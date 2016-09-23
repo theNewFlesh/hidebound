@@ -1,0 +1,59 @@
+---
+username: theNewFlesh
+project_dir: /Volumes/data/project
+token: e17afcc8c42fe24536c14700c4931f0e7f252bb1
+specification: proj001
+extensions:
+  - obj
+  - png
+assets:
+  - maya
+deliverables:
+  - vol001
+  - geo001
+gitignore:
+  - "__pycache__/"
+  - "*.py[cod]"
+  - "*.so"
+  - ".Python"
+  - "env/"
+  - "build/"
+  - "develop-eggs/"
+  - "dist/"
+  - "downloads/"
+  - "eggs/"
+  - ".eggs/"
+  - "lib/"
+  - "lib64/"
+  - "parts/"
+  - "sdist/"
+  - "var/"
+  - "*.egg-info/"
+  - ".installed.cfg"
+  - "*.egg"
+  - "*.manifest"
+  - "*.spec"
+  - "pip-log.txt"
+  - "pip-delete-this-directory.txt"
+  - "htmlcov/"
+  - ".tox/"
+  - ".coverage"
+  - ".coverage.*"
+  - ".cache"
+  - "nosetests.xml"
+  - "coverage.xml"
+  - "*,cover"
+  - "*.mo"
+  - "*.pot"
+  - "*.log"
+  - "docs/_build/"
+  - "target/"
+  - ".ipynb_checkpoints"
+  - ".DS_Store"
+  - "*.pdf"
+  - "*.hdf"
+  - "*.jpg"
+  - "*.gif"
+  - "*.png"
+  - "*.pkl"
+  - "node_modules/"
