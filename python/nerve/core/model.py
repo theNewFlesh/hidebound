@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 import os
+import re
 import yaml
 from copy import deepcopy
 from itertools import *
@@ -77,11 +78,19 @@ class Nerve(object):
             'VALID: {} created according to {} specification'.format(name, spec)
         )
 
-        # create dev branch
-        local.create_head('dev')
-
         # push master
         local.remote().push()
+
+        # create dev branch
+        local.create_head('dev')
+        dev = list(filter(lambda x: re.search('dev', x.name), local.branches))[0]
+        dev.checkout()
+        local.remote().push('dev')
+
+        # set default branch to dev
+        repo.edit(name, default_branch='dev')
+
+        # TODO: send data to DynamoDB
 # ------------------------------------------------------------------------------
 
 def main():
