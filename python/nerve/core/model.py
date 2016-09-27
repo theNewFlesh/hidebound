@@ -102,13 +102,11 @@ class Nerve(object):
         # TODO: send data to DynamoDB
 
     def clone(self, name):
-        orgname = self._config['organization']
+        org = self._config['organization']
         token = self._config['token']
         project_dir = self._config['project_dir']
-        working_dir = os.path.join(project, name)
-        org = self._client(orgname, token=token)
-        url = org.repository(orgname, name).ssh_url
-
+        working_dir = os.path.join(project_dir, name)
+        url = self._client.repository(org, name).ssh_url
         Repo.clone_from(url, working_dir)
 # ------------------------------------------------------------------------------
 
