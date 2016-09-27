@@ -1,11 +1,11 @@
 #! /usr/bin/env python
 import os
-import re
 import yaml
 from copy import deepcopy
 from itertools import *
 from github3 import login
 from git import Repo
+from github3.repos.branch import Branch
 from configparser import ConfigParser
 from nerve.core.utils import execute_subprocess
 from nerve.core.git_lfs import GitLFS
@@ -30,8 +30,11 @@ class Nerve(object):
         extensions = self._config['extensions']
         gitignore = self._config['gitignore']
         spec = self._config['specification']
+        orgname = self._config['organization']
 
-        repo = self._client.create_repository(name, private=True)
+        # create repo on github
+        org = self._client.organization(orgname)
+        repo = org.create_repository(name, private=True)
         working_dir = os.path.join(project_dir, name)
         local = Repo.clone_from(repo.ssh_url, working_dir)
 
@@ -64,6 +67,7 @@ class Nerve(object):
 
         # create project metadata
         config = deepcopy(self._config)
+        del config['token']
         config['project-name'] = name
         config['project-id'] = repo.id
         config['uri'] = repo.ssh_url
@@ -83,14 +87,29 @@ class Nerve(object):
 
         # create dev branch
         local.create_head('dev')
-        dev = list(filter(lambda x: re.search('dev', x.name), local.branches))[0]
+        dev = list(filter(lambda x: x.name == 'dev', local.branches))[0]
         dev.checkout()
         local.remote().push('dev')
+
+        # wait for response
+        response = None
+        while not isinstance(response, Branch):
+            response = repo.branch('dev')
 
         # set default branch to dev
         repo.edit(name, default_branch='dev')
 
         # TODO: send data to DynamoDB
+
+    def clone(self, name):
+        orgname = self._config['organization']
+        token = self._config['token']
+        project_dir = self._config['project_dir']
+        working_dir = os.path.join(project, name)
+        org = self._client(orgname, token=token)
+        url = org.repository(orgname, name).ssh_url
+
+        Repo.clone_from(url, working_dir)
 # ------------------------------------------------------------------------------
 
 def main():
