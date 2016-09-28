@@ -1,14 +1,24 @@
 #! /usr/bin/env python
 import re
-from subprocess import Popen, PIPE, STDOUT, SubprocessError, check_output
+from subprocess import Popen, PIPE, STDOUT, SubprocessError
 # ------------------------------------------------------------------------------
 
 def execute_subprocess(command, error_re='Error:.*'):
-    output = check_output(command, shell=True, stderr=STDOUT).decode('utf-8')
-    error = re.search(error_re, output)
-    if error:
-        raise SubprocessError('Command: "' + cmd + '" returned "' + error.group(0) + '"')
-    return output
+    output = Popen(command, shell=True, stdout=PIPE, stderr=PIPE)
+    stderr = output.stderr.read().decode('utf-8')
+    output = output.stdout.readlines()
+    output = [x.decode('utf-8').strip('\n') for x in output]
+
+    err = '\n'.join(output)
+    for e in [err, stderr]:
+        error = re.search(error_re, e)
+        if error:
+            message = 'Command: "' + command
+            message += '" returned "' + error.group(0) + '"'
+            raise SubprocessError(message)
+
+    for line in output:
+        yield line
 # ------------------------------------------------------------------------------
 
 def main():

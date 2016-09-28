@@ -1,9 +1,14 @@
 ---
 username: theNewFlesh
+user-branch: alex
 organization: nerve-test-organization
-project_dir: /Volumes/data/project
+project-root: /Volumes/data/nerve-test-projects
 token: e17afcc8c42fe24536c14700c4931f0e7f252bb1
 specification: proj001
+include-assets-for-request:
+  - vol*
+exclude-assets-for-request:
+include-assets-for-publishing:
 extensions:
   - obj
   - png
@@ -51,10 +56,4 @@ gitignore:
   - "target/"
   - ".ipynb_checkpoints"
   - ".DS_Store"
-  - "*.pdf"
-  - "*.hdf"
-  - "*.jpg"
-  - "*.gif"
-  - "*.png"
-  - "*.pkl"
   - "node_modules/"

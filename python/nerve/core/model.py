@@ -26,19 +26,21 @@ class Nerve(object):
         '''
         assets = self._config['assets']
         deliverables = self._config['deliverables']
-        project_dir = self._config['project_dir']
+        root = self._config['project-root']
         extensions = self._config['extensions']
         gitignore = self._config['gitignore']
         spec = self._config['specification']
         orgname = self._config['organization']
+        # ----------------------------------------------------------------------
 
         # create repo on github
         org = self._client.organization(orgname)
         repo = org.create_repository(name, private=True)
-        working_dir = os.path.join(project_dir, name)
-        local = Repo.clone_from(repo.ssh_url, working_dir)
+        project = os.path.join(root, name)
+        local = Repo.clone_from(repo.ssh_url, project)
+        # ----------------------------------------------------------------------
 
-        lfs = GitLFS(working_dir)
+        lfs = GitLFS(project)
         lfs.install(skip_smudge=True)
 
         # create .lfsconfig
@@ -46,21 +48,23 @@ class Nerve(object):
         lfsconfig.add_section('lfs')
         lfsconfig.set('lfs', 'url', 'http://localhost:8080')
         lfsconfig.set('lfs', 'access', 'basic')
-        path = os.path.join(working_dir, '.lfsconfig')
+        path = os.path.join(project, '.lfsconfig')
         with open(path, 'w') as f:
             lfsconfig.write(f)
 
         # configure .lfsconfig
         lfs.track(['*.' + x for x in extensions])
+        # ----------------------------------------------------------------------
 
         # create .gitignore
-        path = os.path.join(working_dir, '.gitignore')
+        path = os.path.join(project, '.gitignore')
         with open(path, 'w') as f:
             f.write('\n'.join(gitignore))
+        # ----------------------------------------------------------------------
 
         # create project subdirectories
         for subdir in chain(assets, deliverables):
-            path = os.path.join(working_dir, subdir)
+            path = os.path.join(project, subdir)
             os.mkdir(path)
             # git won't commit empty directories
             open(os.path.join(path, '.keep'), 'w').close()
@@ -73,8 +77,9 @@ class Nerve(object):
         config['uri'] = repo.ssh_url
         config['version'] = 1
         # config['uuid'] = None
-        with open(os.path.join(working_dir, name + '_meta.yml'), 'w') as f:
+        with open(os.path.join(project, name + '_meta.yml'), 'w') as f:
             f.write(yaml.dump(config))
+        # ----------------------------------------------------------------------
 
         # commit everything
         local.git.add('--all')
@@ -102,12 +107,52 @@ class Nerve(object):
         # TODO: send data to DynamoDB
 
     def clone(self, name):
+        '''
+        clone nerve project
+        '''
+        # TODO catch repo already exists errors and repo doesn't exist errors
+
         org = self._config['organization']
         token = self._config['token']
-        project_dir = self._config['project_dir']
-        working_dir = os.path.join(project_dir, name)
-        url = self._client.repository(org, name).ssh_url
-        Repo.clone_from(url, working_dir)
+        root = self._config['project-root']
+        project = os.path.join(root, name)
+        repo = self._client.repository(org, name)
+        local = Repo.clone_from(repo.ssh_url, project)
+
+        # create user-branch
+        ubranch = self._config['user-branch']
+        local.create_head(ubranch)
+        ubranch = list(filter(lambda x: x.name == ubranch, local.branches))[0]
+        ubranch.checkout()
+
+    def request(self, project=os.getcwd(), include=[], exclude=[]):
+        '''
+        request nerve assets
+        '''
+        # TODO ensure pulls only come from dev branch
+        if include == []:
+            include = self._config['include-assets-for-request']
+        if exclude == []:
+            exclude = self._config['exclude-assets-for-request']
+
+        Repo(project).remote().pull()
+        GitLFS(project).pull(include, exclude)
+
+    def publish(self, project=os.getcwd(), include=[]):
+        '''
+        publish nerve assets
+        '''
+        # TODO: add branch support
+        if include == []:
+            include = self._config['include-assets-for-publishing']
+
+        repo = Repo(project)
+        # pulling metadata first avoids merge conflicts
+        # by setting HEAD to the most current
+        repo.remote().pull()
+
+        repo.index.add(include)
+        repo.index.diff('HEAD', R=True).iter_change_type('A') # new files only
 # ------------------------------------------------------------------------------
 
 def main():
