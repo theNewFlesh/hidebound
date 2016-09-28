@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 import os
 from nerve.core.utils import execute_subprocess
-import subprocess
 # ------------------------------------------------------------------------------
 
 class GitLFS(object):
@@ -42,8 +41,7 @@ class GitLFS(object):
             execute_subprocess(cmd + ' ' + exp)
 
         output = execute_subprocess(cmd, 'no matches found:.*')
-        output = output.split('\n')[1:-1]
-        output = [x.lstrip().split(' ') for x in output]
+        output = [x.lstrip().split(' ') for x in output[1:-1]]
         return output
 
     def pull(self, include=[], exclude=[]):
@@ -53,17 +51,19 @@ class GitLFS(object):
         if exclude != []:
             cmd += ' -X ' + ','.join(exclude)
 
-        execute_subprocess(cmd)
+        return execute_subprocess(cmd)
 
     @property
     def status(self):
         cmd = 'git lfs status --porcelain'
         status = execute_subprocess(cmd)
         lut = dict(
-            A='new_file',
+            A='added',
+            C='copied',
             D='deleted',
             M='modified',
-            R='renamed'
+            R='renamed',
+            U='updated'
         )
 
         for item in status:
@@ -74,7 +74,7 @@ class GitLFS(object):
                 datum['state'] = lut[item[0]]
             else:
                 datum['state'] = lut[item[1]]
-            datum['object'] = item[3:].split(' ')[0]
+            datum['filepath'] = item[3:].split(' ')[0]
             yield datum
 # ------------------------------------------------------------------------------
 

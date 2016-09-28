@@ -17,8 +17,7 @@ def execute_subprocess(command, error_re='Error:.*'):
             message += '" returned "' + error.group(0) + '"'
             raise SubprocessError(message)
 
-    for line in output:
-        yield line
+    return output
 # ------------------------------------------------------------------------------
 
 def main():

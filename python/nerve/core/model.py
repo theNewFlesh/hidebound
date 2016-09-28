@@ -106,6 +106,8 @@ class Nerve(object):
 
         # TODO: send data to DynamoDB
 
+        return True
+
     def clone(self, name):
         '''
         clone nerve project
@@ -125,6 +127,8 @@ class Nerve(object):
         ubranch = list(filter(lambda x: x.name == ubranch, local.branches))[0]
         ubranch.checkout()
 
+        return True
+
     def request(self, project=os.getcwd(), include=[], exclude=[]):
         '''
         request nerve assets
@@ -137,6 +141,8 @@ class Nerve(object):
 
         Repo(project).remote().pull()
         GitLFS(project).pull(include, exclude)
+
+        return True
 
     def publish(self, project=os.getcwd(), include=[]):
         '''
@@ -153,6 +159,13 @@ class Nerve(object):
 
         repo.index.add(include)
         repo.index.diff('HEAD', R=True).iter_change_type('A') # new files only
+        lfs = []
+        for item in GitLFS(project).status:
+            if item['staged'] == True and item['state'] == 'added':
+                if item['filepath']
+                lfs.append(item)
+
+        return True
 # ------------------------------------------------------------------------------
 
 def main():
