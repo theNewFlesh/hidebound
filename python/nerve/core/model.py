@@ -20,17 +20,20 @@ class Nerve(object):
         self._client = login(config['username'], token=config['token'])
         self._config = config
 
+    def __getitem__(self, key):
+        return self._config[key]
+
     def create(self, name):
         '''
         create nerve project
         '''
-        assets = self._config['assets']
-        deliverables = self._config['deliverables']
-        root = self._config['project-root']
-        extensions = self._config['extensions']
-        gitignore = self._config['gitignore']
-        spec = self._config['specification']
-        orgname = self._config['organization']
+        assets = self['assets']
+        deliverables = self['deliverables']
+        root = self['project-root']
+        extensions = self['extensions']
+        gitignore = self['gitignore']
+        spec = self['specification']
+        orgname = self['organization']
         # ----------------------------------------------------------------------
 
         # create repo on github
@@ -114,15 +117,15 @@ class Nerve(object):
         '''
         # TODO catch repo already exists errors and repo doesn't exist errors
 
-        org = self._config['organization']
-        token = self._config['token']
-        root = self._config['project-root']
+        org = self['organization']
+        token = self['token']
+        root = self['project-root']
         project = os.path.join(root, name)
         repo = self._client.repository(org, name)
         local = Repo.clone_from(repo.ssh_url, project)
 
         # create user-branch
-        ubranch = self._config['user-branch']
+        ubranch = self['user-branch']
         local.create_head(ubranch)
         ubranch = list(filter(lambda x: x.name == ubranch, local.branches))[0]
         ubranch.checkout()
@@ -135,35 +138,53 @@ class Nerve(object):
         '''
         # TODO ensure pulls only come from dev branch
         if include == []:
-            include = self._config['include-assets-for-request']
+            include = self['include-assets-for-request']
         if exclude == []:
-            exclude = self._config['exclude-assets-for-request']
+            exclude = self['exclude-assets-for-request']
 
         Repo(project).remote().pull()
         GitLFS(project).pull(include, exclude)
 
         return True
 
-    def publish(self, project=os.getcwd(), include=[]):
+    def publish(self, project=os.getcwd(), include=[], verbose=False):
         '''
         publish nerve assets
         '''
         # TODO: add branch support
         if include == []:
-            include = self._config['include-assets-for-publishing']
+            include = self['include-assets-for-publishing']
 
-        repo = Repo(project)
+        local = Repo(project)
         # pulling metadata first avoids merge conflicts
         # by setting HEAD to the most current
-        repo.remote().pull()
+        local.remote().pull()
 
-        repo.index.add(include)
-        repo.index.diff('HEAD', R=True).iter_change_type('A') # new files only
-        lfs = []
-        for item in GitLFS(project).status:
-            if item['staged'] == True and item['state'] == 'added':
-                if item['filepath']
-                lfs.append(item)
+        local.index.add(include)
+
+        # get metadata
+        metadata = local.index.diff('HEAD', R=True)
+
+        # get data
+        lfs = GitLFS(project)
+        exclude = []
+        data = []
+        for datum in lfs.status:
+            if datum['staged']:
+                file = os.path.split(datum['filepath'])[-1]
+
+                # exclude modified v### files
+                if re.search('v\d\d\d', file):
+                    if datum['state'] == 'added':
+                        lfs.append(datum)
+                    else:
+                        exclude.append(datum)
+                        if verbose:
+                            print(datum['filepath'] + ' will not be published')
+                else:
+                    data.append(datum)
+
+        local.index.reset('HEAD', paths=exclude)
 
         return True
 # ------------------------------------------------------------------------------
