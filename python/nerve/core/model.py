@@ -6,7 +6,6 @@ from itertools import *
 from github3 import login
 from git import Repo
 from github3.repos.branch import Branch
-from configparser import ConfigParser
 from nerve.core.utils import execute_subprocess
 from nerve.core.git import Git
 from nerve.core.git_lfs import GitLFS
@@ -24,72 +23,60 @@ class Nerve(object):
     def __getitem__(self, key):
         return self._config[key]
 
-    def create(self, name):
-        '''
-        create nerve project
-        '''
-        assets = self['assets']
-        deliverables = self['deliverables']
-        root = self['project-root']
-        extensions = self['extensions']
-        gitignore = self['gitignore']
-        spec = self['specification']
-        orgname = self['organization']
-        # ----------------------------------------------------------------------
-
-        # create repo on github
-        org = self._client.organization(orgname)
-        repo = org.create_repository(name, private=True)
-        project = os.path.join(root, name)
-        local = Repo.clone_from(repo.ssh_url, project)
-        # ----------------------------------------------------------------------
-
-        # configure lfs
-        lfs = GitLFS(project)
-        lfs.install(skip_smudge=True)
-        lfs.create_config('http://localhost:8080')
-        lfs.track(['*.' + x for x in extensions])
-        # ----------------------------------------------------------------------
-
-        # create .gitignore
-        path = os.path.join(project, '.gitignore')
-        with open(path, 'w') as f:
-            f.write('\n'.join(gitignore))
-        # ----------------------------------------------------------------------
-
-        # create project subdirectories
-        for subdir in chain(assets, deliverables):
+    def _create_subdirectories(self, project):
+        for subdir in chain(self['assets'], self['deliverables']):
             path = os.path.join(project, subdir)
             os.mkdir(path)
             # git won't commit empty directories
             open(os.path.join(path, '.keep'), 'w').close()
 
-        # create project metadata
-        config = deepcopy(self._config)
-        del config['token']
-        config['project-name'] = name
-        config['project-id'] = repo.id
-        config['uri'] = repo.ssh_url
-        config['version'] = 1
-        # config['uuid'] = None
-        with open(os.path.join(project, name + '_meta.yml'), 'w') as f:
-            f.write(yaml.dump(config))
+    def _create_metadata(self, project, name, project_id, uri, version=1):
+            config = deepcopy(self._config)
+            del config['token']
+            config['project-name'] = name
+            config['project-id'] = project_id
+            config['uri'] = uri
+            config['version'] = 1
+            # config['uuid'] = None
+            with open(os.path.join(project, name + '_meta.yml'), 'w') as f:
+                f.write(yaml.dump(config))
+    # --------------------------------------------------------------------------
+
+    def create(self, name):
+        '''
+        create nerve project
+        '''
+        # create repo
+        org = self._client.organization(self['organization'])
+        repo = org.create_repository(name, private=True)
+        project = os.path.join(self['project-root'], name)
+        local = Git(project, repo.ssh_url)
+        # ----------------------------------------------------------------------
+
+        # configure repo
+        lfs = GitLFS(project)
+        lfs.install(skip_smudge=True)
+        lfs.create_config('http://localhost:8080')
+        lfs.track(['*.' + x for x in self['extensions']])
+        local.create_gitignore(self['gitignore'])
+        # ----------------------------------------------------------------------
+
+        # create project structure
+        self._create_subdirectories(project)
+        self._create_metadata(project, name, repo.id, repo.ssh_url)
         # ----------------------------------------------------------------------
 
         # commit everything
-        local.git.add('--all')
-        local.index.commit(
-            'VALID: {} created according to {} specification'.format(name, spec)
+        local.add(all=True)
+        local.commit(
+            'VALID: {} created according to {} specification'.format(
+                name,
+                self['specification']
+            )
         )
-
-        # push master
-        local.remote().push()
-
-        # create dev branch
-        local.create_head('dev')
-        dev = list(filter(lambda x: x.name == 'dev', local.branches))[0]
-        dev.checkout()
-        local.remote().push('dev')
+        local.push('master')
+        local.branch('dev')
+        local.push('dev')
 
         # wait for response
         response = None

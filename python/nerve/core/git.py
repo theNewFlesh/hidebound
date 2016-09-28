@@ -6,10 +6,14 @@ from git import Repo
 # ------------------------------------------------------------------------------
 
 class Git(object):
-    def __init__(self, working_dir=None):
-        if working_dir:
+    def __init__(self, working_dir, url=None):
+        if url:
+            self._repo = self._clone(url, working_dir)
+        else:
             self._repo = Repo(working_dir)
-            os.chdir(working_dir)
+
+        self._working_dir = working_dir
+        os.chdir(working_dir)
 
     def create_gitignore(self, patterns=[]):
         path = os.path.join(self._working_dir, '.gitignore')
@@ -17,25 +21,24 @@ class Git(object):
             f.write('\n'.join(patterns))
         return os.path.exists(path)
 
-    def clone(self, url, working_dir):
-        self._repo = Repo.clone_from(url, working_dir)
-        return os.path.exists(working_dir)
+    def _clone(self, url, working_dir):
+        return Repo.clone_from(url, working_dir)
 
     def add(self, items=[], all=False):
         if all:
-            self._repo.add('--all')
+            self._repo.git.add('--all')
         else:
-            self._repo.add(items)
+            self._repo.git.add(items)
 
     def branch(self, name):
         self._repo.create_head(name)
         branch = list(filter(lambda x: x.name == name, self._repo.branches))[0]
         branch.checkout()
 
-    def push(self, branch, origin='master'):
-        self._repo.origin(origin).push(branch)
+    def push(self, branch, origin='origin'):
+        self._repo.remote(origin).push(branch)
 
-    def pull(self, origin='master'):
+    def pull(self, origin='origin'):
         self._repo.remote(origin).pull()
 
     def commit(self, message):

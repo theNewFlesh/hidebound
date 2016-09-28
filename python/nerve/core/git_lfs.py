@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 import os
+from configparser import ConfigParser
 from nerve.core.utils import execute_subprocess
 # ------------------------------------------------------------------------------
 
@@ -13,7 +14,6 @@ class GitLFS(object):
     @property
     def working_dir(self):
         return self._working_dir
-
 
     def create_config(self, url, access='basic'):
         '''
