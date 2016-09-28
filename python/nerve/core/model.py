@@ -8,6 +8,7 @@ from git import Repo
 from github3.repos.branch import Branch
 from configparser import ConfigParser
 from nerve.core.utils import execute_subprocess
+from nerve.core.git import Git
 from nerve.core.git_lfs import GitLFS
 # ------------------------------------------------------------------------------
 
@@ -43,19 +44,10 @@ class Nerve(object):
         local = Repo.clone_from(repo.ssh_url, project)
         # ----------------------------------------------------------------------
 
+        # configure lfs
         lfs = GitLFS(project)
         lfs.install(skip_smudge=True)
-
-        # create .lfsconfig
-        lfsconfig = ConfigParser()
-        lfsconfig.add_section('lfs')
-        lfsconfig.set('lfs', 'url', 'http://localhost:8080')
-        lfsconfig.set('lfs', 'access', 'basic')
-        path = os.path.join(project, '.lfsconfig')
-        with open(path, 'w') as f:
-            lfsconfig.write(f)
-
-        # configure .lfsconfig
+        lfs.create_config('http://localhost:8080')
         lfs.track(['*.' + x for x in extensions])
         # ----------------------------------------------------------------------
 
@@ -120,12 +112,14 @@ class Nerve(object):
         org = self['organization']
         token = self['token']
         root = self['project-root']
+        ubranch = self['user-branch']
+        # ----------------------------------------------------------------------
+
         project = os.path.join(root, name)
         repo = self._client.repository(org, name)
         local = Repo.clone_from(repo.ssh_url, project)
 
         # create user-branch
-        ubranch = self['user-branch']
         local.create_head(ubranch)
         ubranch = list(filter(lambda x: x.name == ubranch, local.branches))[0]
         ubranch.checkout()
@@ -147,7 +141,7 @@ class Nerve(object):
 
         return True
 
-    def publish(self, project=os.getcwd(), include=[], verbose=False):
+    def publish(self, project=os.getcwd(), include=[], exclude=[], verbose=False):
         '''
         publish nerve assets
         '''
@@ -167,7 +161,6 @@ class Nerve(object):
 
         # get data
         lfs = GitLFS(project)
-        exclude = []
         data = []
         for datum in lfs.status:
             if datum['staged']:

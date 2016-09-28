@@ -14,6 +14,21 @@ class GitLFS(object):
     def working_dir(self):
         return self._working_dir
 
+
+    def create_config(self, url, access='basic'):
+        '''
+        write .lfsconfig file
+        '''
+        lfsconfig = ConfigParser()
+        lfsconfig.add_section('lfs')
+        lfsconfig.set('lfs', 'url', url)
+        lfsconfig.set('lfs', 'access', access)
+        path = os.path.join(self._working_dir, '.lfsconfig')
+        with open(path, 'w') as f:
+            lfsconfig.write(f)
+
+        return os.path.exists(path)
+
     def install(self, force=False, local=False, skip_smudge=False):
         '''
         runs git lfs install
