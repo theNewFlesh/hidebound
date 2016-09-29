@@ -4,11 +4,13 @@ user-branch: alex
 organization: nerve-test-organization
 project-root: /Volumes/data/nerve-test-projects
 token: e17afcc8c42fe24536c14700c4931f0e7f252bb1
+uri-type: ssh
+private: true
 specification: proj001
-include-assets-for-request:
-  - vol*
-exclude-assets-for-request:
-include-assets-for-publishing:
+request-include-patterns:
+  - vol.*
+request-exclude-patterns:
+publish-include-patterns:
 extensions:
   - obj
   - png

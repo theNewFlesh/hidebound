@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 import os
 from configparser import ConfigParser
-from nerve.core.utils import execute_subprocess
+from nerve.core.utils import execute_subprocess, status
 # ------------------------------------------------------------------------------
 
 class GitLFS(object):
@@ -68,29 +68,13 @@ class GitLFS(object):
 
         return execute_subprocess(cmd)
 
-    @property
-    def status(self):
-        cmd = 'git lfs status --porcelain'
-        status = execute_subprocess(cmd)
-        lut = dict(
-            A='added',
-            C='copied',
-            D='deleted',
-            M='modified',
-            R='renamed',
-            U='updated'
+    def status(self, path_re=None, states=[], staged=None, warnings=False):
+        return status(
+            'git lfs status --porcelain',
+            path_re=path_re,
+            states=states,
+            staged=staged
         )
-
-        for item in status:
-            datum = {}
-            datum['staged'] = False
-            if item[0] != ' ':
-                datum['staged'] = True
-                datum['state'] = lut[item[0]]
-            else:
-                datum['state'] = lut[item[1]]
-            datum['filepath'] = item[3:].split(' ')[0]
-            yield datum
 # ------------------------------------------------------------------------------
 
 def main():

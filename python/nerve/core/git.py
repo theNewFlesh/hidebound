@@ -2,7 +2,8 @@
 import os
 import re
 from itertools import *
-from git import Repo
+from git import Repo, GitCommandError
+from nerve.core.utils import status
 # ------------------------------------------------------------------------------
 
 class Git(object):
@@ -22,7 +23,10 @@ class Git(object):
         return os.path.exists(path)
 
     def _clone(self, url, working_dir):
-        return Repo.clone_from(url, working_dir)
+        try:
+            return Repo.clone_from(url, working_dir)
+        except GitCommandError as e:
+            return Repo(working_dir)
 
     def add(self, items=[], all=False):
         if all:
@@ -50,37 +54,13 @@ class Git(object):
         else:
             self._repo.index.reset('HEAD')
 
-    def status(self, path_re=None, states=[], staged=None):
-        if path_re:
-            path_re = re.compile(path_re)
-
-        for item in self._repo.index.diff('HEAD', R=True):
-            lut = dict(
-                A='added',
-                C='copied',
-                D='deleted',
-                M='modified',
-                R='renamed',
-                U='updated'
-            )
-            output = dict(
-                filepath=item.a_path, # is this always correct?
-                state=lut[item.change_type],
-                staged=True
-            )
-
-            if path_re:
-                found = path_re.search(output['filepath'])
-                if not found:
-                    continue
-            if states:
-                if output['state'] not in states:
-                    continue
-            if staged:
-                if output['staged'] != staged:
-                    continue
-
-            yield output
+    def status(self, path_re=None, states=[], staged=None, warnings=False):
+        return status(
+            'git status --porcelain',
+            path_re=path_re,
+            states=states,
+            staged=staged
+        )
 # ------------------------------------------------------------------------------
 
 def main():

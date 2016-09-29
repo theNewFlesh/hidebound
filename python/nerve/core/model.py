@@ -3,25 +3,25 @@ import os
 import yaml
 from copy import deepcopy
 from itertools import *
-from github3 import login
-from git import Repo
-from github3.repos.branch import Branch
-from nerve.core.utils import execute_subprocess
 from nerve.core.git import Git
 from nerve.core.git_lfs import GitLFS
+from nerve.core.client import Client
 # ------------------------------------------------------------------------------
 
 class Nerve(object):
-    def __init__(self, config_path):
+    def __init__(self, config):
         # TODO: add validation to config
-        config = {}
-        with open(config_path, 'r') as f:
-            config = yaml.load(f)
-        self._client = login(config['username'], token=config['token'])
+        if isinstance(config, str):
+            with open(config, 'r') as f:
+                config = yaml.load(f)
         self._config = config
 
     def __getitem__(self, key):
         return self._config[key]
+
+    @property
+    def config(self):
+        return deepcopy(self._config)
 
     def _create_subdirectories(self, project):
         for subdir in chain(self['assets'], self['deliverables']):
@@ -47,10 +47,12 @@ class Nerve(object):
         create nerve project
         '''
         # create repo
-        org = self._client.organization(self['organization'])
-        repo = org.create_repository(name, private=True)
+        config = self.config
+        config['name'] = name
+        client = Client(config)
+
         project = os.path.join(self['project-root'], name)
-        local = Git(project, repo.ssh_url)
+        local = Git(project, client['uri'])
         # ----------------------------------------------------------------------
 
         # configure repo
@@ -63,7 +65,7 @@ class Nerve(object):
 
         # create project structure
         self._create_subdirectories(project)
-        self._create_metadata(project, name, repo.id, repo.ssh_url)
+        self._create_metadata(project, name, client['id'], client['uri'])
         # ----------------------------------------------------------------------
 
         # commit everything
@@ -78,13 +80,8 @@ class Nerve(object):
         local.branch('dev')
         local.push('dev')
 
-        # wait for response
-        response = None
-        while not isinstance(response, Branch):
-            response = repo.branch('dev')
-
-        # set default branch to dev
-        repo.edit(name, default_branch='dev')
+        client.has_branch('dev', wait=True)
+        client.set_default_branch('dev')
 
         # TODO: send data to DynamoDB
 
@@ -95,22 +92,14 @@ class Nerve(object):
         clone nerve project
         '''
         # TODO catch repo already exists errors and repo doesn't exist errors
+        project = os.path.join(self['project-root'], name)
 
-        org = self['organization']
-        token = self['token']
-        root = self['project-root']
-        ubranch = self['user-branch']
-        # ----------------------------------------------------------------------
+        config = self.config
+        config['name'] = name
+        client = Client(config)
 
-        project = os.path.join(root, name)
-        repo = self._client.repository(org, name)
-        local = Repo.clone_from(repo.ssh_url, project)
-
-        # create user-branch
-        local.create_head(ubranch)
-        ubranch = list(filter(lambda x: x.name == ubranch, local.branches))[0]
-        ubranch.checkout()
-
+        local = Git(project, client['uri'])
+        local.branch(self['user-branch'])
         return True
 
     def request(self, project=os.getcwd(), include=[], exclude=[]):
@@ -119,11 +108,11 @@ class Nerve(object):
         '''
         # TODO ensure pulls only come from dev branch
         if include == []:
-            include = self['include-assets-for-request']
+            include = self['request-include-patterns']
         if exclude == []:
-            exclude = self['exclude-assets-for-request']
+            exclude = self['request-exclude-patterns']
 
-        Repo(project).remote().pull()
+        Git(project).pull()
         GitLFS(project).pull(include, exclude)
 
         return True
@@ -134,37 +123,14 @@ class Nerve(object):
         '''
         # TODO: add branch support
         if include == []:
-            include = self['include-assets-for-publishing']
+            include = self['publish-include-patterns']
 
-        local = Repo(project)
         # pulling metadata first avoids merge conflicts
         # by setting HEAD to the most current
-        local.remote().pull()
+        local = Git(project)
+        local.pull()
 
-        local.index.add(include)
-
-        # get metadata
-        metadata = local.index.diff('HEAD', R=True)
-
-        # get data
-        lfs = GitLFS(project)
-        data = []
-        for datum in lfs.status:
-            if datum['staged']:
-                file = os.path.split(datum['filepath'])[-1]
-
-                # exclude modified v### files
-                if re.search('v\d\d\d', file):
-                    if datum['state'] == 'added':
-                        lfs.append(datum)
-                    else:
-                        exclude.append(datum)
-                        if verbose:
-                            print(datum['filepath'] + ' will not be published')
-                else:
-                    data.append(datum)
-
-        local.index.reset('HEAD', paths=exclude)
+        data = GitLFS(project).status(states=['added'])
 
         return True
 # ------------------------------------------------------------------------------
