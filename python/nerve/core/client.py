@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 import os
 import yaml
+import json
 from copy import deepcopy
 from itertools import *
 from github3 import login
@@ -19,6 +20,7 @@ class Client(object):
 
         self._client = login(config['username'], token=config['token'])
         self._org = self._client.organization(config['organization'])
+        self._team_ids = {team.name: team.id for team in self._org.teams()}
         self._repo = self._create_repository(
             config['name'],
             config['organization'],
@@ -41,7 +43,6 @@ class Client(object):
         repo = self._client.repository(orgname, name)
         if isinstance(repo, NullObject):
             repo = self._org.create_repository(
-                orgname,
                 name,
                 private=private
             )
@@ -55,7 +56,7 @@ class Client(object):
     def has_branch(self, name, wait=False):
         response = isinstance(self._repo.branch(name), Branch)
         if wait:
-            while reponse is False:
+            while response is False:
                 response = isinstance(self._repo.branch(name), Branch)
         return response
 
@@ -67,12 +68,12 @@ class Client(object):
         # add_repository is fixed in develop branch of gihub3
         # making this code obsolete
         lut = dict(
-            read=pull,
-            write=push,
-            pull=pull,
-            push=push
+            read='pull',
+            write='push',
+            pull='pull',
+            push='push'
         )
-        perm = lut[permissions]
+        perm = lut[permission]
         perm = {'permission': perm}
 
         id_ = self._team_ids[name]
