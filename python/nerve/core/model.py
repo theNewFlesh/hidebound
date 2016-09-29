@@ -1,8 +1,10 @@
 #! /usr/bin/env python
 import os
+import shutil
 import yaml
 from copy import deepcopy
 from itertools import *
+from warnings import warn
 from nerve.core.git import Git
 from nerve.core.git_lfs import GitLFS
 from nerve.core.client import Client
@@ -19,10 +21,6 @@ class Nerve(object):
     def __getitem__(self, key):
         return self._config[key]
 
-    @property
-    def config(self):
-        return deepcopy(self._config)
-
     def _create_subdirectories(self, project):
         for subdir in chain(self['assets'], self['deliverables']):
             path = os.path.join(project, subdir)
@@ -31,26 +29,32 @@ class Nerve(object):
             open(os.path.join(path, '.keep'), 'w').close()
 
     def _create_metadata(self, project, name, project_id, uri, version=1):
-            config = deepcopy(self._config)
-            del config['token']
-            config['project-name'] = name
-            config['project-id'] = project_id
-            config['uri'] = uri
-            config['version'] = 1
-            # config['uuid'] = None
-            with open(os.path.join(project, name + '_meta.yml'), 'w') as f:
-                f.write(yaml.dump(config))
+        config = deepcopy(self._config)
+        del config['token']
+        config['project-name'] = name
+        config['project-id'] = project_id
+        config['uri'] = uri
+        config['version'] = 1
+        # config['uuid'] = None
+        with open(os.path.join(project, name + '_meta.yml'), 'w') as f:
+            f.write(yaml.dump(config))
+
+    def _get_client(self, name):
+        config = self.config
+        config['name'] = name
+        return Client(config)
     # --------------------------------------------------------------------------
+
+    @property
+    def config(self):
+        return deepcopy(self._config)
 
     def create(self, name):
         '''
         create nerve project
         '''
         # create repo
-        config = self.config
-        config['name'] = name
-        client = Client(config)
-
+        client = self._get_client(name)
         project = os.path.join(self['project-root'], name)
         local = Git(project, client['uri'])
         # ----------------------------------------------------------------------
@@ -82,6 +86,11 @@ class Nerve(object):
 
         client.has_branch('dev', wait=True)
         client.set_default_branch('dev')
+        # ----------------------------------------------------------------------
+
+        # add teams
+        for team, perm in self['teams'].items():
+            client.add_team(team, perm)
 
         # TODO: send data to DynamoDB
 
@@ -93,11 +102,7 @@ class Nerve(object):
         '''
         # TODO catch repo already exists errors and repo doesn't exist errors
         project = os.path.join(self['project-root'], name)
-
-        config = self.config
-        config['name'] = name
-        client = Client(config)
-
+        client = self._get_client(name)
         local = Git(project, client['uri'])
         local.branch(self['user-branch'])
         return True
@@ -130,9 +135,19 @@ class Nerve(object):
         local = Git(project)
         local.pull()
 
+        # get deliverables
+
         data = GitLFS(project).status(states=['added'])
 
         return True
+
+    def delete(self, name, path=os.getcwd(), local=False):
+        self._get_client(name).delete()
+        if local:
+            if os.path.split(path)[-1] == name:
+                shutil.rmtree(path)
+            else:
+                warn(path + ' is not a project directory.  Local deletion aborted.')
 # ------------------------------------------------------------------------------
 
 def main():

@@ -16,17 +16,18 @@ class Git(object):
         self._working_dir = working_dir
         os.chdir(working_dir)
 
-    def create_gitignore(self, patterns=[]):
-        path = os.path.join(self._working_dir, '.gitignore')
-        with open(path, 'w') as f:
-            f.write('\n'.join(patterns))
-        return os.path.exists(path)
-
     def _clone(self, url, working_dir):
         try:
             return Repo.clone_from(url, working_dir)
         except GitCommandError as e:
             return Repo(working_dir)
+    # --------------------------------------------------------------------------
+
+    def create_gitignore(self, patterns=[]):
+        path = os.path.join(self._working_dir, '.gitignore')
+        with open(path, 'w') as f:
+            f.write('\n'.join(patterns))
+        return os.path.exists(path)
 
     def add(self, items=[], all=False):
         if all:

@@ -19,6 +19,9 @@ assets:
 deliverables:
   - vol001
   - geo001
+teams:
+  dev: write
+  biz: read
 gitignore:
   - "__pycache__/"
   - "*.py[cod]"
