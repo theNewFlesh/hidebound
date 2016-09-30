@@ -20,8 +20,9 @@ class Git(object):
                 else:
                     return Repo.clone_from(to_path=working_dir, url=url)
             except GitCommandError as e:
-                raise GitCommandError(e)
-                # already exists
+                # directory already exists
+                if e.status != 128:
+                    raise GitCommandError(e)
 
         repo = Repo(working_dir)
         branch = list(filter(lambda x: x.name == name, repo.branches))[0]
