@@ -80,9 +80,10 @@ class Nerve(object):
                 self['specification']
             )
         )
-        local.push('master')
         local.branch('dev')
         local.push('dev')
+        local.branch('master')
+        local.push('master')
 
         client.has_branch('dev', wait=True)
         client.set_default_branch('dev')
@@ -96,21 +97,31 @@ class Nerve(object):
 
         return True
 
-    def clone(self, name):
+    def clone(self, name, branch='user-branch'):
         '''
         clone nerve project
         '''
         # TODO catch repo already exists errors and repo doesn't exist errors
+        if branch == 'user-branch':
+            branch = self['user-branch']
+
         project = os.path.join(self['project-root'], name)
         client = self._get_client(name)
-        local = Git(project, client['uri'])
-        local.branch(self['user-branch'])
+
+        local = Git(project, client['uri'], branch)
+        if not client.has_branch(branch):
+            # this done in lieu of doing it through github beforehand
+            local.branch(branch)
+            local.push(branch)
+
         return True
 
-    def request(self, project=os.getcwd(), include=[], exclude=[]):
+    def request(self, name, include=[], exclude=[]):
         '''
         request nerve assets
         '''
+        project = os.path.join(self['project-root'], name)
+
         # TODO ensure pulls only come from dev branch
         if include == []:
             include = self['request-include-patterns']
@@ -122,10 +133,12 @@ class Nerve(object):
 
         return True
 
-    def publish(self, project=os.getcwd(), include=[], exclude=[], verbose=False):
+    def publish(self, name, include=[], exclude=[], verbose=False):
         '''
         publish nerve assets
         '''
+        project = os.path.join(self['project-root'], name)
+
         # TODO: add branch support
         if include == []:
             include = self['publish-include-patterns']
@@ -141,13 +154,15 @@ class Nerve(object):
 
         return True
 
-    def delete(self, name, path=os.getcwd(), local=False):
+    def delete(self, name, local=False):
+        project = os.path.join(self['project-root'], name)
+
         self._get_client(name).delete()
         if local:
-            if os.path.split(path)[-1] == name:
-                shutil.rmtree(path)
+            if os.path.split(project)[-1] == name:
+                shutil.rmtree(project)
             else:
-                warn(path + ' is not a project directory.  Local deletion aborted.')
+                warn(project + ' is not a project directory.  Local deletion aborted.')
 # ------------------------------------------------------------------------------
 
 def main():

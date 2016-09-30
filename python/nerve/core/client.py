@@ -53,6 +53,11 @@ class Client(object):
     def config(self):
         return deepcopy(self._config)
 
+    # def create_branch(self, name):
+    #     if self.has_branch(name, wait=True):
+    #         return True
+        # github3 had no ability to create a branch
+
     def has_branch(self, name, wait=False):
         response = isinstance(self._repo.branch(name), Branch)
         if wait:

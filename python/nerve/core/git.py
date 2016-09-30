@@ -7,20 +7,23 @@ from nerve.core.utils import status
 # ------------------------------------------------------------------------------
 
 class Git(object):
-    def __init__(self, working_dir, url=None):
-        if url:
-            self._repo = self._clone(url, working_dir)
-        else:
-            self._repo = Repo(working_dir)
-
+    def __init__(self, working_dir, branch, url=None):
+        self._repo = self._clone(url, working_dir, branch)
         self._working_dir = working_dir
         os.chdir(working_dir)
 
-    def _clone(self, url, working_dir):
-        try:
-            return Repo.clone_from(url, working_dir)
-        except GitCommandError as e:
-            return Repo(working_dir)
+    def _clone(self, working_dir, branch, url=None):
+        if url:
+            try:
+                return Repo.clone_from(url, working_dir, branch=branch)
+            except GitCommandError as e:
+                # already exists
+                pass
+
+        repo = Repo(working_dir)
+        branch = list(filter(lambda x: x.name == name, repo.branches))[0]
+        branch.checkout()
+        return repo
     # --------------------------------------------------------------------------
 
     def create_gitignore(self, patterns=[]):
@@ -36,7 +39,14 @@ class Git(object):
             self._repo.git.add(items)
 
     def branch(self, name):
-        self._repo.create_head(name)
+        for branch in self._repo.branches:
+            if name == branch.name:
+                break
+        else:
+            branch = self._repo.create_head(name)
+        branch.checkout()
+
+    def checkout(self, name):
         branch = list(filter(lambda x: x.name == name, self._repo.branches))[0]
         branch.checkout()
 
