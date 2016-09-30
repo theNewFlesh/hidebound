@@ -16,6 +16,7 @@ class Nerve(object):
         if isinstance(config, str):
             with open(config, 'r') as f:
                 config = yaml.load(f)
+        # TODO: add config validation via schematics
         self._config = config
 
     def __getitem__(self, key):
@@ -28,12 +29,12 @@ class Nerve(object):
             # git won't commit empty directories
             open(os.path.join(path, '.keep'), 'w').close()
 
-    def _create_metadata(self, project, name, project_id, uri, version=1):
+    def _create_metadata(self, project, name, project_id, url, version=1):
         config = deepcopy(self._config)
         del config['token']
         config['project-name'] = name
         config['project-id'] = project_id
-        config['uri'] = uri
+        config['url'] = url
         config['version'] = 1
         # config['uuid'] = None
         with open(os.path.join(project, name + '_meta.yml'), 'w') as f:
@@ -43,6 +44,12 @@ class Nerve(object):
         config = self.config
         config['name'] = name
         return Client(config)
+
+    def _get_project_and_branch(self, name, branch):
+        project = os.path.join(self['project-root'], name)
+        if branch == 'user-branch':
+            branch = self['user-branch']
+        return project, branch
     # --------------------------------------------------------------------------
 
     @property
@@ -54,9 +61,9 @@ class Nerve(object):
         create nerve project
         '''
         # create repo
-        client = self._get_client(name)
         project = os.path.join(self['project-root'], name)
-        local = Git(project, client['uri'])
+        client = self._get_client(name)
+        local = Git(project, url=client['url'])
         # ----------------------------------------------------------------------
 
         # configure repo
@@ -69,7 +76,7 @@ class Nerve(object):
 
         # create project structure
         self._create_subdirectories(project)
-        self._create_metadata(project, name, client['id'], client['uri'])
+        self._create_metadata(project, name, client['id'], client['url'])
         # ----------------------------------------------------------------------
 
         # commit everything
@@ -101,14 +108,12 @@ class Nerve(object):
         '''
         clone nerve project
         '''
-        # TODO catch repo already exists errors and repo doesn't exist errors
-        if branch == 'user-branch':
-            branch = self['user-branch']
+        # TODO: catch repo already exists errors and repo doesn't exist errors
+        project, branch = self._get_project_and_branch(name, branch)
 
-        project = os.path.join(self['project-root'], name)
         client = self._get_client(name)
 
-        local = Git(project, client['uri'], branch)
+        local = Git(project, url=client['url'], branch=branch)
         if not client.has_branch(branch):
             # this done in lieu of doing it through github beforehand
             local.branch(branch)
@@ -116,28 +121,28 @@ class Nerve(object):
 
         return True
 
-    def request(self, name, include=[], exclude=[]):
+    def request(self, name, branch='user-branch', include=[], exclude=[]):
         '''
         request nerve assets
         '''
-        project = os.path.join(self['project-root'], name)
+        project, branch = self._get_project_and_branch(name, branch)
 
-        # TODO ensure pulls only come from dev branch
+        # TODO: ensure pulls only come from dev branch
         if include == []:
             include = self['request-include-patterns']
         if exclude == []:
             exclude = self['request-exclude-patterns']
 
-        Git(project).pull()
+        Git(project, branch=branch).pull()
         GitLFS(project).pull(include, exclude)
 
         return True
 
-    def publish(self, name, include=[], exclude=[], verbose=False):
+    def publish(self, name, branch='user-branch', include=[], exclude=[], verbose=False):
         '''
         publish nerve assets
         '''
-        project = os.path.join(self['project-root'], name)
+        project, branch = self._get_project_and_branch(name, branch)
 
         # TODO: add branch support
         if include == []:
@@ -154,11 +159,16 @@ class Nerve(object):
 
         return True
 
-    def delete(self, name, local=False):
+    def delete(self, name, from_server, from_local):
+        '''
+        deletes nerve project
+        '''
         project = os.path.join(self['project-root'], name)
 
-        self._get_client(name).delete()
-        if local:
+        if from_server:
+            self._get_client(name).delete()
+            # TODO: add git lfs logic for deletion
+        if from_local:
             if os.path.split(project)[-1] == name:
                 shutil.rmtree(project)
             else:

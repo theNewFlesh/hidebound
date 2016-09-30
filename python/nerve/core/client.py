@@ -27,10 +27,10 @@ class Client(object):
             config['private']
         )
 
-        if config['uri-type'] == 'ssh':
-            config['uri'] = self._repo.ssh_url
-        elif config['uri-type'] == 'http':
-            config['uri'] = self._repo.http_url
+        if config['url-type'] == 'ssh':
+            config['url'] = self._repo.ssh_url
+        elif config['url-type'] == 'http':
+            config['url'] = self._repo.http_url
         config['fullname'] = self._repo.full_name
         config['id'] = self._repo.id
 

@@ -7,18 +7,21 @@ from nerve.core.utils import status
 # ------------------------------------------------------------------------------
 
 class Git(object):
-    def __init__(self, working_dir, branch, url=None):
-        self._repo = self._clone(url, working_dir, branch)
+    def __init__(self, working_dir, url=None, branch=None):
+        self._repo = self._clone(working_dir, url=url, branch=branch)
         self._working_dir = working_dir
-        os.chdir(working_dir)
 
-    def _clone(self, working_dir, branch, url=None):
+    def _clone(self, working_dir, branch=None, url=None):
+        os.chdir(os.path.split(working_dir)[0])
         if url:
             try:
-                return Repo.clone_from(url, working_dir, branch=branch)
+                if branch:
+                    return Repo.clone_from(to_path=working_dir, url=url, branch=branch)
+                else:
+                    return Repo.clone_from(to_path=working_dir, url=url)
             except GitCommandError as e:
+                raise GitCommandError(e)
                 # already exists
-                pass
 
         repo = Repo(working_dir)
         branch = list(filter(lambda x: x.name == name, repo.branches))[0]
