@@ -74,7 +74,14 @@ class Nerve(object):
         local.create_gitignore(self['gitignore'])
         # ----------------------------------------------------------------------
 
+        # ensure first commit is on master branch
+        local.add(all=True)
+        local.commit('initial commit')
+        local.push('master')
+        # ----------------------------------------------------------------------
+
         # create project structure
+        local.branch('dev')
         self._create_subdirectories(project)
         self._create_metadata(project, name, client['id'], client['url'])
         # ----------------------------------------------------------------------
@@ -87,13 +94,12 @@ class Nerve(object):
                 self['specification']
             )
         )
-        local.branch('dev')
         local.push('dev')
-        local.branch('master')
-        local.push('master')
-
         client.has_branch('dev', wait=True)
         client.set_default_branch('dev')
+
+        # cleanup
+        shutil.rmtree(project)
         # ----------------------------------------------------------------------
 
         # add teams
@@ -110,11 +116,12 @@ class Nerve(object):
         '''
         # TODO: catch repo already exists errors and repo doesn't exist errors
         project, branch = self._get_project_and_branch(name, branch)
-
         client = self._get_client(name)
+        if client.has_branch(branch):
+            local = Git(project, url=client['url'], branch=branch)
+        else:
+            local = Git(project, url=client['url'], branch='dev')
 
-        local = Git(project, url=client['url'], branch=branch)
-        if not client.has_branch(branch):
             # this done in lieu of doing it through github beforehand
             local.branch(branch)
             local.push(branch)

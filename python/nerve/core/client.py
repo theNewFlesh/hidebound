@@ -56,7 +56,7 @@ class Client(object):
     # def create_branch(self, name):
     #     if self.has_branch(name, wait=True):
     #         return True
-        # github3 had no ability to create a branch
+        # github3 has no ability to create a branch
 
     def has_branch(self, name, wait=False):
         response = isinstance(self._repo.branch(name), Branch)
@@ -85,6 +85,13 @@ class Client(object):
         team = self._org.team(id_)
         url = team._build_url('repos', self['fullname'], base_url=team._api)
         return team._boolean(team._put(url, data=json.dumps(perm)), 204, 404)
+
+    def create_pull_request(self, title, base, head, body=None):
+        request = self._repo.create_pull(title, base, head, body=body)
+        return request.number
+
+    def merge_pull_request(self, number, message=''):
+        return self._repo.pull_request(number).merge(message)
 
     def delete(self):
         self._repo.delete()
