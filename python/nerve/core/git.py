@@ -25,8 +25,10 @@ class Git(object):
                     raise GitCommandError(e)
 
         repo = Repo(working_dir)
-        branch = list(filter(lambda x: x.name == name, repo.branches))[0]
-        branch.checkout()
+        if branch:
+            branch = list(filter(lambda x: x.name == branch, repo.branches))[0]
+            branch.checkout()
+
         return repo
     # --------------------------------------------------------------------------
 
