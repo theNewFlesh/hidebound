@@ -8,15 +8,15 @@ from warnings import warn
 from nerve.core.git import Git
 from nerve.core.git_lfs import GitLFS
 from nerve.core.client import Client
+from nerve.core.metadata import Metadata
 # ------------------------------------------------------------------------------
 
 class Nerve(object):
     def __init__(self, config):
-        # TODO: add validation to config
         if isinstance(config, str):
             with open(config, 'r') as f:
                 config = yaml.load(f)
-        # TODO: add config validation via schematics
+        # TODO: validate config
         self._config = config
 
     def __getitem__(self, key):
@@ -191,8 +191,7 @@ class Nerve(object):
 
         # get only added assets
         lfs = GitLFS(project)
-        assets = lfs.status(include=include, exclude=exclude, states=['added'], warnings=wrn)
-        assets = [x['filepath'] for x in assets]
+        assets = lfs.status(include=include, exclude=exclude, warnings=wrn)
         # ----------------------------------------------------------------------
 
         # GENERATE METADATA FILES
@@ -207,15 +206,16 @@ class Nerve(object):
             # its internal metadata with it
 
             # VALIDATE METADATA
-            meta = Metadata(asset)
+            meta = Metadata(asset['fullpath'])
             if meta.deliverable:
-                if meta.valid:
-                    valid.append(meta)
-                else:
-                    invalid.append(meta)
-                meta.write()
+                if asset['state'] is 'added':
+                    if meta.valid:
+                        valid.append(meta)
+                    else:
+                        invalid.append(meta)
+                    meta.write()
             else:
-                nondeliv.append(asset)
+                nondeliv.append(asset['fullpath'])
         # ----------------------------------------------------------------------
 
         # PUSH ASSETS

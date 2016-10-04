@@ -40,7 +40,7 @@ def status(self, command, include=[], exclude=[], states=[], staged=None, warnin
 
     # for item in self._repo.index.diff('HEAD', R=True):
     #     output = dict(
-    #         filepath=item.a_path, # is this always correct?
+    #         fullpath=item.a_path, # is this always correct?
     #         state=lut[item.change_type],
     #         staged=True
     #     )
@@ -52,8 +52,8 @@ def status(self, command, include=[], exclude=[], states=[], staged=None, warnin
             output['state'] = lut[item[0]]
         else:
             output['state'] = lut[item[1]]
-        filepath = item[3:].split(' ')[0]
-        output['filepath'] = filepath
+        fullpath = item[3:].split(' ')[0]
+        output['fullpath'] = fullpath
         # ------------------------------------------------------------------
 
         message = []
@@ -62,22 +62,22 @@ def status(self, command, include=[], exclude=[], states=[], staged=None, warnin
             _states = ', '.join(states[:-1]) + ' or ' + states[-1]
 
         if include:
-            found = include.search(filepath)
+            found = include.search(fullpath)
             if not found:
-                message.append(filepath + ' is excluded')
+                message.append(fullpath + ' is excluded')
         if exclude:
-            found = exclude.search(filepath)
+            found = exclude.search(fullpath)
             if found:
-                message.append(filepath + ' is excluded')
+                message.append(fullpath + ' is excluded')
         if states:
             if output['state'] not in states:
-                message.append(filepath + ' is not ' + _states)
+                message.append(fullpath + ' is not ' + _states)
         if staged != None:
             if output['staged'] != staged:
                 if staged:
-                    message.append(filepath + ' is unstaged')
+                    message.append(fullpath + ' is unstaged')
                 else:
-                    message.append(filepath + ' is staged')
+                    message.append(fullpath + ' is staged')
 
         if len(message) > 0:
             if warnings is True:
