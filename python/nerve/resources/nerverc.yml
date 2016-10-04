@@ -11,6 +11,8 @@ request-include-patterns:
   - vol.*
 request-exclude-patterns:
 publish-include-patterns:
+  - geo.*
+publish-exclude-patterns:
 extensions:
   - obj
   - png

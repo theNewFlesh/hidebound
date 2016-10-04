@@ -130,7 +130,7 @@ class Nerve(object):
 
     def request(self, name, branch='user-branch', include=[], exclude=[]):
         '''
-        request nerve assets
+        request nerve deliverables
         '''
         project, branch = self._get_project_and_branch(name, branch)
 
@@ -140,31 +140,121 @@ class Nerve(object):
         if exclude == []:
             exclude = self['request-exclude-patterns']
 
+        client = self._get_client(name)
+        title = '{user} attempts to request deliverables from dev'
+        title = title.format(user=self['user-branch'])
+        # body = fancy markdown detailing request?
+        num = client.create_pull_request(title, branch, 'dev')
+        # additional dev to user-branch logic here if needed
+        # if used/implemented propely merge-conflict logic will not be necessary
+        # here
+        client.merge_pull_request(num, 'Request authorized')
+
         Git(project, branch=branch).pull()
         GitLFS(project).pull(include, exclude)
 
         return True
 
-    def publish(self, name, branch='user-branch', include=[], exclude=[], verbose=False):
+    def publish(self, name, branch='user-branch', include=[], exclude=[], verbosity=0):
         '''
         publish nerve assets
         '''
         project, branch = self._get_project_and_branch(name, branch)
-
-        # TODO: add branch support
+        wrn = False
+        if verbosity > 0:
+            wrn = True
         if include == []:
             include = self['publish-include-patterns']
+        if exclude == []:
+            exclude = self['publish-exclude-patterns']
+        # ----------------------------------------------------------------------
+
+        # PULL METADATA FROM DEV
 
         # pulling metadata first avoids merge conflicts
         # by setting HEAD to the most current
+        # TODO: add branch checking logic to skip the following if not needed?
+
+        client = self._get_client(name)
+        title = 'Ensuring {branch} is up to date with dev'.format(branch=branch)
+        # body = fancy markdown detailing publish?
+        num = client.create_pull_request(title, 'dev', branch)
+        # additional user-branch to dev logic here if needed
+        # if used/implemented propely merge-conflict logic will not be necessary
+        # here
+        client.merge_pull_request(num, 'Update complete')
         local = Git(project)
         local.pull()
+        # ----------------------------------------------------------------------
 
-        # get deliverables
+        # GET DATA
 
-        data = GitLFS(project).status(states=['added'])
+        # get only added assets
+        lfs = GitLFS(project)
+        assets = lfs.status(include=include, exclude=exclude, states=['added'], warnings=wrn)
+        assets = [x['filepath'] for x in assets]
+        # ----------------------------------------------------------------------
 
-        return True
+        # GENERATE METADATA FILES
+
+        nondeliv = []
+        valid = []
+        invalid = []
+        for asset in assets:
+            # meta receives a asset, search for a metadata file
+            # if it exists, meta loads that metadata into an internal variable
+            # meta then generates metadata from the asset and overwrites
+            # its internal metadata with it
+
+            # VALIDATE METADATA
+            meta = Metadata(asset)
+            if meta.deliverable:
+                if meta.valid:
+                    valid.append(meta)
+                else:
+                    invalid.append(meta)
+                meta.write()
+            else:
+                nondeliv.append(asset)
+        # ----------------------------------------------------------------------
+
+        # PUSH ASSETS
+
+        # push non-deliverables
+        local.add(nondeliv)
+        nondeliv = [os.path.split(x)[-1] for x in nondeliv]
+        local.commit('NON-DELIVERABLE: ' + ', '.join(nondeliv))
+        local.push(branch)
+
+        if len(invalid) > 0:
+            # commit only invalid metadata to github
+            local.add([x.metapath for x in invalid])
+            local.commit('INVALID: ' + ', '.join([x.name for x in invalid]))
+            local.push(branch)
+            return False
+
+        else:
+            # commit all deliverable to github
+            local.add([x.metapath for x in valid])
+            local.add([x.fullpath for x in valid])
+            local.commit('VALID: ' + ', '.join([x.name for x in valid]))
+            local.push(branch)
+
+            title = '{user} attempts to publish valid deliverables to dev'
+            title = title.format(user=branch)
+            body = []
+            body.append('publisher: **{user}**')
+            bpdy.append('deliverables:')
+            body.extend(['\t' + x.name for x in valid])
+            body.append('assets:')
+            body.extend(['\t' + x for x in nondeliv])
+            body = '\n'.join(body)
+            body = body.format(user=branch)
+
+            num = client.create_pull_request(title, branch, 'dev', body=body)
+            client.merge_pull_request(num, 'Publish authorized')
+
+            return True
 
     def delete(self, name, from_server, from_local):
         '''

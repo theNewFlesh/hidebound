@@ -71,12 +71,14 @@ class Git(object):
         else:
             self._repo.index.reset('HEAD')
 
-    def status(self, path_re=None, states=[], staged=None, warnings=False):
+    def status(self, include=[], exclude=[], states=[], staged=None, warnings=False):
         return status(
             'git status --porcelain',
-            path_re=path_re,
+            include=include,
+            exclude=exclude,
             states=states,
-            staged=staged
+            staged=staged,
+            warnings=warnings
         )
 # ------------------------------------------------------------------------------
 

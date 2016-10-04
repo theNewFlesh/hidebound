@@ -20,7 +20,7 @@ def execute_subprocess(command, error_re='Error:.*'):
 
     return output
 
-def status(self, command, path_re=None, states=[], staged=None, warnings=False):
+def status(self, command, include=[], exclude=[], states=[], staged=None, warnings=False):
     status = execute_subprocess(command)
     lut = {
         'A': 'added',
@@ -32,8 +32,10 @@ def status(self, command, path_re=None, states=[], staged=None, warnings=False):
         '?': 'untracked'
     }
 
-    if path_re:
-        path_re = re.compile(path_re)
+    if include:
+        include = re.compile('|'.join(include))
+    if exclude:
+        exclude = re.compile('|'.join(exclude))
     # ----------------------------------------------------------------------
 
     # for item in self._repo.index.diff('HEAD', R=True):
@@ -54,28 +56,32 @@ def status(self, command, path_re=None, states=[], staged=None, warnings=False):
         output['filepath'] = filepath
         # ------------------------------------------------------------------
 
-        message = None
+        message = []
         _states = states[0]
         if len(states) > 1:
             _states = ', '.join(states[:-1]) + ' or ' + states[-1]
 
-        if path_re:
-            found = path_re.search(filepath)
+        if include:
+            found = include.search(filepath)
             if not found:
-                message = filepath + ' is excluded'
+                message.append(filepath + ' is excluded')
+        if exclude:
+            found = exclude.search(filepath)
+            if found:
+                message.append(filepath + ' is excluded')
         if states:
             if output['state'] not in states:
-                message = filepath + ' is not ' + _states
+                message.append(filepath + ' is not ' + _states)
         if staged != None:
             if output['staged'] != staged:
                 if staged:
-                    message = filepath + ' is unstaged'
+                    message.append(filepath + ' is unstaged')
                 else:
-                    message = filepath + ' is staged'
+                    message.append(filepath + ' is staged')
 
-        if message:
-            if warnings:
-                warn(message)
+        if len(message) > 0:
+            if warnings is True:
+                warn('. '.join(message))
             continue
 
         yield output
