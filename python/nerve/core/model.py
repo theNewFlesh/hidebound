@@ -11,8 +11,37 @@ from nerve.core.client import Client
 from nerve.core.metadata import Metadata
 # ------------------------------------------------------------------------------
 
+'''
+The model module contains the Nerve class, the central component of the entire
+nerve framework.
+
+Platforrm:
+    Unix
+
+Author:
+    Alex Braun <alexander.g.braun@gmail.com> <http://www.alexgbraun.com>
+'''
+
 class Nerve(object):
+    '''
+    Class for handling nerve projects
+
+    Attributes:
+        config (dict): a dictionary representing Nerve's internal configuration
+
+    API:
+        create, clone, request, publish and delete
+    '''
     def __init__(self, config):
+        '''
+        Nerve constructor that takes a nerverc configuration (yaml format)
+
+        Args:
+            config (str or dict): a fullpath to a nerverc config or a dict of one
+
+        Returns:
+            Nerve
+        '''
         if isinstance(config, str):
             with open(config, 'r') as f:
                 config = yaml.load(f)
@@ -23,6 +52,15 @@ class Nerve(object):
         return self._config[key]
 
     def _create_subdirectories(self, project):
+        '''
+        Creates directory structure for a nerve project
+
+        Args:
+            project (str): fullpath to project
+
+        Returns:
+            None
+        '''
         for subdir in chain(self['assets'], self['deliverables']):
             path = os.path.join(project, subdir)
             os.mkdir(path)
@@ -30,6 +68,19 @@ class Nerve(object):
             open(os.path.join(path, '.keep'), 'w').close()
 
     def _create_metadata(self, project, name, project_id, url, version=1):
+        '''
+        Creates a [project]_v[###]_meta.yml file in the base of the project
+
+        Args:
+            project (str): fullpath to project
+            name (str): name of project
+            project_id (str): github repo id
+            url (str): clone url for repo
+            version (int, optional): the version of this projects configuration. Default: 1
+
+        Returns:
+            None
+        '''
         config = deepcopy(self._config)
         del config['token']
         config['project-name'] = name
@@ -37,15 +88,36 @@ class Nerve(object):
         config['url'] = url
         config['version'] = 1
         # config['uuid'] = None
+
+        # version implicitly
         with open(os.path.join(project, name + '_meta.yml'), 'w') as f:
             f.write(yaml.dump(config))
 
     def _get_client(self, name):
+        '''
+        Convenience method for returning a Client class object
+
+        Args:
+            name (str): name of project
+
+        Returns:
+            Client
+        '''
         config = self.config
         config['name'] = name
         return Client(config)
 
     def _get_project_and_branch(self, name, branch):
+        '''
+        Convenience method for returning a project path and branch name
+
+        Args:
+            name (str): name of project
+            branch (str, optional): name of branch. Default: user-branch
+
+        Returns:
+            str, str
+        '''
         project = os.path.join(self['project-root'], name)
         if branch == 'user-branch':
             branch = self['user-branch']
@@ -54,11 +126,31 @@ class Nerve(object):
 
     @property
     def config(self):
+        '''
+        Returns a copy of this object's configuration
+
+        Returns:
+            dict
+        '''
         return deepcopy(self._config)
 
     def create(self, name):
         '''
-        create nerve project
+        Creates a nerve project on Github and in the project-root folder
+
+        Created items include:
+            Github repo
+            dev branch
+            nerve project structure
+            .lfsconfig
+            .gitattributes
+            .gitignore
+
+        Args:
+            name (str): name of project
+
+        Returns:
+            bool
         '''
         # create repo
         project = os.path.join(self['project-root'], name)
@@ -112,7 +204,16 @@ class Nerve(object):
 
     def clone(self, name, branch='user-branch'):
         '''
-        clone nerve project
+        Clones a nerve project to local project-root directory
+
+        Ensures given branch is present in the repo
+
+        Args:
+            name (str): name of project
+            branch (str, optional): branch to clone from. Default: user's branch
+
+        Returns:
+            bool
         '''
         # TODO: catch repo already exists errors and repo doesn't exist errors
         project, branch = self._get_project_and_branch(name, branch)
@@ -130,7 +231,16 @@ class Nerve(object):
 
     def request(self, name, branch='user-branch', include=[], exclude=[]):
         '''
-        request nerve deliverables
+        Request deliverables from the dev branch of given project
+
+        Args:
+            name (str): name of project
+            branch (str, optional): branch to pull deliverables into. Default: user's branch
+            include (list, optional): list of regular expressions user to include specific deliverables
+            exclude (list, optional): list of regular expressions user to exclude specific deliverables
+
+        Returns:
+            bool
         '''
         project, branch = self._get_project_and_branch(name, branch)
 
@@ -157,7 +267,22 @@ class Nerve(object):
 
     def publish(self, name, branch='user-branch', include=[], exclude=[], verbosity=0):
         '''
-        publish nerve assets
+        Attempt to publish deliverables from user's branch to given project's dev branch on Github
+
+        All assets will be published to the user's branch.
+        If all deliverables are valid then all data and metadata will be commited
+        to the user's branch and merged into the dev branch.
+        If not only invalid metadata will be commited to the user's branch
+
+        Args:
+            name (str): name of project
+            branch (str, optional): branch to pull deliverables from. Default: user's branch
+            include (list, optional): list of regular expressions user to include specific assets
+            exclude (list, optional): list of regular expressions user to exclude specific assets
+            verbosity (int, optional): level of events to print to stdout. Default: 0
+
+        Returns:
+            bool
         '''
         project, branch = self._get_project_and_branch(name, branch)
         wrn = False
@@ -258,7 +383,15 @@ class Nerve(object):
 
     def delete(self, name, from_server, from_local):
         '''
-        deletes nerve project
+        Deletes a nerve project
+
+        Args:
+            name (str): name of project
+            from_server (bool): delete Github project
+            from_local (bool): delete local project directory
+
+        Returns:
+            bool
         '''
         project = os.path.join(self['project-root'], name)
 
@@ -270,6 +403,8 @@ class Nerve(object):
                 shutil.rmtree(project)
             else:
                 warn(project + ' is not a project directory.  Local deletion aborted.')
+                return False
+        return True
 # ------------------------------------------------------------------------------
 
 def main():
