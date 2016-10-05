@@ -6,12 +6,49 @@ from git import Repo, GitCommandError
 from nerve.core.utils import status
 # ------------------------------------------------------------------------------
 
+'''
+The model module contains the Git class, nerve's internal API for accessing git
+
+Platforrm:
+    Unix
+
+Author:
+    Alex Braun <alexander.g.braun@gmail.com> <http://www.alexgbraun.com>
+'''
+
 class Git(object):
+    '''
+    Class for interacting with a single local git repository
+
+    API: create_gitignore, add, branch, checkout, push, pull, commit, reset, status
+    '''
     def __init__(self, working_dir, url=None, branch=None):
+        '''
+        Client constructor creates and acts as a single local git repository
+
+        Args:
+            working_dir (str): fullpath of git repository
+            url (str, optional): url to clone Github repository from. Default: None
+            branch (str, optional): branch to clone from or checkout. Default: None
+
+        Returns:
+            Git: local git repository
+        '''
         self._repo = self._clone(working_dir, url=url, branch=branch)
         self._working_dir = working_dir
 
-    def _clone(self, working_dir, branch=None, url=None):
+    def _clone(self, working_dir, url=None, branch=None):
+        '''
+        Convenience method for cloning a GitHub repository
+
+        Args:
+            working_dir (str): fullpath of git repository location
+            url (str, optional): url to clone Github repository from. Default: None
+            branch (str, optional): branch to clone from or checkout. Default: None
+
+        Returns:
+            git.Repo: local repository
+        '''
         os.chdir(os.path.split(working_dir)[0])
         if url:
             try:
@@ -32,19 +69,47 @@ class Git(object):
         return repo
     # --------------------------------------------------------------------------
 
-    def create_gitignore(self, patterns=[]):
+    def create_gitignore(self, patterns):
+        '''
+        Create a .gitignore file in the root path of the local git repository
+
+        Args:
+            patterns (list): gitignore patterns (glob style)
+
+        Returns:
+            bool: existence of .gitignore file
+        '''
         path = os.path.join(self._working_dir, '.gitignore')
         with open(path, 'w') as f:
             f.write('\n'.join(patterns))
         return os.path.exists(path)
 
     def add(self, items=[], all=False):
+        '''
+        Stage items for git commit
+
+        Args:
+            items (list, optional): filepaths to be added
+            all (bool, optional): commit all items
+
+        Returns:
+            None
+        '''
         if all:
             self._repo.git.add('--all')
         else:
             self._repo.git.add(items)
 
     def branch(self, name):
+        '''
+        Checkout a given branch, create it if necessary
+
+        Args:
+            name (str): branch name
+
+        Returns:
+            None
+        '''
         for branch in self._repo.branches:
             if name == branch.name:
                 break
@@ -52,26 +117,73 @@ class Git(object):
             branch = self._repo.create_head(name)
         branch.checkout()
 
-    def checkout(self, name):
-        branch = list(filter(lambda x: x.name == name, self._repo.branches))[0]
-        branch.checkout()
+    def push(self, branch, remote='origin'):
+        '''
+        Push comit to given branch
 
-    def push(self, branch, origin='origin'):
+        Args:
+            branch (str): branch name
+            remote (str, optional): remote repository. Default: origin
+
+        Returns:
+            None
+        '''
         self._repo.remote(origin).push(branch)
 
-    def pull(self, origin='origin'):
+    def pull(self, remote='origin'):
+        '''
+        Pull upstream commits from remote branch
+
+        Args:
+            remote (str, optional): remote repository. Default: origin
+
+        Returns:
+            None
+        '''
         self._repo.remote(origin).pull()
 
     def commit(self, message):
+        '''
+        Commit staged files
+
+        Args:
+            message (str): commit message
+
+        Returns:
+            None
+        '''
         self._repo.index.commit(message)
 
     def reset(self, exclude=[]):
+        '''
+        Remove files staged for commit excluding given fullpaths
+
+        Args:
+            exclude (list, optional): fullpaths of files to be reatined in commit
+
+        Returns:
+            None
+        '''
         if len(exclude) > 0:
             self._repo.index.reset('HEAD', paths=exclude)
         else:
             self._repo.index.reset('HEAD')
 
     def status(self, include=[], exclude=[], states=[], staged=None, warnings=False):
+        '''
+        Get the status of the repositories files
+
+        Args:
+            include (list, optional): list of regex patterns used to include files. Default: []
+            exclude (list, optional): list of regex patterns used to exclude files. Default: []
+            states (list, optional): file states to be shown in output. Default: all states
+                options include: added, copied, deleted, modified, renamed, updated, untracked
+            staged (bool, optional): include only files which are staged or unstaged. Default: both
+            warnings (bool, optional): display warnings
+
+        Returns:
+            list: list of dicts, each one representing a file
+        '''
         return status(
             'git status --porcelain',
             include=include,

@@ -5,6 +5,19 @@ from subprocess import Popen, PIPE, STDOUT, SubprocessError
 # ------------------------------------------------------------------------------
 
 def execute_subprocess(command, error_re='Error:.*'):
+    '''
+    Executes a given command as a subprocess and scrubs the output for errors
+
+    Args:
+        command (str): shell command to be run
+        error_re (str, optional): regex used for capturing errors
+
+    Returns:
+        list: lines of output
+
+    Raises:
+        SubprocessError: stdout error as message
+    '''
     output = Popen(command, shell=True, stdout=PIPE, stderr=PIPE)
     stderr = output.stderr.read().decode('utf-8')
     output = output.stdout.readlines()
@@ -21,6 +34,21 @@ def execute_subprocess(command, error_re='Error:.*'):
     return output
 
 def status(self, command, include=[], exclude=[], states=[], staged=None, warnings=False):
+    '''
+    Convenience function for running a git or git lfs status command and returning nice output
+
+    Args:
+        command (str): command to be run. [git or git lfs] status --porcelain
+        include (list, optional): list of regex patterns used to include files. Default: []
+        exclude (list, optional): list of regex patterns used to exclude files. Default: []
+        states (list, optional): file states to be shown in output. Default: all states
+            options include: added, copied, deleted, modified, renamed, updated, untracked
+        staged (bool, optional): include only files which are staged or unstaged. Default: both
+        warnings (bool, optional): display warnings
+
+    Returns:
+        list: list of dicts, each one representing a file
+    '''
     status = execute_subprocess(command)
     lut = {
         'A': 'added',

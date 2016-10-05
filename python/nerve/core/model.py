@@ -74,8 +74,8 @@ class Nerve(object):
         Args:
             project (str): fullpath to project
             name (str): name of project
-            project_id (str): github repo id
-            url (str): clone url for repo
+            project_id (str): github repository id
+            url (str): clone url for repository
             version (int, optional): the version of this projects configuration. Default: 1
 
         Returns:
@@ -101,7 +101,7 @@ class Nerve(object):
             name (str): name of project
 
         Returns:
-            Client: Repo on Github
+            Client: Github repository
         '''
         config = self.config
         config['name'] = name
@@ -130,7 +130,7 @@ class Nerve(object):
         Returns a copy of this object's configuration
 
         Returns:
-            dict
+            dict: internal configuration
         '''
         return deepcopy(self._config)
 
@@ -139,7 +139,7 @@ class Nerve(object):
         Creates a nerve project on Github and in the project-root folder
 
         Created items include:
-            Github repo
+            Github repository
             dev branch
             nerve project structure
             .lfsconfig
@@ -206,7 +206,7 @@ class Nerve(object):
         '''
         Clones a nerve project to local project-root directory
 
-        Ensures given branch is present in the repo
+        Ensures given branch is present in the repository
 
         Args:
             name (str): name of project
