@@ -91,7 +91,7 @@ class Nerve(object):
 
         # version implicitly
         with open(os.path.join(project, name + '_meta.yml'), 'w') as f:
-            f.write(yaml.dump(config))
+            yaml.dump(config, f)
 
     def _get_client(self, name):
         '''
@@ -101,7 +101,7 @@ class Nerve(object):
             name (str): name of project
 
         Returns:
-            Client
+            Client: Repo on Github
         '''
         config = self.config
         config['name'] = name
@@ -116,7 +116,7 @@ class Nerve(object):
             branch (str, optional): name of branch. Default: user-branch
 
         Returns:
-            str, str
+            tuple(str, str): project name and branch name
         '''
         project = os.path.join(self['project-root'], name)
         if branch == 'user-branch':
@@ -150,7 +150,7 @@ class Nerve(object):
             name (str): name of project
 
         Returns:
-            bool
+            bool: success status
         '''
         # create repo
         project = os.path.join(self['project-root'], name)
@@ -213,7 +213,7 @@ class Nerve(object):
             branch (str, optional): branch to clone from. Default: user's branch
 
         Returns:
-            bool
+            bool: success status
         '''
         # TODO: catch repo already exists errors and repo doesn't exist errors
         project, branch = self._get_project_and_branch(name, branch)
@@ -240,7 +240,7 @@ class Nerve(object):
             exclude (list, optional): list of regular expressions user to exclude specific deliverables
 
         Returns:
-            bool
+            bool: success status
         '''
         project, branch = self._get_project_and_branch(name, branch)
 
@@ -282,7 +282,7 @@ class Nerve(object):
             verbosity (int, optional): level of events to print to stdout. Default: 0
 
         Returns:
-            bool
+            bool: success status
         '''
         project, branch = self._get_project_and_branch(name, branch)
         wrn = False
@@ -391,7 +391,7 @@ class Nerve(object):
             from_local (bool): delete local project directory
 
         Returns:
-            bool
+            bool: success status
         '''
         project = os.path.join(self['project-root'], name)
 
