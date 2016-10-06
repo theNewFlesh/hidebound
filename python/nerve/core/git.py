@@ -128,7 +128,7 @@ class Git(object):
         Returns:
             None
         '''
-        self._repo.remote(origin).push(branch)
+        self._repo.remote(remote).push(branch)
 
     def pull(self, remote='origin'):
         '''
@@ -140,7 +140,7 @@ class Git(object):
         Returns:
             None
         '''
-        self._repo.remote(origin).pull()
+        self._repo.remote(remote).pull()
 
     def commit(self, message):
         '''
