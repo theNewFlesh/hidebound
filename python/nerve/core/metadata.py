@@ -4,7 +4,7 @@ import re
 import yaml
 from itertools import *
 from warnings import warn
-from nerve.spec.lut import LUT
+from nerve.spec import specifications as specs
 # ------------------------------------------------------------------------------
 
 class Metadata(object):
@@ -24,9 +24,8 @@ class Metadata(object):
         root, name = os.path.split(fullpath)
         root, spec = os.path.split(root)
         data = {}
-        for func in LUT[spec]:
-            key, val = func(fullpath)
-            data[key] = val
+        spec = specs.getattr(spec)
+
         return data
 
     @property

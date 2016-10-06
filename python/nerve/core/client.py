@@ -103,7 +103,7 @@ class Client(object):
     #     if self.has_branch(name, wait=True):
     #         return True
 
-    def has_branch(self, name, wait=False):
+    def has_branch(self, name, wait=True):
         '''
         Checks whether Github repository has a given branch
 

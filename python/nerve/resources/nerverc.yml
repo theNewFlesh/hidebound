@@ -2,7 +2,7 @@
 username: theNewFlesh
 user-branch: alex
 organization: nerve-test-organization
-project-root: /Volumes/data/nerve-test-projects
+project-root: /private/tmp
 token: e17afcc8c42fe24536c14700c4931f0e7f252bb1
 url-type: ssh
 private: true
