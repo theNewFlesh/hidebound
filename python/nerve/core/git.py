@@ -130,7 +130,7 @@ class Git(object):
         '''
         self._repo.remote(remote).push(branch)
 
-    def pull(self, remote='origin'):
+    def pull(self, src, dest, remote='origin'):
         '''
         Pull upstream commits from remote branch
 
@@ -140,7 +140,15 @@ class Git(object):
         Returns:
             None
         '''
-        self._repo.remote(remote).pull()
+        src = self.references([src], reftypes=['remote'])
+        src = list(src)[0]
+        src = src['branch']
+
+        dest = self.references([dest], reftypes=['local'])
+        dest = list(dest)[0]
+        dest = dest['branch']
+
+        self._repo.remote(remote).pull(src + ':' + dest)
 
     def commit(self, message):
         '''
@@ -168,6 +176,34 @@ class Git(object):
             self._repo.index.reset('HEAD', paths=exclude)
         else:
             self._repo.index.reset('HEAD')
+
+    def references(self, branches=[], reftypes=['local', 'remote']):
+        for ref in self._repo.references:
+            output = dict(
+                name=ref.name,
+                fullpath=ref.abspath,
+                path=ref.path,
+                branch=os.path.split(ref.name)[-1],
+                commit=ref.object.hexsha,
+                remote=ref.is_remote()
+            )
+            if output['branch'] == 'HEAD':
+                output['branch'] = ref.repo.active_branch.name
+            # ------------------------------------------------------------------
+
+            flag = True
+            if len(branches) > 0:
+                if output['branch'] not in branches:
+                    flag = False
+            if 'local' not in reftypes:
+                if not output['remote']:
+                    flag = False
+            if 'remote' not in reftypes:
+                if output['remote']:
+                    flag = False
+
+            if flag:
+                yield output
 
     def status(self, include=[], exclude=[], states=[], staged=None, warnings=False):
         '''

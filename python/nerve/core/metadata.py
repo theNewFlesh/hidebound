@@ -4,18 +4,33 @@ import re
 import yaml
 from itertools import *
 from warnings import warn
-from nerve.spec import specifications as specs
+from nerve.spec import specifications
+from nerve.core.errors import SpecificationError
 # ------------------------------------------------------------------------------
 
 class Metadata(object):
-    def __init__(self, fullpath):
-        if not os.path.exists(fullpath):
-            raise OSError('No such file or directory: ' + fullpath)
-        if ext in ['yml', 'yaml']:
-            with open(fullpath, 'r') as f:
-                self._data = yaml.load(f)
+    def __init__(self, data, spec):
+        if isinstance(data, dict):
+            pass
+        elif isinstance(data, str):
+            if not os.path.exists(data):
+                raise OSError('No such file or directory: ' + data)
+            if ext in ['yml', 'yaml']:
+                with open(data, 'r') as f:
+                    data = yaml.load(f)
+            else:
+                data = self.generate_metadata(data)
         else:
-            self._data = self.generate_metadata(fullpath)
+            raise TypeError('type: ' + type(data) + ' not supported')
+
+        spec = self.get_spec(spec)
+        self._data = spec(data)
+
+    def get_spec(self, name):
+        if hasattr(specifications, name.capitalize()):
+            return getattr(specifications, name)
+        else:
+            raise SpecificationError(name + ' specification not found in nerve.spec.specifications')
 
     def __getitem__(self, key):
         return self._data[key]
@@ -24,7 +39,7 @@ class Metadata(object):
         root, name = os.path.split(fullpath)
         root, spec = os.path.split(root)
         data = {}
-        spec = specs.getattr(spec)
+        spec = specifications.getattr(spec)
 
         return data
 

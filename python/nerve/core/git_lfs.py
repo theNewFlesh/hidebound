@@ -142,9 +142,9 @@ class GitLFS(object):
             List: list of strings detailing stdout of command
         '''
         cmd = 'git lfs pull'
-        if include != []:
+        if len(include) > 0:
             cmd += ' -I ' + ','.join(include)
-        if exclude != []:
+        if len(exclude) > 0:
             cmd += ' -X ' + ','.join(exclude)
 
         return execute_subprocess(cmd)

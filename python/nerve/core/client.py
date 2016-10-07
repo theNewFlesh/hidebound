@@ -103,22 +103,17 @@ class Client(object):
     #     if self.has_branch(name, wait=True):
     #         return True
 
-    def has_branch(self, name, wait=True):
+    def has_branch(self, name):
         '''
         Checks whether Github repository has a given branch
 
         Args:
             name (str): branch name
-            wait (bool, optional): wait for a response
 
         Returns:
             bool: branch status
         '''
-        response = isinstance(self._repo.branch(name), Branch)
-        if wait:
-            while response is False:
-                response = isinstance(self._repo.branch(name), Branch)
-        return response
+        return isinstance(self._repo.branch(name), Branch)
 
     def set_default_branch(self, name):
         '''
@@ -160,19 +155,20 @@ class Client(object):
         url = team._build_url('repos', self['fullname'], base_url=team._api)
         return team._boolean(team._put(url, data=json.dumps(perm)), 204, 404)
 
-    def create_pull_request(self, title, base, head, body=None):
+    def create_pull_request(self, title, base, branch, body=None):
         '''
-        Creates a pull request to merge a head commit into a base branch on Github
+        Creates a pull request to merge a head commit of branch into a base branch on Github
 
         Args:
             title (str): title of pull request
             base (str): branch to merge head into
-            head (str): commit to be merged
+            branch (str): branch to be merged
             body (str): markdown formatted string to put in the comments
 
         Returns:
             int: pull request number
         '''
+        head = self._repo.branch(branch).commit.sha
         request = self._repo.create_pull(title, base, head, body=body)
         return request.number
 

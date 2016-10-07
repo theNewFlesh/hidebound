@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 import os
+import time
 from nerve.core.model import Nerve
 # ------------------------------------------------------------------------------
 
@@ -14,6 +15,7 @@ def test_whole_project_cycle():
     nerve.delete(name, True, wd)
     print('deleted')
     nerve.create(name)
+    time.sleep(6)
     print('created')
     nerve.clone(name)
     print('cloned')

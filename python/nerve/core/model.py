@@ -42,10 +42,8 @@ class Nerve(object):
         Returns:
             Nerve
         '''
-        if isinstance(config, str):
-            with open(config, 'r') as f:
-                config = yaml.load(f)
-        # TODO: validate config
+        config = Metadata(config, 'config001')
+        config.validate()
         self._config = config
 
     def __getitem__(self, key):
@@ -187,7 +185,7 @@ class Nerve(object):
             )
         )
         local.push('dev')
-        client.has_branch('dev', wait=True)
+        client.has_branch('dev')
         client.set_default_branch('dev')
 
         # cleanup
@@ -245,22 +243,22 @@ class Nerve(object):
         project, branch = self._get_project_and_branch(name, branch)
 
         # TODO: ensure pulls only come from dev branch
-        if include == []:
+        if len(include) == 0:
             include = self['request-include-patterns']
-        if exclude == []:
+        if len(exclude) == 0:
             exclude = self['request-exclude-patterns']
 
         client = self._get_client(name)
         title = '{user} attempts to request deliverables from dev'
         title = title.format(user=self['user-branch'])
         # body = fancy markdown detailing request?
-        num = client.create_pull_request(title, branch, 'dev')
+        # num = client.create_pull_request(title, branch, 'dev')
         # additional dev to user-branch logic here if needed
         # if used/implemented propely merge-conflict logic will not be necessary
         # here
-        client.merge_pull_request(num, 'Request authorized')
+        # client.merge_pull_request(num, 'Request authorized')
 
-        Git(project, branch=branch).pull()
+        Git(project, branch=branch).pull('dev', branch)
         GitLFS(project).pull(include, exclude)
 
         return True
@@ -288,9 +286,9 @@ class Nerve(object):
         wrn = False
         if verbosity > 0:
             wrn = True
-        if include == []:
+        if len(include) == 0:
             include = self['publish-include-patterns']
-        if exclude == []:
+        if len(exclude) == 0:
             exclude = self['publish-exclude-patterns']
         # ----------------------------------------------------------------------
 
@@ -301,15 +299,15 @@ class Nerve(object):
         # TODO: add branch checking logic to skip the following if not needed?
 
         client = self._get_client(name)
-        title = 'Ensuring {branch} is up to date with dev'.format(branch=branch)
+        # title = 'Ensuring {branch} is up to date with dev'.format(branch=branch)
         # body = fancy markdown detailing publish?
-        num = client.create_pull_request(title, 'dev', branch)
+        # num = client.create_pull_request(title, 'dev', branch)
         # additional user-branch to dev logic here if needed
         # if used/implemented propely merge-conflict logic will not be necessary
         # here
-        client.merge_pull_request(num, 'Update complete')
+        # client.merge_pull_request(num, 'Update complete')
         local = Git(project)
-        local.pull()
+        local.pull('dev', branch)
         # ----------------------------------------------------------------------
 
         # GET DATA
