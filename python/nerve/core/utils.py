@@ -1,7 +1,46 @@
 #! /usr/bin/env python
+import os
 import re
 from warnings import warn
 from subprocess import Popen, PIPE, STDOUT, SubprocessError
+# ------------------------------------------------------------------------------
+
+def get_asset_name_traits(fullpath):
+    ext = None
+    name = os.path.split(fullpath)[-1]
+
+    # skip hidden files
+    if name[0] == '.':
+        return {}
+
+    if os.path.isfile(fullpath):
+        name, ext = os.path.splitext(name)
+    traits = name.split('_')
+
+    output = dict(
+        asset_name=name,
+        project_name=traits[0],
+        specification=traits[1],
+        descriptor=traits[2],
+        version=traits[3],
+    )
+
+    if ext:
+        output['extension'] = ext
+
+    if len(traits) > 4:
+        traits = re.split(name, 'v\d\d\d')[-1].split('_')
+        for trait in traits:
+
+            if re.search('\d\d\d-\d\d\d-\d\d\d'):
+                x,y,z = [int(x) for x in trait.split('-')]
+                output['coordinates'] = dict(x=x, y=y, z=z)
+            elif re.search('\d\d\d\d', trait):
+                output['frame'] = int(trait)
+            else:
+                output['render_pass'] = trait
+
+    return output
 # ------------------------------------------------------------------------------
 
 def execute_subprocess(command, error_re='Error:.*'):
@@ -124,7 +163,11 @@ def main():
     help(__main__)
 # ------------------------------------------------------------------------------
 
-__all__ = ['execute_subprocess', 'status']
+__all__ = [
+    'get_asset_name_traits',
+    'execute_subprocess',
+    'status'
+]
 
 if __name__ == '__main__':
     main()

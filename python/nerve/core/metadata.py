@@ -6,6 +6,7 @@ from itertools import *
 from warnings import warn
 from nerve.spec import specifications
 from nerve.core.errors import SpecificationError
+from nerve.core.utils import get_asset_name_traits
 # ------------------------------------------------------------------------------
 
 class Metadata(object):
@@ -36,10 +37,10 @@ class Metadata(object):
             raise TypeError('type: ' + type(item) + ' not supported')
 
         spec = self.get_spec(spec)
-        self._data = spec(item)
+        self.__data = spec(item)
 
     def __getitem__(self, key):
-        return self._data[key]
+        return self.data[key]
     # --------------------------------------------------------------------------
 
     def get_spec(self, name):
@@ -53,25 +54,25 @@ class Metadata(object):
         finds traits for file(s) and overwrites internal data with them
         '''
         traits = {}
-        for key in self._data.keys():
+        for key in self.__data.keys():
             trait = 'get_' + key
             if hasattr(traits, trait):
                 trait = getattr(traits, trait)
                 trait[key] = trait(self._datapath)
 
-        self._data.import_data(traits)
+        self.__data.import_data(traits)
 
     @property
     def data(self):
-        output = self._data.to_primitive()
+        output = self.__data.to_primitive()
         return {re.sub('_', '-', k): v for k,v in output.items()}
 
     def validate(self):
-        return assert(self._data.validate() == None)
+        return self.__data.validate() == None
 
-    def write(self):
-        with open(self._metapath, 'w') as f:
-            yaml.dump(self._data.to_primitive(), f)
+    def write(self, fullpath=self._metapath):
+        with open(fullpath, 'w') as f:
+            yaml.dump(self.__data.to_primitive(), f)
 # ------------------------------------------------------------------------------
 
 def main():

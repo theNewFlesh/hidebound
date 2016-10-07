@@ -8,6 +8,16 @@ from schematics.types.compound import ListType, DictType
 from schematics.exceptions import ValidationError
 # ------------------------------------------------------------------------------
 
+class AssetName(Model):
+    project_name  = StringType(required=True, validators=[is_project_name])
+    specification = StringType(required=True, validators=[is_specification])
+    descriptor    = StringType(required=True, default='desc')
+    version       = IntType(required=True, validators=[is_version])
+    render_pass   = StringType(validators=[is_render_pass])
+    frames        = ListType(BaseType, validators=[is_frames])
+    coordinates   = DictType(BaseType, validators=[is_coordinates])
+# ------------------------------------------------------------------------------
+
 class Specification(Model):
     def __init__(self, arg):
         arg['specification'] = self.__class__.__name__.lower()
@@ -57,11 +67,10 @@ class Deliverable(Specification):
     notes        = StringType(default='')
 
     version      = IntType(required=True, validators=[is_version])
-    version      = IntType(required=True, validators=[is_version])
     asset_name   = StringType(required=True, validators=[is_asset_name])
     asset_id     = StringType(required=True, validators=[is_asset_id])
     data         = ListType(BaseType, validators=[is_data])
-    descriptor   = StringType(default='')
+    descriptor   = StringType(required=True, default='desc')
     dependencies = ListType(BaseType, default=[])
 # ------------------------------------------------------------------------------
 
