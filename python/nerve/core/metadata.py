@@ -9,57 +9,69 @@ from nerve.core.errors import SpecificationError
 # ------------------------------------------------------------------------------
 
 class Metadata(object):
-    def __init__(self, data, spec):
-        if isinstance(data, dict):
-            pass
-        elif isinstance(data, str):
-            if not os.path.exists(data):
-                raise OSError('No such file or directory: ' + data)
+    def __init__(self, item):
+        spec = None
+        if isinstance(item, dict):
+            spec = item['specification']
+
+        elif isinstance(item, str):
+            if not os.path.exists(item):
+                raise OSError('No such file or directory: ' + item)
+
+            spec = os.path.split(item)[0]
+            spec = os.path.split(spec)[-1]
+
             if ext in ['yml', 'yaml']:
-                with open(data, 'r') as f:
-                    data = yaml.load(f)
+                self._metapath = item
+                with open(item, 'r') as f:
+                    item = yaml.load(f)
+
             else:
-                data = self.generate_metadata(data)
+                self._datapath = item
+                item = dict(
+                    specification=spec
+                )
+
         else:
-            raise TypeError('type: ' + type(data) + ' not supported')
+            raise TypeError('type: ' + type(item) + ' not supported')
 
         spec = self.get_spec(spec)
-        self._data = spec(data)
+        self._data = spec(item)
+
+    def __getitem__(self, key):
+        return self._data[key]
+    # --------------------------------------------------------------------------
 
     def get_spec(self, name):
         if hasattr(specifications, name.capitalize()):
             return getattr(specifications, name)
         else:
-            raise SpecificationError(name + ' specification not found in nerve.spec.specifications')
+            raise SpecificationError(name + ' specification not found in specifications module')
 
-    def __getitem__(self, key):
-        return self._data[key]
+    def get_traits(self):
+        '''
+        finds traits for file(s) and overwrites internal data with them
+        '''
+        traits = {}
+        for key in self._data.keys():
+            trait = 'get_' + key
+            if hasattr(traits, trait):
+                trait = getattr(traits, trait)
+                trait[key] = trait(self._datapath)
 
-    def generate_metadata(self, fullpath):
-        root, name = os.path.split(fullpath)
-        root, spec = os.path.split(root)
-        data = {}
-        spec = specifications.getattr(spec)
-
-        return data
+        self._data.import_data(traits)
 
     @property
     def data(self):
-        return self._data
+        output = self._data.to_primitive()
+        return {re.sub('_', '-', k): v for k,v in output.items()}
 
-    @property
-    def deliverable(self):
-        return self._data['deliverable']
-
-    @property
-    def valid(self):
-        output = False
-        # use schematics to verify or falsify
-        return output
+    def validate(self):
+        return assert(self._data.validate() == None)
 
     def write(self):
         with open(self._metapath, 'w') as f:
-            yaml.dump(self._data, f)
+            yaml.dump(self._data.to_primitive(), f)
 # ------------------------------------------------------------------------------
 
 def main():

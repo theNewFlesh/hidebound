@@ -15,6 +15,27 @@ class Specification(Model):
         arg = {re.sub('-', '_', k): v for k,v in arg.items()}
         super().__init__(arg)
 
+    specification = StringType(required=True)
+
+class Config(Specification):
+    username                 = StringType(required=True, validators=[is_username])
+    user_branch              = StringType(required=True, validators=[is_user_branch])
+    organization             = StringType(required=True, validators=[is_organization])
+    project_root             = StringType(required=True, validators=[is_project_root])
+    token                    = StringType(required=True, validators=[is_token])
+    url_type                 = StringType(required=True, validators=[is_url_type])
+    private                  = BooleanType(required=True, validators=[is_private])
+    specification            = StringType(required=True, validators=[is_specification])
+    request_include_patterns = ListType(BaseType, default=[], validators=[is_request_include_patterns])
+    request_exclude_patterns = ListType(BaseType, default=[], validators=[is_request_exclude_patterns])
+    publish_include_patterns = ListType(BaseType, default=[], validators=[is_publish_include_patterns])
+    publish_exclude_patterns = ListType(BaseType, default=[], validators=[is_publish_exclude_patterns])
+    extensions               = ListType(BaseType, required=True, validators=[is_extensions])
+    assets                   = ListType(BaseType, default=[], validators=[is_assets])
+    deliverables             = ListType(BaseType, required=True, validators=[is_deliverables])
+    teams                    = DictType(BaseType, required=True, validators=[is_teams])
+    gitignore                = ListType(BaseType, required=True, validators=[is_gitignore])
+
 class Project(Specification):
     project_name = StringType(required=True, validators=[is_project_name])
     project_id   = StringType(required=True, validators=[is_project_id])
@@ -42,25 +63,6 @@ class Deliverable(Specification):
     data         = ListType(BaseType, validators=[is_data])
     descriptor   = StringType(default='')
     dependencies = ListType(BaseType, default=[])
-
-class Config(Specification):
-    username                 = StringType(required=True, validators=[is_username])
-    user_branch              = StringType(required=True, validators=[is_user_branch])
-    organization             = StringType(required=True, validators=[is_organization])
-    project_root             = StringType(required=True, validators=[is_project_root])
-    token                    = StringType(required=True, validators=[is_token])
-    url_type                 = StringType(required=True, validators=[is_url_type])
-    private                  = BooleanType(required=True, validators=[is_private])
-    specification            = StringType(required=True, validators=[is_specification])
-    request_include_patterns = ListType(BaseType, default=[], validators=[is_request_include_patterns])
-    request_exclude_patterns = ListType(BaseType, default=[], validators=[is_request_exclude_patterns])
-    publish_include_patterns = ListType(BaseType, default=[], validators=[is_publish_include_patterns])
-    publish_exclude_patterns = ListType(BaseType, default=[], validators=[is_publish_exclude_patterns])
-    extensions               = ListType(BaseType, required=True, validators=[is_extensions])
-    assets                   = ListType(BaseType, default=[], validators=[is_assets])
-    deliverables             = ListType(BaseType, required=True, validators=[is_deliverables])
-    teams                    = DictType(BaseType, required=True, validators=[is_teams])
-    gitignore                = ListType(BaseType, required=True, validators=[is_gitignore])
 # ------------------------------------------------------------------------------
 
 class Config001(Config):
