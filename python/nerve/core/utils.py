@@ -4,8 +4,23 @@ import re
 from warnings import warn
 from subprocess import Popen, PIPE, STDOUT, SubprocessError
 # ------------------------------------------------------------------------------
+'''
+The utils module contains functions generally usefull to multiple components
+within the nerve framework
+'''
 
 def get_asset_name_traits(fullpath):
+    '''
+    Given an asset directory or file return a dict of traits derived from the name
+
+    Args:
+        fullpath (str): full path to file or directory
+
+    Returns:
+        dict: traits
+              (asset_name, project_name, specification, descriptor, version,
+               extension, coordinates, frame, render_pass, metadata)
+    '''
     ext = None
     name = os.path.split(fullpath)[-1]
 
@@ -31,12 +46,16 @@ def get_asset_name_traits(fullpath):
     if len(traits) > 4:
         traits = re.split(name, 'v\d\d\d')[-1].split('_')
         for trait in traits:
-
             if re.search('\d\d\d-\d\d\d-\d\d\d'):
                 x,y,z = [int(x) for x in trait.split('-')]
                 output['coordinates'] = dict(x=x, y=y, z=z)
+
             elif re.search('\d\d\d\d', trait):
                 output['frame'] = int(trait)
+
+            elif trait == 'meta':
+                output['metadata'] = True
+
             else:
                 output['render_pass'] = trait
 

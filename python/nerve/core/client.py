@@ -29,8 +29,8 @@ class Client(object):
     Attributes:
         config (dict): a dictionary representing Nerve's internal configuration
 
-    API: has_branch, set_default_branch, add_team
-         create_pull_request, merge_pull_request, delete
+    API: has_branch, set_default_branch, add_team, delete
+         create_pull_request, merge_pull_request
     '''
     def __init__(self, config):
         '''
@@ -188,6 +188,9 @@ class Client(object):
     def delete(self):
         '''
         Deletes repository off of Github
+
+        Args:
+            None
 
         Returns:
             bool: success status

@@ -1,6 +1,9 @@
 #! /usr/bin/env python
 # ------------------------------------------------------------------------------
 
+def is_metadata(item):
+    assert(item == 'metadata')
+
 def is_asset_id(item):
     pass
 

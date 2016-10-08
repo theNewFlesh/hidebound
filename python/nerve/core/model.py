@@ -30,7 +30,7 @@ class Nerve(object):
         config (dict): a dictionary representing Nerve's internal configuration
 
     API:
-        create, clone, request, publish and delete
+        create, clone, request, publish, delete and __getitem__
     '''
     def __init__(self, config):
         '''

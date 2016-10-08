@@ -1,6 +1,10 @@
 #! /usr/bin/env python
-
 # ------------------------------------------------------------------------------
+
+'''
+The errors module contains custom nerve errors
+'''
+
 class SpecificationError(Exception):
     pass
 # ------------------------------------------------------------------------------

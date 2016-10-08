@@ -16,6 +16,9 @@ class AssetName(Model):
     render_pass   = StringType(validators=[is_render_pass])
     frames        = ListType(BaseType, validators=[is_frames])
     coordinates   = DictType(BaseType, validators=[is_coordinates])
+
+class MetaName(AssetName):
+    metadata = StringType(required=True, validators[is_metadata])
 # ------------------------------------------------------------------------------
 
 class Specification(Model):
