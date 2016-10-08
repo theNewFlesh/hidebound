@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 import re
 import os
-from collections import DefaultDict
+from collections import defaultdict
 from nerve.core.utils import get_asset_name_traits
 # ------------------------------------------------------------------------------
 
@@ -28,7 +28,7 @@ def get_extension(fullpath):
 
 def get_coordinates(fullpath):
     if os.path.isdir(fullpath):
-        output = DefaultDict(lambda: [])
+        output = defaultdict(lambda: [])
         for file_ in os.listdir(fullpath):
             temp = get_asset_name_traits(fullpath)
             if temp.has_key('coordinates'):

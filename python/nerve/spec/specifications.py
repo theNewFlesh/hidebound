@@ -18,7 +18,7 @@ class AssetName(Model):
     coordinates   = DictType(BaseType, validators=[is_coordinates])
 
 class MetaName(AssetName):
-    metadata = StringType(required=True, validators[is_metadata])
+    metadata = StringType(required=True, validators=[is_metadata])
 # ------------------------------------------------------------------------------
 
 class Specification(Model):

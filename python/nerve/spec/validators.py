@@ -1,8 +1,11 @@
 #! /usr/bin/env python
+from schematics.exceptions import ValidationError
 # ------------------------------------------------------------------------------
 
 def is_metadata(item):
-    assert(item == 'metadata')
+    if item != 'metadata':
+        raise ValidationError('_meta not found in file name')
+    return True
 
 def is_asset_id(item):
     pass
@@ -74,6 +77,15 @@ def is_username(item):
     pass
 
 def is_version(item):
+    pass
+
+def is_render_pass(item):
+    pass
+
+def is_frames(item):
+    pass
+
+def is_coordinates(item):
     pass
 # ------------------------------------------------------------------------------
 

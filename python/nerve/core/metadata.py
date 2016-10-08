@@ -130,7 +130,7 @@ class Metadata(object):
         '''
         return self.__data.validate() == None
 
-    def write(self, fullpath=self._metapath):
+    def write(self, fullpath=None):
         '''
         Writes internal data to file with correct name in correct location
 
@@ -140,6 +140,8 @@ class Metadata(object):
         Returns:
             bool: success status
         '''
+        if not fullpath:
+            fullpath = self._metapath
         meta = get_asset_name_traits(fullpath)
         specifications.MetaName(meta).validate()
 
