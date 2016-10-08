@@ -42,9 +42,9 @@ class Nerve(object):
         Returns:
             Nerve
         '''
-        config = Metadata(config, 'config001')
+        config = Metadata(config)
         config.validate()
-        self._config = config
+        self._config = config.data
 
     def __getitem__(self, key):
         return self._config[key]

@@ -8,85 +8,85 @@ def is_metadata(item):
     raise ValidationError('_meta not found in ' + str(item))
 
 def is_asset_id(item):
-    pass
+    return True
 
 def is_asset_name(item):
-    pass
+    return True
 
 def is_assets(item):
-    pass
+    return True
 
 def is_data(item):
-    pass
+    return True
 
 def is_deliverables(item):
-    pass
+    return True
 
 def is_extensions(item):
-    pass
+    return True
 
 def is_gitignore(item):
-    pass
+    return True
 
 def is_organization(item):
-    pass
+    return True
 
 def is_private(item):
-    pass
+    return True
 
 def is_project_id(item):
-    pass
+    return True
 
 def is_project_name(item):
-    pass
+    return True
 
 def is_project_root(item):
-    pass
+    return True
 
 def is_publish_exclude_patterns(item):
-    pass
+    return True
 
 def is_publish_include_patterns(item):
-    pass
+    return True
 
 def is_request_exclude_patterns(item):
-    pass
+    return True
 
 def is_request_include_patterns(item):
-    pass
+    return True
 
 def is_specification(item):
-    pass
+    return True
 
 def is_teams(item):
-    pass
+    return True
 
 def is_token(item):
-    pass
+    return True
 
 def is_url(item):
-    pass
+    return True
 
 def is_url_type(item):
-    pass
+    return True
 
 def is_user_branch(item):
-    pass
+    return True
 
 def is_username(item):
-    pass
+    return True
 
 def is_version(item):
-    pass
+    return True
 
 def is_render_pass(item):
-    pass
+    return True
 
 def is_frames(item):
-    pass
+    return True
 
 def is_coordinates(item):
-    pass
+    return True
 # ------------------------------------------------------------------------------
 
 def main():

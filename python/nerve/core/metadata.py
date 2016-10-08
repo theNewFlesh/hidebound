@@ -43,8 +43,14 @@ class Metadata(object):
             if not os.path.exists(item):
                 raise OSError('No such file or directory: ' + item)
 
-            spec = os.path.split(item)[0]
-            spec = os.path.split(spec)[-1]
+            root, name = os.path.split(item)
+            root, spec = os.path.split(root)
+            name, ext = os.path.splitext(name)
+
+
+            if re.search('nerverc', name):
+                spec = 'config001'
+                ext = 'yml'
 
             if ext in ['yml', 'yaml']:
                 self._metapath = item
@@ -77,10 +83,11 @@ class Metadata(object):
         Returns:
             Specification: specification of class "name"
         '''
-        if hasattr(specifications, name.capitalize()):
+        name = name.capitalize()
+        if hasattr(specifications, name):
             return getattr(specifications, name)
         else:
-            raise SpecificationError(name + ' specification not found in specifications module')
+            raise SpecificationError('"' + name + '" specification not found in specifications module')
 
     def get_traits(self):
         '''
