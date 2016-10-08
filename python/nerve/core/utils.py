@@ -54,7 +54,7 @@ def get_asset_name_traits(fullpath):
                 output['frame'] = int(trait)
 
             elif trait == 'meta':
-                output['metadata'] = True
+                output['metadata'] = '_meta'
 
             else:
                 output['render_pass'] = trait

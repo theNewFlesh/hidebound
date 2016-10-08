@@ -3,9 +3,9 @@ from schematics.exceptions import ValidationError
 # ------------------------------------------------------------------------------
 
 def is_metadata(item):
-    if item != 'metadata':
-        raise ValidationError('_meta not found in file name')
-    return True
+    if item == '_meta':
+        return True
+    raise ValidationError('_meta not found in ' + str(item))
 
 def is_asset_id(item):
     pass
