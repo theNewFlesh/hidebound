@@ -8,7 +8,7 @@ from schematics.types.compound import ListType, DictType
 from schematics.exceptions import ValidationError
 # ------------------------------------------------------------------------------
 
-class DeliverableName(Model):
+class MetaName(Model):
     project_name  = StringType(required=True, validators=[is_project_name])
     specification = StringType(required=True, validators=[is_specification])
     descriptor    = StringType(required=True, validators=[])
@@ -16,9 +16,7 @@ class DeliverableName(Model):
     render_pass   = StringType(validators=[is_render_pass])
     frames        = ListType(BaseType, validators=[is_frame])
     coordinates   = DictType(BaseType, validators=[is_coordinate])
-
-class MetaName(DeliverableName):
-    metadata = StringType(required=True, validators=[is_metadata])
+    metadata      = StringType(required=True, validators=[is_metadata])
 # ------------------------------------------------------------------------------
 
 class Specification(Model):
