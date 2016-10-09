@@ -28,7 +28,7 @@ def get_asset_name_traits(fullpath):
     if name[0] == '.':
         return {}
 
-    if os.path.isfile(fullpath):
+    if re.search('\.[a-zA-Z0-9]+$', fullpath):
         name, ext = os.path.splitext(name)
     traits = name.split('_')
 
@@ -37,20 +37,19 @@ def get_asset_name_traits(fullpath):
         project_name=traits[0],
         specification=traits[1],
         descriptor=traits[2],
-        version=traits[3],
+        version=int(traits[3][1:]),
     )
 
     if ext:
-        output['extension'] = ext
+        output['extension'] = ext[1:]
 
     if len(traits) > 4:
-        traits = re.split(name, 'v\d\d\d')[-1].split('_')
-        for trait in traits:
-            if re.search('\d\d\d-\d\d\d-\d\d\d'):
+        for trait in traits[4:]:
+            if re.search('^\d\d\d-\d\d\d-\d\d\d$', trait):
                 x,y,z = [int(x) for x in trait.split('-')]
                 output['coordinates'] = dict(x=x, y=y, z=z)
 
-            elif re.search('\d\d\d\d', trait):
+            elif re.search('^\d\d\d\d$', trait):
                 output['frame'] = int(trait)
 
             elif trait == 'meta':
