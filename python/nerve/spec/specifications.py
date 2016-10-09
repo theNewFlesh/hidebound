@@ -8,16 +8,16 @@ from schematics.types.compound import ListType, DictType
 from schematics.exceptions import ValidationError
 # ------------------------------------------------------------------------------
 
-class AssetName(Model):
+class DeliverableName(Model):
     project_name  = StringType(required=True, validators=[is_project_name])
     specification = StringType(required=True, validators=[is_specification])
-    descriptor    = StringType(required=True, default='desc')
+    descriptor    = StringType(required=True, validators=[])
     version       = IntType(required=True, validators=[is_version])
     render_pass   = StringType(validators=[is_render_pass])
-    frames        = ListType(BaseType, validators=[is_frames])
-    coordinates   = DictType(BaseType, validators=[is_coordinates])
+    frames        = ListType(BaseType, validators=[is_frame])
+    coordinates   = DictType(BaseType, validators=[is_coordinate])
 
-class MetaName(AssetName):
+class MetaName(DeliverableName):
     metadata = StringType(required=True, validators=[is_metadata])
 # ------------------------------------------------------------------------------
 
@@ -39,15 +39,15 @@ class Config(Specification):
     url_type                 = StringType(required=True, validators=[is_url_type])
     private                  = BooleanType(required=True, validators=[is_private])
     specification            = StringType(required=True, validators=[is_specification])
-    request_include_patterns = ListType(BaseType, default=[], validators=[is_request_include_patterns])
-    request_exclude_patterns = ListType(BaseType, default=[], validators=[is_request_exclude_patterns])
-    publish_include_patterns = ListType(BaseType, default=[], validators=[is_publish_include_patterns])
-    publish_exclude_patterns = ListType(BaseType, default=[], validators=[is_publish_exclude_patterns])
-    extensions               = ListType(BaseType, required=True, validators=[is_extensions])
-    assets                   = ListType(BaseType, default=[], validators=[is_assets])
-    deliverables             = ListType(BaseType, required=True, validators=[is_deliverables])
-    teams                    = DictType(BaseType, required=True, validators=[is_teams])
-    gitignore                = ListType(BaseType, required=True, validators=[is_gitignore])
+    request_include_patterns = ListType(StringType, default=[], validators=[is_request_include_patterns])
+    request_exclude_patterns = ListType(StringType, default=[], validators=[is_request_exclude_patterns])
+    publish_include_patterns = ListType(StringType, default=[], validators=[is_publish_include_patterns])
+    publish_exclude_patterns = ListType(StringType, default=[], validators=[is_publish_exclude_patterns])
+    extensions               = ListType(StringType, required=True, validators=[is_extension])
+    assets                   = ListType(StringType, default=[], validators=[is_specification])
+    deliverables             = ListType(StringType, required=True, validators=[is_specification])
+    teams                    = DictType(StringType, required=True, validators=[is_teams])
+    gitignore                = ListType(StringType, required=True, validators=[])
 
 class Project(Specification):
     project_name = StringType(required=True, validators=[is_project_name])
@@ -70,11 +70,11 @@ class Deliverable(Specification):
     notes        = StringType(default='')
 
     version      = IntType(required=True, validators=[is_version])
-    asset_name   = StringType(required=True, validators=[is_asset_name])
+    asset_name   = StringType(required=True, validators=[])
     asset_id     = StringType(required=True, validators=[is_asset_id])
-    data         = ListType(BaseType, validators=[is_data])
-    descriptor   = StringType(required=True, default='desc')
-    dependencies = ListType(BaseType, default=[])
+    data         = ListType(StringType, validators=[is_file, is_path, is_exists])
+    descriptor   = StringType(required=True, validators=[is_descriptor])
+    dependencies = ListType(StringType, default=[])
 # ------------------------------------------------------------------------------
 
 class Config001(Config):
