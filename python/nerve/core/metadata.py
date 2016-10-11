@@ -4,9 +4,8 @@ import re
 import yaml
 from itertools import *
 from warnings import warn
-from nerve.spec import specifications
+from nerve.spec import specifications, traits
 from nerve.core.errors import SpecificationError
-from nerve.spec.traits import *
 # ------------------------------------------------------------------------------
 '''
 The metadata module contain the Metadata class which is used by nerve to handle all metadata
@@ -101,15 +100,15 @@ class Metadata(object):
         Returns:
             dict: traits
         '''
-        traits = {}
+        output = {}
         for key in self.__data.keys():
             trait = 'get_' + key
             if hasattr(traits, trait):
                 trait = getattr(traits, trait)
-                trait[key] = trait(self._datapath)
+                output[key] = trait(self._datapath)
 
-        self.__data.import_data(traits)
-        return traits
+        self.__data.import_data(output)
+        return output
 
     @property
     def data(self):
@@ -146,22 +145,19 @@ class Metadata(object):
         '''
         if not fullpath:
             fullpath = self._metapath
-        meta = dict(
-            asset_name=get_asset_name(fullpath),
-            project_name=get_project_name(fullpath),
-            specification=get_specification(fullpath),
-            descriptor=get_descriptor(fullpath),
-            version=get_version(fullpath),
-            render_pass=get_render_pass(fullpath),
-            coordinate=get_coordinate(fullpath),
-            frame=get_frame(fullpath),
-            extension=get_extension(fullpath),
-            metadata=get_meta(fullpath)
-        )
+        meta = nerve.spec.traits.get_name_traits(fullpath)
         specifications.MetaName(meta).validate()
 
+        # overwrite existing metadata
+        data = {}
+        if os.path.exists(fullpath):
+            with open(fullpath, 'r') as f:
+                data = yaml.load(f)
+
+        data.update(self.__data.to_primitive())
+
         with open(fullpath, 'w') as f:
-            yaml.dump(self.__data.to_primitive(), f)
+            yaml.dump(data, f)
 
         return os.path.exists(fullpath)
 # ------------------------------------------------------------------------------

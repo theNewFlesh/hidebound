@@ -4,7 +4,7 @@ import os
 from collections import defaultdict
 # ------------------------------------------------------------------------------
 
-def _get_asset_name_traits(fullpath):
+def get_name_traits(fullpath):
     '''
     Given an asset directory or file return a dict of traits derived from the name
 
@@ -36,7 +36,8 @@ def _get_asset_name_traits(fullpath):
         render_pass=traits[4],
         coordinate=None,
         frame=None,
-        extension=ext
+        extension=ext,
+        meta=False
     )
 
     if re.search('\d\d\d-\d\d\d(-\d\d\d)?', traits[5]):
@@ -48,6 +49,9 @@ def _get_asset_name_traits(fullpath):
     if re.search('\d\d\d\d', traits[6]):
         output['frame'] = int(traits[6])
 
+    if re.search('_meta$', name):
+        output['meta'] = True
+
     for k,v in output.items():
         if v == '-':
             output[k] = None
@@ -55,48 +59,47 @@ def _get_asset_name_traits(fullpath):
 # ------------------------------------------------------------------------------
 
 def get_asset_name(fullpath):
-    return _get_asset_name_traits(fullpath)['asset_name']
+    return get_name_traits(fullpath)['asset_name']
 
 def get_project_name(fullpath):
-    return _get_asset_name_traits(fullpath)['project_name']
+    return get_name_traits(fullpath)['project_name']
 
 def get_specification(fullpath):
-    return _get_asset_name_traits(fullpath)['specification']
+    return get_name_traits(fullpath)['specification']
 
 def get_descriptor(fullpath):
-    return _get_asset_name_traits(fullpath)['descriptor']
+    return get_name_traits(fullpath)['descriptor']
 
 def get_version(fullpath):
-    return _get_asset_name_traits(fullpath)['version']
+    return get_name_traits(fullpath)['version']
 
 def get_render_pass(fullpath):
-    return _get_asset_name_traits(fullpath)['render_pass']
+    return get_name_traits(fullpath)['render_pass']
 
 def get_coordinates(fullpath):
     if os.path.isdir(fullpath):
         output = defaultdict(lambda: [])
         for file_ in os.listdir(fullpath):
-            coord = _get_asset_name_traits(file_)['coordinate']
+            coord = get_name_traits(file_)['coordinate']
             for key, val in coord.items():
                 output[key].append(val)
         return dict(output)
-    return _get_asset_name_traits(fullpath)['coordinate']
+    return get_name_traits(fullpath)['coordinate']
 
 def get_frames(fullpath):
     if os.path.isdir(fullpath):
         output = []
         for file_ in os.listdir(fullpath):
-            frame = _get_asset_name_traits(file_)['frame']
+            frame = get_name_traits(file_)['frame']
             output.append(frame)
         return output
-    return _get_asset_name_traits(fullpath)['frame']
+    return get_name_traits(fullpath)['frame']
 
 def get_extension(fullpath):
-    return _get_asset_name_traits(fullpath)['extension']
+    return get_name_traits(fullpath)['extension']
 
 def get_meta(fullpath):
-    if re.search('_meta\.', fullpath):
-        return 'meta'
+    return get_name_traits(fullpath)['meta']
 # ------------------------------------------------------------------------------
 
 def main():
