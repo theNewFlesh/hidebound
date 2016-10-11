@@ -314,7 +314,7 @@ class Nerve(object):
 
         return True
 
-    def _publish_non_deliverables(self, project, branch, include, exclude, verbosity):
+    def _publish_non_deliverables(self, local, project, branch, include, exclude, verbosity):
         '''
         Convenience method for publishing non-deliverable assets to a github user branch
 
@@ -375,6 +375,7 @@ class Nerve(object):
         local.pull('dev', branch)
 
         self._publish_non_deliverables(
+            local,
             project,
             branch=branch,
             include=include,
@@ -385,6 +386,7 @@ class Nerve(object):
 
         # get only added deliverable assets
         deliverables = self.status(
+            project,
             include=include,
             exclude=exclude,
             verbosity=verbosity,
