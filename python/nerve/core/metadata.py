@@ -99,6 +99,14 @@ class Metadata(object):
         else:
             msg = '"' + name + '" specification not found in specifications module'
             raise SpecificationError(msg)
+
+    @property
+    def metapath(self):
+        return self._metapath
+
+    @property
+    def datapath(self):
+        return self._datapath
     # --------------------------------------------------------------------------
 
     def get_traits(self):

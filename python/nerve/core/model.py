@@ -133,7 +133,8 @@ class Nerve(object):
         '''
         return deepcopy(self._config)
 
-    def status(self, project, include=[], exclude=[], states=[], verbosity=0):
+    def status(self, project, include=[], exclude=[], states=[], verbosity=0,
+                asset_type=['deliverable', 'nondeliverable']):
         '''
         Reports on the status of all affected files within a given project
 
@@ -185,7 +186,10 @@ class Nerve(object):
                         warn(asset + ' contains files of state: ' + ','.join(rogue_states))
                     continue
 
-            yield Metadata(asset)
+            output = Metadata(asset)
+            asset_type = [x is 'deliverable' for x in asset_type]
+            if output.data.deliverable in asset_type:
+                yield output
 
     def create(self, name):
         '''
@@ -320,6 +324,26 @@ class Nerve(object):
 
         return True
 
+    def _publish_non_deliverables(self, **kwargs):
+        # pulling metadata first avoids merge conflicts by setting HEAD to the
+        # most current
+        local = Git(project)
+        local.pull('dev', branch)
+
+        # get nondeliverable assets
+        nondeliverables = self.status(
+            include=include, exclude=exclude, verbosity=verbosity,
+            asset_type=['nondeliverable']
+        )
+
+        # push non-deliverables to user-branch
+        local.add([x.datapath for x in nondeliverables])
+        names = [x.name for x in nondeliverables]
+        local.commit('NON-DELIVERABLES: ' + ', '.join(names))
+        local.push(branch)
+
+        return True
+
     def publish(self, project, branch='user-branch', include=[], exclude=[], verbosity=0):
         '''
         Attempt to publish deliverables from user's branch to given project's dev branch on Github
@@ -353,66 +377,44 @@ class Nerve(object):
         local.pull('dev', branch)
         # ----------------------------------------------------------------------
 
-        # GET DATA
+        self._publish_non_deliverables(project, branch=branch, include=include,
+            exclude=exclude, verbosity=verbosity)
 
-        assets = self.status(include=include, exclude=exclude, verbosity=verbosity)
-        # ----------------------------------------------------------------------
+        # get only added deliverable assets
+        deliverables = self.status(
+            include=include, exclude=exclude, verbosity=verbosity,
+            states=['added'], asset_type=['deliverable']
+        )
 
-        # GENERATE METADATA FILES
-
-        assets = defaultdict(lambda: [])
-        for file in files:
-            key = file['fullpath'].split(os.sep)
-            if len(key) > 2:
-                key = os.path.join(key[0], key[1])
-            else:
-                key = file['fullpath']
-            assets[key].append(file)
-
-        nondeliv = []
-        valid = []
         invalid = []
-        for asset, data in assets.items():
-            # meta receives a asset, search for a metadata file
-            # if it exists, meta loads that metadata into an internal variable
-            # meta then generates metadata from the asset and overwrites
-            # its internal metadata with it
-
-            # VALIDATE METADATA
-            meta = Metadata(asset)
-            if meta.deliverable:
-                if data['state'] is 'added':
-                    if meta.valid:
-                        valid.append(meta)
-                    else:
-                        invalid.append(meta)
-                    meta.write()
-            else:
-                nondeliv.append(asset['fullpath'])
-        # ----------------------------------------------------------------------
-
-        # PUSH ASSETS
-
-        # push non-deliverables
-        local.add(nondeliv)
-        nondeliv = [os.path.split(x)[-1] for x in nondeliv]
-        local.commit('NON-DELIVERABLE: ' + ', '.join(nondeliv))
-        local.push(branch)
+        valid = []
+        for deliv in deliverables:
+            deliv.get_traits()
+            deliv.write()
+            try:
+                deliv.validate()
+            except ValidationError as e:
+                if verbosity > 0:
+                    warn(e)
+                invalid.append(deliv)
+                continue
+            valid.append(deliv)
 
         client = self._get_client(name)
 
         if len(invalid) > 0:
-            # commit only invalid metadata to github
+            # commit only invalid metadata to github user branch
             local.add([x.metapath for x in invalid])
             local.commit('INVALID: ' + ', '.join([x.name for x in invalid]))
             local.push(branch)
             return False
 
         else:
-            # commit all deliverable to github
+            # commit all deliverable data and metadata to github dev branch
             local.add([x.metapath for x in valid])
-            local.add([x.fullpath for x in valid])
-            local.commit('VALID: ' + ', '.join([x.name for x in valid]))
+            local.add([x.datapath for x in valid])
+            names = [x.name for x in valid]
+            local.commit('VALID: ' + ', '.join(names))
             local.push(branch)
 
             title = '{user} attempts to publish valid deliverables to dev'
@@ -420,9 +422,7 @@ class Nerve(object):
             body = []
             body.append('publisher: **{user}**')
             body.append('deliverables:')
-            body.extend(['\t' + x.name for x in valid])
-            body.append('assets:')
-            body.extend(['\t' + x for x in nondeliv])
+            body.extend(['\t' + x for x in names])
             body = '\n'.join(body)
             body = body.format(user=branch)
 
