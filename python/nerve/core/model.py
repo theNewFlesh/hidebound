@@ -1,11 +1,11 @@
 #! /usr/bin/env python
+from copy import deepcopy
+from collections import defaultdict
+from itertools import chain
 import os
 import shutil
-import yaml
-from copy import deepcopy
-from itertools import *
-from collections import *
 from warnings import warn
+import yaml
 from nerve.core.git import Git
 from nerve.core.git_lfs import GitLFS
 from nerve.core.client import Client
@@ -305,14 +305,14 @@ class Nerve(object):
         if len(exclude) == 0:
             exclude = self['request-exclude-patterns']
 
-        client = self._get_client(name)
-        title = '{user} attempts to request deliverables from dev'
-        title = title.format(user=self['user-branch'])
+        # client = self._get_client(name)
+        # title = '{user} attempts to request deliverables from dev'
+        # title = title.format(user=self['user-branch'])
         # body = fancy markdown detailing request?
         # num = client.create_pull_request(title, branch, 'dev')
-        # additional dev to user-branch logic here if needed
-        # if used/implemented propely merge-conflict logic will not be necessary
-        # here
+        # # additional dev to user-branch logic here if needed
+        # # if used/implemented propely merge-conflict logic will not be necessary
+        # # here
         # client.merge_pull_request(num, 'Request authorized')
 
         Git(project, branch=branch).pull('dev', branch)
@@ -419,7 +419,7 @@ class Nerve(object):
             title = title.format(user=branch)
             body = []
             body.append('publisher: **{user}**')
-            bpdy.append('deliverables:')
+            body.append('deliverables:')
             body.extend(['\t' + x.name for x in valid])
             body.append('assets:')
             body.extend(['\t' + x for x in nondeliv])

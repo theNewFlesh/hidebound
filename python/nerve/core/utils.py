@@ -1,8 +1,7 @@
 #! /usr/bin/env python
-import os
 import re
 from warnings import warn
-from subprocess import Popen, PIPE, STDOUT, SubprocessError
+from subprocess import Popen, PIPE, SubprocessError
 # ------------------------------------------------------------------------------
 '''
 The utils module contains functions generally usefull to multiple components

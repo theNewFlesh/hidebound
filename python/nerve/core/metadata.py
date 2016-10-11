@@ -2,8 +2,6 @@
 import os
 import re
 import yaml
-from itertools import *
-from warnings import warn
 from nerve.spec import specifications, traits
 from nerve.core.errors import SpecificationError
 # ------------------------------------------------------------------------------
@@ -99,7 +97,8 @@ class Metadata(object):
         if hasattr(specifications, name):
             return getattr(specifications, name)
         else:
-            raise SpecificationError('"' + name + '" specification not found in specifications module')
+            msg = '"' + name + '" specification not found in specifications module'
+            raise SpecificationError(msg)
     # --------------------------------------------------------------------------
 
     def get_traits(self):
@@ -133,7 +132,7 @@ class Metadata(object):
             dict: internal data
         '''
         output = self.__data.to_primitive()
-        return {re.sub('_', '-', k): v for k,v in output.items()}
+        return {re.sub('_', '-', k): v for k, v in output.items()}
 
     def validate(self):
         '''
@@ -145,7 +144,7 @@ class Metadata(object):
         Return:
             bool: validity
         '''
-        return self.__data.validate() == None
+        return self.__data.validate() is None
 
     def write(self, fullpath=None):
         '''

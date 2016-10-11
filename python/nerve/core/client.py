@@ -1,9 +1,7 @@
 #! /usr/bin/env python
-import os
-import yaml
-import json
 from copy import deepcopy
-from itertools import *
+import json
+import yaml
 from github3 import login
 from github3.repos.branch import Branch
 from github3.null import NullObject

@@ -1,9 +1,7 @@
 #! /usr/bin/env python
 import os
-import re
-from itertools import *
 from git import Repo, GitCommandError
-from nerve.core.utils import status
+from nerve.core import utils
 # ------------------------------------------------------------------------------
 
 '''
@@ -230,7 +228,7 @@ class Git(object):
         Returns:
             list: list of dicts, each one representing a file
         '''
-        return status(
+        return utils.status(
             'git status --porcelain',
             include=include,
             exclude=exclude,
