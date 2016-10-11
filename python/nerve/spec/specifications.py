@@ -14,9 +14,10 @@ class MetaName(Model):
     descriptor    = StringType(required=True, validators=[])
     version       = IntType(required=True, validators=[is_version])
     render_pass   = StringType(validators=[is_render_pass])
-    frames        = ListType(BaseType, validators=[is_frame])
-    coordinates   = DictType(BaseType, validators=[is_coordinate])
-    meta          = StringType(required=True, validators=[is_meta])
+    coordinate    = DictType(BaseType, validators=[is_coordinate])
+    frame         = ListType(BaseType, validators=[is_frame])
+    meta          = BooleanType(required=True, validators=[is_meta])
+    extension     = StringType(required=True, default='yml', validators=[is_metadata_extension])
 # ------------------------------------------------------------------------------
 
 class Specification(Model):

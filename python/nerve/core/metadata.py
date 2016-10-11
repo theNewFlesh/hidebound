@@ -27,46 +27,60 @@ class Metadata(object):
 
         Args:
             item (dict or str): a dict of asset metadata, an asset yml file or
-                                the fullpath of an asset file or directory
+                                the fullpath of an asset
         Returns:
             Metadata
 
         Raises:
             OSError, TypeError
         '''
+        data = {}
+        metapath = None
+        datapath = None
         spec = None
+
         if isinstance(item, dict):
             spec = item['specification']
+            data = item
 
         elif isinstance(item, str):
             if not os.path.exists(item):
                 raise OSError('No such file or directory: ' + item)
 
-            root, name = os.path.split(item)
-            root, spec = os.path.split(root)
-            name, ext = os.path.splitext(name)
+            meta = self._is_meta(item)
+            conf = self._is_config(item)
+            if meta or conf:
+                if meta:
+                    spec = traits.get_specification(item)
+                if conf:
+                    spec = 'config001'
 
-
-            if re.search('nerverc', name):
-                spec = 'config001'
-                ext = 'yml'
-
-            if ext in ['yml', 'yaml']:
-                self._metapath = item
+                metapath = item
                 with open(item, 'r') as f:
-                    item = yaml.load(f)
+                    data = yaml.load(f)
 
             else:
-                self._datapath = item
-                item = dict(
-                    specification=spec
-                )
+                datapath = item
+                metapath = os.path.splitext(item)[0] + '_meta.yml'
+                spec = traits.get_specification(item)
 
         else:
             raise TypeError('type: ' + type(item) + ' not supported')
 
         spec = self._get_spec(spec)
-        self.__data = spec(item)
+        self.__data = spec(data)
+        self._datapath = datapath
+        self._metapath = metapath
+
+    def _is_meta(self, item):
+        if re.search('_meta', item):
+            return True
+        return False
+
+    def _is_config(self, item):
+        if re.search('nerverc', item):
+            return True
+        return False
 
     def __getitem__(self, key):
         return self.data[key]
@@ -145,7 +159,7 @@ class Metadata(object):
         '''
         if not fullpath:
             fullpath = self._metapath
-        meta = nerve.spec.traits.get_name_traits(fullpath)
+        meta = traits.get_name_traits(fullpath)
         specifications.MetaName(meta).validate()
 
         # overwrite existing metadata

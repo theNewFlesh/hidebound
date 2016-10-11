@@ -82,8 +82,16 @@ def is_frame(item): return
 # @is_re('[.*/a-zA-Z0-9_]+', 'is not a valid gitignore pattern')
 # def is_gitignore(item): return
 
-@is_a(lambda x: x == 'meta', 'does not contain _meta in name')
+@is_a(lambda x: x, 'does not contain _meta in name')
 def is_meta(item): return
+
+@is_a(lambda x: x in ['yml', 'yaml'], 'is not a valid metadata extension')
+def is_metadata_extension(item): return
+
+def is_metapath(item):
+    meta = nerve.spec.traits.get_name_traits(item)
+    nerve.spec.specifications.MetaName(meta).validate()
+    return True
 
 def is_organization(item):
     return True

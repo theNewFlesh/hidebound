@@ -13,8 +13,8 @@ def get_name_traits(fullpath):
 
     Returns:
         dict: traits
-              (asset_name, project_name, specification, descriptor, version,
-               extension, coordinates, frame, render_pass, metadata)
+              (project_name, specification, descriptor, version,
+               extension, render_pass, coordinates, frame)
     '''
     name = os.path.split(fullpath)[-1]
     # skip hidden files
@@ -28,7 +28,6 @@ def get_name_traits(fullpath):
     traits = name.split('_')
 
     output = dict(
-        asset_name=name,
         project_name=traits[0],
         specification=traits[1],
         descriptor=traits[2],
@@ -36,8 +35,7 @@ def get_name_traits(fullpath):
         render_pass=traits[4],
         coordinate=None,
         frame=None,
-        extension=ext,
-        meta=False
+        extension=ext
     )
 
     if re.search('\d\d\d-\d\d\d(-\d\d\d)?', traits[5]):
@@ -49,7 +47,7 @@ def get_name_traits(fullpath):
     if re.search('\d\d\d\d', traits[6]):
         output['frame'] = int(traits[6])
 
-    if re.search('_meta$', name):
+    if re.search('_meta', name):
         output['meta'] = True
 
     for k,v in output.items():
@@ -59,7 +57,8 @@ def get_name_traits(fullpath):
 # ------------------------------------------------------------------------------
 
 def get_asset_name(fullpath):
-    return get_name_traits(fullpath)['asset_name']
+    output = os.path.split(fullpath)[0]
+    return os.path.splitext(output)[0]
 
 def get_project_name(fullpath):
     return get_name_traits(fullpath)['project_name']
@@ -97,9 +96,6 @@ def get_frames(fullpath):
 
 def get_extension(fullpath):
     return get_name_traits(fullpath)['extension']
-
-def get_meta(fullpath):
-    return get_name_traits(fullpath)['meta']
 # ------------------------------------------------------------------------------
 
 def main():
