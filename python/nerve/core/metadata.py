@@ -6,7 +6,7 @@ from itertools import *
 from warnings import warn
 from nerve.spec import specifications
 from nerve.core.errors import SpecificationError
-from nerve.core.utils import get_asset_name_traits
+from nerve.spec.traits import *
 # ------------------------------------------------------------------------------
 '''
 The metadata module contain the Metadata class which is used by nerve to handle all metadata
@@ -66,16 +66,15 @@ class Metadata(object):
         else:
             raise TypeError('type: ' + type(item) + ' not supported')
 
-        spec = self.get_spec(spec)
+        spec = self._get_spec(spec)
         self.__data = spec(item)
 
     def __getitem__(self, key):
         return self.data[key]
-    # --------------------------------------------------------------------------
 
-    def get_spec(self, name):
+    def _get_spec(self, name):
         '''
-        Returns a class from the specifications module of the same name
+        Convenience method that returns a class from the specifications module of the same name
 
         Args:
             name (str): specification class name (all lowercase is fine)
@@ -88,6 +87,7 @@ class Metadata(object):
             return getattr(specifications, name)
         else:
             raise SpecificationError('"' + name + '" specification not found in specifications module')
+    # --------------------------------------------------------------------------
 
     def get_traits(self):
         '''
@@ -100,9 +100,6 @@ class Metadata(object):
 
         Returns:
             dict: traits
-        '''
-        '''
-        finds traits for file(s) and overwrites internal data with them
         '''
         traits = {}
         for key in self.__data.keys():
@@ -149,7 +146,18 @@ class Metadata(object):
         '''
         if not fullpath:
             fullpath = self._metapath
-        meta = get_asset_name_traits(fullpath)
+        meta = dict(
+            asset_name=get_asset_name(fullpath),
+            project_name=get_project_name(fullpath),
+            specification=get_specification(fullpath),
+            descriptor=get_descriptor(fullpath),
+            version=get_version(fullpath),
+            render_pass=get_render_pass(fullpath),
+            coordinate=get_coordinate(fullpath),
+            frame=get_frame(fullpath),
+            extension=get_extension(fullpath),
+            metadata=get_meta(fullpath)
+        )
         specifications.MetaName(meta).validate()
 
         with open(fullpath, 'w') as f:

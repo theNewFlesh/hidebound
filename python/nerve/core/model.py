@@ -4,6 +4,7 @@ import shutil
 import yaml
 from copy import deepcopy
 from itertools import *
+from collections import *
 from warnings import warn
 from nerve.core.git import Git
 from nerve.core.git_lfs import GitLFS
@@ -131,6 +132,45 @@ class Nerve(object):
             dict: internal configuration
         '''
         return deepcopy(self._config)
+
+    def status(self, project, include=[], exclude=[], states=[], verbosity=0):
+        warn_ = False
+        if verbosity == 2:
+            warn_ = True
+        if len(include) == 0:
+            include = self['publish-include-patterns']
+        if len(exclude) == 0:
+            exclude = self['publish-exclude-patterns']
+
+        local = Git(project)
+        local.add(all=True) # git lfs cannot get the status of unstaged files
+        lfs = GitLFS(project)
+        files = lfs.status(include=include, exclude=exclude, warnings=warn_)
+        # ----------------------------------------------------------------------
+
+        temp = defaultdict(lambda: defaultdict(lambda: []))
+        for file in files:
+            asset = file['fullpath'].split(os.sep)
+            if len(asset) > 2:
+                asset = os.path.join(asset[0], asset[1])
+            else:
+                asset = file['fullpath']
+
+            for k, v in file.items():
+                temp[asset][k].append(v)
+
+        local.reset()
+        # ----------------------------------------------------------------------
+
+        for asset, v in sorted(temp.items()):
+            if states:
+                rogue_states = set(v['state']).difference(states)
+                if len(rogue_states) > 0:
+                    if verbosity > 0:
+                        warn(asset + ' contains files of state: ' + ','.join(rogue_states))
+                    continue
+
+            yield Metadata(asset)
 
     def create(self, name):
         '''
@@ -283,13 +323,6 @@ class Nerve(object):
             bool: success status
         '''
         project, branch = self._get_project_and_branch(name, branch)
-        wrn = False
-        if verbosity > 0:
-            wrn = True
-        if len(include) == 0:
-            include = self['publish-include-patterns']
-        if len(exclude) == 0:
-            exclude = self['publish-exclude-patterns']
         # ----------------------------------------------------------------------
 
         # PULL METADATA FROM DEV
@@ -298,40 +331,39 @@ class Nerve(object):
         # by setting HEAD to the most current
         # TODO: add branch checking logic to skip the following if not needed?
 
-        client = self._get_client(name)
-        # title = 'Ensuring {branch} is up to date with dev'.format(branch=branch)
-        # body = fancy markdown detailing publish?
-        # num = client.create_pull_request(title, 'dev', branch)
-        # additional user-branch to dev logic here if needed
-        # if used/implemented propely merge-conflict logic will not be necessary
-        # here
-        # client.merge_pull_request(num, 'Update complete')
         local = Git(project)
         local.pull('dev', branch)
         # ----------------------------------------------------------------------
 
         # GET DATA
 
-        # get only added assets
-        lfs = GitLFS(project)
-        assets = lfs.status(include=include, exclude=exclude, warnings=wrn)
+        assets = self.status(include=include, exclude=exclude, verbosity=verbosity)
         # ----------------------------------------------------------------------
 
         # GENERATE METADATA FILES
 
+        assets = defaultdict(lambda: [])
+        for file in files:
+            key = file['fullpath'].split(os.sep)
+            if len(key) > 2:
+                key = os.path.join(key[0], key[1])
+            else:
+                key = file['fullpath']
+            assets[key].append(file)
+
         nondeliv = []
         valid = []
         invalid = []
-        for asset in assets:
+        for asset, data in assets.items():
             # meta receives a asset, search for a metadata file
             # if it exists, meta loads that metadata into an internal variable
             # meta then generates metadata from the asset and overwrites
             # its internal metadata with it
 
             # VALIDATE METADATA
-            meta = Metadata(asset['fullpath'])
+            meta = Metadata(asset)
             if meta.deliverable:
-                if asset['state'] is 'added':
+                if data['state'] is 'added':
                     if meta.valid:
                         valid.append(meta)
                     else:
@@ -348,6 +380,8 @@ class Nerve(object):
         nondeliv = [os.path.split(x)[-1] for x in nondeliv]
         local.commit('NON-DELIVERABLE: ' + ', '.join(nondeliv))
         local.push(branch)
+
+        client = self._get_client(name)
 
         if len(invalid) > 0:
             # commit only invalid metadata to github

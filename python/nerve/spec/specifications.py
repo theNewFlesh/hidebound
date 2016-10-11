@@ -16,7 +16,7 @@ class MetaName(Model):
     render_pass   = StringType(validators=[is_render_pass])
     frames        = ListType(BaseType, validators=[is_frame])
     coordinates   = DictType(BaseType, validators=[is_coordinate])
-    metadata      = StringType(required=True, validators=[is_metadata])
+    meta          = StringType(required=True, validators=[is_meta])
 # ------------------------------------------------------------------------------
 
 class Specification(Model):
@@ -42,7 +42,7 @@ class Config(Specification):
     publish_include_patterns = ListType(StringType, default=[], validators=[is_publish_include_patterns])
     publish_exclude_patterns = ListType(StringType, default=[], validators=[is_publish_exclude_patterns])
     extensions               = ListType(StringType, required=True, validators=[is_extension])
-    assets                   = ListType(StringType, default=[], validators=[is_specification])
+    assets                   = ListType(StringType, default=[], validators=[])
     deliverables             = ListType(StringType, required=True, validators=[is_specification])
     teams                    = DictType(StringType, required=True, validators=[is_teams])
     gitignore                = ListType(StringType, required=True, validators=[])
@@ -60,6 +60,7 @@ class Asset(Specification):
     project_id   = StringType(required=True, validators=[is_project_id])
     url          = StringType(required=True, validators=[is_url])
     notes        = StringType(default='')
+    deliverable  = BooleanType(default=False)
 
 class Deliverable(Specification):
     project_name = StringType(required=True, validators=[is_project_name])
@@ -73,6 +74,7 @@ class Deliverable(Specification):
     data         = ListType(StringType, validators=[is_file, is_path, is_exists])
     descriptor   = StringType(required=True, validators=[is_descriptor])
     dependencies = ListType(StringType, default=[])
+    deliverable  = BooleanType(default=True)
 # ------------------------------------------------------------------------------
 
 class Config001(Config):
@@ -82,6 +84,9 @@ class Proj001(Project):
     pass
 
 class Vol001(Deliverable):
+    pass
+
+class Geo001(Deliverable):
     pass
 # ------------------------------------------------------------------------------
 

@@ -9,59 +9,6 @@ The utils module contains functions generally usefull to multiple components
 within the nerve framework
 '''
 
-def get_asset_name_traits(fullpath):
-    '''
-    Given an asset directory or file return a dict of traits derived from the name
-
-    Args:
-        fullpath (str): full path to file or directory
-
-    Returns:
-        dict: traits
-              (asset_name, project_name, specification, descriptor, version,
-               extension, coordinates, frame, render_pass, metadata)
-    '''
-    ext = None
-    name = os.path.split(fullpath)[-1]
-
-    # skip hidden files
-    if name[0] == '.':
-        return {}
-
-    if os.path.isfile(fullpath):
-        name, ext = os.path.splitext(name)
-    traits = name.split('_')
-
-    output = dict(
-        asset_name=name,
-        project_name=traits[0],
-        specification=traits[1],
-        descriptor=traits[2],
-        version=traits[3],
-    )
-
-    if ext:
-        output['extension'] = ext
-
-    if len(traits) > 4:
-        traits = re.split(name, 'v\d\d\d')[-1].split('_')
-        for trait in traits:
-            if re.search('\d\d\d-\d\d\d-\d\d\d'):
-                x,y,z = [int(x) for x in trait.split('-')]
-                output['coordinates'] = dict(x=x, y=y, z=z)
-
-            elif re.search('\d\d\d\d', trait):
-                output['frame'] = int(trait)
-
-            elif trait == 'meta':
-                output['metadata'] = '_meta'
-
-            else:
-                output['render_pass'] = trait
-
-    return output
-# ------------------------------------------------------------------------------
-
 def execute_subprocess(command, error_re='Error:.*'):
     '''
     Executes a given command as a subprocess and scrubs the output for errors
@@ -91,7 +38,7 @@ def execute_subprocess(command, error_re='Error:.*'):
 
     return output
 
-def status(self, command, include=[], exclude=[], states=[], staged=None, warnings=False):
+def status(command, include=[], exclude=[], states=[], staged=None, warnings=False):
     '''
     Convenience function for running a git or git lfs status command and returning nice output
 
@@ -107,7 +54,7 @@ def status(self, command, include=[], exclude=[], states=[], staged=None, warnin
     Returns:
         list: list of dicts, each one representing a file
     '''
-    status = execute_subprocess(command)
+    status_ = execute_subprocess(command)
     lut = {
         'A': 'added',
         'C': 'copied',
@@ -130,7 +77,7 @@ def status(self, command, include=[], exclude=[], states=[], staged=None, warnin
     #         state=lut[item.change_type],
     #         staged=True
     #     )
-    for item in status:
+    for item in status_:
         output = {}
         output['staged'] = False
         if item[0] != ' ':
@@ -143,9 +90,6 @@ def status(self, command, include=[], exclude=[], states=[], staged=None, warnin
         # ------------------------------------------------------------------
 
         message = []
-        _states = states[0]
-        if len(states) > 1:
-            _states = ', '.join(states[:-1]) + ' or ' + states[-1]
 
         if include:
             found = include.search(fullpath)
@@ -157,7 +101,7 @@ def status(self, command, include=[], exclude=[], states=[], staged=None, warnin
                 message.append(fullpath + ' is excluded')
         if states:
             if output['state'] not in states:
-                message.append(fullpath + ' is not ' + _states)
+                message.append(fullpath + ' is not ' + ', '.join(states))
         if staged != None:
             if output['staged'] != staged:
                 if staged:
@@ -165,7 +109,7 @@ def status(self, command, include=[], exclude=[], states=[], staged=None, warnin
                 else:
                     message.append(fullpath + ' is staged')
 
-        if len(message) > 0:
+        if message:
             if warnings is True:
                 warn('. '.join(message))
             continue
@@ -183,7 +127,6 @@ def main():
 # ------------------------------------------------------------------------------
 
 __all__ = [
-    'get_asset_name_traits',
     'execute_subprocess',
     'status'
 ]

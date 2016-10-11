@@ -11,6 +11,7 @@ request-include-patterns:
   - vol.*
 request-exclude-patterns:
 publish-include-patterns:
+  - vol.*
   - geo.*
 publish-exclude-patterns:
 extensions:

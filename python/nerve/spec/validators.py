@@ -3,6 +3,7 @@ import os
 import re
 from functools import wraps
 from schematics.exceptions import ValidationError
+import nerve
 # ------------------------------------------------------------------------------
 
 def is_a(predicate=lambda x: x != None, message=''):
@@ -47,6 +48,28 @@ def is_asset_id(item):return True
 @is_a(lambda x: x[0] in list('xyz'), 'is not a valid coordinate')
 def is_coordinate(item): return
 
+def is_deliverable_name(items):
+    proj  = '[a-z]+\d\d\d'
+    spec  = '[a-z]+\d\d\d'
+    desc  = '[-a-zA-Z0-9]'
+    ver   = 'v\d\d\d'
+    rpass = '([-a-z0-9]+|-)'
+    coord = '(\d\d\d-\d\d\d-\d\d\d|-)'
+    frame = '(\d\d\d\d|-)'
+    ext   = '(\.[a-zA-Z0-9]+|)'
+    regex = '_'.join([proj, spec, desc, ver, rpass, coord, frame, ext])
+    regex = '^' + regex + '$'
+    regex = re.compile(regex)
+
+    if isinstance(items, str):
+        items = [items]
+
+    for item in items:
+        if regex.search(item):
+            continue
+        raise ValidationError(str(item) + ' is not a valid deliverable name')
+    return True
+
 @is_re('[-a-z0-9]+', 'is not a valid descriptor')
 def is_descriptor(item): return
 
@@ -59,8 +82,8 @@ def is_frame(item): return
 # @is_re('[.*/a-zA-Z0-9_]+', 'is not a valid gitignore pattern')
 # def is_gitignore(item): return
 
-@is_a(lambda x: x == '_meta', 'does not contain _meta in name')
-def is_metadata(item): return
+@is_a(lambda x: x == 'meta', 'does not contain _meta in name')
+def is_meta(item): return
 
 def is_organization(item):
     return True
@@ -83,8 +106,22 @@ def is_publish_exclude_patterns(item):
 def is_publish_include_patterns(item):
     return True
 
-def is_render_pass(item):
-    return True
+@is_re('$|^'.join([
+        'beauty',
+        'specular',
+        'diffuse',
+        'shadow',
+        'ambient-occlusion',
+        'world-point-position',
+        'uv',
+        'normal',
+        'depth',
+        'z',
+        'matte'
+    ]),
+    'is not a valid render pass'
+)
+def is_render_pass(item): return
 
 def is_request_exclude_patterns(item):
     return True
@@ -92,7 +129,10 @@ def is_request_exclude_patterns(item):
 def is_request_include_patterns(item):
     return True
 
-@is_re('[a-z]+\d\d\d', 'is not a valid specification')
+@is_a(
+    lambda x: hasattr(nerve.spec.specifications, x.capitalize()),
+    'is not a valid specification'
+)
 def is_specification(item): return
 
 def is_teams(item):
@@ -104,8 +144,8 @@ def is_token(item):
 def is_url(item):
     return True
 
-def is_url_type(item):
-    return True
+@is_re('ssh$|^http', 'is not ssh or http')
+def is_url_type(item): return
 
 def is_user_branch(item):
     return True
