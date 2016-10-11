@@ -304,21 +304,10 @@ class Nerve(object):
         name = project
         project, branch = self._get_project_and_branch(name, branch)
 
-        # TODO: ensure pulls only come from dev branch
         if len(include) == 0:
             include = self['request-include-patterns']
         if len(exclude) == 0:
             exclude = self['request-exclude-patterns']
-
-        # client = self._get_client(name)
-        # title = '{user} attempts to request deliverables from dev'
-        # title = title.format(user=self['user-branch'])
-        # body = fancy markdown detailing request?
-        # num = client.create_pull_request(title, branch, 'dev')
-        # # additional dev to user-branch logic here if needed
-        # # if used/implemented propely merge-conflict logic will not be necessary
-        # # here
-        # client.merge_pull_request(num, 'Request authorized')
 
         Git(project, branch=branch).pull('dev', branch)
         GitLFS(project).pull(include, exclude)
