@@ -51,8 +51,8 @@ def status(command, include=[], exclude=[], states=[], staged=None, warnings=Fal
         staged (bool, optional): include only files which are staged or unstaged. Default: both
         warnings (bool, optional): display warnings
 
-    Returns:
-        list: list of dicts, each one representing a file
+    Yields:
+        dict: a single file
     '''
     status_ = execute_subprocess(command)
     lut = {

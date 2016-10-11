@@ -178,6 +178,16 @@ class Git(object):
             self._repo.index.reset('HEAD')
 
     def references(self, branches=[], reftypes=['local', 'remote']):
+        '''
+        Yields reference object information
+
+        Args:
+            branches (list, optional): limit references to these branches. Default: all branches
+            reftypes (list, optional): limit references to local and/or remote repositories. Default: both
+
+        Yields:
+            dict: reference
+        '''
         for ref in self._repo.references:
             output = dict(
                 name=ref.name,

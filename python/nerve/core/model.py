@@ -134,6 +134,21 @@ class Nerve(object):
         return deepcopy(self._config)
 
     def status(self, project, include=[], exclude=[], states=[], verbosity=0):
+        '''
+        Reports on the status of all affected files within a given project
+
+        Args:
+            project (str): name of project
+            include (list, optional): list of regular expressions user to include specific assets
+            exclude (list, optional): list of regular expressions user to exclude specific assets
+            states (list, optional): list of object states files are allowed to be in.
+                options include: added, copied, deleted, modified, renamed, updated and untracked
+            verbosity (int, optional): level of verbosity for output. Default: 0
+                options include: 0, 1 and 2
+
+        Yields:
+            Metadata: Metadata object of each asset
+        '''
         warn_ = False
         if verbosity == 2:
             warn_ = True
@@ -240,20 +255,21 @@ class Nerve(object):
 
         return True
 
-    def clone(self, name, branch='user-branch'):
+    def clone(self, project, branch='user-branch'):
         '''
         Clones a nerve project to local project-root directory
 
         Ensures given branch is present in the repository
 
         Args:
-            name (str): name of project
+            project (str): name of project
             branch (str, optional): branch to clone from. Default: user's branch
 
         Returns:
             bool: success status
         '''
         # TODO: catch repo already exists errors and repo doesn't exist errors
+        name = project
         project, branch = self._get_project_and_branch(name, branch)
         client = self._get_client(name)
         if client.has_branch(branch):
@@ -267,12 +283,12 @@ class Nerve(object):
 
         return True
 
-    def request(self, name, branch='user-branch', include=[], exclude=[]):
+    def request(self, project, branch='user-branch', include=[], exclude=[]):
         '''
         Request deliverables from the dev branch of given project
 
         Args:
-            name (str): name of project
+            project (str): name of project
             branch (str, optional): branch to pull deliverables into. Default: user's branch
             include (list, optional): list of regular expressions user to include specific deliverables
             exclude (list, optional): list of regular expressions user to exclude specific deliverables
@@ -280,6 +296,7 @@ class Nerve(object):
         Returns:
             bool: success status
         '''
+        name = project
         project, branch = self._get_project_and_branch(name, branch)
 
         # TODO: ensure pulls only come from dev branch
@@ -303,7 +320,7 @@ class Nerve(object):
 
         return True
 
-    def publish(self, name, branch='user-branch', include=[], exclude=[], verbosity=0):
+    def publish(self, project, branch='user-branch', include=[], exclude=[], verbosity=0):
         '''
         Attempt to publish deliverables from user's branch to given project's dev branch on Github
 
@@ -313,7 +330,7 @@ class Nerve(object):
         If not only invalid metadata will be commited to the user's branch
 
         Args:
-            name (str): name of project
+            project (str): name of project
             branch (str, optional): branch to pull deliverables from. Default: user's branch
             include (list, optional): list of regular expressions user to include specific assets
             exclude (list, optional): list of regular expressions user to exclude specific assets
@@ -322,6 +339,7 @@ class Nerve(object):
         Returns:
             bool: success status
         '''
+        name = project
         project, branch = self._get_project_and_branch(name, branch)
         # ----------------------------------------------------------------------
 
@@ -413,18 +431,19 @@ class Nerve(object):
 
             return True
 
-    def delete(self, name, from_server, from_local):
+    def delete(self, project, from_server, from_local):
         '''
         Deletes a nerve project
 
         Args:
-            name (str): name of project
+            project (str): name of project
             from_server (bool): delete Github project
             from_local (bool): delete local project directory
 
         Returns:
             bool: success status
         '''
+        name = project
         project = os.path.join(self['project-root'], name)
 
         if from_server:
