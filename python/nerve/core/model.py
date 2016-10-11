@@ -6,6 +6,7 @@ import os
 import shutil
 from warnings import warn
 import yaml
+from schematics.exceptions import ValidationError
 from nerve.core.git import Git
 from nerve.core.git_lfs import GitLFS
 from nerve.core.client import Client
@@ -85,7 +86,7 @@ class Nerve(object):
         config['project-name'] = name
         config['project-id'] = project_id
         config['url'] = url
-        config['version'] = 1
+        config['version'] = version
         # config['uuid'] = None
 
         # version implicitly
@@ -324,15 +325,26 @@ class Nerve(object):
 
         return True
 
-    def _publish_non_deliverables(self, **kwargs):
-        # pulling metadata first avoids merge conflicts by setting HEAD to the
-        # most current
-        local = Git(project)
-        local.pull('dev', branch)
+    def _publish_non_deliverables(self, project, branch, include, exclude, verbosity):
+        '''
+        Convenience method for publishing non-deliverable assets to a github user branch
 
+        Args:
+            project (str): name of project
+            branch (str): branch to pull deliverables from. Default: user's branch
+            include (list): list of regular expressions user to include specific assets
+            exclude (list): list of regular expressions user to exclude specific assets
+            verbosity (int): level of events to print to stdout. Default: 0
+
+        Returns:
+            bool: success status
+        '''
         # get nondeliverable assets
         nondeliverables = self.status(
-            include=include, exclude=exclude, verbosity=verbosity,
+            project,
+            include=include,
+            exclude=exclude,
+            verbosity=verbosity,
             asset_type=['nondeliverable']
         )
 
@@ -344,7 +356,8 @@ class Nerve(object):
 
         return True
 
-    def publish(self, project, branch='user-branch', include=[], exclude=[], verbosity=0):
+    def publish(self,
+            project, branch='user-branch', include=[], exclude=[], verbosity=0):
         '''
         Attempt to publish deliverables from user's branch to given project's dev branch on Github
 
@@ -365,25 +378,29 @@ class Nerve(object):
         '''
         name = project
         project, branch = self._get_project_and_branch(name, branch)
-        # ----------------------------------------------------------------------
-
-        # PULL METADATA FROM DEV
 
         # pulling metadata first avoids merge conflicts
         # by setting HEAD to the most current
         # TODO: add branch checking logic to skip the following if not needed?
-
         local = Git(project)
         local.pull('dev', branch)
-        # ----------------------------------------------------------------------
 
-        self._publish_non_deliverables(project, branch=branch, include=include,
-            exclude=exclude, verbosity=verbosity)
+        self._publish_non_deliverables(
+            project,
+            branch=branch,
+            include=include,
+            exclude=exclude,
+            verbosity=verbosity
+        )
+        # ----------------------------------------------------------------------
 
         # get only added deliverable assets
         deliverables = self.status(
-            include=include, exclude=exclude, verbosity=verbosity,
-            states=['added'], asset_type=['deliverable']
+            include=include,
+            exclude=exclude,
+            verbosity=verbosity,
+            states=['added'],
+            asset_type=['deliverable']
         )
 
         invalid = []
@@ -399,6 +416,7 @@ class Nerve(object):
                 invalid.append(deliv)
                 continue
             valid.append(deliv)
+        # ----------------------------------------------------------------------
 
         client = self._get_client(name)
 

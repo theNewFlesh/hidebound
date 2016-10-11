@@ -102,10 +102,16 @@ class Metadata(object):
 
     @property
     def metapath(self):
+        '''
+        Fullpath to _meta file
+        '''
         return self._metapath
 
     @property
     def datapath(self):
+        '''
+        Fullpath to data
+        '''
         return self._datapath
     # --------------------------------------------------------------------------
 
