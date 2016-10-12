@@ -89,10 +89,7 @@ class Client(object):
     @property
     def config(self):
         '''
-        Returns a copy of this object's configuration
-
-        Returns:
-            dict: internal configuration
+        dict: a copy of this object's configuration
         '''
         return deepcopy(self._config)
 

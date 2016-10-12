@@ -44,10 +44,7 @@ class GitLFS(object):
     @property
     def working_dir(self):
         '''
-        Working path of local git repository
-
-        Returns:
-            str: fullpath of git repository
+        str: fullpath of local git repository
         '''
         return self._working_dir
 

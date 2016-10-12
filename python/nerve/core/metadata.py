@@ -103,14 +103,14 @@ class Metadata(object):
     @property
     def metapath(self):
         '''
-        Fullpath to _meta file
+        str: fullpath to _meta file
         '''
         return self._metapath
 
     @property
     def datapath(self):
         '''
-        Fullpath to data
+        str: fullpath to data
         '''
         return self._datapath
     # --------------------------------------------------------------------------
@@ -140,10 +140,7 @@ class Metadata(object):
     @property
     def data(self):
         '''
-        Internal data property
-
-        Returns:
-            dict: internal data
+        dict: copy of internal data
         '''
         output = self.__data.to_primitive()
         return {re.sub('_', '-', k): v for k, v in output.items()}

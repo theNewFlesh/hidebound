@@ -47,6 +47,7 @@ class Nerve(object):
         config = Metadata(config)
         config.validate()
         self._config = config.data
+    # --------------------------------------------------------------------------
 
     def __getitem__(self, key):
         return self._config[key]
@@ -127,10 +128,7 @@ class Nerve(object):
     @property
     def config(self):
         '''
-        Returns a copy of this object's configuration
-
-        Returns:
-            dict: internal configuration
+        dict: copy of this object's configuration
         '''
         return deepcopy(self._config)
 
@@ -313,6 +311,7 @@ class Nerve(object):
         GitLFS(project).pull(include, exclude)
 
         return True
+    # --------------------------------------------------------------------------
 
     def _publish_non_deliverables(self, local, project, branch, include, exclude, verbosity):
         '''
@@ -345,8 +344,7 @@ class Nerve(object):
 
         return True
 
-    def publish(self,
-            project, branch='user-branch', include=[], exclude=[], verbosity=0):
+    def publish(self, project, branch='user-branch', include=[], exclude=[], verbosity=0):
         '''
         Attempt to publish deliverables from user's branch to given project's dev branch on Github
 
@@ -439,6 +437,7 @@ class Nerve(object):
             client.merge_pull_request(num, 'Publish authorized')
 
             return True
+    # --------------------------------------------------------------------------
 
     def delete(self, project, from_server, from_local):
         '''
@@ -454,9 +453,7 @@ class Nerve(object):
         '''
         name = project
         project = os.path.join(self['project-root'], name)
-
-        if from_server:
-            self._get_client(name).delete()
+        if from_server: self._get_client(name).delete()
             # TODO: add git lfs logic for deletion
         if from_local:
             if os.path.split(project)[-1] == name:

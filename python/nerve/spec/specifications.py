@@ -7,8 +7,24 @@ from schematics.types import StringType, IntType, BooleanType
 from schematics.types.compound import ListType, DictType
 from schematics.exceptions import ValidationError
 # ------------------------------------------------------------------------------
+'''
+The specifications module house all the specifications for nerve entities
+
+Those entities include: configs, projects, assets (non-deliverables) and
+deliverables.
+
+All specifications used in production should be subclassed from the
+aforementioned classes.  All class attributes must have a "get_[attribute]"
+function in the traits module and should have one or more validators related t
+the value of that trait (especially if required).
+'''
 
 class MetaName(Model):
+    '''
+    Used for validating a metadata file's name
+
+    A convenience class used by is_metapath in the validators module
+    '''
     project_name  = StringType(required=True, validators=[is_project_name])
     specification = StringType(required=True, validators=[is_specification])
     descriptor    = StringType(required=True, validators=[])
@@ -21,7 +37,19 @@ class MetaName(Model):
 # ------------------------------------------------------------------------------
 
 class Specification(Model):
+    '''
+    Base class from which all nerve specifications are subclassed
+
+    Attributes:
+        specification (str): same as class name
+    '''
     def __init__(self, arg):
+        '''
+        Sets specification to class name
+
+        Args:
+            arg (dict): data to be run though a specification
+        '''
         arg['specification'] = self.__class__.__name__.lower()
         # needed because python doesn't support hyphenated attributes
         arg = {re.sub('-', '_', k): v for k,v in arg.items()}
