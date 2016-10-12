@@ -8,9 +8,9 @@ Platforrm:
 Author:
     Alex Braun <alexander.g.braun@gmail.com> <http://www.alexgbraun.com>
 
-Todo:
-    * added waiting and timeout logic
-    * handle github errors
+.. todo::
+    - added waiting and timeout logic
+    - handle github errors
 '''
 # ------------------------------------------------------------------------------
 

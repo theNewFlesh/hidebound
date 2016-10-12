@@ -1,4 +1,13 @@
 #! /usr/bin/env python
+'''
+The traits module is function library for specifying singular facts about given files
+
+All trait functions begin with "get_" and then the trait name.  Traits must are
+names exactly the same as their class attribute counterparts in teh specifications
+module.  Triats may only return primitive datatypes.
+'''
+# ------------------------------------------------------------------------------
+
 import re
 import os
 from collections import defaultdict
@@ -7,6 +16,8 @@ from collections import defaultdict
 def get_name_traits(fullpath):
     '''
     Given an asset directory or file return a dict of traits derived from the name
+
+    A traits utility function, not a bonified trait.
 
     Args:
         fullpath (str): full path to file or directory
@@ -57,25 +68,71 @@ def get_name_traits(fullpath):
 # ------------------------------------------------------------------------------
 
 def get_asset_name(fullpath):
+    '''
+    Args:
+        fullpath (str): absolute file/directory path
+    '''
     output = os.path.split(fullpath)[0]
     return os.path.splitext(output)[0]
 
 def get_project_name(fullpath):
+    '''
+    Args:
+        fullpath (str): absolute file/directory path
+
+    Returns:
+        str: project name
+    '''
     return get_name_traits(fullpath)['project_name']
 
 def get_specification(fullpath):
+    '''
+    Args:
+        fullpath (str): absolute file/directory path
+
+    Returns:
+        str: asset specification
+    '''
     return get_name_traits(fullpath)['specification']
 
 def get_descriptor(fullpath):
+    '''
+    Args:
+        fullpath (str): absolute file/directory path
+
+    Returns:
+        str: descriptor
+    '''
     return get_name_traits(fullpath)['descriptor']
 
 def get_version(fullpath):
+    '''
+    Args:
+        fullpath (str): absolute file/directory path
+
+    Returns:
+        str: version
+    '''
     return get_name_traits(fullpath)['version']
 
 def get_render_pass(fullpath):
+    '''
+    Args:
+        fullpath (str): absolute file/directory path
+
+    Returns:
+        str: render pass
+    '''
     return get_name_traits(fullpath)['render_pass']
 
 def get_coordinates(fullpath):
+    '''
+    Args:
+        fullpath (str): absolute file/directory path
+
+    Returns:
+        dict: x,y or x,y,z coordinates
+    '''
     if os.path.isdir(fullpath):
         output = defaultdict(lambda: [])
         for file_ in os.listdir(fullpath):
@@ -86,6 +143,13 @@ def get_coordinates(fullpath):
     return get_name_traits(fullpath)['coordinate']
 
 def get_frames(fullpath):
+    '''
+    Args:
+        fullpath (str): absolute file/directory path
+
+    Returns:
+        list(int): frames
+    '''
     if os.path.isdir(fullpath):
         output = []
         for file_ in os.listdir(fullpath):
@@ -95,6 +159,13 @@ def get_frames(fullpath):
     return get_name_traits(fullpath)['frame']
 
 def get_extension(fullpath):
+    '''
+    Args:
+        fullpath (str): absolute file path
+
+    Returns:
+        str: file extension
+    '''
     return get_name_traits(fullpath)['extension']
 # ------------------------------------------------------------------------------
 

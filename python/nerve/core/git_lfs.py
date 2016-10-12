@@ -8,8 +8,8 @@ Platforrm:
 Author:
     Alex Braun <alexander.g.braun@gmail.com> <http://www.alexgbraun.com>
 
-Todo:
-    * integrate python-based git-lfs server instead of using git-lfs-s3 which is ruby-based
+.. todo::
+    - integrate python-based git-lfs server instead of using git-lfs-s3 which is ruby-based
 '''
 # ------------------------------------------------------------------------------
 

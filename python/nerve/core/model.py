@@ -208,6 +208,9 @@ class Nerve(object):
 
         Returns:
             bool: success status
+
+        .. todo::
+            - send data to DynamoDB
         '''
         # create repo
         project = os.path.join(self['project-root'], name)
@@ -255,8 +258,6 @@ class Nerve(object):
         for team, perm in self['teams'].items():
             client.add_team(team, perm)
 
-        # TODO: send data to DynamoDB
-
         return True
 
     def clone(self, project, branch='user-branch'):
@@ -271,8 +272,10 @@ class Nerve(object):
 
         Returns:
             bool: success status
+
+        .. todo::
+            - catch repo already exists errors and repo doesn't exist errors
         '''
-        # TODO: catch repo already exists errors and repo doesn't exist errors
         name = project
         project, branch = self._get_project_and_branch(name, branch)
         client = self._get_client(name)
@@ -363,13 +366,15 @@ class Nerve(object):
 
         Returns:
             bool: success status
+
+        .. todo::
+            - add branch checking logic to skip the following if not needed?
         '''
         name = project
         project, branch = self._get_project_and_branch(name, branch)
 
         # pulling metadata first avoids merge conflicts
         # by setting HEAD to the most current
-        # TODO: add branch checking logic to skip the following if not needed?
         local = Git(project)
         local.pull('dev', branch)
 
@@ -451,11 +456,14 @@ class Nerve(object):
 
         Returns:
             bool: success status
+
+        .. todo::
+            - add git lfs logic for deletion
         '''
         name = project
         project = os.path.join(self['project-root'], name)
         if from_server: self._get_client(name).delete()
-            # TODO: add git lfs logic for deletion
+            # git lfs deletion logic
         if from_local:
             if os.path.split(project)[-1] == name:
                 shutil.rmtree(project)

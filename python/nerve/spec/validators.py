@@ -1,4 +1,18 @@
 #! /usr/bin/env python
+'''
+The validators module is function library for validating singular traits given to a specification
+
+Much like the traits module, validator functions follow a "is_"[trait] naming
+convention.  Validators are linked with traits inside the validators kwarg of a
+specification class attribute in the specifications module.  They succeed
+silently and raise ValidationError when the trait they validate fails.
+Schematics captures these error messages and pipes them to a error call.
+
+Functions should generally be wrapped with the is_a or is_re decorators for
+brevity.
+'''
+# ------------------------------------------------------------------------------
+
 import os
 import re
 from functools import wraps
