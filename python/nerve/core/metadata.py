@@ -1,13 +1,15 @@
 #! /usr/bin/env python
+'''
+The metadata module contain the Metadata class which is used by nerve to handle all metadata
+'''
+# ------------------------------------------------------------------------------
+
 import os
 import re
 import yaml
 from nerve.spec import specifications, traits
 from nerve.core.errors import SpecificationError
 # ------------------------------------------------------------------------------
-'''
-The metadata module contain the Metadata class which is used by nerve to handle all metadata
-'''
 
 class Metadata(object):
     '''

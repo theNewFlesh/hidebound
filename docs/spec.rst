@@ -1,9 +1,6 @@
 spec package
 ===================
 
-Submodules
-----------
-
 nerve.spec.specifications module
 --------------------------------
 
@@ -24,14 +21,6 @@ nerve.spec.validators module
 --------------------------------
 
 .. automodule:: nerve.spec.validators
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: spec
     :members:
     :undoc-members:
     :show-inheritance:

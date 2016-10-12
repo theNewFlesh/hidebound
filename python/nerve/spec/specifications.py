@@ -1,12 +1,4 @@
 #! /usr/bin/env python
-import re
-from nerve.spec.traits import *
-from nerve.spec.validators import *
-from schematics.models import Model, BaseType
-from schematics.types import StringType, IntType, BooleanType
-from schematics.types.compound import ListType, DictType
-from schematics.exceptions import ValidationError
-# ------------------------------------------------------------------------------
 '''
 The specifications module house all the specifications for nerve entities
 
@@ -18,6 +10,16 @@ aforementioned classes.  All class attributes must have a "get_[attribute]"
 function in the traits module and should have one or more validators related t
 the value of that trait (especially if required).
 '''
+# ------------------------------------------------------------------------------
+
+import re
+from nerve.spec.traits import *
+from nerve.spec.validators import *
+from schematics.models import Model, BaseType
+from schematics.types import StringType, IntType, BooleanType
+from schematics.types.compound import ListType, DictType
+from schematics.exceptions import ValidationError
+# ------------------------------------------------------------------------------
 
 class MetaName(Model):
     '''
@@ -58,6 +60,9 @@ class Specification(Model):
     specification = StringType(required=True)
 
 class Config(Specification):
+    '''
+    Base class for all nerve configs (nerverc)
+    '''
     username                 = StringType(required=True, validators=[is_username])
     user_branch              = StringType(required=True, validators=[is_user_branch])
     organization             = StringType(required=True, validators=[is_organization])
@@ -77,6 +82,9 @@ class Config(Specification):
     gitignore                = ListType(StringType, required=True, validators=[])
 
 class Project(Specification):
+    '''
+    Base class for all nerve projects
+    '''
     project_name = StringType(required=True, validators=[is_project_name])
     project_id   = StringType(required=True, validators=[is_project_id])
     url          = StringType(required=True, validators=[is_url])
@@ -84,7 +92,10 @@ class Project(Specification):
 
     version      = IntType(required=True, validators=[is_version])
 
-class Asset(Specification):
+class NonDeliverable(Specification):
+    '''
+    Base class for all nerve non-deliverable assets
+    '''
     project_name = StringType(required=True, validators=[is_project_name])
     project_id   = StringType(required=True, validators=[is_project_id])
     url          = StringType(required=True, validators=[is_url])
@@ -92,6 +103,9 @@ class Asset(Specification):
     deliverable  = BooleanType(default=False)
 
 class Deliverable(Specification):
+    '''
+    Base class for all nerve deliverable assets
+    '''
     project_name = StringType(required=True, validators=[is_project_name])
     project_id   = StringType(required=True, validators=[is_project_id])
     url          = StringType(required=True, validators=[is_url])

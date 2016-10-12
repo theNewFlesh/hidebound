@@ -1,10 +1,4 @@
 #! /usr/bin/env python
-import os
-from configparser import ConfigParser
-from nerve.core import utils
-from nerve.core.utils import execute_subprocess
-# ------------------------------------------------------------------------------
-
 '''
 The model module contains the GitFS class, nerve's internal API for accessing git lfs
 
@@ -13,9 +7,17 @@ Platforrm:
 
 Author:
     Alex Braun <alexander.g.braun@gmail.com> <http://www.alexgbraun.com>
-'''
 
-# TODO: integrate python-based git-lfs server instead of using git-lfs-s3 which is ruby-based
+Todo:
+    * integrate python-based git-lfs server instead of using git-lfs-s3 which is ruby-based
+'''
+# ------------------------------------------------------------------------------
+
+import os
+from configparser import ConfigParser
+from nerve.core import utils
+from nerve.core.utils import execute_subprocess
+# ------------------------------------------------------------------------------
 
 class GitLFS(object):
     '''

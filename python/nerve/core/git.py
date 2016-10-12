@@ -1,9 +1,4 @@
 #! /usr/bin/env python
-import os
-from git import Repo, GitCommandError
-from nerve.core import utils
-# ------------------------------------------------------------------------------
-
 '''
 The model module contains the Git class, nerve's internal API for accessing git
 
@@ -13,6 +8,12 @@ Platforrm:
 Author:
     Alex Braun <alexander.g.braun@gmail.com> <http://www.alexgbraun.com>
 '''
+# ------------------------------------------------------------------------------
+
+import os
+from git import Repo, GitCommandError
+from nerve.core import utils
+# ------------------------------------------------------------------------------
 
 class Git(object):
     '''

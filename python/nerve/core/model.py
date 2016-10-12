@@ -1,4 +1,16 @@
 #! /usr/bin/env python
+'''
+The model module contains the Nerve class, the central component of the entire
+nerve framework.
+
+Platforrm:
+    Unix
+
+Author:
+    Alex Braun <alexander.g.braun@gmail.com> <http://www.alexgbraun.com>
+'''
+# ------------------------------------------------------------------------------
+
 from copy import deepcopy
 from collections import defaultdict
 from itertools import chain
@@ -12,17 +24,6 @@ from nerve.core.git_lfs import GitLFS
 from nerve.core.client import Client
 from nerve.core.metadata import Metadata
 # ------------------------------------------------------------------------------
-
-'''
-The model module contains the Nerve class, the central component of the entire
-nerve framework.
-
-Platforrm:
-    Unix
-
-Author:
-    Alex Braun <alexander.g.braun@gmail.com> <http://www.alexgbraun.com>
-'''
 
 class Nerve(object):
     '''

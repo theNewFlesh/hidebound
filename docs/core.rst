@@ -1,9 +1,6 @@
 core package
 ===================
 
-Submodules
-----------
-
 nerve.core.client module
 --------------------------------
 
@@ -48,14 +45,6 @@ nerve.core.utils module
 --------------------------------
 
 .. automodule:: nerve.core.utils
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: core
     :members:
     :undoc-members:
     :show-inheritance:

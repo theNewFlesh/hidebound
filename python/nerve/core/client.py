@@ -1,15 +1,4 @@
 #! /usr/bin/env python
-from copy import deepcopy
-import json
-import yaml
-from github3 import login
-from github3.repos.branch import Branch
-from github3.null import NullObject
-# ------------------------------------------------------------------------------
-
-# TODO: added waiting and timeout logic
-# TODO: handle github errors
-
 '''
 The model module contains the Client class, nerve's internal API for accessing Github
 
@@ -18,7 +7,20 @@ Platforrm:
 
 Author:
     Alex Braun <alexander.g.braun@gmail.com> <http://www.alexgbraun.com>
+
+Todo:
+    * added waiting and timeout logic
+    * handle github errors
 '''
+# ------------------------------------------------------------------------------
+
+from copy import deepcopy
+import json
+import yaml
+from github3 import login
+from github3.repos.branch import Branch
+from github3.null import NullObject
+# ------------------------------------------------------------------------------
 
 class Client(object):
     '''

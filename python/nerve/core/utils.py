@@ -1,12 +1,14 @@
 #! /usr/bin/env python
-import re
-from warnings import warn
-from subprocess import Popen, PIPE, SubprocessError
-# ------------------------------------------------------------------------------
 '''
 The utils module contains functions generally usefull to multiple components
 within the nerve framework
 '''
+# ------------------------------------------------------------------------------
+
+import re
+from warnings import warn
+from subprocess import Popen, PIPE, SubprocessError
+# ------------------------------------------------------------------------------
 
 def execute_subprocess(command, error_re='Error:.*'):
     '''
