@@ -5,6 +5,7 @@ The metadata module contain the Metadata class which is used by nerve to handle 
 # ------------------------------------------------------------------------------
 
 import os
+from pprint import pformat
 import re
 import yaml
 from nerve.spec import specifications, traits
@@ -72,6 +73,12 @@ class Metadata(object):
         self._datapath = datapath
         self._metapath = metapath
 
+    def __repr__(self):
+        return pformat(self.data)
+
+    def __getitem__(self, key):
+        return self.data[key]
+
     def _is_meta(self, item):
         if re.search('_meta', item):
             return True
@@ -81,9 +88,6 @@ class Metadata(object):
         if re.search('nerverc', item):
             return True
         return False
-
-    def __getitem__(self, key):
-        return self.data[key]
 
     def _get_spec(self, name):
         '''

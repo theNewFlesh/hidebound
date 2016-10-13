@@ -191,7 +191,7 @@ class Nerve(object):
 
             output = Metadata(asset)
             asset_type = [x is 'deliverable' for x in asset_type]
-            if output.data.deliverable in asset_type:
+            if output.data['deliverable'] in asset_type:
                 yield output
 
     def create(self, name):
