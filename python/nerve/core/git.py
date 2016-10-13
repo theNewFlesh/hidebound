@@ -33,8 +33,6 @@ class Git(object):
         Returns:
             Git: local git repository
         '''
-        if not os.path.exists(working_dir):
-            os.mkdir(working_dir)
         self._repo = self._clone(working_dir, url=url, branch=branch)
         self._working_dir = working_dir
 
@@ -49,18 +47,22 @@ class Git(object):
 
         Returns:
             git.Repo: local repository
+
+        ..todo ::
+            - fix try block so that it raises an error when ssh-agent isn't
+              running or ssh private has not been added
         '''
         os.chdir(os.path.split(working_dir)[0])
         if url:
-            try:
-                if branch:
-                    return Repo.clone_from(to_path=working_dir, url=url, branch=branch)
-                else:
-                    return Repo.clone_from(to_path=working_dir, url=url)
-            except GitCommandError as e:
-                # directory already exists
-                if e.status != 128:
-                    raise GitCommandError(e)
+            # try:
+            if branch:
+                return Repo.clone_from(to_path=working_dir, url=url, branch=branch)
+            else:
+                return Repo.clone_from(to_path=working_dir, url=url)
+            # except GitCommandError as e:
+            #     # directory already exists
+            #     if e.status != 128:
+            #         raise GitCommandError(e)
 
         repo = Repo(working_dir)
         if branch:
