@@ -12,7 +12,7 @@ Author:
 
 import os
 from git import Repo, GitCommandError
-from nerve.core import utils
+from nerve.core.utils import get_status
 # ------------------------------------------------------------------------------
 
 class Git(object):
@@ -33,6 +33,8 @@ class Git(object):
         Returns:
             Git: local git repository
         '''
+        if not os.path.exists(working_dir):
+            os.mkdir(working_dir)
         self._repo = self._clone(working_dir, url=url, branch=branch)
         self._working_dir = working_dir
 
@@ -143,11 +145,17 @@ class Git(object):
         src = list(src)[0]
         src = src['branch']
 
-        dest = self.references([dest], reftypes=['local'])
-        dest = list(dest)[0]
-        dest = dest['branch']
+        temp = self.references([dest], reftypes=['local'])
+        temp = list(temp)
+        if len(temp) == 1:
+            # local branch exists
+            dest = temp[0]['branch']
 
+        # creates local branch if one does not exist
         self._repo.remote(remote).pull(src + ':' + dest)
+
+    def merge(self, src, dest):
+        self._repo.merge_base(src, dest)
 
     def commit(self, message):
         '''
@@ -229,8 +237,9 @@ class Git(object):
         Returns:
             list: list of dicts, each one representing a file
         '''
-        return utils.status(
+        return get_status(
             'git status --porcelain',
+            self._working_dir,
             include=include,
             exclude=exclude,
             states=states,

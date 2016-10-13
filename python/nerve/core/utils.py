@@ -6,6 +6,7 @@ within the nerve framework
 # ------------------------------------------------------------------------------
 
 import re
+import os
 from warnings import warn
 from subprocess import Popen, PIPE, SubprocessError
 # ------------------------------------------------------------------------------
@@ -39,7 +40,7 @@ def execute_subprocess(command, error_re='Error:.*'):
 
     return output
 
-def status(command, include=[], exclude=[], states=[], staged=None, warnings=False):
+def get_status(command, working_dir, include=[], exclude=[], states=[], staged=None, warnings=False):
     '''
     Convenience function for running a git or git lfs status command and returning nice output
 
@@ -55,6 +56,7 @@ def status(command, include=[], exclude=[], states=[], staged=None, warnings=Fal
     Yields:
         dict: a single file
     '''
+    os.chdir(working_dir)
     status_ = execute_subprocess(command)
     lut = {
         'A': 'added',
@@ -129,7 +131,7 @@ def main():
 
 __all__ = [
     'execute_subprocess',
-    'status'
+    'get_status'
 ]
 
 if __name__ == '__main__':

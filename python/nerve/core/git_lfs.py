@@ -16,7 +16,7 @@ Author:
 import os
 from configparser import ConfigParser
 from nerve.core import utils
-from nerve.core.utils import execute_subprocess
+from nerve.core.utils import execute_subprocess, get_status
 # ------------------------------------------------------------------------------
 
 class GitLFS(object):
@@ -164,8 +164,9 @@ class GitLFS(object):
         Returns:
             list: list of dicts, each one representing a file
         '''
-        return utils.status(
+        return get_status(
             'git lfs status --porcelain',
+            self._working_dir,
             include=include,
             exclude=exclude,
             states=states,
