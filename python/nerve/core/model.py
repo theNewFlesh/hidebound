@@ -15,6 +15,7 @@ from copy import deepcopy
 from collections import defaultdict
 from itertools import chain
 import os
+from pprint import pformat
 import shutil
 from warnings import warn
 import yaml
@@ -53,6 +54,9 @@ class Nerve(object):
     def __getitem__(self, key):
         return self._config[key]
 
+    def __repr__(self):
+        return pformat(self._config)
+
     def _create_subdirectories(self, project):
         '''
         Creates directory structure for a nerve project
@@ -89,7 +93,6 @@ class Nerve(object):
         config['project-id'] = project_id
         config['url'] = url
         config['version'] = version
-        # config['uuid'] = None
 
         # version implicitly
         with open(os.path.join(project, name + '_meta.yml'), 'w') as f:
@@ -213,7 +216,7 @@ class Nerve(object):
             - send data to DynamoDB
         '''
         # create repo
-        project = os.path.join(self['project-root'], name)
+        project, _ = self._get_project_and_branch(name, 'master')
         client = self._get_client(name)
         local = Git(project, url=client['url'])
         # ----------------------------------------------------------------------
@@ -222,7 +225,7 @@ class Nerve(object):
         lfs = GitLFS(project)
         lfs.install(skip_smudge=True)
         lfs.create_config('http://localhost:8080')
-        lfs.track(['*.' + x for x in self['extensions']])
+        lfs.track(['*.' + x for x in self['lfs-extensions']])
         local.create_gitignore(self['gitignore'])
         # ----------------------------------------------------------------------
 
@@ -243,7 +246,7 @@ class Nerve(object):
         local.commit(
             'VALID: {} created according to {} specification'.format(
                 name,
-                self['specification']
+                self['project-specification']
             )
         )
         local.push('dev')
@@ -339,14 +342,15 @@ class Nerve(object):
             verbosity=verbosity,
             asset_type=['nondeliverable']
         )
-
-        # push non-deliverables to user-branch
-        local.add([x.datapath for x in nondeliverables])
-        names = [x.name for x in nondeliverables]
-        local.commit('NON-DELIVERABLES: ' + ', '.join(names))
-        local.push(branch)
-
-        return True
+        nondeliverables = list(nondeliverables)
+        if len(nondeliverables) > 0:
+            # push non-deliverables to user-branch
+            local.add([x.datapath for x in nondeliverables])
+            names = [x['asset-name'] for x in nondeliverables]
+            local.commit('NON-DELIVERABLES: ' + ', '.join(names))
+            local.push(branch)
+            return True
+        return False
 
     def publish(self, project, branch='user-branch', include=[], exclude=[], verbosity=0):
         '''
@@ -373,10 +377,11 @@ class Nerve(object):
         name = project
         project, branch = self._get_project_and_branch(name, branch)
 
-        # pulling metadata first avoids merge conflicts
-        # by setting HEAD to the most current
-        local = Git(project)
-        local.pull('dev', branch)
+        # pulling metadata first avoids merge conflicts by keeping the
+        # user-branch HEAD ahead of the dev branch
+        local = Git(project, branch=branch)
+        local.pull('dev', 'dev')
+        local.merge('dev', branch)
 
         self._publish_non_deliverables(
             local,
@@ -418,7 +423,7 @@ class Nerve(object):
         if len(invalid) > 0:
             # commit only invalid metadata to github user branch
             local.add([x.metapath for x in invalid])
-            local.commit('INVALID: ' + ', '.join([x.name for x in invalid]))
+            local.commit('INVALID: ' + ', '.join([x['asset-name'] for x in invalid]))
             local.push(branch)
             return False
 
@@ -426,7 +431,7 @@ class Nerve(object):
             # commit all deliverable data and metadata to github dev branch
             local.add([x.metapath for x in valid])
             local.add([x.datapath for x in valid])
-            names = [x.name for x in valid]
+            names = [x['asset-name'] for x in valid]
             local.commit('VALID: ' + ', '.join(names))
             local.push(branch)
 
@@ -438,6 +443,8 @@ class Nerve(object):
             body.extend(['\t' + x for x in names])
             body = '\n'.join(body)
             body = body.format(user=branch)
+
+            return title, branch, 'dev', body
 
             num = client.create_pull_request(title, branch, 'dev', body=body)
             client.merge_pull_request(num, 'Publish authorized')
