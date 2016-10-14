@@ -153,9 +153,15 @@ def is_request_include_patterns(item):
 
 @is_a(
     lambda x: hasattr(nerve.spec.specifications, x.capitalize()),
-    'is not a valid specification'
-)
+    'is not a valid specification')
 def is_specification(item): return
+
+@is_re('added|copied|deleted|modified|renamed|updated|untracked',
+    'is not a valid state')
+def is_status_state(item): return
+
+@is_re('nondeliverable|deliverable', 'is not a valid asset type')
+def is_status_asset_type(item): return
 
 def is_teams(item):
     return True

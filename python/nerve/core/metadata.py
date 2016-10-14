@@ -149,7 +149,10 @@ class Metadata(object):
         dict: copy of internal data
         '''
         output = self._data.to_primitive()
-        return {re.sub('_', '-', k): v for k, v in output.items()}
+        output = {re.sub('_', '-', k): v for k, v in output.items()}
+        if 'project' in output.keys():
+            output['project'] = {re.sub('_', '-', k): v for k, v in output['project'].items()}
+        return output
 
     def validate(self):
         '''

@@ -13,6 +13,9 @@ publish-include-patterns:
   - vol.*
   - geo.*
 publish-exclude-patterns:
+status-states:
+status-asset-types:
+  - deliverable
 project:
   project_name: nerve-test-repo-2
   project_id: 0
@@ -54,7 +57,6 @@ project:
     - "*.manifest"
     - "*.spec"
     - "pip-log.txt"
-    - "pip-delete-this-directory.txt"
     - "htmlcov/"
     - ".tox/"
     - ".coverage"

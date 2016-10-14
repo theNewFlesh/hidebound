@@ -124,6 +124,9 @@ class Config(Specification):
     request_exclude_patterns = ListType(StringType, default=[], validators=[is_request_exclude_patterns])
     publish_include_patterns = ListType(StringType, default=[], validators=[is_publish_include_patterns])
     publish_exclude_patterns = ListType(StringType, default=[], validators=[is_publish_exclude_patterns])
+    status_states            = ListType(StringType, default=[], validators=[is_status_state])
+    status_asset_types       = ListType(StringType, default=[], validators=[is_status_asset_type])
+    verbosity                = IntType(default=0)
     project                  = ModelType(Project)
 
     def validate_project(self, key, data):
