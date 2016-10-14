@@ -1,12 +1,11 @@
 ---
+specification: config001
 username: theNewFlesh
 user-branch: alex
 organization: nerve-test-organization
 project-root: /tmp
 token: e17afcc8c42fe24536c14700c4931f0e7f252bb1
 url-type: ssh
-private: true
-project-specification: proj001
 request-include-patterns:
   - vol.*
 request-exclude-patterns:
@@ -14,54 +13,61 @@ publish-include-patterns:
   - vol.*
   - geo.*
 publish-exclude-patterns:
-lfs-extensions:
+project:
+  project_name: nerve-test-repo-2
+  project_id: 0
+  version: 1
+  url: ''
+  specification: proj001
+  private: true
+  lfs-extensions:
   - obj
   - png
-assets:
-  - maya001
-deliverables:
-  - vol001
-  - geo001
-teams:
-  dev: write
-  biz: read
-gitignore:
-  - "__pycache__/"
-  - "*.py[cod]"
-  - "*.so"
-  - ".Python"
-  - "env/"
-  - "build/"
-  - "develop-eggs/"
-  - "dist/"
-  - "downloads/"
-  - "eggs/"
-  - ".eggs/"
-  - "lib/"
-  - "lib64/"
-  - "parts/"
-  - "sdist/"
-  - "var/"
-  - "*.egg-info/"
-  - ".installed.cfg"
-  - "*.egg"
-  - "*.manifest"
-  - "*.spec"
-  - "pip-log.txt"
-  - "pip-delete-this-directory.txt"
-  - "htmlcov/"
-  - ".tox/"
-  - ".coverage"
-  - ".coverage.*"
-  - ".cache"
-  - "nosetests.xml"
-  - "coverage.xml"
-  - "*,cover"
-  - "*.mo"
-  - "*.pot"
-  - "*.log"
-  - "docs/_build/"
-  - "target/"
-  - ".ipynb_checkpoints"
-  - ".DS_Store"
-  - "node_modules/"
+  assets:
+    - maya001
+  deliverables:
+    - vol001
+    - geo001
+  teams:
+    dev: write
+    biz: read
+  gitignore:
+    - "__pycache__/"
+    - "*.py[cod]"
+    - "*.so"
+    - ".Python"
+    - "env/"
+    - "build/"
+    - "develop-eggs/"
+    - "dist/"
+    - "downloads/"
+    - "eggs/"
+    - ".eggs/"
+    - "lib/"
+    - "lib64/"
+    - "parts/"
+    - "sdist/"
+    - "var/"
+    - "*.egg-info/"
+    - ".installed.cfg"
+    - "*.egg"
+    - "*.manifest"
+    - "*.spec"
+    - "pip-log.txt"
+    - "pip-delete-this-directory.txt"
+    - "htmlcov/"
+    - ".tox/"
+    - ".coverage"
+    - ".coverage.*"
+    - ".cache"
+    - "nosetests.xml"
+    - "coverage.xml"
+    - "*,cover"
+    - "*.mo"
+    - "*.pot"
+    - "*.log"
+    - "docs/_build/"
+    - "target/"
+    - ".ipynb_checkpoints"
+    - ".DS_Store"
+    - "node_modules/"
