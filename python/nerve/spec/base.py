@@ -65,22 +65,30 @@ class Specification(Model):
 
     specification = StringType(required=True)
 
+class Client(Specification):
+    username     = StringType(required=True, validators=[is_username])
+    token        = StringType(required=True, validators=[is_token])
+    organization = StringType(required=True, validators=[is_organization])
+    project_name = StringType(required=True, validators=[is_project_name])
+    private      = StringType(required=True, default=True, validators=[])
+    url_type     = StringType(required=True, validators=[is_url_type])
+
 class Project(Specification):
     '''
     Base class for all nerve projects
     '''
-    project_name   = StringType(required=True, validators=[is_project_name])
-    project_id     = StringType(required=True, validators=[is_project_id])
-    url            = StringType(required=True, validators=[is_url])
-    notes          = StringType(default='')
+    project_name    = StringType(required=True, validators=[is_project_name])
+    project_id      = StringType(required=True, validators=[is_project_id])
+    url             = StringType(required=True, validators=[is_url])
+    notes           = StringType(default='')
 
-    version        = IntType(required=True, validators=[is_version])
-    teams          = DictType(StringType, required=True, validators=[is_teams])
-    gitignore      = ListType(StringType, required=True, validators=[])
-    private        = BooleanType(required=True, validators=[is_private])
-    lfs_extensions = ListType(StringType, required=True, validators=[is_extension])
-    assets         = ListType(StringType, default=[], validators=[])
-    deliverables   = ListType(StringType, required=True, validators=[is_specification])
+    version         = IntType(required=True, validators=[is_version])
+    teams           = DictType(StringType, required=True, validators=[is_teams])
+    gitignore       = ListType(StringType, required=True, validators=[])
+    private         = BooleanType(required=True, validators=[is_private])
+    lfs_extensions  = ListType(StringType, required=True, validators=[is_extension])
+    nondeliverables = ListType(StringType, default=[], validators=[])
+    deliverables    = ListType(StringType, required=True, validators=[is_specification])
 
 class NonDeliverable(Specification):
     '''
@@ -144,6 +152,7 @@ def main():
 
 __all__ = [
     'Config',
+    'Client',
     'Project',
     'Deliverable',
     'NonDeliverable'

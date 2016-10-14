@@ -12,7 +12,7 @@ the value of that trait (especially if required).
 '''
 # ------------------------------------------------------------------------------
 
-from nerve.spec.base import Config, Project, Deliverable, NonDeliverable
+from nerve.spec.base import Config, Project, Deliverable, NonDeliverable, Client
 # ------------------------------------------------------------------------------
 
 class Config001(Config):

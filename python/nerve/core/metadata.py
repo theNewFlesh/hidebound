@@ -21,7 +21,7 @@ class Metadata(object):
 
     API: data, get_traits, validate, write, __getitem__
     '''
-    def __init__(self, item):
+    def __init__(self, item, metapath=None):
         '''
         Metadata constructor takes a dict, filepath or dirpath and turns it into internal metadata
         The specification class used to wrap the internal data is derived from item.
@@ -36,7 +36,6 @@ class Metadata(object):
             OSError, TypeError
         '''
         data = {}
-        metapath = None
         datapath = None
         spec = None
 
@@ -166,7 +165,7 @@ class Metadata(object):
         '''
         return self._data.validate() is None
 
-    def write(self, fullpath=None):
+    def write(self, fullpath=None, validate=True):
         '''
         Writes internal data to file with correct name in correct location
 
@@ -178,8 +177,10 @@ class Metadata(object):
         '''
         if not fullpath:
             fullpath = self._metapath
-        meta = traits.get_name_traits(fullpath)
-        specifications.MetaName(meta).validate()
+
+        if validate:
+            meta = traits.get_name_traits(fullpath)
+            specifications.MetaName(meta).validate()
 
         # overwrite existing metadata
         data = {}

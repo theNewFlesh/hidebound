@@ -26,7 +26,7 @@ project:
   lfs-extensions:
   - obj
   - png
-  assets:
+  nondeliverables:
     - maya001
   deliverables:
     - vol001

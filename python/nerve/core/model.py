@@ -57,10 +57,12 @@ class Nerve(object):
         return pformat(self.config)
 
     def __get_config(self, config):
-        '''
-        '''
         output = self.config
         if config != {}:
+            if 'project' in config.keys() and 'project' in output.keys():
+                project = output['project']
+                project.update(config['project'])
+                config['project'] = project
             output.update(config)
             output = Metadata(output)
             try:
@@ -70,16 +72,32 @@ class Nerve(object):
             output = output.data
         return output
 
-    def _get_info(self, config):
+    def _get_info(self, name, config):
         config = self.__get_config(config)
-        project = config['project']
-        name = project['project-name']
-        path = os.path.join(config['project-root'], name)
+
         states = config['status-states']
         asset_types = config['status-asset-types']
         branch = config['user-branch']
         verbosity = config['verbosity']
-        return config, project, name, path, states, asset_types, branch, verbosity
+
+        project = config['project']
+        if name == None:
+            name = project['project-name']
+        project['project-name'] = name
+
+        path = os.path.join(config['project-root'], name)
+
+        client_conf = dict(
+            username=config['username'],
+            token=config['token'],
+            organization=config['organization'],
+            project_name=project['project-name'],
+            private=project['private'],
+            url_type=config['url-type'],
+            specification='client'
+        )
+
+        return config, project, name, path, states, asset_types, branch, verbosity, client_conf
 
     @property
     def config(self):
@@ -89,7 +107,7 @@ class Nerve(object):
         return self.__config.data
     # --------------------------------------------------------------------------
 
-    def status(self, **config):
+    def status(self, name=None, **config):
         '''
         Reports on the status of all affected files within a given project
 
@@ -105,7 +123,7 @@ class Nerve(object):
         Yields:
             Metadata: Metadata object of each asset
         '''
-        config, _, _, path, states, asset_types, _, verbosity = self._get_info(config)
+        config, _, _, path, states, asset_types, _, verbosity, client_conf = self._get_info(name, config)
 
         warn_ = False
         if verbosity == 2:
@@ -151,7 +169,7 @@ class Nerve(object):
             if atype in asset_types:
                 yield output
 
-    def create(self, **config):
+    def create(self, name=None, **config):
         '''
         Creates a nerve project on Github and in the project-root folder
 
@@ -173,9 +191,9 @@ class Nerve(object):
             - send data to DynamoDB
         '''
         # create repo
-        config, project, name, path, _, _, _, _ = self._get_info(config)
+        config, project, name, path, _, _, _, verbosity, client_conf = self._get_info(name, config)
 
-        client = Client(config)
+        client = Client(client_conf)
         local = Git(path, url=client['url'])
         # ----------------------------------------------------------------------
 
@@ -195,20 +213,21 @@ class Nerve(object):
 
         # create project structure
         local.branch('dev')
-        for subdir in chain(project['assets'], project['deliverables']):
-            path = os.path.join(path, subdir)
-            os.mkdir(path)
+        for subdir in chain(project['deliverables'], project['nondeliverables']):
+            _path = os.path.join(path, subdir)
+            os.mkdir(_path)
             # git won't commit empty directories
-            open(os.path.join(path, '.keep'), 'w').close()
+            open(os.path.join(_path, '.keep'), 'w').close()
         # ----------------------------------------------------------------------
 
         # create project metadata
         project['project-id'] = client['id']
         project['url'] = client['url']
         project['version'] = 1
-        meta = Metadata(project)
+        meta = project['specification'] + '_meta.yml' # implicit versioning
+        meta = Metadata(project, metapath=meta)
         meta.validate()
-        meta.write()
+        meta.write(validate=False)
         # ----------------------------------------------------------------------
 
         # commit everything
@@ -228,12 +247,12 @@ class Nerve(object):
         # ----------------------------------------------------------------------
 
         # add teams
-        for team, perm in config['teams'].items():
+        for team, perm in project['teams'].items():
             client.add_team(team, perm)
 
         return True
 
-    def clone(self, **config):
+    def clone(self, name=None, **config):
         '''
         Clones a nerve project to local project-root directory
 
@@ -249,9 +268,9 @@ class Nerve(object):
         .. todo::
             - catch repo already exists errors and repo doesn't exist errors
         '''
-        config, _, _, path, _, _, branch, _ = self._get_info(config)
+        config, _, _, path, _, _, branch, verbosity, _ = self._get_info(name, config)
 
-        client = Client(config)
+        client = Client(client_conf)
         if client.has_branch(branch):
             local = Git(path, url=client['url'], branch=branch)
         else:
@@ -263,7 +282,7 @@ class Nerve(object):
 
         return True
 
-    def request(self, **config):
+    def request(self, name=None, **config):
         '''
         Request deliverables from the dev branch of given project
 
@@ -276,7 +295,7 @@ class Nerve(object):
         Returns:
             bool: success status
         '''
-        config, _, _, path, _, _, branch, _ = self._get_info(config)
+        config, _, _, path, _, _, branch, verbosity, _ = self._get_info(name, config)
 
         Git(path, branch=branch).pull('dev', branch)
         GitLFS(path).pull(
@@ -287,7 +306,7 @@ class Nerve(object):
         return True
     # --------------------------------------------------------------------------
 
-    def publish(self, **config):
+    def publish(self, name=None, **config):
         '''
         Attempt to publish deliverables from user's branch to given project's dev branch on Github
 
@@ -309,7 +328,7 @@ class Nerve(object):
         .. todo::
             - add branch checking logic to skip the following if not needed?
         '''
-        config, _, _, path, _, _, branch, verbosity = self._get_info(config)
+        config, _, _, path, _, _, branch, verbosity, client_conf = self._get_info(name, config)
 
         # pulling metadata first avoids merge conflicts by keeping the
         # user-branch HEAD ahead of the dev branch
@@ -352,7 +371,7 @@ class Nerve(object):
             valid.append(deliv)
         # ----------------------------------------------------------------------
 
-        client = Client(config)
+        client = Client(client_conf)
 
         if len(invalid) > 0:
             # commit only invalid metadata to github user branch
@@ -384,7 +403,7 @@ class Nerve(object):
             return True
     # --------------------------------------------------------------------------
 
-    def delete(self, from_server, from_local, **config):
+    def delete(self, from_server, from_local, name=None, **config):
         '''
         Deletes a nerve project
 
@@ -399,16 +418,15 @@ class Nerve(object):
         .. todo::
             - add git lfs logic for deletion
         '''
-        config, project, name, _, _, _, _, _ = self._get_info(config)
-
+        _, _, _, path, _, _, _, verbosity, client_conf = self._get_info(name, config)
         if from_server:
-            Client(config).delete()
+            Client(client_conf).delete()
             # git lfs deletion logic
         if from_local:
-            if os.path.split(project)[-1] == name:
-                shutil.rmtree(project)
+            if os.path.split(path)[-1] == name:
+                shutil.rmtree(path)
             else:
-                warn(project + ' is not a project directory.  Local deletion aborted.')
+                warn(path + ' is not a project directory.  Local deletion aborted.')
                 return False
         return True
 # ------------------------------------------------------------------------------
