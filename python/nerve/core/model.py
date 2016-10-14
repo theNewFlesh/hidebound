@@ -72,7 +72,7 @@ class Nerve(object):
             output = output.data
         return output
 
-    def _get_info(self, name, config):
+    def _get_info(self, name, notes, config):
         config = self.__get_config(config)
 
         states = config['status-states']
@@ -81,9 +81,14 @@ class Nerve(object):
         verbosity = config['verbosity']
 
         project = config['project']
+
         if name == None:
             name = project['project-name']
+        if notes == None:
+            notes = project['notes']
+
         project['project-name'] = name
+        project['notes'] = notes
 
         path = os.path.join(config['project-root'], name)
 
@@ -97,7 +102,7 @@ class Nerve(object):
             specification='client'
         )
 
-        return config, project, name, path, states, asset_types, branch, verbosity, client_conf
+        return config, project, name, path, states, asset_types, branch, verbosity, client_conf, notes
 
     @property
     def config(self):
@@ -123,7 +128,7 @@ class Nerve(object):
         Yields:
             Metadata: Metadata object of each asset
         '''
-        config, _, _, path, states, asset_types, _, verbosity, client_conf = self._get_info(name, config)
+        config, _, _, path, states, asset_types, _, verbosity, client_conf, _ = self._get_info(name, None, config)
 
         warn_ = False
         if verbosity == 2:
@@ -169,7 +174,7 @@ class Nerve(object):
             if atype in asset_types:
                 yield output
 
-    def create(self, name=None, **config):
+    def create(self, name=None, notes=None, **config):
         '''
         Creates a nerve project on Github and in the project-root folder
 
@@ -191,7 +196,7 @@ class Nerve(object):
             - send data to DynamoDB
         '''
         # create repo
-        config, project, name, path, _, _, _, verbosity, client_conf = self._get_info(name, config)
+        config, project, name, path, _, _, _, verbosity, client_conf, _ = self._get_info(name, notes, config)
 
         client = Client(client_conf)
         local = Git(path, url=client['url'])
@@ -268,7 +273,7 @@ class Nerve(object):
         .. todo::
             - catch repo already exists errors and repo doesn't exist errors
         '''
-        config, _, _, path, _, _, branch, verbosity, _ = self._get_info(name, config)
+        config, _, _, path, _, _, branch, verbosity, _, _ = self._get_info(name, None, config)
 
         client = Client(client_conf)
         if client.has_branch(branch):
@@ -295,7 +300,7 @@ class Nerve(object):
         Returns:
             bool: success status
         '''
-        config, _, _, path, _, _, branch, verbosity, _ = self._get_info(name, config)
+        config, _, _, path, _, _, branch, verbosity, _, _ = self._get_info(name, None, config)
 
         Git(path, branch=branch).pull('dev', branch)
         GitLFS(path).pull(
@@ -306,7 +311,7 @@ class Nerve(object):
         return True
     # --------------------------------------------------------------------------
 
-    def publish(self, name=None, **config):
+    def publish(self, name=None, notes=None, **config):
         '''
         Attempt to publish deliverables from user's branch to given project's dev branch on Github
 
@@ -328,7 +333,7 @@ class Nerve(object):
         .. todo::
             - add branch checking logic to skip the following if not needed?
         '''
-        config, _, _, path, _, _, branch, verbosity, client_conf = self._get_info(name, config)
+        config, _, _, path, _, _, branch, verbosity, client_conf, _ = self._get_info(name, notes, config)
 
         # pulling metadata first avoids merge conflicts by keeping the
         # user-branch HEAD ahead of the dev branch
@@ -418,7 +423,7 @@ class Nerve(object):
         .. todo::
             - add git lfs logic for deletion
         '''
-        _, _, _, path, _, _, _, verbosity, client_conf = self._get_info(name, config)
+        _, _, _, path, _, _, _, verbosity, client_conf, _ = self._get_info(name, None, config)
         if from_server:
             Client(client_conf).delete()
             # git lfs deletion logic
