@@ -69,7 +69,7 @@ class Metadata(object):
             raise TypeError('type: ' + type(item) + ' not supported')
 
         spec = self._get_spec(spec)
-        self.__data = spec(data)
+        self._data = spec(data)
         self._datapath = datapath
         self._metapath = metapath
 
@@ -134,13 +134,13 @@ class Metadata(object):
             dict: traits
         '''
         output = {}
-        for key in self.__data.keys():
+        for key in self._data.keys():
             trait = 'get_' + key
             if hasattr(traits, trait):
                 trait = getattr(traits, trait)
                 output[key] = trait(self._datapath)
 
-        self.__data.import_data(output)
+        self._data.import_data(output)
         return output
 
     @property
@@ -148,7 +148,7 @@ class Metadata(object):
         '''
         dict: copy of internal data
         '''
-        output = self.__data.to_primitive()
+        output = self._data.to_primitive()
         return {re.sub('_', '-', k): v for k, v in output.items()}
 
     def validate(self):
@@ -161,7 +161,7 @@ class Metadata(object):
         Return:
             bool: validity
         '''
-        return self.__data.validate() is None
+        return self._data.validate() is None
 
     def write(self, fullpath=None):
         '''
@@ -184,7 +184,7 @@ class Metadata(object):
             with open(fullpath, 'r') as f:
                 data = yaml.load(f)
 
-        data.update(self.__data.to_primitive())
+        data.update(self._data.to_primitive())
 
         with open(fullpath, 'w') as f:
             yaml.dump(data, f)
