@@ -11,19 +11,18 @@ Author:
 '''
 # ------------------------------------------------------------------------------
 
-from copy import deepcopy
 from collections import defaultdict
 from itertools import chain
 import os
 from pprint import pformat
 import shutil
 from warnings import warn
-import yaml
 from schematics.exceptions import ValidationError
 from nerve.core.git import Git
 from nerve.core.git_lfs import GitLFS
 from nerve.core.client import Client
 from nerve.core.metadata import Metadata
+from nerve.core.errors import KeywordError
 # ------------------------------------------------------------------------------
 
 class Nerve(object):
@@ -106,8 +105,7 @@ class Nerve(object):
         Yields:
             Metadata: Metadata object of each asset
         '''
-        (config, project, name, path, states, asset_types, branch,
-        verbosity) = self._get_info(config)
+        config, _, _, path, states, asset_types, _, verbosity = self._get_info(config)
 
         warn_ = False
         if verbosity == 2:
@@ -175,8 +173,7 @@ class Nerve(object):
             - send data to DynamoDB
         '''
         # create repo
-        (config, project, name, path, states, asset_types, branch,
-        verbosity) = self._get_info(config)
+        config, project, name, path, _, _, _, _ = self._get_info(config)
 
         client = Client(config)
         local = Git(path, url=client['url'])
@@ -219,7 +216,7 @@ class Nerve(object):
         local.commit(
             'VALID: {} created according to {} specification'.format(
                 name,
-                spec
+                project['specification']
             )
         )
         local.push('dev')
@@ -252,8 +249,7 @@ class Nerve(object):
         .. todo::
             - catch repo already exists errors and repo doesn't exist errors
         '''
-        (config, project, name, path, states, asset_types, branch,
-        verbosity) = self._get_info(config)
+        config, _, _, path, _, _, branch, _ = self._get_info(config)
 
         client = Client(config)
         if client.has_branch(branch):
@@ -280,8 +276,7 @@ class Nerve(object):
         Returns:
             bool: success status
         '''
-        (config, project, name, path, states, asset_types, branch,
-        verbosity) = self._get_info(config)
+        config, _, _, path, _, _, branch, _ = self._get_info(config)
 
         Git(path, branch=branch).pull('dev', branch)
         GitLFS(path).pull(
@@ -314,8 +309,7 @@ class Nerve(object):
         .. todo::
             - add branch checking logic to skip the following if not needed?
         '''
-        (config, project, name, path, states, asset_types, branch,
-        verbosity) = self._get_info(config)
+        config, _, _, path, _, _, branch, verbosity = self._get_info(config)
 
         # pulling metadata first avoids merge conflicts by keeping the
         # user-branch HEAD ahead of the dev branch
@@ -384,8 +378,6 @@ class Nerve(object):
             body = '\n'.join(body)
             body = body.format(user=branch)
 
-            return title, branch, 'dev', body
-
             num = client.create_pull_request(title, branch, 'dev', body=body)
             client.merge_pull_request(num, 'Publish authorized')
 
@@ -407,8 +399,7 @@ class Nerve(object):
         .. todo::
             - add git lfs logic for deletion
         '''
-        (config, project, name, path, states, asset_types, branch,
-        verbosity) = self._get_info(config)
+        config, project, name, _, _, _, _, _ = self._get_info(config)
 
         if from_server:
             Client(config).delete()
