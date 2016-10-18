@@ -11,9 +11,10 @@ module.  Triats may only return primitive datatypes.
 import re
 import os
 from collections import defaultdict
+from uuid import uuid4
 # ------------------------------------------------------------------------------
 
-def get_name_traits(fullpath):
+def get_name_traits(fullpath, deliverable=True):
     '''
     Given an asset directory or file return a dict of traits derived from the name
 
@@ -40,26 +41,31 @@ def get_name_traits(fullpath):
 
     output = dict(
         project_name=traits[0],
-        specification=traits[1],
-        descriptor=traits[2],
-        version=int(traits[3][1:]),
-        render_pass=traits[4],
-        coordinate=None,
-        frame=None,
-        extension=ext
+        specification=traits[1]
     )
+    if deliverable:
+        output = dict(
+            project_name=traits[0],
+            specification=traits[1],
+            descriptor=traits[2],
+            version=int(traits[3][1:]),
+            render_pass=traits[4],
+            coordinate=None,
+            frame=None,
+            extension=ext
+        )
 
-    if re.search('\d\d\d-\d\d\d(-\d\d\d)?', traits[5]):
-        vals = traits[5].split('-')
-        keys = list('xyz')[:len(vals)]
-        vals = {k:int(v) for k,v in zip(keys, vals)}
-        output['coordinate'] = vals
+        if re.search('\d\d\d-\d\d\d(-\d\d\d)?', traits[5]):
+            vals = traits[5].split('-')
+            keys = list('xyz')[:len(vals)]
+            vals = {k:int(v) for k,v in zip(keys, vals)}
+            output['coordinate'] = vals
 
-    if re.search('\d\d\d\d', traits[6]):
-        output['frame'] = int(traits[6])
+        if re.search('\d\d\d\d', traits[6]):
+            output['frame'] = int(traits[6])
 
-    if re.search('_meta', name):
-        output['meta'] = True
+        if re.search('_meta', name):
+            output['meta'] = True
 
     for k,v in output.items():
         if v == '-':
@@ -67,12 +73,15 @@ def get_name_traits(fullpath):
     return output
 # ------------------------------------------------------------------------------
 
+def get_asset_id(fullpath):
+    return str(uuid4())
+
 def get_asset_name(fullpath):
     '''
     Args:
         fullpath (str): absolute file/directory path
     '''
-    output = os.path.split(fullpath)[0]
+    output = os.path.split(fullpath)[-1]
     return os.path.splitext(output)[0]
 
 def get_project_name(fullpath):
@@ -83,7 +92,7 @@ def get_project_name(fullpath):
     Returns:
         str: project name
     '''
-    return get_name_traits(fullpath)['project_name']
+    return get_name_traits(fullpath, False)['project_name']
 
 def get_specification(fullpath):
     '''
@@ -93,7 +102,7 @@ def get_specification(fullpath):
     Returns:
         str: asset specification
     '''
-    return get_name_traits(fullpath)['specification']
+    return get_name_traits(fullpath, False)['specification']
 
 def get_descriptor(fullpath):
     '''

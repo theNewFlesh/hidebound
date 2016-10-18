@@ -16,8 +16,13 @@ publish-exclude-patterns:
 status-states:
 status-asset-types:
   - deliverable
+status-include-patterns:
+  - vol.*
+  - geo.*
+  - maya.*
+status-exclude-patterns:
 project:
-  project_name: nerve-test-repo-2
+  project_name: nerve-test-repo-3
   project_id: 0
   version: 1
   url: ''
@@ -26,6 +31,7 @@ project:
   lfs-extensions:
   - obj
   - png
+  - mb
   nondeliverables:
     - maya001
   deliverables:

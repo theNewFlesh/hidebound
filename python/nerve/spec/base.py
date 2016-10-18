@@ -14,6 +14,7 @@ the value of that trait (especially if required).
 
 import re
 import nerve
+from nerve.core.utils import conform_keys
 from nerve.spec.traits import *
 from nerve.spec.validators import *
 from schematics.models import Model, BaseType
@@ -54,13 +55,10 @@ class Specification(Model):
             arg (dict): data to be run though a specification
         '''
         data = raw_data
+        # needed because python doesn't support hyphenated attributes
+        data = conform_keys(data, '-', '_')
         if 'specification' not in data.keys():
             data['specification'] = self.__class__.__name__.lower()
-        # needed because python doesn't support hyphenated attributes
-        data = {re.sub('-', '_', k): v for k,v in data.items()}
-        if 'project' in data.keys():
-            if data['project'] != {}:
-                data['project'] = {re.sub('-', '_', k): v for k,v in data['project'].items()}
         super().__init__(raw_data=data)
 
     specification = StringType(required=True)
@@ -90,32 +88,33 @@ class Project(Specification):
     nondeliverables = ListType(StringType, default=[], validators=[])
     deliverables    = ListType(StringType, required=True, validators=[is_specification])
 
-class NonDeliverable(Specification):
+class Asset(Specification):
     '''
-    Base class for all nerve non-deliverable assets
-    '''
-    project_name = StringType(required=True, validators=[is_project_name])
-    project_id   = StringType(required=True, validators=[is_project_id])
-    url          = StringType(required=True, validators=[is_url])
-    notes        = StringType(default='')
-    deliverable  = BooleanType(default=False)
-
-class Deliverable(Specification):
-    '''
-    Base class for all nerve deliverable assets
+    Base class for Deliverable and NonDeliverable
     '''
     project_name = StringType(required=True, validators=[is_project_name])
     project_id   = StringType(required=True, validators=[is_project_id])
     url          = StringType(required=True, validators=[is_url])
     notes        = StringType(default='')
 
-    version      = IntType(required=True, validators=[is_version])
     asset_name   = StringType(required=True, validators=[])
     asset_id     = StringType(required=True, validators=[is_asset_id])
     data         = ListType(StringType, validators=[is_file, is_path, is_exists])
+
+class NonDeliverable(Asset):
+    '''
+    Base class for all nerve non-deliverable assets
+    '''
+    asset_type   = StringType(default='nondeliverable')
+
+class Deliverable(Asset):
+    '''
+    Base class for all nerve deliverable assets
+    '''
     descriptor   = StringType(required=True, validators=[is_descriptor])
+    version      = IntType(required=True, validators=[is_version])
     dependencies = ListType(StringType, default=[])
-    deliverable  = BooleanType(default=True)
+    asset_type   = StringType(default='deliverable')
 
 class Config(Specification):
     '''
@@ -128,10 +127,12 @@ class Config(Specification):
     token                    = StringType(required=True, validators=[is_token])
     url_type                 = StringType(required=True, validators=[is_url_type])
     specification            = StringType(required=True, validators=[is_specification])
-    request_include_patterns = ListType(StringType, default=[], validators=[is_request_include_patterns])
-    request_exclude_patterns = ListType(StringType, default=[], validators=[is_request_exclude_patterns])
-    publish_include_patterns = ListType(StringType, default=[], validators=[is_publish_include_patterns])
-    publish_exclude_patterns = ListType(StringType, default=[], validators=[is_publish_exclude_patterns])
+    request_include_patterns = ListType(StringType, default=[], validators=[is_include_pattern])
+    request_exclude_patterns = ListType(StringType, default=[], validators=[is_exclude_pattern])
+    publish_include_patterns = ListType(StringType, default=[], validators=[is_include_pattern])
+    publish_exclude_patterns = ListType(StringType, default=[], validators=[is_exclude_pattern])
+    status_include_patterns  = ListType(StringType, default=[], validators=[is_include_pattern])
+    status_exclude_patterns  = ListType(StringType, default=[], validators=[is_exclude_pattern])
     status_states            = ListType(StringType, default=[], validators=[is_status_state])
     status_asset_types       = ListType(StringType, default=[], validators=[is_status_asset_type])
     verbosity                = IntType(default=0)
@@ -151,6 +152,7 @@ def main():
 # ------------------------------------------------------------------------------
 
 __all__ = [
+    'MetaName'
     'Config',
     'Client',
     'Project',

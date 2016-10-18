@@ -8,6 +8,8 @@ import os
 from pprint import pformat
 import re
 import yaml
+from nerve.core.utils import conform_keys
+from nerve.spec.base import MetaName
 from nerve.spec import specifications, traits
 from nerve.core.errors import SpecificationError
 # ------------------------------------------------------------------------------
@@ -148,10 +150,7 @@ class Metadata(object):
         dict: copy of internal data
         '''
         output = self._data.to_primitive()
-        output = {re.sub('_', '-', k): v for k, v in output.items()}
-        if 'project' in output.keys():
-            output['project'] = {re.sub('_', '-', k): v for k, v in output['project'].items()}
-        return output
+        return conform_keys(output)
 
     def validate(self):
         '''
@@ -180,7 +179,7 @@ class Metadata(object):
 
         if validate:
             meta = traits.get_name_traits(fullpath)
-            specifications.MetaName(meta).validate()
+            MetaName(meta).validate()
 
         # overwrite existing metadata
         data = {}

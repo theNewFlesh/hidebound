@@ -17,6 +17,7 @@ import os
 from pprint import pformat
 import shutil
 from warnings import warn
+from nerve.core.utils import conform_keys, deep_update
 from schematics.exceptions import ValidationError
 from nerve.core.git import Git
 from nerve.core.git_lfs import GitLFS
@@ -59,11 +60,8 @@ class Nerve(object):
     def __get_config(self, config):
         output = self.config
         if config != {}:
-            if 'project' in config.keys() and 'project' in output.keys():
-                project = output['project']
-                project.update(config['project'])
-                config['project'] = project
-            output.update(config)
+            config = conform_keys(config)
+            output = deep_update(output, config)
             output = Metadata(output)
             try:
                 output.validate()
@@ -138,8 +136,8 @@ class Nerve(object):
         local.add(all=True) # git lfs cannot get the status of unstaged files
         lfs = GitLFS(path)
         files = lfs.status(
-            include=config['publish-include-patterns'],
-            exclude=config['publish-exclude-patterns'],
+            include=config['status-include-patterns'],
+            exclude=config['status-exclude-patterns'],
             warnings=warn_
         )
         # ----------------------------------------------------------------------
@@ -157,10 +155,7 @@ class Nerve(object):
 
         local.reset()
         # ----------------------------------------------------------------------
-        lut = {
-                True: 'deliverable',
-                False: 'nondeliverable'
-        }
+
         for asset, v in sorted(temp.items()):
             if states:
                 rogue_states = set(v['state']).difference(states)
@@ -170,8 +165,8 @@ class Nerve(object):
                     continue
 
             output = Metadata(asset)
-            atype = lut[output.data['deliverable']]
-            if atype in asset_types:
+            if output.data['asset-type'] in asset_types:
+                output.get_traits()
                 yield output
 
     def create(self, name=None, notes=None, **config):
@@ -273,7 +268,7 @@ class Nerve(object):
         .. todo::
             - catch repo already exists errors and repo doesn't exist errors
         '''
-        config, _, _, path, _, _, branch, verbosity, _, _ = self._get_info(name, None, config)
+        config, _, _, path, _, _, branch, verbosity, client_conf, _ = self._get_info(name, None, config)
 
         client = Client(client_conf)
         if client.has_branch(branch):
@@ -333,7 +328,7 @@ class Nerve(object):
         .. todo::
             - add branch checking logic to skip the following if not needed?
         '''
-        config, _, _, path, _, _, branch, verbosity, client_conf, _ = self._get_info(name, notes, config)
+        config, project, _, path, _, _, branch, verbosity, client_conf, _ = self._get_info(name, notes, config)
 
         # pulling metadata first avoids merge conflicts by keeping the
         # user-branch HEAD ahead of the dev branch
@@ -342,12 +337,16 @@ class Nerve(object):
         local.merge('dev', branch)
 
         # get nondeliverable assets
-        nondeliverables = self.status(status_asset_types=['nondeliverable'], **config)
+        nondeliverables = self.status(name=name, status_asset_types=['nondeliverable'], **config)
         nondeliverables = list(nondeliverables)
+        for non in nondeliverables:
+            non.get_traits()
+            non.write(validate=False)
 
         # publish nondeliverables
         if len(nondeliverables) > 0:
             # push non-deliverables to user-branch
+            local.add([x.metapath for x in nondeliverables])
             local.add([x.datapath for x in nondeliverables])
             names = [x['asset-name'] for x in nondeliverables]
             local.commit('NON-DELIVERABLES: ' + ', '.join(names))
@@ -355,9 +354,16 @@ class Nerve(object):
         # ----------------------------------------------------------------------
 
         # get only added deliverable assets
+        if 'project' in config.keys():
+            del config['project']
         deliverables = self.status(
+            name=name,
             status_states=['added'],
             status_asset_types=['deliverable'],
+            project={
+                'project-id': project['project-id'],
+                'url': project['url']
+            },
             **config
         )
 
@@ -423,7 +429,7 @@ class Nerve(object):
         .. todo::
             - add git lfs logic for deletion
         '''
-        _, _, _, path, _, _, _, verbosity, client_conf, _ = self._get_info(name, None, config)
+        _, _, name, path, _, _, _, verbosity, client_conf, _ = self._get_info(name, None, config)
         if from_server:
             Client(client_conf).delete()
             # git lfs deletion logic

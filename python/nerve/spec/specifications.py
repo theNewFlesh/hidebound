@@ -26,6 +26,9 @@ class Vol001(Deliverable):
 
 class Geo001(Deliverable):
     pass
+
+class Maya001(NonDeliverable):
+    pass
 # ------------------------------------------------------------------------------
 
 def main():
@@ -41,7 +44,8 @@ __all__ = [
     'Config001',
     'Proj001',
     'Vol001',
-    'Geo001'
+    'Geo001',
+    'Maya001'
 ]
 
 if __name__ == '__main__':
