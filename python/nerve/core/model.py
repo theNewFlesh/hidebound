@@ -58,6 +58,17 @@ class Nerve(object):
         return pformat(self.config)
 
     def __get_config(self, config):
+        '''
+        Convenience method for creating a new temporary configuration dict by
+        overwriting a copy of the internal config with keyword arguments
+        specified in config
+
+        Args:
+            config (dict): dict of keyword arguments (**config)
+
+        Returns:
+            dict: new config
+        '''
         output = self.config
         if config != {}:
             config = conform_keys(config)
@@ -71,13 +82,18 @@ class Nerve(object):
         return output
 
     def _get_info(self, name, notes, config):
+        '''
+        Convenience method for creating new temporary config
+
+        Args:
+            name (str): name of project
+            notes (str): notes to be added to metadata
+            config (dict): **config dictionary
+
+        Returns:
+            namedtuple: tuple with conveniently named attributes
+        '''
         config = self.__get_config(config)
-
-        states = config['status-states']
-        asset_types = config['status-asset-types']
-        branch = config['user-branch']
-        verbosity = config['verbosity']
-
         project = config['project']
 
         if name == None:
@@ -105,8 +121,17 @@ class Nerve(object):
            'states', 'asset_types', 'branch', 'verbosity', 'client_conf',
            'notes']
         )
-        info = Info(config, project, name, path, states, asset_types, branch,
-            verbosity, client_conf, notes
+        info = Info(
+            config,
+            project,
+            name,
+            path,
+            config['status-states'],
+            config['status-asset-types'],
+            config['user-branch'],
+            config['verbosity'],
+            client_conf,
+            notes
         )
         return info
 
