@@ -450,7 +450,6 @@ class Nerve(object):
         Deletes a nerve project
 
         Args:
-            project (str): name of project
             from_server (bool): delete Github project
             from_local (bool): delete local project directory
             name (str, optional): name of project. Default: None
