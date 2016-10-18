@@ -64,6 +64,9 @@ class Specification(Model):
     specification = StringType(required=True, validators=[is_specification])
 
 class Client(Specification):
+    '''
+    Base class for nerve.core.client.Client's metadata
+    '''
     username     = StringType(required=True, validators=[is_username])
     token        = StringType(required=True, validators=[is_token])
     organization = StringType(required=True, validators=[is_organization])
@@ -74,6 +77,20 @@ class Client(Specification):
 class Project(Specification):
     '''
     Base class for all nerve projects
+
+    Attributes:
+        specification (str): same as class name
+        project_name (str): name of project
+        project_id (str): Github repo id
+        url (str): url of project's Github repo
+        notes (str): project notes
+        version (int): project version
+        teams (dict): Github teams; name, permission pairs
+        gitignore (list): gitignore patterns
+        private (bool): privacy of Github repo
+        lfs_extensions (list): lfs tracked file extensions
+        nondeliverables (list, optional): nondeliverable asset specs/patterns
+        deliverables (list): deliverable asset specs/patterns
     '''
     project_name    = StringType(required=True, validators=[is_project_name])
     project_id      = StringType(required=True, validators=[is_project_id])
@@ -91,6 +108,16 @@ class Project(Specification):
 class Asset(Specification):
     '''
     Base class for Deliverable and NonDeliverable
+
+    Attributes:
+        specification (str): same as class name
+        project_name (str): name of project
+        project_id (str): Github repo id
+        url (str): url of project's Github repo
+        notes (str): project notes
+        asset_name (str): name of asset
+        asset_id (str): randomly generated uuid
+        data (list): list of filepaths
     '''
     project_name = StringType(required=True, validators=[is_project_name])
     project_id   = StringType(required=True, validators=[is_project_id])
@@ -104,12 +131,37 @@ class Asset(Specification):
 class NonDeliverable(Asset):
     '''
     Base class for all nerve non-deliverable assets
+
+    Attributes:
+        specification (str): same as class name
+        project_name (str): name of project
+        project_id (str): Github repo id
+        url (str): url of project's Github repo
+        notes (str): project notes
+        asset_name (str): name of asset
+        asset_id (str): randomly generated uuid
+        data (list): list of filepaths
+        asset_type (str): 'nondeliverable'
     '''
     asset_type   = StringType(default='nondeliverable')
 
 class Deliverable(Asset):
     '''
     Base class for all nerve deliverable assets
+
+    Attributes:
+        specification (str): same as class name
+        project_name (str): name of project
+        project_id (str): Github repo id
+        url (str): url of project's Github repo
+        notes (str): project notes
+        asset_name (str): name of asset
+        asset_id (str): randomly generated uuid
+        data (list): list of filepaths
+        descriptor (str): descriptor found in asset name
+        version (int): version found in asset name
+        dependencies (list): deliverables asset depends upon. Default: []
+        asset_type (str): 'deliverable'
     '''
     descriptor   = StringType(required=True, validators=[is_descriptor])
     version      = IntType(required=True, validators=[is_version])
@@ -119,6 +171,32 @@ class Deliverable(Asset):
 class ConfigBase(Specification):
     '''
     Base class for all nerve configs (nerverc)
+
+    Attributes:
+        specification (str): same as class name
+        username (str): Github username
+        organization (str): Github organization
+        project_root (str): fullpath to root projects directory
+        token (str): Github oauth token
+        url_type (str): type of access to Github. currently only ssh. Options: http, ssh
+        request_include_patterns (list, optional): regular expressions used to include assets within a request
+            Default: []
+        request_exclude_patterns (list, optional): regular expressions used to exclude assets within a request
+            Default: []
+        publish_include_patterns (list, optional): regular expressions used to include assets within a publish
+            Default: []
+        publish_exclude_patterns (list, optional): regular expressions used to exclude assets within a publish
+            Default: []
+        status_include_patterns (list, optional): regular expressions used to include assets within a status call
+            Default: []
+        status_exclude_patterns (list, optional): regular expressions used to exclude assets within a status call
+            Default: []
+        status_states (list, optional): list of allowed states for status call
+            Default: []. Options: added, copied, deleted, modified, renamed, updated, untracked
+        status_asset_types (list, optional): list of allowed asset types for status call
+            Default: []. Options: deliverable, nondeliverable
+        verbosity (int, optional): level of verbosity. Default: 0
+        project (dict, optional): project specification
     '''
     username                 = StringType(required=True, validators=[is_username])
     user_branch              = StringType(required=True, validators=[is_user_branch])

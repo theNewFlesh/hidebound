@@ -1,6 +1,14 @@
 spec package
 ===================
 
+nerve.spec.base module
+--------------------------------
+
+.. automodule:: nerve.spec.base
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 nerve.spec.specifications module
 --------------------------------
 

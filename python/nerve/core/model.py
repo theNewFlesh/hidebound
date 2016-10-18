@@ -153,9 +153,9 @@ class Nerve(object):
             status_include_patterns (list, **config): list of regular expressions user to include specific assets
             status_exclude_patterns (list, **config): list of regular expressions user to exclude specific assets
             status_states (list, **config): list of object states files are allowed to be in.
-                options include: added, copied, deleted, modified, renamed, updated and untracked
+                Options: added, copied, deleted, modified, renamed, updated and untracked
             verbosity (int, **config): level of verbosity for output. Default: 0
-                options include: 0, 1 and 2
+                Options: 0, 1, 2
 
         Yields:
             Metadata: Metadata object of each asset
@@ -221,7 +221,7 @@ class Nerve(object):
             **config: optional config parameters, overwrites fields in a copy of self.config
             project (dict, **config): project metadata.
             verbosity (int, **config): level of verbosity for output. Default: 0
-                options include: 0, 1 and 2
+                Options: 0, 1, 2
 
         Returns:
             bool: success status
@@ -304,7 +304,7 @@ class Nerve(object):
             **config: optional config parameters, overwrites fields in a copy of self.config
             project (dict, **config): project metadata.
             verbosity (int, **config): level of verbosity for output. Default: 0
-                options include: 0, 1 and 2
+                Options: 0, 1, 2
             user_branch (str, **config): branch to clone from. Default: user's branch
 
         Returns:
@@ -340,7 +340,7 @@ class Nerve(object):
             request_include_patterns (list, **config): list of regular expressions user to include specific deliverables
             request_exclude_patterns (list, **config): list of regular expressions user to exclude specific deliverables
             verbosity (int, **config): level of verbosity for output. Default: 0
-                options include: 0, 1 and 2
+                Options: 0, 1, 2
 
         Returns:
             bool: success status
@@ -374,7 +374,7 @@ class Nerve(object):
             publish_include_patterns (list, **config): list of regular expressions user to include specific assets
             publish_exclude_patterns (list, **config): list of regular expressions user to exclude specific assets
             verbosity (int, **config): level of verbosity for output. Default: 0
-                options include: 0, 1 and 2
+                Options: 0, 1, 2
 
         Returns:
             bool: success status
@@ -481,7 +481,7 @@ class Nerve(object):
             **config: optional config parameters, overwrites fields in a copy of self.config
             project (dict, **config): project metadata.
             verbosity (int, **config): level of verbosity for output. Default: 0
-                options include: 0, 1 and 2
+                Options: 0, 1, 2
 
         Returns:
             bool: success status
