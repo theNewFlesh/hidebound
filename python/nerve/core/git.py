@@ -12,7 +12,7 @@ Author:
 
 import os
 from git import Repo, GitCommandError
-from nerve.core.utils import get_status
+from nerve.core.utils import get_status, execute_subprocess
 # ------------------------------------------------------------------------------
 
 class Git(object):
@@ -35,6 +35,7 @@ class Git(object):
         '''
         self._repo = self._clone(working_dir, url=url, branch=branch)
         self._working_dir = working_dir
+        os.chdir(working_dir)
 
     def _clone(self, working_dir, url=None, branch=None):
         '''
@@ -131,7 +132,9 @@ class Git(object):
         Returns:
             None
         '''
-        self._repo.remote(remote).push(branch)
+        # self._repo.remote(remote).push(branch)
+        cmd = 'git push {remote} {branch}'.format(remote=remote, branch=branch)
+        execute_subprocess(cmd)
 
     def pull(self, src, dest, remote='origin'):
         '''
@@ -232,7 +235,7 @@ class Git(object):
             include (list, optional): list of regex patterns used to include files. Default: []
             exclude (list, optional): list of regex patterns used to exclude files. Default: []
             states (list, optional): file states to be shown in output. Default: all states
-                options include: added, copied, deleted, modified, renamed, updated, untracked
+                Options: added, copied, deleted, modified, renamed, updated, untracked
             staged (bool, optional): include only files which are staged or unstaged. Default: both
             warnings (bool, optional): display warnings
 

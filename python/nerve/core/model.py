@@ -11,19 +11,19 @@ Author:
 '''
 # ------------------------------------------------------------------------------
 
-from copy import deepcopy
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 from itertools import chain
 import os
 from pprint import pformat
 import shutil
 from warnings import warn
-import yaml
+from nerve.core.utils import conform_keys, deep_update
 from schematics.exceptions import ValidationError
 from nerve.core.git import Git
 from nerve.core.git_lfs import GitLFS
 from nerve.core.client import Client
 from nerve.core.metadata import Metadata
+from nerve.core.errors import KeywordError
 # ------------------------------------------------------------------------------
 
 class Nerve(object):
@@ -46,125 +46,134 @@ class Nerve(object):
         Returns:
             Nerve
         '''
-        config = Metadata(config)
+        config = Metadata(config, spec='config')
         config.validate()
-        self._config = config.data
+        self.__config = config
     # --------------------------------------------------------------------------
 
     def __getitem__(self, key):
-        return self._config[key]
+        return self.config[key]
 
     def __repr__(self):
-        return pformat(self._config)
+        return pformat(self.config)
 
-    def _create_subdirectories(self, project):
+    def __get_config(self, config):
         '''
-        Creates directory structure for a nerve project
+        Convenience method for creating a new temporary configuration dict by
+        overwriting a copy of the internal config with keyword arguments
+        specified in config
 
         Args:
-            project (str): fullpath to project
+            config (dict): dict of keyword arguments (**config)
 
         Returns:
-            None
+            dict: new config
         '''
-        for subdir in chain(self['assets'], self['deliverables']):
-            path = os.path.join(project, subdir)
-            os.mkdir(path)
-            # git won't commit empty directories
-            open(os.path.join(path, '.keep'), 'w').close()
+        output = self.config
+        if config != {}:
+            config = conform_keys(config)
+            output = deep_update(output, config)
+            output = Metadata(output, spec='config')
+            try:
+                output.validate()
+            except ValidationError as e:
+                raise KeywordError(e)
+            output = output.data
+        return output
 
-    def _create_metadata(self, project, name, project_id, url, version=1):
+    def _get_info(self, name, notes, config):
         '''
-        Creates a [project]_v[###]_meta.yml file in the base of the project
-
-        Args:
-            project (str): fullpath to project
-            name (str): name of project
-            project_id (str): github repository id
-            url (str): clone url for repository
-            version (int, optional): the version of this projects configuration. Default: 1
-
-        Returns:
-            None
-        '''
-        config = deepcopy(self._config)
-        del config['token']
-        config['project-name'] = name
-        config['project-id'] = project_id
-        config['url'] = url
-        config['version'] = version
-
-        # version implicitly
-        with open(os.path.join(project, name + '_meta.yml'), 'w') as f:
-            yaml.dump(config, f)
-
-    def _get_client(self, name):
-        '''
-        Convenience method for returning a Client class object
+        Convenience method for creating new temporary config
 
         Args:
             name (str): name of project
+            notes (str): notes to be added to metadata
+            config (dict): **config dictionary
 
         Returns:
-            Client: Github repository
+            namedtuple: tuple with conveniently named attributes
         '''
-        config = self.config
-        config['name'] = name
-        return Client(config)
+        config = self.__get_config(config)
+        project = config['project']
 
-    def _get_project_and_branch(self, name, branch):
-        '''
-        Convenience method for returning a project path and branch name
+        if name == None:
+            name = project['project-name']
+        if notes == None:
+            notes = project['notes']
 
-        Args:
-            name (str): name of project
-            branch (str, optional): name of branch. Default: user-branch
+        project['project-name'] = name
+        project['notes'] = notes
 
-        Returns:
-            tuple(str, str): project name and branch name
-        '''
-        project = os.path.join(self['project-root'], name)
-        if branch == 'user-branch':
-            branch = self['user-branch']
-        return project, branch
-    # --------------------------------------------------------------------------
+        path = os.path.join(config['project-root'], name)
+
+        client_conf = dict(
+            username=config['username'],
+            token=config['token'],
+            organization=config['organization'],
+            project_name=project['project-name'],
+            private=project['private'],
+            url_type=config['url-type'],
+            specification='client'
+        )
+        # ----------------------------------------------------------------------
+
+        Info = namedtuple('Info', ['config', 'project', 'name', 'path',
+           'states', 'asset_types', 'branch', 'verbosity', 'client_conf',
+           'notes']
+        )
+        info = Info(
+            config,
+            project,
+            name,
+            path,
+            config['status-states'],
+            config['status-asset-types'],
+            config['user-branch'],
+            config['verbosity'],
+            client_conf,
+            notes
+        )
+        return info
 
     @property
     def config(self):
         '''
         dict: copy of this object's configuration
         '''
-        return deepcopy(self._config)
+        return self.__config.data
+    # --------------------------------------------------------------------------
 
-    def status(self, project, include=[], exclude=[], states=[], verbosity=0,
-                asset_type=['deliverable', 'nondeliverable']):
+    def status(self, name=None, **config):
         '''
         Reports on the status of all affected files within a given project
 
         Args:
-            project (str): name of project
-            include (list, optional): list of regular expressions user to include specific assets
-            exclude (list, optional): list of regular expressions user to exclude specific assets
-            states (list, optional): list of object states files are allowed to be in.
-                options include: added, copied, deleted, modified, renamed, updated and untracked
-            verbosity (int, optional): level of verbosity for output. Default: 0
-                options include: 0, 1 and 2
+            name (str, optional): name of project. Default: None
+            **config: optional config parameters, overwrites fields in a copy of self.config
+            status_include_patterns (list, **config): list of regular expressions user to include specific assets
+            status_exclude_patterns (list, **config): list of regular expressions user to exclude specific assets
+            status_states (list, **config): list of object states files are allowed to be in.
+                Options: added, copied, deleted, modified, renamed, updated and untracked
+            verbosity (int, **config): level of verbosity for output. Default: 0
+                Options: 0, 1, 2
 
         Yields:
             Metadata: Metadata object of each asset
         '''
+        info = self._get_info(name, None, config)
+
         warn_ = False
         if verbosity == 2:
             warn_ = True
-        if len(include) == 0:
-            include = self['publish-include-patterns']
-        if len(exclude) == 0:
-            exclude = self['publish-exclude-patterns']
 
-        local = Git(project)
+        local = Git(info.path)
         local.add(all=True) # git lfs cannot get the status of unstaged files
-        lfs = GitLFS(project)
-        files = lfs.status(include=include, exclude=exclude, warnings=warn_)
+        lfs = GitLFS(info.path)
+        files = lfs.status(
+            include=info.config['status-include-patterns'],
+            exclude=info.config['status-exclude-patterns'],
+            warnings=warn_
+        )
         # ----------------------------------------------------------------------
 
         temp = defaultdict(lambda: defaultdict(lambda: []))
@@ -182,19 +191,19 @@ class Nerve(object):
         # ----------------------------------------------------------------------
 
         for asset, v in sorted(temp.items()):
-            if states:
-                rogue_states = set(v['state']).difference(states)
+            if info.states:
+                rogue_states = set(v['state']).difference(info.states)
                 if len(rogue_states) > 0:
-                    if verbosity > 0:
+                    if info.verbosity > 0:
                         warn(asset + ' contains files of state: ' + ','.join(rogue_states))
                     continue
 
             output = Metadata(asset)
-            asset_type = [x is 'deliverable' for x in asset_type]
-            if output.data['deliverable'] in asset_type:
+            if output.data['asset-type'] in info.asset_types:
+                output.get_traits()
                 yield output
 
-    def create(self, name):
+    def create(self, name=None, notes=None, **config):
         '''
         Creates a nerve project on Github and in the project-root folder
 
@@ -207,7 +216,12 @@ class Nerve(object):
             .gitignore
 
         Args:
-            name (str): name of project
+            name (str, optional): name of project. Default: None
+            notes (str, optional): notes to appended to project metadata. Default: None
+            **config: optional config parameters, overwrites fields in a copy of self.config
+            project (dict, **config): project metadata.
+            verbosity (int, **config): level of verbosity for output. Default: 0
+                Options: 0, 1, 2
 
         Returns:
             bool: success status
@@ -216,17 +230,19 @@ class Nerve(object):
             - send data to DynamoDB
         '''
         # create repo
-        project, _ = self._get_project_and_branch(name, 'master')
-        client = self._get_client(name)
-        local = Git(project, url=client['url'])
+        info = self._get_info(name, None, config)
+        project = info.project
+
+        client = Client(info.client_conf)
+        local = Git(info.path, url=client['url'])
         # ----------------------------------------------------------------------
 
         # configure repo
-        lfs = GitLFS(project)
+        lfs = GitLFS(info.path)
         lfs.install(skip_smudge=True)
         lfs.create_config('http://localhost:8080')
-        lfs.track(['*.' + x for x in self['lfs-extensions']])
-        local.create_gitignore(self['gitignore'])
+        lfs.track(['*.' + x for x in project['lfs-extensions']])
+        local.create_gitignore(project['gitignore'])
         # ----------------------------------------------------------------------
 
         # ensure first commit is on master branch
@@ -237,16 +253,29 @@ class Nerve(object):
 
         # create project structure
         local.branch('dev')
-        self._create_subdirectories(project)
-        self._create_metadata(project, name, client['id'], client['url'])
+        for subdir in chain(project['deliverables'], project['nondeliverables']):
+            _path = os.path.join(info.path, subdir)
+            os.mkdir(_path)
+            # git won't commit empty directories
+            open(os.path.join(_path, '.keep'), 'w').close()
+        # ----------------------------------------------------------------------
+
+        # create project metadata
+        project['project-id'] = client['id']
+        project['url'] = client['url']
+        project['version'] = 1
+        meta = project['specification'] + '_meta.yml' # implicit versioning
+        meta = Metadata(project, metapath=meta)
+        meta.validate()
+        meta.write(validate=False)
         # ----------------------------------------------------------------------
 
         # commit everything
         local.add(all=True)
         local.commit(
             'VALID: {} created according to {} specification'.format(
-                name,
-                self['project-specification']
+                info.name,
+                project['specification']
             )
         )
         local.push('dev')
@@ -254,24 +283,29 @@ class Nerve(object):
         client.set_default_branch('dev')
 
         # cleanup
-        shutil.rmtree(project)
+        shutil.rmtree(info.path)
         # ----------------------------------------------------------------------
 
         # add teams
-        for team, perm in self['teams'].items():
+        for team, perm in project['teams'].items():
             client.add_team(team, perm)
 
         return True
 
-    def clone(self, project, branch='user-branch'):
+    def clone(self, name=None, **config):
         '''
         Clones a nerve project to local project-root directory
 
         Ensures given branch is present in the repository
 
         Args:
-            project (str): name of project
-            branch (str, optional): branch to clone from. Default: user's branch
+            name (str, optional): name of project. Default: None
+            notes (str, optional): notes to appended to project metadata. Default: None
+            **config: optional config parameters, overwrites fields in a copy of self.config
+            project (dict, **config): project metadata.
+            verbosity (int, **config): level of verbosity for output. Default: 0
+                Options: 0, 1, 2
+            user_branch (str, **config): branch to clone from. Default: user's branch
 
         Returns:
             bool: success status
@@ -279,80 +313,50 @@ class Nerve(object):
         .. todo::
             - catch repo already exists errors and repo doesn't exist errors
         '''
-        name = project
-        project, branch = self._get_project_and_branch(name, branch)
-        client = self._get_client(name)
-        if client.has_branch(branch):
-            local = Git(project, url=client['url'], branch=branch)
+        info = self._get_info(name, None, config)
+
+        client = Client(info.client_conf)
+        if client.has_branch(info.branch):
+            local = Git(info.path, url=client['url'], branch=info.branch)
         else:
-            local = Git(project, url=client['url'], branch='dev')
+            local = Git(info.path, url=client['url'], branch='dev')
 
             # this done in lieu of doing it through github beforehand
-            local.branch(branch)
-            local.push(branch)
+            local.branch(info.branch)
+            local.push(info.branch)
 
         return True
 
-    def request(self, project, branch='user-branch', include=[], exclude=[]):
+    def request(self, name=None, **config):
         '''
         Request deliverables from the dev branch of given project
 
         Args:
-            project (str): name of project
-            branch (str, optional): branch to pull deliverables into. Default: user's branch
-            include (list, optional): list of regular expressions user to include specific deliverables
-            exclude (list, optional): list of regular expressions user to exclude specific deliverables
+            name (str, optional): name of project. Default: None
+            notes (str, optional): notes to appended to project metadata. Default: None
+            **config: optional config parameters, overwrites fields in a copy of self.config
+            project (dict, **config): project metadata.
+            user_branch (str, **config): branch to pull deliverables into. Default: user's branch
+            request_include_patterns (list, **config): list of regular expressions user to include specific deliverables
+            request_exclude_patterns (list, **config): list of regular expressions user to exclude specific deliverables
+            verbosity (int, **config): level of verbosity for output. Default: 0
+                Options: 0, 1, 2
 
         Returns:
             bool: success status
         '''
-        name = project
-        project, branch = self._get_project_and_branch(name, branch)
+        info = self._get_info(name, None, config)
 
-        if len(include) == 0:
-            include = self['request-include-patterns']
-        if len(exclude) == 0:
-            exclude = self['request-exclude-patterns']
-
-        Git(project, branch=branch).pull('dev', branch)
-        GitLFS(project).pull(include, exclude)
+        Git(info.path, branch=info.branch).pull('dev', info.branch)
+        GitLFS(info.path).pull(
+            info.config['request-include-patterns'],
+            info.config['request-exclude-patterns']
+        )
 
         return True
     # --------------------------------------------------------------------------
 
-    def _publish_non_deliverables(self, local, project, branch, include, exclude, verbosity):
-        '''
-        Convenience method for publishing non-deliverable assets to a github user branch
-
-        Args:
-            project (str): name of project
-            branch (str): branch to pull deliverables from. Default: user's branch
-            include (list): list of regular expressions user to include specific assets
-            exclude (list): list of regular expressions user to exclude specific assets
-            verbosity (int): level of events to print to stdout. Default: 0
-
-        Returns:
-            bool: success status
-        '''
-        # get nondeliverable assets
-        nondeliverables = self.status(
-            project,
-            include=include,
-            exclude=exclude,
-            verbosity=verbosity,
-            asset_type=['nondeliverable']
-        )
-        nondeliverables = list(nondeliverables)
-        if len(nondeliverables) > 0:
-            # push non-deliverables to user-branch
-            local.add([x.datapath for x in nondeliverables])
-            names = [x['asset-name'] for x in nondeliverables]
-            local.commit('NON-DELIVERABLES: ' + ', '.join(names))
-            local.push(branch)
-            return True
-        return False
-
-    def publish(self, project, branch='user-branch', include=[], exclude=[], verbosity=0):
+    def publish(self, name=None, notes=None, **config):
         '''
         Attempt to publish deliverables from user's branch to given project's dev branch on Github
 
@@ -362,11 +366,15 @@ class Nerve(object):
         If not only invalid metadata will be commited to the user's branch
 
         Args:
-            project (str): name of project
-            branch (str, optional): branch to pull deliverables from. Default: user's branch
-            include (list, optional): list of regular expressions user to include specific assets
-            exclude (list, optional): list of regular expressions user to exclude specific assets
-            verbosity (int, optional): level of events to print to stdout. Default: 0
+            name (str, optional): name of project. Default: None
+            notes (str, optional): notes to appended to project metadata. Default: None
+            **config: optional config parameters, overwrites fields in a copy of self.config
+            project (dict, **config): project metadata.
+            user_branch (str, **config): branch to pull deliverables from. Default: user's branch
+            publish_include_patterns (list, **config): list of regular expressions user to include specific assets
+            publish_exclude_patterns (list, **config): list of regular expressions user to exclude specific assets
+            verbosity (int, **config): level of verbosity for output. Default: 0
+                Options: 0, 1, 2
 
         Returns:
             bool: success status
@@ -374,33 +382,45 @@ class Nerve(object):
         .. todo::
             - add branch checking logic to skip the following if not needed?
         '''
-        name = project
-        project, branch = self._get_project_and_branch(name, branch)
+        info = self._get_info(name, None, config)
+        config = info.config
+        branch = info.branch
 
         # pulling metadata first avoids merge conflicts by keeping the
         # user-branch HEAD ahead of the dev branch
-        local = Git(project, branch=branch)
+        local = Git(info.path, branch=branch)
         local.pull('dev', 'dev')
         local.merge('dev', branch)
 
-        self._publish_non_deliverables(
-            local,
-            project,
-            branch=branch,
-            include=include,
-            exclude=exclude,
-            verbosity=verbosity
-        )
+        # get nondeliverable assets
+        nondeliverables = self.status(name=name, status_asset_types=['nondeliverable'], **config)
+        nondeliverables = list(nondeliverables)
+        for non in nondeliverables:
+            non.get_traits()
+            non.write(validate=False)
+
+        # publish nondeliverables
+        if len(nondeliverables) > 0:
+            # push non-deliverables to user-branch
+            local.add([x.metapath for x in nondeliverables])
+            local.add([x.datapath for x in nondeliverables])
+            names = [x['asset-name'] for x in nondeliverables]
+            local.commit('NON-DELIVERABLES: ' + ', '.join(names))
+            local.push(branch) # environment variables for git-lfs-s3 not present
         # ----------------------------------------------------------------------
 
         # get only added deliverable assets
+        if 'project' in config.keys():
+            del config['project']
         deliverables = self.status(
-            project,
-            include=include,
-            exclude=exclude,
-            verbosity=verbosity,
-            states=['added'],
-            asset_type=['deliverable']
+            name=name,
+            status_states=['added'],
+            status_asset_types=['deliverable'],
+            project={
+                'project-id': info.project['project-id'],
+                'url': info.project['url']
+            },
+            **config
         )
 
         invalid = []
@@ -411,14 +431,14 @@ class Nerve(object):
             try:
                 deliv.validate()
             except ValidationError as e:
-                if verbosity > 0:
+                if info.verbosity > 0:
                     warn(e)
                 invalid.append(deliv)
                 continue
             valid.append(deliv)
         # ----------------------------------------------------------------------
 
-        client = self._get_client(name)
+        client = Client(info.client_conf)
 
         if len(invalid) > 0:
             # commit only invalid metadata to github user branch
@@ -444,22 +464,24 @@ class Nerve(object):
             body = '\n'.join(body)
             body = body.format(user=branch)
 
-            return title, branch, 'dev', body
-
             num = client.create_pull_request(title, branch, 'dev', body=body)
             client.merge_pull_request(num, 'Publish authorized')
 
             return True
     # --------------------------------------------------------------------------
 
-    def delete(self, project, from_server, from_local):
+    def delete(self, from_server, from_local, name=None, **config):
         '''
         Deletes a nerve project
 
         Args:
-            project (str): name of project
             from_server (bool): delete Github project
             from_local (bool): delete local project directory
+            name (str, optional): name of project. Default: None
+            **config: optional config parameters, overwrites fields in a copy of self.config
+            project (dict, **config): project metadata.
+            verbosity (int, **config): level of verbosity for output. Default: 0
+                Options: 0, 1, 2
 
         Returns:
             bool: success status
@@ -467,15 +489,16 @@ class Nerve(object):
         .. todo::
             - add git lfs logic for deletion
         '''
-        name = project
-        project = os.path.join(self['project-root'], name)
-        if from_server: self._get_client(name).delete()
+        info = self._get_info(name, None, config)
+
+        if from_server:
+            Client(info.client_conf).delete()
             # git lfs deletion logic
         if from_local:
-            if os.path.split(project)[-1] == name:
-                shutil.rmtree(project)
+            if os.path.split(info.path)[-1] == info.name:
+                shutil.rmtree(info.path)
             else:
-                warn(project + ' is not a project directory.  Local deletion aborted.')
+                warn(info.path + ' is not a project directory.  Local deletion aborted.')
                 return False
         return True
 # ------------------------------------------------------------------------------

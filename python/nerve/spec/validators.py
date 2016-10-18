@@ -122,11 +122,11 @@ def is_project_name(item):
 def is_project_root(item):
     return True
 
-def is_publish_exclude_patterns(item):
-    return True
+@is_re('[a-z0-9_\-/*\.]+', 'is not a valid exclude pattern')
+def is_exclude_pattern(item): return
 
-def is_publish_include_patterns(item):
-    return True
+@is_re('[a-z0-9_\-/*\.]+', 'is not a valid include pattern')
+def is_include_pattern(item): return
 
 @is_re('$|^'.join([
         'beauty',
@@ -153,9 +153,15 @@ def is_request_include_patterns(item):
 
 @is_a(
     lambda x: hasattr(nerve.spec.specifications, x.capitalize()),
-    'is not a valid specification'
-)
+    'is not a valid specification')
 def is_specification(item): return
+
+@is_re('added|copied|deleted|modified|renamed|updated|untracked',
+    'is not a valid state')
+def is_status_state(item): return
+
+@is_re('nondeliverable|deliverable', 'is not a valid asset type')
+def is_status_asset_type(item): return
 
 def is_teams(item):
     return True

@@ -8,6 +8,8 @@ import os
 from pprint import pformat
 import re
 import yaml
+from nerve.core.utils import conform_keys
+from nerve.spec.base import MetaName
 from nerve.spec import specifications, traits
 from nerve.core.errors import SpecificationError
 # ------------------------------------------------------------------------------
@@ -21,7 +23,7 @@ class Metadata(object):
 
     API: data, get_traits, validate, write, __getitem__
     '''
-    def __init__(self, item):
+    def __init__(self, item, metapath=None, datapath=None, spec=None):
         '''
         Metadata constructor takes a dict, filepath or dirpath and turns it into internal metadata
         The specification class used to wrap the internal data is derived from item.
@@ -29,6 +31,10 @@ class Metadata(object):
         Args:
             item (dict or str): a dict of asset metadata, an asset yml file or
                                 the fullpath of an asset
+            metapath (str, optional): fullpath to item metadata _meta.yml file. Default: None
+            datapath (str, optional): fullpath to item data. Default: None
+            spec (str, optional): item specification. Default: None
+
         Returns:
             Metadata
 
@@ -36,9 +42,6 @@ class Metadata(object):
             OSError, TypeError
         '''
         data = {}
-        metapath = None
-        datapath = None
-        spec = None
 
         if isinstance(item, dict):
             spec = item['specification']
@@ -48,14 +51,11 @@ class Metadata(object):
             if not os.path.exists(item):
                 raise OSError('No such file or directory: ' + item)
 
-            meta = self._is_meta(item)
-            conf = self._is_config(item)
+            meta = traits.get_meta(item)
+            conf = traits.get_config(item)
+            if meta:
+                spec = traits.get_specification(item)
             if meta or conf:
-                if meta:
-                    spec = traits.get_specification(item)
-                if conf:
-                    spec = 'config001'
-
                 metapath = item
                 with open(item, 'r') as f:
                     data = yaml.load(f)
@@ -69,7 +69,7 @@ class Metadata(object):
             raise TypeError('type: ' + type(item) + ' not supported')
 
         spec = self._get_spec(spec)
-        self.__data = spec(data)
+        self._data = spec(data)
         self._datapath = datapath
         self._metapath = metapath
 
@@ -78,16 +78,6 @@ class Metadata(object):
 
     def __getitem__(self, key):
         return self.data[key]
-
-    def _is_meta(self, item):
-        if re.search('_meta', item):
-            return True
-        return False
-
-    def _is_config(self, item):
-        if re.search('nerverc', item):
-            return True
-        return False
 
     def _get_spec(self, name):
         '''
@@ -134,13 +124,13 @@ class Metadata(object):
             dict: traits
         '''
         output = {}
-        for key in self.__data.keys():
+        for key in self._data.keys():
             trait = 'get_' + key
             if hasattr(traits, trait):
                 trait = getattr(traits, trait)
                 output[key] = trait(self._datapath)
 
-        self.__data.import_data(output)
+        self._data.import_data(output)
         return output
 
     @property
@@ -148,8 +138,8 @@ class Metadata(object):
         '''
         dict: copy of internal data
         '''
-        output = self.__data.to_primitive()
-        return {re.sub('_', '-', k): v for k, v in output.items()}
+        output = self._data.to_primitive()
+        return conform_keys(output)
 
     def validate(self):
         '''
@@ -161,9 +151,9 @@ class Metadata(object):
         Return:
             bool: validity
         '''
-        return self.__data.validate() is None
+        return self._data.validate() is None
 
-    def write(self, fullpath=None):
+    def write(self, fullpath=None, validate=True):
         '''
         Writes internal data to file with correct name in correct location
 
@@ -175,8 +165,10 @@ class Metadata(object):
         '''
         if not fullpath:
             fullpath = self._metapath
-        meta = traits.get_name_traits(fullpath)
-        specifications.MetaName(meta).validate()
+
+        if validate:
+            meta = traits.get_name_traits(fullpath)
+            MetaName(meta).validate()
 
         # overwrite existing metadata
         data = {}
@@ -184,7 +176,7 @@ class Metadata(object):
             with open(fullpath, 'r') as f:
                 data = yaml.load(f)
 
-        data.update(self.__data.to_primitive())
+        data.update(self._data.to_primitive())
 
         with open(fullpath, 'w') as f:
             yaml.dump(data, f)

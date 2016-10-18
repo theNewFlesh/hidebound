@@ -20,6 +20,7 @@ import yaml
 from github3 import login
 from github3.repos.branch import Branch
 from github3.null import NullObject
+from nerve.core.metadata import Metadata
 # ------------------------------------------------------------------------------
 
 class Client(object):
@@ -42,15 +43,15 @@ class Client(object):
         Returns:
             Client: Github repository
         '''
-        if isinstance(config, str):
-            with open(config, 'r') as f:
-                config = yaml.load(f)
+        config = Metadata(config)
+        config.validate()
+        config = config.data
 
         self._client = login(config['username'], token=config['token'])
         self._org = self._client.organization(config['organization'])
         self._team_ids = {team.name: team.id for team in self._org.teams()}
         self._repo = self._create_repository(
-            config['name'],
+            config['project-name'],
             config['organization'],
             config['private']
         )
@@ -122,7 +123,7 @@ class Client(object):
         Returns:
             bool: success status
         '''
-        self._repo.edit(self['name'], default_branch=name)
+        self._repo.edit(self['project-name'], default_branch=name)
         return True
 
     def add_team(self, name, permission):

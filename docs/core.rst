@@ -1,50 +1,56 @@
-core package
-===================
+core
+====
 
-nerve.core.client module
---------------------------------
+client
+-----------------
 
 .. automodule:: nerve.core.client
     :members:
+    :private-members:
     :undoc-members:
     :show-inheritance:
 
-nerve.core.git module
---------------------------------
+git
+--------------
 
 .. automodule:: nerve.core.git
     :members:
+    :private-members:
     :undoc-members:
     :show-inheritance:
 
-nerve.core.git_lfs module
---------------------------------
+git_lfs
+------------------
 
 .. automodule:: nerve.core.git_lfs
     :members:
+    :private-members:
     :undoc-members:
     :show-inheritance:
 
-nerve.core.metadata module
---------------------------------
+metadata
+-------------------
 
 .. automodule:: nerve.core.metadata
     :members:
+    :private-members:
     :undoc-members:
     :show-inheritance:
 
-nerve.core.model module
---------------------------------
+model
+----------------
 
 .. automodule:: nerve.core.model
     :members:
+    :private-members:
     :undoc-members:
     :show-inheritance:
 
-nerve.core.utils module
---------------------------------
+utils
+----------------
 
 .. automodule:: nerve.core.utils
     :members:
+    :private-members:
     :undoc-members:
     :show-inheritance:

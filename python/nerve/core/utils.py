@@ -5,13 +5,14 @@ within the nerve framework
 '''
 # ------------------------------------------------------------------------------
 
+from copy import deepcopy
 import re
 import os
 from warnings import warn
 from subprocess import Popen, PIPE, SubprocessError
 # ------------------------------------------------------------------------------
 
-def execute_subprocess(command, error_re='Error:.*'):
+def execute_subprocess(command, error_re='[eE]rror:.*'):
     '''
     Executes a given command as a subprocess and scrubs the output for errors
 
@@ -49,7 +50,7 @@ def get_status(command, working_dir, include=[], exclude=[], states=[], staged=N
         include (list, optional): list of regex patterns used to include files. Default: []
         exclude (list, optional): list of regex patterns used to exclude files. Default: []
         states (list, optional): file states to be shown in output. Default: all states
-            options include: added, copied, deleted, modified, renamed, updated, untracked
+            Options: added, copied, deleted, modified, renamed, updated, untracked
         staged (bool, optional): include only files which are staged or unstaged. Default: both
         warnings (bool, optional): display warnings
 
@@ -118,6 +119,30 @@ def get_status(command, working_dir, include=[], exclude=[], states=[], staged=N
             continue
 
         yield output
+
+def is_dictlike(item):
+    '''Determine if an item id dictlike'''
+    return item.__class__.__name__ in ['dict', 'OrderedDict']
+
+def deep_update(original, update):
+    for key, value in original.items():
+        if not key in update:
+            update[key] = value
+        elif isinstance(value, dict):
+            deep_update(value, update[key])
+    return update
+
+def conform_keys(data, src='_', dest='-'):
+    def _conform(data, store):
+        if not is_dictlike(data):
+            return data
+        for key, val in data.items():
+            if is_dictlike(val):
+                store[re.sub(src, dest, key)] = _conform(val, {})
+            else:
+                store[re.sub(src, dest, key)] = val
+        return store
+    return _conform(data, {})
 # ------------------------------------------------------------------------------
 
 def main():
@@ -131,7 +156,10 @@ def main():
 
 __all__ = [
     'execute_subprocess',
-    'get_status'
+    'get_status',
+    'is_dictlike',
+    'deep_update',
+    'conform_keys'
 ]
 
 if __name__ == '__main__':
