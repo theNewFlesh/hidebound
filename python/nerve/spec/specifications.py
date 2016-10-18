@@ -12,10 +12,10 @@ the value of that trait (especially if required).
 '''
 # ------------------------------------------------------------------------------
 
-from nerve.spec.base import Config, Project, Deliverable, NonDeliverable, Client
+from nerve.spec.base import ConfigBase, Project, Deliverable, NonDeliverable, Client
 # ------------------------------------------------------------------------------
 
-class Config001(Config):
+class Config(ConfigBase):
     pass
 
 class Proj001(Project):
@@ -41,7 +41,7 @@ def main():
 # ------------------------------------------------------------------------------
 
 __all__ = [
-    'Config001',
+    'Config',
     'Proj001',
     'Vol001',
     'Geo001',

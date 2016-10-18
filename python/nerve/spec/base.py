@@ -61,7 +61,7 @@ class Specification(Model):
             data['specification'] = self.__class__.__name__.lower()
         super().__init__(raw_data=data)
 
-    specification = StringType(required=True)
+    specification = StringType(required=True, validators=[is_specification])
 
 class Client(Specification):
     username     = StringType(required=True, validators=[is_username])
@@ -116,7 +116,7 @@ class Deliverable(Asset):
     dependencies = ListType(StringType, default=[])
     asset_type   = StringType(default='deliverable')
 
-class Config(Specification):
+class ConfigBase(Specification):
     '''
     Base class for all nerve configs (nerverc)
     '''
@@ -126,7 +126,6 @@ class Config(Specification):
     project_root             = StringType(required=True, validators=[is_project_root])
     token                    = StringType(required=True, validators=[is_token])
     url_type                 = StringType(required=True, validators=[is_url_type])
-    specification            = StringType(required=True, validators=[is_specification])
     request_include_patterns = ListType(StringType, default=[], validators=[is_include_pattern])
     request_exclude_patterns = ListType(StringType, default=[], validators=[is_exclude_pattern])
     publish_include_patterns = ListType(StringType, default=[], validators=[is_include_pattern])

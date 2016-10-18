@@ -31,6 +31,10 @@ class Metadata(object):
         Args:
             item (dict or str): a dict of asset metadata, an asset yml file or
                                 the fullpath of an asset
+            metapath (str, optional): fullpath to item metadata _meta.yml file. Default: None
+            datapath (str, optional): fullpath to item data. Default: None
+            spec (str, optional): item specification. Default: None
+
         Returns:
             Metadata
 
