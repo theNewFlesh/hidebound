@@ -23,7 +23,7 @@ class Metadata(object):
 
     API: data, get_traits, validate, write, __getitem__
     '''
-    def __init__(self, item, metapath=None):
+    def __init__(self, item, metapath=None, datapath=None, spec=None):
         '''
         Metadata constructor takes a dict, filepath or dirpath and turns it into internal metadata
         The specification class used to wrap the internal data is derived from item.
@@ -38,8 +38,6 @@ class Metadata(object):
             OSError, TypeError
         '''
         data = {}
-        datapath = None
-        spec = None
 
         if isinstance(item, dict):
             spec = item['specification']
@@ -49,14 +47,11 @@ class Metadata(object):
             if not os.path.exists(item):
                 raise OSError('No such file or directory: ' + item)
 
-            meta = self._is_meta(item)
-            conf = self._is_config(item)
+            meta = traits.get_meta(item)
+            conf = traits.get_config(item)
+            if meta:
+                spec = traits.get_specification(item)
             if meta or conf:
-                if meta:
-                    spec = traits.get_specification(item)
-                if conf:
-                    spec = 'config001'
-
                 metapath = item
                 with open(item, 'r') as f:
                     data = yaml.load(f)
@@ -79,16 +74,6 @@ class Metadata(object):
 
     def __getitem__(self, key):
         return self.data[key]
-
-    def _is_meta(self, item):
-        if re.search('_meta', item):
-            return True
-        return False
-
-    def _is_config(self, item):
-        if re.search('nerverc', item):
-            return True
-        return False
 
     def _get_spec(self, name):
         '''

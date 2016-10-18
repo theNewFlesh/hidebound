@@ -46,7 +46,8 @@ class Nerve(object):
         Returns:
             Nerve
         '''
-        config = Metadata(config)
+        self.__spec = 'config001'
+        config = Metadata(config, spec=self.__spec)
         config.validate()
         self.__config = config
     # --------------------------------------------------------------------------
@@ -62,7 +63,7 @@ class Nerve(object):
         if config != {}:
             config = conform_keys(config)
             output = deep_update(output, config)
-            output = Metadata(output)
+            output = Metadata(output, spec=self.__spec)
             try:
                 output.validate()
             except ValidationError as e:

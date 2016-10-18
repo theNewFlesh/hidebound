@@ -71,6 +71,16 @@ def get_name_traits(fullpath, deliverable=True):
         if v == '-':
             output[k] = None
     return output
+
+def get_meta(fullpath):
+    if re.search('_meta', fullpath):
+        return True
+    return False
+
+def get_config(fullpath):
+    if re.search('nerverc', fullpath):
+        return True
+    return False
 # ------------------------------------------------------------------------------
 
 def get_asset_id(fullpath):
