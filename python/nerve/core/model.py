@@ -350,7 +350,7 @@ class Nerve(object):
             local.add([x.datapath for x in nondeliverables])
             names = [x['asset-name'] for x in nondeliverables]
             local.commit('NON-DELIVERABLES: ' + ', '.join(names))
-            local.push(branch)
+            local.push(branch) # environment variables for git-lfs-s3 not present
         # ----------------------------------------------------------------------
 
         # get only added deliverable assets
