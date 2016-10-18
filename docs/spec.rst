@@ -1,34 +1,38 @@
-spec package
-===================
+spec
+====
 
-nerve.spec.base module
---------------------------------
+base
+---------------
 
 .. automodule:: nerve.spec.base
     :members:
+    :private-members:
     :undoc-members:
     :show-inheritance:
 
-nerve.spec.specifications module
---------------------------------
+specifications
+-------------------------
 
 .. automodule:: nerve.spec.specifications
     :members:
+    :private-members:
     :undoc-members:
     :show-inheritance:
 
-nerve.spec.traits module
---------------------------------
+traits
+-----------------
 
 .. automodule:: nerve.spec.traits
     :members:
+    :private-members:
     :undoc-members:
     :show-inheritance:
 
-nerve.spec.validators module
---------------------------------
+validators
+---------------------
 
 .. automodule:: nerve.spec.validators
     :members:
+    :private-members:
     :undoc-members:
     :show-inheritance:

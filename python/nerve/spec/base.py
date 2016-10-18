@@ -1,9 +1,8 @@
 #! /usr/bin/env python
 '''
-The specifications module house all the specifications for nerve entities
+The base module houses all the base specifications for nerve entities
 
-Those entities include: configs, projects, assets (non-deliverables) and
-deliverables.
+Those entities include: configs, projects, deliverables and deliverables.
 
 All specifications used in production should be subclassed from the
 aforementioned classes.  All class attributes must have a "get_[attribute]"
