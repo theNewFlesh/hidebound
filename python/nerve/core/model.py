@@ -11,7 +11,7 @@ Author:
 '''
 # ------------------------------------------------------------------------------
 
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 from itertools import chain
 import os
 from pprint import pformat
@@ -100,8 +100,16 @@ class Nerve(object):
             url_type=config['url-type'],
             specification='client'
         )
+        # ----------------------------------------------------------------------
 
-        return config, project, name, path, states, asset_types, branch, verbosity, client_conf, notes
+        Info = namedtuple('Info', ['config', 'project', 'name', 'path',
+           'states', 'asset_types', 'branch', 'verbosity', 'client_conf',
+           'notes']
+        )
+        info = Info(config, project, name, path, states, asset_types, branch,
+            verbosity, client_conf, notes
+        )
+        return info
 
     @property
     def config(self):
@@ -127,18 +135,18 @@ class Nerve(object):
         Yields:
             Metadata: Metadata object of each asset
         '''
-        config, _, _, path, states, asset_types, _, verbosity, client_conf, _ = self._get_info(name, None, config)
+        info = self._get_info(name, None, config)
 
         warn_ = False
         if verbosity == 2:
             warn_ = True
 
-        local = Git(path)
+        local = Git(info.path)
         local.add(all=True) # git lfs cannot get the status of unstaged files
-        lfs = GitLFS(path)
+        lfs = GitLFS(info.path)
         files = lfs.status(
-            include=config['status-include-patterns'],
-            exclude=config['status-exclude-patterns'],
+            include=info.config['status-include-patterns'],
+            exclude=info.config['status-exclude-patterns'],
             warnings=warn_
         )
         # ----------------------------------------------------------------------
@@ -158,15 +166,15 @@ class Nerve(object):
         # ----------------------------------------------------------------------
 
         for asset, v in sorted(temp.items()):
-            if states:
-                rogue_states = set(v['state']).difference(states)
+            if info.states:
+                rogue_states = set(v['state']).difference(info.states)
                 if len(rogue_states) > 0:
-                    if verbosity > 0:
+                    if info.verbosity > 0:
                         warn(asset + ' contains files of state: ' + ','.join(rogue_states))
                     continue
 
             output = Metadata(asset)
-            if output.data['asset-type'] in asset_types:
+            if output.data['asset-type'] in info.asset_types:
                 output.get_traits()
                 yield output
 
@@ -192,14 +200,15 @@ class Nerve(object):
             - send data to DynamoDB
         '''
         # create repo
-        config, project, name, path, _, _, _, verbosity, client_conf, _ = self._get_info(name, notes, config)
+        info = self._get_info(name, None, config)
+        project = info.project
 
-        client = Client(client_conf)
-        local = Git(path, url=client['url'])
+        client = Client(info.client_conf)
+        local = Git(info.path, url=client['url'])
         # ----------------------------------------------------------------------
 
         # configure repo
-        lfs = GitLFS(path)
+        lfs = GitLFS(info.path)
         lfs.install(skip_smudge=True)
         lfs.create_config('http://localhost:8080')
         lfs.track(['*.' + x for x in project['lfs-extensions']])
@@ -215,7 +224,7 @@ class Nerve(object):
         # create project structure
         local.branch('dev')
         for subdir in chain(project['deliverables'], project['nondeliverables']):
-            _path = os.path.join(path, subdir)
+            _path = os.path.join(info.path, subdir)
             os.mkdir(_path)
             # git won't commit empty directories
             open(os.path.join(_path, '.keep'), 'w').close()
@@ -235,7 +244,7 @@ class Nerve(object):
         local.add(all=True)
         local.commit(
             'VALID: {} created according to {} specification'.format(
-                name,
+                info.name,
                 project['specification']
             )
         )
@@ -244,7 +253,7 @@ class Nerve(object):
         client.set_default_branch('dev')
 
         # cleanup
-        shutil.rmtree(path)
+        shutil.rmtree(info.path)
         # ----------------------------------------------------------------------
 
         # add teams
@@ -269,17 +278,17 @@ class Nerve(object):
         .. todo::
             - catch repo already exists errors and repo doesn't exist errors
         '''
-        config, _, _, path, _, _, branch, verbosity, client_conf, _ = self._get_info(name, None, config)
+        info = self._get_info(name, None, config)
 
-        client = Client(client_conf)
-        if client.has_branch(branch):
-            local = Git(path, url=client['url'], branch=branch)
+        client = Client(info.client_conf)
+        if client.has_branch(info.branch):
+            local = Git(info.path, url=client['url'], branch=info.branch)
         else:
-            local = Git(path, url=client['url'], branch='dev')
+            local = Git(info.path, url=client['url'], branch='dev')
 
             # this done in lieu of doing it through github beforehand
-            local.branch(branch)
-            local.push(branch)
+            local.branch(info.branch)
+            local.push(info.branch)
 
         return True
 
@@ -296,12 +305,12 @@ class Nerve(object):
         Returns:
             bool: success status
         '''
-        config, _, _, path, _, _, branch, verbosity, _, _ = self._get_info(name, None, config)
+        info = self._get_info(name, None, config)
 
-        Git(path, branch=branch).pull('dev', branch)
-        GitLFS(path).pull(
-            config['request-include-patterns'],
-            config['request-exclude-patterns']
+        Git(info.path, branch=info.branch).pull('dev', info.branch)
+        GitLFS(info.path).pull(
+            info.config['request-include-patterns'],
+            info.config['request-exclude-patterns']
         )
 
         return True
@@ -329,11 +338,13 @@ class Nerve(object):
         .. todo::
             - add branch checking logic to skip the following if not needed?
         '''
-        config, project, _, path, _, _, branch, verbosity, client_conf, _ = self._get_info(name, notes, config)
+        info = self._get_info(name, None, config)
+        config = info.config
+        branch = info.branch
 
         # pulling metadata first avoids merge conflicts by keeping the
         # user-branch HEAD ahead of the dev branch
-        local = Git(path, branch=branch)
+        local = Git(info.path, branch=branch)
         local.pull('dev', 'dev')
         local.merge('dev', branch)
 
@@ -362,8 +373,8 @@ class Nerve(object):
             status_states=['added'],
             status_asset_types=['deliverable'],
             project={
-                'project-id': project['project-id'],
-                'url': project['url']
+                'project-id': info.project['project-id'],
+                'url': info.project['url']
             },
             **config
         )
@@ -376,14 +387,14 @@ class Nerve(object):
             try:
                 deliv.validate()
             except ValidationError as e:
-                if verbosity > 0:
+                if info.verbosity > 0:
                     warn(e)
                 invalid.append(deliv)
                 continue
             valid.append(deliv)
         # ----------------------------------------------------------------------
 
-        client = Client(client_conf)
+        client = Client(info.client_conf)
 
         if len(invalid) > 0:
             # commit only invalid metadata to github user branch
@@ -430,15 +441,16 @@ class Nerve(object):
         .. todo::
             - add git lfs logic for deletion
         '''
-        _, _, name, path, _, _, _, verbosity, client_conf, _ = self._get_info(name, None, config)
+        info = self._get_info(name, None, config)
+
         if from_server:
-            Client(client_conf).delete()
+            Client(info.client_conf).delete()
             # git lfs deletion logic
         if from_local:
-            if os.path.split(path)[-1] == name:
-                shutil.rmtree(path)
+            if os.path.split(info.path)[-1] == info.name:
+                shutil.rmtree(info.path)
             else:
-                warn(path + ' is not a project directory.  Local deletion aborted.')
+                warn(info.path + ' is not a project directory.  Local deletion aborted.')
                 return False
         return True
 # ------------------------------------------------------------------------------
