@@ -20,19 +20,16 @@ class Git(object):
     Class for interacting with a single local git repository
 
     API: create_gitignore, add, branch, checkout, push, pull, commit, reset, status
+
+    Args:
+        working_dir (str): fullpath of git repository
+        url (str, optional): url to clone Github repository from. Default: None
+        branch (str, optional): branch to clone from or checkout. Default: None
+
+    Returns:
+        Git: local git repository
     '''
     def __init__(self, working_dir, url=None, branch=None):
-        '''
-        Client constructor creates and acts as a single local git repository
-
-        Args:
-            working_dir (str): fullpath of git repository
-            url (str, optional): url to clone Github repository from. Default: None
-            branch (str, optional): branch to clone from or checkout. Default: None
-
-        Returns:
-            Git: local git repository
-        '''
         self._repo = self._clone(working_dir, url=url, branch=branch)
         self._working_dir = working_dir
         os.chdir(working_dir)
@@ -49,7 +46,7 @@ class Git(object):
         Returns:
             git.Repo: local repository
 
-        ..todo ::
+        .. todo::
             - fix try block so that it raises an error when ssh-agent isn't
               running or ssh private has not been added
         '''

@@ -24,20 +24,17 @@ class GitLFS(object):
     Class for sending and parsing git lfs commands executed upon a single local git repository
 
     API: working_dir, create_config, install, track, pull, status
+
+    Changes current working directory of process to woking_dir.
+    Starts local lfs server.
+
+    Args:
+        working_dir (str): fullpath of git repository (must exist)
+
+    Returns:
+        GitLFS: local git lfs repository
     '''
     def __init__(self, working_dir):
-        '''
-        Client constructor creates and acts as a single local git lfs repository
-
-        Changes current working directory of process to woking_dir.
-        Starts local lfs server.
-
-        Args:
-            working_dir (str): fullpath of git repository (must exist)
-
-        Returns:
-            GitLFS: local git lfs repository
-        '''
         self._working_dir = working_dir
         os.chdir(working_dir)
         # start server

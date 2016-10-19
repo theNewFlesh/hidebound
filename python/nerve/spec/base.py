@@ -45,14 +45,14 @@ class Specification(Model):
 
     Attributes:
         specification (str): same as class name
+
+    Args:
+        arg (dict): data to be run though a specification
+
+    Returns:
+        Specification
     '''
     def __init__(self, raw_data={}):
-        '''
-        Sets specification to class name
-
-        Args:
-            arg (dict): data to be run though a specification
-        '''
         data = raw_data
         # needed because python doesn't support hyphenated attributes
         data = conform_keys(data, '-', '_')
@@ -65,6 +65,14 @@ class Specification(Model):
 class Client(Specification):
     '''
     Base class for nerve.core.client.Client's metadata
+
+    Attributes:
+        specification (str): same as class name
+        username (str): Github username
+        organization (str): Github organization
+        project_name (str): name of project
+        private (bool): privacy of Github repo
+        url_type (str): type of access to Github. currently only ssh. Options: http, ssh
     '''
     username     = StringType(required=True, validators=[is_username])
     token        = StringType(required=True, validators=[is_token])

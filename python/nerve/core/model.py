@@ -35,17 +35,14 @@ class Nerve(object):
 
     API:
         create, clone, request, publish, delete and __getitem__
+
+    Args:
+        config (str or dict): a fullpath to a nerverc config or a dict of one
+
+    Returns:
+        Nerve
     '''
     def __init__(self, config):
-        '''
-        Nerve constructor that takes a nerverc configuration (yaml format)
-
-        Args:
-            config (str or dict): a fullpath to a nerverc config or a dict of one
-
-        Returns:
-            Nerve
-        '''
         config = Metadata(config, spec='config')
         config.validate()
         self.__config = config
@@ -88,7 +85,7 @@ class Nerve(object):
         Args:
             name (str): name of project
             notes (str): notes to be added to metadata
-            config (dict): **config dictionary
+            config (dict): \**config dictionary
 
         Returns:
             namedtuple: tuple with conveniently named attributes
@@ -149,12 +146,12 @@ class Nerve(object):
 
         Args:
             name (str, optional): name of project. Default: None
-            **config: optional config parameters, overwrites fields in a copy of self.config
-            status_include_patterns (list, **config): list of regular expressions user to include specific assets
-            status_exclude_patterns (list, **config): list of regular expressions user to exclude specific assets
-            status_states (list, **config): list of object states files are allowed to be in.
+            \**config: optional config parameters, overwrites fields in a copy of self.config
+            status_include_patterns (list, \**config): list of regular expressions user to include specific assets
+            status_exclude_patterns (list, \**config): list of regular expressions user to exclude specific assets
+            status_states (list, \**config): list of object states files are allowed to be in.
                 Options: added, copied, deleted, modified, renamed, updated and untracked
-            verbosity (int, **config): level of verbosity for output. Default: 0
+            verbosity (int, \**config): level of verbosity for output. Default: 0
                 Options: 0, 1, 2
 
         Yields:
@@ -218,9 +215,9 @@ class Nerve(object):
         Args:
             name (str, optional): name of project. Default: None
             notes (str, optional): notes to appended to project metadata. Default: None
-            **config: optional config parameters, overwrites fields in a copy of self.config
-            project (dict, **config): project metadata.
-            verbosity (int, **config): level of verbosity for output. Default: 0
+            \**config: optional config parameters, overwrites fields in a copy of self.config
+            project (dict, \**config): project metadata.
+            verbosity (int, \**config): level of verbosity for output. Default: 0
                 Options: 0, 1, 2
 
         Returns:
@@ -301,11 +298,11 @@ class Nerve(object):
         Args:
             name (str, optional): name of project. Default: None
             notes (str, optional): notes to appended to project metadata. Default: None
-            **config: optional config parameters, overwrites fields in a copy of self.config
-            project (dict, **config): project metadata.
-            verbosity (int, **config): level of verbosity for output. Default: 0
+            \**config: optional config parameters, overwrites fields in a copy of self.config
+            project (dict, \**config): project metadata.
+            verbosity (int, \**config): level of verbosity for output. Default: 0
                 Options: 0, 1, 2
-            user_branch (str, **config): branch to clone from. Default: user's branch
+            user_branch (str, \**config): branch to clone from. Default: user's branch
 
         Returns:
             bool: success status
@@ -334,12 +331,12 @@ class Nerve(object):
         Args:
             name (str, optional): name of project. Default: None
             notes (str, optional): notes to appended to project metadata. Default: None
-            **config: optional config parameters, overwrites fields in a copy of self.config
-            project (dict, **config): project metadata.
-            user_branch (str, **config): branch to pull deliverables into. Default: user's branch
-            request_include_patterns (list, **config): list of regular expressions user to include specific deliverables
-            request_exclude_patterns (list, **config): list of regular expressions user to exclude specific deliverables
-            verbosity (int, **config): level of verbosity for output. Default: 0
+            \**config: optional config parameters, overwrites fields in a copy of self.config
+            project (dict, \**config): project metadata.
+            user_branch (str, \**config): branch to pull deliverables into. Default: user's branch
+            request_include_patterns (list, \**config): list of regular expressions user to include specific deliverables
+            request_exclude_patterns (list, \**config): list of regular expressions user to exclude specific deliverables
+            verbosity (int, \**config): level of verbosity for output. Default: 0
                 Options: 0, 1, 2
 
         Returns:
@@ -368,12 +365,12 @@ class Nerve(object):
         Args:
             name (str, optional): name of project. Default: None
             notes (str, optional): notes to appended to project metadata. Default: None
-            **config: optional config parameters, overwrites fields in a copy of self.config
-            project (dict, **config): project metadata.
-            user_branch (str, **config): branch to pull deliverables from. Default: user's branch
-            publish_include_patterns (list, **config): list of regular expressions user to include specific assets
-            publish_exclude_patterns (list, **config): list of regular expressions user to exclude specific assets
-            verbosity (int, **config): level of verbosity for output. Default: 0
+            \**config: optional config parameters, overwrites fields in a copy of self.config
+            project (dict, \**config): project metadata.
+            user_branch (str, \**config): branch to pull deliverables from. Default: user's branch
+            publish_include_patterns (list, \**config): list of regular expressions user to include specific assets
+            publish_exclude_patterns (list, \**config): list of regular expressions user to exclude specific assets
+            verbosity (int, \**config): level of verbosity for output. Default: 0
                 Options: 0, 1, 2
 
         Returns:
@@ -478,9 +475,9 @@ class Nerve(object):
             from_server (bool): delete Github project
             from_local (bool): delete local project directory
             name (str, optional): name of project. Default: None
-            **config: optional config parameters, overwrites fields in a copy of self.config
-            project (dict, **config): project metadata.
-            verbosity (int, **config): level of verbosity for output. Default: 0
+            \**config: optional config parameters, overwrites fields in a copy of self.config
+            project (dict, \**config): project metadata.
+            verbosity (int, \**config): level of verbosity for output. Default: 0
                 Options: 0, 1, 2
 
         Returns:

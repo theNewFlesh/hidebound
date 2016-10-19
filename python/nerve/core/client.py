@@ -30,19 +30,21 @@ class Client(object):
     Attributes:
         config (dict): a dictionary representing Nerve's internal configuration
 
-    API: has_branch, set_default_branch, add_team, delete
-         create_pull_request, merge_pull_request
+    API:
+        has_branch
+        set_default_branch
+        add_team
+        delete
+        create_pull_request
+        merge_pull_request
+
+    Args:
+        config (dict): a nerve project configuration (derived from nerverc)
+
+    Returns:
+        Client: Github repository
     '''
     def __init__(self, config):
-        '''
-        Client constructor creates and acts as a single repository on Github
-
-        Args:
-            config (dict): a nerve project configuration (derived from nerverc)
-
-        Returns:
-            Client: Github repository
-        '''
         config = Metadata(config)
         config.validate()
         config = config.data

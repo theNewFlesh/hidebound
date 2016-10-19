@@ -22,25 +22,24 @@ class Metadata(object):
     Those specification classes are themselves subclassed from schematics.model.Model.
 
     API: data, get_traits, validate, write, __getitem__
+
+    Constructor takes a dict, filepath or dirpath and turns it into internal metadata
+    The specification class used to wrap the internal data is derived from item.
+
+    Args:
+        item (dict or str): a dict of asset metadata, an asset yml file or
+                            the fullpath of an asset
+        metapath (str, optional): fullpath to item metadata _meta.yml file. Default: None
+        datapath (str, optional): fullpath to item data. Default: None
+        spec (str, optional): item specification. Default: None
+
+    Returns:
+        Metadata
+
+    Raises:
+        OSError, TypeError
     '''
     def __init__(self, item, metapath=None, datapath=None, spec=None):
-        '''
-        Metadata constructor takes a dict, filepath or dirpath and turns it into internal metadata
-        The specification class used to wrap the internal data is derived from item.
-
-        Args:
-            item (dict or str): a dict of asset metadata, an asset yml file or
-                                the fullpath of an asset
-            metapath (str, optional): fullpath to item metadata _meta.yml file. Default: None
-            datapath (str, optional): fullpath to item data. Default: None
-            spec (str, optional): item specification. Default: None
-
-        Returns:
-            Metadata
-
-        Raises:
-            OSError, TypeError
-        '''
         data = {}
 
         if isinstance(item, dict):
