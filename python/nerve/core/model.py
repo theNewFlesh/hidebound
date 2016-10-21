@@ -116,7 +116,7 @@ class Nerve(object):
 
         info = namedtuple('Info', ['config', 'project', 'name', 'path',
            'states', 'asset_types', 'branch', 'verbosity', 'client_conf',
-           'notes', 'ssh_key_path']
+           'notes', 'env']
         )
         info = info(
             config,
@@ -129,7 +129,7 @@ class Nerve(object):
             config['verbosity'],
             client_conf,
             notes,
-            config['ssh-key-path']
+            config['environment']
         )
         return info
 
@@ -164,7 +164,7 @@ class Nerve(object):
         if info.verbosity == 2:
             warn_ = True
 
-        local = Git(info.path, ssh_key_path=info.ssh_key_path)
+        local = Git(info.path, environment=info.env)
         local.reset()
         local.add(all=True) # git lfs cannot get the status of unstaged files
         lfs = GitLFS(info.path)
@@ -233,7 +233,7 @@ class Nerve(object):
         project = info.project
 
         client = Client(info.client_conf)
-        local = Git(info.path, url=client['url'], ssh_key_path=info.ssh_key_path)
+        local = Git(info.path, url=client['url'], environment=info.env)
         # ----------------------------------------------------------------------
 
         # configure repo
@@ -316,9 +316,9 @@ class Nerve(object):
 
         client = Client(info.client_conf)
         if client.has_branch(info.branch):
-            local = Git(info.path, url=client['url'], branch=info.branch, ssh_key_path=info.ssh_key_path)
+            local = Git(info.path, url=client['url'], branch=info.branch, environment=info.env)
         else:
-            local = Git(info.path, url=client['url'], branch='dev', ssh_key_path=info.ssh_key_path)
+            local = Git(info.path, url=client['url'], branch='dev', environment=info.env)
 
             # this done in lieu of doing it through github beforehand
             local.branch(info.branch)
@@ -346,7 +346,7 @@ class Nerve(object):
         '''
         info = self._get_info(name, None, config)
 
-        local = Git(info.path, branch=info.branch, ssh_key_path=info.ssh_key_path)
+        local = Git(info.path, branch=info.branch, environment=info.env)
         local.branch('dev')
         local.pull('dev')
         local.merge('dev', info.branch)
@@ -392,7 +392,7 @@ class Nerve(object):
 
         # pulling metadata first avoids merge conflicts by keeping the
         # user-branch HEAD ahead of the dev branch
-        local = Git(info.path, branch=branch, ssh_key_path=info.ssh_key_path)
+        local = Git(info.path, branch=branch, environment=info.env)
         local.branch('dev')
         local.pull('dev')
         local.merge('dev', branch)
@@ -412,7 +412,7 @@ class Nerve(object):
             local.add([x.datapath for x in nondeliverables])
             names = [x['asset-name'] for x in nondeliverables]
             local.commit('NON-DELIVERABLES: ' + ', '.join(names))
-            local.push(branch) # environment variables for git-lfs-s3 not present
+            local.push(branch, shell=True)
         # ----------------------------------------------------------------------
 
         # get only added deliverable assets

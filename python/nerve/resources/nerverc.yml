@@ -1,11 +1,7 @@
 ---
 username: theNewFlesh
 user-branch: alex
-organization: nerve-test-organization
 project-root: /tmp
-token: e17afcc8c42fe24536c14700c4931f0e7f252bb1
-url-type: ssh
-ssh-key-path: ~/.ssh/nerve-test-ssh
 request-include-patterns:
   - vol.*
 request-exclude-patterns:
@@ -21,6 +17,13 @@ status-include-patterns:
   - geo.*
   - maya.*
 status-exclude-patterns:
+organization: nerve-test-organization
+token: e17afcc8c42fe24536c14700c4931f0e7f252bb1
+url-type: ssh
+environment:
+  GIT_SSH_COMMAND: ssh -i ~/.ssh/nerve-test-ssh
+  USERNAME: alex
+  PASSWORD: nerve
 project:
   project_name: nerve-test-repo-3
   project_id: 0

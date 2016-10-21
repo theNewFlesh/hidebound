@@ -220,7 +220,7 @@ class ConfigBase(Specification):
     status_states            = ListType(StringType, default=[], validators=[is_status_state])
     status_asset_types       = ListType(StringType, default=[], validators=[is_status_asset_type])
     verbosity                = IntType(default=0)
-    ssh_key_path             = StringType(required=True, validators=[])
+    environment              = DictType(StringType, required=True, validators=[])
     project                  = ModelType(Project)
 
     def validate_project(self, key, data):

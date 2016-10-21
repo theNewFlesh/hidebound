@@ -11,11 +11,14 @@ Author:
 # ------------------------------------------------------------------------------
 
 import os
-from git import Repo, GitCommandError
+import re
+import git
+from git import Repo
+from git import GitCommandError
 from nerve.core.utils import get_status, execute_subprocess
 # ------------------------------------------------------------------------------
 
-class Git(object):
+class Git(git.Git):
     '''
     Class for interacting with a single local git repository
 
@@ -29,7 +32,10 @@ class Git(object):
     Returns:
         Git: local git repository
     '''
-    def __init__(self, working_dir, url=None, branch=None):
+    def __init__(self, working_dir, url=None, branch=None, environment={}):
+        super().__init__()
+        self.update_environment(**environment)
+        self._env = environment
         self._repo = self._clone(working_dir, url=url, branch=branch)
         self._working_dir = working_dir
         os.chdir(working_dir)
@@ -68,6 +74,24 @@ class Git(object):
             branch.checkout()
 
         return repo
+
+    def _get_branch(self, name):
+        for branch in self._repo.branches:
+            if branch.name == name:
+                return branch
+        return None
+
+    def _delete_index_on_error(self, func, *args, **kwargs):
+        try:
+            func(*args, **kwargs)
+        except GitCommandError as e:
+            # if 'File exists' not in e.stderr.decode():
+            if re.search('.git/index.lock|new index file', e.stderr.decode()):
+                os.remove(os.path.join(self._working_dir, '.git', 'index'))
+                self.reset()
+                func(*args, **kwargs)
+            else:
+                raise GitCommandError(e)
     # --------------------------------------------------------------------------
 
     def create_gitignore(self, patterns):
@@ -118,7 +142,7 @@ class Git(object):
             branch = self._repo.create_head(name)
         branch.checkout()
 
-    def push(self, branch, remote='origin'):
+    def push(self, branch, remote='origin', shell=False):
         '''
         Push comit to given branch
 
@@ -129,11 +153,13 @@ class Git(object):
         Returns:
             None
         '''
-        # self._repo.remote(remote).push(branch)
-        cmd = 'git push {remote} {branch}'.format(remote=remote, branch=branch)
-        execute_subprocess(cmd)
+        if shell:
+            cmd = 'git push {remote} {branch}'.format(remote=remote, branch=branch)
+            execute_subprocess(cmd, self._working_dir, environment=self._env)
+        else:
+            self._repo.remote(remote).push(branch)
 
-    def pull(self, src, dest, remote='origin'):
+    def pull(self, branch, remote='origin'):
         '''
         Pull upstream commits from remote branch
 
@@ -143,20 +169,24 @@ class Git(object):
         Returns:
             None
         '''
-        src = self.references([src], reftypes=['remote'])
-        src = list(src)[0]
-        src = src['branch']
-
-        temp = self.references([dest], reftypes=['local'])
-        temp = list(temp)
-        if len(temp) == 1:
-            # local branch exists
-            dest = temp[0]['branch']
-
-        # creates local branch if one does not exist
-        self._repo.remote(remote).pull(src + ':' + dest)
+        branch = self.references([branch], reftypes=['remote'])
+        branch = list(branch)[0]
+        branch = branch['branch']
+        self._repo.remote(remote).pull(branch)
 
     def merge(self, src, dest):
+        '''
+        Merge source branch into destination branch
+
+        Arguments:
+            src (str): source branch
+            dest (str): destination branch
+
+        Returns:
+            None
+        '''
+        src = self._get_branch(src)
+        dest = self._get_branch(src)
         self._repo.merge_base(src, dest)
 
     def commit(self, message):

@@ -11,7 +11,7 @@ from warnings import warn
 from subprocess import Popen, PIPE, SubprocessError
 # ------------------------------------------------------------------------------
 
-def execute_subprocess(command, cwd, error_re='[eE]rror:.*'):
+def execute_subprocess(command, cwd, error_re='[eE]rror:.*', environment={}):
     '''
     Executes a given command as a subprocess and scrubs the output for errors
 
@@ -26,6 +26,9 @@ def execute_subprocess(command, cwd, error_re='[eE]rror:.*'):
     Raises:
         SubprocessError: stdout error as message
     '''
+    if environment != {}:
+        temp = [k + '=' + v for k,v in environment.items()]
+        command = ' '.join(temp) + ' ' + command
     output = Popen(command, shell=True, stdout=PIPE, stderr=PIPE, cwd=cwd)
     stderr = output.stderr.read().decode('utf-8')
     output = output.stdout.readlines()
