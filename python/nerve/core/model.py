@@ -17,8 +17,8 @@ import os
 from pprint import pformat
 import shutil
 from warnings import warn
-from nerve.core.utils import conform_keys, deep_update
 from schematics.exceptions import ValidationError
+from nerve.core.utils import conform_keys, deep_update
 from nerve.core.git import Git
 from nerve.core.git_lfs import GitLFS
 from nerve.core.client import Client
@@ -55,13 +55,13 @@ class Nerve(object):
         return pformat(self.config)
 
     def __get_config(self, config):
-        '''
+        r'''
         Convenience method for creating a new temporary configuration dict by
         overwriting a copy of the internal config with keyword arguments
         specified in config
 
         Args:
-            config (dict): dict of keyword arguments (**config)
+            config (dict): dict of keyword arguments (\**config)
 
         Returns:
             dict: new config
@@ -79,7 +79,7 @@ class Nerve(object):
         return output
 
     def _get_info(self, name, notes, config):
-        '''
+        r'''
         Convenience method for creating new temporary config
 
         Args:
@@ -114,11 +114,11 @@ class Nerve(object):
         )
         # ----------------------------------------------------------------------
 
-        Info = namedtuple('Info', ['config', 'project', 'name', 'path',
+        info = namedtuple('Info', ['config', 'project', 'name', 'path',
            'states', 'asset_types', 'branch', 'verbosity', 'client_conf',
-           'notes']
+           'notes', 'ssh_key_path']
         )
-        info = Info(
+        info = info(
             config,
             project,
             name,
@@ -128,7 +128,8 @@ class Nerve(object):
             config['user-branch'],
             config['verbosity'],
             client_conf,
-            notes
+            notes,
+            config['ssh-key-path']
         )
         return info
 
@@ -141,7 +142,7 @@ class Nerve(object):
     # --------------------------------------------------------------------------
 
     def status(self, name=None, **config):
-        '''
+        r'''
         Reports on the status of all affected files within a given project
 
         Args:
@@ -160,10 +161,11 @@ class Nerve(object):
         info = self._get_info(name, None, config)
 
         warn_ = False
-        if verbosity == 2:
+        if info.verbosity == 2:
             warn_ = True
 
-        local = Git(info.path)
+        local = Git(info.path, ssh_key_path=info.ssh_key_path)
+        local.reset()
         local.add(all=True) # git lfs cannot get the status of unstaged files
         lfs = GitLFS(info.path)
         files = lfs.status(
@@ -201,7 +203,7 @@ class Nerve(object):
                 yield output
 
     def create(self, name=None, notes=None, **config):
-        '''
+        r'''
         Creates a nerve project on Github and in the project-root folder
 
         Created items include:
@@ -227,11 +229,11 @@ class Nerve(object):
             - send data to DynamoDB
         '''
         # create repo
-        info = self._get_info(name, None, config)
+        info = self._get_info(name, notes, config)
         project = info.project
 
         client = Client(info.client_conf)
-        local = Git(info.path, url=client['url'])
+        local = Git(info.path, url=client['url'], ssh_key_path=info.ssh_key_path)
         # ----------------------------------------------------------------------
 
         # configure repo
@@ -290,7 +292,7 @@ class Nerve(object):
         return True
 
     def clone(self, name=None, **config):
-        '''
+        r'''
         Clones a nerve project to local project-root directory
 
         Ensures given branch is present in the repository
@@ -314,9 +316,9 @@ class Nerve(object):
 
         client = Client(info.client_conf)
         if client.has_branch(info.branch):
-            local = Git(info.path, url=client['url'], branch=info.branch)
+            local = Git(info.path, url=client['url'], branch=info.branch, ssh_key_path=info.ssh_key_path)
         else:
-            local = Git(info.path, url=client['url'], branch='dev')
+            local = Git(info.path, url=client['url'], branch='dev', ssh_key_path=info.ssh_key_path)
 
             # this done in lieu of doing it through github beforehand
             local.branch(info.branch)
@@ -325,7 +327,7 @@ class Nerve(object):
         return True
 
     def request(self, name=None, **config):
-        '''
+        r'''
         Request deliverables from the dev branch of given project
 
         Args:
@@ -344,7 +346,12 @@ class Nerve(object):
         '''
         info = self._get_info(name, None, config)
 
-        Git(info.path, branch=info.branch).pull('dev', info.branch)
+        local = Git(info.path, branch=info.branch, ssh_key_path=info.ssh_key_path)
+        local.branch('dev')
+        local.pull('dev')
+        local.merge('dev', info.branch)
+        local.branch(info.branch)
+
         GitLFS(info.path).pull(
             info.config['request-include-patterns'],
             info.config['request-exclude-patterns']
@@ -354,7 +361,7 @@ class Nerve(object):
     # --------------------------------------------------------------------------
 
     def publish(self, name=None, notes=None, **config):
-        '''
+        r'''
         Attempt to publish deliverables from user's branch to given project's dev branch on Github
 
         All assets will be published to the user's branch.
@@ -379,15 +386,17 @@ class Nerve(object):
         .. todo::
             - add branch checking logic to skip the following if not needed?
         '''
-        info = self._get_info(name, None, config)
+        info = self._get_info(name, notes, config)
         config = info.config
         branch = info.branch
 
         # pulling metadata first avoids merge conflicts by keeping the
         # user-branch HEAD ahead of the dev branch
-        local = Git(info.path, branch=branch)
-        local.pull('dev', 'dev')
+        local = Git(info.path, branch=branch, ssh_key_path=info.ssh_key_path)
+        local.branch('dev')
+        local.pull('dev')
         local.merge('dev', branch)
+        local.branch(branch)
 
         # get nondeliverable assets
         nondeliverables = self.status(name=name, status_asset_types=['nondeliverable'], **config)
@@ -468,7 +477,7 @@ class Nerve(object):
     # --------------------------------------------------------------------------
 
     def delete(self, from_server, from_local, name=None, **config):
-        '''
+        r'''
         Deletes a nerve project
 
         Args:
