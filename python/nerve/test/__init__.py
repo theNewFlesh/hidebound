@@ -1,1 +1,1 @@
-import nerve.test.test_project
+import nerve.test.test_suite

@@ -16,7 +16,6 @@ Author:
 
 from copy import deepcopy
 import json
-import yaml
 from github3 import login
 from github3.repos.branch import Branch
 from github3.null import NullObject

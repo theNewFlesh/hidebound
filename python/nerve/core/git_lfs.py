@@ -15,7 +15,6 @@ Author:
 
 import os
 from configparser import ConfigParser
-from nerve.core import utils
 from nerve.core.utils import execute_subprocess, get_status
 # ------------------------------------------------------------------------------
 
@@ -102,7 +101,7 @@ class GitLFS(object):
         if skip_smudge:
             cmd += ' --skip-smudge'
 
-        return execute_subprocess(cmd)
+        return execute_subprocess(cmd, self._working_dir)
 
     def track(self, extensions=[]):
         '''
@@ -121,9 +120,9 @@ class GitLFS(object):
             extensions = [extensions]
         cmd = 'git lfs track'
         for exp in extensions:
-            execute_subprocess(cmd + ' ' + exp)
+            execute_subprocess(cmd + ' ' + exp, self._working_dir)
 
-        output = execute_subprocess(cmd, 'no matches found:.*')
+        output = execute_subprocess(cmd, self._working_dir, 'no matches found:.*')
         output = [x.lstrip().split(' ') for x in output[1:-1]]
         return output
 
@@ -144,7 +143,7 @@ class GitLFS(object):
         if len(exclude) > 0:
             cmd += ' -X ' + ','.join(exclude)
 
-        return execute_subprocess(cmd)
+        return execute_subprocess(cmd, self._working_dir)
 
     def status(self, include=[], exclude=[], states=[], staged=None, warnings=False):
         '''

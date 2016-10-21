@@ -5,19 +5,19 @@ within the nerve framework
 '''
 # ------------------------------------------------------------------------------
 
-from copy import deepcopy
 import re
 import os
 from warnings import warn
 from subprocess import Popen, PIPE, SubprocessError
 # ------------------------------------------------------------------------------
 
-def execute_subprocess(command, error_re='[eE]rror:.*'):
+def execute_subprocess(command, cwd, error_re='[eE]rror:.*'):
     '''
     Executes a given command as a subprocess and scrubs the output for errors
 
     Args:
         command (str): shell command to be run
+        cwd (str): current working directory
         error_re (str, optional): regex used for capturing errors
 
     Returns:
@@ -26,7 +26,7 @@ def execute_subprocess(command, error_re='[eE]rror:.*'):
     Raises:
         SubprocessError: stdout error as message
     '''
-    output = Popen(command, shell=True, stdout=PIPE, stderr=PIPE)
+    output = Popen(command, shell=True, stdout=PIPE, stderr=PIPE, cwd=cwd)
     stderr = output.stderr.read().decode('utf-8')
     output = output.stdout.readlines()
     output = [x.decode('utf-8').strip('\n') for x in output]
@@ -58,7 +58,7 @@ def get_status(command, working_dir, include=[], exclude=[], states=[], staged=N
         dict: a single file
     '''
     os.chdir(working_dir)
-    status_ = execute_subprocess(command)
+    status_ = execute_subprocess(command, working_dir)
     lut = {
         'A': 'added',
         'C': 'copied',

@@ -6,7 +6,6 @@ The metadata module contain the Metadata class which is used by nerve to handle 
 
 import os
 from pprint import pformat
-import re
 import yaml
 from nerve.core.utils import conform_keys
 from nerve.spec.base import MetaName
