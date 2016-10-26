@@ -7,7 +7,7 @@ The metadata module contain the Metadata class which is used by nerve to handle 
 import os
 from pprint import pformat
 import yaml
-from nerve.core.utils import conform_keys
+from nerve.core.utils import conform_keys, deep_update
 from nerve.spec.base import MetaName
 from nerve.spec import specifications, traits
 from nerve.core.errors import SpecificationError
@@ -174,11 +174,10 @@ class Metadata(object):
         if os.path.exists(fullpath):
             with open(fullpath, 'r') as f:
                 data = yaml.load(f)
-
-        data.update(self._data.to_primitive())
+        data = deep_update(data, self._data.to_primitive())
 
         with open(fullpath, 'w') as f:
-            yaml.dump(data, f)
+            yaml.dump(data, f, default_flow_style=False)
 
         return os.path.exists(fullpath)
 # ------------------------------------------------------------------------------

@@ -418,7 +418,7 @@ class Nerve(object):
             local.commit('NON-DELIVERABLES: ' + ', '.join(names))
             lfs.remove_prepush()
             lfs.push(branch)
-            local.push(branch, shell=False)
+            local.push(branch)
         # ----------------------------------------------------------------------
 
         # get only added deliverable assets
