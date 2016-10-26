@@ -142,7 +142,7 @@ class Git(git.Git):
             branch = self._repo.create_head(name)
         branch.checkout()
 
-    def push(self, branch, remote='origin', shell=False):
+    def push(self, branch, remote='origin'):
         '''
         Push comit to given branch
 
@@ -153,11 +153,7 @@ class Git(git.Git):
         Returns:
             None
         '''
-        if shell:
-            cmd = 'git push {remote} {branch}'.format(remote=remote, branch=branch)
-            execute_subprocess(cmd, self._working_dir, environment=self._env)
-        else:
-            self._repo.remote(remote).push(branch)
+        self._repo.remote(remote).push(branch)
 
     def pull(self, branch, remote='origin'):
         '''
@@ -278,6 +274,10 @@ class Git(git.Git):
             staged=staged,
             warnings=warnings
         )
+
+    @property
+    def url(self):
+        return list(self._repo.remote('origin').urls)[0]
 # ------------------------------------------------------------------------------
 
 def main():

@@ -135,12 +135,14 @@ def deep_update(original, update):
             deep_update(value, update[key])
     return update
 
-def conform_keys(data, src='_', dest='-'):
+def conform_keys(data, src='_', dest='-', skip=[]):
     def _conform(data, store):
         if not is_dictlike(data):
             return data
         for key, val in data.items():
-            if is_dictlike(val):
+            if key in skip:
+                store[key] = val
+            elif is_dictlike(val):
                 store[re.sub(src, dest, key)] = _conform(val, {})
             else:
                 store[re.sub(src, dest, key)] = val

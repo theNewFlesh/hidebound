@@ -55,7 +55,7 @@ class Specification(Model):
     def __init__(self, raw_data={}):
         data = raw_data
         # needed because python doesn't support hyphenated attributes
-        data = conform_keys(data, '-', '_')
+        data = conform_keys(data, '-', '_', skip=['environment'])
         if 'specification' not in data.keys():
             data['specification'] = self.__class__.__name__.lower()
         super().__init__(raw_data=data)

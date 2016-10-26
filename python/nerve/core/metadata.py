@@ -38,7 +38,7 @@ class Metadata(object):
     Raises:
         OSError, TypeError
     '''
-    def __init__(self, item, metapath=None, datapath=None, spec=None):
+    def __init__(self, item, metapath=None, datapath=None, spec=None, skip_keys=[]):
         data = {}
 
         if isinstance(item, dict):
@@ -70,6 +70,7 @@ class Metadata(object):
         self._data = spec(data)
         self._datapath = datapath
         self._metapath = metapath
+        self._skip_keys = skip_keys
 
     def __repr__(self):
         return pformat(self.data)
@@ -137,7 +138,7 @@ class Metadata(object):
         dict: copy of internal data
         '''
         output = self._data.to_primitive()
-        return conform_keys(output)
+        return conform_keys(output, skip=self._skip_keys)
 
     def validate(self):
         '''

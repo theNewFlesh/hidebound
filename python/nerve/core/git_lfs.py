@@ -33,11 +33,13 @@ class GitLFS(object):
     Returns:
         GitLFS: local git lfs repository
     '''
-    def __init__(self, working_dir):
+    def __init__(self, working_dir, environment={}):
         self._working_dir = working_dir
+        self._env = environment
         os.chdir(working_dir)
+        self.remove_prepush()
         # start server
-        # execute_subprocess('git-lfs-s3')
+        # execute_subprocess('git-lfs-s3', self._working_dir, environment=env)
 
     @property
     def working_dir(self):
@@ -169,6 +171,26 @@ class GitLFS(object):
             staged=staged,
             warnings=warnings
         )
+
+    def push(self, branch, remote='origin'):
+        '''
+        Push comit to given branch
+
+        Args:
+            branch (str): branch name
+            remote (str, optional): remote repository. Default: origin
+
+        Returns:
+            None
+        '''
+        cmd = 'git push {remote} {branch}'.format(remote=remote, branch=branch)
+        execute_subprocess(cmd, self._working_dir, environment=self._env)
+
+    def remove_prepush(self):
+        file_ = os.path.join(self._working_dir, '.git', 'hooks', 'pre-push')
+        if os.path.exists(file_):
+            os.remove(file_)
+        return os.path.exists(file_)
 # ------------------------------------------------------------------------------
 
 def main():

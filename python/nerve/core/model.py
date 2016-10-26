@@ -43,7 +43,7 @@ class Nerve(object):
         Nerve
     '''
     def __init__(self, config):
-        config = Metadata(config, spec='config')
+        config = Metadata(config, spec='config', skip_keys=['environment'])
         config.validate()
         self.__config = config
     # --------------------------------------------------------------------------
@@ -70,7 +70,7 @@ class Nerve(object):
         if config != {}:
             config = conform_keys(config)
             output = deep_update(output, config)
-            output = Metadata(output, spec='config')
+            output = Metadata(output, spec='config', skip_keys=['environment'])
             try:
                 output.validate()
             except ValidationError as e:
@@ -167,7 +167,7 @@ class Nerve(object):
         local = Git(info.path, environment=info.env)
         local.reset()
         local.add(all=True) # git lfs cannot get the status of unstaged files
-        lfs = GitLFS(info.path)
+        lfs = GitLFS(info.path, environment=info.env)
         files = lfs.status(
             include=info.config['status-include-patterns'],
             exclude=info.config['status-exclude-patterns'],
@@ -237,8 +237,9 @@ class Nerve(object):
         # ----------------------------------------------------------------------
 
         # configure repo
-        lfs = GitLFS(info.path)
+        lfs = GitLFS(info.path, environment=info.env)
         lfs.install(skip_smudge=True)
+        lfs.remove_prepush()
         lfs.create_config('http://localhost:8080')
         lfs.track(['*.' + x for x in project['lfs-extensions']])
         local.create_gitignore(project['gitignore'])
@@ -264,7 +265,7 @@ class Nerve(object):
         project['url'] = client['url']
         project['version'] = 1
         meta = project['specification'] + '_meta.yml' # implicit versioning
-        meta = Metadata(project, metapath=meta)
+        meta = Metadata(project, metapath=meta, skip_keys=['environment'])
         meta.validate()
         meta.write(validate=False)
         # ----------------------------------------------------------------------
@@ -352,7 +353,8 @@ class Nerve(object):
         local.merge('dev', info.branch)
         local.branch(info.branch)
 
-        GitLFS(info.path).pull(
+        lfs = GitLFS(info.path, environment=info.env)
+        lfs.pull(
             info.config['request-include-patterns'],
             info.config['request-exclude-patterns']
         )
@@ -398,6 +400,8 @@ class Nerve(object):
         local.merge('dev', branch)
         local.branch(branch)
 
+        lfs = GitLFS(info.path, environment=info.env)
+
         # get nondeliverable assets
         nondeliverables = self.status(name=name, status_asset_types=['nondeliverable'], **config)
         nondeliverables = list(nondeliverables)
@@ -412,7 +416,9 @@ class Nerve(object):
             local.add([x.datapath for x in nondeliverables])
             names = [x['asset-name'] for x in nondeliverables]
             local.commit('NON-DELIVERABLES: ' + ', '.join(names))
-            local.push(branch, shell=True)
+            lfs.remove_prepush()
+            lfs.push(branch)
+            local.push(branch, shell=False)
         # ----------------------------------------------------------------------
 
         # get only added deliverable assets
