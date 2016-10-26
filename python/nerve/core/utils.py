@@ -165,9 +165,9 @@ def conform_keys(data, source='_', target='-', skip=[]):
             if key in skip:
                 store[key] = val
             elif is_dictlike(val):
-                store[re.sub(src, dest, key)] = _conform(val, {})
+                store[re.sub(source, target, key)] = _conform(val, {})
             else:
-                store[re.sub(src, dest, key)] = val
+                store[re.sub(source, target, key)] = val
         return store
     return _conform(data, {})
 # ------------------------------------------------------------------------------
