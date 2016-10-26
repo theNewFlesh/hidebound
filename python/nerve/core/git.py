@@ -277,6 +277,9 @@ class Git(git.Git):
 
     @property
     def url(self):
+        '''
+        str: repo url
+        '''
         return list(self._repo.remote('origin').urls)[0]
 # ------------------------------------------------------------------------------
 

@@ -128,6 +128,16 @@ def is_dictlike(item):
     return item.__class__.__name__ in ['dict', 'OrderedDict']
 
 def deep_update(original, update):
+    '''
+    Recursively updates an original dictionary with an update dictionary
+
+    Args:
+        original (dict): original dictionary
+        update (dict): dictionary to be merged
+
+    Returns:
+        dict: new updated dictionary
+    '''
     for key, value in original.items():
         if not key in update:
             update[key] = value
@@ -135,7 +145,19 @@ def deep_update(original, update):
             deep_update(value, update[key])
     return update
 
-def conform_keys(data, src='_', dest='-', skip=[]):
+def conform_keys(data, source='_', target='-', skip=[]):
+    '''
+    Recursively renames a dictionary's keys
+
+    Args:
+        data (dict): dictionary to be conformed
+        source (str, optional): regex pattern to match in keys. Default: '_'
+        target (str, optional): replacement string. Default: '-'
+        skip (list, optional): keys to skip. Default: []
+
+    Returns:
+        dict: conformed dictionary
+    '''
     def _conform(data, store):
         if not is_dictlike(data):
             return data

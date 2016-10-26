@@ -187,6 +187,15 @@ class GitLFS(object):
         execute_subprocess(cmd, self._working_dir, environment=self._env)
 
     def remove_prepush(self):
+        '''
+        Removes .git/hooks/pre-push, which otherwise breaks git push
+
+        Args:
+            None
+
+        Returns:
+            bool: success status
+        '''
         file_ = os.path.join(self._working_dir, '.git', 'hooks', 'pre-push')
         if os.path.exists(file_):
             os.remove(file_)
