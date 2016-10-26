@@ -362,7 +362,40 @@ class Nerve(object):
         return True
     # --------------------------------------------------------------------------
 
+    def _update_local(self, info):
+        '''
+        Convenience method for merging remote dev branch into local user branch
+
+        Ensures non-fastforward merge conflicts don't occur
+
+        Args:
+            info (tuple): info object returned by _get_info
+
+        Returns:
+            None
+        '''
+        # pulling metadata first avoids merge conflicts by keeping the
+        # user-branch HEAD ahead of the dev branch
+        local = Git(info.path, branch=info.branch, environment=info.env)
+        local.branch('dev')
+        local.pull('dev')
+        local.merge('dev', info.branch)
+        local.branch(info.branch)
+
+        lfs = GitLFS(info.path, environment=info.env)
+
     def _publish_nondeliverables(self, info):
+        '''
+        Convenience method for publishing nondeliverable assets
+
+        Assets published to user branch
+
+        Args:
+            info (tuple): info object returned by _get_info
+
+        Returns:
+            None
+        '''
         # get nondeliverable assets
         nondeliverables = self.status(name=info.name,
             status_asset_types=['nondeliverable'], **info.config)
@@ -384,18 +417,16 @@ class Nerve(object):
             lfs.push(info.branch)
             local.push(info.branch)
 
-    def _update_local(self, info):
-        # pulling metadata first avoids merge conflicts by keeping the
-        # user-branch HEAD ahead of the dev branch
-        local = Git(info.path, branch=info.branch, environment=info.env)
-        local.branch('dev')
-        local.pull('dev')
-        local.merge('dev', info.branch)
-        local.branch(info.branch)
-
-        lfs = GitLFS(info.path, environment=info.env)
-
     def _get_deliverables(self, info):
+        '''
+        Convenience method for retrieving valid and invalid deliverable assets
+
+        Args:
+            info (tuple): info object returned by _get_info
+
+        Returns:
+            tuple: valid deliverables, invalid deliverables
+        '''
         config = info.config
 
         # get only added deliverable assets
