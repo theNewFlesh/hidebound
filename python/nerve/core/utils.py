@@ -30,6 +30,7 @@ def execute_subprocess(command, cwd, error_re='[eE]rror:.*', environment={}):
         temp = [k + '=' + v for k,v in environment.items()]
         command = ' '.join(temp) + ' ' + command
     output = Popen(command, shell=True, stdout=PIPE, stderr=PIPE, cwd=cwd)
+    output.wait()
     stderr = output.stderr.read().decode('utf-8')
     output = output.stdout.readlines()
     output = [x.decode('utf-8').strip('\n') for x in output]

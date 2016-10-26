@@ -15,7 +15,7 @@ import re
 import git
 from git import Repo
 from git import GitCommandError
-from nerve.core.utils import get_status, execute_subprocess
+from nerve.core.utils import get_status
 # ------------------------------------------------------------------------------
 
 class Git(git.Git):

@@ -362,6 +362,72 @@ class Nerve(object):
         return True
     # --------------------------------------------------------------------------
 
+    def _publish_nondeliverables(self, info):
+        # get nondeliverable assets
+        nondeliverables = self.status(name=info.name,
+            status_asset_types=['nondeliverable'], **info.config)
+        nondeliverables = list(nondeliverables)
+        for non in nondeliverables:
+            non.get_traits()
+            non.write(validate=False)
+
+        # publish nondeliverables
+        if len(nondeliverables) > 0:
+            lfs = GitLFS(info.path, environment=info.env)
+            local = Git(info.path, branch=info.branch, environment=info.env)
+
+            # push non-deliverables to user-branch
+            local.add([x.metapath for x in nondeliverables])
+            local.add([x.datapath for x in nondeliverables])
+            names = [x['asset-name'] for x in nondeliverables]
+            local.commit('NON-DELIVERABLES: ' + ', '.join(names))
+            lfs.push(info.branch)
+            local.push(info.branch)
+
+    def _update_local(self, info):
+        # pulling metadata first avoids merge conflicts by keeping the
+        # user-branch HEAD ahead of the dev branch
+        local = Git(info.path, branch=info.branch, environment=info.env)
+        local.branch('dev')
+        local.pull('dev')
+        local.merge('dev', info.branch)
+        local.branch(info.branch)
+
+        lfs = GitLFS(info.path, environment=info.env)
+
+    def _get_deliverables(self, info):
+        config = info.config
+
+        # get only added deliverable assets
+        if 'project' in config.keys():
+            del config['project']
+        deliverables = self.status(
+            name=info.name,
+            status_states=['added'],
+            status_asset_types=['deliverable'],
+            project={
+                'project-id': info.project['project-id'],
+                'url': info.project['url']
+            },
+            **config
+        )
+
+        invalid = []
+        valid = []
+        for deliv in deliverables:
+            deliv.get_traits()
+            deliv.write()
+            try:
+                deliv.validate()
+            except ValidationError as e:
+                if info.verbosity > 0:
+                    warn(e)
+                invalid.append(deliv)
+                continue
+            valid.append(deliv)
+
+        return valid, invalid
+
     def publish(self, name=None, notes=None, **config):
         r'''
         Attempt to publish deliverables from user's branch to given project's dev branch on Github
@@ -389,74 +455,19 @@ class Nerve(object):
             - add branch checking logic to skip the following if not needed?
         '''
         info = self._get_info(name, notes, config)
-        config = info.config
-        branch = info.branch
-
-        # pulling metadata first avoids merge conflicts by keeping the
-        # user-branch HEAD ahead of the dev branch
-        local = Git(info.path, branch=branch, environment=info.env)
-        local.branch('dev')
-        local.pull('dev')
-        local.merge('dev', branch)
-        local.branch(branch)
-
-        lfs = GitLFS(info.path, environment=info.env)
-
-        # get nondeliverable assets
-        nondeliverables = self.status(name=name, status_asset_types=['nondeliverable'], **config)
-        nondeliverables = list(nondeliverables)
-        for non in nondeliverables:
-            non.get_traits()
-            non.write(validate=False)
-
-        # publish nondeliverables
-        if len(nondeliverables) > 0:
-            # push non-deliverables to user-branch
-            local.add([x.metapath for x in nondeliverables])
-            local.add([x.datapath for x in nondeliverables])
-            names = [x['asset-name'] for x in nondeliverables]
-            local.commit('NON-DELIVERABLES: ' + ', '.join(names))
-            lfs.remove_prepush()
-            lfs.push(branch)
-            local.push(branch)
-        # ----------------------------------------------------------------------
-
-        # get only added deliverable assets
-        if 'project' in config.keys():
-            del config['project']
-        deliverables = self.status(
-            name=name,
-            status_states=['added'],
-            status_asset_types=['deliverable'],
-            project={
-                'project-id': info.project['project-id'],
-                'url': info.project['url']
-            },
-            **config
-        )
-
-        invalid = []
-        valid = []
-        for deliv in deliverables:
-            deliv.get_traits()
-            deliv.write()
-            try:
-                deliv.validate()
-            except ValidationError as e:
-                if info.verbosity > 0:
-                    warn(e)
-                invalid.append(deliv)
-                continue
-            valid.append(deliv)
+        self._update_local(info)
+        self._publish_nondeliverables(info)
+        valid, invalid = self._get_deliverables(info)
         # ----------------------------------------------------------------------
 
         client = Client(info.client_conf)
+        local = Git(info.path, branch=info.branch, environment=info.env)
 
         if len(invalid) > 0:
             # commit only invalid metadata to github user branch
             local.add([x.metapath for x in invalid])
             local.commit('INVALID: ' + ', '.join([x['asset-name'] for x in invalid]))
-            local.push(branch)
+            local.push(info.branch)
             return False
 
         else:
@@ -465,18 +476,18 @@ class Nerve(object):
             local.add([x.datapath for x in valid])
             names = [x['asset-name'] for x in valid]
             local.commit('VALID: ' + ', '.join(names))
-            local.push(branch)
+            local.push(info.branch)
 
             title = '{user} attempts to publish valid deliverables to dev'
-            title = title.format(user=branch)
+            title = title.format(user=info.branch)
             body = []
             body.append('publisher: **{user}**')
             body.append('deliverables:')
             body.extend(['\t' + x for x in names])
             body = '\n'.join(body)
-            body = body.format(user=branch)
+            body = body.format(user=info.branch)
 
-            num = client.create_pull_request(title, branch, 'dev', body=body)
+            num = client.create_pull_request(title, info.branch, 'dev', body=body)
             client.merge_pull_request(num, 'Publish authorized')
 
             return True

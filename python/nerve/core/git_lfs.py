@@ -36,8 +36,8 @@ class GitLFS(object):
     def __init__(self, working_dir, environment={}):
         self._working_dir = working_dir
         self._env = environment
-        os.chdir(working_dir)
         self.remove_prepush()
+        os.chdir(working_dir)
         # start server
         # execute_subprocess('git-lfs-s3', self._working_dir, environment=env)
 
@@ -103,7 +103,7 @@ class GitLFS(object):
         if skip_smudge:
             cmd += ' --skip-smudge'
 
-        return execute_subprocess(cmd, self._working_dir)
+        return execute_subprocess(cmd, self._working_dir, environment=self._env)
 
     def track(self, extensions=[]):
         '''
@@ -128,6 +128,7 @@ class GitLFS(object):
         output = [x.lstrip().split(' ') for x in output[1:-1]]
         return output
 
+
     def pull(self, include=[], exclude=[]):
         '''
         Pull data from git lfs, replacing local pointer files with their actual data
@@ -145,7 +146,7 @@ class GitLFS(object):
         if len(exclude) > 0:
             cmd += ' -X ' + ','.join(exclude)
 
-        return execute_subprocess(cmd, self._working_dir)
+        return execute_subprocess(cmd, self._working_dir, environment=self._env)
 
     def status(self, include=[], exclude=[], states=[], staged=None, warnings=False):
         '''
@@ -189,10 +190,8 @@ class GitLFS(object):
     def remove_prepush(self):
         '''
         Removes .git/hooks/pre-push, which otherwise breaks git push
-
         Args:
             None
-
         Returns:
             bool: success status
         '''
