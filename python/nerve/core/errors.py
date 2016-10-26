@@ -15,6 +15,10 @@ class KeywordError(Exception):
     Error used for invalid keywords
     '''
     pass
+
+class TimeoutError(Exception):
+    '''Error used for server call timeouts'''
+    pass
 # ------------------------------------------------------------------------------
 
 def main():
@@ -26,7 +30,11 @@ def main():
     help(__main__)
 # ------------------------------------------------------------------------------
 
-__all__ = ['SpecificationError', 'KeywordError']
+__all__ = [
+    'SpecificationError',
+    'KeywordError',
+    'TimeoutError'
+]
 
 if __name__ == '__main__':
     main()

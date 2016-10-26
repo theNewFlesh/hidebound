@@ -17,7 +17,7 @@ from nerve.core.utils import conform_keys
 from nerve.spec.traits import *
 from nerve.spec.validators import *
 from schematics.models import Model, BaseType
-from schematics.types import StringType, IntType, BooleanType
+from schematics.types import StringType, IntType, BooleanType, URLType
 from schematics.types.compound import ListType, DictType, ModelType
 from schematics.exceptions import ValidationError
 # ------------------------------------------------------------------------------
@@ -222,6 +222,7 @@ class ConfigBase(Specification):
     verbosity                = IntType(default=0)
     environment              = DictType(StringType, required=True, validators=[])
     project                  = ModelType(Project)
+    lfs_server_url           = URLType(default='http://localhost:8080', required=True)
 
     def validate_project(self, key, data):
         is_specification(data['specification'])

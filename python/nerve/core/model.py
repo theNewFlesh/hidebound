@@ -116,7 +116,7 @@ class Nerve(object):
 
         info = namedtuple('Info', ['config', 'project', 'name', 'path',
            'states', 'asset_types', 'branch', 'verbosity', 'client_conf',
-           'notes', 'env']
+           'notes', 'env', 'lfs_url']
         )
         info = info(
             config,
@@ -129,7 +129,8 @@ class Nerve(object):
             config['verbosity'],
             client_conf,
             notes,
-            config['environment']
+            config['environment'],
+            config['lfs-server-url']
         )
         return info
 
@@ -279,7 +280,7 @@ class Nerve(object):
             )
         )
         local.push('dev')
-        client.has_branch('dev')
+        client.has_branch('dev', timeout=10)
         client.set_default_branch('dev')
 
         # cleanup
@@ -382,8 +383,6 @@ class Nerve(object):
         local.merge('dev', info.branch)
         local.branch(info.branch)
 
-        lfs = GitLFS(info.path, environment=info.env)
-
     def _publish_nondeliverables(self, info):
         '''
         Convenience method for publishing nondeliverable assets
@@ -414,7 +413,8 @@ class Nerve(object):
             local.add([x.datapath for x in nondeliverables])
             names = [x['asset-name'] for x in nondeliverables]
             local.commit('NON-DELIVERABLES: ' + ', '.join(names))
-            lfs.push(info.branch)
+            lfs.push(info.lfs_url, info.branch)
+            lfs.remove_prepush()
             local.push(info.branch)
 
     def _get_deliverables(self, info):
@@ -486,8 +486,8 @@ class Nerve(object):
             - add branch checking logic to skip the following if not needed?
         '''
         info = self._get_info(name, notes, config)
-        self._update_local(info)
         self._publish_nondeliverables(info)
+        self._update_local(info)
         valid, invalid = self._get_deliverables(info)
         # ----------------------------------------------------------------------
 

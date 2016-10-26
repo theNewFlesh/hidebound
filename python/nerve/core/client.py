@@ -16,10 +16,12 @@ Author:
 
 from copy import deepcopy
 import json
+import signal
 from github3 import login
 from github3.repos.branch import Branch
 from github3.null import NullObject
 from nerve.core.metadata import Metadata
+from nerve.core.errors import TimeoutError
 # ------------------------------------------------------------------------------
 
 class Client(object):
@@ -102,7 +104,7 @@ class Client(object):
     #     if self.has_branch(name, wait=True):
     #         return True
 
-    def has_branch(self, name):
+    def has_branch(self, name, timeout=0):
         '''
         Checks whether Github repository has a given branch
 
@@ -112,7 +114,21 @@ class Client(object):
         Returns:
             bool: branch status
         '''
-        return isinstance(self._repo.branch(name), Branch)
+        def _handler(signum, frame):
+            raise TimeoutError()
+
+        result = isinstance(self._repo.branch(name), Branch)
+
+        if timeout > 0:
+            signal.signal(signal.SIGALRM, _handler)
+            signal.alarm(timeout)
+            try:
+                while not result:
+                    result = isinstance(self._repo.branch(name), Branch)
+                return result
+            except:
+                pass
+        return result
 
     def set_default_branch(self, name):
         '''

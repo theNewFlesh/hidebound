@@ -173,7 +173,7 @@ class GitLFS(object):
             warnings=warnings
         )
 
-    def push(self, branch, remote='origin'):
+    def push(self, url, branch):
         '''
         Push comit to given branch
 
@@ -184,7 +184,7 @@ class GitLFS(object):
         Returns:
             None
         '''
-        cmd = 'git push {remote} {branch}'.format(remote=remote, branch=branch)
+        cmd = 'git lfs push {remote} {branch}'.format(remote=url, branch=branch)
         execute_subprocess(cmd, self._working_dir, environment=self._env)
 
     def remove_prepush(self):
