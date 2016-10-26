@@ -12,6 +12,7 @@ publish-exclude-patterns:
 status-states:
 status-asset-types:
   - deliverable
+  - nondeliverable
 status-include-patterns:
   - vol.*
   - geo.*
@@ -25,7 +26,7 @@ environment:
   USERNAME: alex
   PASSWORD: nerve
 project:
-  project_name: nerve-test-repo-3
+  project_name: ntr001
   project_id: 0
   version: 1
   url: ''
