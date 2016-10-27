@@ -198,7 +198,7 @@ class GitLFS(object):
         file_ = os.path.join(self._working_dir, '.git', 'hooks', 'pre-push')
         if os.path.exists(file_):
             os.remove(file_)
-        return os.path.exists(file_)
+        return not os.path.exists(file_)
 # ------------------------------------------------------------------------------
 
 def main():
