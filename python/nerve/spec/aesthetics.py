@@ -11,6 +11,7 @@ the value of that trait (especially if required).
 '''
 # ------------------------------------------------------------------------------
 
+from itertools import product
 import re
 import yaml
 from schematics.models import Model, BaseType
@@ -73,8 +74,6 @@ class Palette(Model):
     l21 = ListType(Color)
     l22 = ListType(Color)
     l23 = ListType(Color)
-
-
 
 class Lighting(Model):
     ambient   = FloatType(required=True)
