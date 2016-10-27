@@ -45,6 +45,10 @@ class Palette(Model):
             key = 'l' + str(key)
         return getattr(self, key)
 
+    def items(self):
+        output = filter(lambda x: x[1] != None, super().items())
+        return list(output)
+
     l0 = ListType(Color)
     l1 = ListType(Color)
     l2 = ListType(Color)
@@ -69,6 +73,8 @@ class Palette(Model):
     l21 = ListType(Color)
     l22 = ListType(Color)
     l23 = ListType(Color)
+
+
 
 class Lighting(Model):
     ambient   = FloatType(required=True)
