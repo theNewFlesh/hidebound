@@ -17,6 +17,7 @@ Author:
 from copy import deepcopy
 import json
 import signal
+from time import sleep
 from github3 import login
 from github3.repos.branch import Branch
 from github3.null import NullObject
@@ -124,6 +125,7 @@ class Client(object):
             signal.alarm(timeout)
             try:
                 while not result:
+                    sleep(0.25)
                     result = isinstance(self._repo.branch(name), Branch)
                 return result
             except:
