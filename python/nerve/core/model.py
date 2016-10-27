@@ -550,7 +550,8 @@ class Nerve(object):
             # git lfs deletion logic
         if from_local:
             if os.path.split(info.path)[-1] == info.name:
-                shutil.rmtree(info.path)
+                if os.path.exists(info.path):
+                    shutil.rmtree(info.path)
             else:
                 warn(info.path + ' is not a project directory.  Local deletion aborted.')
                 return False
