@@ -70,8 +70,9 @@ class Git(git.Git):
 
         repo = Repo(working_dir)
         if branch:
-            branch = list(filter(lambda x: x.name == branch, repo.branches))[0]
-            branch.checkout()
+            if repo.active_branch.name != branch:
+                branch = list(filter(lambda x: x.name == branch, repo.branches))[0]
+                branch.checkout()
 
         return repo
 
