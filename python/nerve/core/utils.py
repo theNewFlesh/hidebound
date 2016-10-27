@@ -28,8 +28,10 @@ def execute_subprocess(command, cwd, error_re='[eE]rror:.*', environment={}):
         SubprocessError: stdout error as message
     '''
     if environment != {}:
-        temp = [k + '=' + v for k,v in environment.items()]
-        command = ' '.join(temp) + ' ' + command
+        temp = ['{}={}'.format(k,v) for k,v in environment.items()]
+        temp.append(command)
+        command = ' '.join(temp)
+
     output = Popen(command, shell=True, stdout=PIPE, stderr=PIPE, cwd=cwd)
     # output.wait()
     stderr = output.stderr.read().decode('utf-8')
