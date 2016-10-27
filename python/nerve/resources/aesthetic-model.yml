@@ -1,17 +1,7 @@
 overlay:
   layer:
     item:
-
-figure:
-  layer:
-    item:
-
-ground:
-  layer:
-    item:
-
-appearance:
-  overlay:
+  appearance:
     value: 1.0
     hues: [60, 180, 300, 0, 120, 180]
     saturations: [1.0, 0.9, 0.8]
@@ -31,7 +21,10 @@ appearance:
       l4: [ [120, 1.0, 1.0], [120, 0.9, 1.0], [120, 0.8, 1.0] ]
       l5: [ [180, 1.0, 1.0], [180, 0.9, 1.0], [180, 0.8, 1.0] ]
 
-  figure:
+figure:
+  layer:
+    item:
+  appearance:
     value: 0.5
     hues: [60, 180, 300, 0, 120, 180]
     saturations: [0.8, 0.6, 0.4]
@@ -51,7 +44,10 @@ appearance:
       l4: [ [120, 0.8, 0.5], [120, 0.6, 0.5], [120, 0.4, 0.5] ]
       l5: [ [180, 0.8, 0.5], [180, 0.6, 0.5], [180, 0.4, 0.5] ]
 
-  ground:
+ground:
+  layer:
+    item:
+  appearance:
     value: 0.1
     hues: [60, 180, 300, 0, 120, 180]
     saturations: [0.8, 0.6, 0.4]

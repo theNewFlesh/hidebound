@@ -82,7 +82,7 @@ class Lighting(Model):
     roughness = FloatType(required=True)
     specular  = FloatType(required=True)
 
-class AppearanceElement(Model):
+class Appearance(Model):
     def __init__(self, raw_data={}, **kwargs):
         data = raw_data
         if data != {}:
@@ -112,13 +112,8 @@ class AppearanceElement(Model):
     palette     = ModelType(Palette, required=True)
 # ------------------------------------------------------------------------------
 
-class Appearance(Model):
-    overlay = ModelType(AppearanceElement)
-    figure  = ModelType(AppearanceElement)
-    ground  = ModelType(AppearanceElement)
-
 class Element(Model):
-    appearance = ModelType(AppearanceElement)
+    appearance = ModelType(Appearance)
 
 class Overlay(Element):
     pass
