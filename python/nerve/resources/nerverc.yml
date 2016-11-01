@@ -21,12 +21,14 @@ status-exclude-patterns:
 organization: nerve-test-organization
 token: e17afcc8c42fe24536c14700c4931f0e7f252bb1
 url-type: ssh
+lfs-server-url: http://localhost:8080
+git-credentials:
+  - http://lfsserver:lfsserver@localhost%3a8080
+  - https://:@3scan-viz-test.s3-us-west-2.amazonaws.com
 environment:
   GIT_SSH_COMMAND: ssh -i ~/.ssh/nerve-test-ssh
-  USERNAME: alex
-  PASSWORD: nerve
 project:
-  project_name: ntr001
+  project_name: ntr002
   project_id: 0
   version: 1
   url: ''

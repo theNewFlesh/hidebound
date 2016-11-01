@@ -28,23 +28,22 @@ def execute_subprocess(command, cwd, error_re='[eE]rror:.*', environment={}):
         SubprocessError: stdout error as message
     '''
     if environment != {}:
-        temp = ['{}={}'.format(k,v) for k,v in environment.items()]
+        temp = ['{}="{}"'.format(k,v) for k,v in environment.items()]
         temp.append(command)
         command = ' '.join(temp)
 
-    output = Popen(command, shell=True, stdout=PIPE, stderr=PIPE, cwd=cwd)
-    # output.wait()
+    output = Popen(command, shell=True, stdout=PIPE, stderr=PIPE)
     stderr = output.stderr.read().decode('utf-8')
     output = output.stdout.readlines()
     output = [x.decode('utf-8').strip('\n') for x in output]
 
     err = '\n'.join(output)
-    for e in [err, stderr]:
-        error = re.search(error_re, e)
-        if error:
-            message = 'Command: "' + command
-            message += '" returned "' + error.group(0) + '"'
-            raise SubprocessError(message)
+    err += stderr
+    error = re.search(error_re, err)
+    if error:
+        message = 'Command: "' + command
+        message += '" returned "' + error.group(0) + '"'
+        raise SubprocessError(message)
 
     return output
 
@@ -88,6 +87,7 @@ def get_status(command, working_dir, include=[], exclude=[], states=[], staged=N
     #         state=lut[item.change_type],
     #         staged=True
     #     )
+
     for item in status_:
         output = {}
         output['staged'] = False

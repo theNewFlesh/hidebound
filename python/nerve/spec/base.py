@@ -223,6 +223,7 @@ class ConfigBase(Specification):
     environment              = DictType(StringType, required=True, validators=[])
     project                  = ModelType(Project)
     lfs_server_url           = URLType(default='http://localhost:8080', required=True)
+    git_credentials          = ListType(StringType, default=[], required=True)
 
     def validate_project(self, key, data):
         is_specification(data['specification'])

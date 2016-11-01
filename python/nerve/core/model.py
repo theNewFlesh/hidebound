@@ -16,6 +16,7 @@ from itertools import chain
 import os
 from pprint import pformat
 import shutil
+from time import sleep
 from warnings import warn
 from schematics.exceptions import ValidationError
 from nerve.core.utils import conform_keys, deep_update
@@ -116,7 +117,7 @@ class Nerve(object):
 
         info = namedtuple('Info', ['config', 'project', 'name', 'path',
            'states', 'asset_types', 'branch', 'verbosity', 'client_conf',
-           'notes', 'env', 'lfs_url']
+           'notes', 'env', 'lfs_url', 'git_creds']
         )
         info = info(
             config,
@@ -130,7 +131,8 @@ class Nerve(object):
             client_conf,
             notes,
             config['environment'],
-            config['lfs-server-url']
+            config['lfs-server-url'],
+            config['git-credentials']
         )
         return info
 
@@ -240,15 +242,17 @@ class Nerve(object):
         # configure repo
         lfs = GitLFS(info.path, environment=info.env)
         lfs.install(skip_smudge=True)
-        lfs.remove_prepush()
-        lfs.create_config('http://localhost:8080')
+        lfs.create_config(info.lfs_url)
         lfs.track(['*.' + x for x in project['lfs-extensions']])
+
         local.create_gitignore(project['gitignore'])
+        local.create_git_credentials(info.git_creds)
         # ----------------------------------------------------------------------
 
         # ensure first commit is on master branch
         local.add(all=True)
         local.commit('initial commit')
+        lfs.remove_prepush()
         local.push('master')
         # ----------------------------------------------------------------------
 
@@ -279,6 +283,7 @@ class Nerve(object):
                 project['specification']
             )
         )
+        lfs.remove_prepush()
         local.push('dev')
         client.has_branch('dev', timeout=10)
         client.set_default_branch('dev')
@@ -290,6 +295,9 @@ class Nerve(object):
         # add teams
         for team, perm in project['teams'].items():
             client.add_team(team, perm)
+
+        # needed for race condition with clone
+        sleep(3)
 
         return True
 
@@ -413,7 +421,7 @@ class Nerve(object):
             local.add([x.datapath for x in nondeliverables])
             names = [x['asset-name'] for x in nondeliverables]
             local.commit('NON-DELIVERABLES: ' + ', '.join(names))
-            lfs.push(info.lfs_url, info.branch)
+            lfs.push(info.branch)
             lfs.remove_prepush()
             local.push(info.branch)
 
@@ -493,11 +501,13 @@ class Nerve(object):
 
         client = Client(info.client_conf)
         local = Git(info.path, branch=info.branch, environment=info.env)
+        lfs = GitLFS(info.path, environment=info.env)
 
         if len(invalid) > 0:
             # commit only invalid metadata to github user branch
             local.add([x.metapath for x in invalid])
             local.commit('INVALID: ' + ', '.join([x['asset-name'] for x in invalid]))
+            lfs.remove_prepush()
             local.push(info.branch)
             return False
 
@@ -507,6 +517,7 @@ class Nerve(object):
             local.add([x.datapath for x in valid])
             names = [x['asset-name'] for x in valid]
             local.commit('VALID: ' + ', '.join(names))
+            lfs.remove_prepush()
             local.push(info.branch)
 
             title = '{user} attempts to publish valid deliverables to dev'

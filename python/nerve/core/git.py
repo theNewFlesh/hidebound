@@ -40,6 +40,8 @@ class Git(git.Git):
         self._working_dir = working_dir
         os.chdir(working_dir)
 
+        self.config_credential_helper()
+
     def _clone(self, working_dir, url=None, branch=None):
         '''
         Convenience method for cloning a GitHub repository
@@ -73,7 +75,6 @@ class Git(git.Git):
             if repo.active_branch.name != branch:
                 branch = list(filter(lambda x: x.name == branch, repo.branches))[0]
                 branch.checkout()
-
         return repo
 
     def _get_branch(self, name):
@@ -94,6 +95,29 @@ class Git(git.Git):
             else:
                 raise GitCommandError(e)
     # --------------------------------------------------------------------------
+
+    def config_credential_helper(self):
+        '''
+        Adds credential to .git/config
+
+        Credential store points to a .git-credentials file inside the repo.
+
+        Args:
+            None
+
+        Returns:
+            None
+        '''
+        cred = os.path.join(self._working_dir, '.git-credentials')
+        self._repo.git.config('credential.helper', 'store --file ' + cred)
+
+    def create_git_credentials(self, items):
+        cred = os.path.join(self._working_dir, '.git-credentials')
+        with open(cred, 'w') as f:
+            for item in items:
+                f.write(item + '\n')
+
+        return os.path.exists(cred)
 
     def create_gitignore(self, patterns):
         '''
