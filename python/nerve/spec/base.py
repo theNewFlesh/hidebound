@@ -108,7 +108,7 @@ class Project(Specification):
     teams           = DictType(StringType, required=True, validators=[is_teams])
     gitignore       = ListType(StringType, required=True, validators=[])
     private         = BooleanType(required=True, validators=[is_private])
-    lfs_extensions  = ListType(StringType, required=True, validators=[is_extension])
+    lfs_extensions  = ListType(StringType, required=True, validators=[is_extension, is_not_empty])
     nondeliverables = ListType(StringType, default=[], validators=[])
     deliverables    = ListType(StringType, required=True, validators=[is_specification])
 

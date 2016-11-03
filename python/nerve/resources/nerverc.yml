@@ -23,7 +23,7 @@ token: e17afcc8c42fe24536c14700c4931f0e7f252bb1
 url-type: ssh
 lfs-server-url: http://localhost:8080
 git-credentials:
-  - http://lfsserver:lfsserver@localhost%3a8080
+  - http://alex:nerve@localhost%3a8080
   - https://:@3scan-viz-test.s3-us-west-2.amazonaws.com
 environment:
   GIT_SSH_COMMAND: ssh -i ~/.ssh/nerve-test-ssh
@@ -35,9 +35,9 @@ project:
   specification: proj001
   private: true
   lfs-extensions:
-  - obj
-  - png
-  - mb
+    - obj
+    - png
+    - mb
   nondeliverables:
     - maya001
   deliverables:

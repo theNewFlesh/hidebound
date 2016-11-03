@@ -16,7 +16,6 @@ from itertools import chain
 import os
 from pprint import pformat
 import shutil
-from time import sleep
 from warnings import warn
 from schematics.exceptions import ValidationError
 from nerve.core.utils import conform_keys, deep_update
@@ -229,6 +228,7 @@ class Nerve(object):
             bool: success status
 
         .. todo::
+            - fix whetever causes the notebook kernel to die
             - send data to DynamoDB
         '''
         # create repo
@@ -252,7 +252,7 @@ class Nerve(object):
         # ensure first commit is on master branch
         local.add(all=True)
         local.commit('initial commit')
-        lfs.remove_prepush()
+        # lfs.remove_prepush()
         local.push('master')
         # ----------------------------------------------------------------------
 
@@ -283,21 +283,19 @@ class Nerve(object):
                 project['specification']
             )
         )
-        lfs.remove_prepush()
+        # lfs.remove_prepush()
         local.push('dev')
         client.has_branch('dev', timeout=10)
         client.set_default_branch('dev')
 
-        # cleanup
-        shutil.rmtree(info.path)
-        # ----------------------------------------------------------------------
-
         # add teams
         for team, perm in project['teams'].items():
             client.add_team(team, perm)
+        # ----------------------------------------------------------------------
 
-        # needed for race condition with clone
-        sleep(3)
+        # cleanup
+        os.chdir(info.config['project-root'])
+        shutil.rmtree(info.path) # problem if currently in info.path
 
         return True
 
@@ -404,8 +402,8 @@ class Nerve(object):
             None
         '''
         # get nondeliverable assets
-        nondeliverables = self.status(name=info.name,
-            status_asset_types=['nondeliverable'], **info.config)
+        info.config['status-asset-types'] = ['nondeliverable']
+        nondeliverables = self.status(name=info.name, **info.config)
         nondeliverables = list(nondeliverables)
         for non in nondeliverables:
             non.get_traits()
@@ -421,8 +419,6 @@ class Nerve(object):
             local.add([x.datapath for x in nondeliverables])
             names = [x['asset-name'] for x in nondeliverables]
             local.commit('NON-DELIVERABLES: ' + ', '.join(names))
-            lfs.push(info.branch)
-            lfs.remove_prepush()
             local.push(info.branch)
 
     def _get_deliverables(self, info):

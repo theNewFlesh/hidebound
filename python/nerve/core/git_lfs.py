@@ -120,9 +120,9 @@ class GitLFS(object):
         '''
         if isinstance(extensions, str):
             extensions = [extensions]
-        cmd = 'git lfs track'
+        cmd = 'git lfs track '
         for exp in extensions:
-            execute_subprocess(cmd + ' ' + exp, self._working_dir)
+            execute_subprocess(cmd + '"' + exp + '"', self._working_dir)
 
         output = execute_subprocess(cmd, self._working_dir, 'no matches found:.*')
         output = [x.lstrip().split(' ') for x in output[1:-1]]

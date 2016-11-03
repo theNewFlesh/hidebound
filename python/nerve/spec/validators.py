@@ -87,6 +87,11 @@ def is_deliverable_name(items):
 @is_re('[-a-z0-9]+', 'is not a valid descriptor')
 def is_descriptor(item): return
 
+def is_not_empty(item):
+    if len(item) == 0:
+        raise ValidationError('list is empty')
+    return True
+
 @is_re('[a-zA-Z0-9]+', 'is not a valid extension')
 def is_extension(item): return
 
