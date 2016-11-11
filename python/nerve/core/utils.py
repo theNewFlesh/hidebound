@@ -83,7 +83,7 @@ def get_status(command, working_dir, include=[], exclude=[], states=[], staged=N
 
     # for item in self._repo.index.diff('HEAD', R=True):
     #     output = dict(
-    #         fullpath=item.a_path, # is this always correct?
+    #         path=item.a_path, # is this always correct?
     #         state=lut[item.change_type],
     #         staged=True
     #     )
@@ -96,29 +96,32 @@ def get_status(command, working_dir, include=[], exclude=[], states=[], staged=N
             output['state'] = lut[item[0]]
         else:
             output['state'] = lut[item[1]]
-        fullpath = item[3:].split(' ')[0]
+        path = item[3:].split(' ')[0]
+        output['path'] = path
+        fullpath = os.path.join(working_dir, path)
+        fullpath = re.sub(os.sep + '$', '', fullpath)
         output['fullpath'] = fullpath
         # ------------------------------------------------------------------
 
         message = []
 
         if include:
-            found = include.search(fullpath)
+            found = include.search(path)
             if not found:
-                message.append(fullpath + ' is excluded')
+                message.append(path + ' is excluded')
         if exclude:
-            found = exclude.search(fullpath)
+            found = exclude.search(path)
             if found:
-                message.append(fullpath + ' is excluded')
+                message.append(path + ' is excluded')
         if states:
             if output['state'] not in states:
-                message.append(fullpath + ' is not ' + ', '.join(states))
+                message.append(path + ' is not ' + ', '.join(states))
         if staged != None:
             if output['staged'] != staged:
                 if staged:
-                    message.append(fullpath + ' is unstaged')
+                    message.append(path + ' is unstaged')
                 else:
-                    message.append(fullpath + ' is staged')
+                    message.append(path + ' is staged')
 
         if message:
             if warnings is True:

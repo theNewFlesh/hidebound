@@ -28,10 +28,10 @@ git-credentials:
 environment:
   GIT_SSH_COMMAND: ssh -i ~/.ssh/nerve-test-ssh
 project:
-  project_name: ntr002
-  project_id: 0
+  project-name: ntr002
+  project-id: 0
   version: 1
-  url: ''
+  project-url: ''
   specification: proj001
   private: true
   lfs-extensions:

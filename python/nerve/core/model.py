@@ -15,6 +15,7 @@ from collections import defaultdict, namedtuple
 from itertools import chain
 import os
 from pprint import pformat
+import re
 import shutil
 from warnings import warn
 from schematics.exceptions import ValidationError
@@ -34,7 +35,7 @@ class Nerve(object):
         config (dict): a dictionary representing Nerve's internal configuration
 
     API:
-        create, clone, request, publish, delete and __getitem__
+        create, clone, request, publish, delete, status and __getitem__
 
     Args:
         config (str or dict): a fullpath to a nerverc config or a dict of one
@@ -177,21 +178,24 @@ class Nerve(object):
         )
         # ----------------------------------------------------------------------
 
-        temp = defaultdict(lambda: defaultdict(lambda: []))
+        # aggregate the data into prototype pattern (unique keys with list values)
+        agg = defaultdict(lambda: defaultdict(lambda: []))
         for file in files:
-            asset = file['fullpath'].split(os.sep)
+            asset = file['path'].split(os.sep)
             if len(asset) > 2:
                 asset = os.path.join(asset[0], asset[1])
+                asset = re.search('.*' + asset, file['fullpath'])
+                asset = asset.group(0)
             else:
                 asset = file['fullpath']
 
             for k, v in file.items():
-                temp[asset][k].append(v)
+                agg[asset][k].append(v)
 
         local.reset()
         # ----------------------------------------------------------------------
 
-        for asset, v in sorted(temp.items()):
+        for asset, v in sorted(agg.items()):
             if info.states:
                 rogue_states = set(v['state']).difference(info.states)
                 if len(rogue_states) > 0:
@@ -267,9 +271,13 @@ class Nerve(object):
 
         # create project metadata
         project['project-id'] = client['id']
-        project['url'] = client['url']
+        project['project-url'] = client['url']
         project['version'] = 1
-        meta = project['specification'] + '_meta.yml' # implicit versioning
+        meta = '_'.join([
+            project['project-name'],
+            project['specification'],
+            'meta.yml'
+        ]) # implicit versioning
         meta = Metadata(project, metapath=meta, skip_keys=['environment'])
         meta.validate()
         meta.write(validate=False)
@@ -442,7 +450,7 @@ class Nerve(object):
             status_asset_types=['deliverable'],
             project={
                 'project-id': info.project['project-id'],
-                'url': info.project['url']
+                'project-url': info.project['project-url']
             },
             **config
         )

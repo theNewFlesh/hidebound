@@ -108,7 +108,7 @@ def is_meta(item): return
 def is_metadata_extension(item): return
 
 def is_metapath(item):
-    meta = nerve.spec.traits.get_name_traits(item)
+    meta = nerve.spec.traits.fetch_name_traits(item)
     nerve.spec.specifications.MetaName(meta).validate()
     return True
 
@@ -125,6 +125,9 @@ def is_project_name(item):
     return True
 
 def is_project_root(item):
+    return True
+
+def is_project_url(item):
     return True
 
 @is_re('[a-z0-9_\-/*\.]+', 'is not a valid exclude pattern')
@@ -172,9 +175,6 @@ def is_teams(item):
     return True
 
 def is_token(item):
-    return True
-
-def is_url(item):
     return True
 
 @is_re('ssh$|^http', 'is not ssh or http')

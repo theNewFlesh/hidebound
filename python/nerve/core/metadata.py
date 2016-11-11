@@ -166,7 +166,7 @@ class Metadata(object):
             fullpath = self._metapath
 
         if validate:
-            meta = traits.get_name_traits(fullpath)
+            meta = traits.fetch_name_traits(fullpath)
             MetaName(meta).validate()
 
         # overwrite existing metadata

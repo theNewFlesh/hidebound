@@ -89,7 +89,7 @@ class Project(Specification):
         specification (str): same as class name
         project_name (str): name of project
         project_id (str): Github repo id
-        url (str): url of project's Github repo
+        project_url (str): project_url of project's Github repo
         notes (str): project notes
         version (int): project version
         teams (dict): Github teams; name, permission pairs
@@ -101,7 +101,7 @@ class Project(Specification):
     '''
     project_name    = StringType(required=True, validators=[is_project_name])
     project_id      = StringType(required=True, validators=[is_project_id])
-    url             = StringType(required=True, validators=[is_url])
+    project_url             = StringType(required=True, validators=[is_project_url])
     notes           = StringType(default='')
 
     version         = IntType(required=True, validators=[is_version])
@@ -120,7 +120,7 @@ class Asset(Specification):
         specification (str): same as class name
         project_name (str): name of project
         project_id (str): Github repo id
-        url (str): url of project's Github repo
+        project_url (str): project_url of project's Github repo
         notes (str): project notes
         asset_name (str): name of asset
         asset_id (str): randomly generated uuid
@@ -128,7 +128,7 @@ class Asset(Specification):
     '''
     project_name = StringType(required=True, validators=[is_project_name])
     project_id   = StringType(required=True, validators=[is_project_id])
-    url          = StringType(required=True, validators=[is_url])
+    project_url          = StringType(required=True, validators=[is_project_url])
     notes        = StringType(default='')
 
     asset_name   = StringType(required=True, validators=[])
@@ -143,7 +143,7 @@ class NonDeliverable(Asset):
         specification (str): same as class name
         project_name (str): name of project
         project_id (str): Github repo id
-        url (str): url of project's Github repo
+        project_url (str): project_url of project's Github repo
         notes (str): project notes
         asset_name (str): name of asset
         asset_id (str): randomly generated uuid
@@ -160,7 +160,7 @@ class Deliverable(Asset):
         specification (str): same as class name
         project_name (str): name of project
         project_id (str): Github repo id
-        url (str): url of project's Github repo
+        project_url (str): project_url of project's Github repo
         notes (str): project notes
         asset_name (str): name of asset
         asset_id (str): randomly generated uuid

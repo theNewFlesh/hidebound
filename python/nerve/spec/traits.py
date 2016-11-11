@@ -12,9 +12,10 @@ import re
 import os
 from collections import defaultdict
 from uuid import uuid4
+import yaml
 # ------------------------------------------------------------------------------
 
-def get_name_traits(fullpath, deliverable=True):
+def fetch_name_traits(fullpath, deliverable=True):
     '''
     Given an asset directory or file return a dict of traits derived from the name
 
@@ -72,6 +73,27 @@ def get_name_traits(fullpath, deliverable=True):
             output[k] = None
     return output
 
+def fetch_project_traits(fullpath):
+    '''
+    Args:
+        fullpath (str): absolute file/directory path
+
+    Returns:
+        str: project metadata
+    '''
+    project = fullpath.split(os.sep)[:-2]
+    project = os.path.join(os.sep, *project)
+    files = os.listdir(project)
+    files = filter(lambda x: re.search('.+_[a-z]+\d\d\d_meta\.yml', x), files)
+    files = list(files)
+    if len(files) > 0:
+        meta = os.path.join(project, files[0])
+        with open(meta, 'r') as f:
+            meta = yaml.load(f)
+            return meta
+    return None
+# ------------------------------------------------------------------------------
+
 def get_meta(fullpath):
     if re.search('_meta', fullpath):
         return True
@@ -81,7 +103,6 @@ def get_config(fullpath):
     if re.search('nerverc', fullpath):
         return True
     return False
-# ------------------------------------------------------------------------------
 
 def get_asset_id(fullpath):
     return str(uuid4())
@@ -102,7 +123,19 @@ def get_project_name(fullpath):
     Returns:
         str: project name
     '''
-    return get_name_traits(fullpath, False)['project_name']
+    return fetch_name_traits(fullpath, False)['project_name']
+
+def get_project_id(fullpath):
+    meta = fetch_project_traits(fullpath)
+    if meta:
+        return meta['project_id']
+    return None
+
+def get_project_url(fullpath):
+    meta = fetch_project_traits(fullpath)
+    if meta:
+        return meta['project_url']
+    return None
 
 def get_specification(fullpath):
     '''
@@ -112,7 +145,7 @@ def get_specification(fullpath):
     Returns:
         str: asset specification
     '''
-    return get_name_traits(fullpath, False)['specification']
+    return fetch_name_traits(fullpath, False)['specification']
 
 def get_descriptor(fullpath):
     '''
@@ -122,7 +155,7 @@ def get_descriptor(fullpath):
     Returns:
         str: descriptor
     '''
-    return get_name_traits(fullpath)['descriptor']
+    return fetch_name_traits(fullpath)['descriptor']
 
 def get_version(fullpath):
     '''
@@ -132,7 +165,7 @@ def get_version(fullpath):
     Returns:
         str: version
     '''
-    return get_name_traits(fullpath)['version']
+    return fetch_name_traits(fullpath)['version']
 
 def get_render_pass(fullpath):
     '''
@@ -142,7 +175,7 @@ def get_render_pass(fullpath):
     Returns:
         str: render pass
     '''
-    return get_name_traits(fullpath)['render_pass']
+    return fetch_name_traits(fullpath)['render_pass']
 
 def get_coordinates(fullpath):
     '''
@@ -155,11 +188,11 @@ def get_coordinates(fullpath):
     if os.path.isdir(fullpath):
         output = defaultdict(lambda: [])
         for file_ in os.listdir(fullpath):
-            coord = get_name_traits(file_)['coordinate']
+            coord = fetch_name_traits(file_)['coordinate']
             for key, val in coord.items():
                 output[key].append(val)
         return dict(output)
-    return get_name_traits(fullpath)['coordinate']
+    return fetch_name_traits(fullpath)['coordinate']
 
 def get_frames(fullpath):
     '''
@@ -172,10 +205,10 @@ def get_frames(fullpath):
     if os.path.isdir(fullpath):
         output = []
         for file_ in os.listdir(fullpath):
-            frame = get_name_traits(file_)['frame']
+            frame = fetch_name_traits(file_)['frame']
             output.append(frame)
         return output
-    return get_name_traits(fullpath)['frame']
+    return fetch_name_traits(fullpath)['frame']
 
 def get_extension(fullpath):
     '''
@@ -185,7 +218,7 @@ def get_extension(fullpath):
     Returns:
         str: file extension
     '''
-    return get_name_traits(fullpath)['extension']
+    return fetch_name_traits(fullpath)['extension']
 # ------------------------------------------------------------------------------
 
 def main():
