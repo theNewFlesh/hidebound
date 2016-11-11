@@ -20,13 +20,13 @@ from nerve.core.metadata import Metadata
 class NerveUser(object):
     def __init__(self):
         with open('/etc/nerve/config-location.txt', 'r') as f:
-            self.__nerve = Nerve(f.read().strip('\n'))
+            self._nerve = Nerve(f.read().strip('\n'))
 
     def __getitem__(self, key):
-        return self.__nerve.__getitem__(key)
+        return self._nerve.__getitem__(key)
 
     def __repr__(self):
-        return self.__nerve.__repr__()
+        return self._nerve.__repr__()
 
     def _get_project(self):
         cwd = os.getcwd()
@@ -47,43 +47,46 @@ class NerveUser(object):
         if not project:
             return project
         config['project'] = project
-        return self.__nerve.status(**config)
+        return self._nerve.status(**config)
 
     def clone(self, name=None, **config):
-        return self.__nerve(name, **config)
+        return self._nerve.clone(name, **config)
 
     def request(self, **config):
         project = self._get_project()
         if not project:
             return project
         config['project'] = project
-        return self.__nerve(**config)
+        return self._nerve.request(**config)
 
     def publish(self, notes=None, **config):
         project = self._get_project()
         if not project:
             return project
         config['project'] = project
-        return self.__nerve.publish(notes=notes, **config)
+        return self._nerve.publish(notes=notes, **config)
 
     def delete(self, project=None):
         if project == None:
             project = self._get_project()
             if not project:
                 return project
-        return self.__nerve.delete(False, True, project=project)
+        return self._nerve.delete(False, True, project=project)
 # ------------------------------------------------------------------------------
 
 class NerveAdmin(NerveUser):
+    def __init__(self):
+        super().__init__()
+
     def create(self, name, notes=None, **config):
-        return self.__nerve.create(name, notes, **config)
+        return self._nerve.create(name, notes, **config)
 
     def delete(self, from_server, from_local, project=None):
         if project == None:
             project = self._get_project()
             if not project:
                 return project
-        return self.__nerve.delete(from_server, from_local, project=project)
+        return self._nerve.delete(from_server, from_local, project=project)
 # ------------------------------------------------------------------------------
 
 def main():

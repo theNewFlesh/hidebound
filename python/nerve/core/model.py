@@ -511,7 +511,7 @@ class Nerve(object):
             # commit only invalid metadata to github user branch
             local.add([x.metapath for x in invalid])
             local.commit('INVALID: ' + ', '.join([x['asset-name'] for x in invalid]))
-            lfs.remove_prepush()
+            # lfs.remove_prepush()
             local.push(info.branch)
             return False
 
@@ -521,7 +521,7 @@ class Nerve(object):
             local.add([x.datapath for x in valid])
             names = [x['asset-name'] for x in valid]
             local.commit('VALID: ' + ', '.join(names))
-            lfs.remove_prepush()
+            # lfs.remove_prepush()
             local.push(info.branch)
 
             title = '{user} attempts to publish valid deliverables to dev'
