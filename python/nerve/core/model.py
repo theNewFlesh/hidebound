@@ -256,7 +256,6 @@ class Nerve(object):
         # ensure first commit is on master branch
         local.add(all=True)
         local.commit('initial commit')
-        # lfs.remove_prepush()
         local.push('master')
         # ----------------------------------------------------------------------
 
@@ -286,12 +285,11 @@ class Nerve(object):
         # commit everything
         local.add(all=True)
         local.commit(
-            'VALID: {} created according to {} specification'.format(
+            'VALID PROJECT:\n\t{} created according to {} specification'.format(
                 info.name,
                 project['specification']
             )
         )
-        # lfs.remove_prepush()
         local.push('dev')
         client.has_branch('dev', timeout=10)
         client.set_default_branch('dev')
@@ -426,7 +424,7 @@ class Nerve(object):
             local.add([x.metapath for x in nondeliverables])
             local.add([x.datapath for x in nondeliverables])
             names = [x['asset-name'] for x in nondeliverables]
-            local.commit('NON-DELIVERABLES: ' + ', '.join(names))
+            local.commit('NON-DELIVERABLES:\n\t' + '\n\t'.join(names))
             local.push(info.branch)
 
     def _get_deliverables(self, info):
@@ -510,8 +508,7 @@ class Nerve(object):
         if len(invalid) > 0:
             # commit only invalid metadata to github user branch
             local.add([x.metapath for x in invalid])
-            local.commit('INVALID: ' + ', '.join([x['asset-name'] for x in invalid]))
-            # lfs.remove_prepush()
+            local.commit('INVALID DELIVERABLES:\n\t' + '\n\t'.join([x['asset-name'] for x in invalid]))
             local.push(info.branch)
             return False
 
@@ -520,8 +517,7 @@ class Nerve(object):
             local.add([x.metapath for x in valid])
             local.add([x.datapath for x in valid])
             names = [x['asset-name'] for x in valid]
-            local.commit('VALID: ' + ', '.join(names))
-            # lfs.remove_prepush()
+            local.commit('VALID DELIVERABLES:\n\t' + '\n\t'.join(names))
             local.push(info.branch)
 
             title = '{user} attempts to publish valid deliverables to dev'
@@ -533,7 +529,13 @@ class Nerve(object):
             body = '\n'.join(body)
             body = body.format(user=info.branch)
 
-            num = client.create_pull_request(title, info.branch, 'dev', body=body)
+            sha = local.sha
+            remote_sha = client.get_head_sha(info.branch)
+            while sha != remote_sha:
+                remote_sha = client.get_head_sha(info.branch)
+
+            # this produces a race condition with the local.push process
+            num = client.create_pull_request(title, 'dev', info.branch, body=body)
             client.merge_pull_request(num, 'Publish authorized')
 
             return True

@@ -12,7 +12,7 @@ from subprocess import Popen, PIPE, SubprocessError
 from nerve.core.errors import TimeoutError
 # ------------------------------------------------------------------------------
 
-def execute_subprocess(command, cwd, error_re='[eE]rror:.*', environment={}):
+def execute_subprocess(command, cwd, error_re='[eE]rror:.*', environment={}, timeout=100):
     '''
     Executes a given command as a subprocess and scrubs the output for errors
 
@@ -33,6 +33,7 @@ def execute_subprocess(command, cwd, error_re='[eE]rror:.*', environment={}):
         command = ' '.join(temp)
 
     output = Popen(command, shell=True, stdout=PIPE, stderr=PIPE)
+    output.wait(timeout=timeout)
     stderr = output.stderr.read().decode('utf-8')
     output = output.stdout.readlines()
     output = [x.decode('utf-8').strip('\n') for x in output]
@@ -80,13 +81,6 @@ def get_status(command, working_dir, include=[], exclude=[], states=[], staged=N
     if exclude:
         exclude = re.compile('|'.join(exclude))
     # ----------------------------------------------------------------------
-
-    # for item in self._repo.index.diff('HEAD', R=True):
-    #     output = dict(
-    #         path=item.a_path, # is this always correct?
-    #         state=lut[item.change_type],
-    #         staged=True
-    #     )
 
     for item in status_:
         output = {}

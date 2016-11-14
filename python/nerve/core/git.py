@@ -306,6 +306,10 @@ class Git(git.Git):
         str: repo url
         '''
         return list(self._repo.remote('origin').urls)[0]
+
+    @property
+    def sha(self):
+        return self._repo.head.object.hexsha
 # ------------------------------------------------------------------------------
 
 def main():

@@ -100,11 +100,6 @@ class Client(object):
         '''
         return deepcopy(self._config)
 
-    # def create_branch(self, name):
-    #     # github3 has no ability to create a branch
-    #     if self.has_branch(name, wait=True):
-    #         return True
-
     def has_branch(self, name, timeout=0):
         '''
         Checks whether Github repository has a given branch
@@ -185,8 +180,7 @@ class Client(object):
         Returns:
             int: pull request number
         '''
-        head = self._repo.branch(branch).commit.sha
-        request = self._repo.create_pull(title, base, head, body=body)
+        request = self._repo.create_pull(title, base, branch, body=body)
         return request.number
 
     def merge_pull_request(self, number, message=''):
@@ -214,6 +208,9 @@ class Client(object):
         '''
         self._repo.delete()
         return True
+
+    def get_head_sha(self, branch='master'):
+        return self._repo.branch(branch).commit.sha
 # ------------------------------------------------------------------------------
 
 def main():
