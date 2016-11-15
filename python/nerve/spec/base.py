@@ -101,7 +101,7 @@ class Project(Specification):
     '''
     project_name    = StringType(required=True, validators=[is_project_name])
     project_id      = StringType(required=True, validators=[is_project_id])
-    project_url             = StringType(required=True, validators=[is_project_url])
+    project_url     = StringType(required=True, validators=[is_project_url])
     notes           = StringType(default='')
 
     version         = IntType(required=True, validators=[is_version])
@@ -128,7 +128,7 @@ class Asset(Specification):
     '''
     project_name = StringType(required=True, validators=[is_project_name])
     project_id   = StringType(required=True, validators=[is_project_id])
-    project_url          = StringType(required=True, validators=[is_project_url])
+    project_url  = StringType(required=True, validators=[is_project_url])
     notes        = StringType(default='')
 
     asset_name   = StringType(required=True, validators=[])
