@@ -4,6 +4,7 @@ user-branch: alex
 project-root: /tmp
 request-include-patterns:
   - vol.*
+  - geo.*
 request-exclude-patterns:
 publish-include-patterns:
   - vol.*

@@ -359,13 +359,7 @@ class Nerve(object):
             bool: success status
         '''
         info = self._get_info(name, None, config)
-
-        local = Git(info.path, branch=info.branch, environment=info.env)
-        local.branch('dev')
-        local.pull('dev')
-        local.merge('dev', info.branch)
-        local.branch(info.branch)
-
+        self._update_local(info)
         lfs = GitLFS(info.path, environment=info.env)
         lfs.pull(
             info.config['request-include-patterns'],
@@ -392,8 +386,8 @@ class Nerve(object):
         local = Git(info.path, branch=info.branch, environment=info.env)
         local.branch('dev')
         local.pull('dev')
-        local.merge('dev', info.branch)
         local.branch(info.branch)
+        local.merge('dev', info.branch)
 
     def _publish_nondeliverables(self, info):
         '''
@@ -423,8 +417,12 @@ class Nerve(object):
             # push non-deliverables to user-branch
             local.add([x.metapath for x in nondeliverables])
             local.add([x.datapath for x in nondeliverables])
-            names = [x['asset-name'] for x in nondeliverables]
-            local.commit('NON-DELIVERABLES:\n\t' + '\n\t'.join(names))
+
+            message = [x['asset-name'] for x in nondeliverables]
+            message = '\n\t'.join(message)
+            message = 'NON-DELIVERABLES:\n\t' + message
+            local.commit(message)
+
             local.push(info.branch)
 
     def _get_deliverables(self, info):
@@ -508,7 +506,12 @@ class Nerve(object):
         if len(invalid) > 0:
             # commit only invalid metadata to github user branch
             local.add([x.metapath for x in invalid])
-            local.commit('INVALID DELIVERABLES:\n\t' + '\n\t'.join([x['asset-name'] for x in invalid]))
+
+            message = [x['asset-name'] for x in invalid]
+            message = '\n\t'.join(message)
+            message = 'INVALID DELIVERABLES:\n\t' + message
+            local.commit(message)
+
             local.push(info.branch)
             return False
 
@@ -516,8 +519,12 @@ class Nerve(object):
             # commit all deliverable data and metadata to github dev branch
             local.add([x.metapath for x in valid])
             local.add([x.datapath for x in valid])
+
             names = [x['asset-name'] for x in valid]
-            local.commit('VALID DELIVERABLES:\n\t' + '\n\t'.join(names))
+            message = '\n\t'.join(names)
+            message = 'VALID DELIVERABLES:\n\t' + message
+            local.commit(message)
+
             local.push(info.branch)
 
             title = '{user} attempts to publish valid deliverables to dev'

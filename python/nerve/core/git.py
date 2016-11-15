@@ -190,9 +190,9 @@ class Git(git.Git):
         Returns:
             None
         '''
-        branch = self.references([branch], reftypes=['remote'])
-        branch = list(branch)[0]
-        branch = branch['branch']
+        # branch = self.references([branch], reftypes=['remote'])
+        # branch = list(branch)[0]
+        # branch = branch['branch']
         self._repo.remote(remote).pull(branch)
 
     def merge(self, src, dest):
@@ -207,8 +207,10 @@ class Git(git.Git):
             None
         '''
         src = self._get_branch(src)
-        dest = self._get_branch(src)
-        self._repo.merge_base(src, dest)
+        dest = self._get_branch(dest)
+        base = self._repo.merge_base(dest, src)
+        self._repo.index.merge_tree(src, base=base)
+        self.commit('merged ' + src.name + ' into ' + dest.name)
 
     def commit(self, message):
         '''
