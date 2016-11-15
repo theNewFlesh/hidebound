@@ -54,3 +54,12 @@ utils
     :private-members:
     :undoc-members:
     :show-inheritance:
+
+api
+----------------
+
+.. automodule:: nerve.core.api
+    :members:
+    :private-members:
+    :undoc-members:
+    :show-inheritance:

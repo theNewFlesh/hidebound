@@ -117,7 +117,7 @@ class Nerve(object):
 
         info = namedtuple('Info', ['config', 'project', 'name', 'path',
            'states', 'asset_types', 'branch', 'verbosity', 'client_conf',
-           'notes', 'env', 'lfs_url', 'git_creds']
+           'notes', 'env', 'lfs_url', 'git_creds', 'timeout']
         )
         info = info(
             config,
@@ -132,7 +132,8 @@ class Nerve(object):
             notes,
             config['environment'],
             config['lfs-server-url'],
-            config['git-credentials']
+            config['git-credentials'],
+            config['timeout']
         )
         return info
 
@@ -291,7 +292,7 @@ class Nerve(object):
             )
         )
         local.push('dev')
-        client.has_branch('dev', timeout=10)
+        client.has_branch('dev', timeout=info.timeout)
         client.set_default_branch('dev')
 
         # add teams
@@ -329,7 +330,7 @@ class Nerve(object):
         info = self._get_info(name, None, config)
 
         client = Client(info.client_conf)
-        if client.has_branch(info.branch):
+        if client.has_branch(info.branch, timeout=info.timeout):
             local = Git(info.path, url=client['url'], branch=info.branch, environment=info.env)
         else:
             local = Git(info.path, url=client['url'], branch='dev', environment=info.env)

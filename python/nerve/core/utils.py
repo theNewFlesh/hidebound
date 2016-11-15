@@ -12,7 +12,7 @@ from subprocess import Popen, PIPE, SubprocessError
 from nerve.core.errors import TimeoutError
 # ------------------------------------------------------------------------------
 
-def execute_subprocess(command, cwd, error_re='[eE]rror:.*', environment={}, timeout=100):
+def execute_subprocess(command, cwd, error_re='[eE]rror:.*', environment={}, timeout=None):
     '''
     Executes a given command as a subprocess and scrubs the output for errors
 

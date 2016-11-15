@@ -26,6 +26,7 @@ lfs-server-url: http://localhost:8080
 git-credentials:
   - http://alex:nerve@localhost%3a8080
   - https://:@3scan-viz-test.s3-us-west-2.amazonaws.com
+timeout: 100
 environment:
   GIT_SSH_COMMAND: ssh -i ~/.ssh/nerve-test-ssh
 project:

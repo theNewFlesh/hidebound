@@ -112,6 +112,15 @@ class Git(git.Git):
         self._repo.git.config('credential.helper', 'store --file ' + cred)
 
     def create_git_credentials(self, items):
+        '''
+        Creates a .git-credentials file
+
+        Args:
+            items (list): list of lines to write into .git-credentials
+
+        Returns:
+            bool: success status
+        '''
         cred = os.path.join(self._working_dir, '.git-credentials')
         with open(cred, 'w') as f:
             for item in items:
@@ -311,6 +320,9 @@ class Git(git.Git):
 
     @property
     def sha(self):
+        '''
+        str: head commit sha
+        '''
         return self._repo.head.object.hexsha
 # ------------------------------------------------------------------------------
 

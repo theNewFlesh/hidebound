@@ -95,16 +95,37 @@ def fetch_project_traits(fullpath):
 # ------------------------------------------------------------------------------
 
 def get_meta(fullpath):
+    '''
+    Args:
+        fullpath (str): absolute file/directory path
+
+    Returns:
+        bool: is metadata file
+    '''
     if re.search('_meta', fullpath):
         return True
     return False
 
 def get_config(fullpath):
+    '''
+    Args:
+        fullpath (str): absolute file/directory path
+
+    Returns:
+        bool: is nerverc file
+    '''
     if re.search('nerverc', fullpath):
         return True
     return False
 
 def get_asset_id(fullpath):
+    '''
+    Args:
+        fullpath (str): absolute file/directory path
+
+    Returns:
+        str: uuid
+    '''
     return str(uuid4())
 
 def get_asset_name(fullpath):
@@ -126,12 +147,26 @@ def get_project_name(fullpath):
     return fetch_name_traits(fullpath, False)['project_name']
 
 def get_project_id(fullpath):
+    '''
+    Args:
+        fullpath (str): absolute file/directory path
+
+    Returns:
+        str: project id
+    '''
     meta = fetch_project_traits(fullpath)
     if meta:
         return meta['project_id']
     return None
 
 def get_project_url(fullpath):
+    '''
+    Args:
+        fullpath (str): absolute file/directory path
+
+    Returns:
+        str: github url
+    '''
     meta = fetch_project_traits(fullpath)
     if meta:
         return meta['project_url']

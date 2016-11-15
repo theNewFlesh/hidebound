@@ -224,8 +224,19 @@ class ConfigBase(Specification):
     project                  = ModelType(Project)
     lfs_server_url           = URLType(default='http://localhost:8080', required=True)
     git_credentials          = ListType(StringType, default=[], required=True)
+    timeout                  = IntType(default=100, required=True)
 
     def validate_project(self, key, data):
+        '''
+        Validates project metadata
+
+        Args:
+            key (None): does nothing
+            data (dict): project metadata
+
+        Returns:
+            None
+        '''
         is_specification(data['specification'])
 # ------------------------------------------------------------------------------
 
