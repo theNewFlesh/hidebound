@@ -33,6 +33,7 @@ class Nerve(object):
 
     Attributes:
         config (dict): a dictionary representing Nerve's internal configuration
+        project_template (dict): a dictionary representing Nerve's internal project template
 
     API:
         create, clone, request, publish, delete, status and __getitem__
@@ -86,6 +87,20 @@ class Nerve(object):
         return output
 
     def __get_project(self, name, notes, project, config):
+        r'''
+        Convenience method for creating a new temporary project dict by
+        overwriting a copy of the internal project template, if it exists,
+        with keyword arguments specified in project
+
+        Args:
+            name (str): name of project
+            notes (str, None): notes to be added to metadata
+            config (dict, None): \**config dictionary
+            project (dict, None): \**config dictionary
+
+        Returns:
+            dict: project metadata
+        '''
         project['project-name'] = name
         if notes != None:
             project['notes'] = notes
@@ -103,7 +118,7 @@ class Nerve(object):
             name (str): name of project
             notes (str, None): notes to be added to metadata
             config (dict, None): \**config dictionary
-            project (dict, None): \**config dictionary
+            project (dict, None): project metadata
 
         Returns:
             namedtuple: tuple with conveniently named attributes
@@ -112,8 +127,11 @@ class Nerve(object):
             raise TypeError('name argument must be a string')
 
         config = self.__get_config(config)
+        private = config['private']
         if project != None:
             project = self.__get_project(name, notes, project, config)
+            if 'private' in project.keys():
+                private = project['private']
 
         path = os.path.join(config['project-root'], name)
 
@@ -122,7 +140,7 @@ class Nerve(object):
             token=config['token'],
             organization=config['organization'],
             project_name=name,
-            private=config['private'],
+            private=private,
             url_type=config['url-type'],
             specification='client'
         )
@@ -157,6 +175,13 @@ class Nerve(object):
         dict: copy of this object's configuration
         '''
         return self._config.data
+
+    @property
+    def project_template(self):
+        '''
+        dict: copy of this object's project template
+        '''
+        return self._project_template.data
     # --------------------------------------------------------------------------
 
     def status(self, name, **config):
@@ -234,14 +259,13 @@ class Nerve(object):
             .lfsconfig
             .gitattributes
             .gitignore
+            .git-credentials
 
         Args:
             name (str): name of project. Default: None
             notes (str, optional): notes to appended to project metadata. Default: None
-            \**config: optional config parameters, overwrites fields in a copy of self.config
-            project (dict, \**config): project metadata.
-            verbosity (int, \**config): level of verbosity for output. Default: 0
-                Options: 0, 1, 2
+            config (dict, optional): config parameters, overwrites fields in a copy of self.config
+            \**project: optional project parameters, overwrites fields in a copy of self.project_template
 
         Returns:
             bool: success status
@@ -327,9 +351,7 @@ class Nerve(object):
 
         Args:
             name (str): name of project. Default: None
-            notes (str, optional): notes to appended to project metadata. Default: None
             \**config: optional config parameters, overwrites fields in a copy of self.config
-            project (dict, \**config): project metadata.
             verbosity (int, \**config): level of verbosity for output. Default: 0
                 Options: 0, 1, 2
             user_branch (str, \**config): branch to clone from. Default: user's branch
@@ -360,9 +382,7 @@ class Nerve(object):
 
         Args:
             name (str): name of project. Default: None
-            notes (str, optional): notes to appended to project metadata. Default: None
             \**config: optional config parameters, overwrites fields in a copy of self.config
-            project (dict, \**config): project metadata.
             user_branch (str, \**config): branch to pull deliverables into. Default: user's branch
             request_include_patterns (list, \**config): list of regular expressions user to include specific deliverables
             request_exclude_patterns (list, \**config): list of regular expressions user to exclude specific deliverables
@@ -490,7 +510,6 @@ class Nerve(object):
             name (str): name of project. Default: None
             notes (str, optional): notes to appended to project metadata. Default: None
             \**config: optional config parameters, overwrites fields in a copy of self.config
-            project (dict, \**config): project metadata.
             user_branch (str, \**config): branch to pull deliverables from. Default: user's branch
             publish_include_patterns (list, \**config): list of regular expressions user to include specific assets
             publish_exclude_patterns (list, \**config): list of regular expressions user to exclude specific assets
@@ -567,7 +586,6 @@ class Nerve(object):
             from_server (bool): delete Github project
             from_local (bool): delete local project directory
             \**config: optional config parameters, overwrites fields in a copy of self.config
-            project (dict, \**config): project metadata.
             verbosity (int, \**config): level of verbosity for output. Default: 0
                 Options: 0, 1, 2
 

@@ -105,7 +105,6 @@ class NerveUser(object):
 
         Args:
             \**config: optional config parameters, overwrites fields in a copy of self.config
-            project (dict, \**config): project metadata.
             user_branch (str, \**config): branch to pull deliverables into. Default: user's branch
             request_include_patterns (list, \**config): list of regular expressions user to include specific deliverables
             request_exclude_patterns (list, \**config): list of regular expressions user to exclude specific deliverables
@@ -132,7 +131,6 @@ class NerveUser(object):
         Args:
             notes (str, optional): notes to appended to project metadata. Default: None
             \**config: optional config parameters, overwrites fields in a copy of self.config
-            project (dict, \**config): project metadata.
             user_branch (str, \**config): branch to pull deliverables from. Default: user's branch
             publish_include_patterns (list, \**config): list of regular expressions user to include specific assets
             publish_exclude_patterns (list, \**config): list of regular expressions user to exclude specific assets
@@ -192,7 +190,6 @@ class NerveAdmin(NerveUser):
             name (str, optional): name of project. Default: None
             notes (str, optional): notes to appended to project metadata. Default: None
             \**config: optional config parameters, overwrites fields in a copy of self.config
-            project (dict, \**config): project metadata.
             verbosity (int, \**config): level of verbosity for output. Default: 0
                 Options: 0, 1, 2
 
@@ -206,9 +203,9 @@ class NerveAdmin(NerveUser):
         Deletes a nerve project
 
         Args:
+            name (str): name of project
             from_server (bool): delete Github project
             from_local (bool): delete local project directory
-            project (dict, optional): project metadata. Default: None
 
         Returns:
             bool: success status

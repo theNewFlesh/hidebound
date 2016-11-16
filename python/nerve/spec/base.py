@@ -69,6 +69,7 @@ class Client(Specification):
     Attributes:
         specification (str): same as class name
         username (str): Github username
+        token (str): Github oauth token
         organization (str): Github organization
         project_name (str): name of project
         private (bool): privacy of Github repo
@@ -90,7 +91,6 @@ class ProjectTemplate(Specification):
         version (int): project version
         teams (dict): Github teams; name, permission pairs
         gitignore (list): gitignore patterns
-        private (bool): privacy of Github repo
         lfs_extensions (list): lfs tracked file extensions
         nondeliverables (list, optional): nondeliverable asset specs/patterns
         deliverables (list): deliverable asset specs/patterns
@@ -112,6 +112,7 @@ class Project(Specification):
         project_id (str): Github repo id
         project_url (str): project_url of project's Github repo
         notes (str): project notes
+        private (bool): privacy of Github repo
         version (int): project version
         teams (dict): Github teams; name, permission pairs
         gitignore (list): gitignore patterns
@@ -124,6 +125,7 @@ class Project(Specification):
     project_url     = StringType(required=True, validators=[is_project_url])
     notes           = StringType(default='')
 
+    private         = BooleanType(required=True, validators=[is_private])
     version         = IntType(required=True, validators=[is_version])
     teams           = DictType(StringType, required=True, validators=[is_teams])
     gitignore       = ListType(StringType, required=True, validators=[])
@@ -201,6 +203,7 @@ class Config(Specification):
     Attributes:
         specification (str): same as class name
         username (str): Github username
+        user_branch (str): User's branch name
         organization (str): Github organization
         project_root (str): fullpath to root projects directory
         token (str): Github oauth token
@@ -223,7 +226,11 @@ class Config(Specification):
         status_asset_types (list, optional): list of allowed asset types for status call
             Default: []. Options: deliverable, nondeliverable
         verbosity (int, optional): level of verbosity. Default: 0
-        project (dict, optional): project specification
+        environment (dict): Environment variables
+        lfs_server_url (str, optional): url of lfs server. Default: http://localhost:8080
+        git_credentials (list): list of git credentials
+        timeout (int, optional): maximum timeout in seconds. Default: 100
+        project_template (dict, optional): project specification
     '''
     username                 = StringType(required=True, validators=[is_username])
     user_branch              = StringType(required=True, validators=[is_user_branch])
@@ -242,7 +249,7 @@ class Config(Specification):
     verbosity                = IntType(default=0)
     environment              = DictType(StringType, required=True, validators=[])
     lfs_server_url           = URLType(default='http://localhost:8080', required=True)
-    git_credentials          = ListType(StringType, default=[], required=True)
+    git_credentials          = ListType(StringType, required=True)
     timeout                  = IntType(default=100, required=True)
     project_template         = StringType(validators=[is_exists])
     private                  = BooleanType(required=True, validators=[is_private])
