@@ -86,7 +86,7 @@ class Nerve(object):
             output = output.data
         return output
 
-    def __get_project(self, name, notes, project, config):
+    def __get_project(self, name, notes, config, project):
         r'''
         Convenience method for creating a new temporary project dict by
         overwriting a copy of the internal project template, if it exists,
@@ -110,30 +110,26 @@ class Nerve(object):
 
         return project
 
-    def _get_info(self, name, notes, config, project):
+    def _get_info(self, name, notes='', config={}, project={}):
         r'''
         Convenience method for creating new temporary config
 
         Args:
             name (str): name of project
-            notes (str, None): notes to be added to metadata
-            config (dict, None): \**config dictionary
-            project (dict, None): project metadata
+            notes (str, optional): notes to be added to metadata. Default: ''
+            config (dict, optional): \**config dictionary. Default: {}
+            project (dict, optional): project metadata. Default: {}
 
         Returns:
             namedtuple: tuple with conveniently named attributes
         '''
         if not isinstance(name, str):
             raise TypeError('name argument must be a string')
-        if config == None:
-            config = {}
-        if project == None:
-            project = {}
         # ----------------------------------------------------------------------
 
         config = self.__get_config(config)
 
-        project = self.__get_project(name, notes, project, config)
+        project = self.__get_project(name, notes, config, project)
         if 'private' in project.keys():
             private = project['private']
         else:
@@ -207,7 +203,7 @@ class Nerve(object):
         Yields:
             Metadata: Metadata object of each asset
         '''
-        info = self._get_info(name, None, config, None)
+        info = self._get_info(name, config=config)
 
         warn_ = False
         if info.verbosity == 2:
@@ -281,7 +277,7 @@ class Nerve(object):
             - send data to DynamoDB
         '''
         # create repo
-        info = self._get_info(name, notes, config, project)
+        info = self._get_info(name, notes=notes, config=config, project=project)
         project = info.project
 
         client = Client(info.client_conf)
@@ -369,7 +365,7 @@ class Nerve(object):
         .. todo::
             - catch repo already exists errors and repo doesn't exist errors
         '''
-        info = self._get_info(name, None, config, None)
+        info = self._get_info(name, config=config)
 
         client = Client(info.client_conf)
         if client.has_branch(info.branch, timeout=info.timeout):
@@ -399,7 +395,7 @@ class Nerve(object):
         Returns:
             bool: success status
         '''
-        info = self._get_info(name, None, config, None)
+        info = self._get_info(name, config=config)
         self._update_local(info)
         lfs = GitLFS(info.path, environment=info.env)
         lfs.pull(
@@ -529,7 +525,7 @@ class Nerve(object):
         .. todo::
             - add branch checking logic to skip the following if not needed?
         '''
-        info = self._get_info(name, notes, config, None)
+        info = self._get_info(name, notes=notes, config=config)
         self._publish_nondeliverables(info)
         self._update_local(info)
         valid, invalid = self._get_deliverables(info)
@@ -602,7 +598,7 @@ class Nerve(object):
         .. todo::
             - add git lfs logic for deletion
         '''
-        info = self._get_info(name, None, config, None)
+        info = self._get_info(name, config=config)
 
         if from_server:
             Client(info.client_conf).delete()
