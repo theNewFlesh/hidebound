@@ -79,20 +79,17 @@ class NerveUser(object):
         project = self._get_project()
         if not project:
             return project
-        config['project'] = project
-        return self._nerve.status(**config)
+        return self._nerve.status(project['project-name'], **config)
 
-    def clone(self, name=None, **config):
+    def clone(self, name, **config):
         r'''
         Clones a nerve project to local project-root directory
 
         Ensures given branch is present in the repository
 
         Args:
-            name (str, optional): name of project. Default: None
-            notes (str, optional): notes to appended to project metadata. Default: None
+            name (str): name of project. Default: None
             \**config: optional config parameters, overwrites fields in a copy of self.config
-            project (dict, \**config): project metadata.
             verbosity (int, \**config): level of verbosity for output. Default: 0
                 Options: 0, 1, 2
             user_branch (str, \**config): branch to clone from. Default: user's branch
@@ -121,8 +118,7 @@ class NerveUser(object):
         project = self._get_project()
         if not project:
             return project
-        config['project'] = project
-        return self._nerve.request(**config)
+        return self._nerve.request(project['project-name'], **config)
 
     def publish(self, notes=None, **config):
         r'''
@@ -149,24 +145,22 @@ class NerveUser(object):
         project = self._get_project()
         if not project:
             return project
-        config['project'] = project
-        return self._nerve.publish(notes=notes, **config)
+        return self._nerve.publish(project['project-name'], notes=notes, **config)
 
-    def delete(self, project=None):
+    def delete(self):
         r'''
         Deletes a nerve project from local storage
 
         Args:
-            project (dict, optional): project metadata. Default: None
+            None
 
         Returns:
             bool: success status
         '''
-        if project == None:
-            project = self._get_project()
-            if not project:
-                return project
-        return self._nerve.delete(False, True, project=project)
+        project = self._get_project()
+        if not project:
+            return project
+        return self._nerve.delete(project['project-name'], False, True)
 # ------------------------------------------------------------------------------
 
 class NerveAdmin(NerveUser):
@@ -207,7 +201,7 @@ class NerveAdmin(NerveUser):
         '''
         return self._nerve.create(name, notes, **config)
 
-    def delete(self, from_server, from_local, project=None):
+    def delete(self, name, from_server, from_local):
         r'''
         Deletes a nerve project
 
@@ -219,11 +213,7 @@ class NerveAdmin(NerveUser):
         Returns:
             bool: success status
         '''
-        if project == None:
-            project = self._get_project()
-            if not project:
-                return project
-        return self._nerve.delete(from_server, from_local, project=project)
+        return self._nerve.delete(name, from_server, from_local)
 # ------------------------------------------------------------------------------
 
 def main():

@@ -81,6 +81,27 @@ class Client(Specification):
     private      = StringType(required=True, default=True, validators=[])
     url_type     = StringType(required=True, validators=[is_url_type])
 
+class ProjectTemplate(Specification):
+    '''
+    Project templates are used as overidable defaults for project creation
+
+    Attributes:
+        specification (str): same as class name
+        version (int): project version
+        teams (dict): Github teams; name, permission pairs
+        gitignore (list): gitignore patterns
+        private (bool): privacy of Github repo
+        lfs_extensions (list): lfs tracked file extensions
+        nondeliverables (list, optional): nondeliverable asset specs/patterns
+        deliverables (list): deliverable asset specs/patterns
+    '''
+    version         = IntType(validators=[is_version])
+    teams           = DictType(StringType, validators=[is_teams])
+    gitignore       = ListType(StringType, validators=[])
+    lfs_extensions  = ListType(StringType, validators=[is_extension, is_not_empty])
+    nondeliverables = ListType(StringType, validators=[])
+    deliverables    = ListType(StringType, validators=[is_specification])
+
 class Project(Specification):
     '''
     Base class for all nerve projects
@@ -94,7 +115,6 @@ class Project(Specification):
         version (int): project version
         teams (dict): Github teams; name, permission pairs
         gitignore (list): gitignore patterns
-        private (bool): privacy of Github repo
         lfs_extensions (list): lfs tracked file extensions
         nondeliverables (list, optional): nondeliverable asset specs/patterns
         deliverables (list): deliverable asset specs/patterns
@@ -107,7 +127,6 @@ class Project(Specification):
     version         = IntType(required=True, validators=[is_version])
     teams           = DictType(StringType, required=True, validators=[is_teams])
     gitignore       = ListType(StringType, required=True, validators=[])
-    private         = BooleanType(required=True, validators=[is_private])
     lfs_extensions  = ListType(StringType, required=True, validators=[is_extension, is_not_empty])
     nondeliverables = ListType(StringType, default=[], validators=[])
     deliverables    = ListType(StringType, required=True, validators=[is_specification])
@@ -175,7 +194,7 @@ class Deliverable(Asset):
     dependencies = ListType(StringType, default=[])
     asset_type   = StringType(default='deliverable')
 
-class ConfigBase(Specification):
+class Config(Specification):
     '''
     Base class for all nerve configs (nerverc)
 
@@ -185,6 +204,7 @@ class ConfigBase(Specification):
         organization (str): Github organization
         project_root (str): fullpath to root projects directory
         token (str): Github oauth token
+        private (bool): privacy of Github repo
         url_type (str): type of access to Github. currently only ssh. Options: http, ssh
         request_include_patterns (list, optional): regular expressions used to include assets within a request
             Default: []
@@ -221,10 +241,11 @@ class ConfigBase(Specification):
     status_asset_types       = ListType(StringType, default=[], validators=[is_status_asset_type])
     verbosity                = IntType(default=0)
     environment              = DictType(StringType, required=True, validators=[])
-    project                  = ModelType(Project)
     lfs_server_url           = URLType(default='http://localhost:8080', required=True)
     git_credentials          = ListType(StringType, default=[], required=True)
     timeout                  = IntType(default=100, required=True)
+    project_template         = StringType(validators=[is_exists])
+    private                  = BooleanType(required=True, validators=[is_private])
 
     def validate_project(self, key, data):
         '''
@@ -253,6 +274,7 @@ __all__ = [
     'MetaName'
     'Config',
     'Client',
+    'ProjectTemplate',
     'Project',
     'Deliverable',
     'NonDeliverable'

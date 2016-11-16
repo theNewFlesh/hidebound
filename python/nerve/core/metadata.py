@@ -51,7 +51,8 @@ class Metadata(object):
 
             meta = traits.get_meta(item)
             conf = traits.get_config(item)
-            if meta:
+            template = traits.get_template(item)
+            if meta or template:
                 spec = traits.get_specification(item)
             if meta or conf:
                 metapath = item

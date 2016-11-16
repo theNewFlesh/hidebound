@@ -44,9 +44,15 @@ class Nerve(object):
         Nerve
     '''
     def __init__(self, config):
-        config = Metadata(config, spec='config', skip_keys=['environment'])
+        config = Metadata(config, spec='conf001', skip_keys=['environment'])
         config.validate()
-        self.__config = config
+        self._config = config
+
+        template = None
+        if 'project-template' in config.data.keys():
+            template = Metadata(config.data['project-template'])
+            template.validate()
+        self._project_template = template
     # --------------------------------------------------------------------------
 
     def __getitem__(self, key):
@@ -71,7 +77,7 @@ class Nerve(object):
         if config != {}:
             config = conform_keys(config)
             output = deep_update(output, config)
-            output = Metadata(output, spec='config', skip_keys=['environment'])
+            output = Metadata(output, spec='conf001', skip_keys=['environment'])
             try:
                 output.validate()
             except ValidationError as e:
@@ -79,28 +85,35 @@ class Nerve(object):
             output = output.data
         return output
 
-    def _get_info(self, name, notes, config):
+    def __get_project(self, name, notes, project, config):
+        project['project-name'] = name
+        if notes != None:
+            project['notes'] = notes
+
+        if self._project_template != None:
+            project = deep_update(self._project_template.data, project)
+
+        return project
+
+    def _get_info(self, name, notes, config, project):
         r'''
         Convenience method for creating new temporary config
 
         Args:
             name (str): name of project
-            notes (str): notes to be added to metadata
-            config (dict): \**config dictionary
+            notes (str, None): notes to be added to metadata
+            config (dict, None): \**config dictionary
+            project (dict, None): \**config dictionary
 
         Returns:
             namedtuple: tuple with conveniently named attributes
         '''
+        if not isinstance(name, str):
+            raise TypeError('name argument must be a string')
+
         config = self.__get_config(config)
-        project = config['project']
-
-        if name == None:
-            name = project['project-name']
-        if notes == None:
-            notes = project['notes']
-
-        project['project-name'] = name
-        project['notes'] = notes
+        if project != None:
+            project = self.__get_project(name, notes, project, config)
 
         path = os.path.join(config['project-root'], name)
 
@@ -108,13 +121,14 @@ class Nerve(object):
             username=config['username'],
             token=config['token'],
             organization=config['organization'],
-            project_name=project['project-name'],
-            private=project['private'],
+            project_name=name,
+            private=config['private'],
             url_type=config['url-type'],
             specification='client'
         )
         # ----------------------------------------------------------------------
 
+        # create info object
         info = namedtuple('Info', ['config', 'project', 'name', 'path',
            'states', 'asset_types', 'branch', 'verbosity', 'client_conf',
            'notes', 'env', 'lfs_url', 'git_creds', 'timeout']
@@ -142,15 +156,15 @@ class Nerve(object):
         '''
         dict: copy of this object's configuration
         '''
-        return self.__config.data
+        return self._config.data
     # --------------------------------------------------------------------------
 
-    def status(self, name=None, **config):
+    def status(self, name, **config):
         r'''
         Reports on the status of all affected files within a given project
 
         Args:
-            name (str, optional): name of project. Default: None
+            name (str): name of project. Default: None
             \**config: optional config parameters, overwrites fields in a copy of self.config
             status_include_patterns (list, \**config): list of regular expressions user to include specific assets
             status_exclude_patterns (list, \**config): list of regular expressions user to exclude specific assets
@@ -162,7 +176,7 @@ class Nerve(object):
         Yields:
             Metadata: Metadata object of each asset
         '''
-        info = self._get_info(name, None, config)
+        info = self._get_info(name, None, config, None)
 
         warn_ = False
         if info.verbosity == 2:
@@ -209,7 +223,7 @@ class Nerve(object):
                 output.get_traits()
                 yield output
 
-    def create(self, name=None, notes=None, **config):
+    def create(self, name, notes=None, config={}, **project):
         r'''
         Creates a nerve project on Github and in the project-root folder
 
@@ -222,7 +236,7 @@ class Nerve(object):
             .gitignore
 
         Args:
-            name (str, optional): name of project. Default: None
+            name (str): name of project. Default: None
             notes (str, optional): notes to appended to project metadata. Default: None
             \**config: optional config parameters, overwrites fields in a copy of self.config
             project (dict, \**config): project metadata.
@@ -237,8 +251,7 @@ class Nerve(object):
             - send data to DynamoDB
         '''
         # create repo
-        info = self._get_info(name, notes, config)
-        project = info.project
+        info = self._get_info(name, notes, config, project)
 
         client = Client(info.client_conf)
         local = Git(info.path, url=client['url'], environment=info.env)
@@ -306,14 +319,14 @@ class Nerve(object):
 
         return True
 
-    def clone(self, name=None, **config):
+    def clone(self, name, **config):
         r'''
         Clones a nerve project to local project-root directory
 
         Ensures given branch is present in the repository
 
         Args:
-            name (str, optional): name of project. Default: None
+            name (str): name of project. Default: None
             notes (str, optional): notes to appended to project metadata. Default: None
             \**config: optional config parameters, overwrites fields in a copy of self.config
             project (dict, \**config): project metadata.
@@ -327,7 +340,7 @@ class Nerve(object):
         .. todo::
             - catch repo already exists errors and repo doesn't exist errors
         '''
-        info = self._get_info(name, None, config)
+        info = self._get_info(name, None, config, None)
 
         client = Client(info.client_conf)
         if client.has_branch(info.branch, timeout=info.timeout):
@@ -341,12 +354,12 @@ class Nerve(object):
 
         return True
 
-    def request(self, name=None, **config):
+    def request(self, name, **config):
         r'''
         Request deliverables from the dev branch of given project
 
         Args:
-            name (str, optional): name of project. Default: None
+            name (str): name of project. Default: None
             notes (str, optional): notes to appended to project metadata. Default: None
             \**config: optional config parameters, overwrites fields in a copy of self.config
             project (dict, \**config): project metadata.
@@ -359,7 +372,7 @@ class Nerve(object):
         Returns:
             bool: success status
         '''
-        info = self._get_info(name, None, config)
+        info = self._get_info(name, None, config, None)
         self._update_local(info)
         lfs = GitLFS(info.path, environment=info.env)
         lfs.pull(
@@ -445,10 +458,6 @@ class Nerve(object):
             name=info.name,
             status_states=['added'],
             status_asset_types=['deliverable'],
-            project={
-                'project-id': info.project['project-id'],
-                'project-url': info.project['project-url']
-            },
             **config
         )
 
@@ -468,7 +477,7 @@ class Nerve(object):
 
         return valid, invalid
 
-    def publish(self, name=None, notes=None, **config):
+    def publish(self, name, notes=None, **config):
         r'''
         Attempt to publish deliverables from user's branch to given project's dev branch on Github
 
@@ -478,7 +487,7 @@ class Nerve(object):
         If not only invalid metadata will be commited to the user's branch
 
         Args:
-            name (str, optional): name of project. Default: None
+            name (str): name of project. Default: None
             notes (str, optional): notes to appended to project metadata. Default: None
             \**config: optional config parameters, overwrites fields in a copy of self.config
             project (dict, \**config): project metadata.
@@ -494,7 +503,7 @@ class Nerve(object):
         .. todo::
             - add branch checking logic to skip the following if not needed?
         '''
-        info = self._get_info(name, notes, config)
+        info = self._get_info(name, notes, config, None)
         self._publish_nondeliverables(info)
         self._update_local(info)
         valid, invalid = self._get_deliverables(info)
@@ -549,14 +558,14 @@ class Nerve(object):
             return True
     # --------------------------------------------------------------------------
 
-    def delete(self, from_server, from_local, name=None, **config):
+    def delete(self, name, from_server, from_local, **config):
         r'''
         Deletes a nerve project
 
         Args:
+            name (str): name of project. Default: None
             from_server (bool): delete Github project
             from_local (bool): delete local project directory
-            name (str, optional): name of project. Default: None
             \**config: optional config parameters, overwrites fields in a copy of self.config
             project (dict, \**config): project metadata.
             verbosity (int, \**config): level of verbosity for output. Default: 0
@@ -568,7 +577,7 @@ class Nerve(object):
         .. todo::
             - add git lfs logic for deletion
         '''
-        info = self._get_info(name, None, config)
+        info = self._get_info(name, None, config, None)
 
         if from_server:
             Client(info.client_conf).delete()

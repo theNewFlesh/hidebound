@@ -254,6 +254,18 @@ def get_extension(fullpath):
         str: file extension
     '''
     return fetch_name_traits(fullpath)['extension']
+
+def get_template(fullpath):
+    '''
+    Args:
+        fullpath (str): absolute file/directory path
+
+    Returns:
+        bool: is nerverc template file
+    '''
+    if re.search('nerverc_temp', fullpath):
+        return True
+    return False
 # ------------------------------------------------------------------------------
 
 def main():

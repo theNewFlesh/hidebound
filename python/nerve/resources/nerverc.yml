@@ -1,7 +1,9 @@
 ---
+specification: conf001
 username: theNewFlesh
 user-branch: alex
 project-root: /tmp
+private: true
 request-include-patterns:
   - vol.*
   - geo.*
@@ -29,61 +31,4 @@ git-credentials:
 timeout: 100
 environment:
   GIT_SSH_COMMAND: ssh -i ~/.ssh/nerve-test-ssh
-project:
-  project-name: ntr002
-  project-id: 0
-  version: 1
-  project-url: ''
-  specification: proj001
-  private: true
-  lfs-extensions:
-    - obj
-    - png
-    - mb
-  nondeliverables:
-    - maya001
-  deliverables:
-    - vol001
-    - geo001
-  teams:
-    dev: write
-    biz: read
-  gitignore:
-    - "__pycache__/"
-    - "*.py[cod]"
-    - "*.so"
-    - ".Python"
-    - "env/"
-    - "build/"
-    - "develop-eggs/"
-    - "dist/"
-    - "downloads/"
-    - "eggs/"
-    - ".eggs/"
-    - "lib/"
-    - "lib64/"
-    - "parts/"
-    - "sdist/"
-    - "var/"
-    - "*.egg-info/"
-    - ".installed.cfg"
-    - "*.egg"
-    - "*.manifest"
-    - "*.spec"
-    - "pip-log.txt"
-    - "htmlcov/"
-    - ".tox/"
-    - ".coverage"
-    - ".coverage.*"
-    - ".cache"
-    - "nosetests.xml"
-    - "coverage.xml"
-    - "*,cover"
-    - "*.mo"
-    - "*.pot"
-    - "*.log"
-    - "docs/_build/"
-    - "target/"
-    - ".ipynb_checkpoints"
-    - ".DS_Store"
-    - "node_modules/"
+project-template: /Users/alex/Documents/projects/nerve/python/nerve/resources/nerverc_temp001.yml
