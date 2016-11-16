@@ -87,13 +87,14 @@ class ProjectTemplate(Specification):
     Project templates are used as overidable defaults for project creation
 
     Attributes:
-        specification (str): same as class name
-        version (int): project version
-        teams (dict): Github teams; name, permission pairs
-        gitignore (list): gitignore patterns
-        lfs_extensions (list): lfs tracked file extensions
+        specification (str, optional): same as class name
+        version (int, optional): project version
+        teams (dict, optional): Github teams; name, permission pairs
+        gitignore (list, optional): gitignore patterns
+        lfs_extensions (list, optional): lfs tracked file extensions
         nondeliverables (list, optional): nondeliverable asset specs/patterns
-        deliverables (list): deliverable asset specs/patterns
+        deliverables (list, optional): deliverable asset specs/patterns
+        private (bool, optional): privacy of Github repo
     '''
     version         = IntType(validators=[is_version])
     teams           = DictType(StringType, validators=[is_teams])
@@ -101,6 +102,7 @@ class ProjectTemplate(Specification):
     lfs_extensions  = ListType(StringType, validators=[is_extension, is_not_empty])
     nondeliverables = ListType(StringType, validators=[])
     deliverables    = ListType(StringType, validators=[is_specification])
+    private         = BooleanType(validators=[is_private])
 
 class Project(Specification):
     '''

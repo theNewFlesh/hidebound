@@ -174,7 +174,7 @@ class NerveAdmin(NerveUser):
     def __init__(self):
         super().__init__()
 
-    def create(self, name, notes=None, **config):
+    def create(self, name, notes=None, **project):
         r'''
         Creates a nerve project on Github and in the project-root folder
 
@@ -189,14 +189,12 @@ class NerveAdmin(NerveUser):
         Args:
             name (str, optional): name of project. Default: None
             notes (str, optional): notes to appended to project metadata. Default: None
-            \**config: optional config parameters, overwrites fields in a copy of self.config
-            verbosity (int, \**config): level of verbosity for output. Default: 0
-                Options: 0, 1, 2
+            \**project: optional project parameters, overwrites fields in a copy of self.project_template
 
         Returns:
             bool: success status
         '''
-        return self._nerve.create(name, notes, **config)
+        return self._nerve.create(name, notes, {}, **project)
 
     def delete(self, name, from_server, from_local):
         r'''

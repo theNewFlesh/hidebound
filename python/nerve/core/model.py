@@ -125,13 +125,19 @@ class Nerve(object):
         '''
         if not isinstance(name, str):
             raise TypeError('name argument must be a string')
+        if config == None:
+            config = {}
+        if project == None:
+            project = {}
+        # ----------------------------------------------------------------------
 
         config = self.__get_config(config)
-        private = config['private']
-        if project != None:
-            project = self.__get_project(name, notes, project, config)
-            if 'private' in project.keys():
-                private = project['private']
+
+        project = self.__get_project(name, notes, project, config)
+        if 'private' in project.keys():
+            private = project['private']
+        else:
+            project['private'] = config['private']
 
         path = os.path.join(config['project-root'], name)
 
@@ -140,7 +146,7 @@ class Nerve(object):
             token=config['token'],
             organization=config['organization'],
             project_name=name,
-            private=private,
+            private=project['private'],
             url_type=config['url-type'],
             specification='client'
         )
@@ -276,6 +282,7 @@ class Nerve(object):
         '''
         # create repo
         info = self._get_info(name, notes, config, project)
+        project = info.project
 
         client = Client(info.client_conf)
         local = Git(info.path, url=client['url'], environment=info.env)
