@@ -169,7 +169,7 @@ class NerveAdmin(NerveUser):
         None
 
     Returns:
-        Client: NerveUser
+        Client: NerveAdmin
     '''
     def __init__(self):
         super().__init__()
