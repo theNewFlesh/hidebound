@@ -130,33 +130,40 @@ class Name(object):
         return None
 
     @property
+    def specification_path(self):
+        if self.project_path:
+            if self.specification:
+                path = os.path.join(self.project_path, self.specification)
+                if os.path.exists(path):
+                    return path
+        return None
+
+    @property
     def fullpath(self):
+        def find(item):
+            if item:
+                output = re.sub(item, '', re.sub('^/', '', self.raw))
+                output = os.path.join(item, output)
+                if os.path.exists(output):
+                    return output
+            return None
+
         raw = self.raw
         if os.path.abspath(raw):
             if os.path.exists(raw):
                 return raw
 
-        root = self.project_root
-        asset = re.sub(root, '', raw)
-        asset = os.path.join(root, asset)
-        if os.path.exists(asset):
-            return asset
+        root = find(self.project_root)
+        if root:
+            return root
 
-        proj = self.project_path
+        proj = find(self.project_path)
         if proj:
-            asset = re.sub(proj, '', raw)
-            asset = os.path.join(proj, asset)
-            if os.path.exists(asset):
-                return asset
+            return proj
 
-
-            spec = self.specification
-            if spec:
-                path = os.path.join(proj, spec)
-                asset = re.sub(path, '', raw)
-                asset = os.path.join(path, asset)
-                if os.path.exists(asset):
-                    return asset
+        spec = find(self.specification_path)
+        if spec:
+            return spec
 
         return None
 
@@ -164,6 +171,7 @@ class Name(object):
         return dict(
             project_name=self.project_name,
             project_path=self.project_path,
+            specification_path=self.specification_path,
             fullpath=self.fullpath,
             project_root=self.project_root,
             specification=self.specification,
