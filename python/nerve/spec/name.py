@@ -75,7 +75,7 @@ class Name(object):
         rpass = None
         coord = None
         frame = None
-        meta = None
+        meta = False
 
         if len(items) > 3:
             for item in items[3:]:
