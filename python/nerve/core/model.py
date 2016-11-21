@@ -149,11 +149,11 @@ class Nerve(object):
         # ----------------------------------------------------------------------
 
         # create info object
-        info = namedtuple('Info', ['config', 'project', 'name', 'path',
+        Info = namedtuple('Info', ['config', 'project', 'name', 'path',
            'states', 'asset_types', 'branch', 'verbosity', 'client_conf',
            'notes', 'env', 'lfs_url', 'git_creds', 'timeout']
         )
-        info = info(
+        info = Info(
             config,
             project,
             name,
