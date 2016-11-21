@@ -75,22 +75,20 @@ class Name(object):
         rpass = None
         coord = None
         frame = None
-        meta = None
+        meta = False
 
         if len(items) > 3:
-            items = items[3:]
-
-        for item in items:
-            if re.search('^v\d+$', item):
-                version = int(re.sub('v', '', item))
-            elif re.search('\d\d\d-\d\d\d(-\d\d\d)?', item):
-                coord = tuple(map(int, item.split('-')))
-            elif re.search('^\d\d\d\d$', item):
-                frame = int(item)
-            elif re.search('^meta$', item):
-                meta = True
-            else:
-                rpass = item
+            for item in items[3:]:
+                if re.search('^v\d+$', item):
+                    version = int(re.sub('v', '', item))
+                elif re.search('\d\d\d-\d\d\d(-\d\d\d)?', item):
+                    coord = tuple(map(int, item.split('-')))
+                elif re.search('^\d\d\d\d$', item):
+                    frame = int(item)
+                elif re.search('^meta$', item):
+                    meta = True
+                else:
+                    rpass = item
 
         return dict(
             project_name=proj,
