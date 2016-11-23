@@ -19,17 +19,12 @@ import re
 import shutil
 from warnings import warn
 from schematics.exceptions import ValidationError
-from nerve.core.utils import conform_keys, deep_update
-from nerve.core.git import Git
-from nerve.core.git_lfs import GitLFS
-from nerve.core.client import Client
 from nerve.core.metadata import Metadata
-from nerve.core.errors import KeywordError
 # ------------------------------------------------------------------------------
 
-class Nerve(object):
+class Project(object):
     '''
-    Class for handling nerve projects
+    Class which creates, deletes and interacts with nerve projects
 
     Attributes:
         config (dict): a dictionary representing Nerve's internal configuration
@@ -44,111 +39,46 @@ class Nerve(object):
     Returns:
         Nerve
     '''
-    def __init__(self, config):
+    def __init__(self, config, remote, project_root):
         config = Metadata(config, spec='conf001', skip_keys=['environment'])
         config.validate()
-        self._config = config
-
-        template = None
-        if 'project-template' in config.data.keys():
-            template = Metadata(config.data['project-template'])
-            template.validate()
-        self._project_template = template
+        self._config = config.data
+        self._project_path = os.path.join(project_root, config['project-name'])
+        self._remote_config = remote
     # --------------------------------------------------------------------------
 
-    def __getitem__(self, key):
-        return self.config[key]
-
     def __repr__(self):
-        return pformat(self.config)
+        msg += 'PROJECT PATH:\n'
+        msg += self.project_path
+        msg = '\nPROJECT CONFIG:\n'
+        msg += pformat(self.config)
+        msg += '\nREMOTE CONFIG:\n'
+        msg += pformat(self.remote_config)
+        return msg
 
-    def __get_config(self, config):
-        r'''
-        Convenience method for creating a new temporary configuration dict by
-        overwriting a copy of the internal config with keyword arguments
-        specified in config
-
-        Args:
-            config (dict): dict of keyword arguments (\**config)
-
-        Returns:
-            dict: new config
+    @property
+    def config(self):
         '''
-        output = self.config
-        if config != {}:
-            config = conform_keys(config)
-            output = deep_update(output, config)
-            output = Metadata(output, spec='conf001', skip_keys=['environment'])
-            try:
-                output.validate()
-            except ValidationError as e:
-                raise KeywordError(e)
-            output = output.data
-        return output
-
-    def __get_project(self, name, notes, config, project):
-        r'''
-        Convenience method for creating a new temporary project dict by
-        overwriting a copy of the internal project template, if it exists,
-        with keyword arguments specified in project
-
-        Args:
-            name (str): name of project
-            notes (str, None): notes to be added to metadata
-            config (dict, None): \**config dictionary
-            project (dict, None): \**config dictionary
-
-        Returns:
-            dict: project metadata
+        dict: copy of this object's configuration
         '''
-        project['project-name'] = name
-        if notes != None:
-            project['notes'] = notes
+        return self._config
 
-        if self._project_template != None:
-            project = deep_update(self._project_template.data, project)
-
-        return project
-
-    def _get_info(self, name, notes='', config={}, project={}):
-        r'''
-        Convenience method for creating new temporary config
-
-        Args:
-            name (str): name of project
-            notes (str, optional): notes to be added to metadata. Default: ''
-            config (dict, optional): \**config dictionary. Default: {}
-            project (dict, optional): project metadata. Default: {}
-
-        Returns:
-            namedtuple: tuple with conveniently named attributes
+    @property
+    def remote_config(self):
         '''
-        if not isinstance(name, str):
-            raise TypeError('name argument must be a string')
-        # ----------------------------------------------------------------------
+        dict: copy of this object's project template
+        '''
+        return self._remote_config
 
-        config = self.__get_config(config)
+    @property
+    def project_path(self):
+        '''
+        dict: copy of this object's project path
+        '''
+        return self._project_path
+    # --------------------------------------------------------------------------
 
-        project = self.__get_project(name, notes, config, project)
-        if 'private' in project.keys():
-            private = project['private']
-        else:
-            project['private'] = config['private']
-
-        path = os.path.join(config['project-root'], name)
-
-        client_conf = dict(
-            username=config['username'],
-            token=config['token'],
-            organization=config['organization'],
-            project_name=name,
-            private=project['private'],
-            url_type=config['url-type'],
-            specification='client'
-        )
-        # ----------------------------------------------------------------------
-
-        # create info object
+    def _get_info(config)
         Info = namedtuple('Info', ['config', 'project', 'name', 'path',
            'states', 'asset_types', 'branch', 'verbosity', 'client_conf',
            'notes', 'env', 'lfs_url', 'git_creds', 'timeout']
@@ -156,13 +86,13 @@ class Nerve(object):
         info = Info(
             config,
             project,
-            name,
-            path,
+            project['project-name'],
+            self.project_path,
             config['status-states'],
             config['status-asset-types'],
             config['user-branch'],
             config['verbosity'],
-            client_conf,
+            self.remote_config,
             notes,
             config['environment'],
             config['lfs-server-url'],
@@ -174,19 +104,19 @@ class Nerve(object):
     @property
     def config(self):
         '''
-        dict: copy of this object's configuration
+        dict: This object's configuration
         '''
-        return self._config.data
+        return self._config
 
     @property
     def project_template(self):
         '''
-        dict: copy of this object's project template
+        dict: This object's project template
         '''
-        return self._project_template.data
+        return self._project_template
     # --------------------------------------------------------------------------
 
-    def status(self, name, **config):
+    def status(self, **config):
         r'''
         Reports on the status of all affected files within a given project
 
@@ -203,7 +133,7 @@ class Nerve(object):
         Yields:
             Metadata: Metadata object of each asset
         '''
-        info = self._get_info(name, config=config)
+        info = self._get_info(config)
 
         warn_ = False
         if info.verbosity == 2:
@@ -250,7 +180,7 @@ class Nerve(object):
                 output.get_traits()
                 yield output
 
-    def create(self, name, notes=None, config={}, **project):
+    def create(self, notes=None, config={}, **project):
         r'''
         Creates a nerve project on Github and in the project-root folder
 
@@ -277,7 +207,7 @@ class Nerve(object):
             - send data to DynamoDB
         '''
         # create repo
-        info = self._get_info(name, notes=notes, config=config, project=project)
+        info = self._get_info(config)
         project = info.project
 
         client = Client(info.client_conf)
@@ -346,7 +276,7 @@ class Nerve(object):
 
         return True
 
-    def clone(self, name, **config):
+    def clone(self, **config):
         r'''
         Clones a nerve project to local project-root directory
 
@@ -365,7 +295,7 @@ class Nerve(object):
         .. todo::
             - catch repo already exists errors and repo doesn't exist errors
         '''
-        info = self._get_info(name, config=config)
+        info = self._get_info(config)
 
         client = Client(info.client_conf)
         if client.has_branch(info.branch, timeout=info.timeout):
@@ -379,7 +309,7 @@ class Nerve(object):
 
         return True
 
-    def request(self, name, **config):
+    def request(self, **config):
         r'''
         Request deliverables from the dev branch of given project
 
@@ -395,7 +325,7 @@ class Nerve(object):
         Returns:
             bool: success status
         '''
-        info = self._get_info(name, config=config)
+        info = self._get_info(config)
         self._update_local(info)
         lfs = GitLFS(info.path, environment=info.env)
         lfs.pull(
@@ -500,7 +430,7 @@ class Nerve(object):
 
         return valid, invalid
 
-    def publish(self, name, notes=None, **config):
+    def publish(self, notes=None, **config):
         r'''
         Attempt to publish deliverables from user's branch to given project's dev branch on Github
 
@@ -525,7 +455,7 @@ class Nerve(object):
         .. todo::
             - add branch checking logic to skip the following if not needed?
         '''
-        info = self._get_info(name, notes=notes, config=config)
+        info = self._get_info(config)
         self._publish_nondeliverables(info)
         self._update_local(info)
         valid, invalid = self._get_deliverables(info)
@@ -580,7 +510,7 @@ class Nerve(object):
             return True
     # --------------------------------------------------------------------------
 
-    def delete(self, name, from_server, from_local, **config):
+    def delete(self, from_server, from_local, **config):
         r'''
         Deletes a nerve project
 
@@ -598,7 +528,7 @@ class Nerve(object):
         .. todo::
             - add git lfs logic for deletion
         '''
-        info = self._get_info(name, config=config)
+        info = self._get_info(config)
 
         if from_server:
             Client(info.client_conf).delete()

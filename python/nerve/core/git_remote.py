@@ -25,7 +25,7 @@ from nerve.core.metadata import Metadata
 from nerve.core.errors import TimeoutError
 # ------------------------------------------------------------------------------
 
-class Client(object):
+class GitRemote(object):
     '''
     Class for interacting with a single repository on Github
 
@@ -222,7 +222,7 @@ def main():
     help(__main__)
 # ------------------------------------------------------------------------------
 
-__all__ = ['Client']
+__all__ = ['GitRemote']
 
 if __name__ == '__main__':
     main()
