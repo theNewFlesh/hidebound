@@ -42,7 +42,7 @@ class Project(object):
     def __init__(self, config, remote, project_root):
         config = Metadata(config, spec='conf001', skip_keys=['environment'])
         config.validate()
-        self._config = config.data
+        self._project_config = config.data
         self._project_path = os.path.join(project_root, config['project-name'])
         self._remote_config = remote
     # --------------------------------------------------------------------------
@@ -61,7 +61,7 @@ class Project(object):
         '''
         dict: copy of this object's configuration
         '''
-        return self._config
+        return self._project_config
 
     @property
     def remote_config(self):
@@ -78,35 +78,12 @@ class Project(object):
         return self._project_path
     # --------------------------------------------------------------------------
 
-    def _get_info(config)
-        Info = namedtuple('Info', ['config', 'project', 'name', 'path',
-           'states', 'asset_types', 'branch', 'verbosity', 'client_conf',
-           'notes', 'env', 'lfs_url', 'git_creds', 'timeout']
-        )
-        info = Info(
-            config,
-            project,
-            project['project-name'],
-            self.project_path,
-            config['status-states'],
-            config['status-asset-types'],
-            config['user-branch'],
-            config['verbosity'],
-            self.remote_config,
-            notes,
-            config['environment'],
-            config['lfs-server-url'],
-            config['git-credentials'],
-            config['timeout']
-        )
-        return info
-
     @property
-    def config(self):
+    def project_config(self):
         '''
         dict: This object's configuration
         '''
-        return self._config
+        return self._project_config
 
     @property
     def project_template(self):
@@ -133,19 +110,18 @@ class Project(object):
         Yields:
             Metadata: Metadata object of each asset
         '''
-        info = self._get_info(config)
 
         warn_ = False
-        if info.verbosity == 2:
+        if config['verbosity'] == 2:
             warn_ = True
 
-        local = Git(info.path, environment=info.env)
+        local = Git(self.project_path, environment=config['environment'])
         local.reset()
         local.add(all=True) # git lfs cannot get the status of unstaged files
-        lfs = GitLFS(info.path, environment=info.env)
+        lfs = GitLFS(self.project_path, environment=config['environment'])
         files = lfs.status(
-            include=info.config['status-include-patterns'],
-            exclude=info.config['status-exclude-patterns'],
+            include=config['status-include-patterns'],
+            exclude=config['status-exclude-patterns'],
             warnings=warn_
         )
         # ----------------------------------------------------------------------
@@ -168,15 +144,15 @@ class Project(object):
         # ----------------------------------------------------------------------
 
         for asset, v in sorted(agg.items()):
-            if info.states:
-                rogue_states = set(v['state']).difference(info.states)
+            if config['status-states']:
+                rogue_states = set(v['state']).difference(config['status-states'])
                 if len(rogue_states) > 0:
-                    if info.verbosity > 0:
+                    if config['verbosity'] > 0:
                         warn(asset + ' contains files of state: ' + ','.join(rogue_states))
                     continue
 
             output = Metadata(asset)
-            if output.data['asset-type'] in info.asset_types:
+            if output.data['asset-type'] in config['status-asset-types']:
                 output.get_traits()
                 yield output
 
@@ -207,21 +183,19 @@ class Project(object):
             - send data to DynamoDB
         '''
         # create repo
-        info = self._get_info(config)
-        project = info.project
 
-        client = Client(info.client_conf)
-        local = Git(info.path, url=client['url'], environment=info.env)
+        remote = GitRemote(self.remote_config)
+        local = Git(self.project_path, url=remote['url'], environment=config['environment'])
         # ----------------------------------------------------------------------
 
         # configure repo
-        lfs = GitLFS(info.path, environment=info.env)
+        lfs = GitLFS(self.project_path, environment=config['environment'])
         lfs.install(skip_smudge=True)
-        lfs.create_config(info.lfs_url)
+        lfs.create_config(config['lfs-server-url'])
         lfs.track(['*.' + x for x in project['lfs-extensions']])
 
         local.create_gitignore(project['gitignore'])
-        local.create_git_credentials(info.git_creds)
+        local.create_git_credentials(config['git-credentials'])
         # ----------------------------------------------------------------------
 
         # ensure first commit is on master branch
@@ -233,15 +207,15 @@ class Project(object):
         # create project structure
         local.branch('dev')
         for subdir in chain(project['deliverables'], project['nondeliverables']):
-            _path = os.path.join(info.path, subdir)
+            _path = os.path.join(self.project_path, subdir)
             os.mkdir(_path)
             # git won't commit empty directories
             open(os.path.join(_path, '.keep'), 'w').close()
         # ----------------------------------------------------------------------
 
         # create project metadata
-        project['project-id'] = client['id']
-        project['project-url'] = client['url']
+        project['project-id'] = remote['id']
+        project['project-url'] = remote['url']
         project['version'] = 1
         meta = '_'.join([
             project['project-name'],
@@ -257,22 +231,22 @@ class Project(object):
         local.add(all=True)
         local.commit(
             'VALID PROJECT:\n\t{} created according to {} specification'.format(
-                info.name,
+                self.project_config['project-name'],
                 project['specification']
             )
         )
         local.push('dev')
-        client.has_branch('dev', timeout=info.timeout)
-        client.set_default_branch('dev')
+        remote.has_branch('dev', timeout=comfig['timeout'])
+        remote.set_default_branch('dev')
 
         # add teams
         for team, perm in project['teams'].items():
-            client.add_team(team, perm)
+            remote.add_team(team, perm)
         # ----------------------------------------------------------------------
 
         # cleanup
-        os.chdir(info.config['project-root'])
-        shutil.rmtree(info.path) # problem if currently in info.path
+        os.chdir(config['project-root'])
+        shutil.rmtree(self.project_path) # problem if currently in self.project_path
 
         return True
 
@@ -295,17 +269,26 @@ class Project(object):
         .. todo::
             - catch repo already exists errors and repo doesn't exist errors
         '''
-        info = self._get_info(config)
 
-        client = Client(info.client_conf)
-        if client.has_branch(info.branch, timeout=info.timeout):
-            local = Git(info.path, url=client['url'], branch=info.branch, environment=info.env)
+        remote = GitRemote(self.remote_config)
+        if remote.has_branch(config['user-branch'], timeout=comfig['timeout']):
+            local = Git(
+                self.project_path,
+                url=remote['url'],
+                branch=config['user-branch'],
+                environment=config['environment']
+            )
         else:
-            local = Git(info.path, url=client['url'], branch='dev', environment=info.env)
+            local = Git(
+                self.project_path,
+                url=remote['url'],
+                branch='dev',
+                environment=config['environment']
+            )
 
             # this done in lieu of doing it through github beforehand
-            local.branch(info.branch)
-            local.push(info.branch)
+            local.branch(config['user-branch'])
+            local.push(config['user-branch'])
 
         return True
 
@@ -325,52 +308,58 @@ class Project(object):
         Returns:
             bool: success status
         '''
-        info = self._get_info(config)
-        self._update_local(info)
-        lfs = GitLFS(info.path, environment=info.env)
+        self._update_local(config)
+        lfs = GitLFS(self.project_path, environment=config['environment'])
         lfs.pull(
-            info.config['request-include-patterns'],
-            info.config['request-exclude-patterns']
+            config['request-include-patterns'],
+            config['request-exclude-patterns']
         )
 
         return True
     # --------------------------------------------------------------------------
 
-    def _update_local(self, info):
+    def _update_local(self, config):
         '''
         Convenience method for merging remote dev branch into local user branch
 
         Ensures non-fastforward merge conflicts don't occur
 
         Args:
-            info (tuple): info object returned by _get_info
+            config (dict): ProjectManager config
 
         Returns:
             None
         '''
         # pulling metadata first avoids merge conflicts by keeping the
         # user-branch HEAD ahead of the dev branch
-        local = Git(info.path, branch=info.branch, environment=info.env)
+        local = Git(
+            self.project_path,
+            branch=config['user-branch'],
+            environment=config['environment']
+        )
         local.branch('dev')
         local.pull('dev')
-        local.branch(info.branch)
-        local.merge('dev', info.branch)
+        local.branch(config['user-branch'])
+        local.merge('dev', config['user-branch'])
 
-    def _publish_nondeliverables(self, info):
+    def _publish_nondeliverables(self, config):
         '''
         Convenience method for publishing nondeliverable assets
 
         Assets published to user branch
 
         Args:
-            info (tuple): info object returned by _get_info
+            config (dict): ProjectManager config
 
         Returns:
             None
         '''
         # get nondeliverable assets
-        info.config['status-asset-types'] = ['nondeliverable']
-        nondeliverables = self.status(name=info.name, **info.config)
+        config['status-asset-types'] = ['nondeliverable']
+        nondeliverables = self.status(
+            name=self.project_config['project-name'],
+            **config
+        )
         nondeliverables = list(nondeliverables)
         for non in nondeliverables:
             non.get_traits()
@@ -378,8 +367,12 @@ class Project(object):
 
         # publish nondeliverables
         if len(nondeliverables) > 0:
-            lfs = GitLFS(info.path, environment=info.env)
-            local = Git(info.path, branch=info.branch, environment=info.env)
+            lfs = GitLFS(self.project_path, environment=config['environment'])
+            local = Git(
+                self.project_path,
+                branch=config['user-branch'],
+                environment=config['environment']
+            )
 
             # push non-deliverables to user-branch
             local.add([x.metapath for x in nondeliverables])
@@ -390,25 +383,23 @@ class Project(object):
             message = 'NON-DELIVERABLES:\n\t' + message
             local.commit(message)
 
-            local.push(info.branch)
+            local.push(config['user-branch'])
 
-    def _get_deliverables(self, info):
+    def _get_deliverables(self, config):
         '''
         Convenience method for retrieving valid and invalid deliverable assets
 
         Args:
-            info (tuple): info object returned by _get_info
+            config (dict): ProjectManager config
 
         Returns:
             tuple: valid deliverables, invalid deliverables
         '''
-        config = info.config
-
         # get only added deliverable assets
         if 'project' in config.keys():
             del config['project']
         deliverables = self.status(
-            name=info.name,
+            name=self.project_config['project-name'],
             status_states=['added'],
             status_asset_types=['deliverable'],
             **config
@@ -422,7 +413,7 @@ class Project(object):
             try:
                 deliv.validate()
             except ValidationError as e:
-                if info.verbosity > 0:
+                if config['verbosity'] > 0:
                     warn(e)
                 invalid.append(deliv)
                 continue
@@ -455,15 +446,18 @@ class Project(object):
         .. todo::
             - add branch checking logic to skip the following if not needed?
         '''
-        info = self._get_info(config)
-        self._publish_nondeliverables(info)
-        self._update_local(info)
-        valid, invalid = self._get_deliverables(info)
+        self._publish_nondeliverables(config)
+        self._update_local(config)
+        valid, invalid = self._get_deliverables(config)
         # ----------------------------------------------------------------------
 
-        client = Client(info.client_conf)
-        local = Git(info.path, branch=info.branch, environment=info.env)
-        lfs = GitLFS(info.path, environment=info.env)
+        remote = GitRemote(self.remote_config)
+        local = Git(
+            self.project_path,
+            branch=config['user-branch'],
+            environment=config['environment']
+        )
+        lfs = GitLFS(self.project_path, environment=config['environment'])
 
         if len(invalid) > 0:
             # commit only invalid metadata to github user branch
@@ -474,7 +468,7 @@ class Project(object):
             message = 'INVALID DELIVERABLES:\n\t' + message
             local.commit(message)
 
-            local.push(info.branch)
+            local.push(config['user-branch'])
             return False
 
         else:
@@ -487,25 +481,30 @@ class Project(object):
             message = 'VALID DELIVERABLES:\n\t' + message
             local.commit(message)
 
-            local.push(info.branch)
+            local.push(config['user-branch'])
 
             title = '{user} attempts to publish valid deliverables to dev'
-            title = title.format(user=info.branch)
+            title = title.format(user=config['user-branch'])
             body = []
             body.append('publisher: **{user}**')
             body.append('deliverables:')
             body.extend(['\t' + x for x in names])
             body = '\n'.join(body)
-            body = body.format(user=info.branch)
+            body = body.format(user=config['user-branch'])
 
             sha = local.sha
-            remote_sha = client.get_head_sha(info.branch)
+            remote_sha = remote.get_head_sha(config['user-branch'])
             while sha != remote_sha:
-                remote_sha = client.get_head_sha(info.branch)
+                remote_sha = remote.get_head_sha(config['user-branch'])
 
             # this produces a race condition with the local.push process
-            num = client.create_pull_request(title, 'dev', info.branch, body=body)
-            client.merge_pull_request(num, 'Publish authorized')
+            num = remote.create_pull_request(
+                title,
+                'dev',
+                config['user-branch'],
+                body=body
+            )
+            remote.merge_pull_request(num, 'Publish authorized')
 
             return True
     # --------------------------------------------------------------------------
@@ -528,17 +527,16 @@ class Project(object):
         .. todo::
             - add git lfs logic for deletion
         '''
-        info = self._get_info(config)
 
         if from_server:
-            Client(info.client_conf).delete()
+            GitRemote(self.remote_config).delete()
             # git lfs deletion logic
         if from_local:
-            if os.path.split(info.path)[-1] == info.name:
-                if os.path.exists(info.path):
-                    shutil.rmtree(info.path)
+            # if os.path.split(self.project_path)[-1] == self.project_config['project-name']:
+            if os.path.exists(self.project_path):
+                shutil.rmtree(self.project_path)
             else:
-                warn(info.path + ' is not a project directory.  Local deletion aborted.')
+                warn(self.project_path + ' is not a project directory.  Local deletion aborted.')
                 return False
         return True
 # ------------------------------------------------------------------------------

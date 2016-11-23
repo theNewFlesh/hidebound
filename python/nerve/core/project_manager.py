@@ -19,7 +19,7 @@ from schematics.exceptions import ValidationError
 from nerve.core.utils import conform_keys, deep_update
 from nerve.core.metadata import Metadata
 from nerve.core.errors import KeywordError
-from nerve.core.logger import Logger
+# from nerve.core.logger import Logger
 # ------------------------------------------------------------------------------
 
 class ProjectManager(object):
@@ -71,8 +71,9 @@ class ProjectManager(object):
         return msg
 
     def _log(self, result):
-        log = getattr(self._logger, result['level'])
-        return log(result['message'])
+        # log = getattr(self._logger, result['level'])
+        # return log(result['message'])
+        return result
 
     def __get_config(self, config):
         r'''
