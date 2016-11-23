@@ -14,29 +14,11 @@ the value of that trait (especially if required).
 import re
 import nerve
 from nerve.core.utils import conform_keys
-from nerve.spec.traits import *
 from nerve.spec.validators import *
 from schematics.models import Model, BaseType
 from schematics.types import StringType, IntType, BooleanType, URLType
 from schematics.types.compound import ListType, DictType, ModelType
 from schematics.exceptions import ValidationError
-# ------------------------------------------------------------------------------
-
-class MetaName(Model):
-    '''
-    Used for validating a metadata file's name
-
-    A convenience class used by is_metapath in the validators module
-    '''
-    project_name  = StringType(required=True, validators=[is_project_name])
-    specification = StringType(required=True, validators=[is_specification])
-    descriptor    = StringType(required=True, validators=[])
-    version       = IntType(required=True, validators=[is_version])
-    render_pass   = StringType(validators=[is_render_pass])
-    coordinate    = DictType(BaseType, validators=[is_coordinate])
-    frame         = ListType(BaseType, validators=[is_frame])
-    meta          = BooleanType(required=True, validators=[is_meta])
-    extension     = StringType(required=True, default='yml', validators=[is_metadata_extension])
 # ------------------------------------------------------------------------------
 
 class Specification(Model):
@@ -62,9 +44,26 @@ class Specification(Model):
 
     specification = StringType(required=True, validators=[is_specification])
 
-class Client(Specification):
+class MetaName(Specification):
     '''
-    Base class for nerve.core.client.Client's metadata
+    Used for validating a metadata file's name
+
+    A convenience class used by is_metapath in the validators module
+    '''
+    project_name  = StringType(required=True, validators=[is_project_name])
+    specification = StringType(required=True, validators=[is_specification])
+    descriptor    = StringType(required=True, validators=[])
+    version       = IntType(required=True, validators=[is_version])
+    render_pass   = StringType(validators=[is_render_pass])
+    coordinate    = DictType(BaseType, validators=[is_coordinate])
+    frame         = ListType(BaseType, validators=[is_frame])
+    meta          = BooleanType(required=True, validators=[is_meta])
+    extension     = StringType(required=True, default='yml', validators=[is_metadata_extension])
+# ------------------------------------------------------------------------------
+
+class Remote(Specification):
+    '''
+    Base class for nerve.core.Remote.Remote's metadata
 
     Attributes:
         specification (str): same as class name
@@ -280,9 +279,9 @@ def main():
 # ------------------------------------------------------------------------------
 
 __all__ = [
-    'MetaName'
+    'MetaName',
     'Config',
-    'Client',
+    'Remote',
     'ProjectTemplate',
     'Project',
     'Deliverable',

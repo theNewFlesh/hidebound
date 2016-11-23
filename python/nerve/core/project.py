@@ -20,6 +20,9 @@ import shutil
 from warnings import warn
 from schematics.exceptions import ValidationError
 from nerve.core.metadata import Metadata
+from nerve.core.git import Git
+from nerve.core.git_lfs import GitLFS
+from nerve.core.git_remote import GitRemote
 # ------------------------------------------------------------------------------
 
 class Project(object):
@@ -39,20 +42,20 @@ class Project(object):
     Returns:
         Nerve
     '''
-    def __init__(self, config, remote, project_root):
-        config = Metadata(config, spec='conf001', skip_keys=['environment'])
-        config.validate()
-        self._project_config = config.data
-        self._project_path = os.path.join(project_root, config['project-name'])
-        self._remote_config = remote
+    def __init__(self, fullpath, remote_config, project_root):
+        project_config = Metadata(fullpath, skip_keys=['environment'])
+        project_config.validate()
+        self._project_config = project_config.data
+        self._project_path = os.path.join(project_root, project_config['project-name'])
+        self._remote_config = remote_config
     # --------------------------------------------------------------------------
 
     def __repr__(self):
-        msg += 'PROJECT PATH:\n'
+        msg = 'PROJECT PATH:\n'
         msg += self.project_path
-        msg = '\nPROJECT CONFIG:\n'
+        msg += '\n\nPROJECT CONFIG:\n'
         msg += pformat(self.config)
-        msg += '\nREMOTE CONFIG:\n'
+        msg += '\n\nREMOTE CONFIG:\n'
         msg += pformat(self.remote_config)
         return msg
 
@@ -155,142 +158,6 @@ class Project(object):
             if output.data['asset-type'] in config['status-asset-types']:
                 output.get_traits()
                 yield output
-
-    def create(self, notes=None, config={}, **project):
-        r'''
-        Creates a nerve project on Github and in the project-root folder
-
-        Created items include:
-            Github repository
-            dev branch
-            nerve project structure
-            .lfsconfig
-            .gitattributes
-            .gitignore
-            .git-credentials
-
-        Args:
-            name (str): name of project. Default: None
-            notes (str, optional): notes to appended to project metadata. Default: None
-            config (dict, optional): config parameters, overwrites fields in a copy of self.config
-            \**project: optional project parameters, overwrites fields in a copy of self.project_template
-
-        Returns:
-            bool: success status
-
-        .. todo::
-            - fix whetever causes the notebook kernel to die
-            - send data to DynamoDB
-        '''
-        # create repo
-
-        remote = GitRemote(self.remote_config)
-        local = Git(self.project_path, url=remote['url'], environment=config['environment'])
-        # ----------------------------------------------------------------------
-
-        # configure repo
-        lfs = GitLFS(self.project_path, environment=config['environment'])
-        lfs.install(skip_smudge=True)
-        lfs.create_config(config['lfs-server-url'])
-        lfs.track(['*.' + x for x in project['lfs-extensions']])
-
-        local.create_gitignore(project['gitignore'])
-        local.create_git_credentials(config['git-credentials'])
-        # ----------------------------------------------------------------------
-
-        # ensure first commit is on master branch
-        local.add(all=True)
-        local.commit('initial commit')
-        local.push('master')
-        # ----------------------------------------------------------------------
-
-        # create project structure
-        local.branch('dev')
-        for subdir in chain(project['deliverables'], project['nondeliverables']):
-            _path = os.path.join(self.project_path, subdir)
-            os.mkdir(_path)
-            # git won't commit empty directories
-            open(os.path.join(_path, '.keep'), 'w').close()
-        # ----------------------------------------------------------------------
-
-        # create project metadata
-        project['project-id'] = remote['id']
-        project['project-url'] = remote['url']
-        project['version'] = 1
-        meta = '_'.join([
-            project['project-name'],
-            project['specification'],
-            'meta.yml'
-        ]) # implicit versioning
-        meta = Metadata(project, metapath=meta, skip_keys=['environment'])
-        meta.validate()
-        meta.write(validate=False)
-        # ----------------------------------------------------------------------
-
-        # commit everything
-        local.add(all=True)
-        local.commit(
-            'VALID PROJECT:\n\t{} created according to {} specification'.format(
-                self.project_config['project-name'],
-                project['specification']
-            )
-        )
-        local.push('dev')
-        remote.has_branch('dev', timeout=comfig['timeout'])
-        remote.set_default_branch('dev')
-
-        # add teams
-        for team, perm in project['teams'].items():
-            remote.add_team(team, perm)
-        # ----------------------------------------------------------------------
-
-        # cleanup
-        os.chdir(config['project-root'])
-        shutil.rmtree(self.project_path) # problem if currently in self.project_path
-
-        return True
-
-    def clone(self, **config):
-        r'''
-        Clones a nerve project to local project-root directory
-
-        Ensures given branch is present in the repository
-
-        Args:
-            name (str): name of project. Default: None
-            \**config: optional config parameters, overwrites fields in a copy of self.config
-            verbosity (int, \**config): level of verbosity for output. Default: 0
-                Options: 0, 1, 2
-            user_branch (str, \**config): branch to clone from. Default: user's branch
-
-        Returns:
-            bool: success status
-
-        .. todo::
-            - catch repo already exists errors and repo doesn't exist errors
-        '''
-
-        remote = GitRemote(self.remote_config)
-        if remote.has_branch(config['user-branch'], timeout=comfig['timeout']):
-            local = Git(
-                self.project_path,
-                url=remote['url'],
-                branch=config['user-branch'],
-                environment=config['environment']
-            )
-        else:
-            local = Git(
-                self.project_path,
-                url=remote['url'],
-                branch='dev',
-                environment=config['environment']
-            )
-
-            # this done in lieu of doing it through github beforehand
-            local.branch(config['user-branch'])
-            local.push(config['user-branch'])
-
-        return True
 
     def request(self, **config):
         r'''

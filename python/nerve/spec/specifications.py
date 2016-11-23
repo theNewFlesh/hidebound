@@ -9,7 +9,7 @@ the value of that trait (especially if required).
 '''
 # ------------------------------------------------------------------------------
 
-from nerve.spec.base import Config, ProjectTemplate, Project, Deliverable, NonDeliverable, Client
+from nerve.spec.base import Config, ProjectTemplate, Project, Deliverable, NonDeliverable, Remote
 # ------------------------------------------------------------------------------
 
 class Temp001(ProjectTemplate):

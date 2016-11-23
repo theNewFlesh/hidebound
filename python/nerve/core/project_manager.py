@@ -12,13 +12,21 @@ Author:
 # ------------------------------------------------------------------------------
 
 from collections import defaultdict, namedtuple
+from itertools import chain
 import os
 from pprint import pformat
+import re
+import shutil
+from warnings import warn
 import yaml
 from schematics.exceptions import ValidationError
-from nerve.core.utils import conform_keys, deep_update
+from nerve.core.utils import conform_keys, deep_update, Name
 from nerve.core.metadata import Metadata
 from nerve.core.errors import KeywordError
+from nerve.core.project import Project
+from nerve.core.git import Git
+from nerve.core.git_lfs import GitLFS
+from nerve.core.git_remote import GitRemote
 # from nerve.core.logger import Logger
 # ------------------------------------------------------------------------------
 
@@ -45,28 +53,30 @@ class ProjectManager(object):
         config = config.data
         self._config = config
 
-        self._logger = Logger(level=config['log-level'])
+        # self._logger = Logger(level=config['log-level'])
 
         template = None
         if 'project-template' in config.keys():
 
-            template = config['project-template']
-            if os.path.exists(template):
-                spec = None
-                with open(template, 'r') as f:
-                    spec = yaml.load(f)['specification']
+            temppath = config['project-template']
+            if os.path.exists(temppath):
+                with open(temppath, 'r') as f:
+                    template = yaml.load(f)
 
-                template = Metadata(template, config['project-root'], spec=spec)
+                proj_spec = template['specification']
+                spec = Name(temppath).specification
+
+                template = Metadata(template, spec=spec)
                 template.validate()
                 template = template.data
-                template['specification'] = spec
+                template['specification'] = proj_spec
         self._project_template = template
     # --------------------------------------------------------------------------
 
     def __repr__(self):
         msg = 'CONFIG:\n'
         msg += pformat(self.config)
-        msg += '\nPROJECT TEMPLATE:\n'
+        msg += '\n\nPROJECT TEMPLATE:\n'
         msg += pformat(self.project_template)
         return msg
 
@@ -74,6 +84,21 @@ class ProjectManager(object):
         # log = getattr(self._logger, result['level'])
         # return log(result['message'])
         return result
+
+    def __get_project_metadata(self, fullpath, level='warn'):
+        if os.path.exists(fullpath):
+            meta = os.listdir(fullpath)
+            meta = list(filter(lambda x: re.search('proj\d\d\d_meta', x), meta))
+            if len(meta) == 1:
+                meta = meta[0]
+                return meta
+
+        msg = fullpath + ' project metadata does not exist'
+        if level == 'error':
+            raise OSError(msg)
+        elif level == 'warn':
+            warn(msg)
+        return None
 
     def __get_config(self, config):
         r'''
@@ -99,7 +124,7 @@ class ProjectManager(object):
             output = output.data
         return output
 
-    def __get_project(self, name, notes, config, project):
+    def __get_project_config(self, name, notes, config, project):
         r'''
         Convenience method for creating a new temporary project dict by
         overwriting a copy of the internal project template, if it exists,
@@ -123,7 +148,7 @@ class ProjectManager(object):
 
         return project
 
-    def _get_info(self, name, notes='', config={}, project={}):
+    def _get_info(self, name, notes='', config={}, project={}, level='warn'):
         r'''
         Convenience method for creating new temporary config
 
@@ -142,27 +167,36 @@ class ProjectManager(object):
 
         config = self.__get_config(config)
 
-        project = self.__get_project(name, notes, config, project)
+        project = self.__get_project_config(name, notes, config, project)
         if 'private' in project.keys():
             private = project['private']
         else:
             project['private'] = config['private']
 
-        remote = dict(
-            username=config['username'],
-            token=config['token'],
-            organization=config['organization'],
-            project_name=name,
-            private=project['private'],
-            url_type=config['url-type'],
-            specification='remote'
-        )
+        path = os.path.join(config['project-root'], project['project-name'])
+        meta = self.__get_project_metadata(path, level=level)
+
+        remote = {
+            'username':      config['username'],
+            'token':         config['token'],
+            'organization':  config['organization'],
+            'project-name':  name,
+            'private':       project['private'],
+            'url-type':      config['url-type'],
+            'specification': 'remote'
+        }
         # ----------------------------------------------------------------------
 
         # create info object
-        Info = namedtuple('Info', ['config', 'project', 'remote', 'root'])
-        info = Info(config, project, remote, config['project-root'])
+        Info = namedtuple('Info', ['config', 'project', 'remote', 'root', 'path', 'meta'])
+        info = Info(config, project, remote, config['project-root'], path, meta)
         return info
+
+    def _get_project(self, name):
+        info = self._get_info(name)
+        if info.meta:
+            return Project(info.meta, info.remote, info.root)
+        return None
 
     @property
     def config(self):
@@ -178,30 +212,6 @@ class ProjectManager(object):
         '''
         return self._project_template
     # --------------------------------------------------------------------------
-
-    def status(self, name, **config):
-        r'''
-        Reports on the status of all affected files within a given project
-
-        Args:
-            name (str): name of project. Default: None
-            \**config: optional config parameters, overwrites fields in a copy of self.config
-            status_include_patterns (list, \**config): list of regular expressions user to include specific assets
-            status_exclude_patterns (list, \**config): list of regular expressions user to exclude specific assets
-            status_states (list, \**config): list of object states files are allowed to be in.
-                Options: added, copied, deleted, modified, renamed, updated and untracked
-            log-level (int, \**config): level of log-level for output. Default: 0
-                Options: 0, 1, 2
-
-        Yields:
-            Metadata: Metadata object of each asset
-        '''
-        info = self._get_info(name, notes, config)
-        project = Project(info.project, info.remote, info.root)
-        result = project.status(**info.config)
-
-        self._log(result)
-        return result
 
     def create(self, name, notes=None, config={}, **project):
         r'''
@@ -230,10 +240,80 @@ class ProjectManager(object):
             - send data to DynamoDB
         '''
         info = self._get_info(name, notes, config, project)
-        project = Project(info.project, info.remote, info.root)
-        project.create(**info.config)
+        config = info.config
+        project = info.project
+        path = info.path
 
-        return self._log(result)
+        # project = Project(info.meta, info.remote, info.root)
+        # project.create(info.config, **info.project)
+        # return self._log(result)
+
+        # create repo
+        remote = GitRemote(info.remote)
+        local = Git(path, url=remote['url'], environment=config['environment'])
+        # ----------------------------------------------------------------------
+
+        # configure repo
+        lfs = GitLFS(path, environment=config['environment'])
+        lfs.install(skip_smudge=True)
+        lfs.create_config(config['lfs-server-url'])
+        lfs.track(['*.' + x for x in project['lfs-extensions']])
+
+        local.create_gitignore(project['gitignore'])
+        local.create_git_credentials(config['git-credentials'])
+        # ----------------------------------------------------------------------
+
+        # ensure first commit is on master branch
+        local.add(all=True)
+        local.commit('initial commit')
+        local.push('master')
+        # ----------------------------------------------------------------------
+
+        # create project structure
+        local.branch('dev')
+        for subdir in chain(project['deliverables'], project['nondeliverables']):
+            _path = os.path.join(path, subdir)
+            os.mkdir(_path)
+            # git won't commit empty directories
+            open(os.path.join(_path, '.keep'), 'w').close()
+        # ----------------------------------------------------------------------
+
+        # create project metadata
+        project['project-id'] = remote['id']
+        project['project-url'] = remote['url']
+        project['version'] = 1
+        meta = '_'.join([
+            project['project-name'],
+            project['specification'],
+            'meta.yml'
+        ]) # implicit versioning
+        meta = Metadata(project, metapath=meta, skip_keys=['environment'])
+        meta.validate()
+        meta.write(validate=False)
+        # ----------------------------------------------------------------------
+
+        # commit everything
+        local.add(all=True)
+        local.commit(
+            'VALID PROJECT:\n\t{} created according to {} specification'.format(
+                project['project-name'],
+                project['specification']
+            )
+        )
+        local.push('dev')
+        remote.has_branch('dev', timeout=config['timeout'])
+        remote.set_default_branch('dev')
+
+        # add teams
+        for team, perm in project['teams'].items():
+            remote.add_team(team, perm)
+        # ----------------------------------------------------------------------
+
+        # cleanup
+        os.chdir(config['project-root'])
+        shutil.rmtree(path) # problem if currently in path
+
+        return True
 
     def clone(self, name, **config):
         r'''
@@ -244,7 +324,7 @@ class ProjectManager(object):
         Args:
             name (str): name of project. Default: None
             \**config: optional config parameters, overwrites fields in a copy of self.config
-            log-level (int, \**config): level of log-level for output. Default: 0
+            verbosity (int, \**config): level of verbosity for output. Default: 0
                 Options: 0, 1, 2
             user_branch (str, \**config): branch to clone from. Default: user's branch
 
@@ -254,11 +334,58 @@ class ProjectManager(object):
         .. todo::
             - catch repo already exists errors and repo doesn't exist errors
         '''
-        info = self._get_info(name, config=config)
-        project = Project(info.project, info.remote, info.root)
-        project.clone(**info.config)
+        info = self._get_info(name, config=config, level=None)
+        config = info.config
 
-        return self._log(result)
+        remote = GitRemote(info.remote)
+        if remote.has_branch(config['user-branch'], timeout=config['timeout']):
+            local = Git(
+                info.path,
+                url=remote['url'],
+                branch=config['user-branch'],
+                environment=config['environment']
+            )
+        else:
+            local = Git(
+                info.path,
+                url=remote['url'],
+                branch='dev',
+                environment=config['environment']
+            )
+
+            # this done in lieu of doing it through github beforehand
+            local.branch(config['user-branch'])
+            local.push(config['user-branch'])
+
+        info = self._get_info(name, config=config)
+        project = Project(info.meta, info.remote, info.root)
+
+        return True
+
+    def status(self, name, **config):
+        r'''
+        Reports on the status of all affected files within a given project
+
+        Args:
+            name (str): name of project. Default: None
+            \**config: optional config parameters, overwrites fields in a copy of self.config
+            status_include_patterns (list, \**config): list of regular expressions user to include specific assets
+            status_exclude_patterns (list, \**config): list of regular expressions user to exclude specific assets
+            status_states (list, \**config): list of object states files are allowed to be in.
+                Options: added, copied, deleted, modified, renamed, updated and untracked
+            log-level (int, \**config): level of log-level for output. Default: 0
+                Options: 0, 1, 2
+
+        Yields:
+            Metadata: Metadata object of each asset
+        '''
+        info = self._get_info(name, config=config)
+
+        project = Project(info.meta, info.remote, info.root)
+        result = project.status(**info.config)
+
+        self._log(result)
+        return result
 
     def request(self, name, **config):
         r'''
@@ -277,7 +404,7 @@ class ProjectManager(object):
             bool: success status
         '''
         info = self._get_info(name, config=config)
-        project = Project(info.project, info.remote, info.root)
+        project = Project(info.meta, info.remote, info.root)
         result = project.request(**info.config)
 
         return self._log(result)
@@ -308,7 +435,7 @@ class ProjectManager(object):
             - add branch checking logic to skip the following if not needed?
         '''
         info = self._get_info(name, notes, config)
-        project = Project(info.project, info.remote, info.root)
+        project = Project(info.meta, info.remote, info.root)
         result = project.request(**info.config)
 
         return self._log(result)
@@ -333,7 +460,7 @@ class ProjectManager(object):
             - add git lfs logic for deletion
         '''
         info = self._get_info(name, config=config)
-        project = Project(info.project, info.remote, info.root)
+        project = Project(info.meta, info.remote, info.root)
         result = project.delete(from_server, from_local)
 
         return self._log(result)

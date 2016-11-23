@@ -3,7 +3,7 @@ import os
 import re
 from subprocess import Popen, PIPE
 import time
-from nerve.core.model import Nerve
+# from nerve.core.model import Nerve
 from nerve.core.git_lfs import GitLFS
 from nerve.core.git import Git
 from nerve.core.utils import execute_subprocess
