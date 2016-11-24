@@ -6,8 +6,9 @@ The metadata module contain the Metadata class which is used by nerve to handle 
 
 import os
 from pprint import pformat
+import re
 import yaml
-from nerve.core.utils import conform_keys, deep_update
+from nerve.core.utils import conform_keys, deep_update, Name
 from nerve.spec.base import MetaName
 from nerve.spec import specifications, traits
 from nerve.core.errors import SpecificationError
@@ -42,7 +43,8 @@ class Metadata(object):
         data = {}
 
         if isinstance(item, dict):
-            spec = item['specification']
+            if spec == None:
+                spec = item['specification']
             data = item
 
         elif isinstance(item, str):
@@ -167,7 +169,13 @@ class Metadata(object):
             fullpath = self._metapath
 
         if validate:
-            meta = traits.fetch_name_traits(fullpath)
+            old_meta = Name(fullpath).to_dict()
+
+            # cull old_meta keys by MetaName class attributes
+            cattrs = MetaName.keys(MetaName)
+            cattrs = map(lambda x: re.sub('_', '-', x), cattrs)
+            meta = {k: old_meta[k] for k in cattrs}
+
             MetaName(meta).validate()
 
         # overwrite existing metadata
