@@ -451,7 +451,7 @@ class ProjectManager(object):
             from_server (bool): delete Github project
             from_local (bool): delete local project directory
             \**config: optional config parameters, overwrites fields in a copy of self.config
-            log-level (int, \**config): level of log-level for output. Default: 0
+            verbosity (int, \**config): level of verbosity for output. Default: 0
                 Options: 0, 1, 2
 
         Returns:
@@ -461,10 +461,18 @@ class ProjectManager(object):
             - add git lfs logic for deletion
         '''
         info = self._get_info(name, config=config)
-        project = Project(info.meta, info.remote, info.root)
-        result = project.delete(from_server, from_local)
 
-        return self._log(result)
+        if from_server:
+            GitRemote(info.remote).delete()
+            # git lfs deletion logic
+        if from_local:
+            # if os.path.split(self.project_path)[-1] == self.config['project-name']:
+            if os.path.exists(info.path):
+                shutil.rmtree(info.path)
+            else:
+                warn(info.path + ' is not a project directory.  Local deletion aborted.')
+                return False
+        return True
 # ------------------------------------------------------------------------------
 
 def main():

@@ -367,38 +367,6 @@ class Project(object):
             remote.merge_pull_request(num, 'Publish authorized')
 
             return True
-    # --------------------------------------------------------------------------
-
-    def delete(self, from_server, from_local):
-        r'''
-        Deletes a nerve project
-
-        Args:
-            name (str): name of project. Default: None
-            from_server (bool): delete Github project
-            from_local (bool): delete local project directory
-            \**config: optional config parameters, overwrites fields in a copy of self.config
-            verbosity (int, \**config): level of verbosity for output. Default: 0
-                Options: 0, 1, 2
-
-        Returns:
-            bool: success status
-
-        .. todo::
-            - add git lfs logic for deletion
-        '''
-
-        if from_server:
-            GitRemote(self.remote_config).delete()
-            # git lfs deletion logic
-        if from_local:
-            # if os.path.split(self.project_path)[-1] == self.config['project-name']:
-            if os.path.exists(self.project_path):
-                shutil.rmtree(self.project_path)
-            else:
-                warn(self.project_path + ' is not a project directory.  Local deletion aborted.')
-                return False
-        return True
 # ------------------------------------------------------------------------------
 
 def main():
