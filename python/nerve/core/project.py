@@ -12,6 +12,7 @@ Author:
 # ------------------------------------------------------------------------------
 
 from collections import defaultdict, namedtuple
+from copy import deepcopy
 from itertools import chain
 import os
 from pprint import pformat
@@ -64,21 +65,21 @@ class Project(object):
         '''
         dict: copy of this object's configuration
         '''
-        return self._project_config
+        return deepcopy(self._project_config)
 
     @property
     def remote_config(self):
         '''
         dict: copy of this object's project template
         '''
-        return self._remote_config
+        return deepcopy(self._remote_config)
 
     @property
     def project_path(self):
         '''
         dict: copy of this object's project path
         '''
-        return self._project_path
+        return deepcopy(self._project_path)
     # --------------------------------------------------------------------------
 
     @property
@@ -96,7 +97,7 @@ class Project(object):
         return self._project_template
     # --------------------------------------------------------------------------
 
-    def status(self, **config):
+    def status(self, config):
         r'''
         Reports on the status of all affected files within a given project
 
@@ -146,9 +147,10 @@ class Project(object):
         local.reset()
         # ----------------------------------------------------------------------
 
-        for asset, v in sorted(agg.items()):
+        for asset, asset_data in sorted(agg.items()):
             if config['status-states']:
-                rogue_states = set(v['state']).difference(config['status-states'])
+                rogue_states = set(asset_data['state'])
+                rogue_states = rogue_states.difference(config['status-states'])
                 if len(rogue_states) > 0:
                     if config['verbosity'] > 0:
                         warn(asset + ' contains files of state: ' + ','.join(rogue_states))
@@ -159,7 +161,7 @@ class Project(object):
                 output.get_traits()
                 yield output
 
-    def request(self, **config):
+    def request(self, config):
         r'''
         Request deliverables from the dev branch of given project
 
@@ -223,11 +225,7 @@ class Project(object):
         '''
         # get nondeliverable assets
         config['status-asset-types'] = ['nondeliverable']
-        nondeliverables = self.status(
-            name=self.project_config['project-name'],
-            **config
-        )
-        nondeliverables = list(nondeliverables)
+        nondeliverables = list(self.status(config))
         for non in nondeliverables:
             non.get_traits()
             non.write(validate=False)
@@ -263,14 +261,9 @@ class Project(object):
             tuple: valid deliverables, invalid deliverables
         '''
         # get only added deliverable assets
-        if 'project' in config.keys():
-            del config['project']
-        deliverables = self.status(
-            name=self.project_config['project-name'],
-            status_states=['added'],
-            status_asset_types=['deliverable'],
-            **config
-        )
+        config['status-states'] = ['added']
+        config['status-asset-types'] = ['deliverable']
+        deliverables = self.status(config)
 
         invalid = []
         valid = []
@@ -288,7 +281,7 @@ class Project(object):
 
         return valid, invalid
 
-    def publish(self, notes=None, **config):
+    def publish(self, config, notes=None):
         r'''
         Attempt to publish deliverables from user's branch to given project's dev branch on Github
 
@@ -376,7 +369,7 @@ class Project(object):
             return True
     # --------------------------------------------------------------------------
 
-    def delete(self, from_server, from_local, **config):
+    def delete(self, from_server, from_local):
         r'''
         Deletes a nerve project
 
@@ -399,7 +392,7 @@ class Project(object):
             GitRemote(self.remote_config).delete()
             # git lfs deletion logic
         if from_local:
-            # if os.path.split(self.project_path)[-1] == self.project_config['project-name']:
+            # if os.path.split(self.project_path)[-1] == self.config['project-name']:
             if os.path.exists(self.project_path):
                 shutil.rmtree(self.project_path)
             else:

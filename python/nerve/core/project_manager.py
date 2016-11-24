@@ -12,6 +12,7 @@ Author:
 # ------------------------------------------------------------------------------
 
 from collections import defaultdict, namedtuple
+from copy import deepcopy
 from itertools import chain
 import os
 from pprint import pformat
@@ -203,14 +204,14 @@ class ProjectManager(object):
         '''
         dict: copy of this object's configuration
         '''
-        return self._config
+        return deepcopy(self._config)
 
     @property
     def project_template(self):
         '''
         dict: copy of this object's project template
         '''
-        return self._project_template
+        return deepcopy(self._project_template)
     # --------------------------------------------------------------------------
 
     def create(self, name, notes=None, config={}, **project):
@@ -382,7 +383,7 @@ class ProjectManager(object):
         info = self._get_info(name, config=config)
 
         project = Project(info.meta, info.remote, info.root)
-        result = project.status(**info.config)
+        result = project.status(info.config)
 
         self._log(result)
         return result
@@ -405,7 +406,7 @@ class ProjectManager(object):
         '''
         info = self._get_info(name, config=config)
         project = Project(info.meta, info.remote, info.root)
-        result = project.request(**info.config)
+        result = project.request(info.config)
 
         return self._log(result)
 
@@ -436,7 +437,7 @@ class ProjectManager(object):
         '''
         info = self._get_info(name, notes, config)
         project = Project(info.meta, info.remote, info.root)
-        result = project.request(**info.config)
+        result = project.publish(info.config, notes=notes)
 
         return self._log(result)
     # --------------------------------------------------------------------------

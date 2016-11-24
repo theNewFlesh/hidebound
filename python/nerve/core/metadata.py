@@ -171,6 +171,7 @@ class Metadata(object):
         if validate:
             old_meta = Name(fullpath).to_dict()
 
+            # cull old_meta keys by MetaName class attributes
             cattrs = MetaName.keys(MetaName)
             cattrs = map(lambda x: re.sub('_', '-', x), cattrs)
             meta = {k: old_meta[k] for k in cattrs}
