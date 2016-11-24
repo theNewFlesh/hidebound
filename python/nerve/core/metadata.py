@@ -145,7 +145,7 @@ class Metadata(object):
 
     def validate(self):
         '''
-        Validates internal data accodring to specification
+        Validates internal data according to specification
 
         Args:
             None
