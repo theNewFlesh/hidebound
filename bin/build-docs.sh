@@ -1,1 +1,1 @@
-cd ../docs; sphinx-apidoc -f -o source ../; make html
+cd ../docs; make html; python restyle_css.py
