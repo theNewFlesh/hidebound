@@ -11,7 +11,7 @@ def restyle_css(css):
     font-size: 90% !important;
 }
 .docutils dt {
-    background: #FFFFFF !important;
+    background: #FDFDFD !important;
     border-left: 0px !important;
 }
 '''
