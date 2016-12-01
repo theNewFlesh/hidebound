@@ -226,7 +226,7 @@ class Config(Specification):
             Default: []. Options: added, copied, deleted, modified, renamed, updated, untracked
         status_asset_types (list, optional): list of allowed asset types for status call
             Default: []. Options: deliverable, nondeliverable
-        verbosity (int, optional): level of verbosity. Default: 0
+        log_level (str, optional): level of logging. Default: warn
         environment (dict): Environment variables
         lfs_server_url (str, optional): url of lfs server. Default: http://localhost:8080
         git_credentials (list): list of git credentials
@@ -247,7 +247,7 @@ class Config(Specification):
     status_exclude_patterns  = ListType(StringType, default=[], validators=[is_exclude_pattern])
     status_states            = ListType(StringType, default=[], validators=[is_status_state])
     status_asset_types       = ListType(StringType, default=[], validators=[is_status_asset_type])
-    verbosity                = IntType(default=0)
+    log_level                = StringType(default='warn')
     environment              = DictType(StringType, required=True, validators=[])
     lfs_server_url           = URLType(default='http://localhost:8080', required=True)
     git_credentials          = ListType(StringType, required=True)

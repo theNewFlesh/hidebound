@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 '''
-The model module contains the Nerve class, the central component of the entire
-nerve framework.
+The project_manager module contains the ProjectManager class.  This class is
+used for creating, deleting and modifying Nerve projects.
 
 Platforrm:
     Unix
@@ -31,6 +31,9 @@ from nerve.core.git_remote import GitRemote
 # from nerve.core.logger import Logger
 # ------------------------------------------------------------------------------
 
+PROJECT_MANAGER_SPEC = 'conf001'
+PROJECT_METADATA_RE = 'proj\d\d\d_meta'
+
 class ProjectManager(object):
     '''
     Class for handling nerve projects
@@ -40,7 +43,7 @@ class ProjectManager(object):
         project_template (dict): a dictionary representing Nerve's internal project template
 
     API:
-        create, clone, request, publish, delete, status and __getitem__
+        create, clone, request, publish, delete, status, config and project_template
 
     Args:
         config (str or dict): a fullpath to a nerverc config or a dict of one
@@ -49,12 +52,12 @@ class ProjectManager(object):
         Nerve
     '''
     def __init__(self, config):
-        config = Metadata(config, spec='conf001', skip_keys=['environment'])
+        config = Metadata(config, spec=PROJECT_MANAGER_SPEC, skip_keys=['environment'])
         config.validate()
         config = config.data
         self._config = config
 
-        # self._logger = Logger(level=config['log-level'])
+        # self._logger = Logger(log_level=config['log-level'])
 
         template = None
         if 'project-template' in config.keys():
@@ -82,33 +85,50 @@ class ProjectManager(object):
         return msg
 
     def _log(self, result):
-        # log = getattr(self._logger, result['level'])
+        '''
+        Logging method
+        '''
+        # log = getattr(self._logger, result['log-level'])
         # return log(result['message'])
         return result
 
-    def __get_project_metadata(self, fullpath, level='warn'):
-        if os.path.exists(fullpath):
-            meta = os.listdir(fullpath)
-            meta = list(filter(lambda x: re.search('proj\d\d\d_meta', x), meta))
+    def __get_project_metadata(self, dirpath, log_level='warn'):
+        '''
+        Finds project metadata given the directory the _meta.yml file resides in
+
+        Args:
+            dirpath (str): local project directory
+            log_level (str, optional): logging level. Default: warn
+
+        Returns:
+            dict: project metadata
+
+        Raises:
+            OSError or warning
+
+        '''
+        if os.path.exists(dirpath):
+            meta = os.listdir(dirpath)
+            meta = list(filter(lambda x: re.search(PROJECT_METADATA_RE, x), meta))
             if len(meta) == 1:
                 meta = meta[0]
                 return meta
 
-        msg = fullpath + ' project metadata does not exist'
-        if level == 'error':
+        msg = dirpath + ' project metadata does not exist'
+        if log_level == 'error':
             raise OSError(msg)
-        elif level == 'warn':
+        elif log_level == 'warn':
             warn(msg)
         return None
 
     def __get_config(self, config):
-        r'''
+        '''
         Convenience method for creating a new temporary configuration dict by
         overwriting a copy of the internal config with keyword arguments
         specified in config
 
         Args:
-            config (dict): dict of keyword arguments (\**config)
+            config (dict): dict of keyword arguments
 
         Returns:
             dict: new config
@@ -117,7 +137,7 @@ class ProjectManager(object):
         if config != {}:
             config = conform_keys(config)
             output = deep_update(output, config)
-            output = Metadata(output, spec='conf001', skip_keys=['environment'])
+            output = Metadata(output, spec=PROJECT_MANAGER_SPEC, skip_keys=['environment'])
             try:
                 output.validate()
             except ValidationError as e:
@@ -126,7 +146,7 @@ class ProjectManager(object):
         return output
 
     def __get_project_config(self, name, notes, config, project):
-        r'''
+        '''
         Convenience method for creating a new temporary project dict by
         overwriting a copy of the internal project template, if it exists,
         with keyword arguments specified in project
@@ -134,8 +154,8 @@ class ProjectManager(object):
         Args:
             name (str): name of project
             notes (str, None): notes to be added to metadata
-            config (dict, None): \**config dictionary
-            project (dict, None): \**config dictionary
+            config (dict, None): config dictionary
+            project (dict, None): config dictionary
 
         Returns:
             dict: project metadata
@@ -149,15 +169,16 @@ class ProjectManager(object):
 
         return project
 
-    def _get_info(self, name, notes='', config={}, project={}, level='warn'):
-        r'''
+    def _get_info(self, name, notes='', config={}, project={}, log_level='warn'):
+        '''
         Convenience method for creating new temporary config
 
         Args:
             name (str): name of project
             notes (str, optional): notes to be added to metadata. Default: ''
-            config (dict, optional): \**config dictionary. Default: {}
+            config (dict, optional): config parameters, overwrites fields in a copy of self.config
             project (dict, optional): project metadata. Default: {}
+            log_level (str, optional): logging level. Default: warn
 
         Returns:
             namedtuple: tuple with conveniently named attributes
@@ -175,7 +196,7 @@ class ProjectManager(object):
             project['private'] = config['private']
 
         path = os.path.join(config['project-root'], project['project-name'])
-        meta = self.__get_project_metadata(path, level=level)
+        meta = self.__get_project_metadata(path, log_level=log_level)
 
         remote = {
             'username':      config['username'],
@@ -194,6 +215,15 @@ class ProjectManager(object):
         return info
 
     def _get_project(self, name):
+        '''
+        Convenience factory method for generating Project objects
+
+        Args:
+            name (str): name of project
+
+        Returns:
+            Project
+        '''
         info = self._get_info(name)
         if info.meta:
             return Project(info.meta, info.remote, info.root)
@@ -325,9 +355,10 @@ class ProjectManager(object):
         Args:
             name (str): name of project. Default: None
             \**config: optional config parameters, overwrites fields in a copy of self.config
-            verbosity (int, \**config): level of verbosity for output. Default: 0
-                Options: 0, 1, 2
-            user_branch (str, \**config): branch to clone from. Default: user's branch
+
+        \**ConfigParameters:
+            * log_level (int): level of log-level for output. Default: 0
+            * user_branch (str): branch to clone from. Default: user's branch
 
         Returns:
             bool: success status
@@ -335,7 +366,7 @@ class ProjectManager(object):
         .. todo::
             - catch repo already exists errors and repo doesn't exist errors
         '''
-        info = self._get_info(name, config=config, level=None)
+        info = self._get_info(name, config=config, log_level=None)
         config = info.config
 
         remote = GitRemote(info.remote)
@@ -370,12 +401,14 @@ class ProjectManager(object):
         Args:
             name (str): name of project. Default: None
             \**config: optional config parameters, overwrites fields in a copy of self.config
-            status_include_patterns (list, \**config): list of regular expressions user to include specific assets
-            status_exclude_patterns (list, \**config): list of regular expressions user to exclude specific assets
-            status_states (list, \**config): list of object states files are allowed to be in.
-                Options: added, copied, deleted, modified, renamed, updated and untracked
-            log-level (int, \**config): level of log-level for output. Default: 0
-                Options: 0, 1, 2
+
+        \**ConfigParameters:
+            * status_include_patterns (list): list of regular expressions user to include specific assets
+            * status_exclude_patterns (list): list of regular expressions user to exclude specific assets
+            * status_states (list): list of object states files are allowed to be in.
+              Options: added, copied, deleted, modified, renamed, updated and untracked
+            * log_level (int): level of log-level for output. Default: 0
+
 
         Yields:
             Metadata: Metadata object of each asset
@@ -395,11 +428,12 @@ class ProjectManager(object):
         Args:
             name (str): name of project. Default: None
             \**config: optional config parameters, overwrites fields in a copy of self.config
-            user_branch (str, \**config): branch to pull deliverables into. Default: user's branch
-            request_include_patterns (list, \**config): list of regular expressions user to include specific deliverables
-            request_exclude_patterns (list, \**config): list of regular expressions user to exclude specific deliverables
-            log-level (int, \**config): level of log-level for output. Default: 0
-                Options: 0, 1, 2
+
+        \**ConfigParameters:
+            * user_branch (str): branch to pull deliverables into. Default: user's branch
+            * request_include_patterns (list): list of regular expressions user to include specific deliverables
+            * request_exclude_patterns (list): list of regular expressions user to exclude specific deliverables
+            * log_level (int): level of log-level for output. Default: 0
 
         Returns:
             bool: success status
@@ -423,11 +457,12 @@ class ProjectManager(object):
             name (str): name of project. Default: None
             notes (str, optional): notes to appended to project metadata. Default: None
             \**config: optional config parameters, overwrites fields in a copy of self.config
-            user_branch (str, \**config): branch to pull deliverables from. Default: user's branch
-            publish_include_patterns (list, \**config): list of regular expressions user to include specific assets
-            publish_exclude_patterns (list, \**config): list of regular expressions user to exclude specific assets
-            log-level (int, \**config): level of log-level for output. Default: 0
-                Options: 0, 1, 2
+
+        \**ConfigParameters:
+            * user_branch (str): branch to pull deliverables from. Default: user's branch
+            * publish_include_patterns (list): list of regular expressions user to include specific assets
+            * publish_exclude_patterns (list): list of regular expressions user to exclude specific assets
+            * log_level (int): level of log-level for output. Default: 0
 
         Returns:
             bool: success status
@@ -451,8 +486,9 @@ class ProjectManager(object):
             from_server (bool): delete Github project
             from_local (bool): delete local project directory
             \**config: optional config parameters, overwrites fields in a copy of self.config
-            verbosity (int, \**config): level of verbosity for output. Default: 0
-                Options: 0, 1, 2
+
+        \**ConfigParameters:
+            * log_level (int): level of log-level for output. Default: 0
 
         Returns:
             bool: success status
@@ -484,7 +520,7 @@ def main():
     help(__main__)
 # ------------------------------------------------------------------------------
 
-__all__ = ['Nerve']
+__all__ = ['ProjectManager']
 
 if __name__ == '__main__':
     main()

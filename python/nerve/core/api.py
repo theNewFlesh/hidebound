@@ -13,9 +13,12 @@ Author:
 import os
 import re
 from warnings import warn
-from nerve.core.model import Nerve
+import yaml
+from nerve.core.project_manager import ProjectManager
 from nerve.core.metadata import Metadata
 # ------------------------------------------------------------------------------
+
+NERVE_GLOBAL_CONFIG = '/etc/nerve/nerve-global-config.yml'
 
 class NerveUser(object):
     '''
@@ -28,16 +31,18 @@ class NerveUser(object):
         Client: NerveUser
     '''
     def __init__(self):
-        with open('/etc/nerve/config-location.txt', 'r') as f:
-            self._nerve = Nerve(f.read().strip('\n'))
+        config = None
+        with open(NERVE_GLOBAL_CONFIG, 'r') as f:
+            config = yaml.load(f)
+        self._project_manager = ProjectManager(config['nerverc-location'])
 
     def __getitem__(self, key):
-        return self._nerve.__getitem__(key)
+        return self._project_manager.__getitem__(key)
 
     def __repr__(self):
-        return self._nerve.__repr__()
+        return self._project_manager.__repr__()
 
-    def _get_project(self):
+    def _get_project(self, dirpath):
         '''
         Finds and returns project metadata
 
@@ -47,13 +52,12 @@ class NerveUser(object):
         Returns:
             dict: Metadata
         '''
-        cwd = os.getcwd()
-        files = os.listdir(cwd)
+        files = os.listdir(dirpath)
         if '.git' in files:
             meta = list(filter(lambda x: re.search('_meta.yml', x), files))
             if len(meta) > 0:
                 meta = meta[0]
-                meta = os.path.join(cwd, meta)
+                meta = os.path.join(dirpath, meta)
                 meta = Metadata(meta)
                 if re.search('proj\d\d\d', meta['specification']):
                     return meta.data
@@ -66,12 +70,13 @@ class NerveUser(object):
 
         Args:
             \**config: optional config parameters, overwrites fields in a copy of self.config
-            status_include_patterns (list, \**config): list of regular expressions user to include specific assets
-            status_exclude_patterns (list, \**config): list of regular expressions user to exclude specific assets
-            status_states (list, \**config): list of object states files are allowed to be in.
-                Options: added, copied, deleted, modified, renamed, updated and untracked
-            verbosity (int, \**config): level of verbosity for output. Default: 0
-                Options: 0, 1, 2
+
+        \**ConfigParameters:
+            * status_include_patterns (list): list of regular expressions user to include specific assets
+            * status_exclude_patterns (list): list of regular expressions user to exclude specific assets
+            * status_states (list): list of object states files are allowed to be in.
+              Options: added, copied, deleted, modified, renamed, updated and untracked
+            * log_level (str): logging level. Default: warn
 
         Yields:
             Metadata: Metadata object of each asset
@@ -79,7 +84,7 @@ class NerveUser(object):
         project = self._get_project()
         if not project:
             return project
-        return self._nerve.status(project['project-name'], **config)
+        return self._project_manager.status(project['project-name'], **config)
 
     def clone(self, name, **config):
         r'''
@@ -90,14 +95,15 @@ class NerveUser(object):
         Args:
             name (str): name of project. Default: None
             \**config: optional config parameters, overwrites fields in a copy of self.config
-            verbosity (int, \**config): level of verbosity for output. Default: 0
-                Options: 0, 1, 2
-            user_branch (str, \**config): branch to clone from. Default: user's branch
+
+        \**ConfigParameters:
+            * log_level (str): logging level. Default: warn
+            * user_branch (str): branch to clone from. Default: user's branch
 
         Returns:
             bool: success status
         '''
-        return self._nerve.clone(name, **config)
+        return self._project_manager.clone(name, **config)
 
     def request(self, **config):
         r'''
@@ -105,11 +111,12 @@ class NerveUser(object):
 
         Args:
             \**config: optional config parameters, overwrites fields in a copy of self.config
-            user_branch (str, \**config): branch to pull deliverables into. Default: user's branch
-            request_include_patterns (list, \**config): list of regular expressions user to include specific deliverables
-            request_exclude_patterns (list, \**config): list of regular expressions user to exclude specific deliverables
-            verbosity (int, \**config): level of verbosity for output. Default: 0
-                Options: 0, 1, 2
+
+        \**ConfigParameters:
+            * user_branch (str): branch to pull deliverables into. Default: user's branch
+            * request_include_patterns (list): list of regular expressions user to include specific deliverables
+            * request_exclude_patterns (list): list of regular expressions user to exclude specific deliverables
+            * log_level (str): logging level. Default: warn
 
         Returns:
             bool: success status
@@ -117,7 +124,7 @@ class NerveUser(object):
         project = self._get_project()
         if not project:
             return project
-        return self._nerve.request(project['project-name'], **config)
+        return self._project_manager.request(project['project-name'], **config)
 
     def publish(self, notes=None, **config):
         r'''
@@ -131,11 +138,12 @@ class NerveUser(object):
         Args:
             notes (str, optional): notes to appended to project metadata. Default: None
             \**config: optional config parameters, overwrites fields in a copy of self.config
-            user_branch (str, \**config): branch to pull deliverables from. Default: user's branch
-            publish_include_patterns (list, \**config): list of regular expressions user to include specific assets
-            publish_exclude_patterns (list, \**config): list of regular expressions user to exclude specific assets
-            verbosity (int, \**config): level of verbosity for output. Default: 0
-                Options: 0, 1, 2
+
+        \**ConfigParameters:
+            * user_branch (str): branch to pull deliverables from. Default: user's branch
+            * publish_include_patterns (list): list of regular expressions user to include specific assets
+            * publish_exclude_patterns (list): list of regular expressions user to exclude specific assets
+            * log_level (str): logging level. Default: warn
 
         Returns:
             bool: success status
@@ -143,7 +151,7 @@ class NerveUser(object):
         project = self._get_project()
         if not project:
             return project
-        return self._nerve.publish(project['project-name'], notes=notes, **config)
+        return self._project_manager.publish(project['project-name'], notes=notes, **config)
 
     def delete(self):
         r'''
@@ -158,7 +166,7 @@ class NerveUser(object):
         project = self._get_project()
         if not project:
             return project
-        return self._nerve.delete(project['project-name'], False, True)
+        return self._project_manager.delete(project['project-name'], False, True)
 # ------------------------------------------------------------------------------
 
 class NerveAdmin(NerveUser):
@@ -194,7 +202,7 @@ class NerveAdmin(NerveUser):
         Returns:
             bool: success status
         '''
-        return self._nerve.create(name, notes, {}, **project)
+        return self._project_manager.create(name, notes, {}, **project)
 
     def delete(self, name, from_server, from_local):
         r'''
@@ -208,7 +216,7 @@ class NerveAdmin(NerveUser):
         Returns:
             bool: success status
         '''
-        return self._nerve.delete(name, from_server, from_local)
+        return self._project_manager.delete(name, from_server, from_local)
 # ------------------------------------------------------------------------------
 
 def main():

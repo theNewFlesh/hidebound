@@ -1,7 +1,8 @@
 #! /usr/bin/env python
 '''
-The model module contains the Nerve class, the central component of the entire
-nerve framework.
+The project module contains the Project class, which represent a single Nerve
+project.  This in turn represents a single git repo, Github repo and directory
+within a bucket on AWS.
 
 Platforrm:
     Unix
@@ -28,44 +29,47 @@ from nerve.core.git_remote import GitRemote
 
 class Project(object):
     '''
-    Class which creates, deletes and interacts with nerve projects
+    This class provides an API to an already locally existing Nerve project
 
     Attributes:
-        config (dict): a dictionary representing Nerve's internal configuration
-        project_template (dict): a dictionary representing Nerve's internal project template
+        metadata (dict): a dictionary representing this project's metadata
+        project_path (str): the fullpath of this project
+        remote_config (dict): a configuration to be passed to the git remote client
 
     API:
-        create, clone, request, publish, delete, status and __getitem__
+        request, publish, status, metadata, project_path and remote_config
 
     Args:
-        config (str or dict): a fullpath to a nerverc config or a dict of one
+        fullpath (str): fullpath to project's local metadata (_meta.yml) file
+        remote_config (str or dict): a fullpath to a GitRemote config or a dict of one
+        project_root (str): fullpath to local root directory for all Nerve projects
 
     Returns:
         Nerve
     '''
     def __init__(self, fullpath, remote_config, project_root):
-        project_config = Metadata(fullpath, skip_keys=['environment'])
-        project_config.validate()
-        self._project_config = project_config.data
-        self._project_path = os.path.join(project_root, project_config['project-name'])
+        meta = Metadata(fullpath, skip_keys=['environment'])
+        meta.validate()
+        self._metadata = meta.data
+        self._project_path = os.path.join(project_root, meta['project-name'])
         self._remote_config = remote_config
     # --------------------------------------------------------------------------
 
     def __repr__(self):
         msg = 'PROJECT PATH:\n'
         msg += self.project_path
-        msg += '\n\nPROJECT CONFIG:\n'
-        msg += pformat(self.config)
+        msg += '\n\nPROJECT METADATA:\n'
+        msg += pformat(self.metadata)
         msg += '\n\nREMOTE CONFIG:\n'
         msg += pformat(self.remote_config)
         return msg
 
     @property
-    def config(self):
+    def metadata(self):
         '''
         dict: copy of this object's configuration
         '''
-        return deepcopy(self._project_config)
+        return deepcopy(self._metadata)
 
     @property
     def remote_config(self):
@@ -82,41 +86,26 @@ class Project(object):
         return deepcopy(self._project_path)
     # --------------------------------------------------------------------------
 
-    @property
-    def project_config(self):
-        '''
-        dict: This object's configuration
-        '''
-        return self._project_config
-
-    @property
-    def project_template(self):
-        '''
-        dict: This object's project template
-        '''
-        return self._project_template
-    # --------------------------------------------------------------------------
-
     def status(self, config):
         r'''
         Reports on the status of all affected files within a given project
 
         Args:
-            name (str): name of project. Default: None
-            \**config: optional config parameters, overwrites fields in a copy of self.config
-            status_include_patterns (list, \**config): list of regular expressions user to include specific assets
-            status_exclude_patterns (list, \**config): list of regular expressions user to exclude specific assets
-            status_states (list, \**config): list of object states files are allowed to be in.
-                Options: added, copied, deleted, modified, renamed, updated and untracked
-            verbosity (int, \**config): level of verbosity for output. Default: 0
-                Options: 0, 1, 2
+            config: ProjectManager config
+
+        ConfigParameters:
+            * status-include-patterns (list): list of regular expressions user to include specific assets
+            * status-exclude-patterns (list): list of regular expressions user to exclude specific assets
+            * status-states (list): list of object states files are allowed to be in.
+              Options: added, copied, deleted, modified, renamed, updated and untracked
+            * log-level (str): logging level
 
         Yields:
             Metadata: Metadata object of each asset
         '''
 
         warn_ = False
-        if config['verbosity'] == 2:
+        if config['log-level'] == 2:
             warn_ = True
 
         local = Git(self.project_path, environment=config['environment'])
@@ -152,7 +141,7 @@ class Project(object):
                 rogue_states = set(asset_data['state'])
                 rogue_states = rogue_states.difference(config['status-states'])
                 if len(rogue_states) > 0:
-                    if config['verbosity'] > 0:
+                    if config['log-level'] > 0:
                         warn(asset + ' contains files of state: ' + ','.join(rogue_states))
                     continue
 
@@ -166,13 +155,13 @@ class Project(object):
         Request deliverables from the dev branch of given project
 
         Args:
-            name (str): name of project. Default: None
-            \**config: optional config parameters, overwrites fields in a copy of self.config
-            user_branch (str, \**config): branch to pull deliverables into. Default: user's branch
-            request_include_patterns (list, \**config): list of regular expressions user to include specific deliverables
-            request_exclude_patterns (list, \**config): list of regular expressions user to exclude specific deliverables
-            verbosity (int, \**config): level of verbosity for output. Default: 0
-                Options: 0, 1, 2
+            config: ProjectManager config
+
+        ConfigParameters:
+            * user-branch (str): branch to pull deliverables into. Default: user's branch
+            * request-include-patterns (list): list of regular expressions user to include specific deliverables
+            * request-exclude-patterns (list): list of regular expressions user to exclude specific deliverables
+            * log-level (str): logging level
 
         Returns:
             bool: success status
@@ -196,6 +185,10 @@ class Project(object):
         Args:
             config (dict): ProjectManager config
 
+        ConfigParameters:
+            * user-branch (str): branch to pull deliverables into. Default: user's branch
+            * environment (dict): environment variables used for calls to shell
+
         Returns:
             None
         '''
@@ -212,13 +205,17 @@ class Project(object):
         local.merge('dev', config['user-branch'])
 
     def _publish_nondeliverables(self, config):
-        '''
+        r'''
         Convenience method for publishing nondeliverable assets
 
         Assets published to user branch
 
         Args:
             config (dict): ProjectManager config
+
+        ConfigParameters:
+            * user-branch (str): branch to pull deliverables into. Default: user's branch
+            * environment (dict): environment variables used for calls to shell
 
         Returns:
             None
@@ -251,11 +248,14 @@ class Project(object):
             local.push(config['user-branch'])
 
     def _get_deliverables(self, config):
-        '''
+        r'''
         Convenience method for retrieving valid and invalid deliverable assets
 
         Args:
             config (dict): ProjectManager config
+
+        ConfigParameters:
+            * log-level (str): logging level
 
         Returns:
             tuple: valid deliverables, invalid deliverables
@@ -273,7 +273,7 @@ class Project(object):
             try:
                 deliv.validate()
             except ValidationError as e:
-                if config['verbosity'] > 0:
+                if config['log-level'] > 0:
                     warn(e)
                 invalid.append(deliv)
                 continue
@@ -291,14 +291,14 @@ class Project(object):
         If not only invalid metadata will be commited to the user's branch
 
         Args:
-            name (str): name of project. Default: None
+            config: ProjectManager config
             notes (str, optional): notes to appended to project metadata. Default: None
-            \**config: optional config parameters, overwrites fields in a copy of self.config
-            user_branch (str, \**config): branch to pull deliverables from. Default: user's branch
-            publish_include_patterns (list, \**config): list of regular expressions user to include specific assets
-            publish_exclude_patterns (list, \**config): list of regular expressions user to exclude specific assets
-            verbosity (int, \**config): level of verbosity for output. Default: 0
-                Options: 0, 1, 2
+
+        ConfigParameters:
+            * user-branch (str): branch to pull defrom kaiverables from. Default: user's branch
+            * publish-include-patterns (list): list of regular expressions user to include specific assets
+            * publish-exclude-patterns (list): list of regular expressions user to exclude specific assets
+            * log-level (str): logging level
 
         Returns:
             bool: success status
@@ -378,7 +378,7 @@ def main():
     help(__main__)
 # ------------------------------------------------------------------------------
 
-__all__ = ['Nerve']
+__all__ = ['Project']
 
 if __name__ == '__main__':
     main()

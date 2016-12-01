@@ -54,7 +54,7 @@ class GitRemote(object):
         self._client = login(config['username'], token=config['token'])
         self._org = self._client.organization(config['organization'])
         self._team_ids = {team.name: team.id for team in self._org.teams()}
-        self._repo = self._create_repository(
+        self._repo = self._get_repository(
             config['project-name'],
             config['organization'],
             config['private']
@@ -72,9 +72,9 @@ class GitRemote(object):
     def __getitem__(self, key):
         return self._config[key]
 
-    def _create_repository(self, name, orgname, private):
+    def _get_repository(self, name, orgname, private):
         '''
-        Creates a repository on GitHub
+        Gets a repository on GitHub. Creates one if it doesn't exist.
 
         Args:
             name (str): repository name
