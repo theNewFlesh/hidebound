@@ -72,11 +72,11 @@ class NerveUser(object):
             `**config`: optional config parameters, overwrites fields in a copy of self.config
 
         **ConfigParameters:
-            * **status_include_patterns** *(list)* - list of regular expressions user to include specific assets
-            * **status_exclude_patterns** *(list)* - list of regular expressions user to exclude specific assets
-            * **status_states** *(list)* - list of object states files are allowed to be in.
+            * **status_include_patterns** *(list)* – list of regular expressions user to include specific assets
+            * **status_exclude_patterns** *(list)* – list of regular expressions user to exclude specific assets
+            * **status_states** *(list)* – list of object states files are allowed to be in.
               Options: added, copied, deleted, modified, renamed, updated and untracked
-            * **log_level** *(str)* - logging level. Default: warn
+            * **log_level** *(str)* – logging level. Default: warn
 
         Yields:
             Metadata: Metadata object of each asset
@@ -97,8 +97,8 @@ class NerveUser(object):
             `**config`: optional config parameters, overwrites fields in a copy of self.config
 
         **ConfigParameters:
-            * **log_level** *(str)* - logging level. Default: warn
-            * **user_branch** *(str)* - branch to clone from. Default: user's branch
+            * **log_level** *(str)* – logging level. Default: warn
+            * **user_branch** *(str)* – branch to clone from. Default: user's branch
 
         Returns:
             bool: success status
@@ -113,10 +113,10 @@ class NerveUser(object):
             `**config`: optional config parameters, overwrites fields in a copy of self.config
 
         **ConfigParameters:
-            * **user_branch** *(str)* - branch to pull deliverables into. Default: user's branch
-            * **request_include_patterns** *(list)* - list of regular expressions user to include specific deliverables
-            * **request_exclude_patterns** *(list)* - list of regular expressions user to exclude specific deliverables
-            * **log_level** *(str)* - logging level. Default: warn
+            * **user_branch** *(str)* – branch to pull deliverables into. Default: user's branch
+            * **request_include_patterns** *(list)* – list of regular expressions user to include specific deliverables
+            * **request_exclude_patterns** *(list)* – list of regular expressions user to exclude specific deliverables
+            * **log_level** *(str)* – logging level. Default: warn
 
         Returns:
             bool: success status
@@ -140,10 +140,10 @@ class NerveUser(object):
             `**config`: optional config parameters, overwrites fields in a copy of self.config
 
         **ConfigParameters:
-            * **user_branch** *(str)* - branch to pull deliverables from. Default: user's branch
-            * **publish_include_patterns** *(list)* - list of regular expressions user to include specific assets
-            * **publish_exclude_patterns** *(list)* - list of regular expressions user to exclude specific assets
-            * **log_level** *(str)* - logging level. Default: warn
+            * **user_branch** *(str)* – branch to pull deliverables from. Default: user's branch
+            * **publish_include_patterns** *(list)* – list of regular expressions user to include specific assets
+            * **publish_exclude_patterns** *(list)* – list of regular expressions user to exclude specific assets
+            * **log_level** *(str)* – logging level. Default: warn
 
         Returns:
             bool: success status
