@@ -47,7 +47,7 @@ class NerveUser(object):
         Finds and returns project metadata
 
         Args:
-            None
+            dirpath (str): directory of local nerve project
 
         Returns:
             dict: Metadata
