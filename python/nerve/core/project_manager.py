@@ -245,7 +245,7 @@ class ProjectManager(object):
     # --------------------------------------------------------------------------
 
     def create(self, name, notes=None, config={}, **project):
-        r'''
+        '''
         Creates a nerve project on Github and in the project-root folder
 
         Created items include:
@@ -347,18 +347,18 @@ class ProjectManager(object):
         return True
 
     def clone(self, name, **config):
-        r'''
+        '''
         Clones a nerve project to local project-root directory
 
         Ensures given branch is present in the repository
 
         Args:
             name (str): name of project. Default: None
-            \**config: optional config parameters, overwrites fields in a copy of self.config
+            `**config`: optional config parameters, overwrites fields in a copy of self.config
 
-        \**ConfigParameters:
-            * log_level (int): level of log-level for output. Default: 0
-            * user_branch (str): branch to clone from. Default: user's branch
+        **ConfigParameters:
+            * **log_level** (int): level of log-level for output. Default: 0
+            * **user_branch** (str): branch to clone from. Default: user's branch
 
         Returns:
             bool: success status
@@ -395,19 +395,19 @@ class ProjectManager(object):
         return True
 
     def status(self, name, **config):
-        r'''
+        '''
         Reports on the status of all affected files within a given project
 
         Args:
             name (str): name of project. Default: None
-            \**config: optional config parameters, overwrites fields in a copy of self.config
+            `**config`: optional config parameters, overwrites fields in a copy of self.config
 
-        \**ConfigParameters:
-            * status_include_patterns (list): list of regular expressions user to include specific assets
-            * status_exclude_patterns (list): list of regular expressions user to exclude specific assets
-            * status_states (list): list of object states files are allowed to be in.
+        **ConfigParameters:
+            * **status_include_patterns** (list): list of regular expressions user to include specific assets
+            * **status_exclude_patterns** (list): list of regular expressions user to exclude specific assets
+            * **status_states** (list): list of object states files are allowed to be in.
               Options: added, copied, deleted, modified, renamed, updated and untracked
-            * log_level (int): level of log-level for output. Default: 0
+            * **log_level** (int): level of log-level for output. Default: 0
 
 
         Yields:
@@ -422,18 +422,18 @@ class ProjectManager(object):
         return result
 
     def request(self, name, **config):
-        r'''
+        '''
         Request deliverables from the dev branch of given project
 
         Args:
             name (str): name of project. Default: None
-            \**config: optional config parameters, overwrites fields in a copy of self.config
+            `**config`: optional config parameters, overwrites fields in a copy of self.config
 
-        \**ConfigParameters:
-            * user_branch (str): branch to pull deliverables into. Default: user's branch
-            * request_include_patterns (list): list of regular expressions user to include specific deliverables
-            * request_exclude_patterns (list): list of regular expressions user to exclude specific deliverables
-            * log_level (int): level of log-level for output. Default: 0
+        **ConfigParameters:
+            * **user_branch** (str): branch to pull deliverables into. Default: user's branch
+            * **request_include_patterns** (list): list of regular expressions user to include specific deliverables
+            * **request_exclude_patterns** (list): list of regular expressions user to exclude specific deliverables
+            * **log_level** (int): level of log-level for output. Default: 0
 
         Returns:
             bool: success status
@@ -445,7 +445,7 @@ class ProjectManager(object):
         return self._log(result)
 
     def publish(self, name, notes=None, **config):
-        r'''
+        '''
         Attempt to publish deliverables from user's branch to given project's dev branch on Github
 
         All assets will be published to the user's branch.
@@ -456,13 +456,13 @@ class ProjectManager(object):
         Args:
             name (str): name of project. Default: None
             notes (str, optional): notes to appended to project metadata. Default: None
-            \**config: optional config parameters, overwrites fields in a copy of self.config
+            `**config`: optional config parameters, overwrites fields in a copy of self.config
 
-        \**ConfigParameters:
-            * user_branch (str): branch to pull deliverables from. Default: user's branch
-            * publish_include_patterns (list): list of regular expressions user to include specific assets
-            * publish_exclude_patterns (list): list of regular expressions user to exclude specific assets
-            * log_level (int): level of log-level for output. Default: 0
+        **ConfigParameters:
+            * **user_branch** (str): branch to pull deliverables from. Default: user's branch
+            * **publish_include_patterns** (list): list of regular expressions user to include specific assets
+            * **publish_exclude_patterns** (list): list of regular expressions user to exclude specific assets
+            * **log_level** (int): level of log-level for output. Default: 0
 
         Returns:
             bool: success status
@@ -478,17 +478,17 @@ class ProjectManager(object):
     # --------------------------------------------------------------------------
 
     def delete(self, name, from_server, from_local, **config):
-        r'''
+        '''
         Deletes a nerve project
 
         Args:
             name (str): name of project. Default: None
             from_server (bool): delete Github project
             from_local (bool): delete local project directory
-            \**config: optional config parameters, overwrites fields in a copy of self.config
+            `**config`: optional config parameters, overwrites fields in a copy of self.config
 
-        \**ConfigParameters:
-            * log_level (int): level of log-level for output. Default: 0
+        **ConfigParameters:
+            * **log_level** (int): level of log-level for output. Default: 0
 
         Returns:
             bool: success status

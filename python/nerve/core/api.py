@@ -65,18 +65,18 @@ class NerveUser(object):
         return False
 
     def status(self, **config):
-        r'''
+        '''
         Reports on the status of all affected files within a given project
 
         Args:
-            \**config: optional config parameters, overwrites fields in a copy of self.config
+            `**config`: optional config parameters, overwrites fields in a copy of self.config
 
-        \**ConfigParameters:
-            * status_include_patterns (list): list of regular expressions user to include specific assets
-            * status_exclude_patterns (list): list of regular expressions user to exclude specific assets
-            * status_states (list): list of object states files are allowed to be in.
+        **ConfigParameters:
+            * **status_include_patterns** (list): list of regular expressions user to include specific assets
+            * **status_exclude_patterns** (list): list of regular expressions user to exclude specific assets
+            * **status_states** (list): list of object states files are allowed to be in.
               Options: added, copied, deleted, modified, renamed, updated and untracked
-            * log_level (str): logging level. Default: warn
+            * **log_level** (str): logging level. Default: warn
 
         Yields:
             Metadata: Metadata object of each asset
@@ -87,18 +87,18 @@ class NerveUser(object):
         return self._project_manager.status(project['project-name'], **config)
 
     def clone(self, name, **config):
-        r'''
+        '''
         Clones a nerve project to local project-root directory
 
         Ensures given branch is present in the repository
 
         Args:
             name (str): name of project. Default: None
-            \**config: optional config parameters, overwrites fields in a copy of self.config
+            `**config`: optional config parameters, overwrites fields in a copy of self.config
 
-        \**ConfigParameters:
-            * log_level (str): logging level. Default: warn
-            * user_branch (str): branch to clone from. Default: user's branch
+        **ConfigParameters:
+            * **log_level** (str): logging level. Default: warn
+            * **user_branch** (str): branch to clone from. Default: user's branch
 
         Returns:
             bool: success status
@@ -106,17 +106,17 @@ class NerveUser(object):
         return self._project_manager.clone(name, **config)
 
     def request(self, **config):
-        r'''
+        '''
         Request deliverables from the dev branch of given project
 
         Args:
-            \**config: optional config parameters, overwrites fields in a copy of self.config
+            `**config`: optional config parameters, overwrites fields in a copy of self.config
 
-        \**ConfigParameters:
-            * user_branch (str): branch to pull deliverables into. Default: user's branch
-            * request_include_patterns (list): list of regular expressions user to include specific deliverables
-            * request_exclude_patterns (list): list of regular expressions user to exclude specific deliverables
-            * log_level (str): logging level. Default: warn
+        **ConfigParameters:
+            * **user_branch** (str): branch to pull deliverables into. Default: user's branch
+            * **request_include_patterns** (list): list of regular expressions user to include specific deliverables
+            * **request_exclude_patterns** (list): list of regular expressions user to exclude specific deliverables
+            * **log_level** (str): logging level. Default: warn
 
         Returns:
             bool: success status
@@ -127,7 +127,7 @@ class NerveUser(object):
         return self._project_manager.request(project['project-name'], **config)
 
     def publish(self, notes=None, **config):
-        r'''
+        '''
         Attempt to publish deliverables from user's branch to given project's dev branch on Github
 
         All assets will be published to the user's branch.
@@ -137,13 +137,13 @@ class NerveUser(object):
 
         Args:
             notes (str, optional): notes to appended to project metadata. Default: None
-            \**config: optional config parameters, overwrites fields in a copy of self.config
+            `**config`: optional config parameters, overwrites fields in a copy of self.config
 
-        \**ConfigParameters:
-            * user_branch (str): branch to pull deliverables from. Default: user's branch
-            * publish_include_patterns (list): list of regular expressions user to include specific assets
-            * publish_exclude_patterns (list): list of regular expressions user to exclude specific assets
-            * log_level (str): logging level. Default: warn
+        **ConfigParameters:
+            * **user_branch** (str): branch to pull deliverables from. Default: user's branch
+            * **publish_include_patterns** (list): list of regular expressions user to include specific assets
+            * **publish_exclude_patterns** (list): list of regular expressions user to exclude specific assets
+            * **log_level** (str): logging level. Default: warn
 
         Returns:
             bool: success status
@@ -154,7 +154,7 @@ class NerveUser(object):
         return self._project_manager.publish(project['project-name'], notes=notes, **config)
 
     def delete(self):
-        r'''
+        '''
         Deletes a nerve project from local storage
 
         Args:
@@ -183,19 +183,19 @@ class NerveAdmin(NerveUser):
         super().__init__()
 
     def create(self, name, notes=None, **project):
-        r'''
+        '''
         Creates a nerve project on Github and in the project-root folder
 
         Created items include:
-            Github repository
-            dev branch
-            nerve project structure
-            .lfsconfig
-            .gitattributes
-            .gitignore
+            * Github repository
+            * dev branch
+            * nerve project structure
+            * .lfsconfig
+            * .gitattributes
+            * .gitignore
 
         Args:
-            name (str, optional): name of project. Default: None
+            name (str): name of project. Default: None
             notes (str, optional): notes to appended to project metadata. Default: None
             \**project: optional project parameters, overwrites fields in a copy of self.project_template
 
@@ -205,7 +205,7 @@ class NerveAdmin(NerveUser):
         return self._project_manager.create(name, notes, {}, **project)
 
     def delete(self, name, from_server, from_local):
-        r'''
+        '''
         Deletes a nerve project
 
         Args:

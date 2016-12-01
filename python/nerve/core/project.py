@@ -87,18 +87,18 @@ class Project(object):
     # --------------------------------------------------------------------------
 
     def status(self, config):
-        r'''
+        '''
         Reports on the status of all affected files within a given project
 
         Args:
             config: ProjectManager config
 
         ConfigParameters:
-            * status-include-patterns (list): list of regular expressions user to include specific assets
-            * status-exclude-patterns (list): list of regular expressions user to exclude specific assets
-            * status-states (list): list of object states files are allowed to be in.
+            * **status-include-patterns** (list): list of regular expressions user to include specific assets
+            * **status-exclude-patterns** (list): list of regular expressions user to exclude specific assets
+            * **status-states** (list): list of object states files are allowed to be in.
               Options: added, copied, deleted, modified, renamed, updated and untracked
-            * log-level (str): logging level
+            * **log-level** (str): logging level
 
         Yields:
             Metadata: Metadata object of each asset
@@ -151,17 +151,17 @@ class Project(object):
                 yield output
 
     def request(self, config):
-        r'''
+        '''
         Request deliverables from the dev branch of given project
 
         Args:
             config: ProjectManager config
 
         ConfigParameters:
-            * user-branch (str): branch to pull deliverables into. Default: user's branch
-            * request-include-patterns (list): list of regular expressions user to include specific deliverables
-            * request-exclude-patterns (list): list of regular expressions user to exclude specific deliverables
-            * log-level (str): logging level
+            * **user-branch** (str): branch to pull deliverables into. Default: user's branch
+            * **request-include-patterns** (list): list of regular expressions user to include specific deliverables
+            * **request-exclude-patterns** (list): list of regular expressions user to exclude specific deliverables
+            * **log-level** (str): logging level
 
         Returns:
             bool: success status
@@ -186,8 +186,8 @@ class Project(object):
             config (dict): ProjectManager config
 
         ConfigParameters:
-            * user-branch (str): branch to pull deliverables into. Default: user's branch
-            * environment (dict): environment variables used for calls to shell
+            * **user-branch** (str): branch to pull deliverables into. Default: user's branch
+            * **environment** (dict): environment variables used for calls to shell
 
         Returns:
             None
@@ -205,7 +205,7 @@ class Project(object):
         local.merge('dev', config['user-branch'])
 
     def _publish_nondeliverables(self, config):
-        r'''
+        '''
         Convenience method for publishing nondeliverable assets
 
         Assets published to user branch
@@ -214,8 +214,8 @@ class Project(object):
             config (dict): ProjectManager config
 
         ConfigParameters:
-            * user-branch (str): branch to pull deliverables into. Default: user's branch
-            * environment (dict): environment variables used for calls to shell
+            * **user-branch** (str): branch to pull deliverables into. Default: user's branch
+            * **environment** (dict): environment variables used for calls to shell
 
         Returns:
             None
@@ -248,14 +248,14 @@ class Project(object):
             local.push(config['user-branch'])
 
     def _get_deliverables(self, config):
-        r'''
+        '''
         Convenience method for retrieving valid and invalid deliverable assets
 
         Args:
             config (dict): ProjectManager config
 
         ConfigParameters:
-            * log-level (str): logging level
+            * **log-level** (str): logging level
 
         Returns:
             tuple: valid deliverables, invalid deliverables
@@ -282,7 +282,7 @@ class Project(object):
         return valid, invalid
 
     def publish(self, config, notes=None):
-        r'''
+        '''
         Attempt to publish deliverables from user's branch to given project's dev branch on Github
 
         All assets will be published to the user's branch.
@@ -295,10 +295,10 @@ class Project(object):
             notes (str, optional): notes to appended to project metadata. Default: None
 
         ConfigParameters:
-            * user-branch (str): branch to pull defrom kaiverables from. Default: user's branch
-            * publish-include-patterns (list): list of regular expressions user to include specific assets
-            * publish-exclude-patterns (list): list of regular expressions user to exclude specific assets
-            * log-level (str): logging level
+            * **user-branch** (str): branch to pull defrom kaiverables from. Default: user's branch
+            * **publish-include-patterns** (list): list of regular expressions user to include specific assets
+            * **publish-exclude-patterns** (list): list of regular expressions user to exclude specific assets
+            * **log-level** (str): logging level
 
         Returns:
             bool: success status
