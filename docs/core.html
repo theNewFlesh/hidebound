@@ -1,0 +1,2031 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>core &mdash; nerve 0.5.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="nerve 0.5.0 documentation" href="index.html"/>
+        <link rel="up" title="nerve" href="modules.html"/>
+        <link rel="next" title="spec" href="spec.html"/>
+        <link rel="prev" title="nerve" href="modules.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> nerve
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">nerve</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="">core</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-nerve.core.project_manager">project_manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-nerve.core.project">project</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-nerve.core.metadata">metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-nerve.core.api">api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#client">client</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-nerve.core.git">git</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-nerve.core.git_lfs">git_lfs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-nerve.core.utils">utils</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="spec.html">spec</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">nerve</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="modules.html">nerve</a> &raquo;</li>
+      
+    <li>core</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/core.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="core">
+<h1>core<a class="headerlink" href="#core" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-nerve.core.project_manager">
+<span id="project-manager"></span><h2>project_manager<a class="headerlink" href="#module-nerve.core.project_manager" title="Permalink to this headline">¶</a></h2>
+<p>The project_manager module contains the ProjectManager class.  This class is
+used for creating, deleting and modifying Nerve projects.</p>
+<dl class="docutils">
+<dt>Platforrm:</dt>
+<dd>Unix</dd>
+<dt>Author:</dt>
+<dd>Alex Braun &lt;<a class="reference external" href="mailto:alexander&#46;g&#46;braun&#37;&#52;&#48;gmail&#46;com">alexander<span>&#46;</span>g<span>&#46;</span>braun<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt; &lt;<a class="reference external" href="http://www.alexgbraun.com">http://www.alexgbraun.com</a>&gt;</dd>
+</dl>
+<dl class="class">
+<dt id="nerve.core.project_manager.ProjectManager">
+<em class="property">class </em><tt class="descclassname">nerve.core.project_manager.</tt><tt class="descname">ProjectManager</tt><big>(</big><em>config</em><big>)</big><a class="reference internal" href="_modules/nerve/core/project_manager.html#ProjectManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.project_manager.ProjectManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<p>Class for handling nerve projects</p>
+<dl class="attribute">
+<dt id="nerve.core.project_manager.ProjectManager.config">
+<tt class="descname">config</tt><a class="reference internal" href="_modules/nerve/core/project_manager.html#ProjectManager.config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.project_manager.ProjectManager.config" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em></p>
+<p>a dictionary representing Nerve&#8217;s internal configuration</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="nerve.core.project_manager.ProjectManager.project_template">
+<tt class="descname">project_template</tt><a class="reference internal" href="_modules/nerve/core/project_manager.html#ProjectManager.project_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.project_manager.ProjectManager.project_template" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em></p>
+<p>a dictionary representing Nerve&#8217;s internal project template</p>
+</dd></dl>
+
+<dl class="docutils">
+<dt>API:</dt>
+<dd>create, clone, request, publish, delete, status, config and project_template</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> (<em>str or dict</em>) &#8211; a fullpath to a nerverc config or a dict of one</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Nerve</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="nerve.core.project_manager.ProjectManager._ProjectManager__get_config">
+<tt class="descname">_ProjectManager__get_config</tt><big>(</big><em>config</em><big>)</big><a class="headerlink" href="#nerve.core.project_manager.ProjectManager._ProjectManager__get_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience method for creating a new temporary configuration dict by
+overwriting a copy of the internal config with keyword arguments
+specified in config</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) &#8211; dict of keyword arguments</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">new config</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.project_manager.ProjectManager._ProjectManager__get_project_config">
+<tt class="descname">_ProjectManager__get_project_config</tt><big>(</big><em>name</em>, <em>notes</em>, <em>config</em>, <em>project</em><big>)</big><a class="headerlink" href="#nerve.core.project_manager.ProjectManager._ProjectManager__get_project_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience method for creating a new temporary project dict by
+overwriting a copy of the internal project template, if it exists,
+with keyword arguments specified in project</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; name of project</li>
+<li><strong>notes</strong> (<em>str, None</em>) &#8211; notes to be added to metadata</li>
+<li><strong>config</strong> (<em>dict, None</em>) &#8211; config dictionary</li>
+<li><strong>project</strong> (<em>dict, None</em>) &#8211; config dictionary</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">project metadata</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.project_manager.ProjectManager._ProjectManager__get_project_metadata">
+<tt class="descname">_ProjectManager__get_project_metadata</tt><big>(</big><em>dirpath</em>, <em>log_level='warn'</em><big>)</big><a class="headerlink" href="#nerve.core.project_manager.ProjectManager._ProjectManager__get_project_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds project metadata given the directory the _meta.yml file resides in</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dirpath</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; local project directory</li>
+<li><strong>log_level</strong> (<em>str, optional</em>) &#8211; logging level. Default: warn</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">project metadata</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">dict</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>OSError or warning</strong> &#8211;</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.project_manager.ProjectManager._get_info">
+<tt class="descname">_get_info</tt><big>(</big><em>name</em>, <em>notes=''</em>, <em>config={}</em>, <em>project={}</em>, <em>log_level='warn'</em><big>)</big><a class="reference internal" href="_modules/nerve/core/project_manager.html#ProjectManager._get_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.project_manager.ProjectManager._get_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience method for creating new temporary config</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; name of project</li>
+<li><strong>notes</strong> (<em>str, optional</em>) &#8211; notes to be added to metadata. Default: &#8216;&#8217;</li>
+<li><strong>config</strong> (<em>dict, optional</em>) &#8211; config parameters, overwrites fields in a copy of self.config</li>
+<li><strong>project</strong> (<em>dict, optional</em>) &#8211; project metadata. Default: {}</li>
+<li><strong>log_level</strong> (<em>str, optional</em>) &#8211; logging level. Default: warn</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">tuple with conveniently named attributes</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">namedtuple</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.project_manager.ProjectManager._get_project">
+<tt class="descname">_get_project</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="_modules/nerve/core/project_manager.html#ProjectManager._get_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.project_manager.ProjectManager._get_project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience factory method for generating Project objects</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; name of project</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Project</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.project_manager.ProjectManager._log">
+<tt class="descname">_log</tt><big>(</big><em>result</em><big>)</big><a class="reference internal" href="_modules/nerve/core/project_manager.html#ProjectManager._log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.project_manager.ProjectManager._log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logging method</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.project_manager.ProjectManager.clone">
+<tt class="descname">clone</tt><big>(</big><em>name</em>, <em>**config</em><big>)</big><a class="reference internal" href="_modules/nerve/core/project_manager.html#ProjectManager.clone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.project_manager.ProjectManager.clone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clones a nerve project to local project-root directory</p>
+<p>Ensures given branch is present in the repository</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; name of project. Default: None</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt><a href="#id1"><span class="problematic" id="id2">**</span></a>ConfigParameters:</dt>
+<dd><ul class="first last simple">
+<li><strong>log_level</strong> <em>(int)</em> – level of log-level for output. Default: 0</li>
+<li><strong>user_branch</strong> <em>(str)</em> – branch to clone from. Default: user&#8217;s branch</li>
+</ul>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">success status</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<ul class="last simple">
+<li>catch repo already exists errors and repo doesn&#8217;t exist errors</li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">config</tt><a class="reference internal" href="_modules/nerve/core/project_manager.html#ProjectManager.config"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>dict: copy of this object&#8217;s configuration</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.project_manager.ProjectManager.create">
+<tt class="descname">create</tt><big>(</big><em>name</em>, <em>notes=None</em>, <em>config={}</em>, <em>**project</em><big>)</big><a class="reference internal" href="_modules/nerve/core/project_manager.html#ProjectManager.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.project_manager.ProjectManager.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a nerve project on Github and in the project-root folder</p>
+<dl class="docutils">
+<dt>Created items include:</dt>
+<dd>Github repository
+dev branch
+nerve project structure
+.lfsconfig
+.gitattributes
+.gitignore
+.git-credentials</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; name of project. Default: None</li>
+<li><strong>notes</strong> (<em>str, optional</em>) &#8211; notes to appended to project metadata. Default: None</li>
+<li><strong>config</strong> (<em>dict, optional</em>) &#8211; config parameters, overwrites fields in a copy of self.config</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">success status</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">bool</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-todo admonition" id="index-1">
+<p class="first admonition-title">Todo</p>
+<ul class="last simple">
+<li>fix whetever causes the notebook kernel to die</li>
+<li>send data to DynamoDB</li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.project_manager.ProjectManager.delete">
+<tt class="descname">delete</tt><big>(</big><em>name</em>, <em>from_server</em>, <em>from_local</em>, <em>**config</em><big>)</big><a class="reference internal" href="_modules/nerve/core/project_manager.html#ProjectManager.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.project_manager.ProjectManager.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes a nerve project</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; name of project. Default: None</li>
+<li><strong>from_server</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) &#8211; delete Github project</li>
+<li><strong>from_local</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) &#8211; delete local project directory</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt><a href="#id3"><span class="problematic" id="id4">**</span></a>ConfigParameters:</dt>
+<dd><ul class="first last simple">
+<li><strong>log_level</strong> <em>(int)</em> – level of log-level for output. Default: 0</li>
+</ul>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">success status</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-todo admonition" id="index-2">
+<p class="first admonition-title">Todo</p>
+<ul class="last simple">
+<li>add git lfs logic for deletion</li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">project_template</tt><a class="reference internal" href="_modules/nerve/core/project_manager.html#ProjectManager.project_template"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>dict: copy of this object&#8217;s project template</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.project_manager.ProjectManager.publish">
+<tt class="descname">publish</tt><big>(</big><em>name</em>, <em>notes=None</em>, <em>**config</em><big>)</big><a class="reference internal" href="_modules/nerve/core/project_manager.html#ProjectManager.publish"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.project_manager.ProjectManager.publish" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempt to publish deliverables from user&#8217;s branch to given project&#8217;s dev branch on Github</p>
+<p>All assets will be published to the user&#8217;s branch.
+If all deliverables are valid then all data and metadata will be commited
+to the user&#8217;s branch and merged into the dev branch.
+If not only invalid metadata will be commited to the user&#8217;s branch</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; name of project. Default: None</li>
+<li><strong>notes</strong> (<em>str, optional</em>) &#8211; notes to appended to project metadata. Default: None</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt><a href="#id5"><span class="problematic" id="id6">**</span></a>ConfigParameters:</dt>
+<dd><ul class="first last simple">
+<li><strong>user_branch</strong> <em>(str)</em> – branch to pull deliverables from. Default: user&#8217;s branch</li>
+<li><strong>publish_include_patterns</strong> <em>(list)</em> – list of regular expressions user to include specific assets</li>
+<li><strong>publish_exclude_patterns</strong> <em>(list)</em> – list of regular expressions user to exclude specific assets</li>
+<li><strong>log_level</strong> <em>(int)</em> – level of log-level for output. Default: 0</li>
+</ul>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">success status</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-todo admonition" id="index-3">
+<p class="first admonition-title">Todo</p>
+<ul class="last simple">
+<li>add branch checking logic to skip the following if not needed?</li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.project_manager.ProjectManager.request">
+<tt class="descname">request</tt><big>(</big><em>name</em>, <em>**config</em><big>)</big><a class="reference internal" href="_modules/nerve/core/project_manager.html#ProjectManager.request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.project_manager.ProjectManager.request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request deliverables from the dev branch of given project</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; name of project. Default: None</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt><a href="#id7"><span class="problematic" id="id8">**</span></a>ConfigParameters:</dt>
+<dd><ul class="first last simple">
+<li><strong>user_branch</strong> <em>(str)</em> – branch to pull deliverables into. Default: user&#8217;s branch</li>
+<li><strong>request_include_patterns</strong> <em>(list)</em> – list of regular expressions user to include specific deliverables</li>
+<li><strong>request_exclude_patterns</strong> <em>(list)</em> – list of regular expressions user to exclude specific deliverables</li>
+<li><strong>log_level</strong> <em>(int)</em> – level of log-level for output. Default: 0</li>
+</ul>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">success status</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.project_manager.ProjectManager.status">
+<tt class="descname">status</tt><big>(</big><em>name</em>, <em>**config</em><big>)</big><a class="reference internal" href="_modules/nerve/core/project_manager.html#ProjectManager.status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.project_manager.ProjectManager.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reports on the status of all affected files within a given project</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; name of project. Default: None</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt><a href="#id9"><span class="problematic" id="id10">**</span></a>ConfigParameters:</dt>
+<dd><ul class="first last simple">
+<li><strong>status_include_patterns</strong> <em>(list)</em> – list of regular expressions user to include specific assets</li>
+<li><strong>status_exclude_patterns</strong> <em>(list)</em> – list of regular expressions user to exclude specific assets</li>
+<li><strong>status_states</strong> <em>(list)</em> – list of object states files are allowed to be in.
+Options: added, copied, deleted, modified, renamed, updated and untracked</li>
+<li><strong>log_level</strong> <em>(int)</em> – level of log-level for output. Default: 0</li>
+</ul>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Yields:</th><td class="field-body"><em>Metadata</em> &#8211;
+Metadata object of each asset</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-nerve.core.project">
+<span id="project"></span><h2>project<a class="headerlink" href="#module-nerve.core.project" title="Permalink to this headline">¶</a></h2>
+<p>The project module contains the Project class, which represent a single Nerve
+project.  This in turn represents a single git repo, Github repo and directory
+within a bucket on AWS.</p>
+<dl class="docutils">
+<dt>Platforrm:</dt>
+<dd>Unix</dd>
+<dt>Author:</dt>
+<dd>Alex Braun &lt;<a class="reference external" href="mailto:alexander&#46;g&#46;braun&#37;&#52;&#48;gmail&#46;com">alexander<span>&#46;</span>g<span>&#46;</span>braun<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt; &lt;<a class="reference external" href="http://www.alexgbraun.com">http://www.alexgbraun.com</a>&gt;</dd>
+</dl>
+<dl class="class">
+<dt id="nerve.core.project.Project">
+<em class="property">class </em><tt class="descclassname">nerve.core.project.</tt><tt class="descname">Project</tt><big>(</big><em>fullpath</em>, <em>remote_config</em>, <em>project_root</em><big>)</big><a class="reference internal" href="_modules/nerve/core/project.html#Project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.project.Project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<p>This class provides an API to an already locally existing Nerve project</p>
+<dl class="attribute">
+<dt id="nerve.core.project.Project.metadata">
+<tt class="descname">metadata</tt><a class="reference internal" href="_modules/nerve/core/project.html#Project.metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.project.Project.metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em></p>
+<p>a dictionary representing this project&#8217;s metadata</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="nerve.core.project.Project.project_path">
+<tt class="descname">project_path</tt><a class="reference internal" href="_modules/nerve/core/project.html#Project.project_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.project.Project.project_path" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em></p>
+<p>the fullpath of this project</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="nerve.core.project.Project.remote_config">
+<tt class="descname">remote_config</tt><a class="reference internal" href="_modules/nerve/core/project.html#Project.remote_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.project.Project.remote_config" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em></p>
+<p>a configuration to be passed to the git remote client</p>
+</dd></dl>
+
+<dl class="docutils">
+<dt>API:</dt>
+<dd>request, publish, status, metadata, project_path and remote_config</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fullpath</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; fullpath to project&#8217;s local metadata (_meta.yml) file</li>
+<li><strong>remote_config</strong> (<em>str or dict</em>) &#8211; a fullpath to a GitRemote config or a dict of one</li>
+<li><strong>project_root</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; fullpath to local root directory for all Nerve projects</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Nerve</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="nerve.core.project.Project._get_deliverables">
+<tt class="descname">_get_deliverables</tt><big>(</big><em>config</em><big>)</big><a class="reference internal" href="_modules/nerve/core/project.html#Project._get_deliverables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.project.Project._get_deliverables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience method for retrieving valid and invalid deliverable assets</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) &#8211; ProjectManager config</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>ConfigParameters:</dt>
+<dd><ul class="first last simple">
+<li><strong>log-level</strong> <em>(str)</em> - logging level</li>
+</ul>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">valid deliverables, invalid deliverables</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">tuple</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.project.Project._publish_nondeliverables">
+<tt class="descname">_publish_nondeliverables</tt><big>(</big><em>config</em><big>)</big><a class="reference internal" href="_modules/nerve/core/project.html#Project._publish_nondeliverables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.project.Project._publish_nondeliverables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience method for publishing nondeliverable assets</p>
+<p>Assets published to user branch</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) &#8211; ProjectManager config</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>ConfigParameters:</dt>
+<dd><ul class="first last simple">
+<li><strong>user-branch</strong> <em>(str)</em> - branch to pull deliverables into. Default: user&#8217;s branch</li>
+<li><strong>environment</strong> <em>(dict)</em> - environment variables used for calls to shell</li>
+</ul>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.project.Project._update_local">
+<tt class="descname">_update_local</tt><big>(</big><em>config</em><big>)</big><a class="reference internal" href="_modules/nerve/core/project.html#Project._update_local"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.project.Project._update_local" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience method for merging remote dev branch into local user branch</p>
+<p>Ensures non-fastforward merge conflicts don&#8217;t occur</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) &#8211; ProjectManager config</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>ConfigParameters:</dt>
+<dd><ul class="first last simple">
+<li><strong>user-branch</strong> <em>(str)</em> - branch to pull deliverables into. Default: user&#8217;s branch</li>
+<li><strong>environment</strong> <em>(dict)</em> - environment variables used for calls to shell</li>
+</ul>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">metadata</tt><a class="reference internal" href="_modules/nerve/core/project.html#Project.metadata"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>dict: copy of this object&#8217;s configuration</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">project_path</tt><a class="reference internal" href="_modules/nerve/core/project.html#Project.project_path"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>dict: copy of this object&#8217;s project path</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.project.Project.publish">
+<tt class="descname">publish</tt><big>(</big><em>config</em>, <em>notes=None</em><big>)</big><a class="reference internal" href="_modules/nerve/core/project.html#Project.publish"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.project.Project.publish" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempt to publish deliverables from user&#8217;s branch to given project&#8217;s dev branch on Github</p>
+<p>All assets will be published to the user&#8217;s branch.
+If all deliverables are valid then all data and metadata will be commited
+to the user&#8217;s branch and merged into the dev branch.
+If not only invalid metadata will be commited to the user&#8217;s branch</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>config</strong> &#8211; ProjectManager config</li>
+<li><strong>notes</strong> (<em>str, optional</em>) &#8211; notes to appended to project metadata. Default: None</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>ConfigParameters:</dt>
+<dd><ul class="first last simple">
+<li><strong>user-branch</strong> <em>(str)</em> - branch to publish deliverables into. Default: user&#8217;s branch</li>
+<li><strong>publish-include-patterns</strong> <em>(list)</em> - list of regular expressions user to include specific assets</li>
+<li><strong>publish-exclude-patterns</strong> <em>(list)</em> - list of regular expressions user to exclude specific assets</li>
+<li><strong>log-level</strong> <em>(str)</em> - logging level</li>
+</ul>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">success status</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-todo admonition" id="index-4">
+<p class="first admonition-title">Todo</p>
+<ul class="last simple">
+<li>add branch checking logic to skip the following if not needed?</li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">remote_config</tt><a class="reference internal" href="_modules/nerve/core/project.html#Project.remote_config"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>dict: copy of this object&#8217;s project template</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.project.Project.request">
+<tt class="descname">request</tt><big>(</big><em>config</em><big>)</big><a class="reference internal" href="_modules/nerve/core/project.html#Project.request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.project.Project.request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request deliverables from the dev branch of given project</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> &#8211; ProjectManager config</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>ConfigParameters:</dt>
+<dd><ul class="first last simple">
+<li><strong>user-branch</strong> <em>(str)</em> - branch to pull deliverables into. Default: user&#8217;s branch</li>
+<li><strong>request-include-patterns</strong> <em>(list)</em> - list of regular expressions user to include specific deliverables</li>
+<li><strong>request-exclude-patterns</strong> <em>(list)</em> - list of regular expressions user to exclude specific deliverables</li>
+<li><strong>log-level</strong> <em>(str)</em> - logging level</li>
+</ul>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">success status</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.project.Project.status">
+<tt class="descname">status</tt><big>(</big><em>config</em><big>)</big><a class="reference internal" href="_modules/nerve/core/project.html#Project.status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.project.Project.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reports on the status of all affected files within a given project</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> &#8211; ProjectManager config</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>ConfigParameters:</dt>
+<dd><ul class="first last simple">
+<li><strong>status-include-patterns</strong> <em>(list)</em> - list of regular expressions user to include specific assets</li>
+<li><strong>status-exclude-patterns</strong> <em>(list)</em> - list of regular expressions user to exclude specific assets</li>
+<li><strong>status-states</strong> <em>(list)</em> - list of object states files are allowed to be in.
+Options: added, copied, deleted, modified, renamed, updated and untracked</li>
+<li><strong>log-level</strong> <em>(str)</em> - logging level</li>
+</ul>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Yields:</th><td class="field-body"><em>Metadata</em> &#8211;
+Metadata object of each asset</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-nerve.core.metadata">
+<span id="metadata"></span><h2>metadata<a class="headerlink" href="#module-nerve.core.metadata" title="Permalink to this headline">¶</a></h2>
+<p>The metadata module contain the Metadata class which is used by nerve to handle all metadata</p>
+<dl class="class">
+<dt id="nerve.core.metadata.Metadata">
+<em class="property">class </em><tt class="descclassname">nerve.core.metadata.</tt><tt class="descname">Metadata</tt><big>(</big><em>item</em>, <em>metapath=None</em>, <em>datapath=None</em>, <em>spec=None</em>, <em>skip_keys=[]</em><big>)</big><a class="reference internal" href="_modules/nerve/core/metadata.html#Metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.metadata.Metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<p>The Metadata class provides a simple object for generating, validating and writing metadata</p>
+<p>Internally, Metadata generates a specification class found in the specifications module.
+Those specification classes are themselves subclassed from schematics.model.Model.</p>
+<p>API: data, get_traits, validate, write, __getitem__</p>
+<p>Constructor takes a dict, filepath or dirpath and turns it into internal metadata
+The specification class used to wrap the internal data is derived from item.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>item</strong> (<em>dict or str</em>) &#8211; a dict of asset metadata, an asset yml file or
+the fullpath of an asset</li>
+<li><strong>metapath</strong> (<em>str, optional</em>) &#8211; fullpath to item metadata _meta.yml file. Default: None</li>
+<li><strong>datapath</strong> (<em>str, optional</em>) &#8211; fullpath to item data. Default: None</li>
+<li><strong>spec</strong> (<em>str, optional</em>) &#8211; item specification. Default: None</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Metadata</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>OSError, TypeError</strong> &#8211;</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="nerve.core.metadata.Metadata._get_spec">
+<tt class="descname">_get_spec</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="_modules/nerve/core/metadata.html#Metadata._get_spec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.metadata.Metadata._get_spec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience method that returns a class from the specifications module of the same name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; specification class name (all lowercase is fine)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">specification of class &#8220;name&#8221;</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Specification</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="nerve.core.metadata.Metadata.data">
+<tt class="descname">data</tt><a class="reference internal" href="_modules/nerve/core/metadata.html#Metadata.data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.metadata.Metadata.data" title="Permalink to this definition">¶</a></dt>
+<dd><p>dict: copy of internal data</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="nerve.core.metadata.Metadata.datapath">
+<tt class="descname">datapath</tt><a class="reference internal" href="_modules/nerve/core/metadata.html#Metadata.datapath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.metadata.Metadata.datapath" title="Permalink to this definition">¶</a></dt>
+<dd><p>str: fullpath to data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.metadata.Metadata.get_traits">
+<tt class="descname">get_traits</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nerve/core/metadata.html#Metadata.get_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.metadata.Metadata.get_traits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates metadata from evaluating data files pointed to provided metadata
+Uses trait function from the traits module to overwrites internal data
+with new values</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">traits</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="nerve.core.metadata.Metadata.metapath">
+<tt class="descname">metapath</tt><a class="reference internal" href="_modules/nerve/core/metadata.html#Metadata.metapath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.metadata.Metadata.metapath" title="Permalink to this definition">¶</a></dt>
+<dd><p>str: fullpath to _meta file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.metadata.Metadata.validate">
+<tt class="descname">validate</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nerve/core/metadata.html#Metadata.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.metadata.Metadata.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates internal data according to specification</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">validity</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.metadata.Metadata.write">
+<tt class="descname">write</tt><big>(</big><em>fullpath=None</em>, <em>validate=True</em><big>)</big><a class="reference internal" href="_modules/nerve/core/metadata.html#Metadata.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.metadata.Metadata.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes internal data to file with correct name in correct location</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fullpath</strong> (<em>str, optional</em>) &#8211; full path to yml metadata file</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">success status</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-nerve.core.api">
+<span id="api"></span><h2>api<a class="headerlink" href="#module-nerve.core.api" title="Permalink to this headline">¶</a></h2>
+<p>The api module contains the User and Admin classes, which wrap the nerve model class</p>
+<dl class="docutils">
+<dt>Platforrm:</dt>
+<dd>Unix</dd>
+<dt>Author:</dt>
+<dd>Alex Braun &lt;<a class="reference external" href="mailto:alexander&#46;g&#46;braun&#37;&#52;&#48;gmail&#46;com">alexander<span>&#46;</span>g<span>&#46;</span>braun<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt; &lt;<a class="reference external" href="http://www.alexgbraun.com">http://www.alexgbraun.com</a>&gt;</dd>
+</dl>
+<dl class="class">
+<dt id="nerve.core.api.NerveUser">
+<em class="property">class </em><tt class="descclassname">nerve.core.api.</tt><tt class="descname">NerveUser</tt><a class="reference internal" href="_modules/nerve/core/api.html#NerveUser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.api.NerveUser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<p>Class for interacting with nerve as a user</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">NerveUser</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Client</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="nerve.core.api.NerveUser._get_project">
+<tt class="descname">_get_project</tt><big>(</big><em>dirpath</em><big>)</big><a class="reference internal" href="_modules/nerve/core/api.html#NerveUser._get_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.api.NerveUser._get_project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds and returns project metadata</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dirpath</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; directory of local nerve project</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Metadata</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.api.NerveUser.clone">
+<tt class="descname">clone</tt><big>(</big><em>name</em>, <em>**config</em><big>)</big><a class="reference internal" href="_modules/nerve/core/api.html#NerveUser.clone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.api.NerveUser.clone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clones a nerve project to local project-root directory</p>
+<p>Ensures given branch is present in the repository</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; name of project. Default: None</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt><a href="#id11"><span class="problematic" id="id12">**</span></a>ConfigParameters:</dt>
+<dd><ul class="first last simple">
+<li><strong>log_level</strong> <em>(str)</em> – logging level. Default: warn</li>
+<li><strong>user_branch</strong> <em>(str)</em> – branch to clone from. Default: user&#8217;s branch</li>
+</ul>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">success status</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.api.NerveUser.delete">
+<tt class="descname">delete</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nerve/core/api.html#NerveUser.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.api.NerveUser.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes a nerve project from local storage</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">success status</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.api.NerveUser.publish">
+<tt class="descname">publish</tt><big>(</big><em>notes=None</em>, <em>**config</em><big>)</big><a class="reference internal" href="_modules/nerve/core/api.html#NerveUser.publish"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.api.NerveUser.publish" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempt to publish deliverables from user&#8217;s branch to given project&#8217;s dev branch on Github</p>
+<p>All assets will be published to the user&#8217;s branch.
+If all deliverables are valid then all data and metadata will be commited
+to the user&#8217;s branch and merged into the dev branch.
+If not only invalid metadata will be commited to the user&#8217;s branch</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>notes</strong> (<em>str, optional</em>) &#8211; notes to appended to project metadata. Default: None</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt><a href="#id13"><span class="problematic" id="id14">**</span></a>ConfigParameters:</dt>
+<dd><ul class="first last simple">
+<li><strong>user_branch</strong> <em>(str)</em> – branch to pull deliverables from. Default: user&#8217;s branch</li>
+<li><strong>publish_include_patterns</strong> <em>(list)</em> – list of regular expressions user to include specific assets</li>
+<li><strong>publish_exclude_patterns</strong> <em>(list)</em> – list of regular expressions user to exclude specific assets</li>
+<li><strong>log_level</strong> <em>(str)</em> – logging level. Default: warn</li>
+</ul>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">success status</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.api.NerveUser.request">
+<tt class="descname">request</tt><big>(</big><em>**config</em><big>)</big><a class="reference internal" href="_modules/nerve/core/api.html#NerveUser.request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.api.NerveUser.request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request deliverables from the dev branch of given project</p>
+<dl class="docutils">
+<dt><a href="#id15"><span class="problematic" id="id16">**</span></a>ConfigParameters:</dt>
+<dd><ul class="first last simple">
+<li><strong>user_branch</strong> <em>(str)</em> – branch to pull deliverables into. Default: user&#8217;s branch</li>
+<li><strong>request_include_patterns</strong> <em>(list)</em> – list of regular expressions user to include specific deliverables</li>
+<li><strong>request_exclude_patterns</strong> <em>(list)</em> – list of regular expressions user to exclude specific deliverables</li>
+<li><strong>log_level</strong> <em>(str)</em> – logging level. Default: warn</li>
+</ul>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">success status</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.api.NerveUser.status">
+<tt class="descname">status</tt><big>(</big><em>**config</em><big>)</big><a class="reference internal" href="_modules/nerve/core/api.html#NerveUser.status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.api.NerveUser.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reports on the status of all affected files within a given project</p>
+<dl class="docutils">
+<dt><a href="#id17"><span class="problematic" id="id18">**</span></a>ConfigParameters:</dt>
+<dd><ul class="first last simple">
+<li><strong>status_include_patterns</strong> <em>(list)</em> – list of regular expressions user to include specific assets</li>
+<li><strong>status_exclude_patterns</strong> <em>(list)</em> – list of regular expressions user to exclude specific assets</li>
+<li><strong>status_states</strong> <em>(list)</em> – list of object states files are allowed to be in.
+Options: added, copied, deleted, modified, renamed, updated and untracked</li>
+<li><strong>log_level</strong> <em>(str)</em> – logging level. Default: warn</li>
+</ul>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Yields:</th><td class="field-body"><em>Metadata</em> &#8211;
+Metadata object of each asset</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="nerve.core.api.NerveAdmin">
+<em class="property">class </em><tt class="descclassname">nerve.core.api.</tt><tt class="descname">NerveAdmin</tt><a class="reference internal" href="_modules/nerve/core/api.html#NerveAdmin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.api.NerveAdmin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nerve.core.api.NerveUser" title="nerve.core.api.NerveUser"><tt class="xref py py-class docutils literal"><span class="pre">nerve.core.api.NerveUser</span></tt></a></p>
+<p>Class for interacting with nerve as an administrator</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">NerveAdmin</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Client</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="nerve.core.api.NerveAdmin.create">
+<tt class="descname">create</tt><big>(</big><em>name</em>, <em>notes=None</em>, <em>**project</em><big>)</big><a class="reference internal" href="_modules/nerve/core/api.html#NerveAdmin.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.api.NerveAdmin.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a nerve project on Github and in the project-root folder</p>
+<dl class="docutils">
+<dt>Created items include:</dt>
+<dd><ul class="first last simple">
+<li>Github repository</li>
+<li>dev branch</li>
+<li>nerve project structure</li>
+<li>.lfsconfig</li>
+<li>.gitattributes</li>
+<li>.gitignore</li>
+</ul>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; name of project. Default: None</li>
+<li><strong>notes</strong> (<em>str, optional</em>) &#8211; notes to appended to project metadata. Default: None</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">success status</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">bool</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.api.NerveAdmin.delete">
+<tt class="descname">delete</tt><big>(</big><em>name</em>, <em>from_server</em>, <em>from_local</em><big>)</big><a class="reference internal" href="_modules/nerve/core/api.html#NerveAdmin.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.api.NerveAdmin.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes a nerve project</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; name of project</li>
+<li><strong>from_server</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) &#8211; delete Github project</li>
+<li><strong>from_local</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) &#8211; delete local project directory</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">success status</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">bool</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="client">
+<h2>client<a class="headerlink" href="#client" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-nerve.core.git">
+<span id="git"></span><h2>git<a class="headerlink" href="#module-nerve.core.git" title="Permalink to this headline">¶</a></h2>
+<p>The model module contains the Git class, nerve&#8217;s internal API for accessing git</p>
+<dl class="docutils">
+<dt>Platforrm:</dt>
+<dd>Unix</dd>
+<dt>Author:</dt>
+<dd>Alex Braun &lt;<a class="reference external" href="mailto:alexander&#46;g&#46;braun&#37;&#52;&#48;gmail&#46;com">alexander<span>&#46;</span>g<span>&#46;</span>braun<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt; &lt;<a class="reference external" href="http://www.alexgbraun.com">http://www.alexgbraun.com</a>&gt;</dd>
+</dl>
+<dl class="class">
+<dt id="nerve.core.git.Git">
+<em class="property">class </em><tt class="descclassname">nerve.core.git.</tt><tt class="descname">Git</tt><big>(</big><em>working_dir</em>, <em>url=None</em>, <em>branch=None</em>, <em>environment={}</em><big>)</big><a class="reference internal" href="_modules/nerve/core/git.html#Git"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.git.Git" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">git.cmd.Git</span></tt></p>
+<p>Class for interacting with a single local git repository</p>
+<p>API: create_gitignore, add, branch, checkout, push, pull, commit, reset, status</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>working_dir</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; fullpath of git repository</li>
+<li><strong>url</strong> (<em>str, optional</em>) &#8211; url to clone Github repository from. Default: None</li>
+<li><strong>branch</strong> (<em>str, optional</em>) &#8211; branch to clone from or checkout. Default: None</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">local git repository</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Git</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="nerve.core.git.Git._clone">
+<tt class="descname">_clone</tt><big>(</big><em>working_dir</em>, <em>url=None</em>, <em>branch=None</em><big>)</big><a class="reference internal" href="_modules/nerve/core/git.html#Git._clone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.git.Git._clone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience method for cloning a GitHub repository</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>working_dir</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; fullpath of git repository location</li>
+<li><strong>url</strong> (<em>str, optional</em>) &#8211; url to clone Github repository from. Default: None</li>
+<li><strong>branch</strong> (<em>str, optional</em>) &#8211; branch to clone from or checkout. Default: None</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">git.Repo: local repository</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-todo admonition" id="index-5">
+<p class="first admonition-title">Todo</p>
+<ul class="last simple">
+<li>fix try block so that it raises an error when ssh-agent isn&#8217;t
+running or ssh private has not been added</li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.git.Git._delete_index_on_error">
+<tt class="descname">_delete_index_on_error</tt><big>(</big><em>func</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/nerve/core/git.html#Git._delete_index_on_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.git.Git._delete_index_on_error" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.git.Git._get_branch">
+<tt class="descname">_get_branch</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="_modules/nerve/core/git.html#Git._get_branch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.git.Git._get_branch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.git.Git.add">
+<tt class="descname">add</tt><big>(</big><em>items=[]</em>, <em>all=False</em><big>)</big><a class="reference internal" href="_modules/nerve/core/git.html#Git.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.git.Git.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stage items for git commit</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>items</strong> (<em>list, optional</em>) &#8211; filepaths to be added</li>
+<li><strong>all</strong> (<em>bool, optional</em>) &#8211; commit all items</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.git.Git.branch">
+<tt class="descname">branch</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="_modules/nerve/core/git.html#Git.branch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.git.Git.branch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checkout a given branch, create it if necessary</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; branch name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.git.Git.commit">
+<tt class="descname">commit</tt><big>(</big><em>message</em><big>)</big><a class="reference internal" href="_modules/nerve/core/git.html#Git.commit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.git.Git.commit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Commit staged files</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>message</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; commit message</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.git.Git.config_credential_helper">
+<tt class="descname">config_credential_helper</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nerve/core/git.html#Git.config_credential_helper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.git.Git.config_credential_helper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds credential to .git/config</p>
+<p>Credential store points to a .git-credentials file inside the repo.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.git.Git.create_git_credentials">
+<tt class="descname">create_git_credentials</tt><big>(</big><em>items</em><big>)</big><a class="reference internal" href="_modules/nerve/core/git.html#Git.create_git_credentials"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.git.Git.create_git_credentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a .git-credentials file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>items</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#list" title="(in Python v3.6)"><em>list</em></a>) &#8211; list of lines to write into .git-credentials</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">success status</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.git.Git.create_gitignore">
+<tt class="descname">create_gitignore</tt><big>(</big><em>patterns</em><big>)</big><a class="reference internal" href="_modules/nerve/core/git.html#Git.create_gitignore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.git.Git.create_gitignore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a .gitignore file in the root path of the local git repository</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>patterns</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#list" title="(in Python v3.6)"><em>list</em></a>) &#8211; gitignore patterns (glob style)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">existence of .gitignore file</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.git.Git.merge">
+<tt class="descname">merge</tt><big>(</big><em>src</em>, <em>dest</em><big>)</big><a class="reference internal" href="_modules/nerve/core/git.html#Git.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.git.Git.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge source branch into destination branch</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>src</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; source branch</li>
+<li><strong>dest</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; destination branch</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.git.Git.pull">
+<tt class="descname">pull</tt><big>(</big><em>branch</em>, <em>remote='origin'</em><big>)</big><a class="reference internal" href="_modules/nerve/core/git.html#Git.pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.git.Git.pull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pull upstream commits from remote branch</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>remote</strong> (<em>str, optional</em>) &#8211; remote repository. Default: origin</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.git.Git.push">
+<tt class="descname">push</tt><big>(</big><em>branch</em>, <em>remote='origin'</em><big>)</big><a class="reference internal" href="_modules/nerve/core/git.html#Git.push"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.git.Git.push" title="Permalink to this definition">¶</a></dt>
+<dd><p>Push comit to given branch</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>branch</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; branch name</li>
+<li><strong>remote</strong> (<em>str, optional</em>) &#8211; remote repository. Default: origin</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.git.Git.references">
+<tt class="descname">references</tt><big>(</big><em>branches=[], reftypes=['local', 'remote']</em><big>)</big><a class="reference internal" href="_modules/nerve/core/git.html#Git.references"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.git.Git.references" title="Permalink to this definition">¶</a></dt>
+<dd><p>Yields reference object information</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>branches</strong> (<em>list, optional</em>) &#8211; limit references to these branches. Default: all branches</li>
+<li><strong>reftypes</strong> (<em>list, optional</em>) &#8211; limit references to local and/or remote repositories. Default: both</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body"><p class="first last"><em>dict</em> &#8211;
+reference</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.git.Git.reset">
+<tt class="descname">reset</tt><big>(</big><em>exclude=[]</em><big>)</big><a class="reference internal" href="_modules/nerve/core/git.html#Git.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.git.Git.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove files staged for commit excluding given fullpaths</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>exclude</strong> (<em>list, optional</em>) &#8211; fullpaths of files to be reatined in commit</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="nerve.core.git.Git.sha">
+<tt class="descname">sha</tt><a class="reference internal" href="_modules/nerve/core/git.html#Git.sha"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.git.Git.sha" title="Permalink to this definition">¶</a></dt>
+<dd><p>str: head commit sha</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.git.Git.status">
+<tt class="descname">status</tt><big>(</big><em>include=[]</em>, <em>exclude=[]</em>, <em>states=[]</em>, <em>staged=None</em>, <em>warnings=False</em><big>)</big><a class="reference internal" href="_modules/nerve/core/git.html#Git.status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.git.Git.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the status of the repositories files</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>include</strong> (<em>list, optional</em>) &#8211; list of regex patterns used to include files. Default: []</li>
+<li><strong>exclude</strong> (<em>list, optional</em>) &#8211; list of regex patterns used to exclude files. Default: []</li>
+<li><strong>states</strong> (<em>list, optional</em>) &#8211; file states to be shown in output. Default: all states
+Options: added, copied, deleted, modified, renamed, updated, untracked</li>
+<li><strong>staged</strong> (<em>bool, optional</em>) &#8211; include only files which are staged or unstaged. Default: both</li>
+<li><strong>warnings</strong> (<em>bool, optional</em>) &#8211; display warnings</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of dicts, each one representing a file</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="nerve.core.git.Git.url">
+<tt class="descname">url</tt><a class="reference internal" href="_modules/nerve/core/git.html#Git.url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.git.Git.url" title="Permalink to this definition">¶</a></dt>
+<dd><p>str: repo url</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-nerve.core.git_lfs">
+<span id="git-lfs"></span><h2>git_lfs<a class="headerlink" href="#module-nerve.core.git_lfs" title="Permalink to this headline">¶</a></h2>
+<p>The model module contains the GitFS class, nerve&#8217;s internal API for accessing git lfs</p>
+<dl class="docutils">
+<dt>Platforrm:</dt>
+<dd>Unix</dd>
+<dt>Author:</dt>
+<dd>Alex Braun &lt;<a class="reference external" href="mailto:alexander&#46;g&#46;braun&#37;&#52;&#48;gmail&#46;com">alexander<span>&#46;</span>g<span>&#46;</span>braun<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt; &lt;<a class="reference external" href="http://www.alexgbraun.com">http://www.alexgbraun.com</a>&gt;</dd>
+</dl>
+<div class="admonition-todo admonition" id="index-6">
+<p class="first admonition-title">Todo</p>
+<ul class="last simple">
+<li>integrate python-based git-lfs server instead of using git-lfs-s3 which is ruby-based</li>
+</ul>
+</div>
+<dl class="class">
+<dt id="nerve.core.git_lfs.GitLFS">
+<em class="property">class </em><tt class="descclassname">nerve.core.git_lfs.</tt><tt class="descname">GitLFS</tt><big>(</big><em>working_dir</em>, <em>environment={}</em><big>)</big><a class="reference internal" href="_modules/nerve/core/git_lfs.html#GitLFS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.git_lfs.GitLFS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<p>Class for sending and parsing git lfs commands executed upon a single local git repository</p>
+<p>API: working_dir, create_config, install, track, pull, status</p>
+<p>Changes current working directory of process to woking_dir.
+Starts local lfs server.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>working_dir</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; fullpath of git repository (must exist)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">local git lfs repository</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">GitLFS</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="nerve.core.git_lfs.GitLFS.create_config">
+<tt class="descname">create_config</tt><big>(</big><em>url</em>, <em>access='basic'</em><big>)</big><a class="reference internal" href="_modules/nerve/core/git_lfs.html#GitLFS.create_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.git_lfs.GitLFS.create_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a .lfsconfig file in the root path of the local git repository</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>url</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; url of local git lfs server (eg. <a class="reference external" href="http://localhost:8080">http://localhost:8080</a>)</li>
+<li><strong>access</strong> (<em>str, optional</em>) &#8211; git lfs access rights. Default: &#8216;basic&#8217;</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">existence of .lfsconfig file</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">bool</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.git_lfs.GitLFS.install">
+<tt class="descname">install</tt><big>(</big><em>force=False</em>, <em>local=False</em>, <em>skip_smudge=False</em><big>)</big><a class="reference internal" href="_modules/nerve/core/git_lfs.html#GitLFS.install"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.git_lfs.GitLFS.install" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform the following actions to ensure that Git LFS is setup properly:</p>
+<ul class="simple">
+<li>Set up the clean and smudge filters under the name &#8220;lfs&#8221; in the global Git
+config.</li>
+<li>Install a pre-push hook to run git lfs pre-push for the current repository,
+if run from inside one. If &#8220;core.hooksPath&#8221; is configured in any Git
+configuration (and supported, i.e., the installed Git version is at least
+2.9.0), then the pre-push hook will be installed to that directory instead.</li>
+</ul>
+<p>Without any options, git lfs install will only setup the &#8220;lfs&#8221; smudge and clean
+filters if they are not already set.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>force</strong> (<em>bool, optional</em>) &#8211; sets the &#8220;lfs&#8221; smudge and clean filters, overwriting existing values</li>
+<li><strong>local</strong> &#8211; sets the &#8220;lfs&#8221; smudge and clean filters in the local repository&#8217;s git
+config, instead of the global git config (~/.gitconfig)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of strings detailing stdout of command</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">List</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.git_lfs.GitLFS.pull">
+<tt class="descname">pull</tt><big>(</big><em>include=[]</em>, <em>exclude=[]</em><big>)</big><a class="reference internal" href="_modules/nerve/core/git_lfs.html#GitLFS.pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.git_lfs.GitLFS.pull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pull data from git lfs, replacing local pointer files with their actual data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>include</strong> (<em>list, optional</em>) &#8211; list of glob patterns used to include files. Default: []</li>
+<li><strong>exclude</strong> (<em>list, optional</em>) &#8211; list of glob patterns used to exclude files. Default: []</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of strings detailing stdout of command</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">List</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.git_lfs.GitLFS.push">
+<tt class="descname">push</tt><big>(</big><em>branch</em>, <em>remote='origin'</em><big>)</big><a class="reference internal" href="_modules/nerve/core/git_lfs.html#GitLFS.push"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.git_lfs.GitLFS.push" title="Permalink to this definition">¶</a></dt>
+<dd><p>Push comit to given branch</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>branch</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; branch name</li>
+<li><strong>remote</strong> (<em>str, optional</em>) &#8211; remote repository. Default: origin</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.git_lfs.GitLFS.remove_prepush">
+<tt class="descname">remove_prepush</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nerve/core/git_lfs.html#GitLFS.remove_prepush"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.git_lfs.GitLFS.remove_prepush" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes .git/hooks/pre-push, which otherwise breaks git push</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">success status</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.git_lfs.GitLFS.status">
+<tt class="descname">status</tt><big>(</big><em>include=[]</em>, <em>exclude=[]</em>, <em>states=[]</em>, <em>staged=None</em>, <em>warnings=False</em><big>)</big><a class="reference internal" href="_modules/nerve/core/git_lfs.html#GitLFS.status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.git_lfs.GitLFS.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the status of the tracked git lfs files</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>include</strong> (<em>list, optional</em>) &#8211; list of regex patterns used to include files. Default: []</li>
+<li><strong>exclude</strong> (<em>list, optional</em>) &#8211; list of regex patterns used to exclude files. Default: []</li>
+<li><strong>states</strong> (<em>list, optional</em>) &#8211; file states to be shown in output. Default: all states
+Options: added, copied, deleted, modified, renamed, updated, untracked</li>
+<li><strong>staged</strong> (<em>bool, optional</em>) &#8211; include only files which are staged or unstaged. Default: both</li>
+<li><strong>warnings</strong> (<em>bool, optional</em>) &#8211; display warnings</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of dicts, each one representing a file</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.git_lfs.GitLFS.track">
+<tt class="descname">track</tt><big>(</big><em>extensions=[]</em><big>)</big><a class="reference internal" href="_modules/nerve/core/git_lfs.html#GitLFS.track"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.git_lfs.GitLFS.track" title="Permalink to this definition">¶</a></dt>
+<dd><p>Track files with certain file extensions through git lfs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>extensions</strong> (<em>list or str</em>) &#8211; list of file extensions specifying file extensions to be tracked</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<p>lfs.track([&#8216;png&#8217;, &#8216;obj&#8217;, &#8216;jpg&#8217;])</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list of strings detailing stdout of command</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">List</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="nerve.core.git_lfs.GitLFS.working_dir">
+<tt class="descname">working_dir</tt><a class="reference internal" href="_modules/nerve/core/git_lfs.html#GitLFS.working_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.git_lfs.GitLFS.working_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>str: fullpath of local git repository</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-nerve.core.utils">
+<span id="utils"></span><h2>utils<a class="headerlink" href="#module-nerve.core.utils" title="Permalink to this headline">¶</a></h2>
+<p>The utils module contains functions generally usefull to multiple components
+within the nerve framework</p>
+<dl class="function">
+<dt id="nerve.core.utils.execute_subprocess">
+<tt class="descclassname">nerve.core.utils.</tt><tt class="descname">execute_subprocess</tt><big>(</big><em>command</em>, <em>cwd</em>, <em>error_re='[eE]rror:.*'</em>, <em>environment={}</em>, <em>timeout=None</em><big>)</big><a class="reference internal" href="_modules/nerve/core/utils.html#execute_subprocess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.utils.execute_subprocess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes a given command as a subprocess and scrubs the output for errors</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>command</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; shell command to be run</li>
+<li><strong>cwd</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; current working directory</li>
+<li><strong>error_re</strong> (<em>str, optional</em>) &#8211; regex used for capturing errors</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">lines of output</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">list</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><tt class="xref py py-exc docutils literal"><span class="pre">SubprocessError</span></tt> &#8211; 
+stdout error as message</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nerve.core.utils.get_status">
+<tt class="descclassname">nerve.core.utils.</tt><tt class="descname">get_status</tt><big>(</big><em>command</em>, <em>working_dir</em>, <em>include=[]</em>, <em>exclude=[]</em>, <em>states=[]</em>, <em>staged=None</em>, <em>warnings=False</em><big>)</big><a class="reference internal" href="_modules/nerve/core/utils.html#get_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.utils.get_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function for running a git or git lfs status command and returning nice output</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>command</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; command to be run. [git or git lfs] status &#8211;porcelain</li>
+<li><strong>include</strong> (<em>list, optional</em>) &#8211; list of regex patterns used to include files. Default: []</li>
+<li><strong>exclude</strong> (<em>list, optional</em>) &#8211; list of regex patterns used to exclude files. Default: []</li>
+<li><strong>states</strong> (<em>list, optional</em>) &#8211; file states to be shown in output. Default: all states
+Options: added, copied, deleted, modified, renamed, updated, untracked</li>
+<li><strong>staged</strong> (<em>bool, optional</em>) &#8211; include only files which are staged or unstaged. Default: both</li>
+<li><strong>warnings</strong> (<em>bool, optional</em>) &#8211; display warnings</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Yields:</th><td class="field-body"><p class="first last"><em>dict</em> &#8211;
+a single file</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nerve.core.utils.is_dictlike">
+<tt class="descclassname">nerve.core.utils.</tt><tt class="descname">is_dictlike</tt><big>(</big><em>item</em><big>)</big><a class="reference internal" href="_modules/nerve/core/utils.html#is_dictlike"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.utils.is_dictlike" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if an item id dictlike</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="nerve.core.utils.deep_update">
+<tt class="descclassname">nerve.core.utils.</tt><tt class="descname">deep_update</tt><big>(</big><em>original</em>, <em>update</em><big>)</big><a class="reference internal" href="_modules/nerve/core/utils.html#deep_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.utils.deep_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursively updates an original dictionary with an update dictionary</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>original</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) &#8211; original dictionary</li>
+<li><strong>update</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) &#8211; dictionary to be merged</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">new updated dictionary</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="nerve.core.utils.conform_keys">
+<tt class="descclassname">nerve.core.utils.</tt><tt class="descname">conform_keys</tt><big>(</big><em>data</em>, <em>source='_'</em>, <em>target='-'</em>, <em>skip=[]</em><big>)</big><a class="reference internal" href="_modules/nerve/core/utils.html#conform_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.utils.conform_keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursively renames a dictionary&#8217;s keys</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) &#8211; dictionary to be conformed</li>
+<li><strong>source</strong> (<em>str, optional</em>) &#8211; regex pattern to match in keys. Default: &#8216;_&#8217;</li>
+<li><strong>target</strong> (<em>str, optional</em>) &#8211; replacement string. Default: &#8216;-&#8216;</li>
+<li><strong>skip</strong> (<em>list, optional</em>) &#8211; keys to skip. Default: []</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">conformed dictionary</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="nerve.core.utils.Name">
+<em class="property">class </em><tt class="descclassname">nerve.core.utils.</tt><tt class="descname">Name</tt><big>(</big><em>name</em>, <em>project_root=None</em><big>)</big><a class="reference internal" href="_modules/nerve/core/utils.html#Name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.utils.Name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<dl class="method">
+<dt id="nerve.core.utils.Name._Name__get_asset_attrs">
+<tt class="descname">_Name__get_asset_attrs</tt><big>(</big><em>items</em><big>)</big><a class="headerlink" href="#nerve.core.utils.Name._Name__get_asset_attrs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.utils.Name._Name__get_attrs">
+<tt class="descname">_Name__get_attrs</tt><big>(</big><em>raw</em>, <em>ftype</em><big>)</big><a class="headerlink" href="#nerve.core.utils.Name._Name__get_attrs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.utils.Name._Name__get_ftype">
+<tt class="descname">_Name__get_ftype</tt><big>(</big><em>raw</em><big>)</big><a class="headerlink" href="#nerve.core.utils.Name._Name__get_ftype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.utils.Name._Name__get_project_root">
+<tt class="descname">_Name__get_project_root</tt><big>(</big><em>fullpath</em><big>)</big><a class="headerlink" href="#nerve.core.utils.Name._Name__get_project_root" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="nerve.core.utils.Name.fullpath">
+<tt class="descname">fullpath</tt><a class="reference internal" href="_modules/nerve/core/utils.html#Name.fullpath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.utils.Name.fullpath" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="nerve.core.utils.Name.project_path">
+<tt class="descname">project_path</tt><a class="reference internal" href="_modules/nerve/core/utils.html#Name.project_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.utils.Name.project_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="nerve.core.utils.Name.specification_path">
+<tt class="descname">specification_path</tt><a class="reference internal" href="_modules/nerve/core/utils.html#Name.specification_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.utils.Name.specification_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="nerve.core.utils.Name.to_dict">
+<tt class="descname">to_dict</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/nerve/core/utils.html#Name.to_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.utils.Name.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="nerve.core.utils.fetch_project_traits">
+<tt class="descclassname">nerve.core.utils.</tt><tt class="descname">fetch_project_traits</tt><big>(</big><em>fullpath</em><big>)</big><a class="reference internal" href="_modules/nerve/core/utils.html#fetch_project_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.core.utils.fetch_project_traits" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fullpath</strong> (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; absolute file/directory path</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">project metadata</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="spec.html" class="btn btn-neutral float-right" title="spec" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="modules.html" class="btn btn-neutral" title="nerve" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Alex Braun.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.5.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

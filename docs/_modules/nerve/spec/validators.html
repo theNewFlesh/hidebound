@@ -1,0 +1,395 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>nerve.spec.validators &mdash; nerve 0.5.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="nerve 0.5.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> nerve
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">nerve</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">nerve</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>nerve.spec.validators</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for nerve.spec.validators</h1><div class="highlight"><pre>
+<span></span><span class="ch">#! /usr/bin/env python</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">The validators module is function library for validating singular traits given to a specification</span>
+
+<span class="sd">Much like the traits module, validator functions follow a &quot;is_&quot;[trait] naming</span>
+<span class="sd">convention.  Validators are linked with traits inside the validators kwarg of a</span>
+<span class="sd">specification class attribute in the specifications module.  They succeed</span>
+<span class="sd">silently and raise ValidationError when the trait they validate fails.</span>
+<span class="sd">Schematics captures these error messages and pipes them to a error call.</span>
+
+<span class="sd">Functions should generally be wrapped with the is_a or is_re decorators for</span>
+<span class="sd">brevity.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+<span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">ValidationError</span>
+<span class="kn">import</span> <span class="nn">nerve</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="is_a"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_a">[docs]</a><span class="k">def</span> <span class="nf">is_a</span><span class="p">(</span><span class="n">predicate</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="n">items</span> <span class="o">=</span> <span class="n">items</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">items</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;list&#39;</span><span class="p">,</span> <span class="s1">&#39;tuple&#39;</span><span class="p">]:</span>
+                <span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="n">items</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">predicate</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">func</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">message</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">True</span>
+
+        <span class="k">return</span> <span class="n">wrapper</span>
+    <span class="k">return</span> <span class="n">decorator</span>
+</div>
+<div class="viewcode-block" id="is_re"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_re">[docs]</a><span class="k">def</span> <span class="nf">is_re</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">is_a</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;^&#39;</span> <span class="o">+</span> <span class="n">regex</span> <span class="o">+</span> <span class="s1">&#39;$&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">message</span><span class="p">)</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+</div>
+<span class="nd">@is_a</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">,</span> <span class="s1">&#39;does not exist&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="is_exists"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_exists">[docs]</a><span class="k">def</span> <span class="nf">is_exists</span><span class="p">(</span><span class="n">item</span><span class="p">):</span> <span class="k">return</span>
+</div>
+<span class="nd">@is_a</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">,</span> <span class="s1">&#39;is not a valid fullpath&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="is_path"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_path">[docs]</a><span class="k">def</span> <span class="nf">is_path</span><span class="p">(</span><span class="n">item</span><span class="p">):</span> <span class="k">return</span>
+</div>
+<span class="nd">@is_a</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">,</span> <span class="s1">&#39;is not a valid file path&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="is_file"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_file">[docs]</a><span class="k">def</span> <span class="nf">is_file</span><span class="p">(</span><span class="n">item</span><span class="p">):</span> <span class="k">return</span>
+</div>
+<span class="nd">@is_a</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">,</span> <span class="s1">&#39;is not a valid directory path&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="is_directory"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_directory">[docs]</a><span class="k">def</span> <span class="nf">is_directory</span><span class="p">(</span><span class="n">item</span><span class="p">):</span> <span class="k">return</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="is_asset_id"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_asset_id">[docs]</a><span class="k">def</span> <span class="nf">is_asset_id</span><span class="p">(</span><span class="n">item</span><span class="p">):</span><span class="k">return</span> <span class="bp">True</span>
+</div>
+<span class="nd">@is_a</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="s1">&#39;xyz&#39;</span><span class="p">),</span> <span class="s1">&#39;is not a valid coordinate&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="is_coordinate"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_coordinate">[docs]</a><span class="k">def</span> <span class="nf">is_coordinate</span><span class="p">(</span><span class="n">item</span><span class="p">):</span> <span class="k">return</span>
+</div>
+<div class="viewcode-block" id="is_deliverable_name"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_deliverable_name">[docs]</a><span class="k">def</span> <span class="nf">is_deliverable_name</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+    <span class="n">proj</span>  <span class="o">=</span> <span class="s1">&#39;[a-z]+\d\d\d&#39;</span>
+    <span class="n">spec</span>  <span class="o">=</span> <span class="s1">&#39;[a-z]+\d\d\d&#39;</span>
+    <span class="n">desc</span>  <span class="o">=</span> <span class="s1">&#39;[-a-zA-Z0-9]&#39;</span>
+    <span class="n">ver</span>   <span class="o">=</span> <span class="s1">&#39;v\d\d\d&#39;</span>
+    <span class="n">rpass</span> <span class="o">=</span> <span class="s1">&#39;([-a-z0-9]+|-)&#39;</span>
+    <span class="n">coord</span> <span class="o">=</span> <span class="s1">&#39;(\d\d\d-\d\d\d-\d\d\d|-)&#39;</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="s1">&#39;(\d\d\d\d|-)&#39;</span>
+    <span class="n">ext</span>   <span class="o">=</span> <span class="s1">&#39;(\.[a-zA-Z0-9]+|)&#39;</span>
+    <span class="n">regex</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">proj</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">desc</span><span class="p">,</span> <span class="n">ver</span><span class="p">,</span> <span class="n">rpass</span><span class="p">,</span> <span class="n">coord</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">ext</span><span class="p">])</span>
+    <span class="n">regex</span> <span class="o">=</span> <span class="s1">&#39;^&#39;</span> <span class="o">+</span> <span class="n">regex</span> <span class="o">+</span> <span class="s1">&#39;$&#39;</span>
+    <span class="n">regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="n">items</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; is not a valid deliverable name&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">True</span>
+</div>
+<span class="nd">@is_re</span><span class="p">(</span><span class="s1">&#39;[-a-z0-9]+&#39;</span><span class="p">,</span> <span class="s1">&#39;is not a valid descriptor&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="is_descriptor"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_descriptor">[docs]</a><span class="k">def</span> <span class="nf">is_descriptor</span><span class="p">(</span><span class="n">item</span><span class="p">):</span> <span class="k">return</span>
+</div>
+<div class="viewcode-block" id="is_not_empty"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_not_empty">[docs]</a><span class="k">def</span> <span class="nf">is_not_empty</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s1">&#39;list is empty&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">True</span>
+</div>
+<span class="nd">@is_re</span><span class="p">(</span><span class="s1">&#39;[a-zA-Z0-9]+&#39;</span><span class="p">,</span> <span class="s1">&#39;is not a valid extension&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="is_extension"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_extension">[docs]</a><span class="k">def</span> <span class="nf">is_extension</span><span class="p">(</span><span class="n">item</span><span class="p">):</span> <span class="k">return</span>
+</div>
+<span class="nd">@is_a</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="mi">9999</span><span class="p">,</span> <span class="s1">&#39;is not a valid frame&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="is_frame"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_frame">[docs]</a><span class="k">def</span> <span class="nf">is_frame</span><span class="p">(</span><span class="n">item</span><span class="p">):</span> <span class="k">return</span>
+
+<span class="c1"># @is_re(&#39;[.*/a-zA-Z0-9_]+&#39;, &#39;is not a valid gitignore pattern&#39;)</span>
+<span class="c1"># def is_gitignore(item): return</span>
+</div>
+<span class="nd">@is_a</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;does not contain _meta in name&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="is_meta"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_meta">[docs]</a><span class="k">def</span> <span class="nf">is_meta</span><span class="p">(</span><span class="n">item</span><span class="p">):</span> <span class="k">return</span>
+</div>
+<span class="nd">@is_a</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;yml&#39;</span><span class="p">,</span> <span class="s1">&#39;yaml&#39;</span><span class="p">],</span> <span class="s1">&#39;is not a valid metadata extension&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="is_metadata_extension"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_metadata_extension">[docs]</a><span class="k">def</span> <span class="nf">is_metadata_extension</span><span class="p">(</span><span class="n">item</span><span class="p">):</span> <span class="k">return</span>
+</div>
+<div class="viewcode-block" id="is_metapath"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_metapath">[docs]</a><span class="k">def</span> <span class="nf">is_metapath</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="n">meta</span> <span class="o">=</span> <span class="n">nerve</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">traits</span><span class="o">.</span><span class="n">fetch_name_traits</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+    <span class="n">nerve</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">specifications</span><span class="o">.</span><span class="n">MetaName</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+    <span class="k">return</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="is_organization"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_organization">[docs]</a><span class="k">def</span> <span class="nf">is_organization</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="is_private"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_private">[docs]</a><span class="k">def</span> <span class="nf">is_private</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="is_project_id"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_project_id">[docs]</a><span class="k">def</span> <span class="nf">is_project_id</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="is_project_name"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_project_name">[docs]</a><span class="k">def</span> <span class="nf">is_project_name</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="is_project_root"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_project_root">[docs]</a><span class="k">def</span> <span class="nf">is_project_root</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="is_project_url"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_project_url">[docs]</a><span class="k">def</span> <span class="nf">is_project_url</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">True</span>
+</div>
+<span class="nd">@is_re</span><span class="p">(</span><span class="s1">&#39;[a-z0-9_\-/*\.]+&#39;</span><span class="p">,</span> <span class="s1">&#39;is not a valid exclude pattern&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="is_exclude_pattern"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_exclude_pattern">[docs]</a><span class="k">def</span> <span class="nf">is_exclude_pattern</span><span class="p">(</span><span class="n">item</span><span class="p">):</span> <span class="k">return</span>
+</div>
+<span class="nd">@is_re</span><span class="p">(</span><span class="s1">&#39;[a-z0-9_\-/*\.]+&#39;</span><span class="p">,</span> <span class="s1">&#39;is not a valid include pattern&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="is_include_pattern"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_include_pattern">[docs]</a><span class="k">def</span> <span class="nf">is_include_pattern</span><span class="p">(</span><span class="n">item</span><span class="p">):</span> <span class="k">return</span>
+</div>
+<span class="nd">@is_re</span><span class="p">(</span><span class="s1">&#39;$|^&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+        <span class="s1">&#39;beauty&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;specular&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;diffuse&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;shadow&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ambient-occlusion&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;world-point-position&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;uv&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;normal&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;depth&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;z&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;matte&#39;</span>
+    <span class="p">]),</span>
+    <span class="s1">&#39;is not a valid render pass&#39;</span>
+<span class="p">)</span>
+<div class="viewcode-block" id="is_render_pass"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_render_pass">[docs]</a><span class="k">def</span> <span class="nf">is_render_pass</span><span class="p">(</span><span class="n">item</span><span class="p">):</span> <span class="k">return</span>
+</div>
+<div class="viewcode-block" id="is_request_exclude_patterns"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_request_exclude_patterns">[docs]</a><span class="k">def</span> <span class="nf">is_request_exclude_patterns</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="is_request_include_patterns"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_request_include_patterns">[docs]</a><span class="k">def</span> <span class="nf">is_request_include_patterns</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">True</span>
+</div>
+<span class="nd">@is_a</span><span class="p">(</span>
+    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">nerve</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">specifications</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()),</span>
+    <span class="s1">&#39;is not a valid specification&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="is_specification"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_specification">[docs]</a><span class="k">def</span> <span class="nf">is_specification</span><span class="p">(</span><span class="n">item</span><span class="p">):</span> <span class="k">return</span>
+</div>
+<span class="nd">@is_re</span><span class="p">(</span><span class="s1">&#39;added|copied|deleted|modified|renamed|updated|untracked&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;is not a valid state&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="is_status_state"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_status_state">[docs]</a><span class="k">def</span> <span class="nf">is_status_state</span><span class="p">(</span><span class="n">item</span><span class="p">):</span> <span class="k">return</span>
+</div>
+<span class="nd">@is_re</span><span class="p">(</span><span class="s1">&#39;nondeliverable|deliverable&#39;</span><span class="p">,</span> <span class="s1">&#39;is not a valid asset type&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="is_status_asset_type"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_status_asset_type">[docs]</a><span class="k">def</span> <span class="nf">is_status_asset_type</span><span class="p">(</span><span class="n">item</span><span class="p">):</span> <span class="k">return</span>
+</div>
+<div class="viewcode-block" id="is_teams"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_teams">[docs]</a><span class="k">def</span> <span class="nf">is_teams</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="is_token"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_token">[docs]</a><span class="k">def</span> <span class="nf">is_token</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">True</span>
+</div>
+<span class="nd">@is_re</span><span class="p">(</span><span class="s1">&#39;ssh$|^http&#39;</span><span class="p">,</span> <span class="s1">&#39;is not ssh or http&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="is_url_type"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_url_type">[docs]</a><span class="k">def</span> <span class="nf">is_url_type</span><span class="p">(</span><span class="n">item</span><span class="p">):</span> <span class="k">return</span>
+</div>
+<div class="viewcode-block" id="is_user_branch"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_user_branch">[docs]</a><span class="k">def</span> <span class="nf">is_user_branch</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="is_username"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_username">[docs]</a><span class="k">def</span> <span class="nf">is_username</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="is_version"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.is_version">[docs]</a><span class="k">def</span> <span class="nf">is_version</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">True</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../spec.html#nerve.spec.validators.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Run help if called directly</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="kn">import</span> <span class="nn">__main__</span>
+    <span class="n">help</span><span class="p">(</span><span class="n">__main__</span><span class="p">)</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+
+<span class="c1"># __all__ = []</span>
+</div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Alex Braun.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.5.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

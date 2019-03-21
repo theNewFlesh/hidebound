@@ -1,0 +1,406 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>nerve.core.git_lfs &mdash; nerve 0.5.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="nerve 0.5.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> nerve
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">nerve</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">nerve</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>nerve.core.git_lfs</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for nerve.core.git_lfs</h1><div class="highlight"><pre>
+<span></span><span class="ch">#! /usr/bin/env python</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">The model module contains the GitFS class, nerve&#39;s internal API for accessing git lfs</span>
+
+<span class="sd">Platforrm:</span>
+<span class="sd">    Unix</span>
+
+<span class="sd">Author:</span>
+<span class="sd">    Alex Braun &lt;alexander.g.braun@gmail.com&gt; &lt;http://www.alexgbraun.com&gt;</span>
+
+<span class="sd">.. todo::</span>
+<span class="sd">    - integrate python-based git-lfs server instead of using git-lfs-s3 which is ruby-based</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">configparser</span> <span class="kn">import</span> <span class="n">ConfigParser</span>
+<span class="kn">from</span> <span class="nn">nerve.core.utils</span> <span class="kn">import</span> <span class="n">execute_subprocess</span><span class="p">,</span> <span class="n">get_status</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="GitLFS"><a class="viewcode-back" href="../../../core.html#nerve.core.git_lfs.GitLFS">[docs]</a><span class="k">class</span> <span class="nc">GitLFS</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Class for sending and parsing git lfs commands executed upon a single local git repository</span>
+
+<span class="sd">    API: working_dir, create_config, install, track, pull, status</span>
+
+<span class="sd">    Changes current working directory of process to woking_dir.</span>
+<span class="sd">    Starts local lfs server.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        working_dir (str): fullpath of git repository (must exist)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        GitLFS: local git lfs repository</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">working_dir</span><span class="p">,</span> <span class="n">environment</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_working_dir</span> <span class="o">=</span> <span class="n">working_dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_env</span> <span class="o">=</span> <span class="n">environment</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_prepush</span><span class="p">()</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">working_dir</span><span class="p">)</span>
+        <span class="c1"># start server</span>
+        <span class="c1"># execute_subprocess(&#39;git-lfs-s3&#39;, self._working_dir, environment=env)</span>
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="GitLFS.working_dir"><a class="viewcode-back" href="../../../core.html#nerve.core.git_lfs.GitLFS.working_dir">[docs]</a>    <span class="k">def</span> <span class="nf">working_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        str: fullpath of local git repository</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_working_dir</span>
+</div>
+<div class="viewcode-block" id="GitLFS.create_config"><a class="viewcode-back" href="../../../core.html#nerve.core.git_lfs.GitLFS.create_config">[docs]</a>    <span class="k">def</span> <span class="nf">create_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">access</span><span class="o">=</span><span class="s1">&#39;basic&#39;</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Creates a .lfsconfig file in the root path of the local git repository</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            url (str): url of local git lfs server (eg. http://localhost:8080)</span>
+<span class="sd">            access (str, optional): git lfs access rights. Default: &#39;basic&#39;</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: existence of .lfsconfig file</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">lfsconfig</span> <span class="o">=</span> <span class="n">ConfigParser</span><span class="p">()</span>
+        <span class="n">lfsconfig</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="s1">&#39;lfs&#39;</span><span class="p">)</span>
+        <span class="n">lfsconfig</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;lfs&#39;</span><span class="p">,</span> <span class="s1">&#39;url&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+        <span class="n">lfsconfig</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;lfs&#39;</span><span class="p">,</span> <span class="s1">&#39;access&#39;</span><span class="p">,</span> <span class="n">access</span><span class="p">)</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_working_dir</span><span class="p">,</span> <span class="s1">&#39;.lfsconfig&#39;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">lfsconfig</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="GitLFS.install"><a class="viewcode-back" href="../../../core.html#nerve.core.git_lfs.GitLFS.install">[docs]</a>    <span class="k">def</span> <span class="nf">install</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">local</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">skip_smudge</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Perform the following actions to ensure that Git LFS is setup properly:</span>
+
+<span class="sd">        * Set up the clean and smudge filters under the name &quot;lfs&quot; in the global Git</span>
+<span class="sd">          config.</span>
+<span class="sd">        * Install a pre-push hook to run git lfs pre-push for the current repository,</span>
+<span class="sd">          if run from inside one. If &quot;core.hooksPath&quot; is configured in any Git</span>
+<span class="sd">          configuration (and supported, i.e., the installed Git version is at least</span>
+<span class="sd">          2.9.0), then the pre-push hook will be installed to that directory instead.</span>
+
+<span class="sd">        Without any options, git lfs install will only setup the &quot;lfs&quot; smudge and clean</span>
+<span class="sd">        filters if they are not already set.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            force (bool, optional): sets the &quot;lfs&quot; smudge and clean filters, overwriting existing values</span>
+<span class="sd">            local (bool, optional): sets the &quot;lfs&quot; smudge and clean filters in the local repository&#39;s git</span>
+<span class="sd">                config, instead of the global git config (~/.gitconfig)</span>
+<span class="sd">            skip-smudge (bool, optional): skips automatic downloading of objects</span>
+<span class="sd">                on clone or pull. This requires a manual &quot;git lfs pull&quot; every</span>
+<span class="sd">                time a new commit is checked out on your repository</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List: list of strings detailing stdout of command</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;git lfs install&#39;</span>
+        <span class="c1"># --system ommitted</span>
+        <span class="k">if</span> <span class="n">force</span><span class="p">:</span>
+            <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39; --force&#39;</span>
+        <span class="k">if</span> <span class="n">local</span><span class="p">:</span>
+            <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39; --local&#39;</span>
+        <span class="k">if</span> <span class="n">skip_smudge</span><span class="p">:</span>
+            <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39; --skip-smudge&#39;</span>
+
+        <span class="k">return</span> <span class="n">execute_subprocess</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_working_dir</span><span class="p">,</span> <span class="n">environment</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="GitLFS.track"><a class="viewcode-back" href="../../../core.html#nerve.core.git_lfs.GitLFS.track">[docs]</a>    <span class="k">def</span> <span class="nf">track</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">extensions</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Track files with certain file extensions through git lfs</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            extensions (list or str): list of file extensions specifying file extensions to be tracked</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            lfs.track([&#39;png&#39;, &#39;obj&#39;, &#39;jpg&#39;])</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List: list of strings detailing stdout of command</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">extensions</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span><span class="n">extensions</span><span class="p">]</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;git lfs track &#39;</span>
+        <span class="k">for</span> <span class="n">exp</span> <span class="ow">in</span> <span class="n">extensions</span><span class="p">:</span>
+            <span class="n">execute_subprocess</span><span class="p">(</span><span class="n">cmd</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span> <span class="o">+</span> <span class="n">exp</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_working_dir</span><span class="p">)</span>
+
+        <span class="n">output</span> <span class="o">=</span> <span class="n">execute_subprocess</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_working_dir</span><span class="p">,</span> <span class="s1">&#39;no matches found:.*&#39;</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">output</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="k">return</span> <span class="n">output</span>
+
+</div>
+<div class="viewcode-block" id="GitLFS.pull"><a class="viewcode-back" href="../../../core.html#nerve.core.git_lfs.GitLFS.pull">[docs]</a>    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">include</span><span class="o">=</span><span class="p">[],</span> <span class="n">exclude</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Pull data from git lfs, replacing local pointer files with their actual data</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            include (list, optional): list of glob patterns used to include files. Default: []</span>
+<span class="sd">            exclude (list, optional): list of glob patterns used to exclude files. Default: []</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List: list of strings detailing stdout of command</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;git lfs pull&#39;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">include</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39; -I &#39;</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">include</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">exclude</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39; -X &#39;</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">exclude</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">execute_subprocess</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_working_dir</span><span class="p">,</span> <span class="n">environment</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="GitLFS.status"><a class="viewcode-back" href="../../../core.html#nerve.core.git_lfs.GitLFS.status">[docs]</a>    <span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">include</span><span class="o">=</span><span class="p">[],</span> <span class="n">exclude</span><span class="o">=</span><span class="p">[],</span> <span class="n">states</span><span class="o">=</span><span class="p">[],</span> <span class="n">staged</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">warnings</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Get the status of the tracked git lfs files</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            include (list, optional): list of regex patterns used to include files. Default: []</span>
+<span class="sd">            exclude (list, optional): list of regex patterns used to exclude files. Default: []</span>
+<span class="sd">            states (list, optional): file states to be shown in output. Default: all states</span>
+<span class="sd">                Options: added, copied, deleted, modified, renamed, updated, untracked</span>
+<span class="sd">            staged (bool, optional): include only files which are staged or unstaged. Default: both</span>
+<span class="sd">            warnings (bool, optional): display warnings</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: list of dicts, each one representing a file</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">get_status</span><span class="p">(</span>
+            <span class="s1">&#39;git lfs status --porcelain&#39;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_working_dir</span><span class="p">,</span>
+            <span class="n">include</span><span class="o">=</span><span class="n">include</span><span class="p">,</span>
+            <span class="n">exclude</span><span class="o">=</span><span class="n">exclude</span><span class="p">,</span>
+            <span class="n">states</span><span class="o">=</span><span class="n">states</span><span class="p">,</span>
+            <span class="n">staged</span><span class="o">=</span><span class="n">staged</span><span class="p">,</span>
+            <span class="n">warnings</span><span class="o">=</span><span class="n">warnings</span>
+        <span class="p">)</span>
+</div>
+<div class="viewcode-block" id="GitLFS.push"><a class="viewcode-back" href="../../../core.html#nerve.core.git_lfs.GitLFS.push">[docs]</a>    <span class="k">def</span> <span class="nf">push</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">branch</span><span class="p">,</span> <span class="n">remote</span><span class="o">=</span><span class="s1">&#39;origin&#39;</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Push comit to given branch</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            branch (str): branch name</span>
+<span class="sd">            remote (str, optional): remote repository. Default: origin</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;git lfs push {remote} {branch}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">remote</span><span class="o">=</span><span class="n">remote</span><span class="p">,</span> <span class="n">branch</span><span class="o">=</span><span class="n">branch</span><span class="p">)</span>
+        <span class="n">execute_subprocess</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_working_dir</span><span class="p">,</span> <span class="n">environment</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="GitLFS.remove_prepush"><a class="viewcode-back" href="../../../core.html#nerve.core.git_lfs.GitLFS.remove_prepush">[docs]</a>    <span class="k">def</span> <span class="nf">remove_prepush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Removes .git/hooks/pre-push, which otherwise breaks git push</span>
+<span class="sd">        Args:</span>
+<span class="sd">            None</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: success status</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">file_</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_working_dir</span><span class="p">,</span> <span class="s1">&#39;.git&#39;</span><span class="p">,</span> <span class="s1">&#39;hooks&#39;</span><span class="p">,</span> <span class="s1">&#39;pre-push&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">file_</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">file_</span><span class="p">)</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">file_</span><span class="p">)</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+</div></div>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Run help if called directly</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="kn">import</span> <span class="nn">__main__</span>
+    <span class="n">help</span><span class="p">(</span><span class="n">__main__</span><span class="p">)</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;GitLFS&#39;</span><span class="p">]</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Alex Braun.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.5.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
