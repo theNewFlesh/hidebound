@@ -1,5 +1,8 @@
+nerve
+======
+
 .. toctree::
    :maxdepth: 4
 
-   nerve
-   cli
+   core
+   spec

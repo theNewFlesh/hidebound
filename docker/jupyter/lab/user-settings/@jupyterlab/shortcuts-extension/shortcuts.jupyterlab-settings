@@ -1,0 +1,60 @@
+{
+    "shortcuts": [
+        {
+            "command": "application:activate-next-tab",
+            "keys": [
+                "Alt Tab"
+            ],
+            "selector": "body"
+        },
+        {
+            "command": "application:activate-previous-tab",
+            "keys": [
+                "Alt Shift Tab"
+            ],
+            "selector": "body"
+        },
+        {
+            "command": "application:close",
+            "keys": [
+                "Alt W"
+            ],
+            "selector": ".jp-Activity"
+        },
+        {
+            "command": "apputils:activate-command-palette",
+            "keys": [
+                "Accel Shift P"
+            ],
+            "selector": "body"
+        },
+        {
+            "command": "notebook:toggle-all-cell-line-numbers",
+            "keys": [
+                "L"
+            ],
+            "selector": ".jp-Notebook:focus"
+        },
+        {
+            "command": "notebook:create-new",
+            "keys": [
+                "Alt N"
+            ],
+            "selector": "body"
+        },
+        {
+            "command": "notebook:create-console",
+            "keys": [
+                "Alt K"
+            ],
+            "selector": "body"
+        },
+        {
+            "command": "terminal:open",
+            "keys": [
+                "Alt T"
+            ],
+            "selector": "body"
+        }
+    ]
+}
