@@ -73,6 +73,16 @@ class AssetNameParser:
 
     @staticmethod
     def _raise_field_error(field, part):
+        '''
+        A convenience function used for raising custom ParseExceptions.
+
+        Args:
+            field (str): Field.
+            part (str): Part of field.
+
+        Returns:
+            function: lambda s, l, i, e: raise_error(field, s, i)
+        '''
         def raise_error(field, string, instance):
             expr = None
             if hasattr(instance, 'expr'):
