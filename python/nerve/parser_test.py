@@ -96,7 +96,19 @@ class ParserTests(unittest.TestCase):
             AssetNameParser(fields).parse(name)
 
     def test_to_string(self):
-        pass
+        fields = ['project', 'specification', 'descriptor', 'version', 'frame', 'extension']
+        metadata = dict(
+            project='proj002',
+            specification='spec062',
+            descriptor='desc',
+            version=99,
+            frame=78,
+            extension='exr',
+            foo='bar'
+        )
+        result = AssetNameParser(fields).to_string(metadata)
+        expected = 'p-proj002_s-spec062_d-desc_v099_f0078.exr'
+        self.assertEqual(result, expected)
 
     def test_recurse_init(self):
         fields = ['project', 'specification', 'descriptor', 'version', 'frame', 'extension']
