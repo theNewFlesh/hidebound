@@ -188,6 +188,12 @@ class ParserTests(unittest.TestCase):
         expected = dict(descriptor='desc003')
         self.assertEqual(result, expected)
 
+    def test_parse_descriptor_containing_indicators(self):
+        name = 'p-proj001_s-spec002_d-v012-p-banana-f99_v003_c004-005-006_f0007.exr'
+        result = AssetNameParser(self.fields).parse(name)['descriptor']
+        expected = 'v012-p-banana-f99'
+        self.assertEqual(result, expected)
+
     def test_parse_descriptor_indicator(self):
         name = 'p-proj001_s-spec002_ddesc_v003_c004-005-006_f0007.exr'
         msg = f'Illegal descriptor field indicator in "{name}". Expecting: "d-"'
