@@ -1,5 +1,5 @@
 import unittest
-from pyparsing import ParseException
+from pyparsing import ParseException, Regex
 import pytest
 from nerve.parser import AssetNameParser
 # ------------------------------------------------------------------------------
@@ -31,6 +31,13 @@ class ParserTests(unittest.TestCase):
         fields = ['specification', 'version', 'project', 'frame']
         result = AssetNameParser(fields)
         self.assertEqual(result._fields, fields)
+
+    def test_raise_field_error(self):
+        parser = Regex(r'foo')\
+            .setFailAction(AssetNameParser._raise_field_error('foo', 'bar'))
+        expected = 'Illegal foo field bar in "baz". Expecting: foo'
+        with self.assertRaisesRegexp(ParseException, expected):
+            parser.parseString('baz')
 
     def test_parse_0(self):
         name = 'p-proj001_s-spec002_d-desc_v003_c004-005-006_f0007.exr'
