@@ -1,0 +1,177 @@
+a,
+a:visited {
+    color: #B6ECF3 !important;
+}
+
+a:hover {
+    color: #DE958E !important;
+}
+
+.btn,
+.btn-neutral,
+.btn:visited,
+.btn-neutral:visited {
+    background: #444444 !important;
+    color: #B6ECF3 !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.btn:hover,
+.btn-neutral:hover {
+    background: #555555 !important;
+    color: #DE958E !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.viewcode-link {
+    color: #EBB483 !important;
+}
+
+.viewcode-link:hover {
+    color: #F4F4F4 !important;
+}
+
+.wy-nav-content-wrap {
+    background: #242424 !important;
+}
+
+.wy-nav-top {
+    background: #343434 !important;
+}
+
+.wy-side-nav-search {
+    background: #444444 !important;
+}
+
+.wy-side-nav-search a,
+.wy-side-nav-search a:visited {
+    color: #B6ECF3 !important;
+}
+
+.wy-side-nav-search .version {
+    color: #A4A4A4 !important;
+}
+
+.wy-menu-vertical header,
+.wy-menu-vertical p.caption {
+    color: #A4A4A4 !important;
+}
+
+.wy-menu-vertical a:hover,
+.wy-side-nav-search a:hover {
+    color: #DE958E !important;
+    background: #444444 !important;
+}
+
+.wy-menu-vertical li a,
+.wy-menu-vertical li.on a,
+.wy-menu-vertical li.current a {
+    background: #343434 !important;
+    border: 0px solid #343434 !important;
+}
+
+.wy-menu-vertical li.on a span.toctree-expand,
+.wy-menu-vertical li.current>a span.toctree-expand {
+    color: #DE958E !important;
+}
+
+input {
+    background: #242424;
+    color: #F4F4F4;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.rst-content pre.literal-block,
+.rst-content div[class^='highlight'] {
+    border: none !important;
+}
+
+pre {
+    background: #343434 !important;
+}
+
+pre > .gp {
+    color: #B6ECF3 !important;
+}
+
+pre > span {
+    color: #EBB483 !important;
+}
+
+.wy-nav-content {
+    background: #242424;
+    color: #F4F4F4;
+}
+
+.wy-nav-side {
+    background: #343434 !important;
+}
+
+.reference.internal.current {
+    background: #444444 !important;
+    color: #B6ECF3 !important;
+    border: none !important;
+}
+
+.method dt,
+.function dt,
+.descname {
+    background: #343434 !important;
+    color: #B6ECF3 !important;
+}
+
+.data dt,
+.attribute dt {
+    background: #343434 !important;
+    color: #E9EABE !important;
+}
+
+.class dt  {
+    background: #343434 !important;
+    color: #B6ECF3 !important;
+}
+
+.descclassname  {
+    background: #343434 !important;
+    color: #A0D17B !important;
+}
+
+.sig-param {
+    color: #DE958E !important;
+}
+
+.rst-content dl:not(.docutils) dt {
+    background: #343434 !important;
+    color: #7EC4CF !important;
+    border-top-color: #A4A4A4 !important;
+}
+
+.rst-content dl:not(.docutils) dl dt {
+    border: none !important;
+    color: #7EC4CF !important;
+}
+
+code.literal {
+    background: #343434 !important;
+    border: none !important;
+}
+
+.xref,
+.py-meth {
+    color: #B6ECF3 !important;
+    background: #343434 !important;
+    border: none !important;
+}
+
+.xref:hover,
+.py-meth:hover {
+    color: #DE958E !important;
+    background: #444444 !important;
+}
+
+span[id*='MathJax-Span'] {
+    color: #E9EABE !important;
+}

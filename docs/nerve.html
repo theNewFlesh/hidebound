@@ -8,43 +8,46 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>package &mdash; nerve 0.5.0 documentation</title>
+  <title>nerve &mdash; nerve  documentation</title>
   
 
   
   
+  
+  
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="nerve 0.5.0 documentation" href="index.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/style.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="cli" href="cli.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="modules.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
+   
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -58,7 +61,7 @@
             
             
               <div class="version">
-                0.5.0
+                0.1.0
               </div>
             
           
@@ -79,8 +82,19 @@
           
             
             
-                <ul>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">nerve</a></li>
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">nerve</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-nerve.errors">errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-nerve.parser">parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#metadata">metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#utils">utils</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">cli</a></li>
 </ul>
 
             
@@ -92,83 +106,239 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">nerve</a>
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">nerve</a>
+        
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
-      
-    <li>package</li>
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="modules.html">&lt;no title&gt;</a> &raquo;</li>
+        
+      <li>nerve</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="_sources/nerve.txt" rel="nofollow"> View page source</a>
+            
+            <a href="_sources/nerve.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="package">
-<h1>package<a class="headerlink" href="#package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="core.html">core</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="core.html#module-nerve.core.project_manager">project_manager</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core.html#module-nerve.core.project">project</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core.html#module-nerve.core.metadata">metadata</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core.html#module-nerve.core.api">api</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core.html#client">client</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core.html#module-nerve.core.git">git</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core.html#module-nerve.core.git_lfs">git_lfs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core.html#module-nerve.core.utils">utils</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="spec.html">spec</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="spec.html#module-nerve.spec.base">base</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spec.html#module-nerve.spec.specifications">specifications</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spec.html#module-nerve.spec.traits">traits</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spec.html#module-nerve.spec.validators">validators</a></li>
-</ul>
-</li>
-</ul>
+  <div class="section" id="nerve">
+<h1>nerve<a class="headerlink" href="#nerve" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-nerve.errors">
+<span id="errors"></span><h2>errors<a class="headerlink" href="#module-nerve.errors" title="Permalink to this headline">¶</a></h2>
+<p>The errors module contains custom nerve errors</p>
+<dl class="py exception">
+<dt id="nerve.errors.SpecificationError">
+<em class="property">exception </em><code class="sig-prename descclassname">nerve.errors.</code><code class="sig-name descname">SpecificationError</code><a class="reference internal" href="_modules/nerve/errors.html#SpecificationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.errors.SpecificationError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Error used for missing specifications</p>
+</dd></dl>
+
 </div>
+<div class="section" id="module-nerve.parser">
+<span id="parser"></span><h2>parser<a class="headerlink" href="#module-nerve.parser" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="nerve.parser.AssetNameParser">
+<em class="property">class </em><code class="sig-prename descclassname">nerve.parser.</code><code class="sig-name descname">AssetNameParser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fields</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/parser.html#AssetNameParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.parser.AssetNameParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class for converting asset names to metadata and metadata to asset names,
+according to a dynimcally defined grammar.</p>
+<dl class="py attribute">
+<dt id="nerve.parser.AssetNameParser.COORDINATE_INDICATOR">
+<code class="sig-name descname">COORDINATE_INDICATOR</code><em class="property"> = 'c'</em><a class="headerlink" href="#nerve.parser.AssetNameParser.COORDINATE_INDICATOR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="nerve.parser.AssetNameParser.COORDINATE_PADDING">
+<code class="sig-name descname">COORDINATE_PADDING</code><em class="property"> = 3</em><a class="headerlink" href="#nerve.parser.AssetNameParser.COORDINATE_PADDING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="nerve.parser.AssetNameParser.DESCRIPTOR_INDICATOR">
+<code class="sig-name descname">DESCRIPTOR_INDICATOR</code><em class="property"> = 'd-'</em><a class="headerlink" href="#nerve.parser.AssetNameParser.DESCRIPTOR_INDICATOR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="nerve.parser.AssetNameParser.EXTENSION_INDICATOR">
+<code class="sig-name descname">EXTENSION_INDICATOR</code><em class="property"> = '.'</em><a class="headerlink" href="#nerve.parser.AssetNameParser.EXTENSION_INDICATOR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="nerve.parser.AssetNameParser.FIELD_SEPARATOR">
+<code class="sig-name descname">FIELD_SEPARATOR</code><em class="property"> = '_'</em><a class="headerlink" href="#nerve.parser.AssetNameParser.FIELD_SEPARATOR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="nerve.parser.AssetNameParser.FRAME_INDICATOR">
+<code class="sig-name descname">FRAME_INDICATOR</code><em class="property"> = 'f'</em><a class="headerlink" href="#nerve.parser.AssetNameParser.FRAME_INDICATOR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="nerve.parser.AssetNameParser.FRAME_PADDING">
+<code class="sig-name descname">FRAME_PADDING</code><em class="property"> = 4</em><a class="headerlink" href="#nerve.parser.AssetNameParser.FRAME_PADDING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="nerve.parser.AssetNameParser.LEGAL_FIELDS">
+<code class="sig-name descname">LEGAL_FIELDS</code><em class="property"> = ['project', 'specification', 'descriptor', 'version', 'coordinate', 'frame', 'extension']</em><a class="headerlink" href="#nerve.parser.AssetNameParser.LEGAL_FIELDS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="nerve.parser.AssetNameParser.PROJECT_INDICATOR">
+<code class="sig-name descname">PROJECT_INDICATOR</code><em class="property"> = 'p-'</em><a class="headerlink" href="#nerve.parser.AssetNameParser.PROJECT_INDICATOR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="nerve.parser.AssetNameParser.SPECIFICATION_INDICATOR">
+<code class="sig-name descname">SPECIFICATION_INDICATOR</code><em class="property"> = 's-'</em><a class="headerlink" href="#nerve.parser.AssetNameParser.SPECIFICATION_INDICATOR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="nerve.parser.AssetNameParser.TOKEN_SEPARATOR">
+<code class="sig-name descname">TOKEN_SEPARATOR</code><em class="property"> = '-'</em><a class="headerlink" href="#nerve.parser.AssetNameParser.TOKEN_SEPARATOR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="nerve.parser.AssetNameParser.VERSION_INDICATOR">
+<code class="sig-name descname">VERSION_INDICATOR</code><em class="property"> = 'v'</em><a class="headerlink" href="#nerve.parser.AssetNameParser.VERSION_INDICATOR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="nerve.parser.AssetNameParser.VERSION_PADDING">
+<code class="sig-name descname">VERSION_PADDING</code><em class="property"> = 3</em><a class="headerlink" href="#nerve.parser.AssetNameParser.VERSION_PADDING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="nerve.parser.AssetNameParser._get_parser">
+<code class="sig-name descname">_get_parser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fields</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/parser.html#AssetNameParser._get_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.parser.AssetNameParser._get_parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a parser based on the given fields.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fields</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – A list of fields.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>parser.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Group</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="nerve.parser.AssetNameParser._raise_field_error">
+<em class="property">static </em><code class="sig-name descname">_raise_field_error</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">field</span></em>, <em class="sig-param"><span class="n">part</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/parser.html#AssetNameParser._raise_field_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.parser.AssetNameParser._raise_field_error" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="nerve.parser.AssetNameParser.parse">
+<code class="sig-name descname">parse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">string</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/parser.html#AssetNameParser.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.parser.AssetNameParser.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse given string into dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>string</strong> (<em>str</em>) – String to be parsed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>metadata.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="nerve.parser.AssetNameParser.to_string">
+<code class="sig-name descname">to_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dict_</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/parser.html#AssetNameParser.to_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.parser.AssetNameParser.to_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a given dictionary to a string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dict</strong> (<em>dict</em>) – Dictionary.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Asset name.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="metadata">
+<h2>metadata<a class="headerlink" href="#metadata" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="utils">
+<h2>utils<a class="headerlink" href="#utils" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
 
            </div>
+           
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="cli.html" class="btn btn-neutral float-right" title="cli" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="modules.html" class="btn btn-neutral float-left" title="&lt;no title&gt;" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, Alex Braun.
+        &copy; Copyright 2019, Alex Braun &lt;TheNewFlesh@github.com&gt;
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -181,35 +351,15 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'0.5.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

@@ -18,14 +18,14 @@ setup(
     packages=['nerve'],
     version=VERSION,
     license='MIT',
-    description='A library of generic tools for ETL work and visualization of JSON blobs and python repositories.',  # noqa E501
+    description='A library for creating assets from files on disk.',
     long_description=README,
     long_description_content_type='text/markdown',
     author='Alex Braun',
     author_email='Alexander.G.Braun@gmail.com',
     url='https://github.com/theNewFlesh/nerve',
     download_url='https://github.com/theNewFlesh/nerve/archive/' + VERSION + '.tar.gz',
-    keywords=['ETL', 'blob', 'dependency', 'graph', 'svg', 'networkx', 'transform'],
+    keywords=['asset', 'project', 'data'],
     install_requires=PROD_REQUIREMENTS,
     classifiers=[
       'Development Status :: 4 - Beta',

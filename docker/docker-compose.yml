@@ -17,7 +17,7 @@ services:
       context: .
       dockerfile: nerve.dockerfile
     ports:
-      - '9001:9000'
+      - '9012:9000'
       - '5000:5000'
     userns_mode: "host"
     user: root
