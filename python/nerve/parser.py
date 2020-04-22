@@ -169,10 +169,15 @@ class AssetNameParser:
             'extension':     extension_indicator + extension,
         }
 
+        # if only extension was given
+        if fields == ['extension']:
+            return Group(extension).parseString(string)[0].asDict()
+
         # create unordered parser
         has_ext = fields[-1] == 'extension'
         if has_ext:
             fields.pop()
+
         field = Or([lut[x] for x in fields])
         unordered_parser = delimitedList(field, delim=self.FIELD_SEPARATOR)
         if has_ext:
