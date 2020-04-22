@@ -10,6 +10,9 @@ class ParserTests(unittest.TestCase):
         with self.assertRaisesRegexp(ValueError, 'Fields cannot be empty.'):
             AssetNameParser([])
 
+        with self.assertRaisesRegexp(ValueError, 'Fields cannot contain duplicates.'):
+            AssetNameParser(['foo', 'foo'])
+
         with self.assertRaisesRegexp(ValueError, "Illegal fields found: \['foo', 'bar'\]"):
             AssetNameParser(['project', 'specification', 'foo', 'bar'])
 
@@ -51,10 +54,10 @@ class ParserTests(unittest.TestCase):
         )
         self.assertEqual(result, expected)
 
-    def test_parse_bad_order(self):
+    def test_parse_ignore_order(self):
         fields = ['project', 'specification', 'descriptor', 'version', 'frame', 'extension']
         name = 's-spec062_p-proj002_v099_d-desc_f0078.exr'
-        result = AssetNameParser(fields).parse(name)
+        result = AssetNameParser(fields).parse(name, ignore_order=True)
         expected = dict(
             project='proj002',
             specification='spec062',
@@ -64,6 +67,14 @@ class ParserTests(unittest.TestCase):
             extension='exr',
         )
         self.assertEqual(result, expected)
+
+    def test_parse_bad_order(self):
+        fields = ['project', 'specification', 'descriptor', 'version', 'frame', 'extension']
+        name = 's-spec062_p-proj002_v099_d-desc_f0078.exr'
+        with pytest.raises(ParseException) as e:
+            AssetNameParser(fields).parse(name)
+        expected = f'Incorrect field order in "{name}". Given field order: {fields}'
+        self.assertEqual(str(e.value)[:len(expected)], expected)
 
     def test_parse_bad_indicator(self):
         fields = ['project', 'specification', 'descriptor', 'version', 'frame', 'extension']
@@ -83,12 +94,6 @@ class ParserTests(unittest.TestCase):
         msg = f'Illegal descriptor field token in "{name}". Expecting: .*'
         with self.assertRaisesRegexp(ParseException, msg):
             AssetNameParser(fields).parse(name)
-
-    def test_get_parser(self):
-        fields = ['project', 'specification', 'coordinate', 'version']
-        result = AssetNameParser(fields)
-        result = result._get_parser(result._fields)
-        self.assertIsInstance(result, Group)
 
     def test_to_string(self):
         pass

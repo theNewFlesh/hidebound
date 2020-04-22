@@ -1,5 +1,5 @@
 from copy import copy
-from pyparsing import Group, Optional, ParseException, Regex, Suppress
+from pyparsing import delimitedList, Group, Optional, Or, ParseException, Regex, Suppress
 # ------------------------------------------------------------------------------
 
 
@@ -40,6 +40,7 @@ class AssetNameParser:
 
         Raises:
             ValueError: If fields is empty.
+            ValueError: If fields are duplicated.
             ValueError: If illegal fields are given.
             ValueError: If illegal field order given.
 
@@ -49,6 +50,11 @@ class AssetNameParser:
         # ensure fields is not empty
         if len(fields) == 0:
             msg = 'Fields cannot be empty.'
+            raise ValueError(msg)
+
+        # ensure fields are ot duplicated
+        if len(fields) != len(set(fields)):
+            msg = 'Fields cannot contain duplicates.'
             raise ValueError(msg)
 
         # ensure fields are legal
@@ -64,7 +70,6 @@ class AssetNameParser:
             raise ValueError(msg)
 
         self._fields = fields
-        self._parser = self._get_parser(fields)
 
     @staticmethod
     def _raise_field_error(field, part):
@@ -80,17 +85,19 @@ class AssetNameParser:
             raise ParseException(msg)
         return lambda s,l,i,e: raise_error(field, s, i)
 
-    def _get_parser(self, fields):
+    def parse(self, string, ignore_order=False):
         '''
         Create a parser based on the given fields.
 
         Args:
             fields (list[str]): A list of fields.
+            ignore_order (bool, optional): Whether to ignore the field order.
+                Default: False.
 
         Returns:
             Group: parser.
         '''
-        fields = copy(fields)
+        fields = copy(self._fields)
 
         # setup grammar
         field_sep = Suppress(self.FIELD_SEPARATOR)
@@ -162,16 +169,26 @@ class AssetNameParser:
             'extension':     extension_indicator + extension,
         }
 
-        # create parser
+        # create unordered parser
+        has_ext = fields[-1] == 'extension'
+        if has_ext:
+            fields.pop()
+        field = Or([lut[x] for x in fields])
+        unordered_parser = delimitedList(field, delim=self.FIELD_SEPARATOR)
+        if has_ext:
+            unordered_parser += lut['extension']
+        unordered_parser = Group(unordered_parser)
+
+        # create ordered parser
         last = fields.pop()
         temp = []
         for field in fields:
             temp.append(lut[field])
             temp.append(field_sep)
-
-        if last == 'extension':
-            temp.pop()
         temp.append(lut[last])
+
+        if has_ext:
+            temp.append(lut['extension'])
 
         parser = Suppress(Regex('^'))
         for item in temp:
@@ -179,19 +196,25 @@ class AssetNameParser:
         parser += Suppress(Regex('$'))
 
         parser = Group(parser)
-        return parser
 
-    def parse(self, string):
-        '''
-        Parse given string into dictionary.
+        # parse string
+        if ignore_order:
+            return unordered_parser.parseString(string)[0].asDict()
 
-        Args:
-            string (str): String to be parsed.
+        else:
+            try:
+                unordered_parser.parseString(string)
+                parsable = True
+            except ParseException:
+                parsable = False
 
-        Returns:
-            dict: metadata.
-        '''
-        return self._parser.parseString(string)[0].asDict()
+            try:
+                return parser.parseString(string)[0].asDict()
+            except ParseException as msg:
+                if parsable:
+                    msg = f'Incorrect field order in "{string}". '
+                    msg += f'Given field order: {self._fields}.'
+                raise ParseException(msg)
 
     def to_string(self, dict_):
         '''
