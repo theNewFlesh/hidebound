@@ -6,8 +6,9 @@ from nerve.parser import AssetNameParser
 
 
 class ParserTests(unittest.TestCase):
-    fields = ['project', 'specification', 'descriptor', 'version', 'coordinate', 'frame', 'extension']
-
+    fields = [
+        'project', 'specification', 'descriptor', 'version', 'coordinate', 'frame', 'extension'
+    ]
 
     def test_init(self):
         with self.assertRaisesRegexp(ValueError, 'Fields cannot be empty.'):

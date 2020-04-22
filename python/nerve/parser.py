@@ -83,7 +83,7 @@ class AssetNameParser:
             msg = f'Illegal {field} field {part} in "{string}". '
             msg += f'Expecting: {expr}'
             raise ParseException(msg)
-        return lambda s,l,i,e: raise_error(field, s, i)
+        return lambda s, l, i, e: raise_error(field, s, i)
 
     def parse(self, string, ignore_order=False):
         '''
@@ -103,36 +103,36 @@ class AssetNameParser:
         field_sep = Suppress(self.FIELD_SEPARATOR)
         # ----------------------------------------------------------------------
 
-        project = Regex('[a-z]{3,4}\d{1,3}')\
+        project = Regex(r'[a-z]{3,4}\d{1,3}')\
             .setResultsName('project')\
             .setFailAction(self._raise_field_error('project', 'token'))
 
-        specification = Regex('[a-z]{3,4}\d\d\d')\
+        specification = Regex(r'[a-z]{3,4}\d\d\d')\
             .setResultsName('specification')\
             .setFailAction(self._raise_field_error('specification', 'token'))
 
-        descriptor = Regex('[a-z0-9][a-z0-9-]*')\
+        descriptor = Regex(r'[a-z0-9][a-z0-9-]*')\
             .setResultsName('descriptor')\
             .setFailAction(self._raise_field_error('descriptor', 'token'))
 
-        version = Regex('\d{' + str(self.VERSION_PADDING) + '}')\
-            .setParseAction(lambda s,l,t: int(t[0]))\
+        version = Regex(r'\d{' + str(self.VERSION_PADDING) + '}')\
+            .setParseAction(lambda s, l, t: int(t[0]))\
             .setResultsName('version')\
             .setFailAction(self._raise_field_error('version', 'token'))
 
-        coord = Regex('\d{' + str(self.COORDINATE_PADDING) + '}')\
-            .setParseAction(lambda s,l,t: int(t[0]))
+        coord = Regex(r'\d{' + str(self.COORDINATE_PADDING) + '}')\
+            .setParseAction(lambda s, l, t: int(t[0]))
         t_sep = Suppress(self.TOKEN_SEPARATOR)
         coordinate = Group(coord + Optional(t_sep + coord) + Optional(t_sep + coord))\
             .setResultsName('coordinate')\
             .setFailAction(self._raise_field_error('coordinate', 'token'))
 
-        frame = Regex('\d{' + str(self.FRAME_PADDING) + '}')\
-            .setParseAction(lambda s,l,t: int(t[0]))\
+        frame = Regex(r'\d{' + str(self.FRAME_PADDING) + '}')\
+            .setParseAction(lambda s, l, t: int(t[0]))\
             .setResultsName('frame')\
             .setFailAction(self._raise_field_error('frame', 'token'))
 
-        extension = Regex('[a-zA-Z0-9]+')\
+        extension = Regex(r'[a-zA-Z0-9]+')\
             .setResultsName('extension')\
             .setFailAction(self._raise_field_error('extension', 'token'))
         # ----------------------------------------------------------------------
@@ -160,13 +160,13 @@ class AssetNameParser:
         # ----------------------------------------------------------------------
 
         lut = {
-            'project':       project_indicator + project,
+            'project': project_indicator + project,
             'specification': specification_indicator + specification,
-            'descriptor':    descriptor_indicator + descriptor,
-            'version':       version_indicator + version,
-            'coordinate':    coordinate_indicator + coordinate,
-            'frame':         frame_indicator + frame,
-            'extension':     extension_indicator + extension,
+            'descriptor': descriptor_indicator + descriptor,
+            'version': version_indicator + version,
+            'coordinate': coordinate_indicator + coordinate,
+            'frame': frame_indicator + frame,
+            'extension': extension_indicator + extension,
         }
 
         # if only extension was given
