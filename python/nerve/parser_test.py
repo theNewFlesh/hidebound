@@ -451,7 +451,6 @@ class ParserTests(unittest.TestCase):
                 parser.parseString(name)[0].asDict()
 
     def test_parse_specification(self):
-        parser = AssetNameParser._get_specification_parser()
         expected = dict(specification='spec001')
         result = AssetNameParser.parse_specification('s-spec001')
         self.assertEqual(result, expected)
