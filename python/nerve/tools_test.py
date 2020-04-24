@@ -1,6 +1,5 @@
 from pathlib import Path
 import os
-import re
 from tempfile import TemporaryDirectory
 import time
 import unittest
@@ -79,7 +78,7 @@ class ToolsTests(unittest.TestCase):
             regex = r'\.txt'
 
             self.create_files(root)
-            expected =  [
+            expected = [
                 Path(root, 'a/b/3.txt'),
                 Path(root, 'a/b/c/5.txt'),
             ]
@@ -93,7 +92,7 @@ class ToolsTests(unittest.TestCase):
             regex = r'\.txt'
 
             self.create_files(root)
-            expected =  [
+            expected = [
                 Path(root, 'a/1.foo'),
                 Path(root, 'a/b/2.json'),
                 Path(root, 'a/b/c/4.json'),
@@ -109,7 +108,7 @@ class ToolsTests(unittest.TestCase):
             e_regex = r'\.json'
 
             self.create_files(root)
-            expected =  [
+            expected = [
                 Path(root, 'a/b/3.txt'),
                 Path(root, 'a/b/c/5.txt'),
             ]
@@ -137,8 +136,8 @@ class ToolsTests(unittest.TestCase):
 
             result = tools.directory_to_dataframe(
                 root,
-                include_regex = r'/a/b',
-                exclude_regex = r'\.json'
+                include_regex=r'/a/b',
+                exclude_regex=r'\.json'
             )
             cols = ['fullpath', 'filename', 'extension']
             for col in cols:
