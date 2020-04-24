@@ -69,6 +69,10 @@ class AssetNameParser:
             msg = 'Illegal field order: Extension field must be last if it is included in fields.'
             raise ValueError(msg)
 
+        grammar = self._get_grammar()
+        self._extension_parser = self._get_extension_parser(grammar)
+        self._ordered_parser = self._get_ordered_parser(grammar, fields)
+        self._unordered_parser = self._get_unordered_parser(grammar, fields)
         self._fields = fields
 
     @staticmethod
@@ -83,19 +87,145 @@ class AssetNameParser:
         Returns:
             function: lambda s, l, i, e: raise_error(field, s, i)
         '''
-        def raise_error(field, string, instance):
+        def raise_error(field, text, instance):
             expr = None
             if hasattr(instance, 'expr'):
                 expr = instance.expr
             else:
                 expr = instance.pattern
 
-            msg = f'Illegal {field} field {part} in "{string}". '
+            msg = f'Illegal {field} field {part} in "{text}". '
             msg += f'Expecting: {expr}'
             raise ParseException(msg)
         return lambda s, l, i, e: raise_error(field, s, i)
 
-    def parse(self, string, ignore_order=False):
+    @staticmethod
+    def _get_grammar():
+        '''
+        Create parser grammar dictionary.
+
+        Returns:
+            dict: Grammar.
+        '''
+        project = Regex(r'[a-z]{3,4}\d{1,3}')\
+            .setResultsName('project')\
+            .setFailAction(AssetNameParser._raise_field_error('project', 'token'))
+
+        specification = Regex(r'[a-z]{3,4}\d\d\d')\
+            .setResultsName('specification')\
+            .setFailAction(AssetNameParser._raise_field_error('specification', 'token'))
+
+        descriptor = Regex(r'[a-z0-9][a-z0-9-]*')\
+            .setResultsName('descriptor')\
+            .setFailAction(AssetNameParser._raise_field_error('descriptor', 'token'))
+
+        version = Regex(r'\d{' + str(AssetNameParser.VERSION_PADDING) + '}')\
+            .setParseAction(lambda s, l, t: int(t[0]))\
+            .setResultsName('version')\
+            .setFailAction(AssetNameParser._raise_field_error('version', 'token'))
+
+        coord = Regex(r'\d{' + str(AssetNameParser.COORDINATE_PADDING) + '}')\
+            .setParseAction(lambda s, l, t: int(t[0]))
+        t_sep = Suppress(AssetNameParser.TOKEN_SEPARATOR)
+        coordinate = Group(coord + Optional(t_sep + coord) + Optional(t_sep + coord))\
+            .setResultsName('coordinate')\
+            .setFailAction(AssetNameParser._raise_field_error('coordinate', 'token'))
+
+        frame = Regex(r'\d{' + str(AssetNameParser.FRAME_PADDING) + '}')\
+            .setParseAction(lambda s, l, t: int(t[0]))\
+            .setResultsName('frame')\
+            .setFailAction(AssetNameParser._raise_field_error('frame', 'token'))
+
+        extension = Regex(r'[a-zA-Z0-9]+')\
+            .setResultsName('extension')\
+            .setFailAction(AssetNameParser._raise_field_error('extension', 'token'))
+        # ----------------------------------------------------------------------
+
+        project_indicator = Suppress(AssetNameParser.PROJECT_INDICATOR)\
+            .setFailAction(AssetNameParser._raise_field_error('project', 'indicator'))
+
+        specification_indicator = Suppress(AssetNameParser.SPECIFICATION_INDICATOR)\
+            .setFailAction(AssetNameParser._raise_field_error('specification', 'indicator'))
+
+        descriptor_indicator = Suppress(AssetNameParser.DESCRIPTOR_INDICATOR)\
+            .setFailAction(AssetNameParser._raise_field_error('descriptor', 'indicator'))
+
+        version_indicator = Suppress(AssetNameParser.VERSION_INDICATOR)\
+            .setFailAction(AssetNameParser._raise_field_error('version', 'indicator'))
+
+        coordinate_indicator = Suppress(AssetNameParser.COORDINATE_INDICATOR)\
+            .setFailAction(AssetNameParser._raise_field_error('coordinate', 'indicator'))
+
+        frame_indicator = Suppress(AssetNameParser.FRAME_INDICATOR)\
+            .setFailAction(AssetNameParser._raise_field_error('frame', 'indicator'))
+
+        extension_indicator = Suppress(AssetNameParser.EXTENSION_INDICATOR)\
+            .setFailAction(AssetNameParser._raise_field_error('extension', 'indicator'))
+        # ----------------------------------------------------------------------
+
+        grammar = {
+            'project': project_indicator + project,
+            'specification': specification_indicator + specification,
+            'specification_token': specification,
+            'descriptor': descriptor_indicator + descriptor,
+            'version': version_indicator + version,
+            'coordinate': coordinate_indicator + coordinate,
+            'frame': frame_indicator + frame,
+            'extension': extension_indicator + extension,
+            'extension_token': extension,
+            'field_separator': Suppress(AssetNameParser.FIELD_SEPARATOR)
+        }
+        return grammar
+
+    @staticmethod
+    def _get_extension_parser(grammar):
+        return Group(grammar['extension_token'])
+
+    @staticmethod
+    def _get_unordered_parser(grammar, fields):
+        parser = None
+        if fields[-1] == 'extension':
+            field = Or([grammar[x] for x in fields[:-1]])
+            parser = delimitedList(field, delim=grammar['field_separator'])
+            parser += grammar[fields[-1]]
+        else:
+            field = Or([grammar[x] for x in fields])
+            parser = delimitedList(field, delim=grammar['field_separator'])
+
+        parser = Group(parser)
+        return parser
+
+    @staticmethod
+    def _get_ordered_parser(grammar, fields):
+        parser = Suppress(Regex('^'))
+        for i, field in enumerate(fields[:-1]):
+            parser += grammar[field]
+            if fields[i + 1] != 'extension':
+                parser += grammar['field_separator']
+        parser += grammar[fields[-1]]
+        parser += Suppress(Regex('$'))
+        parser = Group(parser)
+        return parser
+
+    @staticmethod
+    def _get_specification_parser():
+        grammar = AssetNameParser._get_grammar()
+        indicator = Suppress(Regex('.*' + AssetNameParser.SPECIFICATION_INDICATOR))
+        parser = indicator + grammar['specification_token']
+        parser = Group(parser)
+        return parser
+
+    @staticmethod
+    def parse_specification(text):
+        try:
+            return AssetNameParser\
+                ._get_specification_parser()\
+                .parseString(text)[0].asDict()
+        except ParseException:
+            msg = f'Specification not found in "{text}".'
+            raise ParseException(msg)
+
+    def parse(self, text, ignore_order=False):
         '''
         Create a parser based on the given fields.
 
@@ -107,127 +237,28 @@ class AssetNameParser:
         Returns:
             Group: parser.
         '''
-        fields = copy(self._fields)
+        if self._fields == ['extension']:
+            return self._extension_parser.parseString(text)[0].asDict()
 
-        # setup grammar
-        field_sep = Suppress(self.FIELD_SEPARATOR)
-        # ----------------------------------------------------------------------
-
-        project = Regex(r'[a-z]{3,4}\d{1,3}')\
-            .setResultsName('project')\
-            .setFailAction(self._raise_field_error('project', 'token'))
-
-        specification = Regex(r'[a-z]{3,4}\d\d\d')\
-            .setResultsName('specification')\
-            .setFailAction(self._raise_field_error('specification', 'token'))
-
-        descriptor = Regex(r'[a-z0-9][a-z0-9-]*')\
-            .setResultsName('descriptor')\
-            .setFailAction(self._raise_field_error('descriptor', 'token'))
-
-        version = Regex(r'\d{' + str(self.VERSION_PADDING) + '}')\
-            .setParseAction(lambda s, l, t: int(t[0]))\
-            .setResultsName('version')\
-            .setFailAction(self._raise_field_error('version', 'token'))
-
-        coord = Regex(r'\d{' + str(self.COORDINATE_PADDING) + '}')\
-            .setParseAction(lambda s, l, t: int(t[0]))
-        t_sep = Suppress(self.TOKEN_SEPARATOR)
-        coordinate = Group(coord + Optional(t_sep + coord) + Optional(t_sep + coord))\
-            .setResultsName('coordinate')\
-            .setFailAction(self._raise_field_error('coordinate', 'token'))
-
-        frame = Regex(r'\d{' + str(self.FRAME_PADDING) + '}')\
-            .setParseAction(lambda s, l, t: int(t[0]))\
-            .setResultsName('frame')\
-            .setFailAction(self._raise_field_error('frame', 'token'))
-
-        extension = Regex(r'[a-zA-Z0-9]+')\
-            .setResultsName('extension')\
-            .setFailAction(self._raise_field_error('extension', 'token'))
-        # ----------------------------------------------------------------------
-
-        project_indicator = Suppress(self.PROJECT_INDICATOR)\
-            .setFailAction(self._raise_field_error('project', 'indicator'))
-
-        specification_indicator = Suppress(self.SPECIFICATION_INDICATOR)\
-            .setFailAction(self._raise_field_error('specification', 'indicator'))
-
-        descriptor_indicator = Suppress(self.DESCRIPTOR_INDICATOR)\
-            .setFailAction(self._raise_field_error('descriptor', 'indicator'))
-
-        version_indicator = Suppress(self.VERSION_INDICATOR)\
-            .setFailAction(self._raise_field_error('version', 'indicator'))
-
-        coordinate_indicator = Suppress(self.COORDINATE_INDICATOR)\
-            .setFailAction(self._raise_field_error('coordinate', 'indicator'))
-
-        frame_indicator = Suppress(self.FRAME_INDICATOR)\
-            .setFailAction(self._raise_field_error('frame', 'indicator'))
-
-        extension_indicator = Suppress(self.EXTENSION_INDICATOR)\
-            .setFailAction(self._raise_field_error('extension', 'indicator'))
-        # ----------------------------------------------------------------------
-
-        lut = {
-            'project': project_indicator + project,
-            'specification': specification_indicator + specification,
-            'descriptor': descriptor_indicator + descriptor,
-            'version': version_indicator + version,
-            'coordinate': coordinate_indicator + coordinate,
-            'frame': frame_indicator + frame,
-            'extension': extension_indicator + extension,
-        }
-
-        # if only extension was given
-        if fields == ['extension']:
-            return Group(extension).parseString(string)[0].asDict()
-
-        # create unordered parser
-        has_ext = fields[-1] == 'extension'
-        if has_ext:
-            fields.pop()
-
-        field = Or([lut[x] for x in fields])
-        unordered_parser = delimitedList(field, delim=self.FIELD_SEPARATOR)
-        if has_ext:
-            unordered_parser += lut['extension']
-        unordered_parser = Group(unordered_parser)
-
-        # create ordered parser
-        last = fields.pop()
-        temp = []
-        for field in fields:
-            temp.append(lut[field])
-            temp.append(field_sep)
-        temp.append(lut[last])
-
-        if has_ext:
-            temp.append(lut['extension'])
-
-        parser = Suppress(Regex('^'))
-        for item in temp:
-            parser += item
-        parser += Suppress(Regex('$'))
-
-        parser = Group(parser)
-
-        # parse string
+        # parse text
         if ignore_order:
-            return unordered_parser.parseString(string)[0].asDict()
+            return self._unordered_parser.parseString(text)[0].asDict()
 
         else:
+            # determine if the text can be parsed with random field order
             try:
-                unordered_parser.parseString(string)
+                self._unordered_parser.parseString(text)
                 parsable = True
             except ParseException:
                 parsable = False
 
             try:
-                return parser.parseString(string)[0].asDict()
+                return self._ordered_parser.parseString(text)[0].asDict()
             except ParseException as msg:
+                # it is a field order error if it is parasable with a different
+                # field order
                 if parsable:
-                    msg = f'Incorrect field order in "{string}". '
+                    msg = f'Incorrect field order in "{text}". '
                     msg += f'Given field order: {self._fields}.'
                 raise ParseException(msg)
 
