@@ -298,3 +298,164 @@ class ParserTests(unittest.TestCase):
         msg = f'Illegal extension field token in "{name}". Expecting: .*'
         with self.assertRaisesRegexp(ParseException, msg):
             AssetNameParser(self.fields).parse(name)
+
+    # GRAMMAR-------------------------------------------------------------------
+    def test_get_grammar(self):
+        result = AssetNameParser._get_grammar()
+        expected = [
+            'project',
+            'specification',
+            'descriptor',
+            'version',
+            'coordinate',
+            'frame',
+            'extension',
+            'field_separator',
+        ]
+        result = set(expected).difference(result.keys())
+        self.assertEqual(len(result), 0)
+
+    def test_get_extension_parser(self):
+        grammar = AssetNameParser._get_grammar()
+        parser = AssetNameParser._get_extension_parser(grammar)
+
+        expected = 'Illegal extension field token.*'
+        with self.assertRaisesRegexp(ParseException, expected):
+            parser.parseString('foo.')
+
+        expected = 'Illegal extension field token.*'
+        with self.assertRaisesRegexp(ParseException, expected):
+            parser.parseString('foo.bar-baz')
+
+        result = parser.parseString('foo.bar')[0].asDict()['extension']
+        self.assertEqual(result, 'bar')
+
+        result = parser.parseString('foo.bar.baz')[0].asDict()['extension']
+        self.assertEqual(result, 'baz')
+
+        result = parser.parseString('foo')[0].asDict()['extension']
+        self.assertEqual(result, 'foo')
+
+        result = parser.parseString('.foo')[0].asDict()['extension']
+        self.assertEqual(result, 'foo')
+
+    def test_get_unordered_parser(self):
+        fields = ['project', 'specification', 'descriptor', 'version', 'frame', 'extension']
+        grammar = AssetNameParser._get_grammar()
+        parser = AssetNameParser._get_unordered_parser(grammar, fields)
+
+        expected = dict(
+            project='proj002',
+            specification='spec062',
+            descriptor='desc',
+            version=99,
+            frame=78,
+            extension='exr'
+        )
+        names = [
+            'f0078_s-spec062_p-proj002_v099_d-desc.exr',
+            's-spec062_f0078_p-proj002_d-desc_v099.exr',
+            'v099_f0078_s-spec062_d-desc_p-proj002.exr',
+        ]
+        for name in names:
+            result = parser.parseString(name)[0].asDict()
+            self.assertEqual(result, expected)
+
+    def test_get_unordered_parser_no_extension(self):
+        fields = ['project', 'specification', 'descriptor', 'version', 'frame']
+        grammar = AssetNameParser._get_grammar()
+        parser = AssetNameParser._get_unordered_parser(grammar, fields)
+
+        expected = dict(
+            project='proj002',
+            specification='spec062',
+            descriptor='desc',
+            version=99,
+            frame=78
+        )
+        names = [
+            'f0078_s-spec062_p-proj002_v099_d-desc',
+            's-spec062_f0078_p-proj002_d-desc_v099',
+            'v099_f0078_s-spec062_d-desc_p-proj002',
+            'f0078_s-spec062_p-proj002_v099_d-desc.exr',
+            's-spec062_f0078_p-proj002_d-desc_v099.exr',
+            'v099_f0078_s-spec062_d-desc_p-proj002.exr',
+        ]
+        for name in names:
+            result = parser.parseString(name)[0].asDict()
+            self.assertEqual(result, expected)
+
+    def test_get_ordered_parser(self):
+        fields = [
+            'project', 'specification', 'descriptor', 'version', 'coordinate',
+            'frame', 'extension'
+        ]
+        grammar = AssetNameParser._get_grammar()
+        parser = AssetNameParser._get_ordered_parser(grammar, fields)
+
+        expected = dict(
+            project='proj001',
+            specification='spec002',
+            descriptor='desc',
+            version=3,
+            coordinate=[4, 5, 6],
+            frame=7,
+            extension='exr'
+        )
+        name = 'p-proj001_s-spec002_d-desc_v003_c004-005-006_f0007.exr'
+        result = parser.parseString(name)[0].asDict()
+        self.assertEqual(result, expected)
+
+        name = 'p-proj001.s-spec002.d-desc.v003.c004-005-006.f0007.exr'
+        with self.assertRaises(ParseException):
+            parser.parseString(name)[0].asDict()
+
+        # no extension
+        parser = AssetNameParser._get_ordered_parser(grammar, fields[:-1])
+        del expected['extension']
+        name = 'p-proj001_s-spec002_d-desc_v003_c004-005-006_f0007'
+        result = parser.parseString(name)[0].asDict()
+        self.assertEqual(result, expected)
+
+        name = 'p-proj001_s-spec002_d-desc_v003_c004-005-006_f0007_exr'
+        with self.assertRaises(ParseException):
+            parser.parseString(name)[0].asDict()
+
+    def test_get_specification_parser(self):
+        parser = AssetNameParser._get_specification_parser()
+        expected = dict(specification='spec001')
+
+        names = [
+            's-spec001',
+            'p-s-spec001',
+            'pizzas-spec001',
+            'pizza_s-spec001',
+            's-spec001banana',
+            's-spec0012',
+        ]
+        for name in names:
+            result = parser.parseString(name)[0].asDict()
+            self.assertEqual(result, expected)
+
+        names = [
+            'spec001',
+            '-spec001',
+            'p-spec001',
+            's.spec001',
+            's-001spec',
+            's-sp001',
+            's-specification001'
+        ]
+        for name in names:
+            with self.assertRaises(ParseException):
+                parser.parseString(name)[0].asDict()
+
+    def test_parse_specification(self):
+        parser = AssetNameParser._get_specification_parser()
+        expected = dict(specification='spec001')
+        result = AssetNameParser.parse_specification('s-spec001')
+        self.assertEqual(result, expected)
+
+        expected = 'Specification not found in "spec001".'
+        with self.assertRaisesRegexp(ParseException, expected):
+            AssetNameParser.parse_specification('spec001')

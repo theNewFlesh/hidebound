@@ -66,7 +66,8 @@ class AssetNameParser:
 
         # ensure extension is last field
         if 'extension' in fields and fields[-1] != 'extension':
-            msg = 'Illegal field order: Extension field must be last if it is included in fields.'
+            msg = 'Illegal field order: Extension field must be last if it is '
+            msg += 'included in fields.'
             raise ValueError(msg)
 
         grammar = self._get_grammar()
@@ -75,6 +76,7 @@ class AssetNameParser:
         self._unordered_parser = self._get_unordered_parser(grammar, fields)
         self._fields = fields
 
+    # GRAMMAR-------------------------------------------------------------------
     @staticmethod
     def _raise_field_error(field, part):
         '''
@@ -136,7 +138,7 @@ class AssetNameParser:
             .setResultsName('frame')\
             .setFailAction(AssetNameParser._raise_field_error('frame', 'token'))
 
-        extension = Regex(r'[a-zA-Z0-9]+')\
+        extension = Regex(r'[a-zA-Z0-9]+$')\
             .setResultsName('extension')\
             .setFailAction(AssetNameParser._raise_field_error('extension', 'token'))
         # ----------------------------------------------------------------------
@@ -177,12 +179,35 @@ class AssetNameParser:
         }
         return grammar
 
+    # PARSERS-------------------------------------------------------------------
     @staticmethod
     def _get_extension_parser(grammar):
-        return Group(grammar['extension_token'])
+        '''
+        Creates a parser for file extensions.
+
+        Args:
+            grammar (dict): AssetNameParser grammar dictionary.
+
+        Returns:
+            Group: Parser.
+        '''
+        parser = Optional(Suppress(Regex(r'.*\.|.*?'))) + grammar['extension_token']
+        parser = Group(parser)
+        return parser
 
     @staticmethod
     def _get_unordered_parser(grammar, fields):
+        '''
+        Creates a parser for asset names of fields with arbitrary order.
+
+        Args:
+            grammar (dict): AssetNameParser grammar dictionary.
+            fields (list[str]): List of fields.
+
+        Returns:
+            Group: Parser.
+        '''
+        # TODO: fix grammar so that there are no duplicate field matches.
         parser = None
         if fields[-1] == 'extension':
             field = Or([grammar[x] for x in fields[:-1]])
@@ -197,6 +222,16 @@ class AssetNameParser:
 
     @staticmethod
     def _get_ordered_parser(grammar, fields):
+        '''
+        Creates a parser for asset names.
+
+        Args:
+            grammar (dict): AssetNameParser grammar dictionary.
+            fields (list[str]): List of fields.
+
+        Returns:
+            Group: Parser.
+        '''
         parser = Suppress(Regex('^'))
         for i, field in enumerate(fields[:-1]):
             parser += grammar[field]
@@ -209,14 +244,33 @@ class AssetNameParser:
 
     @staticmethod
     def _get_specification_parser():
+        '''
+        Returns a parser for finding a specification within an arbitrary string.
+
+        Returns:
+            Group: Parser.
+        '''
         grammar = AssetNameParser._get_grammar()
         indicator = Suppress(Regex('.*' + AssetNameParser.SPECIFICATION_INDICATOR))
         parser = indicator + grammar['specification_token']
         parser = Group(parser)
         return parser
 
+    # PUBLIC--------------------------------------------------------------------
     @staticmethod
     def parse_specification(text):
+        '''
+        Parse a string for a specification.
+
+        Args:
+            text (str): String to be parsed.
+
+        Raises:
+            ParseException: If specification is not found.
+
+        Returns:
+            dict: Dictionary with "specification" key.
+        '''
         try:
             return AssetNameParser\
                 ._get_specification_parser()\
