@@ -102,10 +102,27 @@ class DatabaseTests(unittest.TestCase):
 
     def get_specifications(self):
         class Spec001(Specification):
-            pass
+            name = 'spec001'
+            fields = [
+                'project',
+                'specification',
+                'descriptor',
+                'version',
+                'coordinate',
+                'frame',
+                'extension',
+            ]
 
         class Spec002(Specification):
-            pass
+            name = 'spec002'
+            fields = [
+                'project',
+                'specification',
+                'descriptor',
+                'version',
+                'frame',
+                'extension',
+            ]
 
         class BadSpec:
             pass
@@ -141,7 +158,7 @@ class DatabaseTests(unittest.TestCase):
         with TemporaryDirectory() as root:
             self.create_files(root)
             result = Database(root, [Spec001]).update().data
-            self.assertEqual(len(result), 5)
+            self.assertEqual(len(result), 32)
 
     def test_update_no_files(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
