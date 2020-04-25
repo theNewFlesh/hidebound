@@ -1,4 +1,6 @@
 from pathlib import Path
+
+import numpy as np
 import pandas as pd
 from pandas import DataFrame
 
@@ -58,7 +60,7 @@ class Database:
         self._include_regex = include_regex
         self._exclude_regex = exclude_regex
         self._ignore_order = ignore_order
-        self._specifications = {x.specification: x for x in specifications}
+        self._specifications = {x.name: x for x in specifications}
         self.data = None
 
     def update(self):
@@ -75,72 +77,8 @@ class Database:
             exclude_regex=self._exclude_regex
         )
 
-        # get specification data
-        spec = data.filename.apply(
-            lambda x: tools.try_(
-                AssetNameParser.parse_specification,
-                x,
-                'error'
-            )
-        )
-
-        # convert spec parse errors to dict
-        mask = spec.apply(lambda x: not isinstance(x, dict)).astype(bool)
-        spec[mask] = spec[mask].apply(lambda x: dict(error=x))
-
-        # flatten spec data into DataFrame
-        spec = DataFrame(spec.tolist())
-        if 'error' not in spec.columns:
-            spec['error'] = None
-
-        # combine spec data with file data
-        data = pd.concat([data, spec], axis=1)
-
-        # get mask of files with specs
-        mask = data.specification.apply(
-            lambda x: isinstance(x, str) and x in self._specifications.keys()
-        )
-        mask = data[mask].index
-
-        # create meta column
-        data['meta'] = None
-        data.meta = data.meta.apply(lambda x: {})
-
-        # parse filenames for metadata
-        parse = lambda x: AssetNameParser(
-            self._specifications[x[0]].fields
-        ).parse(x[1], ignore_order=self._ignore_order)
-        data.loc[mask, 'meta'] = data.loc[mask]\
-            .apply(lambda x: [x.specification, x.filename], axis=1)\
-            .apply(lambda x: tools.try_(parse, x, 'error'))\
-            .apply(lambda x: x if isinstance(x, dict) else dict(error=x))
-
-        # concatenate data and metadata
-        meta = data.meta.tolist()
-        meta = DataFrame(meta)
-
-        cols = ['specification', 'extension', 'error']
-        for col in cols:
-            if col not in meta.columns:
-                meta[col] = None
-
-        # merge data and metadata and clean up error columns
-        meta['err'] = meta.error
-        meta.drop(columns=cols, inplace=True)
-        data = pd.concat([data, meta], axis=1)
-        data.loc[mask, 'error'] = data.loc[mask, 'err']
-
-        # get asset names
-        data['asset_name'] = None
-        mask = data.specification.notnull()
-        data.loc[mask, 'asset_name'] = data[mask]\
-            .apply(lambda x: self._specifications[x.specification]\
-                .filepath_to_asset_name(x.fullpath),
-                axis=1
-            )
-
-        # cleanup columns
-        cols = [
+        # add all columns to data
+        columns = [
             'project',
             'specification',
             'descriptor',
@@ -153,10 +91,83 @@ class Database:
             'fullpath',
             'error'
         ]
-        for col in cols:
+        for col in columns:
             if col not in data.columns:
-                data[col] = None
-        data = data[cols]
+                data[col] = np.nan
+
+        # if no files are found return empty DataFrame
+        if len(data) == 0:
+            data.columns = columns
+            self.data = data
+            return self
+
+        # get specification data------------------------------------------------
+        def to_asset_spec(filename):
+            output = tools.try_(
+                AssetNameParser.parse_specification, filename, 'error'
+            )
+            if not isinstance(output, dict):
+                output = dict(error=output)
+            for key in ['specification', 'error']:
+                if key not in output.keys():
+                    output[key] = np.nan
+            return output
+
+        spec = data.filename.apply(to_asset_spec).tolist()
+        spec = DataFrame(spec)
+
+        # combine spec data with file data
+        data['error'] = spec.error
+        mask = spec.specification.notnull()
+        data.loc[mask, 'specification'] = spec.loc[mask, 'specification']
+
+        # get metadata----------------------------------------------------------
+        def to_asset_metadata(specification, filename):
+            if specification not in self._specifications.keys():
+                return {}
+
+            spec = self._specifications[specification]
+            parser = AssetNameParser(spec.fields)
+            output = tools.try_(parser.parse, filename, 'error')
+            if not isinstance(output, dict):
+                output = dict(error=output)
+
+            for key in ['specification', 'extension', 'error']:
+                if key not in output.keys():
+                    output[key] = np.nan
+            return output
+
+        meta = data.apply(
+            lambda x: to_asset_metadata(x.specification, x.filename),
+            axis=1
+        )
+        meta = DataFrame(meta.tolist())
+
+        # merge data and metadata
+        for col in meta.columns:
+            if col not in data.columns:
+                data[col] = np.nan
+
+            mask = meta[col].notnull()
+            data.loc[mask, col] = meta.loc[mask, col]
+
+        # get asset names
+        data['asset_name'] = data.apply(
+            lambda y: tools.try_(
+                lambda x: self\
+                    ._specifications[x.specification]\
+                    .filename_to_asset_name(x.filename),
+                y,
+                np.nan
+            ),
+            axis=1
+        )
+
+        # cleanup columns
+        for col in columns:
+            if col not in data.columns:
+                data[col] = np.nan
+        data = data[columns]
 
         self.data = data
         return self
