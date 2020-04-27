@@ -17,7 +17,7 @@ class Database:
     def __init__(
         self,
         root,
-        specifications,
+        specifications=[],
         include_regex='',
         exclude_regex=r'\.DS_Store',
         ignore_order=False
@@ -27,7 +27,8 @@ class Database:
 
         Args:
             root (str or Path): Root directory to recurse.
-            specifications (list[Specification]): List of asset specifications.
+            specifications (list[Specification], optional): List of asset
+                specifications. Default: [].
             include_regex (str, optional): Include filenames that match this
                 regex. Default: None.
             exclude_regex (str, optional): Exclude filenames that match this

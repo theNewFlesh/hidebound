@@ -60,7 +60,7 @@ class DatabaseTests(unittest.TestCase):
                 'proj001_s-spec002_pizza_v002_0004.exr',
             ],[
                 'p-proj001_s-spec002_d-pizza_v002_f0001.exr',
-                'proj001_s-spec002_d-pizza_v002_f0002.exr',
+                'proj001_s-spec002_pizza_v002_f0002.exr',
                 'p-proj001_s-spec002_d-pizza_v002_f0003.exr',
                 'p-proj001_s-spec002_d-pizza_v002'
             ],[
@@ -138,7 +138,8 @@ class DatabaseTests(unittest.TestCase):
 
         with TemporaryDirectory() as root:
             self.create_files(root)
-            expected = 'Specification may only contain subclasses of Specification. Found: .*.'
+            expected = 'Specification may only contain subclasses of'
+            expected += ' Specification. Found: .*.'
 
             with self.assertRaisesRegexp(TypeError, expected):
                 Database(root, [BadSpec])
@@ -158,7 +159,9 @@ class DatabaseTests(unittest.TestCase):
         with TemporaryDirectory() as root:
             self.create_files(root)
             result = Database(root, [Spec001]).update().data
-            self.assertEqual(len(result), 32)
+            result = result.groupby('specification').count()
+            self.assertEqual(result.fullpath, 15)
+            self.assertEqual(result.error, 1)
 
     def test_update_no_files(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
