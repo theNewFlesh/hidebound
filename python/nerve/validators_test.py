@@ -1,7 +1,5 @@
 import unittest
 
-from schematics.exceptions import ValidationError
-
 import nerve.validators as vd
 from nerve.validators import ValidationError
 # ------------------------------------------------------------------------------

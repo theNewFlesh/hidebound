@@ -1,8 +1,6 @@
 from copy import copy
 import unittest
 
-from schematics.exceptions import DataError
-
 import nerve.specifications as spec
 import nerve.validators as vd
 # ------------------------------------------------------------------------------

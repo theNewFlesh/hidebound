@@ -8,13 +8,12 @@ module.  Triats may only return primitive datatypes.
 '''
 # ------------------------------------------------------------------------------
 
-import re
 import os
-from collections import defaultdict
 from uuid import uuid4
-import yaml
+
 from nerve.core.utils import Name, fetch_project_traits
 # ------------------------------------------------------------------------------
+
 
 def get_meta(fullpath):
     '''
@@ -26,6 +25,7 @@ def get_meta(fullpath):
     '''
     return Name(fullpath).meta
 
+
 def get_config(fullpath):
     '''
     Args:
@@ -35,6 +35,7 @@ def get_config(fullpath):
         bool: is nerverc file
     '''
     return Name(fullpath).config
+
 
 def get_asset_id(fullpath):
     '''
@@ -46,6 +47,7 @@ def get_asset_id(fullpath):
     '''
     return str(uuid4())
 
+
 def get_asset_name(fullpath):
     '''
     Args:
@@ -53,6 +55,7 @@ def get_asset_name(fullpath):
     '''
     output = os.path.split(fullpath)[-1]
     return os.path.splitext(output)[0]
+
 
 def get_project_name(fullpath):
     '''
@@ -63,6 +66,7 @@ def get_project_name(fullpath):
         str: project name
     '''
     return Name(fullpath).project_name
+
 
 def get_project_id(fullpath):
     '''
@@ -77,6 +81,7 @@ def get_project_id(fullpath):
         return meta['project_id']
     return None
 
+
 def get_project_url(fullpath):
     '''
     Args:
@@ -90,6 +95,7 @@ def get_project_url(fullpath):
         return meta['project_url']
     return None
 
+
 def get_specification(fullpath):
     '''
     Args:
@@ -99,6 +105,7 @@ def get_specification(fullpath):
         str: asset specification
     '''
     return Name(fullpath).specification
+
 
 def get_descriptor(fullpath):
     '''
@@ -110,6 +117,7 @@ def get_descriptor(fullpath):
     '''
     return Name(fullpath).descriptor
 
+
 def get_version(fullpath):
     '''
     Args:
@@ -120,6 +128,7 @@ def get_version(fullpath):
     '''
     return Name(fullpath).version
 
+
 def get_render_pass(fullpath):
     '''
     Args:
@@ -129,6 +138,7 @@ def get_render_pass(fullpath):
         str: render pass
     '''
     return Name(fullpath).render_pass
+
 
 def get_coordinates(fullpath):
     '''
@@ -146,6 +156,7 @@ def get_coordinates(fullpath):
         return output
     return [Name(fullpath).coordinate]
 
+
 def get_frames(fullpath):
     '''
     Args:
@@ -162,6 +173,7 @@ def get_frames(fullpath):
         return output
     return [Name(fullpath).frame]
 
+
 def get_extension(fullpath):
     '''
     Args:
@@ -172,6 +184,7 @@ def get_extension(fullpath):
     '''
     return Name(fullpath).extension
 
+
 def get_template(fullpath):
     '''
     Args:
@@ -181,18 +194,3 @@ def get_template(fullpath):
         bool: is nerverc template file
     '''
     return Name(fullpath).template
-# ------------------------------------------------------------------------------
-
-def main():
-    '''
-    Run help if called directly
-    '''
-
-    import __main__
-    help(__main__)
-# ------------------------------------------------------------------------------
-
-# __all__ = []
-
-if __name__ == '__main__':
-    main()

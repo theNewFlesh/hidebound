@@ -8,16 +8,15 @@ within the nerve framework
 from itertools import takewhile
 import os
 import re
-from subprocess import Popen, PIPE, SubprocessError
-from warnings import warn
+
 import yaml
-from nerve.core.errors import TimeoutError
 # ------------------------------------------------------------------------------
 
 
 def is_dictlike(item):
     '''Determine if an item id dictlike'''
     return item.__class__.__name__ in ['dict', 'OrderedDict']
+
 
 def deep_update(original, update):
     '''
@@ -31,11 +30,12 @@ def deep_update(original, update):
         dict: new updated dictionary
     '''
     for key, value in original.items():
-        if not key in update:
+        if key not in update:
             update[key] = value
         elif isinstance(value, dict):
             deep_update(value, update[key])
     return update
+
 
 def conform_keys(data, source='_', target='-', skip=[]):
     '''
@@ -64,10 +64,11 @@ def conform_keys(data, source='_', target='-', skip=[]):
     return _conform(data, {})
 # ------------------------------------------------------------------------------
 
+
 class Name(object):
     def __init__(self, name, project_root=None):
         self.raw = name
-        if project_root == None:
+        if project_root is None:
             project_root = self.__get_project_root(name)
         self.project_root = project_root
         ftype = self.__get_ftype(name)
@@ -80,7 +81,7 @@ class Name(object):
 
     def __get_project_root(self, fullpath):
         items = fullpath.split(os.sep)
-        temp = takewhile(lambda x: not bool(re.search('^[a-z\-]+\d\d\d$', x)), items)
+        temp = takewhile(lambda x: not bool(re.search(r'^[a-z\-]+\d\d\d$', x)), items)
         temp = list(temp)
         if len(temp) != len(items):
             return os.path.join(os.sep, *temp)
@@ -89,11 +90,11 @@ class Name(object):
     def __get_attrs(self, raw, ftype):
         root, name = os.path.split(raw)
         name, ext = os.path.splitext(name)
-        ext = re.sub('\.', '', ext) if ext != '' else None
-        config = True if re.search('nerverc', raw) else False
+        ext = re.sub(r'\.', '', ext) if ext != '' else None
+        config = True if re.search(r'nerverc', raw) else False
 
         template = False
-        if re.search('nerverc_temp', raw):
+        if re.search(r'nerverc_temp', raw):
             config = False
             template = True
 
@@ -149,13 +150,13 @@ class Name(object):
 
         if len(items) > 3:
             for item in items[3:]:
-                if re.search('^v\d+$', item):
-                    version = int(re.sub('v', '', item))
-                elif re.search('\d\d\d-\d\d\d(-\d\d\d)?', item):
+                if re.search(r'^v\d+$', item):
+                    version = int(re.sub(r'v', '', item))
+                elif re.search(r'\d\d\d-\d\d\d(-\d\d\d)?', item):
                     coord = tuple(map(int, item.split('-')))
-                elif re.search('^\d\d\d\d$', item):
+                elif re.search(r'^\d\d\d\d$', item):
                     frame = int(item)
-                elif re.search('^meta$', item):
+                elif re.search(r'^meta$', item):
                     meta = True
                 else:
                     rpass = item
@@ -175,8 +176,8 @@ class Name(object):
     def __get_ftype(self, raw):
         root, name = os.path.split(raw)
         name, ext = os.path.splitext(name)
-        if re.search('nerverc', name):
-            if re.search('temp', name):
+        if re.search(r'nerverc', name):
+            if re.search(r'temp', name):
                 return 'template'
             return 'config'
 
@@ -184,7 +185,7 @@ class Name(object):
         if len(items) < 3:
             return 'unknown'
 
-        if re.search('^proj\d+', items[1]):
+        if re.search(r'^proj\d+', items[1]):
             return 'project'
 
         return 'asset'
@@ -209,7 +210,7 @@ class Name(object):
     def fullpath(self):
         def find(item):
             if item:
-                output = re.sub(item, '', re.sub('^/', '', self.raw))
+                output = re.sub(item, '', re.sub(r'^/', '', self.raw))
                 output = os.path.join(item, output)
                 if os.path.exists(output):
                     return output
@@ -256,6 +257,7 @@ class Name(object):
         }
 # ------------------------------------------------------------------------------
 
+
 def fetch_project_traits(fullpath):
     '''
     Args:
@@ -266,7 +268,7 @@ def fetch_project_traits(fullpath):
     '''
     project = Name(fullpath).project_path
     files = os.listdir(project)
-    files = filter(lambda x: re.search('.+_[a-z]+\d\d\d_meta\.yml', x), files)
+    files = filter(lambda x: re.search(r'.+_[a-z]+\d\d\d_meta\.yml', x), files)
     files = list(files)
     if len(files) > 0:
         meta = os.path.join(project, files[0])
@@ -274,26 +276,3 @@ def fetch_project_traits(fullpath):
             meta = yaml.load(f)
             return meta
     return None
-# ------------------------------------------------------------------------------
-
-def main():
-    '''
-    Run help if called directly
-    '''
-
-    import __main__
-    help(__main__)
-# ------------------------------------------------------------------------------
-
-__all__ = [
-    'execute_subprocess',
-    'get_status',
-    'is_dictlike',
-    'deep_update',
-    'conform_keys',
-    'Name',
-    'fetch_project_traits'
-]
-
-if __name__ == '__main__':
-    main()

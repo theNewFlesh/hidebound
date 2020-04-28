@@ -56,7 +56,7 @@ def list_all_files(directory, include_regex='', exclude_regex=''):
                 yield Path(root, file_)
 
 
-def directory_to_dataframe(directory, include_regex='', exclude_regex='\.DS_Store'):
+def directory_to_dataframe(directory, include_regex='', exclude_regex=r'\.DS_Store'):
     r'''
     Recursively list files with in a given directory as rows in a DataFrame.
 

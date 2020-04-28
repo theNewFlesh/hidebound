@@ -14,6 +14,7 @@ from nerve.spec import specifications, traits
 from nerve.core.errors import SpecificationError
 # ------------------------------------------------------------------------------
 
+
 class Metadata(object):
     '''
     The Metadata class provides a simple object for generating, validating and writing metadata
@@ -43,7 +44,7 @@ class Metadata(object):
         data = {}
 
         if isinstance(item, dict):
-            if spec == None:
+            if spec is None:
                 spec = item['specification']
             data = item
 
@@ -189,18 +190,3 @@ class Metadata(object):
             yaml.dump(data, f, default_flow_style=False)
 
         return os.path.exists(fullpath)
-# ------------------------------------------------------------------------------
-
-def main():
-    '''
-    Run help if called directly
-    '''
-
-    import __main__
-    help(__main__)
-# ------------------------------------------------------------------------------
-
-__all__ = ['Metadata']
-
-if __name__ == '__main__':
-    main()
