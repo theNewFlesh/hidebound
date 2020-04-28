@@ -1,53 +1,41 @@
-#! /usr/bin/env python
+from schematics.types import IntType, StringType
+
+import nerve.validators as vd
+from nerve.specification_base import SequenceSpecificationBase
+# ------------------------------------------------------------------------------
+
+
 '''
-The specifications module house all the specifications for all nerve projects
+The specifications module house all the specifications for all nerve projects.
 
 All specifications used in production should be subclassed from the base classes
-foudn in the base module.  All class attributes must have a "get_[attribute]"
-function in the traits module and should have one or more validators related t
-the value of that trait (especially if required).
+found in the specification_base module. All class attributes must have a
+"get_[attribute]" function in the traits module and should have one or more
+validators related to the value of that trait (especially if required).
 '''
-# ------------------------------------------------------------------------------
 
-from nerve.spec.base import Config, ProjectTemplate, Project, Deliverable, NonDeliverable, Remote
-# ------------------------------------------------------------------------------
 
-class Temp001(ProjectTemplate):
-    pass
-
-class Conf001(Config):
-    pass
-
-class Proj001(Project):
-    pass
-
-class Vol001(Deliverable):
-    pass
-
-class Geo001(Deliverable):
-    pass
-
-class Maya001(NonDeliverable):
-    pass
-# ------------------------------------------------------------------------------
-
-def main():
+class Raw001(SequenceSpecificationBase):
     '''
-    Run help if called directly
+    Raw 1K x 1K pngs.
+
+    Attributes:
+        filename_fields (list[str]): project, specification, descriptor,
+            version, frame, extension
+        asset_name_fields (list[str]): project, specification, descriptor,
+            version,
+        height (int): Image height. Must be 1024.
+        width (int): Image width. Must be 1024.
+        extension (str): File extension. Must be "png".
     '''
-
-    import __main__
-    help(__main__)
-# ------------------------------------------------------------------------------
-
-__all__ = [
-    'Temp001',
-    'Conf001',
-    'Proj001',
-    'Vol001',
-    'Geo001',
-    'Maya001'
-]
-
-if __name__ == '__main__':
-    main()
+    filename_fields = [
+        'project', 'specification', 'descriptor', 'version', 'frame',
+        'extension'
+    ]
+    height = IntType(required=True, validators=[lambda x: vd.is_eq(x, 1024)])
+    width = IntType(required=True, validators=[lambda x: vd.is_eq(x, 1024)])
+    frame = IntType(required=True, validators=[vd.is_frame])
+    extension = StringType(
+        required=True,
+        validators=[vd.is_extension, lambda x: vd.is_eq(x, 'png')]
+    )
