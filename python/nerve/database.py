@@ -1,12 +1,12 @@
 from pathlib import Path
 
 import numpy as np
-import pandas as pd
 from pandas import DataFrame
 
 from nerve.parser import AssetNameParser
 import nerve.tools as tools
-from nerve.specification_base import Specification
+import nerve.validators as vd
+from nerve.specification_base import SpecificationBase
 # ------------------------------------------------------------------------------
 
 
@@ -22,23 +22,23 @@ class Database:
         exclude_regex=r'\.DS_Store',
         ignore_order=False
     ):
-        '''
+        r'''
         Creates an instance of Database but does not populate it with data.
 
         Args:
             root (str or Path): Root directory to recurse.
-            specifications (list[Specification], optional): List of asset
+            specifications (list[SpecificationBase], optional): List of asset
                 specifications. Default: [].
             include_regex (str, optional): Include filenames that match this
                 regex. Default: None.
             exclude_regex (str, optional): Exclude filenames that match this
                 regex. Default: '\.DS_Store'.
-            ignore_order (bool, optional): Whether to ignore the field order in
+            ignore_order (bool, optional): Whether to ignore the filename_ order in
                 filenames. Default: False.
 
         Raises:
             FileNotFoundError: If root is not a directory or does not exist.
-            TypeError: If specifications contains a non-Specification object.
+            TypeError: If specifications contains a non-SpecificationBase object.
 
         Returns:
             Database: Database instance.
@@ -50,10 +50,10 @@ class Database:
             raise FileNotFoundError(msg)
 
         bad_specs = list(filter(
-            lambda x: not issubclass(x, Specification), specifications
+            lambda x: not issubclass(x, SpecificationBase), specifications
         ))
         if len(bad_specs) > 0:
-            msg = f'Specification may only contain subclasses of Specification.'
+            msg = f'SpecificationBase may only contain subclasses of SpecificationBase.'
             msg += f' Found: {bad_specs}.'
             raise TypeError(msg)
 
@@ -71,78 +71,84 @@ class Database:
         Returns:
             Database: self.
         '''
-        # get file data
-        data = tools.directory_to_dataframe(
+        data = self._get_file_data()
+        if len(data) > 0:
+            self._add_specification(data)
+            self._validate_filepath(data)
+            self._add_filename_data(data)
+            self._add_asset_id(data)
+            self._add_asset_name(data)
+
+        data = self._cleanup(data)
+        self.data = data
+        return self
+
+    # DATA-MUNGING--------------------------------------------------------------
+    def _get_file_data(self):
+        return tools.directory_to_dataframe(
             self._root,
             include_regex=self._include_regex,
             exclude_regex=self._exclude_regex
         )
 
-        # add all columns to data
-        columns = [
-            'project',
-            'specification',
-            'descriptor',
-            'version',
-            'coordinate',
-            'frame',
-            'extension',
-            'asset_name',
-            'filename',
-            'fullpath',
-            'error'
-        ]
-        for col in columns:
-            if col not in data.columns:
-                data[col] = np.nan
-
-        # if no files are found return empty DataFrame
-        if len(data) == 0:
-            data.columns = columns
-            self.data = data
-            return self
-
-        # get specification data------------------------------------------------
-        def to_asset_spec(filename):
+    def _add_specification(self, data):
+        def get_spec(filename):
             output = tools.try_(
-                AssetNameParser.parse_specification, filename, 'error'
+                AssetNameParser.parse_specification, filename, 'errors'
             )
             if not isinstance(output, dict):
                 output = dict(error=output)
-            for key in ['specification', 'error']:
+            for key in ['specification', 'errors']:
                 if key not in output.keys():
                     output[key] = np.nan
             return output
 
-        spec = data.filename.apply(to_asset_spec).tolist()
+        spec = data.filename.apply(get_spec).tolist()
         spec = DataFrame(spec)
 
-        # combine spec data with file data
-        data['error'] = spec.error
+        # set specifications
         mask = spec.specification.notnull()
         data.loc[mask, 'specification'] = spec.loc[mask, 'specification']
 
-        # get metadata----------------------------------------------------------
-        def to_asset_metadata(specification, filename):
-            if specification not in self._specifications.keys():
-                return {}
+        # set errors
+        data['errors'] = np.nan
+        data.errors = data.errors.apply(lambda x: set())
+        mask = spec.errors.notnull()
+        data.loc[mask, 'errors'] = spec.loc[mask, 'errors']\
+            .apply(lambda x: set([x]))
 
-            spec = self._specifications[specification]
-            parser = AssetNameParser(spec.fields)
-            output = tools.try_(parser.parse, filename, 'error')
-            if not isinstance(output, dict):
-                output = dict(error=output)
+        # add not found spec errors
+        mask = data.specification.apply(lambda x: x not in self._specifications.keys())
+        data.loc[mask, 'errors']\
+            .apply(lambda x: x.add(
+                vd.ValidationError('Specification not found.')
+            ))
 
-            for key in ['specification', 'extension', 'error']:
-                if key not in output.keys():
-                    output[key] = np.nan
-            return output
+        # set specification class
+        mask = data.errors.apply(lambda x: len(x) == 0)
+        data['specification_class'] = np.nan
+        data.loc[mask, 'specification_class'] = data.loc[mask, 'specification']\
+            .apply(lambda x: self._specifications[x])
 
-        meta = data.apply(
-            lambda x: to_asset_metadata(x.specification, x.filename),
+    def _validate_filepath(self, data):
+        def validate(row):
+            try:
+                row.specification_class().validate_filepath(row.fullpath)
+            except vd.ValidationError as e:
+                row.errors.add(e)
+        mask = data.errors.apply(lambda x: len(x) == 0)
+        data[mask].apply(validate, axis=1)
+
+    def _add_filename_data(self, data):
+        mask = data.errors.apply(lambda x: len(x) == 0)
+        meta = data.copy()
+        meta['data'] = None
+        meta.data = meta.data.apply(lambda x: {})
+        meta.loc[mask, 'data'] = meta[mask].apply(
+            lambda x: x.specification_class().get_filename_metadata(x.filename),
             axis=1
         )
-        meta = DataFrame(meta.tolist())
+        meta = DataFrame(meta.data.tolist())
 
         # merge data and metadata
         for col in meta.columns:
@@ -152,23 +158,40 @@ class Database:
             mask = meta[col].notnull()
             data.loc[mask, col] = meta.loc[mask, col]
 
-        # get asset names
-        data['asset_name'] = data.apply(
-            lambda y: tools.try_(
-                lambda x: self\
-                    ._specifications[x.specification]\
-                    .filename_to_asset_name(x.filename),
-                y,
-                np.nan
-            ),
+    def _add_asset_id(self, data):
+        mask = data.errors.apply(lambda x: len(x) == 0)
+        data['asset_id'] = np.nan
+        data.loc[mask, 'asset_id'] = data.loc[mask].apply(
+            lambda x: x.specification_class().get_asset_id(x.fullpath),
             axis=1
         )
 
-        # cleanup columns
+    def _add_asset_name(self, data):
+        mask = data.errors.apply(lambda x: len(x) == 0)
+        data['asset_name'] = np.nan
+        data.loc[mask, 'asset_name'] = data.loc[mask].apply(
+            lambda x: x.specification_class().get_asset_name(x.fullpath),
+            axis=1
+        )
+
+    def _cleanup(self, data):
+        columns = [
+            'project',
+            'specification',
+            'descriptor',
+            'version',
+            'coordinate',
+            'frame',
+            'extension',
+            'filename',
+            'fullpath',
+            'errors',
+            'asset_name',
+            'asset_id',
+        ]
+        # if no files are found return empty DataFrame
         for col in columns:
             if col not in data.columns:
                 data[col] = np.nan
         data = data[columns]
-
-        self.data = data
-        return self
+        return data

@@ -1,5 +1,6 @@
 from pathlib import Path
 import unittest
+import uuid
 
 import nerve.specification_base as sb
 from nerve.validators import ValidationError
@@ -37,7 +38,7 @@ class SpecificationBaseTests(unittest.TestCase):
 
     def test_get_asset_id(self):
         result = self.Foo().get_asset_id(self.filepath)
-        expected = hash('/tmp/proj001/p-proj001_s-spec001_d-desc_v001')
+        expected = str(uuid.uuid3(uuid.NAMESPACE_URL, '/tmp/proj001/p-proj001_s-spec001_d-desc_v001'))
         self.assertEqual(result, expected)
 
     def test_validate_filepath(self):

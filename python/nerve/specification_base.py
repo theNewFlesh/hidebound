@@ -1,4 +1,5 @@
 from pathlib import Path
+import uuid
 
 from nerve.validators import ValidationError
 from pyparsing import ParseException
@@ -28,6 +29,7 @@ class SpecificationBase(Model):
         version (int): Asset version.
         extension (str): File extension.
     '''
+    name = None
     asset_type = 'specification'
     filename_fields = [
         'project', 'specification', 'descriptor', 'version', 'extension'
@@ -80,7 +82,8 @@ class SpecificationBase(Model):
 
     def get_asset_id(self, filepath):
         '''
-        Returns a hash of the asset directory or file, depending of asset type.
+        Returns a hash UUID of the asset directory or file, depending of asset
+        type.
 
         Args:
             filepath (str or Path): Fullpath to asset file.
@@ -88,7 +91,9 @@ class SpecificationBase(Model):
         Returns:
             str: Asset id.
         '''
-        return hash(self.get_asset_path(filepath).as_posix())
+        return str(uuid.uuid3(
+            uuid.NAMESPACE_URL, self.get_asset_path(filepath).as_posix()
+        ))
 
     def validate_filepath(self, filepath):
         '''
