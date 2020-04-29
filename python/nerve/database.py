@@ -84,7 +84,7 @@ class Database:
             self._add_asset_name(data)
             self._add_asset_path(data)
             self._add_asset_type(data)
-            # self._add_asset_id(data)
+            self._add_asset_id(data)
 
         data = self._cleanup(data)
         self.data = data
@@ -275,8 +275,8 @@ class Database:
             'errors',
             'asset_name',
             'asset_path',
-            # 'asset_id',
             'asset_type',
+            'asset_id',
         ]
         # if no files are found return empty DataFrame
         for col in columns:

@@ -9,6 +9,9 @@ from pandas import DataFrame
 
 from nerve.database import Database
 from nerve.specification_base import SpecificationBase
+from nerve.specification_base import FileSpecificationBase
+from nerve.specification_base import SequenceSpecificationBase
+from nerve.specification_base import ComplexSpecificationBase
 # ------------------------------------------------------------------------------
 
 
@@ -27,7 +30,7 @@ class DatabaseTests(unittest.TestCase):
         'asset_name',
         'asset_path',
         'asset_type',
-        # 'asset_id',
+        'asset_id',
     ]
 
     def get_data(self, root, nans=False):
@@ -63,7 +66,10 @@ class DatabaseTests(unittest.TestCase):
 
         data = DataFrame(data)
         data.columns = ['asset_id', 'specification', 'asset_path', 'filename', 'error']
+
         data.asset_path = data.asset_path.apply(lambda x: root + '/' + x)
+        data['asset_name'] = data.asset_path.apply(lambda x: x.split('/')[-1])
+
         data['fullpath'] = data\
             .apply(lambda x: Path(root, x.asset_path, x.filename), axis=1)
 
@@ -304,31 +310,148 @@ class DatabaseTests(unittest.TestCase):
             expected = temp[col].fillna('null').tolist()
             self.assertEqual(result, expected)
 
-    # def test_add_asset_id(self):
-    #     data = self.get_data('/tmp', True)
-    #     mask = data.specification_class.notnull()
-    #     expected = data.loc[mask, 'asset_path'].nunique()
-    #     del data['asset_id']
+    def test_add_asset_id(self):
+        Spec001, Spec002, BadSpec = self.get_specifications()
+        data = [
+            [
+                Spec001,
+                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0001.png',
+                set([]),
+            ],
+            [
+                Spec001,
+                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0002.png',
+                set([]),
+            ],
+            [
+                Spec002,
+                '/tmp/p-proj002_s-spec002_d-MASTER_v001/p-proj002_s-spec002_d-MASTER_v001_f0001.png',
+                set(['Error']),
+            ],
+            [
+                Spec002,
+                '/tmp/p-proj002_s-spec002_d-desc_v001/p-proj002_s-spec002_d-desc_v001_f0002.png',
+                set([]),
+            ],
+            [
+                np.nan,
+                '/tmp/proj002/misc.txt',
+                set(['Error']),
+            ],
+        ]
 
-    #     Database._add_asset_id(data)
-    #     result = data['asset_id'].dropna().nunique()
-    #     self.assertEqual(result, expected)
+        data = DataFrame(data)
+        data.columns = ['specification_class', 'fullpath', 'errors']
 
-    # def test_add_asset_name(self):
-    #     pass
+        Database._add_asset_id(data)
+        result = data['asset_id'].dropna().nunique()
+        self.assertEqual(result, 2)
+
+    def test_add_asset_name(self):
+        Spec001, Spec002, BadSpec = self.get_specifications()
+        data = [
+            [
+                Spec001,
+                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0001.png',
+                set([]),
+            ],
+            [
+                Spec001,
+                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0002.png',
+                set([]),
+            ],
+            [
+                Spec002,
+                '/tmp/p-proj002_s-spec002_d-MASTER_v001/p-proj002_s-spec002_d-MASTER_v001_f0001.png',
+                set(['Error']),
+            ],
+            [
+                Spec002,
+                '/tmp/p-proj002_s-spec002_d-desc_v001/p-proj002_s-spec002_d-desc_v001_f0002.png',
+                set([]),
+            ],
+            [
+                np.nan,
+                '/tmp/proj002/misc.txt',
+                set(['Error']),
+            ],
+        ]
+
+        data = DataFrame(data)
+        data.columns = ['specification_class', 'fullpath', 'errors']
+
+        Database._add_asset_name(data)
+        result = data['asset_name'].dropna().nunique()
+        self.assertEqual(result, 2)
 
     def test_add_asset_path(self):
-        data = self.get_data('/tmp', True)
-        mask = data.specification_class.notnull()
-        expected = data.loc[mask, 'asset_path'].nunique()
-        del data['asset_path']
+        Spec001, Spec002, BadSpec = self.get_specifications()
+        data = [
+            [
+                Spec001,
+                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0001.png',
+                set([]),
+            ],
+            [
+                Spec001,
+                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0002.png',
+                set([]),
+            ],
+            [
+                Spec002,
+                '/tmp/p-proj002_s-spec002_d-MASTER_v001/p-proj002_s-spec002_d-MASTER_v001_f0001.png',
+                set(['Error']),
+            ],
+            [
+                Spec002,
+                '/tmp/p-proj002_s-spec002_d-desc_v001/p-proj002_s-spec002_d-desc_v001_f0002.png',
+                set([]),
+            ],
+            [
+                np.nan,
+                '/tmp/proj002/misc.txt',
+                set(['Error']),
+            ],
+        ]
+
+        data = DataFrame(data)
+        data.columns = ['specification_class', 'fullpath', 'errors']
+        expected = data.fullpath\
+            .apply(lambda x: Path(x).parent).apply(str).tolist()
+        expected[-1] = 'nan'
 
         Database._add_asset_path(data)
-        result = data['asset_path'].dropna().nunique()
+        result = data['asset_path'].apply(str).tolist()
         self.assertEqual(result, expected)
 
-    # def test_add_asset_type(self):
-    #     pass
+        result = data['asset_path'].dropna().nunique()
+        self.assertEqual(result, 3)
 
-    # def test_cleanup(self):
-    #     pass
+    def test_add_asset_type(self):
+        class Spec001(FileSpecificationBase):
+            name = 'spec001'
+            filename_fields = ['specification']
+
+        class Spec002(SequenceSpecificationBase):
+            name = 'spec002'
+            filename_fields = ['specification']
+
+        class Spec003(ComplexSpecificationBase):
+            name = 'spec003'
+            filename_fields = ['specification']
+
+        data = DataFrame()
+        data['specification_class'] = [
+            Spec001,
+            Spec002,
+            Spec003,
+            np.nan,
+        ]
+        Database._add_asset_type(data)
+        result = data['asset_type'].fillna('null').tolist()
+        expected = ['file', 'sequence', 'complex', 'null']
+        self.assertEqual(result, expected)
+
+    def test_cleanup(self):
+        result = Database._cleanup(DataFrame()).columns.tolist()
+        self.assertEqual(result, self.columns)
