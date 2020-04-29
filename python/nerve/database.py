@@ -66,7 +66,8 @@ class Database:
 
     def update(self):
         '''
-        Recurse root directory and populate self.data with its files.
+        Recurse root directory, populate self.data with its files, locate and
+        validate assets.
 
         Returns:
             Database: self.
@@ -85,6 +86,12 @@ class Database:
 
     # DATA-MUNGING--------------------------------------------------------------
     def _get_file_data(self):
+        '''
+        Returns DataFrame of file data of root directory.
+
+        Returns:
+            DataFrame: File DataFrame.
+        '''
         return tools.directory_to_dataframe(
             self._root,
             include_regex=self._include_regex,
@@ -92,6 +99,18 @@ class Database:
         )
 
     def _add_specification(self, data):
+        '''
+        Adds specification data to given DataFrame.
+
+        Columns added:
+
+            * specification - specification name
+            * specification_class - specificaton class
+            * errors - set of errors
+
+        Args:
+            data (DataFrame): DataFrame.
+        '''
         def get_spec(filename):
             output = tools.try_(
                 AssetNameParser.parse_specification, filename, 'errors'
@@ -131,6 +150,13 @@ class Database:
             .apply(lambda x: self._specifications[x])
 
     def _validate_filepath(self, data):
+        '''
+        Validates fullpath column of given DataFrame.
+        Adds error to errors column if invalid.
+
+        Args:
+            data (DataFrame): DataFrame.
+        '''
         def validate(row):
             try:
                 row.specification_class().validate_filepath(row.fullpath)
@@ -140,6 +166,13 @@ class Database:
         data[mask].apply(validate, axis=1)
 
     def _add_filename_data(self, data):
+        '''
+        Adds data derived from parsing valid values in filename column.
+        Adds many columnns.
+
+        Args:
+            data (DataFrame): DataFrame.
+        '''
         mask = data.errors.apply(lambda x: len(x) == 0)
         meta = data.copy()
         meta['data'] = None
@@ -159,6 +192,12 @@ class Database:
             data.loc[mask, col] = meta.loc[mask, col]
 
     def _add_asset_id(self, data):
+        '''
+        Adds asset_id column derived UUID hash of asset fullpath.
+
+        Args:
+            data (DataFrame): DataFrame.
+        '''
         mask = data.errors.apply(lambda x: len(x) == 0)
         data['asset_id'] = np.nan
         data.loc[mask, 'asset_id'] = data.loc[mask].apply(
@@ -167,6 +206,12 @@ class Database:
         )
 
     def _add_asset_name(self, data):
+        '''
+        Adds asset_name column derived from fullpath.
+
+        Args:
+            data (DataFrame): DataFrame.
+        '''
         mask = data.errors.apply(lambda x: len(x) == 0)
         data['asset_name'] = np.nan
         data.loc[mask, 'asset_name'] = data.loc[mask].apply(
@@ -175,6 +220,15 @@ class Database:
         )
 
     def _cleanup(self, data):
+        '''
+        Ensures only specific columns are present and in correct order.
+
+        Args:
+            data (DataFrame): DataFrame.
+
+        Returns:
+            DataFrame: Cleaned up DataFrame.
+        '''
         columns = [
             'project',
             'specification',
