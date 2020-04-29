@@ -315,17 +315,17 @@ class DatabaseTests(unittest.TestCase):
         data = [
             [
                 Spec001,
-                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0001.png',
+                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0001.png',  # noqa E501
                 set([]),
             ],
             [
                 Spec001,
-                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0002.png',
+                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0002.png',  # noqa E501
                 set([]),
             ],
             [
                 Spec002,
-                '/tmp/p-proj002_s-spec002_d-MASTER_v001/p-proj002_s-spec002_d-MASTER_v001_f0001.png',
+                '/tmp/p-proj002_s-spec002_d-MASTER_v001/p-proj002_s-spec002_d-MASTER_v001_f0001.png',  # noqa E501
                 set(['Error']),
             ],
             [
@@ -352,17 +352,17 @@ class DatabaseTests(unittest.TestCase):
         data = [
             [
                 Spec001,
-                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0001.png',
+                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0001.png',  # noqa E501
                 set([]),
             ],
             [
                 Spec001,
-                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0002.png',
+                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0002.png',  # noqa E501
                 set([]),
             ],
             [
                 Spec002,
-                '/tmp/p-proj002_s-spec002_d-MASTER_v001/p-proj002_s-spec002_d-MASTER_v001_f0001.png',
+                '/tmp/p-proj002_s-spec002_d-MASTER_v001/p-proj002_s-spec002_d-MASTER_v001_f0001.png',  # noqa E501
                 set(['Error']),
             ],
             [
@@ -389,17 +389,17 @@ class DatabaseTests(unittest.TestCase):
         data = [
             [
                 Spec001,
-                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0001.png',
+                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0001.png',  # noqa E501
                 set([]),
             ],
             [
                 Spec001,
-                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0002.png',
+                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0002.png',  # noqa E501
                 set([]),
             ],
             [
                 Spec002,
-                '/tmp/p-proj002_s-spec002_d-MASTER_v001/p-proj002_s-spec002_d-MASTER_v001_f0001.png',
+                '/tmp/p-proj002_s-spec002_d-MASTER_v001/p-proj002_s-spec002_d-MASTER_v001_f0001.png',  # noqa E501
                 set(['Error']),
             ],
             [
