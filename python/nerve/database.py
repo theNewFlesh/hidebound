@@ -72,33 +72,27 @@ class Database:
         Returns:
             Database: self.
         '''
-        data = self._get_file_data()
+        data = tools.directory_to_dataframe(
+            self._root,
+            include_regex=self._include_regex,
+            exclude_regex=self._exclude_regex
+        )
         if len(data) > 0:
-            self._add_specification(data)
+            self._add_specification(data, self._specifications)
             self._validate_filepath(data)
             self._add_filename_data(data)
-            self._add_asset_id(data)
             self._add_asset_name(data)
+            self._add_asset_path(data)
+            self._add_asset_type(data)
+            # self._add_asset_id(data)
 
         data = self._cleanup(data)
         self.data = data
         return self
 
     # DATA-MUNGING--------------------------------------------------------------
-    def _get_file_data(self):
-        '''
-        Returns DataFrame of file data of root directory.
-
-        Returns:
-            DataFrame: File DataFrame.
-        '''
-        return tools.directory_to_dataframe(
-            self._root,
-            include_regex=self._include_regex,
-            exclude_regex=self._exclude_regex
-        )
-
-    def _add_specification(self, data):
+    @staticmethod
+    def _add_specification(data, specifications):
         '''
         Adds specification data to given DataFrame.
 
@@ -110,6 +104,7 @@ class Database:
 
         Args:
             data (DataFrame): DataFrame.
+            specifications (dict): Dictionary of specifications.
         '''
         def get_spec(filename):
             output = tools.try_(
@@ -137,7 +132,7 @@ class Database:
             .apply(lambda x: set([x]))
 
         # add not found spec errors
-        mask = data.specification.apply(lambda x: x not in self._specifications.keys())
+        mask = data.specification.apply(lambda x: x not in specifications.keys())
         data.loc[mask, 'errors']\
             .apply(lambda x: x.add(
                 vd.ValidationError('Specification not found.')
@@ -147,9 +142,10 @@ class Database:
         mask = data.errors.apply(lambda x: len(x) == 0)
         data['specification_class'] = np.nan
         data.loc[mask, 'specification_class'] = data.loc[mask, 'specification']\
-            .apply(lambda x: self._specifications[x])
+            .apply(lambda x: specifications[x])
 
-    def _validate_filepath(self, data):
+    @staticmethod
+    def _validate_filepath(data):
         '''
         Validates fullpath column of given DataFrame.
         Adds error to errors column if invalid.
@@ -163,9 +159,11 @@ class Database:
             except vd.ValidationError as e:
                 row.errors.add(e)
         mask = data.errors.apply(lambda x: len(x) == 0)
-        data[mask].apply(validate, axis=1)
+        if len(data[mask]) > 0:
+            data[mask].apply(validate, axis=1)
 
-    def _add_filename_data(self, data):
+    @staticmethod
+    def _add_filename_data(data):
         '''
         Adds data derived from parsing valid values in filename column.
         Adds many columnns.
@@ -177,10 +175,11 @@ class Database:
         meta = data.copy()
         meta['data'] = None
         meta.data = meta.data.apply(lambda x: {})
-        meta.loc[mask, 'data'] = meta[mask].apply(
-            lambda x: x.specification_class().get_filename_metadata(x.filename),
-            axis=1
-        )
+        if len(meta[mask]) > 0:
+            meta.loc[mask, 'data'] = meta[mask].apply(
+                lambda x: x.specification_class().get_filename_metadata(x.filename),
+                axis=1
+            )
         meta = DataFrame(meta.data.tolist())
 
         # merge data and metadata
@@ -191,7 +190,8 @@ class Database:
             mask = meta[col].notnull()
             data.loc[mask, col] = meta.loc[mask, col]
 
-    def _add_asset_id(self, data):
+    @staticmethod
+    def _add_asset_id(data):
         '''
         Adds asset_id column derived UUID hash of asset fullpath.
 
@@ -200,12 +200,14 @@ class Database:
         '''
         mask = data.errors.apply(lambda x: len(x) == 0)
         data['asset_id'] = np.nan
-        data.loc[mask, 'asset_id'] = data.loc[mask].apply(
-            lambda x: x.specification_class().get_asset_id(x.fullpath),
-            axis=1
-        )
+        if len(data[mask]) > 0:
+            data.loc[mask, 'asset_id'] = data.loc[mask].apply(
+                lambda x: x.specification_class().get_asset_id(x.fullpath),
+                axis=1
+            )
 
-    def _add_asset_name(self, data):
+    @staticmethod
+    def _add_asset_name(data):
         '''
         Adds asset_name column derived from fullpath.
 
@@ -214,12 +216,43 @@ class Database:
         '''
         mask = data.errors.apply(lambda x: len(x) == 0)
         data['asset_name'] = np.nan
-        data.loc[mask, 'asset_name'] = data.loc[mask].apply(
-            lambda x: x.specification_class().get_asset_name(x.fullpath),
-            axis=1
-        )
+        if len(data[mask]) > 0:
+            data.loc[mask, 'asset_name'] = data.loc[mask].apply(
+                lambda x: x.specification_class().get_asset_name(x.fullpath),
+                axis=1
+            )
 
-    def _cleanup(self, data):
+    @staticmethod
+    def _add_asset_path(data):
+        '''
+        Adds asset_path column derived from fullpath.
+
+        Args:
+            data (DataFrame): DataFrame.
+        '''
+        mask = data.specification_class.notnull()
+        data['asset_path'] = np.nan
+        if len(data[mask]) > 0:
+            data.loc[mask, 'asset_path'] = data.loc[mask].apply(
+                lambda x: x.specification_class().get_asset_path(x.fullpath),
+                axis=1
+            )
+
+    @staticmethod
+    def _add_asset_type(data):
+        '''
+        Adds asset_type column derived from specification.
+
+        Args:
+            data (DataFrame): DataFrame.
+        '''
+        mask = data.specification_class.notnull()
+        data['asset_type'] = np.nan
+        data.loc[mask, 'asset_type'] = data.loc[mask, 'specification_class']\
+            .apply(lambda x: x.asset_type)
+
+    @staticmethod
+    def _cleanup(data):
         '''
         Ensures only specific columns are present and in correct order.
 
@@ -241,7 +274,9 @@ class Database:
             'fullpath',
             'errors',
             'asset_name',
-            'asset_id',
+            'asset_path',
+            # 'asset_id',
+            'asset_type',
         ]
         # if no files are found return empty DataFrame
         for col in columns:
