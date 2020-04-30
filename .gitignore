@@ -1,17 +1,14 @@
-# Byte-compiled / optimized / DLL files
+# python
 __pycache__/
 *.py[cod]
+*$py.class
 
-# C extensions
-*.so
-
-# Distribution / packaging
+# packaging
 .Python
 env/
 build/
 develop-eggs/
 dist/
-downloads/
 eggs/
 .eggs/
 lib/
@@ -23,52 +20,39 @@ var/
 .installed.cfg
 *.egg
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
+# sphinx
+docs/_build/
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
+# web
+node_modules
+/.npm/*
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*,cover
+# c
+*.so
 
-# Translations
-*.mo
-*.pot
+# vim
+.*.swp
+.*.swo
 
-# Django stuff:
-*.log
-
-# Sphinx documentation
-sphinx/_build/
-
-# PyBuilder
-target/
-
-# IPython
-.ipynb_checkpoints
-
-# OS X
+# os x files
 .DS_Store
 
-# Images
-*.pdf
-*.hdf
-*.jpg
-*.gif
-*.png
-*.pkl
+# pytest
+.pytest_cache/
+.coverage
 
-# Javascript
-node_modules/
+# ansible
+devops/ansible/**/*.retry
+
+# vscode
+.vscode/*
+
+# sublime sftp config
+sftp-config.json
+
+# jupyter
+.ipynb_checkpoints/
+.ipynb_checkpoints/*
+data/
+.cache/
+*.jupyterlab-workspace
