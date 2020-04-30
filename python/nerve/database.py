@@ -238,6 +238,11 @@ class Database:
                 axis=1
             )
 
+        # overwrite asset_path for misnamed files within asset directory
+        for path in data.asset_path.dropna().unique():
+            mask = data.fullpath.apply(lambda x: path.as_posix() in x)
+            data.loc[mask, 'asset_path'] = path
+
     @staticmethod
     def _add_asset_type(data):
         '''
