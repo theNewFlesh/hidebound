@@ -256,7 +256,8 @@ class Database:
     @staticmethod
     def _cleanup(data):
         '''
-        Ensures only specific columns are present and in correct order.
+        Ensures only specific columns are present and in correct order and Paths
+        are converted to strings.
 
         Args:
             data (DataFrame): DataFrame.
@@ -284,5 +285,12 @@ class Database:
         for col in columns:
             if col not in data.columns:
                 data[col] = np.nan
-        data = data[columns]
+        # use copy to avoid SettingWithCopyWarning
+        data = data[columns].copy()
+
+        # convert Paths to str
+        for col in data.columns:
+            mask = data[col].apply(lambda x: isinstance(x, Path))
+            data.loc[mask, col] = data.loc[mask, col]\
+                .apply(lambda x: x.absolute().as_posix())
         return data

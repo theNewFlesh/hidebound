@@ -447,5 +447,15 @@ class DatabaseTests(unittest.TestCase):
         self.assertEqual(result, expected)
 
     def test_cleanup(self):
-        result = Database._cleanup(DataFrame()).columns.tolist()
+        data = DataFrame()
+        result = Database._cleanup(data).columns.tolist()
+        self.assertEqual(result, self.columns)
+
+        data['fullpath'] = [np.nan, Path('/foo/bar'), Path('/bar/foo')]
+        data['version'] = [1, 2, 3]
+        expected = [np.nan, '/foo/bar', '/bar/foo']
+        result = Database._cleanup(data).fullpath.tolist()
+        self.assertEqual(result, expected)
+
+        result = Database._cleanup(data).columns.tolist()
         self.assertEqual(result, self.columns)
