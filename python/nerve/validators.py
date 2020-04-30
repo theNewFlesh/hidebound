@@ -64,10 +64,10 @@ def is_project(item):
         ind = AssetNameParser.PROJECT_INDICATOR
         AssetNameParser(['project']).parse(ind + item)
     except ParseException:
-        return False
+        return False  # pragma: no cover
 
     if re.search('^[a-z0-9]+$', item) is None:
-        return False
+        return False  # pragma: no cover
 
     return True
 
@@ -90,18 +90,18 @@ def is_descriptor(item):
         ind = AssetNameParser.DESCRIPTOR_INDICATOR
         AssetNameParser(['descriptor']).parse(ind + item)
     except ParseException:
-        return False
+        return False  # pragma: no cover
 
     if re.search('^[a-z0-9-]+$', item) is None:
-        return False
+        return False  # pragma: no cover
 
     # the mast/final/last asset is never actually that
     # asset should only ever be thought of in terms of latest version
     if re.search('^(master|final|last)', item):
-        return False
+        return False  # pragma: no cover
 
     if len(item) < 1:
-        return False
+        return False  # pragma: no cover
 
     return True
 
@@ -155,16 +155,16 @@ def is_coordinate(item):
         bool: Validity of coordinate.
     '''
     if len(item) == 0:
-        return False
+        return False  # pragma: no cover
 
     if len(item) > 3:
-        return False
+        return False  # pragma: no cover
 
     if min(item) < 0:
-        return False
+        return False  # pragma: no cover
 
     if max(item) >= 10**AssetNameParser.COORDINATE_PADDING:
-        return False
+        return False  # pragma: no cover
 
     return True
 
@@ -185,7 +185,7 @@ def is_extension(item):
     '''
     if re.search('^[a-z0-9]+$', item):
         return True
-    return False
+    return False  # pragma: no cover
 
 
 @validator('{} != {}.')
