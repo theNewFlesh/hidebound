@@ -286,6 +286,7 @@ class Database:
             if col not in data.columns:
                 data[col] = np.nan
         # use copy to avoid SettingWithCopyWarning
+        # TODO: figure out a way to prevent warning without copy.
         data = data[columns].copy()
 
         # convert Paths to str
