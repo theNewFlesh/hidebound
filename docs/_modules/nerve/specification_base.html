@@ -153,10 +153,10 @@
 <span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
 
-<span class="kn">from</span> <span class="nn">nerve.validators</span> <span class="kn">import</span> <span class="n">ValidationError</span>
 <span class="kn">from</span> <span class="nn">pyparsing</span> <span class="kn">import</span> <span class="n">ParseException</span>
 <span class="kn">from</span> <span class="nn">schematics</span> <span class="kn">import</span> <span class="n">Model</span>
-<span class="kn">from</span> <span class="nn">schematics.types</span> <span class="kn">import</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">IntType</span>
+<span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">ValidationError</span>
+<span class="kn">from</span> <span class="nn">schematics.types</span> <span class="kn">import</span> <span class="n">IntType</span><span class="p">,</span> <span class="n">ListType</span><span class="p">,</span> <span class="n">StringType</span>
 
 <span class="kn">from</span> <span class="nn">nerve.parser</span> <span class="kn">import</span> <span class="n">AssetNameParser</span>
 <span class="kn">import</span> <span class="nn">nerve.validators</span> <span class="k">as</span> <span class="nn">vd</span>
@@ -187,10 +187,18 @@
         <span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="s1">&#39;specification&#39;</span><span class="p">,</span> <span class="s1">&#39;descriptor&#39;</span><span class="p">,</span> <span class="s1">&#39;version&#39;</span><span class="p">,</span> <span class="s1">&#39;extension&#39;</span>
     <span class="p">]</span>
     <span class="n">asset_name_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="s1">&#39;specification&#39;</span><span class="p">,</span> <span class="s1">&#39;descriptor&#39;</span><span class="p">,</span> <span class="s1">&#39;version&#39;</span><span class="p">]</span>
-    <span class="n">project</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_project</span><span class="p">])</span>
-    <span class="n">descriptor</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_descriptor</span><span class="p">])</span>
-    <span class="n">version</span> <span class="o">=</span> <span class="n">IntType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_version</span><span class="p">])</span>
-    <span class="n">extension</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_extension</span><span class="p">])</span>
+    <span class="n">project</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
+        <span class="n">StringType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_project</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">descriptor</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
+        <span class="n">StringType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_descriptor</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
+        <span class="n">IntType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_version</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">extension</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
+        <span class="n">StringType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_extension</span><span class="p">]</span>
+    <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{}):</span>
         <span class="sd">&#39;&#39;&#39;</span>

@@ -518,6 +518,11 @@ according to a dynimcally defined grammar.</p>
 <em class="property">class </em><code class="sig-prename descclassname">nerve.database.</code><code class="sig-name descname">Database</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span></em>, <em class="sig-param"><span class="n">specifications</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">include_regex</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">exclude_regex</span><span class="o">=</span><span class="default_value">'\\.DS_Store'</span></em>, <em class="sig-param"><span class="n">ignore_order</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/database.html#Database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.database.Database" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Generates a DataFrame using the files within a given directory as rows.</p>
+<dl class="py attribute">
+<dt id="nerve.database.Database.COLUMNS">
+<code class="sig-name descname">COLUMNS</code><em class="property"> = ['project', 'specification', 'descriptor', 'version', 'coordinate', 'frame', 'extension', 'filename', 'fullpath', 'error', 'asset_name', 'asset_path', 'asset_type']</em><a class="headerlink" href="#nerve.database.Database.COLUMNS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt id="nerve.database.Database._add_asset_id">
 <em class="property">static </em><code class="sig-name descname">_add_asset_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/database.html#Database._add_asset_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.database.Database._add_asset_id" title="Permalink to this definition">¶</a></dt>
@@ -674,22 +679,22 @@ validate assets.</p>
 
 <dl class="py attribute">
 <dt id="nerve.specification_base.ComplexSpecificationBase.descriptor">
-<code class="sig-name descname">descriptor</code><em class="property"> = &lt;StringType() instance on ComplexSpecificationBase as 'descriptor'&gt;</em><a class="headerlink" href="#nerve.specification_base.ComplexSpecificationBase.descriptor" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">descriptor</code><em class="property"> = &lt;ListType(StringType) instance on ComplexSpecificationBase as 'descriptor'&gt;</em><a class="headerlink" href="#nerve.specification_base.ComplexSpecificationBase.descriptor" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="nerve.specification_base.ComplexSpecificationBase.extension">
-<code class="sig-name descname">extension</code><em class="property"> = &lt;StringType() instance on ComplexSpecificationBase as 'extension'&gt;</em><a class="headerlink" href="#nerve.specification_base.ComplexSpecificationBase.extension" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">extension</code><em class="property"> = &lt;ListType(StringType) instance on ComplexSpecificationBase as 'extension'&gt;</em><a class="headerlink" href="#nerve.specification_base.ComplexSpecificationBase.extension" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="nerve.specification_base.ComplexSpecificationBase.project">
-<code class="sig-name descname">project</code><em class="property"> = &lt;StringType() instance on ComplexSpecificationBase as 'project'&gt;</em><a class="headerlink" href="#nerve.specification_base.ComplexSpecificationBase.project" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">project</code><em class="property"> = &lt;ListType(StringType) instance on ComplexSpecificationBase as 'project'&gt;</em><a class="headerlink" href="#nerve.specification_base.ComplexSpecificationBase.project" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="nerve.specification_base.ComplexSpecificationBase.version">
-<code class="sig-name descname">version</code><em class="property"> = &lt;IntType() instance on ComplexSpecificationBase as 'version'&gt;</em><a class="headerlink" href="#nerve.specification_base.ComplexSpecificationBase.version" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">version</code><em class="property"> = &lt;ListType(IntType) instance on ComplexSpecificationBase as 'version'&gt;</em><a class="headerlink" href="#nerve.specification_base.ComplexSpecificationBase.version" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -722,12 +727,12 @@ validate assets.</p>
 
 <dl class="py attribute">
 <dt id="nerve.specification_base.FileSpecificationBase.descriptor">
-<code class="sig-name descname">descriptor</code><em class="property"> = &lt;StringType() instance on FileSpecificationBase as 'descriptor'&gt;</em><a class="headerlink" href="#nerve.specification_base.FileSpecificationBase.descriptor" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">descriptor</code><em class="property"> = &lt;ListType(StringType) instance on FileSpecificationBase as 'descriptor'&gt;</em><a class="headerlink" href="#nerve.specification_base.FileSpecificationBase.descriptor" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="nerve.specification_base.FileSpecificationBase.extension">
-<code class="sig-name descname">extension</code><em class="property"> = &lt;StringType() instance on FileSpecificationBase as 'extension'&gt;</em><a class="headerlink" href="#nerve.specification_base.FileSpecificationBase.extension" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">extension</code><em class="property"> = &lt;ListType(StringType) instance on FileSpecificationBase as 'extension'&gt;</em><a class="headerlink" href="#nerve.specification_base.FileSpecificationBase.extension" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -749,12 +754,12 @@ validate assets.</p>
 
 <dl class="py attribute">
 <dt id="nerve.specification_base.FileSpecificationBase.project">
-<code class="sig-name descname">project</code><em class="property"> = &lt;StringType() instance on FileSpecificationBase as 'project'&gt;</em><a class="headerlink" href="#nerve.specification_base.FileSpecificationBase.project" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">project</code><em class="property"> = &lt;ListType(StringType) instance on FileSpecificationBase as 'project'&gt;</em><a class="headerlink" href="#nerve.specification_base.FileSpecificationBase.project" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="nerve.specification_base.FileSpecificationBase.version">
-<code class="sig-name descname">version</code><em class="property"> = &lt;IntType() instance on FileSpecificationBase as 'version'&gt;</em><a class="headerlink" href="#nerve.specification_base.FileSpecificationBase.version" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">version</code><em class="property"> = &lt;ListType(IntType) instance on FileSpecificationBase as 'version'&gt;</em><a class="headerlink" href="#nerve.specification_base.FileSpecificationBase.version" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -788,12 +793,12 @@ directory.</p>
 
 <dl class="py attribute">
 <dt id="nerve.specification_base.SequenceSpecificationBase.descriptor">
-<code class="sig-name descname">descriptor</code><em class="property"> = &lt;StringType() instance on SequenceSpecificationBase as 'descriptor'&gt;</em><a class="headerlink" href="#nerve.specification_base.SequenceSpecificationBase.descriptor" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">descriptor</code><em class="property"> = &lt;ListType(StringType) instance on SequenceSpecificationBase as 'descriptor'&gt;</em><a class="headerlink" href="#nerve.specification_base.SequenceSpecificationBase.descriptor" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="nerve.specification_base.SequenceSpecificationBase.extension">
-<code class="sig-name descname">extension</code><em class="property"> = &lt;StringType() instance on SequenceSpecificationBase as 'extension'&gt;</em><a class="headerlink" href="#nerve.specification_base.SequenceSpecificationBase.extension" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">extension</code><em class="property"> = &lt;ListType(StringType) instance on SequenceSpecificationBase as 'extension'&gt;</em><a class="headerlink" href="#nerve.specification_base.SequenceSpecificationBase.extension" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -815,12 +820,12 @@ directory.</p>
 
 <dl class="py attribute">
 <dt id="nerve.specification_base.SequenceSpecificationBase.project">
-<code class="sig-name descname">project</code><em class="property"> = &lt;StringType() instance on SequenceSpecificationBase as 'project'&gt;</em><a class="headerlink" href="#nerve.specification_base.SequenceSpecificationBase.project" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">project</code><em class="property"> = &lt;ListType(StringType) instance on SequenceSpecificationBase as 'project'&gt;</em><a class="headerlink" href="#nerve.specification_base.SequenceSpecificationBase.project" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="nerve.specification_base.SequenceSpecificationBase.version">
-<code class="sig-name descname">version</code><em class="property"> = &lt;IntType() instance on SequenceSpecificationBase as 'version'&gt;</em><a class="headerlink" href="#nerve.specification_base.SequenceSpecificationBase.version" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">version</code><em class="property"> = &lt;ListType(IntType) instance on SequenceSpecificationBase as 'version'&gt;</em><a class="headerlink" href="#nerve.specification_base.SequenceSpecificationBase.version" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -924,12 +929,12 @@ directory.</p>
 
 <dl class="py attribute">
 <dt id="id5">
-<code class="sig-name descname">descriptor</code><em class="property"> = &lt;StringType() instance on SpecificationBase as 'descriptor'&gt;</em><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">descriptor</code><em class="property"> = &lt;ListType(StringType) instance on SpecificationBase as 'descriptor'&gt;</em><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id6">
-<code class="sig-name descname">extension</code><em class="property"> = &lt;StringType() instance on SpecificationBase as 'extension'&gt;</em><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">extension</code><em class="property"> = &lt;ListType(StringType) instance on SpecificationBase as 'extension'&gt;</em><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1016,7 +1021,7 @@ type.</p>
 
 <dl class="py attribute">
 <dt id="id8">
-<code class="sig-name descname">project</code><em class="property"> = &lt;StringType() instance on SpecificationBase as 'project'&gt;</em><a class="headerlink" href="#id8" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">project</code><em class="property"> = &lt;ListType(StringType) instance on SpecificationBase as 'project'&gt;</em><a class="headerlink" href="#id8" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1029,8 +1034,8 @@ type.</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#nerve.validators.ValidationError" title="nerve.validators.ValidationError"><strong>ValidationError</strong></a> – If parse fails.</p></li>
-<li><p><a class="reference internal" href="#nerve.validators.ValidationError" title="nerve.validators.ValidationError"><strong>ValidationError</strong></a> – If asset directory name is invalid.</p></li>
+<li><p><strong>ValidationError</strong> – If parse fails.</p></li>
+<li><p><strong>ValidationError</strong> – If asset directory name is invalid.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1038,7 +1043,7 @@ type.</p>
 
 <dl class="py attribute">
 <dt id="id9">
-<code class="sig-name descname">version</code><em class="property"> = &lt;IntType() instance on SpecificationBase as 'version'&gt;</em><a class="headerlink" href="#id9" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">version</code><em class="property"> = &lt;ListType(IntType) instance on SpecificationBase as 'version'&gt;</em><a class="headerlink" href="#id9" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1115,12 +1120,12 @@ version,</p>
 
 <dl class="py attribute">
 <dt id="nerve.specifications.Raw001.descriptor">
-<code class="sig-name descname">descriptor</code><em class="property"> = &lt;StringType() instance on Raw001 as 'descriptor'&gt;</em><a class="headerlink" href="#nerve.specifications.Raw001.descriptor" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">descriptor</code><em class="property"> = &lt;ListType(StringType) instance on Raw001 as 'descriptor'&gt;</em><a class="headerlink" href="#nerve.specifications.Raw001.descriptor" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id10">
-<code class="sig-name descname">extension</code><em class="property"> = &lt;StringType() instance on Raw001 as 'extension'&gt;</em><a class="headerlink" href="#id10" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">extension</code><em class="property"> = &lt;ListType(StringType) instance on Raw001 as 'extension'&gt;</em><a class="headerlink" href="#id10" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1130,12 +1135,12 @@ version,</p>
 
 <dl class="py attribute">
 <dt id="nerve.specifications.Raw001.frame">
-<code class="sig-name descname">frame</code><em class="property"> = &lt;IntType() instance on Raw001 as 'frame'&gt;</em><a class="headerlink" href="#nerve.specifications.Raw001.frame" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">frame</code><em class="property"> = &lt;ListType(IntType) instance on Raw001 as 'frame'&gt;</em><a class="headerlink" href="#nerve.specifications.Raw001.frame" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id12">
-<code class="sig-name descname">height</code><em class="property"> = &lt;IntType() instance on Raw001 as 'height'&gt;</em><a class="headerlink" href="#id12" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">height</code><em class="property"> = &lt;ListType(IntType) instance on Raw001 as 'height'&gt;</em><a class="headerlink" href="#id12" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1145,17 +1150,17 @@ version,</p>
 
 <dl class="py attribute">
 <dt id="nerve.specifications.Raw001.project">
-<code class="sig-name descname">project</code><em class="property"> = &lt;StringType() instance on Raw001 as 'project'&gt;</em><a class="headerlink" href="#nerve.specifications.Raw001.project" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">project</code><em class="property"> = &lt;ListType(StringType) instance on Raw001 as 'project'&gt;</em><a class="headerlink" href="#nerve.specifications.Raw001.project" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="nerve.specifications.Raw001.version">
-<code class="sig-name descname">version</code><em class="property"> = &lt;IntType() instance on Raw001 as 'version'&gt;</em><a class="headerlink" href="#nerve.specifications.Raw001.version" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">version</code><em class="property"> = &lt;ListType(IntType) instance on Raw001 as 'version'&gt;</em><a class="headerlink" href="#nerve.specifications.Raw001.version" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id13">
-<code class="sig-name descname">width</code><em class="property"> = &lt;IntType() instance on Raw001 as 'width'&gt;</em><a class="headerlink" href="#id13" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">width</code><em class="property"> = &lt;ListType(IntType) instance on Raw001 as 'width'&gt;</em><a class="headerlink" href="#id13" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1169,13 +1174,6 @@ to a specification.</p>
 specification class attribute. They succeed silently and raise DataError when
 the trait they validate fails. Schematics captures these error messages and
 pipes them to an error call.</p>
-<dl class="py exception">
-<dt id="nerve.validators.ValidationError">
-<em class="property">exception </em><code class="sig-prename descclassname">nerve.validators.</code><code class="sig-name descname">ValidationError</code><a class="reference internal" href="_modules/nerve/validators.html#ValidationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.validators.ValidationError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
-<p>Error raised for validators.</p>
-</dd></dl>
-
 <dl class="py function">
 <dt id="nerve.validators.is_coordinate">
 <code class="sig-prename descclassname">nerve.validators.</code><code class="sig-name descname">is_coordinate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">item</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/validators.html#is_coordinate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.validators.is_coordinate" title="Permalink to this definition">¶</a></dt>
@@ -1185,7 +1183,7 @@ pipes them to an error call.</p>
 <dd class="field-odd"><p><strong>item</strong> (<em>str</em>) – Coordinate.</p>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference internal" href="#nerve.validators.ValidationError" title="nerve.validators.ValidationError"><strong>ValidationError</strong></a> – If coordinate is invalid.</p>
+<dd class="field-even"><p><strong>ValidationError</strong> – If coordinate is invalid.</p>
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Validity of coordinate.</p>
@@ -1205,7 +1203,7 @@ pipes them to an error call.</p>
 <dd class="field-odd"><p><strong>item</strong> (<em>str</em>) – Descriptor.</p>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference internal" href="#nerve.validators.ValidationError" title="nerve.validators.ValidationError"><strong>ValidationError</strong></a> – If descriptor is invalid.</p>
+<dd class="field-even"><p><strong>ValidationError</strong> – If descriptor is invalid.</p>
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Validity of descriptor.</p>
@@ -1228,7 +1226,7 @@ pipes them to an error call.</p>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference internal" href="#nerve.validators.ValidationError" title="nerve.validators.ValidationError"><strong>ValidationError</strong></a> – If a does not equal b.</p>
+<dd class="field-even"><p><strong>ValidationError</strong> – If a does not equal b.</p>
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Equality of a and b.</p>
@@ -1248,7 +1246,7 @@ pipes them to an error call.</p>
 <dd class="field-odd"><p><strong>item</strong> (<em>str</em>) – File extension.</p>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference internal" href="#nerve.validators.ValidationError" title="nerve.validators.ValidationError"><strong>ValidationError</strong></a> – If extension is invalid.</p>
+<dd class="field-even"><p><strong>ValidationError</strong> – If extension is invalid.</p>
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Validity of extension.</p>
@@ -1268,7 +1266,7 @@ pipes them to an error call.</p>
 <dd class="field-odd"><p><strong>item</strong> (<em>str</em>) – Frame.</p>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference internal" href="#nerve.validators.ValidationError" title="nerve.validators.ValidationError"><strong>ValidationError</strong></a> – If frame is invalid.</p>
+<dd class="field-even"><p><strong>ValidationError</strong> – If frame is invalid.</p>
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Validity of frame.</p>
@@ -1291,7 +1289,7 @@ pipes them to an error call.</p>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference internal" href="#nerve.validators.ValidationError" title="nerve.validators.ValidationError"><strong>ValidationError</strong></a> – If a is not greater than b.</p>
+<dd class="field-even"><p><strong>ValidationError</strong> – If a is not greater than b.</p>
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>A is greater than b.</p>
@@ -1314,7 +1312,7 @@ pipes them to an error call.</p>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference internal" href="#nerve.validators.ValidationError" title="nerve.validators.ValidationError"><strong>ValidationError</strong></a> – If a is not less than b.</p>
+<dd class="field-even"><p><strong>ValidationError</strong> – If a is not less than b.</p>
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>A is less than b.</p>
@@ -1334,7 +1332,7 @@ pipes them to an error call.</p>
 <dd class="field-odd"><p><strong>item</strong> (<em>str</em>) – Project name.</p>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference internal" href="#nerve.validators.ValidationError" title="nerve.validators.ValidationError"><strong>ValidationError</strong></a> – If project name is invalid.</p>
+<dd class="field-even"><p><strong>ValidationError</strong> – If project name is invalid.</p>
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Validity of project name.</p>
@@ -1354,7 +1352,7 @@ pipes them to an error call.</p>
 <dd class="field-odd"><p><strong>item</strong> (<em>str</em>) – Version.</p>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference internal" href="#nerve.validators.ValidationError" title="nerve.validators.ValidationError"><strong>ValidationError</strong></a> – If version is invalid.</p>
+<dd class="field-even"><p><strong>ValidationError</strong> – If version is invalid.</p>
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Validity of version.</p>
@@ -1366,8 +1364,8 @@ pipes them to an error call.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="nerve.validators.validator">
-<code class="sig-prename descclassname">nerve.validators.</code><code class="sig-name descname">validator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">message</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/validators.html#validator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.validators.validator" title="Permalink to this definition">¶</a></dt>
+<dt id="nerve.validators.validate">
+<code class="sig-prename descclassname">nerve.validators.</code><code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">message</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/validators.html#validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.validators.validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>A decorator for predicate functions that raises a ValidationError
 if it returns False.</p>
 <dl class="field-list simple">
@@ -1375,7 +1373,32 @@ if it returns False.</p>
 <dd class="field-odd"><p><strong>message</strong> (<em>str</em>) – Error message if predicate returns False.</p>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference internal" href="#nerve.validators.ValidationError" title="nerve.validators.ValidationError"><strong>ValidationError</strong></a> – If predicate returns False.</p>
+<dd class="field-even"><p><strong>ValidationError</strong> – If predicate returns False.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Function that returns a boolean.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>function</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="nerve.validators.validate_each">
+<code class="sig-prename descclassname">nerve.validators.</code><code class="sig-name descname">validate_each</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">message</span></em>, <em class="sig-param"><span class="n">list_first_arg</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/validators.html#validate_each"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.validators.validate_each" title="Permalink to this definition">¶</a></dt>
+<dd><p>A decorator for predicate functions that raises a ValidationError
+if it returns False when applied to each argument individually.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – Error message if predicate returns False.</p></li>
+<li><p><strong>list_first_arg</strong> (<em>str</em><em>, </em><em>optional</em>) – Set to True if first argument is a list.
+Default: False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValidationError</strong> – If predicate returns False.</p>
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Function that returns a boolean.</p>

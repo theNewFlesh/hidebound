@@ -150,7 +150,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for nerve.specifications</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">schematics.types</span> <span class="kn">import</span> <span class="n">IntType</span><span class="p">,</span> <span class="n">StringType</span>
+<span></span><span class="kn">from</span> <span class="nn">schematics.types</span> <span class="kn">import</span> <span class="n">IntType</span><span class="p">,</span> <span class="n">ListType</span><span class="p">,</span> <span class="n">StringType</span>
 
 <span class="kn">import</span> <span class="nn">nerve.validators</span> <span class="k">as</span> <span class="nn">vd</span>
 <span class="kn">from</span> <span class="nn">nerve.specification_base</span> <span class="kn">import</span> <span class="n">SequenceSpecificationBase</span>
@@ -185,10 +185,15 @@
         <span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="s1">&#39;specification&#39;</span><span class="p">,</span> <span class="s1">&#39;descriptor&#39;</span><span class="p">,</span> <span class="s1">&#39;version&#39;</span><span class="p">,</span> <span class="s1">&#39;frame&#39;</span><span class="p">,</span>
         <span class="s1">&#39;extension&#39;</span>
     <span class="p">]</span>
-    <span class="n">height</span> <span class="o">=</span> <span class="n">IntType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_eq</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)])</span>
-    <span class="n">width</span> <span class="o">=</span> <span class="n">IntType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_eq</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)])</span>
-    <span class="n">frame</span> <span class="o">=</span> <span class="n">IntType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_frame</span><span class="p">])</span>
-    <span class="n">extension</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
+        <span class="n">IntType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_eq</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)]</span>
+    <span class="p">)</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
+        <span class="n">IntType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_eq</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)]</span>
+    <span class="p">)</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span><span class="n">IntType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_frame</span><span class="p">])</span>
+    <span class="n">extension</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
+        <span class="n">StringType</span><span class="p">(),</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_extension</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_eq</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;png&#39;</span><span class="p">)]</span>
     <span class="p">)</span></div>

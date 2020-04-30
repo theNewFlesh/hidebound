@@ -163,18 +163,14 @@
 <span class="kn">import</span> <span class="nn">re</span>
 
 <span class="kn">from</span> <span class="nn">pyparsing</span> <span class="kn">import</span> <span class="n">ParseException</span>
+<span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">ValidationError</span>
 <span class="kn">import</span> <span class="nn">wrapt</span>
 
 <span class="kn">from</span> <span class="nn">nerve.parser</span> <span class="kn">import</span> <span class="n">AssetNameParser</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
-<div class="viewcode-block" id="ValidationError"><a class="viewcode-back" href="../../nerve.html#nerve.validators.ValidationError">[docs]</a><span class="k">class</span> <span class="nc">ValidationError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Error raised for validators.&#39;&#39;&#39;</span>
-    <span class="k">pass</span></div>
-
-
-<div class="viewcode-block" id="validator"><a class="viewcode-back" href="../../nerve.html#nerve.validators.validator">[docs]</a><span class="k">def</span> <span class="nf">validator</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+<div class="viewcode-block" id="validate"><a class="viewcode-back" href="../../nerve.html#nerve.validators.validate">[docs]</a><span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    A decorator for predicate functions that raises a ValidationError</span>
 <span class="sd">    if it returns False.</span>
@@ -198,7 +194,41 @@
     <span class="k">return</span> <span class="n">wrapper</span></div>
 
 
-<div class="viewcode-block" id="is_project"><a class="viewcode-back" href="../../nerve.html#nerve.validators.is_project">[docs]</a><span class="nd">@validator</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="si">{}</span><span class="s1">&quot; is not a valid project name.&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="validate_each"><a class="viewcode-back" href="../../nerve.html#nerve.validators.validate_each">[docs]</a><span class="k">def</span> <span class="nf">validate_each</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">list_first_arg</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    A decorator for predicate functions that raises a ValidationError</span>
+<span class="sd">    if it returns False when applied to each argument individually.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        message (str): Error message if predicate returns False.</span>
+<span class="sd">        list_first_arg (str, optional): Set to True if first argument is a list.</span>
+<span class="sd">            Default: False.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValidationError: If predicate returns False.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        function: Function that returns a boolean.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="nd">@wrapt</span><span class="o">.</span><span class="n">decorator</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">wrapped</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">extra_args</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">extra_args</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">list_first_arg</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">args</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">wrapped</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="o">*</span><span class="n">extra_args</span><span class="p">):</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="o">*</span><span class="n">extra_args</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">return</span> <span class="n">wrapper</span></div>
+
+
+<span class="c1"># VALIDATORS--------------------------------------------------------------------</span>
+<div class="viewcode-block" id="is_project"><a class="viewcode-back" href="../../nerve.html#nerve.validators.is_project">[docs]</a><span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="si">{}</span><span class="s1">&quot; is not a valid project name.&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_project</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates a project name.</span>
@@ -224,7 +254,7 @@
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
-<div class="viewcode-block" id="is_descriptor"><a class="viewcode-back" href="../../nerve.html#nerve.validators.is_descriptor">[docs]</a><span class="nd">@validator</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="si">{}</span><span class="s1">&quot; is not a valid descriptor.&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="is_descriptor"><a class="viewcode-back" href="../../nerve.html#nerve.validators.is_descriptor">[docs]</a><span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="si">{}</span><span class="s1">&quot; is not a valid descriptor.&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_descriptor</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates a descriptor.</span>
@@ -258,7 +288,7 @@
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
-<div class="viewcode-block" id="is_version"><a class="viewcode-back" href="../../nerve.html#nerve.validators.is_version">[docs]</a><span class="nd">@validator</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a valid version. 0 &lt; version &lt; 1000.&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="is_version"><a class="viewcode-back" href="../../nerve.html#nerve.validators.is_version">[docs]</a><span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a valid version. 0 &lt; version &lt; 1000.&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_version</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates a version.</span>
@@ -275,7 +305,7 @@
     <span class="k">return</span> <span class="n">item</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">item</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">**</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">VERSION_PADDING</span></div>
 
 
-<div class="viewcode-block" id="is_frame"><a class="viewcode-back" href="../../nerve.html#nerve.validators.is_frame">[docs]</a><span class="nd">@validator</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a valid frame. -1 &lt; frame &lt; 10000.&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="is_frame"><a class="viewcode-back" href="../../nerve.html#nerve.validators.is_frame">[docs]</a><span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a valid frame. -1 &lt; frame &lt; 10000.&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_frame</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates a frame.</span>
@@ -292,7 +322,10 @@
     <span class="k">return</span> <span class="n">item</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">item</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">**</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">FRAME_PADDING</span></div>
 
 
-<div class="viewcode-block" id="is_coordinate"><a class="viewcode-back" href="../../nerve.html#nerve.validators.is_coordinate">[docs]</a><span class="nd">@validator</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a valid coordinate. -1 &lt; coordinate &lt; 1000.&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="is_coordinate"><a class="viewcode-back" href="../../nerve.html#nerve.validators.is_coordinate">[docs]</a><span class="nd">@validate_each</span><span class="p">(</span>
+    <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a valid coordinate. -1 &lt; coordinate &lt; 1000.&#39;</span><span class="p">,</span>
+    <span class="n">list_first_arg</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_coordinate</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates a coordinate.</span>
@@ -321,7 +354,7 @@
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
-<div class="viewcode-block" id="is_extension"><a class="viewcode-back" href="../../nerve.html#nerve.validators.is_extension">[docs]</a><span class="nd">@validator</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="si">{}</span><span class="s1">&quot; is not a valid extension.&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="is_extension"><a class="viewcode-back" href="../../nerve.html#nerve.validators.is_extension">[docs]</a><span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="si">{}</span><span class="s1">&quot; is not a valid extension.&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_extension</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates a file extension.</span>
@@ -340,7 +373,7 @@
     <span class="k">return</span> <span class="kc">False</span>  <span class="c1"># pragma: no cover</span></div>
 
 
-<div class="viewcode-block" id="is_eq"><a class="viewcode-back" href="../../nerve.html#nerve.validators.is_eq">[docs]</a><span class="nd">@validator</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> != </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="is_eq"><a class="viewcode-back" href="../../nerve.html#nerve.validators.is_eq">[docs]</a><span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> != </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_eq</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates that a and b are equal.</span>
@@ -358,7 +391,7 @@
     <span class="k">return</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span></div>
 
 
-<div class="viewcode-block" id="is_lt"><a class="viewcode-back" href="../../nerve.html#nerve.validators.is_lt">[docs]</a><span class="nd">@validator</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> !&lt; </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="is_lt"><a class="viewcode-back" href="../../nerve.html#nerve.validators.is_lt">[docs]</a><span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> !&lt; </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_lt</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates that a is less than b.</span>
@@ -376,7 +409,7 @@
     <span class="k">return</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span></div>
 
 
-<div class="viewcode-block" id="is_gt"><a class="viewcode-back" href="../../nerve.html#nerve.validators.is_gt">[docs]</a><span class="nd">@validator</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> !&gt; </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="is_gt"><a class="viewcode-back" href="../../nerve.html#nerve.validators.is_gt">[docs]</a><span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> !&gt; </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_gt</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates that a is greater than b.</span>
