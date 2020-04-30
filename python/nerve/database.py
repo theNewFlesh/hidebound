@@ -98,9 +98,9 @@ class Database:
 
         Columns added:
 
-            * specification - specification name
-            * specification_class - specificaton class
-            * errors - set of errors
+            * specification
+            * specification_class
+            * error
 
         Args:
             data (DataFrame): DataFrame.
@@ -108,11 +108,11 @@ class Database:
         '''
         def get_spec(filename):
             output = tools.try_(
-                AssetNameParser.parse_specification, filename, 'errors'
+                AssetNameParser.parse_specification, filename, 'error'
             )
             if not isinstance(output, dict):
                 output = dict(error=output)
-            for key in ['specification', 'errors']:
+            for key in ['specification', 'error']:
                 if key not in output.keys():
                     output[key] = np.nan
             return output
@@ -124,22 +124,17 @@ class Database:
         mask = spec.specification.notnull()
         data.loc[mask, 'specification'] = spec.loc[mask, 'specification']
 
-        # set errors
-        data['errors'] = np.nan
-        data.errors = data.errors.apply(lambda x: set())
-        mask = spec.errors.notnull()
-        data.loc[mask, 'errors'] = spec.loc[mask, 'errors']\
-            .apply(lambda x: set([x]))
-
-        # add not found spec errors
+        # set error
+        data['error'] = np.nan
         mask = data.specification.apply(lambda x: x not in specifications.keys())
-        data.loc[mask, 'errors']\
-            .apply(lambda x: x.add(
-                vd.ValidationError('Specification not found.')
-            ))
+        data.loc[mask, 'error'] = 'Specification not found.'
+
+        # parse errors overwrite spec not found
+        mask = spec.error.notnull()
+        data.loc[mask, 'error'] = spec.loc[mask, 'error']
 
         # set specification class
-        mask = data.errors.apply(lambda x: len(x) == 0)
+        mask = data.error.isnull()
         data['specification_class'] = np.nan
         data.loc[mask, 'specification_class'] = data.loc[mask, 'specification']\
             .apply(lambda x: specifications[x])
@@ -148,7 +143,7 @@ class Database:
     def _validate_filepath(data):
         '''
         Validates fullpath column of given DataFrame.
-        Adds error to errors column if invalid.
+        Adds error to error column if invalid.
 
         Args:
             data (DataFrame): DataFrame.
@@ -156,11 +151,13 @@ class Database:
         def validate(row):
             try:
                 row.specification_class().validate_filepath(row.fullpath)
-            except vd.ValidationError as e:
-                row.errors.add(e)
-        mask = data.errors.apply(lambda x: len(x) == 0)
+                return np.nan
+            except vd.ValidationError as error:
+                return str(error)
+
+        mask = data.error.isnull()
         if len(data[mask]) > 0:
-            data[mask].apply(validate, axis=1)
+            data.loc[mask, 'error'] = data[mask].apply(validate, axis=1)
 
     @staticmethod
     def _add_filename_data(data):
@@ -171,7 +168,7 @@ class Database:
         Args:
             data (DataFrame): DataFrame.
         '''
-        mask = data.errors.apply(lambda x: len(x) == 0)
+        mask = data.error.isnull()
         meta = data.copy()
         meta['data'] = None
         meta.data = meta.data.apply(lambda x: {})
@@ -198,7 +195,7 @@ class Database:
         Args:
             data (DataFrame): DataFrame.
         '''
-        mask = data.errors.apply(lambda x: len(x) == 0)
+        mask = data.error.isnull()
         data['asset_id'] = np.nan
         if len(data[mask]) > 0:
             data.loc[mask, 'asset_id'] = data.loc[mask].apply(
@@ -214,7 +211,7 @@ class Database:
         Args:
             data (DataFrame): DataFrame.
         '''
-        mask = data.errors.apply(lambda x: len(x) == 0)
+        mask = data.error.isnull()
         data['asset_name'] = np.nan
         if len(data[mask]) > 0:
             data.loc[mask, 'asset_name'] = data.loc[mask].apply(
@@ -277,7 +274,7 @@ class Database:
             'extension',
             'filename',
             'fullpath',
-            'errors',
+            'error',
             'asset_name',
             'asset_path',
             'asset_type',

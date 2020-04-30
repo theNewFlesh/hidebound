@@ -26,7 +26,7 @@ class DatabaseTests(unittest.TestCase):
         'extension',
         'filename',
         'fullpath',
-        'errors',
+        'error',
         'asset_name',
         'asset_path',
         'asset_type',
@@ -72,8 +72,6 @@ class DatabaseTests(unittest.TestCase):
 
         data['fullpath'] = data\
             .apply(lambda x: Path(root, x.asset_path, x.filename), axis=1)
-
-        data['errors'] = data.error.apply(lambda x: set([]) if x == [] else set([x]))
 
         Spec001, Spec002, BadSpec = self.get_specifications()
         specs = {
@@ -216,7 +214,7 @@ class DatabaseTests(unittest.TestCase):
             self.assertEqual(len(result), 0)
             self.assertEqual(result.columns.tolist(), self.columns)
 
-    def test_update_errors(self):
+    def test_update_error(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
 
         with TemporaryDirectory() as root:
@@ -229,7 +227,7 @@ class DatabaseTests(unittest.TestCase):
             data = data[data.fullpath.apply(lambda x: x in keys)]
 
             regexes = data.fullpath.apply(lambda x: lut[x.as_posix()]).tolist()
-            results = data.errors.apply(lambda x: x[0]).tolist()
+            results = data.error.apply(lambda x: x[0]).tolist()
             for result, regex in zip(results, regexes):
                 self.assertRegex(result, regex)
 
@@ -249,17 +247,13 @@ class DatabaseTests(unittest.TestCase):
 
         error = 'Invalid asset directory name'
         mask = data.error == error
-        data.loc[mask, 'errors'] = data.loc[mask, 'errors']\
-            .apply(lambda x: set([]))
+        data.loc[mask, 'error'] = np.nan
 
-        cols = ['specification_class', 'fullpath', 'errors']
+        cols = ['specification_class', 'fullpath', 'error']
         data = data[cols]
 
         Database._validate_filepath(data)
-        result = data.loc[mask, 'errors']\
-            .apply(lambda x: list(x)[0])\
-            .apply(str)\
-            .tolist()[0]
+        result = data.loc[mask, 'error'].tolist()[0]
         self.assertRegex(result, error)
 
     def test_add_filename_data(self):
@@ -268,31 +262,31 @@ class DatabaseTests(unittest.TestCase):
             [
                 Spec001,
                 'p-proj001_s-spec001_d-desc_v001_c000-000_f0001.png',
-                set([]),
+                np.nan,
                 'proj001', 'spec001', 'desc', 1, [0, 0], 1, 'png'
             ],
             [
                 Spec001,
                 'p-proj001_s-spec001_d-desc_v001_c000-000_f0002.png',
-                set([]),
+                np.nan,
                 'proj001', 'spec001', 'desc', 1, [0, 0], 2, 'png'
             ],
             [
                 Spec002,
                 'p-proj002_s-spec002_d-MASTER_v001_f0001.png',
-                set(['Error']),
+                'Error',
                 np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
             ],
             [
                 Spec002,
                 'p-proj002_s-spec002_d-desc_v001_f0002.png',
-                set([]),
+                np.nan,
                 'proj002', 'spec002', 'desc', 1, np.nan, 2, 'png'
             ],
             [
                 np.nan,
                 'misc.txt',
-                set(['Error']),
+                'Error',
                 np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
             ],
         ]
@@ -301,7 +295,7 @@ class DatabaseTests(unittest.TestCase):
             'project', 'specification', 'descriptor', 'version', 'coordinate',
             'frame', 'extension'
         ]
-        data.columns = ['specification_class', 'filename', 'errors'] + cols
+        data.columns = ['specification_class', 'filename', 'error'] + cols
         temp = data.copy()
 
         Database._add_filename_data(data)
@@ -316,32 +310,32 @@ class DatabaseTests(unittest.TestCase):
             [
                 Spec001,
                 '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0001.png',  # noqa E501
-                set([]),
+                np.nan,
             ],
             [
                 Spec001,
                 '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0002.png',  # noqa E501
-                set([]),
+                np.nan,
             ],
             [
                 Spec002,
                 '/tmp/p-proj002_s-spec002_d-MASTER_v001/p-proj002_s-spec002_d-MASTER_v001_f0001.png',  # noqa E501
-                set(['Error']),
+                'Error',
             ],
             [
                 Spec002,
                 '/tmp/p-proj002_s-spec002_d-desc_v001/p-proj002_s-spec002_d-desc_v001_f0002.png',
-                set([]),
+                np.nan,
             ],
             [
                 np.nan,
                 '/tmp/proj002/misc.txt',
-                set(['Error']),
+                'Error',
             ],
         ]
 
         data = DataFrame(data)
-        data.columns = ['specification_class', 'fullpath', 'errors']
+        data.columns = ['specification_class', 'fullpath', 'error']
 
         Database._add_asset_id(data)
         result = data['asset_id'].dropna().nunique()
@@ -353,32 +347,32 @@ class DatabaseTests(unittest.TestCase):
             [
                 Spec001,
                 '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0001.png',  # noqa E501
-                set([]),
+                np.nan,
             ],
             [
                 Spec001,
                 '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0002.png',  # noqa E501
-                set([]),
+                np.nan,
             ],
             [
                 Spec002,
                 '/tmp/p-proj002_s-spec002_d-MASTER_v001/p-proj002_s-spec002_d-MASTER_v001_f0001.png',  # noqa E501
-                set(['Error']),
+                'Error',
             ],
             [
                 Spec002,
                 '/tmp/p-proj002_s-spec002_d-desc_v001/p-proj002_s-spec002_d-desc_v001_f0002.png',
-                set([]),
+                np.nan,
             ],
             [
                 np.nan,
                 '/tmp/proj002/misc.txt',
-                set(['Error']),
+                'Error',
             ],
         ]
 
         data = DataFrame(data)
-        data.columns = ['specification_class', 'fullpath', 'errors']
+        data.columns = ['specification_class', 'fullpath', 'error']
 
         Database._add_asset_name(data)
         result = data['asset_name'].dropna().nunique()
@@ -390,32 +384,32 @@ class DatabaseTests(unittest.TestCase):
             [
                 Spec001,
                 '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0001.png',  # noqa E501
-                set([]),
+                np.nan,
             ],
             [
                 Spec001,
                 '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0002.png',  # noqa E501
-                set([]),
+                np.nan,
             ],
             [
                 Spec002,
                 '/tmp/p-proj002_s-spec002_d-MASTER_v001/p-proj002_s-spec002_d-MASTER_v001_f0001.png',  # noqa E501
-                set(['Error']),
+                'Error',
             ],
             [
                 Spec002,
                 '/tmp/p-proj002_s-spec002_d-desc_v001/p-proj002_s-spec002_d-desc_v001_f0002.png',
-                set([]),
+                np.nan,
             ],
             [
                 np.nan,
                 '/tmp/proj002/misc.txt',
-                set(['Error']),
+                'Error',
             ],
         ]
 
         data = DataFrame(data)
-        data.columns = ['specification_class', 'fullpath', 'errors']
+        data.columns = ['specification_class', 'fullpath', 'error']
         expected = data.fullpath\
             .apply(lambda x: Path(x).parent).apply(str).tolist()
         expected[-1] = 'nan'
