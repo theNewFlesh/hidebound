@@ -1,4 +1,4 @@
-from schematics.types import IntType, StringType
+from schematics.types import IntType, ListType, StringType
 
 import nerve.validators as vd
 from nerve.specification_base import SequenceSpecificationBase
@@ -33,10 +33,15 @@ class Raw001(SequenceSpecificationBase):
         'project', 'specification', 'descriptor', 'version', 'frame',
         'extension'
     ]
-    height = IntType(required=True, validators=[lambda x: vd.is_eq(x, 1024)])
-    width = IntType(required=True, validators=[lambda x: vd.is_eq(x, 1024)])
-    frame = IntType(required=True, validators=[vd.is_frame])
-    extension = StringType(
+    height = ListType(
+        IntType(), required=True, validators=[lambda x: vd.is_eq(x, 1024)]
+    )
+    width = ListType(
+        IntType(), required=True, validators=[lambda x: vd.is_eq(x, 1024)]
+    )
+    frame = ListType(IntType(), required=True, validators=[vd.is_frame])
+    extension = ListType(
+        StringType(),
         required=True,
         validators=[vd.is_extension, lambda x: vd.is_eq(x, 'png')]
     )

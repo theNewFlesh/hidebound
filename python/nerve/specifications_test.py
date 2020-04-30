@@ -1,4 +1,4 @@
-from copy import copy
+from collections import defaultdict
 import unittest
 
 from schematics.exceptions import DataError
@@ -9,7 +9,7 @@ import nerve.specifications as spec
 
 class SpecificationsTests(unittest.TestCase):
     def test_raw001(self):
-        data = dict(
+        item = dict(
             project='proj001',
             descriptor='desc',
             version=1,
@@ -18,27 +18,29 @@ class SpecificationsTests(unittest.TestCase):
             height=1024,
             width=1024,
         )
+        data = defaultdict(lambda: [])
+        for i in range(3):
+            for k, v in item.items():
+                data[k].append(v)
+
         spec.Raw001(data).validate()
 
         expected = '1023 != 1024'
-        x = copy(data)
-        x['width'] = 1023
+        data['width'][-1] = 1023
         with self.assertRaisesRegexp(DataError, expected):
-            spec.Raw001(x).validate()
+            spec.Raw001(data).validate()
 
         expected = '1000 != 1024'
-        x = copy(data)
-        x['height'] = 1000
+        data['height'][-1] = 1000
         with self.assertRaisesRegexp(DataError, expected):
-            spec.Raw001(x).validate()
+            spec.Raw001(data).validate()
 
         expected = '.*PNG.* is not a valid extension.'
-        x = copy(data)
-        x['extension'] = 'PNG'
+        data['extension'][-1] = 'PNG'
         with self.assertRaisesRegexp(DataError, expected):
-            spec.Raw001(x).validate()
+            spec.Raw001(data).validate()
 
         expected = 'jpeg != png'
-        x['extension'] = 'jpeg'
+        data['extension'][-1] = 'jpeg'
         with self.assertRaisesRegexp(DataError, expected):
-            spec.Raw001(x).validate()
+            spec.Raw001(data).validate()

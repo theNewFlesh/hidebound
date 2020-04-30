@@ -4,7 +4,7 @@ import uuid
 from pyparsing import ParseException
 from schematics import Model
 from schematics.exceptions import ValidationError
-from schematics.types import StringType, IntType
+from schematics.types import IntType, ListType, StringType
 
 from nerve.parser import AssetNameParser
 import nerve.validators as vd
@@ -35,10 +35,18 @@ class SpecificationBase(Model):
         'project', 'specification', 'descriptor', 'version', 'extension'
     ]
     asset_name_fields = ['project', 'specification', 'descriptor', 'version']
-    project = StringType(required=True, validators=[vd.is_project])
-    descriptor = StringType(required=True, validators=[vd.is_descriptor])
-    version = IntType(required=True, validators=[vd.is_version])
-    extension = StringType(required=True, validators=[vd.is_extension])
+    project = ListType(
+        StringType(), required=True, validators=[vd.is_project]
+    )
+    descriptor = ListType(
+        StringType(), required=True, validators=[vd.is_descriptor]
+    )
+    version = ListType(
+        IntType(), required=True, validators=[vd.is_version]
+    )
+    extension = ListType(
+        StringType(), required=True, validators=[vd.is_extension]
+    )
 
     def __init__(self, data={}):
         '''
