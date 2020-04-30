@@ -14,6 +14,23 @@ class Database:
     '''
     Generates a DataFrame using the files within a given directory as rows.
     '''
+    COLUMNS = [
+        'project',
+        'specification',
+        'descriptor',
+        'version',
+        'coordinate',
+        'frame',
+        'extension',
+        'filename',
+        'fullpath',
+        'error',
+        'asset_name',
+        'asset_path',
+        'asset_type',
+        # 'asset_id',
+    ]
+
     def __init__(
         self,
         root,
@@ -84,7 +101,7 @@ class Database:
             self._add_asset_name(data)
             self._add_asset_path(data)
             self._add_asset_type(data)
-            self._add_asset_id(data)
+            # self._add_asset_id(data)
 
         data = self._cleanup(data)
         self.data = data
@@ -265,29 +282,13 @@ class Database:
         Returns:
             DataFrame: Cleaned up DataFrame.
         '''
-        columns = [
-            'project',
-            'specification',
-            'descriptor',
-            'version',
-            'coordinate',
-            'frame',
-            'extension',
-            'filename',
-            'fullpath',
-            'error',
-            'asset_name',
-            'asset_path',
-            'asset_type',
-            'asset_id',
-        ]
         # if no files are found return empty DataFrame
-        for col in columns:
+        for col in Database.COLUMNS:
             if col not in data.columns:
                 data[col] = np.nan
         # use copy to avoid SettingWithCopyWarning
         # TODO: figure out a way to prevent warning without copy.
-        data = data[columns].copy()
+        data = data[Database.COLUMNS].copy()
 
         # convert Paths to str
         for col in data.columns:

@@ -30,7 +30,7 @@ class DatabaseTests(unittest.TestCase):
         'asset_name',
         'asset_path',
         'asset_type',
-        'asset_id',
+        # 'asset_id',
     ]
 
     def get_data(self, root, nans=False):
