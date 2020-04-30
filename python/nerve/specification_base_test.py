@@ -14,6 +14,10 @@ class SpecificationBaseTests(unittest.TestCase):
         def get_asset_path(self, filepath):
             return Path(filepath).parent
 
+    class Bar(sb.FileSpecificationBase):
+        def get_asset_path(self, filepath):
+            return Path(filepath)
+
     def test_init(self):
         result = sb.SpecificationBase().name
         self.assertEqual(result, 'specificationbase')
@@ -48,6 +52,7 @@ class SpecificationBaseTests(unittest.TestCase):
 
     def test_validate_filepath(self):
         self.Foo().validate_filepath(self.filepath)
+        self.Bar().validate_filepath(self.filepath)
 
         root = '/tmp/proj001'
         parent = 'p-proj001_s-spec001_d-desc_v001'
@@ -67,10 +72,16 @@ class SpecificationBaseTests(unittest.TestCase):
             self.Foo().validate_filepath(bad_descriptor_token)
 
         bad_parent = 'p-proj001_s-spec001_d-pizza_v001'
-        bad_descriptor_token = Path(root, bad_parent, filename)
+        bad_parent = Path(root, bad_parent, filename)
         expected = 'Invalid asset directory name'
         with self.assertRaisesRegexp(ValidationError, expected):
-            self.Foo().validate_filepath(bad_descriptor_token)
+            self.Foo().validate_filepath(bad_parent)
+
+        bad_parent_token = 'p-proj001_s-spec001_d-pizza_v01'
+        bad_parent_token = Path(root, bad_parent_token, filename)
+        expected = 'Illegal version field token'
+        with self.assertRaisesRegexp(ValidationError, expected):
+            self.Foo().validate_filepath(bad_parent_token)
 
     def test_get_filename_metadata(self):
         result = self.Foo().get_filename_metadata(self.filepath)

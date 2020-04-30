@@ -1,5 +1,5 @@
 from copy import copy
-from pyparsing import delimitedList, Group, Optional, Or, ParseException, Regex, Suppress
+from pyparsing import Group, Optional, ParseException, Regex, Suppress
 # ------------------------------------------------------------------------------
 
 
@@ -72,8 +72,7 @@ class AssetNameParser:
 
         grammar = self._get_grammar()
         self._extension_parser = self._get_extension_parser(grammar)
-        self._ordered_parser = self._get_ordered_parser(grammar, fields)
-        self._unordered_parser = self._get_unordered_parser(grammar, fields)
+        self._parser = self._get_parser(grammar, fields)
         self._fields = fields
 
     # GRAMMAR-------------------------------------------------------------------
@@ -196,32 +195,7 @@ class AssetNameParser:
         return parser
 
     @staticmethod
-    def _get_unordered_parser(grammar, fields):
-        '''
-        Creates a parser for asset names of fields with arbitrary order.
-
-        Args:
-            grammar (dict): AssetNameParser grammar dictionary.
-            fields (list[str]): List of fields.
-
-        Returns:
-            Group: Parser.
-        '''
-        # TODO: fix grammar so that there are no duplicate field matches.
-        parser = None
-        if fields[-1] == 'extension':
-            field = Or([grammar[x] for x in fields[:-1]])
-            parser = delimitedList(field, delim=grammar['field_separator'])
-            parser += grammar[fields[-1]]
-        else:
-            field = Or([grammar[x] for x in fields])
-            parser = delimitedList(field, delim=grammar['field_separator'])
-
-        parser = Group(parser)
-        return parser
-
-    @staticmethod
-    def _get_ordered_parser(grammar, fields):
+    def _get_parser(grammar, fields):
         '''
         Creates a parser for asset names.
 
@@ -281,40 +255,20 @@ class AssetNameParser:
 
     def parse(self, text, ignore_order=False):
         '''
-        Create a parser based on the given fields.
+        Parse a given string.
 
         Args:
-            fields (list[str]): A list of fields.
-            ignore_order (bool, optional): Whether to ignore the field order.
-                Default: False.
+            text (str): Strign to be parsed.
+
+        Raises:
+            ParseException: If parse fails.
 
         Returns:
             Group: parser.
         '''
         if self._fields == ['extension']:
             return self._extension_parser.parseString(text)[0].asDict()
-
-        # parse text
-        if ignore_order:
-            return self._unordered_parser.parseString(text)[0].asDict()
-
-        else:
-            # determine if the text can be parsed with random field order
-            try:
-                self._unordered_parser.parseString(text)
-                parsable = True
-            except ParseException:
-                parsable = False
-
-            try:
-                return self._ordered_parser.parseString(text)[0].asDict()
-            except ParseException as msg:
-                # it is a field order error if it is parasable with a different
-                # field order
-                if parsable:
-                    msg = f'Incorrect field order in "{text}". '
-                    msg += f'Given field order: {self._fields}.'
-                raise ParseException(msg)
+        return self._parser.parseString(text)[0].asDict()
 
     def to_string(self, dict_):
         '''
