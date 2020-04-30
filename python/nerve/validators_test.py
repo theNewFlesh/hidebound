@@ -6,21 +6,133 @@ from nerve.validators import ValidationError
 
 
 class DatabaseTests(unittest.TestCase):
-    def test_validator(self):
-        message = '{} is not foo'
-        @vd.validator(message)
-        def func(item):
+    # VALIDATE------------------------------------------------------------------
+    def test_validate(self):
+        message = '{} is not foo.'
+
+        @vd.validate(message)
+        def foo(item):
             return item == 'foo'
 
-        func('foo')
+        foo('foo')
 
         expected = message.format('bar')
         with self.assertRaisesRegexp(ValidationError, expected):
-            func('bar')
+            foo('bar')
 
         expected = message.format(1)
         with self.assertRaisesRegexp(ValidationError, expected):
-            func(1)
+            foo(1)
+
+    def test_validate_extra_arg(self):
+        message = '{} is not less than {}.'
+
+        @vd.validate(message)
+        def foo(a, b):
+            return a < b
+
+        foo(1, 2)
+
+        expected = message.format(2, 1)
+        with self.assertRaisesRegexp(ValidationError, expected):
+            foo(2, 1)
+
+    def test_validate_list(self):
+        message = 'Sum of {} is not less than 4.'
+
+        @vd.validate(message)
+        def foo(items):
+            return sum(items) < 4
+
+        foo([0, 1, 2])
+
+        expected = message.format(r'\[1, 2, 3\]')
+        with self.assertRaisesRegexp(ValidationError, expected):
+            foo([1, 2, 3])
+
+        expected = message.format(1)
+        with self.assertRaises(TypeError):
+            foo(1)
+
+    def test_validate_list_extra_arg(self):
+        message = 'Sum of {} is not less than {}.'
+
+        @vd.validate(message)
+        def foo(a, b):
+            return sum(a) < b
+
+        foo([0, 1, 2], 4)
+
+        expected = message.format(r'\[1, 2, 3\]', 4)
+        with self.assertRaisesRegexp(ValidationError, expected):
+            foo([1, 2, 3], 4)
+
+        with self.assertRaises(TypeError):
+            foo(1, 4)
+
+    # VALIDATE_EACH-------------------------------------------------------------
+    def test_validate_each(self):
+        message = '{} is not foo.'
+
+        @vd.validate_each(message)
+        def foo(item):
+            return item == 'foo'
+
+        foo('foo')
+
+        expected = message.format('bar')
+        with self.assertRaisesRegexp(ValidationError, expected):
+            foo('bar')
+
+        expected = message.format(1)
+        with self.assertRaisesRegexp(ValidationError, expected):
+            foo(1)
+
+    def test_validate_each_extra_arg(self):
+        message = '{} is not less than {}.'
+
+        @vd.validate_each(message)
+        def foo(a, b):
+            return a < b
+
+        foo(1, 2)
+
+        expected = message.format(2, 1)
+        with self.assertRaisesRegexp(ValidationError, expected):
+            foo(2, 1)
+
+    def test_validate_each_list(self):
+        message = '{} is not less than 4.'
+
+        @vd.validate_each(message)
+        def foo(item):
+            return item < 4
+
+        foo([0, 1, 2])
+
+        expected = message.format(5)
+        with self.assertRaisesRegexp(ValidationError, expected):
+            foo([1, 2, 5])
+
+        with self.assertRaises(TypeError):
+            foo('a')
+
+    def test_validate_each_list_extra_arg(self):
+        message = '{} is not less than {}.'
+
+        @vd.validate_each(message)
+        def foo(a, b):
+            return a < b
+
+        foo([0, 1, 2], 4)
+
+        expected = message.format(5, 4)
+        with self.assertRaisesRegexp(ValidationError, expected):
+            foo([1, 2, 5], 4)
+
+        with self.assertRaises(TypeError):
+            foo([1, 'a'], 4)
+    # --------------------------------------------------------------------------
 
     def test_is_project(self):
         vd.is_project('proj001')

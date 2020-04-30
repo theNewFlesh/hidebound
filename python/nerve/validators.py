@@ -22,7 +22,7 @@ class ValidationError(Exception):
     pass
 
 
-def validator(message):
+def validate(message):
     '''
     A decorator for predicate functions that raises a ValidationError
     if it returns False.
@@ -46,7 +46,41 @@ def validator(message):
     return wrapper
 
 
-@validator('"{}" is not a valid project name.')
+def validate_each(message, list_first_arg=False):
+    '''
+    A decorator for predicate functions that raises a ValidationError
+    if it returns False when applied to each argument individually.
+
+    Args:
+        message (str): Error message if predicate returns False.
+        list_first_arg (str, optional): Set to True if first argument is a list.
+            Default: False.
+
+    Raises:
+        ValidationError: If predicate returns False.
+
+    Returns:
+        function: Function that returns a boolean.
+    '''
+    @wrapt.decorator
+    def wrapper(wrapped, instance, args, kwargs):
+        extra_args = []
+        if len(args) > 1:
+            extra_args = args[1:]
+
+        args = args[0]
+        if list_first_arg or not isinstance(args, list):
+            args = [args]
+        for arg in args:
+            if not wrapped(arg, *extra_args):
+                msg = message.format(arg, *extra_args)
+                raise ValidationError(msg)
+        return
+    return wrapper
+
+
+# VALIDATORS--------------------------------------------------------------------
+@validate_each('"{}" is not a valid project name.')
 def is_project(item):
     '''
     Validates a project name.
@@ -72,7 +106,7 @@ def is_project(item):
     return True
 
 
-@validator('"{}" is not a valid descriptor.')
+@validate_each('"{}" is not a valid descriptor.')
 def is_descriptor(item):
     '''
     Validates a descriptor.
@@ -106,7 +140,7 @@ def is_descriptor(item):
     return True
 
 
-@validator('{} is not a valid version. 0 < version < 1000.')
+@validate_each('{} is not a valid version. 0 < version < 1000.')
 def is_version(item):
     '''
     Validates a version.
@@ -123,7 +157,7 @@ def is_version(item):
     return item > 0 and item < 10**AssetNameParser.VERSION_PADDING
 
 
-@validator('{} is not a valid frame. -1 < frame < 10000.')
+@validate_each('{} is not a valid frame. -1 < frame < 10000.')
 def is_frame(item):
     '''
     Validates a frame.
@@ -140,7 +174,10 @@ def is_frame(item):
     return item >= 0 and item < 10**AssetNameParser.FRAME_PADDING
 
 
-@validator('{} is not a valid coordinate. -1 < coordinate < 1000.')
+@validate_each(
+    '{} is not a valid coordinate. -1 < coordinate < 1000.',
+    list_first_arg=True
+)
 def is_coordinate(item):
     '''
     Validates a coordinate.
@@ -169,7 +206,7 @@ def is_coordinate(item):
     return True
 
 
-@validator('"{}" is not a valid extension.')
+@validate_each('"{}" is not a valid extension.')
 def is_extension(item):
     '''
     Validates a file extension.
@@ -188,7 +225,7 @@ def is_extension(item):
     return False  # pragma: no cover
 
 
-@validator('{} != {}.')
+@validate_each('{} != {}.')
 def is_eq(a, b):
     '''
     Validates that a and b are equal.
@@ -206,7 +243,7 @@ def is_eq(a, b):
     return a == b
 
 
-@validator('{} !< {}.')
+@validate_each('{} !< {}.')
 def is_lt(a, b):
     '''
     Validates that a is less than b.
@@ -224,7 +261,7 @@ def is_lt(a, b):
     return a < b
 
 
-@validator('{} !> {}.')
+@validate_each('{} !> {}.')
 def is_gt(a, b):
     '''
     Validates that a is greater than b.
