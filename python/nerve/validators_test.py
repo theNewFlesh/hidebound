@@ -1,7 +1,8 @@
 import unittest
 
+from schematics.exceptions import ValidationError
+
 import nerve.validators as vd
-from nerve.validators import ValidationError
 # ------------------------------------------------------------------------------
 
 
@@ -137,30 +138,30 @@ class DatabaseTests(unittest.TestCase):
     def test_is_project(self):
         vd.is_project('proj001')
 
-        expected = '"proj-001" is not a valid project name.'
+        expected = '.*proj-001.* is not a valid project name'
         with self.assertRaisesRegexp(ValidationError, expected):
             vd.is_project('proj-001')
 
-        expected = '"bigfancyproj001" is not a valid project name.'
+        expected = '.*bigfancyproj001.* is not a valid project name'
         with self.assertRaisesRegexp(ValidationError, expected):
             vd.is_project('bigfancyproj001')
 
-        expected = '"proj00001" is not a valid project name.'
+        expected = '.*proj00001.* is not a valid project name'
         with self.assertRaisesRegexp(ValidationError, expected):
             vd.is_project('proj00001')
 
     def test_is_descriptor(self):
         vd.is_descriptor('desc')
 
-        expected = '"master-desc" is not a valid descriptor.'
+        expected = '.*master-desc.* is not a valid descriptor'
         with self.assertRaisesRegexp(ValidationError, expected):
             vd.is_descriptor('master-desc')
 
-        expected = '"Desc" is not a valid descriptor.'
+        expected = '.*Desc.* is not a valid descriptor'
         with self.assertRaisesRegexp(ValidationError, expected):
             vd.is_descriptor('Desc')
 
-        expected = '"" is not a valid descriptor.'
+        expected = '.* is not a valid descriptor'
         with self.assertRaisesRegexp(ValidationError, expected):
             vd.is_descriptor('')
 
@@ -210,7 +211,7 @@ class DatabaseTests(unittest.TestCase):
     def test_is_extension(self):
         vd.is_extension('png')
 
-        expected = r'"\$\$\$" is not a valid extension\.'
+        expected = r'.*\$\$\$.* is not a valid extension'
         with self.assertRaisesRegexp(ValidationError, expected):
             vd.is_extension('$$$')
 

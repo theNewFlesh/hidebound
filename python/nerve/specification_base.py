@@ -1,9 +1,9 @@
 from pathlib import Path
 import uuid
 
-from nerve.validators import ValidationError
 from pyparsing import ParseException
 from schematics import Model
+from schematics.exceptions import ValidationError
 from schematics.types import StringType, IntType
 
 from nerve.parser import AssetNameParser

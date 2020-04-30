@@ -11,15 +11,11 @@ pipes them to an error call.
 import re
 
 from pyparsing import ParseException
+from schematics.exceptions import ValidationError
 import wrapt
 
 from nerve.parser import AssetNameParser
 # ------------------------------------------------------------------------------
-
-
-class ValidationError(Exception):
-    '''Error raised for validators.'''
-    pass
 
 
 def validate(message):

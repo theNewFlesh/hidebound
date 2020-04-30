@@ -2,10 +2,10 @@ from pathlib import Path
 
 import numpy as np
 from pandas import DataFrame
+from schematics.exceptions import ValidationError
 
 from nerve.parser import AssetNameParser
 import nerve.tools as tools
-import nerve.validators as vd
 from nerve.specification_base import SpecificationBase
 # ------------------------------------------------------------------------------
 
@@ -169,7 +169,7 @@ class Database:
             try:
                 row.specification_class().validate_filepath(row.fullpath)
                 return np.nan
-            except vd.ValidationError as error:
+            except ValidationError as error:
                 return str(error)
 
         mask = data.error.isnull()

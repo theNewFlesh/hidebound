@@ -1,8 +1,9 @@
 from copy import copy
 import unittest
 
+from schematics.exceptions import DataError
+
 import nerve.specifications as spec
-import nerve.validators as vd
 # ------------------------------------------------------------------------------
 
 
@@ -22,22 +23,22 @@ class SpecificationsTests(unittest.TestCase):
         expected = '1023 != 1024'
         x = copy(data)
         x['width'] = 1023
-        with self.assertRaisesRegexp(vd.ValidationError, expected):
+        with self.assertRaisesRegexp(DataError, expected):
             spec.Raw001(x).validate()
 
         expected = '1000 != 1024'
         x = copy(data)
         x['height'] = 1000
-        with self.assertRaisesRegexp(vd.ValidationError, expected):
+        with self.assertRaisesRegexp(DataError, expected):
             spec.Raw001(x).validate()
 
-        expected = '"PNG" is not a valid extension.'
+        expected = '.*PNG.* is not a valid extension.'
         x = copy(data)
         x['extension'] = 'PNG'
-        with self.assertRaisesRegexp(vd.ValidationError, expected):
+        with self.assertRaisesRegexp(DataError, expected):
             spec.Raw001(x).validate()
 
         expected = 'jpeg != png'
         x['extension'] = 'jpeg'
-        with self.assertRaisesRegexp(vd.ValidationError, expected):
+        with self.assertRaisesRegexp(DataError, expected):
             spec.Raw001(x).validate()

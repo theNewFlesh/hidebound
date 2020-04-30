@@ -2,8 +2,9 @@ from pathlib import Path
 import unittest
 import uuid
 
+from schematics.exceptions import ValidationError
+
 import nerve.specification_base as sb
-from nerve.validators import ValidationError
 # ------------------------------------------------------------------------------
 
 
