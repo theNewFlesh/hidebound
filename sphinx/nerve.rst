@@ -48,27 +48,3 @@ validators
     :private-members:
     :undoc-members:
     :show-inheritance:
-
-traits
---------
-.. automodule:: nerve.traits
-    :members:
-    :private-members:
-    :undoc-members:
-    :show-inheritance:
-
-metadata
---------
-.. automodule:: nerve.metadata
-    :members:
-    :private-members:
-    :undoc-members:
-    :show-inheritance:
-
-utils
------
-.. automodule:: nerve.utils
-    :members:
-    :private-members:
-    :undoc-members:
-    :show-inheritance:
