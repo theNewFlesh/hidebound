@@ -398,8 +398,8 @@ according to a dynimcally defined grammar.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nerve.parser.AssetNameParser._get_ordered_parser">
-<em class="property">static </em><code class="sig-name descname">_get_ordered_parser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">grammar</span></em>, <em class="sig-param"><span class="n">fields</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/parser.html#AssetNameParser._get_ordered_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.parser.AssetNameParser._get_ordered_parser" title="Permalink to this definition">¶</a></dt>
+<dt id="nerve.parser.AssetNameParser._get_parser">
+<em class="property">static </em><code class="sig-name descname">_get_parser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">grammar</span></em>, <em class="sig-param"><span class="n">fields</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/parser.html#AssetNameParser._get_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.parser.AssetNameParser._get_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a parser for asset names.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -432,26 +432,6 @@ according to a dynimcally defined grammar.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nerve.parser.AssetNameParser._get_unordered_parser">
-<em class="property">static </em><code class="sig-name descname">_get_unordered_parser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">grammar</span></em>, <em class="sig-param"><span class="n">fields</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/parser.html#AssetNameParser._get_unordered_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.parser.AssetNameParser._get_unordered_parser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a parser for asset names of fields with arbitrary order.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>grammar</strong> (<em>dict</em>) – AssetNameParser grammar dictionary.</p></li>
-<li><p><strong>fields</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – List of fields.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Parser.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Group</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt id="nerve.parser.AssetNameParser._raise_field_error">
 <em class="property">static </em><code class="sig-name descname">_raise_field_error</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">field</span></em>, <em class="sig-param"><span class="n">part</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/parser.html#AssetNameParser._raise_field_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.parser.AssetNameParser._raise_field_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>A convenience function used for raising custom ParseExceptions.</p>
@@ -474,20 +454,19 @@ according to a dynimcally defined grammar.</p>
 <dl class="py method">
 <dt id="nerve.parser.AssetNameParser.parse">
 <code class="sig-name descname">parse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em>, <em class="sig-param"><span class="n">ignore_order</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/parser.html#AssetNameParser.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.parser.AssetNameParser.parse" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a parser based on the given fields.</p>
+<dd><p>Parse a given string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>fields</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – A list of fields.</p></li>
-<li><p><strong>ignore_order</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to ignore the field order.
-Default: False.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – Strign to be parsed.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>parser.</p>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ParseException</strong> – If parse fails.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Group</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>parser.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Group</p>
 </dd>
 </dl>
 </dd></dl>

@@ -151,7 +151,7 @@
             
   <h1>Source code for nerve.parser</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
-<span class="kn">from</span> <span class="nn">pyparsing</span> <span class="kn">import</span> <span class="n">delimitedList</span><span class="p">,</span> <span class="n">Group</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Or</span><span class="p">,</span> <span class="n">ParseException</span><span class="p">,</span> <span class="n">Regex</span><span class="p">,</span> <span class="n">Suppress</span>
+<span class="kn">from</span> <span class="nn">pyparsing</span> <span class="kn">import</span> <span class="n">Group</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">ParseException</span><span class="p">,</span> <span class="n">Regex</span><span class="p">,</span> <span class="n">Suppress</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
@@ -224,8 +224,7 @@
 
         <span class="n">grammar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_grammar</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_extension_parser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_extension_parser</span><span class="p">(</span><span class="n">grammar</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ordered_parser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_ordered_parser</span><span class="p">(</span><span class="n">grammar</span><span class="p">,</span> <span class="n">fields</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_unordered_parser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_unordered_parser</span><span class="p">(</span><span class="n">grammar</span><span class="p">,</span> <span class="n">fields</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_parser</span><span class="p">(</span><span class="n">grammar</span><span class="p">,</span> <span class="n">fields</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="o">=</span> <span class="n">fields</span>
 
     <span class="c1"># GRAMMAR-------------------------------------------------------------------</span>
@@ -347,33 +346,8 @@
         <span class="n">parser</span> <span class="o">=</span> <span class="n">Group</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">parser</span></div>
 
-<div class="viewcode-block" id="AssetNameParser._get_unordered_parser"><a class="viewcode-back" href="../../nerve.html#nerve.parser.AssetNameParser._get_unordered_parser">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_get_unordered_parser</span><span class="p">(</span><span class="n">grammar</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Creates a parser for asset names of fields with arbitrary order.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            grammar (dict): AssetNameParser grammar dictionary.</span>
-<span class="sd">            fields (list[str]): List of fields.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            Group: Parser.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="c1"># TODO: fix grammar so that there are no duplicate field matches.</span>
-        <span class="n">parser</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">fields</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;extension&#39;</span><span class="p">:</span>
-            <span class="n">field</span> <span class="o">=</span> <span class="n">Or</span><span class="p">([</span><span class="n">grammar</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
-            <span class="n">parser</span> <span class="o">=</span> <span class="n">delimitedList</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">delim</span><span class="o">=</span><span class="n">grammar</span><span class="p">[</span><span class="s1">&#39;field_separator&#39;</span><span class="p">])</span>
-            <span class="n">parser</span> <span class="o">+=</span> <span class="n">grammar</span><span class="p">[</span><span class="n">fields</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">field</span> <span class="o">=</span> <span class="n">Or</span><span class="p">([</span><span class="n">grammar</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">])</span>
-            <span class="n">parser</span> <span class="o">=</span> <span class="n">delimitedList</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">delim</span><span class="o">=</span><span class="n">grammar</span><span class="p">[</span><span class="s1">&#39;field_separator&#39;</span><span class="p">])</span>
-
-        <span class="n">parser</span> <span class="o">=</span> <span class="n">Group</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">parser</span></div>
-
-<div class="viewcode-block" id="AssetNameParser._get_ordered_parser"><a class="viewcode-back" href="../../nerve.html#nerve.parser.AssetNameParser._get_ordered_parser">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_get_ordered_parser</span><span class="p">(</span><span class="n">grammar</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
+<div class="viewcode-block" id="AssetNameParser._get_parser"><a class="viewcode-back" href="../../nerve.html#nerve.parser.AssetNameParser._get_parser">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_get_parser</span><span class="p">(</span><span class="n">grammar</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Creates a parser for asset names.</span>
 
@@ -433,40 +407,20 @@
 
 <div class="viewcode-block" id="AssetNameParser.parse"><a class="viewcode-back" href="../../nerve.html#nerve.parser.AssetNameParser.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">ignore_order</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Create a parser based on the given fields.</span>
+<span class="sd">        Parse a given string.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            fields (list[str]): A list of fields.</span>
-<span class="sd">            ignore_order (bool, optional): Whether to ignore the field order.</span>
-<span class="sd">                Default: False.</span>
+<span class="sd">            text (str): Strign to be parsed.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ParseException: If parse fails.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Group: parser.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;extension&#39;</span><span class="p">]:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extension_parser</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">text</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">asDict</span><span class="p">()</span>
-
-        <span class="c1"># parse text</span>
-        <span class="k">if</span> <span class="n">ignore_order</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unordered_parser</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">text</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">asDict</span><span class="p">()</span>
-
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># determine if the text can be parsed with random field order</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_unordered_parser</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-                <span class="n">parsable</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="k">except</span> <span class="n">ParseException</span><span class="p">:</span>
-                <span class="n">parsable</span> <span class="o">=</span> <span class="kc">False</span>
-
-            <span class="k">try</span><span class="p">:</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ordered_parser</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">text</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">asDict</span><span class="p">()</span>
-            <span class="k">except</span> <span class="n">ParseException</span> <span class="k">as</span> <span class="n">msg</span><span class="p">:</span>
-                <span class="c1"># it is a field order error if it is parasable with a different</span>
-                <span class="c1"># field order</span>
-                <span class="k">if</span> <span class="n">parsable</span><span class="p">:</span>
-                    <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Incorrect field order in &quot;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s1">&quot;. &#39;</span>
-                    <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;Given field order: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_fields</span><span class="si">}</span><span class="s1">.&#39;</span>
-                <span class="k">raise</span> <span class="n">ParseException</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">text</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">asDict</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="AssetNameParser.to_string"><a class="viewcode-back" href="../../nerve.html#nerve.parser.AssetNameParser.to_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dict_</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>

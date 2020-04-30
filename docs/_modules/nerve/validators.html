@@ -216,10 +216,10 @@
         <span class="n">ind</span> <span class="o">=</span> <span class="n">AssetNameParser</span><span class="o">.</span><span class="n">PROJECT_INDICATOR</span>
         <span class="n">AssetNameParser</span><span class="p">([</span><span class="s1">&#39;project&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">ind</span> <span class="o">+</span> <span class="n">item</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">ParseException</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">False</span>  <span class="c1"># pragma: no cover</span>
 
     <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;^[a-z0-9]+$&#39;</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">False</span>  <span class="c1"># pragma: no cover</span>
 
     <span class="k">return</span> <span class="kc">True</span></div>
 
@@ -242,18 +242,18 @@
         <span class="n">ind</span> <span class="o">=</span> <span class="n">AssetNameParser</span><span class="o">.</span><span class="n">DESCRIPTOR_INDICATOR</span>
         <span class="n">AssetNameParser</span><span class="p">([</span><span class="s1">&#39;descriptor&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">ind</span> <span class="o">+</span> <span class="n">item</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">ParseException</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">False</span>  <span class="c1"># pragma: no cover</span>
 
     <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;^[a-z0-9-]+$&#39;</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">False</span>  <span class="c1"># pragma: no cover</span>
 
     <span class="c1"># the mast/final/last asset is never actually that</span>
     <span class="c1"># asset should only ever be thought of in terms of latest version</span>
     <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;^(master|final|last)&#39;</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
-        <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">False</span>  <span class="c1"># pragma: no cover</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">False</span>  <span class="c1"># pragma: no cover</span>
 
     <span class="k">return</span> <span class="kc">True</span></div>
 
@@ -307,16 +307,16 @@
 <span class="sd">        bool: Validity of coordinate.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">False</span>  <span class="c1"># pragma: no cover</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">False</span>  <span class="c1"># pragma: no cover</span>
 
     <span class="k">if</span> <span class="nb">min</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">False</span>  <span class="c1"># pragma: no cover</span>
 
     <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="o">**</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">COORDINATE_PADDING</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">False</span>  <span class="c1"># pragma: no cover</span>
 
     <span class="k">return</span> <span class="kc">True</span></div>
 
@@ -337,7 +337,7 @@
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;^[a-z0-9]+$&#39;</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">True</span>
-    <span class="k">return</span> <span class="kc">False</span></div>
+    <span class="k">return</span> <span class="kc">False</span>  <span class="c1"># pragma: no cover</span></div>
 
 
 <div class="viewcode-block" id="is_eq"><a class="viewcode-back" href="../../nerve.html#nerve.validators.is_eq">[docs]</a><span class="nd">@validator</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> != </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="p">)</span>
