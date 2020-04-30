@@ -1,9 +1,9 @@
 nerve
 =====
 
-errors
+tools
 ------
-.. automodule:: nerve.errors
+.. automodule:: nerve.tools
     :members:
     :private-members:
     :undoc-members:
@@ -17,17 +17,33 @@ parser
     :undoc-members:
     :show-inheritance:
 
-metadata
---------
-.. automodule:: nerve.metadata
+database
+-------
+.. automodule:: nerve.database
     :members:
     :private-members:
     :undoc-members:
     :show-inheritance:
 
-utils
------
-.. automodule:: nerve.utils
+specification_base
+-------
+.. automodule:: nerve.specification_base
+    :members:
+    :private-members:
+    :undoc-members:
+    :show-inheritance:
+
+specifications
+-------
+.. automodule:: nerve.specifications
+    :members:
+    :private-members:
+    :undoc-members:
+    :show-inheritance:
+
+validators
+--------
+.. automodule:: nerve.validators
     :members:
     :private-members:
     :undoc-members:
