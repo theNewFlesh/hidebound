@@ -3,7 +3,7 @@ nerve
 
 database
 --------
-    .. automodule:: nerve.database
+.. automodule:: nerve.database
     :members:
     :private-members:
     :undoc-members:
@@ -11,7 +11,7 @@ database
 
 parser
 ------
-    .. automodule:: nerve.parser
+.. automodule:: nerve.parser
     :members:
     :private-members:
     :undoc-members:
@@ -19,7 +19,7 @@ parser
 
 specification_base
 ------------------
-    .. automodule:: nerve.specification_base
+.. automodule:: nerve.specification_base
     :members:
     :private-members:
     :undoc-members:
@@ -27,7 +27,7 @@ specification_base
 
 specifications
 --------------
-    .. automodule:: nerve.specifications
+.. automodule:: nerve.specifications
     :members:
     :private-members:
     :undoc-members:
@@ -35,7 +35,7 @@ specifications
 
 tools
 ------
-    .. automodule:: nerve.tools
+.. automodule:: nerve.tools
     :members:
     :private-members:
     :undoc-members:
@@ -43,7 +43,7 @@ tools
 
 traits
 ------
-    .. automodule:: nerve.traits
+.. automodule:: nerve.traits
     :members:
     :private-members:
     :undoc-members:
@@ -51,7 +51,7 @@ traits
 
 validators
 ----------
-    .. automodule:: nerve.validators
+.. automodule:: nerve.validators
     :members:
     :private-members:
     :undoc-members:
