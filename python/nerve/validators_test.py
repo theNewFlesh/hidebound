@@ -1,5 +1,6 @@
 import unittest
 
+import numpy as np
 from schematics.exceptions import ValidationError
 
 import nerve.validators as vd
@@ -235,3 +236,33 @@ class DatabaseTests(unittest.TestCase):
         expected = '0 !> 1.'
         with self.assertRaisesRegexp(ValidationError, expected):
             vd.is_gt(0, 1)
+
+    def test_is_homogenous(self):
+        vd.is_homogenous([])
+        vd.is_homogenous(['a'])
+        vd.is_homogenous([0, 0, 0])
+        vd.is_homogenous(list('aaa'))
+
+        item = [0, 0, 1]
+        with self.assertRaises(ValidationError) as e:
+            vd.is_homogenous(item)
+        expected = f'{item} is not homogenous.'
+        self.assertIn(expected, str(e.exception[0]))
+
+        item = [0, 0, 'a']
+        with self.assertRaises(ValidationError) as e:
+            vd.is_homogenous(item)
+        expected = f'{item} is not homogenous.'
+        self.assertIn(expected, str(e.exception[0]))
+
+        item = [0, 0, np.nan]
+        with self.assertRaises(ValidationError) as e:
+            vd.is_homogenous(item)
+        expected = f'{item} is not homogenous.'
+        self.assertIn(expected, str(e.exception[0]))
+
+        item = [np.nan, 0, np.nan]
+        with self.assertRaises(ValidationError) as e:
+            vd.is_homogenous(item)
+        expected = f'{item} is not homogenous.'
+        self.assertIn(expected, str(e.exception[0]))

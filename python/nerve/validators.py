@@ -273,3 +273,27 @@ def is_gt(a, b):
         bool: A is greater than b.
     '''
     return a > b
+
+
+@validate('{} is not homogenous.')
+def is_homogenous(items):
+    '''
+    Validates thats all items are equal.
+
+    Args:
+        items (list): List of items.
+
+    Raises:
+        ValidationError: If items are not all the same.
+
+    Returns:
+        bool: Homogeneity of items.
+    '''
+    if len(items) < 2:
+        return True
+
+    first = items[0]
+    for item in items[1:]:
+        if item != first:
+            return False
+    return True
