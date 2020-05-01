@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.2.0
+                0.2.1
               </div>
             
           
@@ -199,6 +199,7 @@
     <span class="n">extension</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
         <span class="n">StringType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_extension</span><span class="p">]</span>
     <span class="p">)</span>
+    <span class="n">file_traits</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{}):</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -289,17 +290,50 @@
             <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filepath</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span><span class="si">}</span><span class="s1">.&#39;</span>
             <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SpecificationBase.get_filename_metadata"><a class="viewcode-back" href="../../nerve.html#nerve.specification_base.SpecificationBase.get_filename_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">get_filename_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+<div class="viewcode-block" id="SpecificationBase.get_filename_traits"><a class="viewcode-back" href="../../nerve.html#nerve.specification_base.SpecificationBase.get_filename_traits">[docs]</a>    <span class="k">def</span> <span class="nf">get_filename_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Returns a dictionary of filename metadata from given filepath.</span>
+<span class="sd">        Returns a dictionary of filename traits from given filepath.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            filepath (str or Path): Fullpath to asset file.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            dict: Metadata.</span>
+<span class="sd">            dict: Traits.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="k">return</span> <span class="n">AssetNameParser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename_fields</span><span class="p">)</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">AssetNameParser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename_fields</span><span class="p">)</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SpecificationBase.get_file_traits"><a class="viewcode-back" href="../../nerve.html#nerve.specification_base.SpecificationBase.get_file_traits">[docs]</a>    <span class="k">def</span> <span class="nf">get_file_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Returns a dictionary of file traits from given filepath.</span>
+<span class="sd">        Returns error in respective field if one is encountered.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath (str or Path): Fullpath to asset file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: Traits.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_traits</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">output</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+                <span class="n">output</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">error</span>
+        <span class="k">return</span> <span class="n">output</span></div>
+
+<div class="viewcode-block" id="SpecificationBase.get_traits"><a class="viewcode-back" href="../../nerve.html#nerve.specification_base.SpecificationBase.get_traits">[docs]</a>    <span class="k">def</span> <span class="nf">get_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Returns a dictionary of file and filename traits from given filepath.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath (str or Path): Fullpath to asset file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: Traits.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">traits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_filename_traits</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+        <span class="n">traits</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_file_traits</span><span class="p">(</span><span class="n">filepath</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">traits</span></div></div>
 
 
 <div class="viewcode-block" id="FileSpecificationBase"><a class="viewcode-back" href="../../nerve.html#nerve.specification_base.FileSpecificationBase">[docs]</a><span class="k">class</span> <span class="nc">FileSpecificationBase</span><span class="p">(</span><span class="n">SpecificationBase</span><span class="p">):</span>

@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.2.0
+                0.2.1
               </div>
             
           
@@ -153,6 +153,7 @@
 <span></span><span class="kn">from</span> <span class="nn">schematics.types</span> <span class="kn">import</span> <span class="n">IntType</span><span class="p">,</span> <span class="n">ListType</span><span class="p">,</span> <span class="n">StringType</span>
 
 <span class="kn">import</span> <span class="nn">nerve.validators</span> <span class="k">as</span> <span class="nn">vd</span>
+<span class="kn">import</span> <span class="nn">nerve.traits</span> <span class="k">as</span> <span class="nn">tr</span>
 <span class="kn">from</span> <span class="nn">nerve.specification_base</span> <span class="kn">import</span> <span class="n">SequenceSpecificationBase</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
@@ -196,6 +197,11 @@
         <span class="n">StringType</span><span class="p">(),</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_extension</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_eq</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;png&#39;</span><span class="p">)]</span>
+    <span class="p">)</span>
+    <span class="n">file_traits</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">width</span><span class="o">=</span><span class="n">tr</span><span class="o">.</span><span class="n">get_image_width</span><span class="p">,</span>
+        <span class="n">height</span><span class="o">=</span><span class="n">tr</span><span class="o">.</span><span class="n">get_image_height</span><span class="p">,</span>
+        <span class="n">channels</span><span class="o">=</span><span class="n">tr</span><span class="o">.</span><span class="n">get_image_channels</span><span class="p">,</span>
     <span class="p">)</span></div>
 </pre></div>
 

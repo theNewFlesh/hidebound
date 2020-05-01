@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.2.0
+                0.2.1
               </div>
             
           
@@ -88,12 +88,13 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">nerve</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-nerve.tools">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-nerve.database">database</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-nerve.parser">parser</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#database">database</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#specification-base">specification_base</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#specifications">specifications</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#validators">validators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-nerve.specification_base">specification_base</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-nerve.specifications">specifications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-nerve.tools">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-nerve.traits">traits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-nerve.validators">validators</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="cli.html">cli</a></li>
@@ -165,55 +166,107 @@
             
   <div class="section" id="nerve">
 <h1>nerve<a class="headerlink" href="#nerve" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="module-nerve.tools">
-<span id="tools"></span><h2>tools<a class="headerlink" href="#module-nerve.tools" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-nerve.database">
+<span id="database"></span><h2>database<a class="headerlink" href="#module-nerve.database" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="nerve.tools.StopWatch">
-<em class="property">class </em><code class="sig-prename descclassname">nerve.tools.</code><code class="sig-name descname">StopWatch</code><a class="reference internal" href="_modules/nerve/tools.html#StopWatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.tools.StopWatch" title="Permalink to this definition">¶</a></dt>
+<dt id="nerve.database.Database">
+<em class="property">class </em><code class="sig-prename descclassname">nerve.database.</code><code class="sig-name descname">Database</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span></em>, <em class="sig-param"><span class="n">specifications</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">include_regex</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">exclude_regex</span><span class="o">=</span><span class="default_value">'\\.DS_Store'</span></em>, <em class="sig-param"><span class="n">ignore_order</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/database.html#Database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.database.Database" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>StopWatch is used for timing blocks of code.</p>
-<dl class="py method">
-<dt id="nerve.tools.StopWatch.delta">
-<em class="property">property </em><code class="sig-name descname">delta</code><a class="headerlink" href="#nerve.tools.StopWatch.delta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Time delta of stop - start.</p>
-</dd></dl>
+<p>Generates a DataFrame using the files within a given directory as rows.</p>
+<dl class="py attribute">
+<dt id="nerve.database.Database.COLUMNS">
+<code class="sig-name descname">COLUMNS</code><em class="property"> = ['project', 'specification', 'descriptor', 'version', 'coordinate', 'frame', 'extension', 'filename', 'fullpath', 'error', 'asset_name', 'asset_path', 'asset_type']</em><a class="headerlink" href="#nerve.database.Database.COLUMNS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
-<dt id="nerve.tools.StopWatch.human_readable_delta">
-<em class="property">property </em><code class="sig-name descname">human_readable_delta</code><a class="headerlink" href="#nerve.tools.StopWatch.human_readable_delta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Time delta in human readable format.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="nerve.tools.StopWatch.start">
-<code class="sig-name descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/tools.html#StopWatch.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.tools.StopWatch.start" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call this method directly before the code you wish to time.</p>
+<dt id="nerve.database.Database._add_asset_id">
+<em class="property">static </em><code class="sig-name descname">_add_asset_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/database.html#Database._add_asset_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.database.Database._add_asset_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds asset_id column derived UUID hash of asset fullpath.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>DataFrame</em>) – DataFrame.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nerve.tools.StopWatch.stop">
-<code class="sig-name descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/tools.html#StopWatch.stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.tools.StopWatch.stop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call this method directly after the code you wish to time.</p>
+<dt id="nerve.database.Database._add_asset_name">
+<em class="property">static </em><code class="sig-name descname">_add_asset_name</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/database.html#Database._add_asset_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.database.Database._add_asset_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds asset_name column derived from fullpath.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>DataFrame</em>) – DataFrame.</p>
+</dd>
+</dl>
 </dd></dl>
 
+<dl class="py method">
+<dt id="nerve.database.Database._add_asset_path">
+<em class="property">static </em><code class="sig-name descname">_add_asset_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/database.html#Database._add_asset_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.database.Database._add_asset_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds asset_path column derived from fullpath.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>DataFrame</em>) – DataFrame.</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="py function">
-<dt id="nerve.tools.directory_to_dataframe">
-<code class="sig-prename descclassname">nerve.tools.</code><code class="sig-name descname">directory_to_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">directory</span></em>, <em class="sig-param"><span class="n">include_regex</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">exclude_regex</span><span class="o">=</span><span class="default_value">'\\.DS_Store'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/tools.html#directory_to_dataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.tools.directory_to_dataframe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Recursively list files with in a given directory as rows in a DataFrame.</p>
+<dl class="py method">
+<dt id="nerve.database.Database._add_asset_type">
+<em class="property">static </em><code class="sig-name descname">_add_asset_type</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/database.html#Database._add_asset_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.database.Database._add_asset_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds asset_type column derived from specification.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>DataFrame</em>) – DataFrame.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="nerve.database.Database._add_filename_traits">
+<em class="property">static </em><code class="sig-name descname">_add_filename_traits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/database.html#Database._add_filename_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.database.Database._add_filename_traits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds traits derived from parsing valid values in filename column.
+Adds many columnns.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>DataFrame</em>) – DataFrame.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="nerve.database.Database._add_specification">
+<em class="property">static </em><code class="sig-name descname">_add_specification</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">specifications</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/database.html#Database._add_specification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.database.Database._add_specification" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds specification data to given DataFrame.</p>
+<p>Columns added:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>specification</p></li>
+<li><p>specification_class</p></li>
+<li><p>error</p></li>
+</ul>
+</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>directory</strong> (<em>str</em><em> or </em><em>Path</em>) – Directory to walk.</p></li>
-<li><p><strong>include_regex</strong> (<em>str</em><em>, </em><em>optional</em>) – Include filenames that match this regex.
-Default: None.</p></li>
-<li><p><strong>exclude_regex</strong> (<em>str</em><em>, </em><em>optional</em>) – Exclude filenames that match this regex.
-Default: ‘.DS_Store’.</p></li>
+<li><p><strong>data</strong> (<em>DataFrame</em>) – DataFrame.</p></li>
+<li><p><strong>specifications</strong> (<em>dict</em>) – Dictionary of specifications.</p></li>
 </ul>
 </dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="nerve.database.Database._cleanup">
+<em class="property">static </em><code class="sig-name descname">_cleanup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/database.html#Database._cleanup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.database.Database._cleanup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensures only specific columns are present and in correct order and Paths
+are converted to strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>DataFrame</em>) – DataFrame.</p>
+</dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>DataFrame with one file per row.</p>
+<dd class="field-even"><p>Cleaned up DataFrame.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>DataFrame</p>
@@ -221,75 +274,33 @@ Default: ‘.DS_Store’.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="py function">
-<dt id="nerve.tools.list_all_files">
-<code class="sig-prename descclassname">nerve.tools.</code><code class="sig-name descname">list_all_files</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">directory</span></em>, <em class="sig-param"><span class="n">include_regex</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">exclude_regex</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/tools.html#list_all_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.tools.list_all_files" title="Permalink to this definition">¶</a></dt>
-<dd><p>Recusively list all files within a given directory.</p>
+<dl class="py method">
+<dt id="nerve.database.Database._validate_filepath">
+<em class="property">static </em><code class="sig-name descname">_validate_filepath</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/database.html#Database._validate_filepath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.database.Database._validate_filepath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates fullpath column of given DataFrame.
+Adds error to error column if invalid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>directory</strong> (<em>str</em><em> or </em><em>Path</em>) – Directory to walk.</p></li>
-<li><p><strong>include_regex</strong> (<em>str</em><em>, </em><em>optional</em>) – Include filenames that match this regex.
-Default: ‘’.</p></li>
-<li><p><strong>exclude_regex</strong> (<em>str</em><em>, </em><em>optional</em>) – Exclude filenames that match this regex.
-Default: ‘’.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>FileNotFoundError</strong> – If argument is not a directory or does not exist.</p>
-</dd>
-<dt class="field-odd">Yields</dt>
-<dd class="field-odd"><p><em>Path</em> – File.</p>
+<dd class="field-odd"><p><strong>data</strong> (<em>DataFrame</em>) – DataFrame.</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="py function">
-<dt id="nerve.tools.relative_path">
-<code class="sig-prename descclassname">nerve.tools.</code><code class="sig-name descname">relative_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module</span></em>, <em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/tools.html#relative_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.tools.relative_path" title="Permalink to this definition">¶</a></dt>
-<dd><p>Resolve path given current module’s file path and given suffix.</p>
+<dl class="py method">
+<dt id="nerve.database.Database.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/database.html#Database.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.database.Database.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recurse root directory, populate self.data with its files, locate and
+validate assets.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>module</strong> (<em>str</em>) – Always __file__ of current module.</p></li>
-<li><p><strong>path</strong> (<em>str</em>) – Path relative to __file__.</p></li>
-</ul>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>self.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Resolved Path object.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Path</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#nerve.database.Database" title="nerve.database.Database">Database</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="py function">
-<dt id="nerve.tools.try_">
-<code class="sig-prename descclassname">nerve.tools.</code><code class="sig-name descname">try_</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">function</span></em>, <em class="sig-param"><span class="n">item</span></em>, <em class="sig-param"><span class="n">return_item</span><span class="o">=</span><span class="default_value">'item'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/tools.html#try_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.tools.try_" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call given function on given item, catch any exceptions and return given
-return item.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>function</strong> (<em>function</em>) – Function of signature lambda x: x.</p></li>
-<li><p><strong>item</strong> (<em>object</em>) – Item used to call function.</p></li>
-<li><p><strong>return_item</strong> (<em>object</em><em>, </em><em>optional</em>) – Item to be returned. Default: “item”.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><p>Original item if return_item is “item”.
-Exception: If return_item is “error”.
-object: Object return by function call if return_item is not “item” or</p>
-<blockquote>
-<div><p>”error”.</p>
-</div></blockquote>
-</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>object</p>
-</dd>
-</dl>
 </dd></dl>
 
 </div>
@@ -511,147 +522,9 @@ according to a dynimcally defined grammar.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="database">
-<h2>database<a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-nerve.database"></span><dl class="py class">
-<dt id="nerve.database.Database">
-<em class="property">class </em><code class="sig-prename descclassname">nerve.database.</code><code class="sig-name descname">Database</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span></em>, <em class="sig-param"><span class="n">specifications</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">include_regex</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">exclude_regex</span><span class="o">=</span><span class="default_value">'\\.DS_Store'</span></em>, <em class="sig-param"><span class="n">ignore_order</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/database.html#Database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.database.Database" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Generates a DataFrame using the files within a given directory as rows.</p>
-<dl class="py attribute">
-<dt id="nerve.database.Database.COLUMNS">
-<code class="sig-name descname">COLUMNS</code><em class="property"> = ['project', 'specification', 'descriptor', 'version', 'coordinate', 'frame', 'extension', 'filename', 'fullpath', 'error', 'asset_name', 'asset_path', 'asset_type']</em><a class="headerlink" href="#nerve.database.Database.COLUMNS" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="nerve.database.Database._add_asset_id">
-<em class="property">static </em><code class="sig-name descname">_add_asset_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/database.html#Database._add_asset_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.database.Database._add_asset_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds asset_id column derived UUID hash of asset fullpath.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>data</strong> (<em>DataFrame</em>) – DataFrame.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="nerve.database.Database._add_asset_name">
-<em class="property">static </em><code class="sig-name descname">_add_asset_name</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/database.html#Database._add_asset_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.database.Database._add_asset_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds asset_name column derived from fullpath.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>data</strong> (<em>DataFrame</em>) – DataFrame.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="nerve.database.Database._add_asset_path">
-<em class="property">static </em><code class="sig-name descname">_add_asset_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/database.html#Database._add_asset_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.database.Database._add_asset_path" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds asset_path column derived from fullpath.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>data</strong> (<em>DataFrame</em>) – DataFrame.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="nerve.database.Database._add_asset_type">
-<em class="property">static </em><code class="sig-name descname">_add_asset_type</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/database.html#Database._add_asset_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.database.Database._add_asset_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds asset_type column derived from specification.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>data</strong> (<em>DataFrame</em>) – DataFrame.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="nerve.database.Database._add_filename_data">
-<em class="property">static </em><code class="sig-name descname">_add_filename_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/database.html#Database._add_filename_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.database.Database._add_filename_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds data derived from parsing valid values in filename column.
-Adds many columnns.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>data</strong> (<em>DataFrame</em>) – DataFrame.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="nerve.database.Database._add_specification">
-<em class="property">static </em><code class="sig-name descname">_add_specification</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">specifications</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/database.html#Database._add_specification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.database.Database._add_specification" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds specification data to given DataFrame.</p>
-<p>Columns added:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>specification</p></li>
-<li><p>specification_class</p></li>
-<li><p>error</p></li>
-</ul>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>DataFrame</em>) – DataFrame.</p></li>
-<li><p><strong>specifications</strong> (<em>dict</em>) – Dictionary of specifications.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="nerve.database.Database._cleanup">
-<em class="property">static </em><code class="sig-name descname">_cleanup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/database.html#Database._cleanup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.database.Database._cleanup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Ensures only specific columns are present and in correct order and Paths
-are converted to strings.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>data</strong> (<em>DataFrame</em>) – DataFrame.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Cleaned up DataFrame.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>DataFrame</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="nerve.database.Database._validate_filepath">
-<em class="property">static </em><code class="sig-name descname">_validate_filepath</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/database.html#Database._validate_filepath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.database.Database._validate_filepath" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validates fullpath column of given DataFrame.
-Adds error to error column if invalid.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>data</strong> (<em>DataFrame</em>) – DataFrame.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="nerve.database.Database.update">
-<code class="sig-name descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/database.html#Database.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.database.Database.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Recurse root directory, populate self.data with its files, locate and
-validate assets.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>self.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="#nerve.database.Database" title="nerve.database.Database">Database</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="specification-base">
-<h2>specification_base<a class="headerlink" href="#specification-base" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-nerve.specification_base"></span><dl class="py class">
+<div class="section" id="module-nerve.specification_base">
+<span id="specification-base"></span><h2>specification_base<a class="headerlink" href="#module-nerve.specification_base" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
 <dt id="nerve.specification_base.ComplexSpecificationBase">
 <em class="property">class </em><code class="sig-prename descclassname">nerve.specification_base.</code><code class="sig-name descname">ComplexSpecificationBase</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/specification_base.html#ComplexSpecificationBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.specification_base.ComplexSpecificationBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nerve.specification_base.SpecificationBase" title="nerve.specification_base.SpecificationBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">nerve.specification_base.SpecificationBase</span></code></a></p>
@@ -938,6 +811,11 @@ directory.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt id="nerve.specification_base.SpecificationBase.file_traits">
+<code class="sig-name descname">file_traits</code><em class="property"> = {}</em><a class="headerlink" href="#nerve.specification_base.SpecificationBase.file_traits" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt id="id7">
 <code class="sig-name descname">filename_fields</code><em class="property"> = ['project', 'specification', 'descriptor', 'version', 'extension']</em><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -998,15 +876,50 @@ type.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="nerve.specification_base.SpecificationBase.get_filename_metadata">
-<code class="sig-name descname">get_filename_metadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/specification_base.html#SpecificationBase.get_filename_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.specification_base.SpecificationBase.get_filename_metadata" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a dictionary of filename metadata from given filepath.</p>
+<dt id="nerve.specification_base.SpecificationBase.get_file_traits">
+<code class="sig-name descname">get_file_traits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/specification_base.html#SpecificationBase.get_file_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.specification_base.SpecificationBase.get_file_traits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary of file traits from given filepath.
+Returns error in respective field if one is encountered.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>filepath</strong> (<em>str</em><em> or </em><em>Path</em>) – Fullpath to asset file.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Metadata.</p>
+<dd class="field-even"><p>Traits.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="nerve.specification_base.SpecificationBase.get_filename_traits">
+<code class="sig-name descname">get_filename_traits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/specification_base.html#SpecificationBase.get_filename_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.specification_base.SpecificationBase.get_filename_traits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary of filename traits from given filepath.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filepath</strong> (<em>str</em><em> or </em><em>Path</em>) – Fullpath to asset file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Traits.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="nerve.specification_base.SpecificationBase.get_traits">
+<code class="sig-name descname">get_traits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/specification_base.html#SpecificationBase.get_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.specification_base.SpecificationBase.get_traits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary of file and filename traits from given filepath.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filepath</strong> (<em>str</em><em> or </em><em>Path</em>) – Fullpath to asset file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Traits.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>
@@ -1049,9 +962,9 @@ type.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="specifications">
-<h2>specifications<a class="headerlink" href="#specifications" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-nerve.specifications"></span><dl class="py class">
+<div class="section" id="module-nerve.specifications">
+<span id="specifications"></span><h2>specifications<a class="headerlink" href="#module-nerve.specifications" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
 <dt id="nerve.specifications.Raw001">
 <em class="property">class </em><code class="sig-prename descclassname">nerve.specifications.</code><code class="sig-name descname">Raw001</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/specifications.html#Raw001"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.specifications.Raw001" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#nerve.specification_base.SequenceSpecificationBase" title="nerve.specification_base.SequenceSpecificationBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">nerve.specification_base.SequenceSpecificationBase</span></code></a></p>
@@ -1129,6 +1042,11 @@ version,</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt id="nerve.specifications.Raw001.file_traits">
+<code class="sig-name descname">file_traits</code><em class="property"> = {'channels': &lt;function get_image_channels&gt;, 'height': &lt;function get_image_height&gt;, 'width': &lt;function get_image_width&gt;}</em><a class="headerlink" href="#nerve.specifications.Raw001.file_traits" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt id="id11">
 <code class="sig-name descname">filename_fields</code><em class="property"> = ['project', 'specification', 'descriptor', 'version', 'frame', 'extension']</em><a class="headerlink" href="#id11" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -1166,9 +1084,191 @@ version,</p>
 </dd></dl>
 
 </div>
-<div class="section" id="validators">
-<h2>validators<a class="headerlink" href="#validators" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-nerve.validators"></span><p>The validators module is function library for validating singular traits given
+<div class="section" id="module-nerve.tools">
+<span id="tools"></span><h2>tools<a class="headerlink" href="#module-nerve.tools" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="nerve.tools.StopWatch">
+<em class="property">class </em><code class="sig-prename descclassname">nerve.tools.</code><code class="sig-name descname">StopWatch</code><a class="reference internal" href="_modules/nerve/tools.html#StopWatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.tools.StopWatch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>StopWatch is used for timing blocks of code.</p>
+<dl class="py method">
+<dt id="nerve.tools.StopWatch.delta">
+<em class="property">property </em><code class="sig-name descname">delta</code><a class="headerlink" href="#nerve.tools.StopWatch.delta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time delta of stop - start.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="nerve.tools.StopWatch.human_readable_delta">
+<em class="property">property </em><code class="sig-name descname">human_readable_delta</code><a class="headerlink" href="#nerve.tools.StopWatch.human_readable_delta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time delta in human readable format.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="nerve.tools.StopWatch.start">
+<code class="sig-name descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/tools.html#StopWatch.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.tools.StopWatch.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call this method directly before the code you wish to time.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="nerve.tools.StopWatch.stop">
+<code class="sig-name descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/tools.html#StopWatch.stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.tools.StopWatch.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call this method directly after the code you wish to time.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="nerve.tools.directory_to_dataframe">
+<code class="sig-prename descclassname">nerve.tools.</code><code class="sig-name descname">directory_to_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">directory</span></em>, <em class="sig-param"><span class="n">include_regex</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">exclude_regex</span><span class="o">=</span><span class="default_value">'\\.DS_Store'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/tools.html#directory_to_dataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.tools.directory_to_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursively list files with in a given directory as rows in a DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>directory</strong> (<em>str</em><em> or </em><em>Path</em>) – Directory to walk.</p></li>
+<li><p><strong>include_regex</strong> (<em>str</em><em>, </em><em>optional</em>) – Include filenames that match this regex.
+Default: None.</p></li>
+<li><p><strong>exclude_regex</strong> (<em>str</em><em>, </em><em>optional</em>) – Exclude filenames that match this regex.
+Default: ‘.DS_Store’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame with one file per row.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="nerve.tools.list_all_files">
+<code class="sig-prename descclassname">nerve.tools.</code><code class="sig-name descname">list_all_files</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">directory</span></em>, <em class="sig-param"><span class="n">include_regex</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">exclude_regex</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/tools.html#list_all_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.tools.list_all_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recusively list all files within a given directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>directory</strong> (<em>str</em><em> or </em><em>Path</em>) – Directory to walk.</p></li>
+<li><p><strong>include_regex</strong> (<em>str</em><em>, </em><em>optional</em>) – Include filenames that match this regex.
+Default: ‘’.</p></li>
+<li><p><strong>exclude_regex</strong> (<em>str</em><em>, </em><em>optional</em>) – Exclude filenames that match this regex.
+Default: ‘’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>FileNotFoundError</strong> – If argument is not a directory or does not exist.</p>
+</dd>
+<dt class="field-odd">Yields</dt>
+<dd class="field-odd"><p><em>Path</em> – File.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="nerve.tools.relative_path">
+<code class="sig-prename descclassname">nerve.tools.</code><code class="sig-name descname">relative_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module</span></em>, <em class="sig-param"><span class="n">path</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/tools.html#relative_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.tools.relative_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resolve path given current module’s file path and given suffix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module</strong> (<em>str</em>) – Always __file__ of current module.</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Path relative to __file__.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Resolved Path object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="nerve.tools.try_">
+<code class="sig-prename descclassname">nerve.tools.</code><code class="sig-name descname">try_</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">function</span></em>, <em class="sig-param"><span class="n">item</span></em>, <em class="sig-param"><span class="n">return_item</span><span class="o">=</span><span class="default_value">'item'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/tools.html#try_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.tools.try_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call given function on given item, catch any exceptions and return given
+return item.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>function</strong> (<em>function</em>) – Function of signature lambda x: x.</p></li>
+<li><p><strong>item</strong> (<em>object</em>) – Item used to call function.</p></li>
+<li><p><strong>return_item</strong> (<em>object</em><em>, </em><em>optional</em>) – Item to be returned. Default: “item”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Original item if return_item is “item”.
+Exception: If return_item is “error”.
+object: Object return by function call if return_item is not “item” or</p>
+<blockquote>
+<div><p>”error”.</p>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-nerve.traits">
+<span id="traits"></span><h2>traits<a class="headerlink" href="#module-nerve.traits" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="nerve.traits.get_image_channels">
+<code class="sig-prename descclassname">nerve.traits.</code><code class="sig-name descname">get_image_channels</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/traits.html#get_image_channels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.traits.get_image_channels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the number of channels of the given image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filepath</strong> (<em>str</em><em> or </em><em>Path</em>) – Fullpath to image file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Number of channels.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="nerve.traits.get_image_height">
+<code class="sig-prename descclassname">nerve.traits.</code><code class="sig-name descname">get_image_height</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/traits.html#get_image_height"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.traits.get_image_height" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the height of the given image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filepath</strong> (<em>str</em><em> or </em><em>Path</em>) – Fullpath to image file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Image height.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="nerve.traits.get_image_width">
+<code class="sig-prename descclassname">nerve.traits.</code><code class="sig-name descname">get_image_width</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/traits.html#get_image_width"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.traits.get_image_width" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the width of the given image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filepath</strong> (<em>str</em><em> or </em><em>Path</em>) – Fullpath to image file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Image width.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-nerve.validators">
+<span id="validators"></span><h2>validators<a class="headerlink" href="#module-nerve.validators" title="Permalink to this headline">¶</a></h2>
+<p>The validators module is function library for validating singular traits given
 to a specification.</p>
 <p>Validators are linked with traits via the validators kwarg of a
 specification class attribute. They succeed silently and raise DataError when
