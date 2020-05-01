@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.2.1
+                0.2.2
               </div>
             
           
@@ -159,6 +159,7 @@
 <span class="kn">from</span> <span class="nn">schematics.types</span> <span class="kn">import</span> <span class="n">IntType</span><span class="p">,</span> <span class="n">ListType</span><span class="p">,</span> <span class="n">StringType</span>
 
 <span class="kn">from</span> <span class="nn">nerve.parser</span> <span class="kn">import</span> <span class="n">AssetNameParser</span>
+<span class="kn">import</span> <span class="nn">nerve.tools</span> <span class="k">as</span> <span class="nn">tools</span>
 <span class="kn">import</span> <span class="nn">nerve.validators</span> <span class="k">as</span> <span class="nn">vd</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
@@ -190,6 +191,7 @@
     <span class="n">project</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
         <span class="n">StringType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_project</span><span class="p">]</span>
     <span class="p">)</span>
+    <span class="n">specification</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span><span class="n">StringType</span><span class="p">())</span>
     <span class="n">descriptor</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
         <span class="n">StringType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_descriptor</span><span class="p">]</span>
     <span class="p">)</span>
@@ -216,7 +218,7 @@
 <span class="sd">        Returns the expected asset name give a filepath.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            filepath (str or Path): Fullpath to asset file.</span>
+<span class="sd">            filepath (str or Path): filepath to asset file.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: Asset name.</span>
@@ -230,7 +232,7 @@
 <span class="sd">        Returns the expected asset path given a filepath.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            filepath (str or Path): Fullpath to asset file.</span>
+<span class="sd">            filepath (str or Path): filepath to asset file.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            NotImplementedError: If method not defined in subclass.</span>
@@ -247,7 +249,7 @@
 <span class="sd">        type.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            filepath (str or Path): Fullpath to asset file.</span>
+<span class="sd">            filepath (str or Path): filepath to asset file.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: Asset id.</span>
@@ -261,7 +263,7 @@
 <span class="sd">        Attempts to parse the given filepath.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            filepath (str or Path): Fullpath to asset file.</span>
+<span class="sd">            filepath (str or Path): filepath to asset file.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValidationError: If parse fails.</span>
@@ -293,22 +295,27 @@
 <div class="viewcode-block" id="SpecificationBase.get_filename_traits"><a class="viewcode-back" href="../../nerve.html#nerve.specification_base.SpecificationBase.get_filename_traits">[docs]</a>    <span class="k">def</span> <span class="nf">get_filename_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns a dictionary of filename traits from given filepath.</span>
+<span class="sd">        Returns error in filename_error key if one is encountered.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            filepath (str or Path): Fullpath to asset file.</span>
+<span class="sd">            filepath (str or Path): filepath to asset file.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            dict: Traits.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="k">return</span> <span class="n">AssetNameParser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename_fields</span><span class="p">)</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">AssetNameParser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename_fields</span><span class="p">)</span>\
+                <span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ParseException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">filename_error</span><span class="o">=</span><span class="n">tools</span><span class="o">.</span><span class="n">error_to_string</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="SpecificationBase.get_file_traits"><a class="viewcode-back" href="../../nerve.html#nerve.specification_base.SpecificationBase.get_file_traits">[docs]</a>    <span class="k">def</span> <span class="nf">get_file_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns a dictionary of file traits from given filepath.</span>
-<span class="sd">        Returns error in respective field if one is encountered.</span>
+<span class="sd">        Returns error in respective key if one is encountered.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            filepath (str or Path): Fullpath to asset file.</span>
+<span class="sd">            filepath (str or Path): filepath to asset file.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            dict: Traits.</span>
@@ -317,16 +324,17 @@
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_traits</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">output</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
-                <span class="n">output</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">error</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">output</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">tools</span><span class="o">.</span><span class="n">error_to_string</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">output</span></div>
 
 <div class="viewcode-block" id="SpecificationBase.get_traits"><a class="viewcode-back" href="../../nerve.html#nerve.specification_base.SpecificationBase.get_traits">[docs]</a>    <span class="k">def</span> <span class="nf">get_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns a dictionary of file and filename traits from given filepath.</span>
+<span class="sd">        Errors are captured in their respective keys.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            filepath (str or Path): Fullpath to asset file.</span>
+<span class="sd">            filepath (str or Path): filepath to asset file.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            dict: Traits.</span>
@@ -350,7 +358,7 @@
 <span class="sd">        Returns the filepath.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            filepath (str or Path): Fullpath to asset file.</span>
+<span class="sd">            filepath (str or Path): filepath to asset file.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Path: Asset path.</span>
@@ -373,7 +381,7 @@
 <span class="sd">        Returns the directory containing the asset files.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            filepath (str or Path): Fullpath to asset file.</span>
+<span class="sd">            filepath (str or Path): filepath to asset file.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Path: Asset path.</span>

@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.2.1
+                0.2.2
               </div>
             
           
@@ -175,8 +175,8 @@
         <span class="s1">&#39;frame&#39;</span><span class="p">,</span>
         <span class="s1">&#39;extension&#39;</span><span class="p">,</span>
         <span class="s1">&#39;filename&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;fullpath&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;error&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;filepath&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;file_error&#39;</span><span class="p">,</span>
         <span class="s1">&#39;asset_name&#39;</span><span class="p">,</span>
         <span class="s1">&#39;asset_path&#39;</span><span class="p">,</span>
         <span class="s1">&#39;asset_type&#39;</span><span class="p">,</span>
@@ -269,7 +269,7 @@
 
 <span class="sd">            * specification</span>
 <span class="sd">            * specification_class</span>
-<span class="sd">            * error</span>
+<span class="sd">            * file_error</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            data (DataFrame): DataFrame.</span>
@@ -280,8 +280,8 @@
                 <span class="n">AssetNameParser</span><span class="o">.</span><span class="n">parse_specification</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span>
             <span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-                <span class="n">output</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="n">output</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;specification&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">]:</span>
+                <span class="n">output</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">file_error</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">output</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;specification&#39;</span><span class="p">,</span> <span class="s1">&#39;file_error&#39;</span><span class="p">]:</span>
                 <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                     <span class="n">output</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
             <span class="k">return</span> <span class="n">output</span>
@@ -294,16 +294,17 @@
         <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;specification&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;specification&#39;</span><span class="p">]</span>
 
         <span class="c1"># set error</span>
-        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;file_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">specification</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">specifications</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Specification not found.&#39;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="n">tools</span><span class="o">.</span><span class="n">error_to_string</span><span class="p">(</span><span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;Specification not found.&#39;</span><span class="p">))</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;file_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">error</span>
 
         <span class="c1"># parse errors overwrite spec not found</span>
-        <span class="n">mask</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
-        <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">]</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">file_error</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;file_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;file_error&#39;</span><span class="p">]</span>
 
         <span class="c1"># set specification class</span>
-        <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">file_error</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
         <span class="n">data</span><span class="p">[</span><span class="s1">&#39;specification_class&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
         <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;specification_class&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;specification&#39;</span><span class="p">]</span>\
             <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">specifications</span><span class="p">[</span><span class="n">x</span><span class="p">])</span></div>
@@ -311,7 +312,7 @@
 <div class="viewcode-block" id="Database._validate_filepath"><a class="viewcode-back" href="../../nerve.html#nerve.database.Database._validate_filepath">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_validate_filepath</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Validates fullpath column of given DataFrame.</span>
+<span class="sd">        Validates filepath column of given DataFrame.</span>
 <span class="sd">        Adds error to error column if invalid.</span>
 
 <span class="sd">        Args:</span>
@@ -319,14 +320,14 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">row</span><span class="o">.</span><span class="n">specification_class</span><span class="p">()</span><span class="o">.</span><span class="n">validate_filepath</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">fullpath</span><span class="p">)</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">specification_class</span><span class="p">()</span><span class="o">.</span><span class="n">validate_filepath</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">filepath</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-            <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
-                <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">tools</span><span class="o">.</span><span class="n">error_to_string</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
-        <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">file_error</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">validate</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+            <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;file_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">validate</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Database._add_filename_traits"><a class="viewcode-back" href="../../nerve.html#nerve.database.Database._add_filename_traits">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_add_filename_traits</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
@@ -337,7 +338,7 @@
 <span class="sd">        Args:</span>
 <span class="sd">            data (DataFrame): DataFrame.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">file_error</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
         <span class="n">traits</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">traits</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">traits</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">{})</span>
@@ -359,39 +360,39 @@
 <div class="viewcode-block" id="Database._add_asset_id"><a class="viewcode-back" href="../../nerve.html#nerve.database.Database._add_asset_id">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_add_asset_id</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Adds asset_id column derived UUID hash of asset fullpath.</span>
+<span class="sd">        Adds asset_id column derived UUID hash of asset filepath.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            data (DataFrame): DataFrame.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">file_error</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
         <span class="n">data</span><span class="p">[</span><span class="s1">&#39;asset_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;asset_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-                <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">()</span><span class="o">.</span><span class="n">get_asset_id</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">fullpath</span><span class="p">),</span>
+                <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">()</span><span class="o">.</span><span class="n">get_asset_id</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">filepath</span><span class="p">),</span>
                 <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
             <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Database._add_asset_name"><a class="viewcode-back" href="../../nerve.html#nerve.database.Database._add_asset_name">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_add_asset_name</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Adds asset_name column derived from fullpath.</span>
+<span class="sd">        Adds asset_name column derived from filepath.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            data (DataFrame): DataFrame.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">file_error</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
         <span class="n">data</span><span class="p">[</span><span class="s1">&#39;asset_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;asset_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-                <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">()</span><span class="o">.</span><span class="n">get_asset_name</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">fullpath</span><span class="p">),</span>
+                <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">()</span><span class="o">.</span><span class="n">get_asset_name</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">filepath</span><span class="p">),</span>
                 <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
             <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Database._add_asset_path"><a class="viewcode-back" href="../../nerve.html#nerve.database.Database._add_asset_path">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_add_asset_path</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Adds asset_path column derived from fullpath.</span>
+<span class="sd">        Adds asset_path column derived from filepath.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            data (DataFrame): DataFrame.</span>
@@ -400,13 +401,13 @@
         <span class="n">data</span><span class="p">[</span><span class="s1">&#39;asset_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;asset_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-                <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">()</span><span class="o">.</span><span class="n">get_asset_path</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">fullpath</span><span class="p">),</span>
+                <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">()</span><span class="o">.</span><span class="n">get_asset_path</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">filepath</span><span class="p">),</span>
                 <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
             <span class="p">)</span>
 
         <span class="c1"># overwrite asset_path for misnamed files within asset directory</span>
         <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">asset_path</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
-            <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">fullpath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">path</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span> <span class="ow">in</span> <span class="n">x</span><span class="p">)</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">path</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span> <span class="ow">in</span> <span class="n">x</span><span class="p">)</span>
             <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;asset_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span></div>
 
 <div class="viewcode-block" id="Database._add_asset_type"><a class="viewcode-back" href="../../nerve.html#nerve.database.Database._add_asset_type">[docs]</a>    <span class="nd">@staticmethod</span>

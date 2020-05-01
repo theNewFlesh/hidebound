@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.2.1
+                0.2.2
               </div>
             
           
@@ -152,10 +152,13 @@
   <h1>Source code for nerve.tools</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">dropwhile</span><span class="p">,</span> <span class="n">takewhile</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pformat</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">humanfriendly</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">DataError</span>
 
 <span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
@@ -195,10 +198,10 @@
 
     <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">file_</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-            <span class="n">fullpath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">file_</span><span class="p">)</span>
+            <span class="n">filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">file_</span><span class="p">)</span>
 
             <span class="n">output</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">temp</span> <span class="o">=</span> <span class="n">fullpath</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="n">filepath</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">include_regex</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">include_re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">temp</span><span class="p">):</span>
                 <span class="n">output</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">if</span> <span class="n">exclude_regex</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="ow">and</span> <span class="n">exclude_re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">temp</span><span class="p">):</span>
@@ -230,10 +233,10 @@
     <span class="n">files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">files</span><span class="p">))</span>
 
     <span class="n">data</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">()</span>
-    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;fullpath&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">files</span>
-    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">fullpath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;extension&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">fullpath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:])</span>
-    <span class="n">data</span><span class="o">.</span><span class="n">fullpath</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">fullpath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">())</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;filepath&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">files</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;extension&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">filepath</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">())</span>
     <span class="k">return</span> <span class="n">data</span></div>
 
 
@@ -285,6 +288,25 @@
     <span class="c1"># LOGGER.debug(</span>
     <span class="c1">#     f&#39;Relative_path called with: {module} and {path}. Returned: {output}&#39;</span>
     <span class="c1"># )</span>
+    <span class="k">return</span> <span class="n">output</span></div>
+
+
+<div class="viewcode-block" id="error_to_string"><a class="viewcode-back" href="../../nerve.html#nerve.tools.error_to_string">[docs]</a><span class="k">def</span> <span class="nf">error_to_string</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Formats error as string.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        error (Exception): Error.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Error message.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="n">DataError</span><span class="p">):</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">pformat</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">output</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39; </span><span class="si">{</span><span class="n">output</span><span class="si">}</span><span class="s1"> &#39;</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">error</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">(</span><span class="si">{</span><span class="n">output</span><span class="si">}</span><span class="s1">)&#39;</span>
     <span class="k">return</span> <span class="n">output</span></div>
 
 
