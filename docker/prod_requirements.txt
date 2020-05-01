@@ -1,4 +1,5 @@
 flask
 flasgger
 humanfriendly
+scikit-image
 schematics

@@ -256,7 +256,7 @@ class DatabaseTests(unittest.TestCase):
         result = data.loc[mask, 'error'].tolist()[0]
         self.assertRegex(result, error)
 
-    def test_add_filename_data(self):
+    def test_add_filename_traits(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
         data = [
             [
@@ -298,7 +298,7 @@ class DatabaseTests(unittest.TestCase):
         data.columns = ['specification_class', 'filename', 'error'] + cols
         temp = data.copy()
 
-        Database._add_filename_data(data)
+        Database._add_filename_traits(data)
         for col in cols:
             result = data[col].fillna('null').tolist()
             expected = temp[col].fillna('null').tolist()

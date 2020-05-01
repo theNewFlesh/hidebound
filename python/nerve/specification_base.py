@@ -47,6 +47,7 @@ class SpecificationBase(Model):
     extension = ListType(
         StringType(), required=True, validators=[vd.is_extension]
     )
+    file_traits = {}
 
     def __init__(self, data={}):
         '''
@@ -137,17 +138,50 @@ class SpecificationBase(Model):
             msg += f'{filepath.as_posix()}.'
             raise ValidationError(msg)
 
-    def get_filename_metadata(self, filepath):
+    def get_filename_traits(self, filepath):
         '''
-        Returns a dictionary of filename metadata from given filepath.
+        Returns a dictionary of filename traits from given filepath.
 
         Args:
             filepath (str or Path): Fullpath to asset file.
 
         Returns:
-            dict: Metadata.
+            dict: Traits.
         '''
         return AssetNameParser(self.filename_fields).parse(Path(filepath).name)
+
+    def get_file_traits(self, filepath):
+        '''
+        Returns a dictionary of file traits from given filepath.
+        Returns error in respective field if one is encountered.
+
+        Args:
+            filepath (str or Path): Fullpath to asset file.
+
+        Returns:
+            dict: Traits.
+        '''
+        output = {}
+        for name, func in self.file_traits.items():
+            try:
+                output[name] = func(filepath)
+            except Exception as error:
+                output[name] = error
+        return output
+
+    def get_traits(self, filepath):
+        '''
+        Returns a dictionary of file and filename traits from given filepath.
+
+        Args:
+            filepath (str or Path): Fullpath to asset file.
+
+        Returns:
+            dict: Traits.
+        '''
+        traits = self.get_filename_traits(filepath)
+        traits.update(self.get_file_traits(filepath))
+        return traits
 
 
 class FileSpecificationBase(SpecificationBase):

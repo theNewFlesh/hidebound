@@ -1,6 +1,7 @@
 from schematics.types import IntType, ListType, StringType
 
 import nerve.validators as vd
+import nerve.traits as tr
 from nerve.specification_base import SequenceSpecificationBase
 # ------------------------------------------------------------------------------
 
@@ -44,4 +45,9 @@ class Raw001(SequenceSpecificationBase):
         StringType(),
         required=True,
         validators=[vd.is_extension, lambda x: vd.is_eq(x, 'png')]
+    )
+    file_traits = dict(
+        width=tr.get_image_width,
+        height=tr.get_image_height,
+        channels=tr.get_image_channels,
     )

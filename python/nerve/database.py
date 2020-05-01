@@ -97,7 +97,7 @@ class Database:
         if len(data) > 0:
             self._add_specification(data, self._specifications)
             self._validate_filepath(data)
-            self._add_filename_data(data)
+            self._add_filename_traits(data)
             self._add_asset_name(data)
             self._add_asset_path(data)
             self._add_asset_type(data)
@@ -177,32 +177,32 @@ class Database:
             data.loc[mask, 'error'] = data[mask].apply(validate, axis=1)
 
     @staticmethod
-    def _add_filename_data(data):
+    def _add_filename_traits(data):
         '''
-        Adds data derived from parsing valid values in filename column.
+        Adds traits derived from parsing valid values in filename column.
         Adds many columnns.
 
         Args:
             data (DataFrame): DataFrame.
         '''
         mask = data.error.isnull()
-        meta = data.copy()
-        meta['data'] = None
-        meta.data = meta.data.apply(lambda x: {})
-        if len(meta[mask]) > 0:
-            meta.loc[mask, 'data'] = meta[mask].apply(
-                lambda x: x.specification_class().get_filename_metadata(x.filename),
+        traits = data.copy()
+        traits['data'] = None
+        traits.data = traits.data.apply(lambda x: {})
+        if len(traits[mask]) > 0:
+            traits.loc[mask, 'data'] = traits[mask].apply(
+                lambda x: x.specification_class().get_filename_traits(x.filename),
                 axis=1
             )
-        meta = DataFrame(meta.data.tolist())
+        traits = DataFrame(traits.data.tolist())
 
-        # merge data and metadata
-        for col in meta.columns:
+        # merge data and traits
+        for col in traits.columns:
             if col not in data.columns:
                 data[col] = np.nan
 
-            mask = meta[col].notnull()
-            data.loc[mask, col] = meta.loc[mask, col]
+            mask = traits[col].notnull()
+            data.loc[mask, col] = traits.loc[mask, col]
 
     @staticmethod
     def _add_asset_id(data):

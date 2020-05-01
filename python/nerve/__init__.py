@@ -12,4 +12,5 @@ import nerve.parser  # noqa F401
 import nerve.specification_base  # noqa F401
 import nerve.specifications  # noqa F401
 import nerve.tools  # noqa F401
+import nerve.traits  # noqa F401
 import nerve.validators  # noqa F401

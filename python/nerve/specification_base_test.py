@@ -1,10 +1,15 @@
 from pathlib import Path
+from tempfile import TemporaryDirectory
 import unittest
 import uuid
 
+import numpy as np
+from pyparsing import ParseException
 from schematics.exceptions import ValidationError
+import skimage.io
 
 import nerve.specification_base as sb
+import nerve.traits as traits
 # ------------------------------------------------------------------------------
 
 
@@ -12,6 +17,12 @@ class SpecificationBaseTests(unittest.TestCase):
     filepath = '/tmp/proj001/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001.ext'
 
     class Foo(sb.SpecificationBase):
+        file_traits = {
+            'width': traits.get_image_width,
+            'height': traits.get_image_height,
+            'channels': traits.get_image_channels,
+        }
+
         def get_asset_path(self, filepath):
             return Path(filepath).parent
 
@@ -84,8 +95,8 @@ class SpecificationBaseTests(unittest.TestCase):
         with self.assertRaisesRegexp(ValidationError, expected):
             self.Foo().validate_filepath(bad_parent_token)
 
-    def test_get_filename_metadata(self):
-        result = self.Foo().get_filename_metadata(self.filepath)
+    def test_get_filename_traits(self):
+        result = self.Foo().get_filename_traits(self.filepath)
         expected = dict(
             project='proj001',
             specification='spec001',
@@ -94,6 +105,77 @@ class SpecificationBaseTests(unittest.TestCase):
             extension='ext',
         )
         self.assertEqual(result, expected)
+
+    def test_get_file_traits(self):
+        with TemporaryDirectory() as root:
+            img = np.zeros((5, 4, 3), dtype=np.uint8)
+            filepath = Path(root, 'foo.png')
+            skimage.io.imsave(filepath.as_posix(), img)
+
+            result = self.Foo().get_file_traits(filepath)
+            expected = dict(width=4, height=5, channels=3)
+            self.assertEqual(result, expected)
+
+    def test_get_file_traits_error(self):
+        with TemporaryDirectory() as root:
+            filepath = Path(root, 'foo.txt')
+            with open(filepath, 'w') as f:
+                f.write('')
+
+            result = self.Foo().get_file_traits(filepath)
+            self.assertIsInstance(result['width'], ValueError)
+            self.assertIsInstance(result['height'], ValueError)
+            self.assertIsInstance(result['channels'], ValueError)
+
+    def test_get_traits(self):
+        with TemporaryDirectory() as root:
+            img = np.zeros((5, 4, 3), dtype=np.uint8)
+            name = 'p-proj001_s-spec001_d-desc_v001.png'
+            filepath = Path(root, name)
+            skimage.io.imsave(filepath.as_posix(), img)
+
+            result = self.Foo().get_traits(filepath)
+            expected = dict(
+                project='proj001',
+                specification='spec001',
+                descriptor='desc',
+                version=1,
+                extension='png',
+                width=4,
+                height=5,
+                channels=3
+            )
+            self.assertEqual(result, expected)
+
+    def test_get_traits_error(self):
+        with TemporaryDirectory() as root:
+            name = 'p-proj001_FOOBAR_d-desc_v001.png'
+            filepath = Path(root, name)
+            with open(filepath, 'w') as f:
+                f.write('')
+
+            with self.assertRaises(ParseException):
+                self.Foo().get_traits(filepath)
+
+            name = 'p-proj001_s-spec001_d-desc_v001.png'
+            filepath = Path(root, name)
+            with open(filepath, 'w') as f:
+                f.write('')
+
+            result = self.Foo().get_traits(filepath)
+            good = dict(
+                project='proj001',
+                specification='spec001',
+                descriptor='desc',
+                version=1,
+                extension='png',
+            )
+            for k, v in good.items():
+                self.assertEqual(result[k], good[k])
+
+            bad = ['width', 'height', 'channels']
+            for k in bad:
+                self.assertIsInstance(result[k], ValueError)
 
 
 class OtherSpecificationBaseTests(unittest.TestCase):
