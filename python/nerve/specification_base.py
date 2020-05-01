@@ -38,6 +38,7 @@ class SpecificationBase(Model):
     project = ListType(
         StringType(), required=True, validators=[vd.is_project]
     )
+    specification = ListType(StringType())
     descriptor = ListType(
         StringType(), required=True, validators=[vd.is_descriptor]
     )
@@ -141,6 +142,7 @@ class SpecificationBase(Model):
     def get_filename_traits(self, filepath):
         '''
         Returns a dictionary of filename traits from given filepath.
+        Returns error in filename_error key if one is encountered.
 
         Args:
             filepath (str or Path): filepath to asset file.
@@ -148,12 +150,16 @@ class SpecificationBase(Model):
         Returns:
             dict: Traits.
         '''
-        return AssetNameParser(self.filename_fields).parse(Path(filepath).name)
+        try:
+            return AssetNameParser(self.filename_fields)\
+                .parse(Path(filepath).name)
+        except ParseException as error:
+            return dict(filename_error=str(error))
 
     def get_file_traits(self, filepath):
         '''
         Returns a dictionary of file traits from given filepath.
-        Returns error in respective field if one is encountered.
+        Returns error in respective key if one is encountered.
 
         Args:
             filepath (str or Path): filepath to asset file.
@@ -172,6 +178,7 @@ class SpecificationBase(Model):
     def get_traits(self, filepath):
         '''
         Returns a dictionary of file and filename traits from given filepath.
+        Errors are captured in their respective keys.
 
         Args:
             filepath (str or Path): filepath to asset file.
@@ -179,7 +186,11 @@ class SpecificationBase(Model):
         Returns:
             dict: Traits.
         '''
-        traits = self.get_filename_traits(filepath)
+        traits = {}
+        try:
+            traits = self.get_filename_traits(filepath)
+        except ParseException:
+            pass
         traits.update(self.get_file_traits(filepath))
         return traits
 

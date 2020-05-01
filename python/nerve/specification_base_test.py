@@ -14,7 +14,8 @@ import nerve.traits as traits
 
 
 class SpecificationBaseTests(unittest.TestCase):
-    filepath = '/tmp/proj001/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001.ext'
+    filepath = '/tmp/proj001/p-proj001_s-spec001_d-desc_v001/'
+    filepath += 'p-proj001_s-spec001_d-desc_v001.ext'
 
     class Foo(sb.SpecificationBase):
         file_traits = {
@@ -44,7 +45,8 @@ class SpecificationBaseTests(unittest.TestCase):
     def test_get_asset_path(self):
         class Bar(sb.SpecificationBase):
             pass
-        expected = 'Method must be implemented in subclasses of SpecificationBase.'
+        expected = 'Method must be implemented in subclasses of '
+        expected += 'SpecificationBase.'
         with self.assertRaisesRegexp(NotImplementedError, expected):
             Bar().get_asset_path(self.filepath)
 
@@ -154,8 +156,16 @@ class SpecificationBaseTests(unittest.TestCase):
             with open(filepath, 'w') as f:
                 f.write('')
 
-            with self.assertRaises(ParseException):
-                self.Foo().get_traits(filepath)
+            result = self.Foo().get_traits(filepath).keys()
+            result = sorted(result)
+            expected = ['channels', 'filename_error', 'height', 'width']
+            self.assertEqual(result, expected)
+
+            result = self.Foo().get_traits(filepath)
+            self.assertRegex(
+                result['filename_error'],
+                'Illegal specification field indicator'
+            )
 
             name = 'p-proj001_s-spec001_d-desc_v001.png'
             filepath = Path(root, name)
@@ -179,7 +189,8 @@ class SpecificationBaseTests(unittest.TestCase):
 
 
 class OtherSpecificationBaseTests(unittest.TestCase):
-    filepath = '/tmp/proj001/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001.ext'
+    filepath = '/tmp/proj001/p-proj001_s-spec001_d-desc_v001/'
+    filepath += 'p-proj001_s-spec001_d-desc_v001.ext'
 
     def test_file_specification_base(self):
         result = sb.FileSpecificationBase()
