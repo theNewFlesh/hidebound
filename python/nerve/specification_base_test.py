@@ -4,7 +4,6 @@ import unittest
 import uuid
 
 import numpy as np
-from pyparsing import ParseException
 from schematics.exceptions import ValidationError
 import skimage.io
 
