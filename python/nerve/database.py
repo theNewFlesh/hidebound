@@ -1,5 +1,4 @@
 from pathlib import Path
-import re
 
 import numpy as np
 from pandas import DataFrame
@@ -118,7 +117,7 @@ class Database:
 
             * specification
             * specification_class
-            * error
+            * file_error
 
         Args:
             data (DataFrame): DataFrame.
@@ -145,7 +144,8 @@ class Database:
         # set error
         data['file_error'] = np.nan
         mask = data.specification.apply(lambda x: x not in specifications.keys())
-        data.loc[mask, 'file_error'] = 'Specification not found.'
+        error = tools.error_to_string(KeyError('Specification not found.'))
+        data.loc[mask, 'file_error'] = error
 
         # parse errors overwrite spec not found
         mask = spec.file_error.notnull()
@@ -170,8 +170,8 @@ class Database:
             try:
                 row.specification_class().validate_filepath(row.filepath)
                 return np.nan
-            except ValidationError as error:
-                return str(error)
+            except ValidationError as e:
+                return tools.error_to_string(e)
 
         mask = data.file_error.isnull()
         if len(data[mask]) > 0:
@@ -290,12 +290,6 @@ class Database:
         # use copy to avoid SettingWithCopyWarning
         # TODO: figure out a way to prevent warning without copy.
         data = data[Database.COLUMNS].copy()
-
-        # make file error more readable
-        mask = data.file_error.notnull()
-        data.loc[mask, 'file_error'] = data.loc[mask, 'file_error']\
-            .apply(str)\
-            .apply(lambda x: re.sub(r'^\[\"?|"?\]$', '', x))
 
         # convert Paths to str
         for col in data.columns:

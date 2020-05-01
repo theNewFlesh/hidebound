@@ -7,6 +7,7 @@ from schematics.exceptions import ValidationError
 from schematics.types import IntType, ListType, StringType
 
 from nerve.parser import AssetNameParser
+import nerve.tools as tools
 import nerve.validators as vd
 # ------------------------------------------------------------------------------
 
@@ -153,8 +154,8 @@ class SpecificationBase(Model):
         try:
             return AssetNameParser(self.filename_fields)\
                 .parse(Path(filepath).name)
-        except ParseException as error:
-            return dict(filename_error=str(error))
+        except ParseException as e:
+            return dict(filename_error=tools.error_to_string(e))
 
     def get_file_traits(self, filepath):
         '''
@@ -171,8 +172,8 @@ class SpecificationBase(Model):
         for name, func in self.file_traits.items():
             try:
                 output[name] = func(filepath)
-            except Exception as error:
-                output[name] = error
+            except Exception as e:
+                output[name] = tools.error_to_string(e)
         return output
 
     def get_traits(self, filepath):
@@ -186,11 +187,7 @@ class SpecificationBase(Model):
         Returns:
             dict: Traits.
         '''
-        traits = {}
-        try:
-            traits = self.get_filename_traits(filepath)
-        except ParseException:
-            pass
+        traits = self.get_filename_traits(filepath)
         traits.update(self.get_file_traits(filepath))
         return traits
 

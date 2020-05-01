@@ -124,9 +124,9 @@ class SpecificationBaseTests(unittest.TestCase):
                 f.write('')
 
             result = self.Foo().get_file_traits(filepath)
-            self.assertIsInstance(result['width'], ValueError)
-            self.assertIsInstance(result['height'], ValueError)
-            self.assertIsInstance(result['channels'], ValueError)
+            self.assertRegex(result['width'], 'ValueError')
+            self.assertRegex(result['height'], 'ValueError')
+            self.assertRegex(result['channels'], 'ValueError')
 
     def test_get_traits(self):
         with TemporaryDirectory() as root:
@@ -184,7 +184,7 @@ class SpecificationBaseTests(unittest.TestCase):
 
             bad = ['width', 'height', 'channels']
             for k in bad:
-                self.assertIsInstance(result[k], ValueError)
+                self.assertRegex(result[k], 'ValueError')
 
 
 class OtherSpecificationBaseTests(unittest.TestCase):

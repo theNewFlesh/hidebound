@@ -1,9 +1,12 @@
 from itertools import dropwhile, takewhile
 from pathlib import Path
+from pprint import pformat
 import datetime
 import humanfriendly
 import os
 import re
+
+from schematics.exceptions import DataError
 
 from pandas import DataFrame
 # ------------------------------------------------------------------------------
@@ -133,6 +136,25 @@ def relative_path(module, path):
     # LOGGER.debug(
     #     f'Relative_path called with: {module} and {path}. Returned: {output}'
     # )
+    return output
+
+
+def error_to_string(error):
+    '''
+    Formats error as string.
+
+    Args:
+        error (Exception): Error.
+
+    Returns:
+        str: Error message.
+    '''
+    output = error.args[0]
+    if isinstance(error, DataError):
+        output = '\n' + pformat(dict(output)) + '\n'
+    else:
+        output = f' {output} '
+    output = f'{error.__class__.__name__}({output})'
     return output
 
 

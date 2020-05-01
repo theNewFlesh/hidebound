@@ -5,6 +5,9 @@ import time
 import unittest
 
 from pandas import DataFrame
+from schematics.exceptions import DataError
+from schematics.models import Model
+from schematics.types import StringType
 
 import nerve.tools as tools
 # ------------------------------------------------------------------------------
@@ -42,6 +45,23 @@ class ToolsTests(unittest.TestCase):
     def test_relative_path(self):
         result = tools.relative_path(__file__, '../../resources/foo.txt')
         self.assertTrue(os.path.exists(result))
+
+    def test_error_to_string(self):
+        error = KeyError('Foo')
+        expected = 'KeyError( Foo )'
+        result = tools.error_to_string(error)
+        self.assertEqual(result, expected)
+
+        class Foo(Model):
+            bar = StringType(required=True)
+            baz = StringType(required=True)
+
+        try:
+            Foo({}).validate()
+        except DataError as e:
+            result = tools.error_to_string(e)
+        expected = r'DataError\(\n.*(bar|baz).*\n.*(bar|baz).*\n\)'
+        self.assertRegex(result, expected)
 
     def test_stopwatch(self):
         stopwatch = tools.StopWatch()
