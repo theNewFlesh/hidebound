@@ -6,7 +6,7 @@ import humanfriendly
 import os
 import re
 
-from schematics.exceptions import DataError
+from schematics.exceptions import DataError, ValidationError
 
 from pandas import DataFrame
 # ------------------------------------------------------------------------------
@@ -152,6 +152,9 @@ def error_to_string(error):
     output = error.args[0]
     if isinstance(error, DataError):
         output = '\n' + pformat(dict(output)) + '\n'
+    elif isinstance(error, ValidationError):
+        output = [x.summary for x in output]
+        output = '\n' + '\n'.join(output) + '\n'
     else:
         output = f' {output} '
     output = f'{error.__class__.__name__}({output})'

@@ -5,7 +5,7 @@ import time
 import unittest
 
 from pandas import DataFrame
-from schematics.exceptions import DataError
+from schematics.exceptions import DataError, ValidationError
 from schematics.models import Model
 from schematics.types import StringType
 
@@ -49,6 +49,11 @@ class ToolsTests(unittest.TestCase):
     def test_error_to_string(self):
         error = KeyError('Foo')
         expected = 'KeyError( Foo )'
+        result = tools.error_to_string(error)
+        self.assertEqual(result, expected)
+
+        error = ValidationError(['foo', 'bar'])
+        expected = 'ValidationError(\nfoo\nbar\n)'
         result = tools.error_to_string(error)
         self.assertEqual(result, expected)
 
