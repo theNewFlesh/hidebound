@@ -1,4 +1,5 @@
 from pathlib import Path
+import re
 
 import numpy as np
 from pandas import DataFrame
@@ -24,7 +25,7 @@ class Database:
         'extension',
         'filename',
         'filepath',
-        'error',
+        'file_error',
         'asset_name',
         'asset_path',
         'asset_type',
@@ -128,8 +129,8 @@ class Database:
                 AssetNameParser.parse_specification, filename, 'error'
             )
             if not isinstance(output, dict):
-                output = dict(error=output)
-            for key in ['specification', 'error']:
+                output = dict(file_error=str(output))
+            for key in ['specification', 'file_error']:
                 if key not in output.keys():
                     output[key] = np.nan
             return output
@@ -142,16 +143,16 @@ class Database:
         data.loc[mask, 'specification'] = spec.loc[mask, 'specification']
 
         # set error
-        data['error'] = np.nan
+        data['file_error'] = np.nan
         mask = data.specification.apply(lambda x: x not in specifications.keys())
-        data.loc[mask, 'error'] = 'Specification not found.'
+        data.loc[mask, 'file_error'] = 'Specification not found.'
 
         # parse errors overwrite spec not found
-        mask = spec.error.notnull()
-        data.loc[mask, 'error'] = spec.loc[mask, 'error']
+        mask = spec.file_error.notnull()
+        data.loc[mask, 'file_error'] = spec.loc[mask, 'file_error']
 
         # set specification class
-        mask = data.error.isnull()
+        mask = data.file_error.isnull()
         data['specification_class'] = np.nan
         data.loc[mask, 'specification_class'] = data.loc[mask, 'specification']\
             .apply(lambda x: specifications[x])
@@ -172,9 +173,9 @@ class Database:
             except ValidationError as error:
                 return str(error)
 
-        mask = data.error.isnull()
+        mask = data.file_error.isnull()
         if len(data[mask]) > 0:
-            data.loc[mask, 'error'] = data[mask].apply(validate, axis=1)
+            data.loc[mask, 'file_error'] = data[mask].apply(validate, axis=1)
 
     @staticmethod
     def _add_filename_traits(data):
@@ -185,7 +186,7 @@ class Database:
         Args:
             data (DataFrame): DataFrame.
         '''
-        mask = data.error.isnull()
+        mask = data.file_error.isnull()
         traits = data.copy()
         traits['data'] = None
         traits.data = traits.data.apply(lambda x: {})
@@ -212,7 +213,7 @@ class Database:
         Args:
             data (DataFrame): DataFrame.
         '''
-        mask = data.error.isnull()
+        mask = data.file_error.isnull()
         data['asset_id'] = np.nan
         if len(data[mask]) > 0:
             data.loc[mask, 'asset_id'] = data.loc[mask].apply(
@@ -228,7 +229,7 @@ class Database:
         Args:
             data (DataFrame): DataFrame.
         '''
-        mask = data.error.isnull()
+        mask = data.file_error.isnull()
         data['asset_name'] = np.nan
         if len(data[mask]) > 0:
             data.loc[mask, 'asset_name'] = data.loc[mask].apply(
@@ -289,6 +290,12 @@ class Database:
         # use copy to avoid SettingWithCopyWarning
         # TODO: figure out a way to prevent warning without copy.
         data = data[Database.COLUMNS].copy()
+
+        # make file error more readable
+        mask = data.file_error.notnull()
+        data.loc[mask, 'file_error'] = data.loc[mask, 'file_error']\
+            .apply(str)\
+            .apply(lambda x: re.sub(r'^\[\"?|"?\]$', '', x))
 
         # convert Paths to str
         for col in data.columns:
