@@ -25,7 +25,7 @@ class DatabaseTests(unittest.TestCase):
         'frame',
         'extension',
         'filename',
-        'fullpath',
+        'filepath',
         'error',
         'asset_name',
         'asset_path',
@@ -70,7 +70,7 @@ class DatabaseTests(unittest.TestCase):
         data.asset_path = data.asset_path.apply(lambda x: root + '/' + x)
         data['asset_name'] = data.asset_path.apply(lambda x: x.split('/')[-1])
 
-        data['fullpath'] = data\
+        data['filepath'] = data\
             .apply(lambda x: Path(root, x.asset_path, x.filename), axis=1)
 
         Spec001, Spec002, BadSpec = self.get_specifications()
@@ -89,9 +89,9 @@ class DatabaseTests(unittest.TestCase):
 
     def create_files(self, root):
         data = self.get_data(root)
-        for fullpath in data.fullpath.tolist():
-            os.makedirs(fullpath.parent, exist_ok=True)
-            with open(fullpath, 'w') as f:
+        for filepath in data.filepath.tolist():
+            os.makedirs(filepath.parent, exist_ok=True)
+            with open(filepath, 'w') as f:
                 f.write('')
         return data
 
@@ -99,9 +99,9 @@ class DatabaseTests(unittest.TestCase):
         files = self.get_data(root)
         data = DataFrame()
         data['filename'] = files.filename
-        data['fullpath'] = files.asset_path
-        data.fullpath = data\
-            .apply(lambda x: Path(x.fullpath, x.filename), axis=1)
+        data['filepath'] = files.asset_path
+        data.filepath = data\
+            .apply(lambda x: Path(x.filepath, x.filename), axis=1)
         data['extension'] = files\
             .filename.apply(lambda x: os.path.splitext(x)[1:])
         return data
@@ -167,33 +167,33 @@ class DatabaseTests(unittest.TestCase):
 
     def test_update_exclude(self):
         with TemporaryDirectory() as root:
-            expected = self.create_files(root).fullpath\
+            expected = self.create_files(root).filepath\
                 .apply(lambda x: x.as_posix()).tolist()
             regex = r'misc\.txt|vdb'
             expected = list(filter(lambda x: not re.search(regex, x), expected))
             expected = sorted(expected)
 
             result = Database(root, exclude_regex=regex)\
-                .update().data.fullpath.tolist()
+                .update().data.filepath.tolist()
             result = sorted(result)
             self.assertEqual(result, expected)
 
     def test_update_include(self):
         with TemporaryDirectory() as root:
-            expected = self.create_files(root).fullpath\
+            expected = self.create_files(root).filepath\
                 .apply(lambda x: x.as_posix()).tolist()
             regex = r'misc\.txt|vdb'
             expected = list(filter(lambda x: re.search(regex, x), expected))
             expected = sorted(expected)
 
             result = Database(root, include_regex=regex)\
-                .update().data.fullpath.tolist()
+                .update().data.filepath.tolist()
             result = sorted(result)
             self.assertEqual(result, expected)
 
     def test_update_include_exclude(self):
         with TemporaryDirectory() as root:
-            expected = self.create_files(root).fullpath\
+            expected = self.create_files(root).filepath\
                 .apply(lambda x: x.as_posix()).tolist()
             i_regex = r'pizza'
             expected = list(filter(lambda x: re.search(i_regex, x), expected))
@@ -202,7 +202,7 @@ class DatabaseTests(unittest.TestCase):
             expected = sorted(expected)
 
             result = Database(root, include_regex=i_regex, exclude_regex=e_regex)\
-                .update().data.fullpath.tolist()
+                .update().data.filepath.tolist()
             result = sorted(result)
             self.assertEqual(result, expected)
 
@@ -221,12 +221,12 @@ class DatabaseTests(unittest.TestCase):
             files = self.create_files(root)
             data = Database(root, [Spec001, Spec002]).update().data
 
-            keys = files.fullpath.tolist()
+            keys = files.filepath.tolist()
             lut = dict(zip(keys, files.error.tolist()))
 
-            data = data[data.fullpath.apply(lambda x: x in keys)]
+            data = data[data.filepath.apply(lambda x: x in keys)]
 
-            regexes = data.fullpath.apply(lambda x: lut[x.as_posix()]).tolist()
+            regexes = data.filepath.apply(lambda x: lut[x.as_posix()]).tolist()
             results = data.error.apply(lambda x: x[0]).tolist()
             for result, regex in zip(results, regexes):
                 self.assertRegex(result, regex)
@@ -249,7 +249,7 @@ class DatabaseTests(unittest.TestCase):
         mask = data.error == error
         data.loc[mask, 'error'] = np.nan
 
-        cols = ['specification_class', 'fullpath', 'error']
+        cols = ['specification_class', 'filepath', 'error']
         data = data[cols]
 
         Database._validate_filepath(data)
@@ -335,7 +335,7 @@ class DatabaseTests(unittest.TestCase):
         ]
 
         data = DataFrame(data)
-        data.columns = ['specification_class', 'fullpath', 'error']
+        data.columns = ['specification_class', 'filepath', 'error']
 
         Database._add_asset_id(data)
         result = data['asset_id'].dropna().nunique()
@@ -372,7 +372,7 @@ class DatabaseTests(unittest.TestCase):
         ]
 
         data = DataFrame(data)
-        data.columns = ['specification_class', 'fullpath', 'error']
+        data.columns = ['specification_class', 'filepath', 'error']
 
         Database._add_asset_name(data)
         result = data['asset_name'].dropna().nunique()
@@ -409,8 +409,8 @@ class DatabaseTests(unittest.TestCase):
         ]
 
         data = DataFrame(data)
-        data.columns = ['specification_class', 'fullpath', 'error']
-        expected = data.fullpath\
+        data.columns = ['specification_class', 'filepath', 'error']
+        expected = data.filepath\
             .apply(lambda x: Path(x).parent).apply(str).tolist()
         expected[-1] = 'nan'
 
@@ -451,10 +451,10 @@ class DatabaseTests(unittest.TestCase):
         result = Database._cleanup(data).columns.tolist()
         self.assertEqual(result, self.columns)
 
-        data['fullpath'] = [np.nan, Path('/foo/bar'), Path('/bar/foo')]
+        data['filepath'] = [np.nan, Path('/foo/bar'), Path('/bar/foo')]
         data['version'] = [1, 2, 3]
         expected = [np.nan, '/foo/bar', '/bar/foo']
-        result = Database._cleanup(data).fullpath.tolist()
+        result = Database._cleanup(data).filepath.tolist()
         self.assertEqual(result, expected)
 
         result = Database._cleanup(data).columns.tolist()

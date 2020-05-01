@@ -12,19 +12,19 @@ import nerve.tools as tools
 
 class ToolsTests(unittest.TestCase):
     def create_files(self, root):
-        fullpaths = [
+        filepaths = [
             'a/1.foo',
             'a/b/2.json',
             'a/b/3.txt',
             'a/b/c/4.json',
             'a/b/c/5.txt'
         ]
-        fullpaths = [Path(root, x) for x in fullpaths]
-        for fullpath in fullpaths:
-            os.makedirs(fullpath.parent, exist_ok=True)
-            with open(fullpath, 'w') as f:
+        filepaths = [Path(root, x) for x in filepaths]
+        for filepath in filepaths:
+            os.makedirs(filepath.parent, exist_ok=True)
+            with open(filepath, 'w') as f:
                 f.write('')
-        return fullpaths
+        return filepaths
 
     def test_try_(self):
         result = tools.try_(lambda x: int(x), 1.0, return_item='item')
@@ -124,21 +124,21 @@ class ToolsTests(unittest.TestCase):
     def test_directory_to_dataframe(self):
         with TemporaryDirectory() as root:
             self.create_files(root)
-            fullpaths = [
+            filepaths = [
                 Path(root, 'a/b/3.txt'),
                 Path(root, 'a/b/c/5.txt'),
             ]
             expected = DataFrame()
-            expected['fullpath'] = fullpaths
-            expected['filename'] = expected.fullpath.apply(lambda x: x.name)
+            expected['filepath'] = filepaths
+            expected['filename'] = expected.filepath.apply(lambda x: x.name)
             expected['extension'] = 'txt'
-            expected.fullpath = expected.fullpath.apply(lambda x: x.as_posix())
+            expected.filepath = expected.filepath.apply(lambda x: x.as_posix())
 
             result = tools.directory_to_dataframe(
                 root,
                 include_regex=r'/a/b',
                 exclude_regex=r'\.json'
             )
-            cols = ['fullpath', 'filename', 'extension']
+            cols = ['filepath', 'filename', 'extension']
             for col in cols:
                 self.assertEqual(result[col].tolist(), expected[col].tolist())

@@ -43,10 +43,10 @@ def list_all_files(directory, include_regex='', exclude_regex=''):
 
     for root, dirs, files in os.walk(directory):
         for file_ in files:
-            fullpath = Path(root, file_)
+            filepath = Path(root, file_)
 
             output = True
-            temp = fullpath.absolute().as_posix()
+            temp = filepath.absolute().as_posix()
             if include_regex != '' and not include_re.search(temp):
                 output = False
             if exclude_regex != '' and exclude_re.search(temp):
@@ -78,10 +78,10 @@ def directory_to_dataframe(directory, include_regex='', exclude_regex=r'\.DS_Sto
     files = sorted(list(files))
 
     data = DataFrame()
-    data['fullpath'] = files
-    data['filename'] = data.fullpath.apply(lambda x: x.name)
-    data['extension'] = data.fullpath.apply(lambda x: os.path.splitext(x)[-1][1:])
-    data.fullpath = data.fullpath.apply(lambda x: x.absolute().as_posix())
+    data['filepath'] = files
+    data['filename'] = data.filepath.apply(lambda x: x.name)
+    data['extension'] = data.filepath.apply(lambda x: os.path.splitext(x)[-1][1:])
+    data.filepath = data.filepath.apply(lambda x: x.absolute().as_posix())
     return data
 
 

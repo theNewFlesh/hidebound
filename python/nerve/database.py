@@ -23,7 +23,7 @@ class Database:
         'frame',
         'extension',
         'filename',
-        'fullpath',
+        'filepath',
         'error',
         'asset_name',
         'asset_path',
@@ -159,7 +159,7 @@ class Database:
     @staticmethod
     def _validate_filepath(data):
         '''
-        Validates fullpath column of given DataFrame.
+        Validates filepath column of given DataFrame.
         Adds error to error column if invalid.
 
         Args:
@@ -167,7 +167,7 @@ class Database:
         '''
         def validate(row):
             try:
-                row.specification_class().validate_filepath(row.fullpath)
+                row.specification_class().validate_filepath(row.filepath)
                 return np.nan
             except ValidationError as error:
                 return str(error)
@@ -207,7 +207,7 @@ class Database:
     @staticmethod
     def _add_asset_id(data):
         '''
-        Adds asset_id column derived UUID hash of asset fullpath.
+        Adds asset_id column derived UUID hash of asset filepath.
 
         Args:
             data (DataFrame): DataFrame.
@@ -216,14 +216,14 @@ class Database:
         data['asset_id'] = np.nan
         if len(data[mask]) > 0:
             data.loc[mask, 'asset_id'] = data.loc[mask].apply(
-                lambda x: x.specification_class().get_asset_id(x.fullpath),
+                lambda x: x.specification_class().get_asset_id(x.filepath),
                 axis=1
             )
 
     @staticmethod
     def _add_asset_name(data):
         '''
-        Adds asset_name column derived from fullpath.
+        Adds asset_name column derived from filepath.
 
         Args:
             data (DataFrame): DataFrame.
@@ -232,14 +232,14 @@ class Database:
         data['asset_name'] = np.nan
         if len(data[mask]) > 0:
             data.loc[mask, 'asset_name'] = data.loc[mask].apply(
-                lambda x: x.specification_class().get_asset_name(x.fullpath),
+                lambda x: x.specification_class().get_asset_name(x.filepath),
                 axis=1
             )
 
     @staticmethod
     def _add_asset_path(data):
         '''
-        Adds asset_path column derived from fullpath.
+        Adds asset_path column derived from filepath.
 
         Args:
             data (DataFrame): DataFrame.
@@ -248,13 +248,13 @@ class Database:
         data['asset_path'] = np.nan
         if len(data[mask]) > 0:
             data.loc[mask, 'asset_path'] = data.loc[mask].apply(
-                lambda x: x.specification_class().get_asset_path(x.fullpath),
+                lambda x: x.specification_class().get_asset_path(x.filepath),
                 axis=1
             )
 
         # overwrite asset_path for misnamed files within asset directory
         for path in data.asset_path.dropna().unique():
-            mask = data.fullpath.apply(lambda x: path.as_posix() in x)
+            mask = data.filepath.apply(lambda x: path.as_posix() in x)
             data.loc[mask, 'asset_path'] = path
 
     @staticmethod

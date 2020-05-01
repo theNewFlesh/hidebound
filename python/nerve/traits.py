@@ -15,7 +15,7 @@ def get_image_width(filepath):
     Gets the width of the given image.
 
     Args:
-        filepath (str or Path): Fullpath to image file.
+        filepath (str or Path): filepath to image file.
 
     Returns:
         int: Image width.
@@ -29,7 +29,7 @@ def get_image_height(filepath):
     Gets the height of the given image.
 
     Args:
-        filepath (str or Path): Fullpath to image file.
+        filepath (str or Path): filepath to image file.
 
     Returns:
         int: Image height.
@@ -43,7 +43,7 @@ def get_image_channels(filepath):
     Gets the number of channels of the given image.
 
     Args:
-        filepath (str or Path): Fullpath to image file.
+        filepath (str or Path): filepath to image file.
 
     Returns:
         int: Number of channels.

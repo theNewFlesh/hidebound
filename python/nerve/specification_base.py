@@ -64,7 +64,7 @@ class SpecificationBase(Model):
         Returns the expected asset name give a filepath.
 
         Args:
-            filepath (str or Path): Fullpath to asset file.
+            filepath (str or Path): filepath to asset file.
 
         Returns:
             str: Asset name.
@@ -78,7 +78,7 @@ class SpecificationBase(Model):
         Returns the expected asset path given a filepath.
 
         Args:
-            filepath (str or Path): Fullpath to asset file.
+            filepath (str or Path): filepath to asset file.
 
         Raises:
             NotImplementedError: If method not defined in subclass.
@@ -95,7 +95,7 @@ class SpecificationBase(Model):
         type.
 
         Args:
-            filepath (str or Path): Fullpath to asset file.
+            filepath (str or Path): filepath to asset file.
 
         Returns:
             str: Asset id.
@@ -109,7 +109,7 @@ class SpecificationBase(Model):
         Attempts to parse the given filepath.
 
         Args:
-            filepath (str or Path): Fullpath to asset file.
+            filepath (str or Path): filepath to asset file.
 
         Raises:
             ValidationError: If parse fails.
@@ -143,7 +143,7 @@ class SpecificationBase(Model):
         Returns a dictionary of filename traits from given filepath.
 
         Args:
-            filepath (str or Path): Fullpath to asset file.
+            filepath (str or Path): filepath to asset file.
 
         Returns:
             dict: Traits.
@@ -156,7 +156,7 @@ class SpecificationBase(Model):
         Returns error in respective field if one is encountered.
 
         Args:
-            filepath (str or Path): Fullpath to asset file.
+            filepath (str or Path): filepath to asset file.
 
         Returns:
             dict: Traits.
@@ -174,7 +174,7 @@ class SpecificationBase(Model):
         Returns a dictionary of file and filename traits from given filepath.
 
         Args:
-            filepath (str or Path): Fullpath to asset file.
+            filepath (str or Path): filepath to asset file.
 
         Returns:
             dict: Traits.
@@ -198,7 +198,7 @@ class FileSpecificationBase(SpecificationBase):
         Returns the filepath.
 
         Args:
-            filepath (str or Path): Fullpath to asset file.
+            filepath (str or Path): filepath to asset file.
 
         Returns:
             Path: Asset path.
@@ -221,7 +221,7 @@ class SequenceSpecificationBase(SpecificationBase):
         Returns the directory containing the asset files.
 
         Args:
-            filepath (str or Path): Fullpath to asset file.
+            filepath (str or Path): filepath to asset file.
 
         Returns:
             Path: Asset path.
