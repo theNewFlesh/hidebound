@@ -175,7 +175,7 @@
 <p>Generates a DataFrame using the files within a given directory as rows.</p>
 <dl class="py attribute">
 <dt id="nerve.database.Database.COLUMNS">
-<code class="sig-name descname">COLUMNS</code><em class="property"> = ['project', 'specification', 'descriptor', 'version', 'coordinate', 'frame', 'extension', 'filename', 'filepath', 'file_error', 'asset_name', 'asset_path', 'asset_type']</em><a class="headerlink" href="#nerve.database.Database.COLUMNS" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">COLUMNS</code><em class="property"> = ['project', 'specification', 'descriptor', 'version', 'coordinate', 'frame', 'extension', 'filename', 'filepath', 'file_error', 'file_traits', 'asset_name', 'asset_path', 'asset_type', 'asset_traits']</em><a class="headerlink" href="#nerve.database.Database.COLUMNS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -212,6 +212,18 @@
 </dd></dl>
 
 <dl class="py method">
+<dt id="nerve.database.Database._add_asset_traits">
+<em class="property">static </em><code class="sig-name descname">_add_asset_traits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/database.html#Database._add_asset_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.database.Database._add_asset_traits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds traits derived from aggregation of file traits.
+Add asset_traits column and one column per traits key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>DataFrame</em>) – DataFrame.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="nerve.database.Database._add_asset_type">
 <em class="property">static </em><code class="sig-name descname">_add_asset_type</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/database.html#Database._add_asset_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.database.Database._add_asset_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds asset_type column derived from specification.</p>
@@ -223,10 +235,10 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="nerve.database.Database._add_filename_traits">
-<em class="property">static </em><code class="sig-name descname">_add_filename_traits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/database.html#Database._add_filename_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.database.Database._add_filename_traits" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds traits derived from parsing valid values in filename column.
-Adds many columnns.</p>
+<dt id="nerve.database.Database._add_file_traits">
+<em class="property">static </em><code class="sig-name descname">_add_file_traits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/database.html#Database._add_file_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.database.Database._add_file_traits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds traits derived from file in filepath.
+Add file_traits column and one column per traits key.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>data</strong> (<em>DataFrame</em>) – DataFrame.</p>
@@ -1223,6 +1235,31 @@ Default: ‘’.</p></li>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="nerve.tools.to_prototype">
+<code class="sig-prename descclassname">nerve.tools.</code><code class="sig-name descname">to_prototype</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dicts</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/tools.html#to_prototype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.tools.to_prototype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a list of dicts into a dict of lists.
+.. example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="n">nowrap</span><span class="p">:</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">dicts</span> <span class="o">=</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">20</span><span class="p">)]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">to_prototype</span><span class="p">(</span><span class="n">dicts</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">]}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dicts</strong> (<em>list</em><em>[</em><em>dict</em><em>]</em>) – List of dicts.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Prototype dictionary.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
