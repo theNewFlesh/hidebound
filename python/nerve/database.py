@@ -1,3 +1,4 @@
+from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
@@ -25,9 +26,11 @@ class Database:
         'filename',
         'filepath',
         'file_error',
+        'file_traits',
         'asset_name',
         'asset_path',
         'asset_type',
+        'asset_traits',
         # 'asset_id',
     ]
 
@@ -97,10 +100,11 @@ class Database:
         if len(data) > 0:
             self._add_specification(data, self._specifications)
             self._validate_filepath(data)
-            self._add_filename_traits(data)
+            self._add_file_traits(data)
             self._add_asset_name(data)
             self._add_asset_path(data)
             self._add_asset_type(data)
+            self._add_asset_traits(data)
             # self._add_asset_id(data)
 
         data = self._cleanup(data)
@@ -178,25 +182,24 @@ class Database:
             data.loc[mask, 'file_error'] = data[mask].apply(validate, axis=1)
 
     @staticmethod
-    def _add_filename_traits(data):
+    def _add_file_traits(data):
         '''
-        Adds traits derived from parsing valid values in filename column.
-        Adds many columnns.
+        Adds traits derived from file in filepath.
+        Add file_traits column and one column per traits key.
 
         Args:
             data (DataFrame): DataFrame.
         '''
-        mask = data.file_error.isnull()
-        traits = data.copy()
-        traits['data'] = None
-        traits.data = traits.data.apply(lambda x: {})
-        if len(traits[mask]) > 0:
-            traits.loc[mask, 'data'] = traits[mask].apply(
-                lambda x: x.specification_class().get_filename_traits(x.filename),
+        data['file_traits'] = np.nan
+        data.file_traits = data.file_traits.apply(lambda x: {})
+        mask = data.specification_class.notnull()
+        if len(data[mask]) > 0:
+            data.loc[mask, 'file_traits'] = data[mask].apply(
+                lambda x: x.specification_class().get_traits(x.filepath),
                 axis=1
             )
-        traits = DataFrame(traits.data.tolist())
 
+        traits = DataFrame(data.file_traits.tolist())
         # merge data and traits
         for col in traits.columns:
             if col not in data.columns:
@@ -204,6 +207,24 @@ class Database:
 
             mask = traits[col].notnull()
             data.loc[mask, col] = traits.loc[mask, col]
+
+    @staticmethod
+    def _add_asset_traits(data):
+        '''
+        Adds traits derived from aggregation of file traits.
+        Add asset_traits column and one column per traits key.
+
+        Args:
+            data (DataFrame): DataFrame.
+        '''
+        lut = data\
+            .groupby('asset_path', as_index=False)\
+            .file_traits.agg(lambda x: tools.to_prototype(x.tolist()))\
+            .apply(lambda x: x.tolist(), axis=1)\
+            .tolist()
+        lut = defaultdict(lambda: {}, lut)
+
+        data['asset_traits'] = data.asset_path.apply(lambda x: lut[x])
 
     @staticmethod
     def _add_asset_id(data):
@@ -289,7 +310,18 @@ class Database:
                 data[col] = np.nan
         # use copy to avoid SettingWithCopyWarning
         # TODO: figure out a way to prevent warning without copy.
-        data = data[Database.COLUMNS].copy()
+        cols = data.columns
+        cols = set(cols).difference(Database.COLUMNS)
+        cols = sorted(cols)
+        cols = Database.COLUMNS + cols
+        cols = list(filter(lambda x: x != 'specification_class', cols))
+        data = data[cols].copy()
+
+        # copy filename_error to file_error
+        if 'filename_error' in data.columns:
+            mask = data.filename_error.notnull()
+            data.loc[mask, 'file_error'] = data.loc[mask, 'filename_error']
+            del data['filename_error']
 
         # convert Paths to str
         for col in data.columns:

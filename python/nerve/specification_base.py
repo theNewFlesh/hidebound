@@ -173,7 +173,7 @@ class SpecificationBase(Model):
             try:
                 output[name] = func(filepath)
             except Exception as e:
-                output[name] = tools.error_to_string(e)
+                output[name + '_error'] = tools.error_to_string(e)
         return output
 
     def get_traits(self, filepath):

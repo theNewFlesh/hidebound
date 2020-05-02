@@ -27,9 +27,11 @@ class DatabaseTests(unittest.TestCase):
         'filename',
         'filepath',
         'file_error',
+        'file_traits',
         'asset_name',
         'asset_path',
         'asset_type',
+        'asset_traits',
         # 'asset_id',
     ]
 
@@ -165,33 +167,52 @@ class DatabaseTests(unittest.TestCase):
             Database(root, [Spec001])
             Database(root, [Spec001, Spec002])
 
+    # UPDATE--------------------------------------------------------------------
+    def test_update(self):
+        with TemporaryDirectory() as root:
+            Spec001, Spec002, BadSpec = self.get_specifications()
+
+            expected = self.create_files(root).filepath\
+                .apply(lambda x: x.as_posix()).tolist()
+            expected = sorted(expected)
+
+            result = Database(root, [Spec001, Spec002]).update().data.filepath.tolist()
+            result = sorted(result)
+            self.assertEqual(result, expected)
+
     def test_update_exclude(self):
         with TemporaryDirectory() as root:
+            Spec001, Spec002, BadSpec = self.get_specifications()
+
             expected = self.create_files(root).filepath\
                 .apply(lambda x: x.as_posix()).tolist()
             regex = r'misc\.txt|vdb'
             expected = list(filter(lambda x: not re.search(regex, x), expected))
             expected = sorted(expected)
 
-            result = Database(root, exclude_regex=regex)\
+            result = Database(root, [Spec001, Spec002], exclude_regex=regex)\
                 .update().data.filepath.tolist()
             result = sorted(result)
             self.assertEqual(result, expected)
 
     def test_update_include(self):
         with TemporaryDirectory() as root:
+            Spec001, Spec002, BadSpec = self.get_specifications()
+
             expected = self.create_files(root).filepath\
                 .apply(lambda x: x.as_posix()).tolist()
             regex = r'misc\.txt|vdb'
             expected = list(filter(lambda x: re.search(regex, x), expected))
             expected = sorted(expected)
 
-            result = Database(root, include_regex=regex)\
+            result = Database(root, [Spec001, Spec002], include_regex=regex)\
                 .update().data.filepath.tolist()
             result = sorted(result)
             self.assertEqual(result, expected)
 
     def test_update_include_exclude(self):
+        Spec001, Spec002, BadSpec = self.get_specifications()
+
         with TemporaryDirectory() as root:
             expected = self.create_files(root).filepath\
                 .apply(lambda x: x.as_posix()).tolist()
@@ -201,8 +222,13 @@ class DatabaseTests(unittest.TestCase):
             expected = list(filter(lambda x: not re.search(e_regex, x), expected))
             expected = sorted(expected)
 
-            result = Database(root, include_regex=i_regex, exclude_regex=e_regex)\
-                .update().data.filepath.tolist()
+            result = Database(
+                root,
+                [Spec001, Spec002],
+                include_regex=i_regex,
+                exclude_regex=e_regex,
+            )
+            result = result.update().data.filepath.tolist()
             result = sorted(result)
             self.assertEqual(result, expected)
 
@@ -242,6 +268,7 @@ class DatabaseTests(unittest.TestCase):
         expected = data.specification
         self.assertEqual(result, expected.tolist())
 
+    # FILE-METHODS--------------------------------------------------------------
     def test_validate_filepath(self):
         data = self.get_data('/tmp')
 
@@ -256,36 +283,36 @@ class DatabaseTests(unittest.TestCase):
         result = data.loc[mask, 'file_error'].tolist()[0]
         self.assertRegex(result, error)
 
-    def test_add_filename_traits(self):
+    def test_add_file_traits(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
         data = [
             [
                 Spec001,
-                'p-proj001_s-spec001_d-desc_v001_c000-000_f0001.png',
+                '/tmp/p-proj001_s-spec001_d-desc_v001_c000-000_f0001.png',
                 np.nan,
                 'proj001', 'spec001', 'desc', 1, [0, 0], 1, 'png'
             ],
             [
                 Spec001,
-                'p-proj001_s-spec001_d-desc_v001_c000-000_f0002.png',
+                '/tmp/p-proj001_s-spec001_d-desc_v001_c000-000_f0002.png',
                 np.nan,
                 'proj001', 'spec001', 'desc', 1, [0, 0], 2, 'png'
             ],
             [
                 Spec002,
-                'p-proj002_s-spec002_d-MASTER_v001_f0001.png',
+                '/tmp/p-proj002_s-spec002_d-MASTER_v001_f0001.png',
                 'file_Error',
                 np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
             ],
             [
                 Spec002,
-                'p-proj002_s-spec002_d-desc_v001_f0002.png',
+                '/tmp/p-proj002_s-spec002_d-desc_v001_f0002.png',
                 np.nan,
                 'proj002', 'spec002', 'desc', 1, np.nan, 2, 'png'
             ],
             [
                 np.nan,
-                'misc.txt',
+                '/tmp/misc.txt',
                 'file_Error',
                 np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
             ],
@@ -295,14 +322,36 @@ class DatabaseTests(unittest.TestCase):
             'project', 'specification', 'descriptor', 'version', 'coordinate',
             'frame', 'extension'
         ]
-        data.columns = ['specification_class', 'filename', 'file_error'] + cols
+        data.columns = ['specification_class', 'filepath', 'file_error'] + cols
         temp = data.copy()
 
-        Database._add_filename_traits(data)
+        Database._add_file_traits(data)
         for col in cols:
             result = data[col].fillna('null').tolist()
             expected = temp[col].fillna('null').tolist()
             self.assertEqual(result, expected)
+
+    # ASSET-METHODS-------------------------------------------------------------
+    def test_add_asset_traits(self):
+        data = DataFrame()
+        data['asset_path'] = ['a', 'a', 'b', 'b', np.nan]
+        data['file_traits'] = [
+            dict(w=0, x=1, y=1),
+            dict(x=2, y=2),
+            dict(x=1, y=1, z=1),
+            dict(x=2, y=2, z=2),
+            {},
+        ]
+        Database._add_asset_traits(data)
+        result = data.asset_traits.tolist()
+        expected = [
+            dict(w=[0], x=[1, 2], y=[1, 2]),
+            dict(w=[0], x=[1, 2], y=[1, 2]),
+            dict(x=[1, 2], y=[1, 2], z=[1, 2]),
+            dict(x=[1, 2], y=[1, 2], z=[1, 2]),
+            {}
+        ]
+        self.assertEqual(result, expected)
 
     def test_add_asset_id(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
