@@ -68,6 +68,16 @@ class ToolsTests(unittest.TestCase):
         expected = r'DataError\(\n.*(bar|baz).*\n.*(bar|baz).*\n\)'
         self.assertRegex(result, expected)
 
+    def test_to_prototype(self):
+        dicts = [
+            dict(a=1, b=2, c=3),
+            dict(a=1, b=2, d=3),
+            dict(a=1, b=2, e=3),
+        ]
+        expected = dict(a=[1, 1, 1], b=[2, 2, 2], c=[3], d=[3], e=[3])
+        result = tools.to_prototype(dicts)
+        self.assertEqual(result, expected)
+
     def test_stopwatch(self):
         stopwatch = tools.StopWatch()
         stopwatch.start()

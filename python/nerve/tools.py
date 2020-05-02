@@ -1,3 +1,4 @@
+from collections import defaultdict
 from itertools import dropwhile, takewhile
 from pathlib import Path
 from pprint import pformat
@@ -154,10 +155,37 @@ def error_to_string(error):
         output = '\n' + pformat(dict(output)) + '\n'
     elif isinstance(error, ValidationError):
         output = [x.summary for x in output]
-        output = '\n' + '\n'.join(output) + '\n'
+        if len(output) == 1:
+            output = f' {output} '
+        else:
+            output = '\n' + '\n'.join(output) + '\n'
     else:
         output = f' {output} '
     output = f'{error.__class__.__name__}({output})'
+    return output
+
+
+def to_prototype(dicts):
+    '''
+    Converts a list of dicts into a dict of lists.
+    .. example::
+        :nowrap:
+
+        >>> dicts = [dict(a=1, b=2, c=3), dict(a=10, b=20)]
+        >>> to_prototype(dicts)
+        {'a': [1, 10], 'b': [2, 20], 'c': [3]}
+
+    Args:
+        dicts (list[dict]): List of dicts.
+
+    Returns:
+        dict: Prototype dictionary.
+    '''
+    output = defaultdict(lambda: [])
+    for dict_ in dicts:
+        for key, val in dict_.items():
+            output[key].append(val)
+    output = dict(output)
     return output
 
 
