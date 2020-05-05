@@ -1,17 +1,21 @@
 from pathlib import Path
+from tempfile import TemporaryDirectory
 import os
 import re
-from tempfile import TemporaryDirectory
 import unittest
 
-import numpy as np
 from pandas import DataFrame
+from schematics.types import ListType, IntType, StringType
+import numpy as np
+import skimage.io
 
 from nerve.database import Database
-from nerve.specification_base import SpecificationBase
+from nerve.specification_base import ComplexSpecificationBase
 from nerve.specification_base import FileSpecificationBase
 from nerve.specification_base import SequenceSpecificationBase
-from nerve.specification_base import ComplexSpecificationBase
+from nerve.specification_base import SpecificationBase
+import nerve.traits as tr
+import nerve.validators as vd
 # ------------------------------------------------------------------------------
 
 
@@ -32,6 +36,8 @@ class DatabaseTests(unittest.TestCase):
         'asset_path',
         'asset_type',
         'asset_traits',
+        'asset_error',
+        'asset_valid',
         # 'asset_id',
     ]
 
@@ -54,13 +60,13 @@ class DatabaseTests(unittest.TestCase):
             [3, 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v003', 'p-proj001_s-spec001_d-pizza_v003_c000-001_f0004.png',  None                                ],  # noqa E501 E241
             [3, None,      'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v003', 'p-proj001_s-spec0001_d-pizza_v003_c000-001_f0005.png', 'Illegal specification field token' ],  # noqa E501 E241
             [3, None,      'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v003', 'misc.txt',                                             'SpecificationBase not found'       ],  # noqa E501 E241
-            [4, 'spec002', 'proj001/spec002/taco/p-proj001_s-spec002_d-taco_v001',   'p-proj001_s-spec002_d-taco_v001_f0000.exr',            None                                ],  # noqa E501 E241
-            [4, 'spec002', 'proj001/spec002/taco/p-proj001_s-spec002_d-taco_v001',   'p-proj001_s-spec002_d-taco_v001_f0001.exr',            None                                ],  # noqa E501 E241
-            [4, 'spec002', 'proj001/spec002/taco/p-proj001_s-spec002_d-taco_v001',   'p-proj001_s-spec002_d-taco_v001_f0002.exr',            None                                ],  # noqa E501 E241
-            [5, 'spec002', 'proj001/spec002/taco/p-proj001_s-spec002_d-taco_v002',   'p-proj001_s-spec002_d-taco_v001_f0000.exr',            'Invalid asset directory name'      ],  # noqa E501 E241
-            [5, 'spec002', 'proj001/spec002/taco/p-proj001_s-spec002_d-taco_v002',   'p-proj001_s-spec002_d-taco_v002_f0001.exr',            None                                ],  # noqa E501 E241
+            [4, 'spec002', 'proj001/spec002/taco/p-proj001_s-spec002_d-taco_v001',   'p-proj001_s-spec002_d-taco_v001_f0000.jpg',            None                                ],  # noqa E501 E241
+            [4, 'spec002', 'proj001/spec002/taco/p-proj001_s-spec002_d-taco_v001',   'p-proj001_s-spec002_d-taco_v001_f0001.jpg',            None                                ],  # noqa E501 E241
+            [4, 'spec002', 'proj001/spec002/taco/p-proj001_s-spec002_d-taco_v001',   'p-proj001_s-spec002_d-taco_v001_f0002.jpg',            None                                ],  # noqa E501 E241
+            [5, 'spec002', 'proj001/spec002/taco/p-proj001_s-spec002_d-taco_v002',   'p-proj001_s-spec002_d-taco_v001_f0000.jpg',            'Invalid asset directory name'      ],  # noqa E501 E241
+            [5, 'spec002', 'proj001/spec002/taco/p-proj001_s-spec002_d-taco_v002',   'p-proj001_s-spec002_d-taco_v002_f0001.jpg',            None                                ],  # noqa E501 E241
             [5, 'spec002', 'proj001/spec002/taco/p-proj001_s-spec002_d-taco_v002',   'p-proj001_s-spec002_d-taco_v002',                      'Expected "_"'                      ],  # noqa E501 E241
-            [5, 'spec002', 'proj001/spec002/taco/p-proj001_s-spec002_d-taco_v002',   'p-proj001_s-spec002_d-taco_v02_f0003.exr',             'Illegal version field token'       ],  # noqa E501 E241
+            [5, 'spec002', 'proj001/spec002/taco/p-proj001_s-spec002_d-taco_v002',   'p-proj001_s-spec002_d-taco_v02_f0003.jpg',             'Illegal version field token'       ],  # noqa E501 E241
             [6, 'vdb001',  'proj002/vdb001',                                         'p-proj002_s-vdb001_d-bagel_v001.vdb',                  'Specification not found'           ],  # noqa E501 E241
             [6, 'vdb001',  'proj002/vdb001',                                         'p-proj002_s-vdb001_d-bagel_v002.vdb',                  'Specification not found'           ],  # noqa E501 E241
             [6, 'vdb001',  'proj002/vdb001',                                         'p-proj002_s-vdb001_d-bagel_v003.vdb',                  'Specification not found'           ],  # noqa E501 E241
@@ -93,8 +99,14 @@ class DatabaseTests(unittest.TestCase):
         data = self.get_data(root)
         for filepath in data.filepath.tolist():
             os.makedirs(filepath.parent, exist_ok=True)
-            with open(filepath, 'w') as f:
-                f.write('')
+
+            ext = os.path.splitext(filepath)[-1][1:]
+            if ext in ['png', 'jpg']:
+                img = np.zeros((5, 4, 3), dtype=np.uint8)
+                skimage.io.imsave(filepath.as_posix(), img)
+            else:
+                with open(filepath, 'w') as f:
+                    f.write('')
         return data
 
     def get_directory_to_dataframe_data(self, root):
@@ -120,6 +132,32 @@ class DatabaseTests(unittest.TestCase):
                 'frame',
                 'extension',
             ]
+            coordinate = ListType(ListType(IntType()), required=True)
+            frame = ListType(IntType(), required=True)
+            extension = ListType(
+                StringType(),
+                required=True,
+                validators=[lambda x: vd.is_eq(x, 'png')]
+            )
+
+            height = ListType(
+                IntType(),
+                required=True, validators=[lambda x: vd.is_eq(x, 5)]
+            )
+            width = ListType(
+                IntType(),
+                required=True, validators=[lambda x: vd.is_eq(x, 4)]
+            )
+            channels = ListType(
+                IntType(),
+                required=True, validators=[lambda x: vd.is_eq(x, 3)]
+            )
+
+            file_traits = dict(
+                width=tr.get_image_width,
+                height=tr.get_image_height,
+                channels=tr.get_image_channels,
+            )
 
             def get_asset_path(self, filepath):
                 return Path(filepath).parents[0]
@@ -134,6 +172,32 @@ class DatabaseTests(unittest.TestCase):
                 'frame',
                 'extension',
             ]
+
+            frame = ListType(IntType(), required=True)
+            extension = ListType(
+                StringType(),
+                required=True,
+                validators=[lambda x: vd.is_eq(x, 'jpg')]
+            )
+
+            height = ListType(
+                IntType(),
+                required=True, validators=[lambda x: vd.is_eq(x, 5)]
+            )
+            width = ListType(
+                IntType(),
+                required=True, validators=[lambda x: vd.is_eq(x, 4)]
+            )
+            channels = ListType(
+                IntType(),
+                required=True, validators=[lambda x: vd.is_eq(x, 3)]
+            )
+
+            file_traits = dict(
+                width=tr.get_image_width,
+                height=tr.get_image_height,
+                channels=tr.get_image_channels,
+            )
 
             def get_asset_path(self, filepath):
                 return Path(filepath).parents[0]
@@ -176,8 +240,13 @@ class DatabaseTests(unittest.TestCase):
                 .apply(lambda x: x.as_posix()).tolist()
             expected = sorted(expected)
 
-            result = Database(root, [Spec001, Spec002]).update().data.filepath.tolist()
+            data = Database(root, [Spec001, Spec002]).update().data
+            result = data.filepath.tolist()
             result = sorted(result)
+            self.assertEqual(result, expected)
+
+            result = data.groupby('asset_path').asset_valid.first().tolist()
+            expected = [True, True, False, True, False]
             self.assertEqual(result, expected)
 
     def test_update_exclude(self):
@@ -508,3 +577,77 @@ class DatabaseTests(unittest.TestCase):
 
         result = Database._cleanup(data).columns.tolist()
         self.assertEqual(result, self.columns)
+
+    def test_validate_assets(self):
+        with TemporaryDirectory() as root:
+            Spec001, Spec002, BadSpec = self.get_specifications()
+            data = self.create_files(root).head(1)
+            traits = dict(
+                project=['proj001'],
+                specification=['spec001'],
+                descriptor=['desc'],
+                version=[1],
+                coordinate=[[0, 1]],
+                frame=[5],
+                extension=['png'],
+                height=[5],
+                width=[4],
+                channels=[3],
+            )
+            data['asset_traits'] = [traits]
+            Database._validate_assets(data)
+
+            for i, row in data.iterrows():
+                self.assertTrue(np.isnan(row.asset_error))
+                self.assertTrue(row.asset_valid)
+
+            result = data.columns.tolist()
+            cols = ['asset_error', 'asset_valid']
+            for expected in cols:
+                self.assertIn(expected, result)
+
+    def test_validate_assets_invalid_one_file(self):
+        with TemporaryDirectory() as root:
+            Spec001, Spec002, BadSpec = self.get_specifications()
+            data = self.create_files(root).head(1)
+            traits = dict(
+                project=['proj001'],
+                specification=['spec001'],
+                descriptor=['desc'],
+                version=[1],
+                coordinate=[[0, 1]],
+                frame=[5],
+                extension=['png'],
+                height=[5],
+                width=[40],
+                channels=[3],
+            )
+            data['asset_traits'] = [traits]
+            Database._validate_assets(data)
+
+            for i, row in data.iterrows():
+                self.assertRegex(row.asset_error, '40 != 4')
+                self.assertFalse(row.asset_valid)
+
+    def test_validate_assets_invalid_many_file(self):
+        with TemporaryDirectory() as root:
+            Spec001, Spec002, BadSpec = self.get_specifications()
+            data = self.create_files(root).head(2)
+            traits = dict(
+                project=['proj001', 'proj001'],
+                specification=['spec001', 'spec001'],
+                descriptor=['desc', 'desc'],
+                version=[1, 1],
+                coordinate=[[0, 1], [0, 1]],
+                frame=[5, 5],
+                extension=['png', 'png'],
+                height=[5, 5],
+                width=[4, 400],
+                channels=[3, 3],
+            )
+            data['asset_traits'] = [traits, traits]
+            Database._validate_assets(data)
+
+            for i, row in data.iterrows():
+                self.assertRegex(row.asset_error, '400 != 4')
+                self.assertFalse(row.asset_valid)

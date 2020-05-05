@@ -31,6 +31,8 @@ class Database:
         'asset_path',
         'asset_type',
         'asset_traits',
+        'asset_error',
+        'asset_valid',
         # 'asset_id',
     ]
 
@@ -105,6 +107,7 @@ class Database:
             self._add_asset_path(data)
             self._add_asset_type(data)
             self._add_asset_traits(data)
+            self._validate_assets(data)
             # self._add_asset_id(data)
 
         data = self._cleanup(data)
@@ -225,6 +228,42 @@ class Database:
         lut = defaultdict(lambda: {}, lut)
 
         data['asset_traits'] = data.asset_path.apply(lambda x: lut[x])
+
+    @staticmethod
+    def _validate_assets(data):
+        '''
+        Validates assets according to their specification.
+        Add asset_error and asset_valid columns.
+
+        Args:
+            data (DataFrame): DataFrame.
+        '''
+        # create error lut
+        error = data.groupby('asset_path')\
+            .first()\
+            .apply(
+                lambda y: tools.try_(
+                    lambda x: x.specification_class(x.asset_traits).validate(),
+                    y,
+                    'error'),
+                axis=1)
+        lut = dict(zip(error.index.tolist(), error.tolist()))
+
+        # assign asset_error column
+        mask = data.asset_path.apply(lambda x: x in lut.keys())
+        data['asset_error'] = 'null'
+        data.loc[mask, 'asset_error'] = data.loc[mask, 'asset_path']\
+            .apply(lambda x: lut[x])\
+            .apply(lambda x: tools.error_to_string(x) if x is not None else np.nan)
+
+        # assign asset_valid column
+        data['asset_valid'] = False
+        mask = data.asset_error.isnull()
+        data.loc[mask, 'asset_valid'] = True
+
+        # cleanup asset_error
+        data.asset_error = data.asset_error\
+            .apply(lambda x: np.nan if x == 'null' else x)
 
     @staticmethod
     def _add_asset_id(data):
