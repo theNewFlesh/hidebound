@@ -183,6 +183,8 @@
         <span class="s1">&#39;asset_path&#39;</span><span class="p">,</span>
         <span class="s1">&#39;asset_type&#39;</span><span class="p">,</span>
         <span class="s1">&#39;asset_traits&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;asset_error&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;asset_valid&#39;</span><span class="p">,</span>
         <span class="c1"># &#39;asset_id&#39;,</span>
     <span class="p">]</span>
 
@@ -257,6 +259,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_add_asset_path</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_add_asset_type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_add_asset_traits</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_validate_assets</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
             <span class="c1"># self._add_asset_id(data)</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cleanup</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -377,6 +380,42 @@
         <span class="n">lut</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">{},</span> <span class="n">lut</span><span class="p">)</span>
 
         <span class="n">data</span><span class="p">[</span><span class="s1">&#39;asset_traits&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">asset_path</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">lut</span><span class="p">[</span><span class="n">x</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Database._validate_assets"><a class="viewcode-back" href="../../nerve.html#nerve.database.Database._validate_assets">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_validate_assets</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Validates assets according to their specification.</span>
+<span class="sd">        Add asset_error and asset_valid columns.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (DataFrame): DataFrame.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># create error lut</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;asset_path&#39;</span><span class="p">)</span>\
+            <span class="o">.</span><span class="n">first</span><span class="p">()</span>\
+            <span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="n">tools</span><span class="o">.</span><span class="n">try_</span><span class="p">(</span>
+                    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">asset_traits</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">(),</span>
+                    <span class="n">y</span><span class="p">,</span>
+                    <span class="s1">&#39;error&#39;</span><span class="p">),</span>
+                <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">lut</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">error</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span>
+
+        <span class="c1"># assign asset_error column</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">asset_path</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">lut</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;asset_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;null&#39;</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;asset_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;asset_path&#39;</span><span class="p">]</span>\
+            <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">lut</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>\
+            <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">tools</span><span class="o">.</span><span class="n">error_to_string</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+        <span class="c1"># assign asset_valid column</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;asset_valid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">asset_error</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;asset_valid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># cleanup asset_error</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">asset_error</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">asset_error</span>\
+            <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="s1">&#39;null&#39;</span> <span class="k">else</span> <span class="n">x</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Database._add_asset_id"><a class="viewcode-back" href="../../nerve.html#nerve.database.Database._add_asset_id">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_add_asset_id</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>

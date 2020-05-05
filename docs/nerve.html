@@ -175,7 +175,7 @@
 <p>Generates a DataFrame using the files within a given directory as rows.</p>
 <dl class="py attribute">
 <dt id="nerve.database.Database.COLUMNS">
-<code class="sig-name descname">COLUMNS</code><em class="property"> = ['project', 'specification', 'descriptor', 'version', 'coordinate', 'frame', 'extension', 'filename', 'filepath', 'file_error', 'file_traits', 'asset_name', 'asset_path', 'asset_type', 'asset_traits']</em><a class="headerlink" href="#nerve.database.Database.COLUMNS" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">COLUMNS</code><em class="property"> = ['project', 'specification', 'descriptor', 'version', 'coordinate', 'frame', 'extension', 'filename', 'filepath', 'file_error', 'file_traits', 'asset_name', 'asset_path', 'asset_type', 'asset_traits', 'asset_error', 'asset_valid']</em><a class="headerlink" href="#nerve.database.Database.COLUMNS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -282,6 +282,18 @@ are converted to strings.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="nerve.database.Database._validate_assets">
+<em class="property">static </em><code class="sig-name descname">_validate_assets</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nerve/database.html#Database._validate_assets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#nerve.database.Database._validate_assets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates assets according to their specification.
+Add asset_error and asset_valid columns.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>DataFrame</em>) – DataFrame.</p>
 </dd>
 </dl>
 </dd></dl>
