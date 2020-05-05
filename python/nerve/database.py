@@ -55,8 +55,8 @@ class Database:
                 regex. Default: None.
             exclude_regex (str, optional): Exclude filenames that match this
                 regex. Default: '\.DS_Store'.
-            ignore_order (bool, optional): Whether to ignore the filename_ order in
-                filenames. Default: False.
+            ignore_order (bool, optional): Whether to ignore the filename_ order
+                in filenames. Default: False.
 
         Raises:
             FileNotFoundError: If root is not a directory or does not exist.
@@ -75,8 +75,8 @@ class Database:
             lambda x: not issubclass(x, SpecificationBase), specifications
         ))
         if len(bad_specs) > 0:
-            msg = f'SpecificationBase may only contain subclasses of SpecificationBase.'
-            msg += f' Found: {bad_specs}.'
+            msg = f'SpecificationBase may only contain subclasses of '
+            msg += f'SpecificationBase. Found: {bad_specs}.'
             raise TypeError(msg)
 
         self._root = root
