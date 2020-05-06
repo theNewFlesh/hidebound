@@ -1,0 +1,441 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>hidebound.specification_base &mdash; hidebound  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> hidebound
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../hidebound.html">hidebound</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli.html">cli</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">hidebound</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>hidebound.specification_base</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for hidebound.specification_base</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+
+<span class="kn">from</span> <span class="nn">pyparsing</span> <span class="kn">import</span> <span class="n">ParseException</span>
+<span class="kn">from</span> <span class="nn">schematics</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">ValidationError</span>
+<span class="kn">from</span> <span class="nn">schematics.types</span> <span class="kn">import</span> <span class="n">IntType</span><span class="p">,</span> <span class="n">ListType</span><span class="p">,</span> <span class="n">StringType</span>
+
+<span class="kn">from</span> <span class="nn">hidebound.parser</span> <span class="kn">import</span> <span class="n">AssetNameParser</span>
+<span class="kn">import</span> <span class="nn">hidebound.tools</span> <span class="k">as</span> <span class="nn">tools</span>
+<span class="kn">import</span> <span class="nn">hidebound.validators</span> <span class="k">as</span> <span class="nn">vd</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Contains the abstract base classes for all Hidebound specifications.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+
+<div class="viewcode-block" id="SpecificationBase"><a class="viewcode-back" href="../../hidebound.html#hidebound.specification_base.SpecificationBase">[docs]</a><span class="k">class</span> <span class="nc">SpecificationBase</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    The base class for all Hidebound specifications.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        asset_type (str): Type of asset. Options include: file, sequence, complex.</span>
+<span class="sd">        filename_fields (list[str]): List of fields found in the asset filenames.</span>
+<span class="sd">        asset_name_fields (list[str]): List of fields found in the asset name.</span>
+<span class="sd">        project (str): Project name.</span>
+<span class="sd">        descriptor (str): Asset descriptor.</span>
+<span class="sd">        version (int): Asset version.</span>
+<span class="sd">        extension (str): File extension.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">asset_type</span> <span class="o">=</span> <span class="s1">&#39;specification&#39;</span>
+    <span class="n">filename_fields</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="s1">&#39;specification&#39;</span><span class="p">,</span> <span class="s1">&#39;descriptor&#39;</span><span class="p">,</span> <span class="s1">&#39;version&#39;</span><span class="p">,</span> <span class="s1">&#39;extension&#39;</span>
+    <span class="p">]</span>
+    <span class="n">asset_name_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="s1">&#39;specification&#39;</span><span class="p">,</span> <span class="s1">&#39;descriptor&#39;</span><span class="p">,</span> <span class="s1">&#39;version&#39;</span><span class="p">]</span>
+    <span class="n">project</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
+        <span class="n">StringType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_project</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">specification</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span><span class="n">StringType</span><span class="p">())</span>
+    <span class="n">descriptor</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
+        <span class="n">StringType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_descriptor</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
+        <span class="n">IntType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_version</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">extension</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
+        <span class="n">StringType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_extension</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">file_traits</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Returns a new specification instance.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (dict, optional): Dictionary of asset data.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">raw_data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+<div class="viewcode-block" id="SpecificationBase.get_asset_name"><a class="viewcode-back" href="../../hidebound.html#hidebound.specification_base.SpecificationBase.get_asset_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_asset_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Returns the expected asset name give a filepath.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath (str or Path): filepath to asset file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Asset name.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">AssetNameParser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename_fields</span><span class="p">)</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">filepath</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">AssetNameParser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">asset_name_fields</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SpecificationBase.get_asset_path"><a class="viewcode-back" href="../../hidebound.html#hidebound.specification_base.SpecificationBase.get_asset_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_asset_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Returns the expected asset path given a filepath.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath (str or Path): filepath to asset file.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NotImplementedError: If method not defined in subclass.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Path: Asset path.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Method must be implemented in subclasses of SpecificationBase.&#39;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SpecificationBase.get_asset_id"><a class="viewcode-back" href="../../hidebound.html#hidebound.specification_base.SpecificationBase.get_asset_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_asset_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Returns a hash UUID of the asset directory or file, depending of asset</span>
+<span class="sd">        type.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath (str or Path): filepath to asset file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Asset id.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid3</span><span class="p">(</span>
+            <span class="n">uuid</span><span class="o">.</span><span class="n">NAMESPACE_URL</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_asset_path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+        <span class="p">))</span></div>
+
+<div class="viewcode-block" id="SpecificationBase.validate_filepath"><a class="viewcode-back" href="../../hidebound.html#hidebound.specification_base.SpecificationBase.validate_filepath">[docs]</a>    <span class="k">def</span> <span class="nf">validate_filepath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Attempts to parse the given filepath.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath (str or Path): filepath to asset file.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValidationError: If parse fails.</span>
+<span class="sd">            ValidationError: If asset directory name is invalid.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">AssetNameParser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename_fields</span><span class="p">)</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">filepath</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ParseException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">asset_type</span> <span class="o">==</span> <span class="s1">&#39;file&#39;</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">AssetNameParser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">asset_name_fields</span><span class="p">)</span>
+        <span class="n">actual</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_asset_path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">actual</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ParseException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+        <span class="n">expected</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">actual</span> <span class="o">!=</span> <span class="n">expected</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Invalid asset directory name. &#39;</span>
+            <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;Expecting: </span><span class="si">{</span><span class="n">expected</span><span class="si">}</span><span class="s1">. Found: </span><span class="si">{</span><span class="n">actual</span><span class="si">}</span><span class="s1"> in &#39;</span>
+            <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filepath</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span><span class="si">}</span><span class="s1">.&#39;</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SpecificationBase.get_filename_traits"><a class="viewcode-back" href="../../hidebound.html#hidebound.specification_base.SpecificationBase.get_filename_traits">[docs]</a>    <span class="k">def</span> <span class="nf">get_filename_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Returns a dictionary of filename traits from given filepath.</span>
+<span class="sd">        Returns error in filename_error key if one is encountered.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath (str or Path): filepath to asset file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: Traits.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">AssetNameParser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename_fields</span><span class="p">)</span>\
+                <span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ParseException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">filename_error</span><span class="o">=</span><span class="n">tools</span><span class="o">.</span><span class="n">error_to_string</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="SpecificationBase.get_file_traits"><a class="viewcode-back" href="../../hidebound.html#hidebound.specification_base.SpecificationBase.get_file_traits">[docs]</a>    <span class="k">def</span> <span class="nf">get_file_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Returns a dictionary of file traits from given filepath.</span>
+<span class="sd">        Returns error in respective key if one is encountered.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath (str or Path): filepath to asset file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: Traits.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_traits</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">output</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">output</span><span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tools</span><span class="o">.</span><span class="n">error_to_string</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span></div>
+
+<div class="viewcode-block" id="SpecificationBase.get_traits"><a class="viewcode-back" href="../../hidebound.html#hidebound.specification_base.SpecificationBase.get_traits">[docs]</a>    <span class="k">def</span> <span class="nf">get_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Returns a dictionary of file and filename traits from given filepath.</span>
+<span class="sd">        Errors are captured in their respective keys.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath (str or Path): filepath to asset file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: Traits.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">traits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_filename_traits</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+        <span class="n">traits</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_file_traits</span><span class="p">(</span><span class="n">filepath</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">traits</span></div></div>
+
+
+<div class="viewcode-block" id="FileSpecificationBase"><a class="viewcode-back" href="../../hidebound.html#hidebound.specification_base.FileSpecificationBase">[docs]</a><span class="k">class</span> <span class="nc">FileSpecificationBase</span><span class="p">(</span><span class="n">SpecificationBase</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    The base class for asset that consist of a single file.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        asset_type (str): File.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">asset_type</span> <span class="o">=</span> <span class="s1">&#39;file&#39;</span>
+
+<div class="viewcode-block" id="FileSpecificationBase.get_asset_path"><a class="viewcode-back" href="../../hidebound.html#hidebound.specification_base.FileSpecificationBase.get_asset_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_asset_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Returns the filepath.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath (str or Path): filepath to asset file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Path: Asset path.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="SequenceSpecificationBase"><a class="viewcode-back" href="../../hidebound.html#hidebound.specification_base.SequenceSpecificationBase">[docs]</a><span class="k">class</span> <span class="nc">SequenceSpecificationBase</span><span class="p">(</span><span class="n">SpecificationBase</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    The base class for assets that consist of a sequence of files under a single</span>
+<span class="sd">    directory.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        asset_type (str): Sequence.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">asset_type</span> <span class="o">=</span> <span class="s1">&#39;sequence&#39;</span>
+
+<div class="viewcode-block" id="SequenceSpecificationBase.get_asset_path"><a class="viewcode-back" href="../../hidebound.html#hidebound.specification_base.SequenceSpecificationBase.get_asset_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_asset_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Returns the directory containing the asset files.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath (str or Path): filepath to asset file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Path: Asset path.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="ComplexSpecificationBase"><a class="viewcode-back" href="../../hidebound.html#hidebound.specification_base.ComplexSpecificationBase">[docs]</a><span class="k">class</span> <span class="nc">ComplexSpecificationBase</span><span class="p">(</span><span class="n">SpecificationBase</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    The base class for assets that consist of multiple directories of files.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        asset_type (str): Complex.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">asset_type</span> <span class="o">=</span> <span class="s1">&#39;complex&#39;</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Alex Braun &lt;TheNewFlesh@github.com&gt;
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

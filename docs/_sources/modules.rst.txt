@@ -1,5 +1,5 @@
 .. toctree::
    :maxdepth: 4
 
-   nerve
+   hidebound
    cli

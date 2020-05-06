@@ -14,8 +14,8 @@ with open('README.md') as f:
 # ------------------------------------------------------------------------------
 
 setup(
-    name='nerve',
-    packages=['nerve'],
+    name='hidebound',
+    packages=['hidebound'],
     version=VERSION,
     license='MIT',
     description='A library for creating assets from files on disk.',
@@ -23,8 +23,8 @@ setup(
     long_description_content_type='text/markdown',
     author='Alex Braun',
     author_email='Alexander.G.Braun@gmail.com',
-    url='https://github.com/theNewFlesh/nerve',
-    download_url='https://github.com/theNewFlesh/nerve/archive/' + VERSION + '.tar.gz',
+    url='https://github.com/theNewFlesh/hidebound',
+    download_url='https://github.com/theNewFlesh/hidebound/archive/' + VERSION + '.tar.gz',
     keywords=['asset', 'project', 'data'],
     install_requires=PROD_REQUIREMENTS,
     classifiers=[

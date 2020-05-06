@@ -1,4 +1,4 @@
-# Run the nerve service stack
+# Run the hidebound service stack
 
 # Required variables
 #  - CURRENT_USER: The uid:gid value to ensure the bind mounted volume's
@@ -10,19 +10,19 @@ volumes:
   cache:
 services:
 
-  nerve:
-    container_name: nerve
+  hidebound:
+    container_name: hidebound
     image: ${IMAGE}
     build:
       context: .
-      dockerfile: nerve.dockerfile
+      dockerfile: hidebound.dockerfile
     ports:
       - '9012:9000'
       - '5000:5000'
     userns_mode: "host"
     user: root
     volumes:
-      - ${REPO_PATH}:/root/nerve
+      - ${REPO_PATH}:/root/hidebound
       - ${REPO_PATH}/docker/jupyter:/root/.jupyter
-    working_dir: "/root/nerve/python"
+    working_dir: "/root/hidebound/python"
     command: "tail -f /dev/null"
