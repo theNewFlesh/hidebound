@@ -20,7 +20,7 @@ import hidebound.validators as vd
 # ------------------------------------------------------------------------------
 
 
-class SpecifcationValidatorTests(unittest.TestCase):
+class IsSpecificationFileTests(unittest.TestCase):
     def test_is_specification_file(self):
         with TemporaryDirectory() as root:
             filepath = Path(root, 'specifications1.py')

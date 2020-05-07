@@ -60,7 +60,8 @@ def is_specification_file(filepath):
     # ensure SPECIFICATIONS is a dict
     if not isinstance(mod.SPECIFICATIONS, dict):
         sys.path = temp
-        msg = f'{filepath.as_posix()} SPECIFICATIONS attribute is not a dictionary.'
+        msg = f'{filepath.as_posix()} SPECIFICATIONS attribute is not a '
+        msg += 'dictionary.'
         raise ValidationError(msg)
 
     # ensure all SPECIFICATIONS values are SpecificationBase subclasses
