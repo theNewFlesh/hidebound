@@ -5,11 +5,12 @@ import re
 import unittest
 
 from pandas import DataFrame
+from schematics.exceptions import ValidationError
 from schematics.types import ListType, IntType, StringType
 import numpy as np
 import skimage.io
 
-from hidebound.database import Database
+from hidebound.database import Database, is_specification_file
 from hidebound.specification_base import ComplexSpecificationBase
 from hidebound.specification_base import FileSpecificationBase
 from hidebound.specification_base import SequenceSpecificationBase
@@ -17,6 +18,142 @@ from hidebound.specification_base import SpecificationBase
 import hidebound.traits as tr
 import hidebound.validators as vd
 # ------------------------------------------------------------------------------
+
+
+class SpecifcationValidatorTests(unittest.TestCase):
+    def test_is_specification_file(self):
+        with TemporaryDirectory() as root:
+            filepath = Path(root, 'specifications1.py')
+
+            text = '''
+                from schematics.types import IntType, ListType, StringType
+                from hidebound.specification_base import SpecificationBase
+
+                class Spec001(SpecificationBase):
+                    foo = ListType(IntType(), required=True)
+                    bar = ListType(StringType(), required=True)
+
+                SPECIFICATIONS = {
+                    'spec001': Spec001
+                }'''
+            text = re.sub('                ', '', text)
+            with open(filepath, 'w') as f:
+                f.write(text)
+            is_specification_file(filepath)
+
+    def test_import(self):
+        with TemporaryDirectory() as root:
+            filepath = Path(root, 'specifications2.py')
+
+            text = '''
+                from schematics.types import IntType, ListType, StringType
+                from hidebound.specification_base import SpecificationBase
+
+                BIG DUMB ERROR
+
+                class Spec001(SpecificationBase):
+                    foo = ListType(IntType(), required=True)
+                    bar = ListType(StringType(), required=True)
+
+                SPECIFICATIONS = {
+                    'spec001': Spec001
+                }'''
+            text = re.sub('                ', '', text)
+            with open(filepath, 'w') as f:
+                f.write(text)
+
+            expected = f'{filepath.as_posix()} could not be imported.'
+            with self.assertRaisesRegexp(ValidationError, expected):
+                is_specification_file(filepath)
+
+    def test_has_specifications_attribute(self):
+        with TemporaryDirectory() as root:
+            filepath = Path(root, 'specifications3.py')
+
+            text = '''
+                from schematics.types import IntType, ListType, StringType
+                from hidebound.specification_base import SpecificationBase
+
+                class Spec001(SpecificationBase):
+                    foo = ListType(IntType(), required=True)
+                    bar = ListType(StringType(), required=True)'''
+            text = re.sub('                ', '', text)
+            with open(filepath, 'w') as f:
+                f.write(text)
+
+            expected = f'{filepath.as_posix()} has no SPECIFICATIONS attribute.'
+            with self.assertRaisesRegexp(ValidationError, expected):
+                is_specification_file(filepath)
+
+    def test_specifications_is_dict(self):
+        with TemporaryDirectory() as root:
+            filepath = Path(root, 'specifications4.py')
+
+            text = '''
+                from schematics.types import IntType, ListType, StringType
+                from hidebound.specification_base import SpecificationBase
+
+                class Spec001(SpecificationBase):
+                    foo = ListType(IntType(), required=True)
+                    bar = ListType(StringType(), required=True)
+
+                SPECIFICATIONS = [
+                    ('spec001', Spec001)
+                ]'''
+            text = re.sub('                ', '', text)
+            with open(filepath, 'w') as f:
+                f.write(text)
+
+            expected = f'{filepath.as_posix()} SPECIFICATIONS attribute is not '
+            expected += 'a dictionary.'
+            with self.assertRaisesRegexp(ValidationError, expected):
+                is_specification_file(filepath)
+
+    def test_specificationbase_bad_subclasses(self):
+        with TemporaryDirectory() as root:
+            filepath = Path(root, 'specifications5.py')
+
+            text = '''
+                from schematics.types import IntType, ListType, StringType
+                from hidebound.specification_base import SpecificationBase
+
+                class Spec001:
+                    foo = ListType(IntType(), required=True)
+                    bar = ListType(StringType(), required=True)
+
+                SPECIFICATIONS = {
+                    'spec001': Spec001
+                }'''
+            text = re.sub('                ', '', text)
+            with open(filepath, 'w') as f:
+                f.write(text)
+
+            expected = 'are not subclasses of SpecificationBase.'
+            with self.assertRaisesRegexp(ValidationError, expected):
+                is_specification_file(filepath)
+
+    def test_correct_key_names(self):
+        with TemporaryDirectory() as root:
+            filepath = Path(root, 'specifications6.py')
+
+            text = '''
+                from schematics.types import IntType, ListType, StringType
+                from hidebound.specification_base import SpecificationBase
+
+                class Spec001(SpecificationBase):
+                    foo = ListType(IntType(), required=True)
+                    bar = ListType(StringType(), required=True)
+
+                SPECIFICATIONS = {
+                    'Spec001': Spec001
+                }'''
+            text = re.sub('                ', '', text)
+            with open(filepath, 'w') as f:
+                f.write(text)
+
+            expected = r"Improper SPECIFICATIONS keys: \['Spec001'\]\."
+            with self.assertRaisesRegexp(ValidationError, expected):
+                is_specification_file(filepath)
 
 
 class DatabaseTests(unittest.TestCase):
