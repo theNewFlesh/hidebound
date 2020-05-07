@@ -8,6 +8,7 @@ the trait they validate fails. Schematics captures these error messages and
 pipes them to an error call.
 '''
 
+import os
 import re
 
 from pyparsing import ParseException
@@ -296,4 +297,66 @@ def is_homogenous(items):
     for item in items[1:]:
         if item != first:
             return False
+    return True
+
+
+@validate_each('{} is not in {}.')
+def is_in(a, b):
+    '''
+    Validates that each a is in b.
+    Args:
+        a (object): Object.
+        b (object): Object.
+    Raises:
+        ValidationError: If a is not in b.
+    Returns:
+        bool: Alls a's in b.
+    '''
+    return a in b
+
+
+@validate_each('{} is not an attribute of {}.')
+def is_attribute_of(name, object):
+    '''
+    Validates that each name is an attribute of given object.
+    Args:
+        a (str): Attribute name.
+        b (object): Object.
+    Raises:
+        ValidationError: If an name is not an attribute of given object.
+    Returns:
+        bool: Alls names are attributes of object.
+    '''
+    return hasattr(object, name)
+
+
+@validate('{} is not a directory or does not exist.')
+def is_directory(item):
+    '''
+    Validates thats item is a directory.
+    Args:
+        item (str): Directory path.
+    Raises:
+        ValidationError: If item is not a directory or does not exist.
+    Returns:
+        bool: State of item.
+    '''
+    if not os.path.isdir(item):
+        return False
+    return True
+
+
+@validate('{} is not a file or does not exist.')
+def is_file(item):
+    '''
+    Validates thats item is a file.
+    Args:
+        item (str): Filepath.
+    Raises:
+        ValidationError: If item is not a file or does not exist.
+    Returns:
+        bool: State of item.
+    '''
+    if not os.path.isfile(item):
+        return False
     return True

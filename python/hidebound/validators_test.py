@@ -1,3 +1,5 @@
+from pathlib import Path
+from tempfile import TemporaryDirectory
 import unittest
 
 import numpy as np
@@ -266,3 +268,58 @@ class DatabaseTests(unittest.TestCase):
             vd.is_homogenous(item)
         expected = f'{item} is not homogenous.'
         self.assertIn(expected, str(e.exception[0]))
+
+    def test_is_in(self):
+        vd.is_in(0, [0, 1, 2])
+        vd.is_in(2, ['a', 1, 2])
+
+        expected = r'0 is not in \[3, 4, 5\]'
+        with self.assertRaisesRegexp(ValidationError, expected):
+            vd.is_in(0, [3, 4, 5])
+
+    def test_is_attribute_of(self):
+        class Foo:
+            bar = 'bar'
+
+            def baz(self):
+                pass
+
+        vd.is_attribute_of('bar', Foo)
+        vd.is_attribute_of('baz', Foo)
+
+        expected = f'bagel is not an attribute of {Foo}'
+        with self.assertRaisesRegexp(ValidationError, expected):
+            vd.is_attribute_of('bagel', Foo)
+
+    def test_is_directory(self):
+        dirpath = '/foo/bar'
+        expected = f'{dirpath} is not a directory or does not exist.'
+        with self.assertRaisesRegexp(ValidationError, expected):
+            vd.is_directory(dirpath)
+
+        with TemporaryDirectory() as root:
+            vd.is_directory(root)
+
+            filepath = Path(root, 'foo.txt')
+            with open(filepath, 'w') as f:
+                f.write('')
+
+            expected = f'{filepath} is not a directory or does not exist.'
+            with self.assertRaisesRegexp(ValidationError, expected):
+                vd.is_directory(filepath)
+
+    def test_is_file(self):
+        filepath = '/foo/bar.txt'
+        expected = f'{filepath} is not a file or does not exist.'
+        with self.assertRaisesRegexp(ValidationError, expected):
+            vd.is_file(filepath)
+
+        with TemporaryDirectory() as root:
+            expected = f'{root} is not a file or does not exist.'
+            with self.assertRaisesRegexp(ValidationError, expected):
+                vd.is_file(root)
+
+            filepath = Path(root, 'foo.txt')
+            with open(filepath, 'w') as f:
+                f.write('')
+            vd.is_file(filepath)
