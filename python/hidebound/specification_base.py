@@ -30,7 +30,6 @@ class SpecificationBase(Model):
         version (int): Asset version.
         extension (str): File extension.
     '''
-    name = None
     asset_type = 'specification'
     filename_fields = [
         'project', 'specification', 'descriptor', 'version', 'extension'
@@ -59,7 +58,6 @@ class SpecificationBase(Model):
             data (dict, optional): Dictionary of asset data.
         '''
         super().__init__(raw_data=data)
-        self.name = self.__class__.__name__.lower()
 
     def get_asset_name(self, filepath):
         '''

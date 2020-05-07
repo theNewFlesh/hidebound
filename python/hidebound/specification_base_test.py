@@ -31,10 +31,7 @@ class SpecificationBaseTests(unittest.TestCase):
             return Path(filepath)
 
     def test_init(self):
-        result = sb.SpecificationBase().name
-        self.assertEqual(result, 'specificationbase')
-        result = self.Foo().name
-        self.assertEqual(result, 'foo')
+        sb.SpecificationBase()
 
     def test_get_asset_name(self):
         result = self.Foo().get_asset_name(self.filepath)
