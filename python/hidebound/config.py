@@ -25,7 +25,7 @@ def is_specification_file(filepath):
     Raises:
         ValidationError: If module could not be imported.
         ValidationError: If module has no SPECIFICATIONS attribute.
-        ValidationError: If module SPECIFICATIONS attribute is not a dictionary.
+        ValidationError: If module SPECIFICATIONS attribute is not a list.
         ValidationError: If modules classes in SPECIFICATIONS attribute are not
             subclasses of SpecificationBase.
         ValidationError: If keys in SPECIFICATIONS attribute are not lowercase
