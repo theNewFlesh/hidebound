@@ -379,6 +379,37 @@ class DatabaseTests(DatabaseTestBase):
                 .apply(lambda x: '/tmp/hidebound' in x).unique().tolist()
             self.assertEqual(result, [True])
 
+    def test_get_data_for_write_dirs(self):
+        data = tools.relative_path(__file__, '../../resources/fake_data.csv')
+        data = pd.read_csv(data)
+
+        file_data, file_meta, asset_meta = db_tools._get_data_for_write(
+            data,
+            '/tmp/projects',
+            '/tmp/hidebound'
+        )
+
+        result = file_data.target\
+            .apply(lambda x: '/tmp/hidebound/data' in x).unique().tolist()
+        self.assertEqual(result, [True])
+
+        result = file_meta.target\
+            .apply(lambda x: '/tmp/hidebound/metadata/file' in x).unique().tolist()
+        self.assertEqual(result, [True])
+
+        result = asset_meta.target\
+            .apply(lambda x: '/tmp/hidebound/metadata/asset' in x).unique().tolist()
+        self.assertEqual(result, [True])
+
+    def test_get_data_for_write_empty_dataframe(self):
+        data = DataFrame()
+        data['asset_valid'] = [False, False]
+
+        result = db_tools._get_data_for_write(
+            data, '/tmp/projects', '/tmp/hidebound'
+        )
+        self.assertIs(result, None)
+
     def test_get_data_for_write_asset_id_file_ids_pair(self):
         data = tools.relative_path(__file__, '../../resources/fake_data.csv')
         data = pd.read_csv(data)

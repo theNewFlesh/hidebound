@@ -330,10 +330,6 @@ def _get_data_for_write(data, source_dir, target_dir):
     lut = defaultdict(lambda: np.nan, lut)
     data['asset_id'] = data.asset_path.apply(lambda x: lut[x])
 
-    # create target data path
-    data['data_path'] = data.filepath\
-        .apply(lambda x: re.sub(source_dir, data_dir, x))
-
     # create file id and metadata
     data['file_id'] = data.asset_name.apply(lambda x: str(uuid.uuid4()))
     data['metadata'] = data.apply(
@@ -350,12 +346,8 @@ def _get_data_for_write(data, source_dir, target_dir):
         axis=1
     )
 
-    # create target metadata path
-    data['metadata_path'] = data.file_id\
-        .apply(lambda x: Path(meta_dir, x + '.json').as_posix())
-
     # create asset metadata
-    asset_meta = data\
+    asset_meta = data.copy()\
         .groupby('asset_id', as_index=False)\
         .agg(lambda x: [dict(
             asset_id=x.asset_id.tolist()[0],
@@ -369,22 +361,21 @@ def _get_data_for_write(data, source_dir, target_dir):
             filepaths=x.filepath.tolist(),
         )])
     asset_meta['metadata'] = asset_meta.asset_name
-    asset_meta['metadata_path'] = asset_meta.asset_id\
-        .apply(lambda x: Path(data_dir, x + '.json').as_posix())
+    asset_meta['target'] = asset_meta.asset_id\
+        .apply(lambda x: Path(meta_dir, 'asset', x + '.json').as_posix())
+    asset_meta = asset_meta[['metadata', 'target']]
 
     # create file data
-    cols = ['filepath', 'data_path']
-    file_data = data[cols].copy()
-    file_data.columns = ['source', 'target']
+    file_data = data.copy()
+    file_data['source'] = file_data.filepath
+    file_data['target'] = file_data.source\
+        .apply(lambda x: re.sub(source_dir, data_dir, x))
+    file_data = file_data[['source', 'target']]
 
     # create file metadata
-    cols = ['metadata', 'metadata_path']
-    file_meta = data[cols].copy()
-    file_meta.columns = ['metadata', 'target']
-
-    # restrict asset metadata columns
-    cols = ['metadata', 'metadata_path']
-    asset_meta = asset_meta[cols]
-    asset_meta.columns = ['metadata', 'target']
+    file_meta = data.copy()
+    file_meta['target'] = file_meta.file_id\
+        .apply(lambda x: Path(meta_dir, 'file', x + '.json').as_posix())
+    file_meta = file_meta[['metadata', 'target']]
 
     return file_data, file_meta, asset_meta
