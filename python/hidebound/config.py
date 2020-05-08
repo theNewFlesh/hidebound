@@ -89,7 +89,7 @@ class Config(Model):
             Default: ''.
         exclude_regex (str, optional): Exclude filenames that match this regex.
             Default: '\.DS_Store'.
-        extraction_mode (str, optional): How assets will be extracted to
+        write_mode (str, optional): How assets will be extracted to
             hidebound/data directory. Default: copy.
     '''
     root_directory = StringType(required=True, validators=[vd.is_directory])
@@ -101,7 +101,7 @@ class Config(Model):
     )
     include_regex = StringType(default='', required=True)
     exclude_regex = StringType(default=r'\.DS_Store', required=True)
-    extraction_mode = StringType(
+    write_mode = StringType(
         required=True,
         validators=[lambda x: vd.is_in(x, ['copy', 'move'])]
     )

@@ -160,7 +160,7 @@ class ConfigTests(unittest.TestCase):
             specification_files=[],
             include_regex='foo',
             exclude_regex='bar',
-            extraction_mode='copy',
+            write_mode='copy',
         )
 
     def test_config(self):
@@ -189,19 +189,19 @@ class ConfigTests(unittest.TestCase):
             with self.assertRaisesRegex(DataError, expected):
                 cfg.Config(self.config).validate()
 
-    def test_extraction_mode(self):
+    def test_write_mode(self):
         with TemporaryDirectory() as temp:
             self.set_data(temp)
             os.makedirs(self.root)
             os.makedirs(self.asset_dir)
 
-            self.config['extraction_mode'] = 'copy'
+            self.config['write_mode'] = 'copy'
             cfg.Config(self.config).validate()
 
-            self.config['extraction_mode'] = 'move'
+            self.config['write_mode'] = 'move'
             cfg.Config(self.config).validate()
 
-            self.config['extraction_mode'] = 'shuffle'
+            self.config['write_mode'] = 'shuffle'
             expected = r"shuffle is not in \['copy', 'move'\]"
             with self.assertRaisesRegexp(DataError, expected):
                 cfg.Config(self.config).validate()

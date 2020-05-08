@@ -1,14 +1,9 @@
-from collections import defaultdict
 from importlib import import_module
 from pathlib import Path
 import json
 import os
-import re
 import shutil
 import sys
-import uuid
-
-import numpy as np
 
 from hidebound.config import Config
 import hidebound.database_tools as db_tools
@@ -57,7 +52,7 @@ class Database:
             specifications=specs,
             include_regex=config['include_regex'],
             exclude_regex=config['exclude_regex'],
-            extraction_mode=config['extraction_mode'],
+            write_mode=config['write_mode'],
         )
 
     @staticmethod
@@ -82,7 +77,7 @@ class Database:
         specifications=[],
         include_regex='',
         exclude_regex=r'\.DS_Store',
-        extraction_mode='copy',
+        write_mode='copy',
     ):
         r'''
         Creates an instance of Database but does not populate it with data.
@@ -97,13 +92,13 @@ class Database:
                 regex. Default: None.
             exclude_regex (str, optional): Exclude filenames that match this
                 regex. Default: '\.DS_Store'.
-            extraction_mode (str, optional): How assets will be extracted to
+            write_mode (str, optional): How assets will be extracted to
                 hidebound/data directory. Default: copy.
 
         Raises:
             TypeError: If specifications contains a non-SpecificationBase
                 object.
-            ValueError: If extraction_mode not is not "copy" or "move".
+            ValueError: If write_mode not is not "copy" or "move".
             FileNotFoundError: If root is not a directory or does not exist.
             FileNotFoundError: If hidebound_parent_dir is not directory or
                 does not exist.
@@ -129,10 +124,10 @@ class Database:
             msg = f'{root} is not a directory or does not exist.'
             raise FileNotFoundError(msg)
 
-        # validate extraction mode
+        # validate write mode
         modes = ['copy', 'move']
-        if extraction_mode not in modes:
-            msg = f'Invalid extraction mode: {extraction_mode} not in {modes}.'
+        if write_mode not in modes:
+            msg = f'Invalid write mode: {write_mode} not in {modes}.'
             raise ValueError(msg)
 
         # validate hidebound root dir
@@ -151,7 +146,7 @@ class Database:
         self._hb_root = hb_root
         self._include_regex = include_regex
         self._exclude_regex = exclude_regex
-        self._extraction_mode = extraction_mode
+        self._write_mode = write_mode
         self._specifications = {x.__name__.lower(): x for x in specifications}
         self.data = None
 
@@ -177,8 +172,51 @@ class Database:
             db_tools._add_asset_type(data)
             db_tools._add_asset_traits(data)
             db_tools._validate_assets(data)
-            # db_tools._add_asset_id(data)
 
         data = db_tools._cleanup(data)
         self.data = data
+        return self
+
+    def create(self):
+        '''
+        Extract valid assets as data and metadata within the hidebound
+        directory.
+
+        Writes:
+
+            * file data to hb_parent/hidebound/data - under same directory structure
+            * file metadata as json to hb_parent/hidebound/metadata/file
+            * asset metadata as json to hb_parent/hidebound/metadata/asset
+
+        Returns:
+            Database: self.
+        '''
+        def write_json(obj, filepath):
+            with open(filepath, 'w') as f:
+                json.dump(obj, f)
+
+        temp = db_tools._get_data_for_write(
+            self.data, self._root, self._hb_root
+        )
+        if temp is None:
+            return self
+
+        file_data, file_meta, asset_meta = temp
+
+        # make directories
+        for item in temp:
+            item.target.apply(lambda x: os.makedirs(Path(x).parent, exist_ok=True))
+
+        # write file data
+        if self._write_mode == 'move':
+            file_data.apply(lambda x: shutil.move(x.source, x.target), axis=1)
+        else:
+            file_data.apply(lambda x: shutil.copy2(x.source, x.target), axis=1)
+
+        # write file metadata
+        file_meta.apply(lambda x: write_json(x.metadata, x.target), axis=1)
+
+        # write asset metadata
+        asset_meta.apply(lambda x: write_json(x.metadata, x.target), axis=1)
+
         return self

@@ -8,6 +8,7 @@ from schematics.exceptions import DataError
 
 from hidebound.database import Database
 from hidebound.database_test_base import DatabaseTestBase
+import hidebound.tools as tools
 # ------------------------------------------------------------------------------
 
 
@@ -48,7 +49,7 @@ class DatabaseTests(DatabaseTestBase):
                 specification_files=[spec_file],
                 include_regex='foo',
                 exclude_regex='bar',
-                extraction_mode='copy',
+                write_mode='copy',
             )
             Database.from_config(config)
 
@@ -69,7 +70,7 @@ class DatabaseTests(DatabaseTestBase):
                 specification_files=[spec_file],
                 include_regex='foo',
                 exclude_regex='bar',
-                extraction_mode='copy',
+                write_mode='copy',
             )
             config_file = Path(root, 'config.json')
             with open(config_file, 'w') as f:
@@ -121,15 +122,15 @@ class DatabaseTests(DatabaseTestBase):
             with self.assertRaisesRegexp(TypeError, expected):
                 Database(root, hb_root, [Spec001, BadSpec])
 
-    def test_init_bad_extraction_mode(self):
+    def test_init_bad_write_mode(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
         with TemporaryDirectory() as root:
             hb_root = Path(root, 'hb_root')
             os.makedirs(hb_root)
 
-            expected = r"Invalid extraction mode: foo not in \['copy', 'move'\]\."
+            expected = r"Invalid write mode: foo not in \['copy', 'move'\]\."
             with self.assertRaisesRegexp(ValueError, expected):
-                Database(root, hb_root, [Spec001], extraction_mode='foo')
+                Database(root, hb_root, [Spec001], write_mode='foo')
 
     # UPDATE--------------------------------------------------------------------
     def test_update(self):
@@ -239,3 +240,100 @@ class DatabaseTests(DatabaseTestBase):
             results = data.file_error.apply(lambda x: x[0]).tolist()
             for result, regex in zip(results, regexes):
                 self.assertRegex(result, regex)
+
+    # CREATE--------------------------------------------------------------------
+    def test_create(self):
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hb_root')
+            os.makedirs(hb_root)
+            Spec001, Spec002, BadSpec = self.get_specifications()
+            self.create_files(root)
+
+            db = Database(root, hb_root, [Spec001, Spec002])
+            db.update()
+            data = db.data
+            db.create()
+
+            data = data[data.asset_valid]
+
+            # ensure files are written
+            result = Path(hb_root, 'hidebound/data')
+            result = tools.directory_to_dataframe(result)
+            result = sorted(result.filename.tolist())
+            self.assertGreater(len(result), 0)
+            expected = sorted(data.filename.tolist())
+            self.assertEqual(result, expected)
+
+            # ensure file metadata is written
+            result = len(os.listdir(Path(hb_root, 'hidebound/metadata/file')))
+            self.assertGreater(result, 0)
+            expected = data.filepath.nunique()
+            self.assertEqual(result, expected)
+
+            # ensure asset metadata is written
+            result = len(os.listdir(Path(hb_root, 'hidebound/metadata/asset')))
+            self.assertGreater(result, 0)
+            expected = data.asset_path.nunique()
+            self.assertEqual(result, expected)
+
+    def test_create_copy(self):
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hb_root')
+            os.makedirs(hb_root)
+
+            root = Path(root, 'projects').as_posix()
+            os.makedirs(root)
+
+            Spec001, Spec002, BadSpec = self.get_specifications()
+
+            expected = self.create_files(root).filepath\
+                .apply(lambda x: x.as_posix()).tolist()
+            expected = sorted(expected)
+
+            db = Database(root, hb_root, [Spec001, Spec002], write_mode='copy')
+            db.update()
+            db.create()
+
+            result = tools.directory_to_dataframe(root).filepath.tolist()
+            result = sorted(result)
+            self.assertEqual(result, expected)
+
+    def test_create_move(self):
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hb_root')
+            os.makedirs(hb_root)
+
+            root = Path(root, 'projects').as_posix()
+            os.makedirs(root)
+
+            self.create_files(root)
+            Spec001, Spec002, BadSpec = self.get_specifications()
+            db = Database(root, hb_root, [Spec001, Spec002], write_mode='move')
+            db.update()
+            data = db.data
+            db.create()
+            data = data[data.asset_valid]
+
+            # assert that no valid asset files are found in their original
+            result = data.filepath.apply(lambda x: os.path.exists(x)).unique().tolist()
+            self.assertEqual(result, [False])
+
+            # ensure files are written
+            result = Path(hb_root, 'hidebound/data')
+            result = tools.directory_to_dataframe(result)
+            result = sorted(result.filename.tolist())
+            self.assertGreater(len(result), 0)
+            expected = sorted(data.filename.tolist())
+            self.assertEqual(result, expected)
+
+            # ensure file metadata is written
+            result = len(os.listdir(Path(hb_root, 'hidebound/metadata/file')))
+            self.assertGreater(result, 0)
+            expected = data.filepath.nunique()
+            self.assertEqual(result, expected)
+
+            # ensure asset metadata is written
+            result = len(os.listdir(Path(hb_root, 'hidebound/metadata/asset')))
+            self.assertGreater(result, 0)
+            expected = data.asset_path.nunique()
+            self.assertEqual(result, expected)
