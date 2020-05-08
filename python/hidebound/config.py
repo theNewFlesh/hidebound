@@ -97,18 +97,19 @@ class Config(Model):
 
     Attributes:
         root_directory (str or Path): Root directory to recurse.
-        asset_directory (str or Path): Directory where assets will be saved.
+        hidebound_parent_directory (str or Path): Directory where hidebound
+            directory will be created and hidebound data saved.
         specification_files (list[str], optional): List of asset specification
             files. Default: [].
         include_regex (str, optional): Include filenames that match this regex.
             Default: ''.
         exclude_regex (str, optional): Exclude filenames that match this regex.
             Default: '\.DS_Store'.
-        extraction_mode (str, optional): How assets will be extracted to asset
-            directory. Default: copy.
+        extraction_mode (str, optional): How assets will be extracted to
+            hidebound/data directory. Default: copy.
     '''
     root_directory = StringType(required=True, validators=[vd.is_directory])
-    asset_directory = StringType(required=True, validators=[vd.is_directory])
+    hidebound_parent_directory = StringType(required=True, validators=[vd.is_directory])
     specification_files = ListType(
         StringType(validators=[is_specification_file]),
         default=[],

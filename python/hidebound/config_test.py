@@ -191,7 +191,7 @@ class ConfigTests(unittest.TestCase):
         self.asset_dir = Path(temp, 'assets').as_posix()
         self.config = dict(
             root_directory=self.root,
-            asset_directory=self.asset_dir,
+            hidebound_parent_directory=self.asset_dir,
             specification_files=[],
             include_regex='foo',
             exclude_regex='bar',
@@ -219,7 +219,8 @@ class ConfigTests(unittest.TestCase):
             self.set_data(temp)
             os.makedirs(self.root)
 
-            expected = 'asset_directory.*is not a directory or does not exist'
+            expected = 'hidebound_parent_directory.*is not a directory or does '
+            expected += 'not exist'
             with self.assertRaisesRegex(DataError, expected):
                 cfg.Config(self.config).validate()
 
