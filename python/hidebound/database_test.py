@@ -5,6 +5,7 @@ import re
 import unittest
 
 from pandas import DataFrame
+from schematics.exceptions import DataError
 from schematics.types import ListType, IntType, StringType
 import numpy as np
 import skimage.io
@@ -207,40 +208,103 @@ class DatabaseTests(unittest.TestCase):
 
         return Spec001, Spec002, BadSpec
 
+    def test_from_config(self):
+        with TemporaryDirectory() as root:
+            # create hb root dir
+            hb_root = Path(root, 'hb_root').as_posix()
+            os.makedirs(hb_root)
+
+            # write specs file
+            os.makedirs(Path(root, 'specs'))
+            spec_file = Path(root, 'specs', 'specs.py').as_posix()
+
+            text = '''
+                from schematics.types import IntType, ListType, StringType
+                from hidebound.specification_base import SpecificationBase
+
+                class Spec001(SpecificationBase):
+                    foo = ListType(IntType(), required=True)
+                    bar = ListType(StringType(), required=True)
+
+                class Spec002(SpecificationBase):
+                    boo = ListType(IntType(), required=True)
+                    far = ListType(StringType(), required=True)
+
+                SPECIFICATIONS = [Spec001, Spec002]'''
+            text = re.sub('                ', '', text)
+            with open(spec_file, 'w') as f:
+                f.write(text)
+
+            config = dict(
+                root_directory=root,
+                hidebound_parent_directory=hb_root,
+                specification_files=[spec_file],
+                include_regex='foo',
+                exclude_regex='bar',
+                extraction_mode='copy',
+            )
+            Database.from_config(config)
+
+            config['specification_files'] = ['/foo/bar.py']
+            with self.assertRaises(DataError):
+                Database.from_config(config)
+
     def test_init(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hb_root')
+            os.makedirs(hb_root)
 
+            self.create_files(root)
+            Database(root, hb_root)
+            Database(root, hb_root, [Spec001])
+            Database(root, hb_root, [Spec001, Spec002])
+
+            expected = Path(hb_root, 'hidebound')
+            self.assertTrue(os.path.exists(expected))
+
+    def test_init_bad_root(self):
+        Spec001, Spec002, BadSpec = self.get_specifications()
         expected = '/foo is not a directory or does not exist.'
         with self.assertRaisesRegexp(FileNotFoundError, expected):
-            Database('/foo', [Spec001])
+            Database('/foo', '/bar', [Spec001])
 
+    def test_init_bad_hb_root(self):
+        Spec001, Spec002, BadSpec = self.get_specifications()
         with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hb_root')
+            expected = '/hb_root is not a directory or does not exist'
+            with self.assertRaisesRegexp(FileNotFoundError, expected):
+                Database(root, hb_root)
+
+    def test_init_bad_specifications(self):
+        Spec001, Spec002, BadSpec = self.get_specifications()
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hb_root')
+            os.makedirs(hb_root)
+
             self.create_files(root)
             expected = 'SpecificationBase may only contain subclasses of'
             expected += ' SpecificationBase. Found: .*.'
 
             with self.assertRaisesRegexp(TypeError, expected):
-                Database(root, [BadSpec])
+                Database(root, hb_root, [BadSpec])
 
             with self.assertRaisesRegexp(TypeError, expected):
-                Database(root, [Spec001, BadSpec])
-
-        with TemporaryDirectory() as root:
-            self.create_files(root)
-            Database(root)
-            Database(root, [Spec001])
-            Database(root, [Spec001, Spec002])
+                Database(root, hb_root, [Spec001, BadSpec])
 
     # UPDATE--------------------------------------------------------------------
     def test_update(self):
         with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hb_root')
+            os.makedirs(hb_root)
             Spec001, Spec002, BadSpec = self.get_specifications()
 
             expected = self.create_files(root).filepath\
                 .apply(lambda x: x.as_posix()).tolist()
             expected = sorted(expected)
 
-            data = Database(root, [Spec001, Spec002]).update().data
+            data = Database(root, hb_root, [Spec001, Spec002]).update().data
             result = data.filepath.tolist()
             result = sorted(result)
             self.assertEqual(result, expected)
@@ -251,6 +315,8 @@ class DatabaseTests(unittest.TestCase):
 
     def test_update_exclude(self):
         with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hb_root')
+            os.makedirs(hb_root)
             Spec001, Spec002, BadSpec = self.get_specifications()
 
             expected = self.create_files(root).filepath\
@@ -259,13 +325,15 @@ class DatabaseTests(unittest.TestCase):
             expected = list(filter(lambda x: not re.search(regex, x), expected))
             expected = sorted(expected)
 
-            result = Database(root, [Spec001, Spec002], exclude_regex=regex)\
+            result = Database(root, hb_root, [Spec001, Spec002], exclude_regex=regex)\
                 .update().data.filepath.tolist()
             result = sorted(result)
             self.assertEqual(result, expected)
 
     def test_update_include(self):
         with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hb_root')
+            os.makedirs(hb_root)
             Spec001, Spec002, BadSpec = self.get_specifications()
 
             expected = self.create_files(root).filepath\
@@ -274,7 +342,7 @@ class DatabaseTests(unittest.TestCase):
             expected = list(filter(lambda x: re.search(regex, x), expected))
             expected = sorted(expected)
 
-            result = Database(root, [Spec001, Spec002], include_regex=regex)\
+            result = Database(root, hb_root, [Spec001, Spec002], include_regex=regex)\
                 .update().data.filepath.tolist()
             result = sorted(result)
             self.assertEqual(result, expected)
@@ -283,6 +351,9 @@ class DatabaseTests(unittest.TestCase):
         Spec001, Spec002, BadSpec = self.get_specifications()
 
         with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hb_root')
+            os.makedirs(hb_root)
+
             expected = self.create_files(root).filepath\
                 .apply(lambda x: x.as_posix()).tolist()
             i_regex = r'pizza'
@@ -293,6 +364,7 @@ class DatabaseTests(unittest.TestCase):
 
             result = Database(
                 root,
+                hb_root,
                 [Spec001, Spec002],
                 include_regex=i_regex,
                 exclude_regex=e_regex,
@@ -305,7 +377,9 @@ class DatabaseTests(unittest.TestCase):
         Spec001, Spec002, BadSpec = self.get_specifications()
 
         with TemporaryDirectory() as root:
-            result = Database(root, [Spec001]).update().data
+            hb_root = Path(root, 'hb_root')
+            os.makedirs(hb_root)
+            result = Database(root, hb_root, [Spec001]).update().data
             self.assertEqual(len(result), 0)
             self.assertEqual(result.columns.tolist(), self.columns)
 
@@ -313,8 +387,10 @@ class DatabaseTests(unittest.TestCase):
         Spec001, Spec002, BadSpec = self.get_specifications()
 
         with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hb_root')
+            os.makedirs(hb_root)
             files = self.create_files(root)
-            data = Database(root, [Spec001, Spec002]).update().data
+            data = Database(root, hb_root, [Spec001, Spec002]).update().data
 
             keys = files.filepath.tolist()
             lut = dict(zip(keys, files.file_error.tolist()))

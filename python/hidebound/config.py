@@ -1,5 +1,6 @@
 from copy import copy
 from importlib import import_module
+import inspect
 import os
 from pathlib import Path
 import sys
@@ -55,36 +56,19 @@ def is_specification_file(filepath):
         msg = f'{filepath.as_posix()} has no SPECIFICATIONS attribute.'
         raise ValidationError(msg)
 
-    # ensure SPECIFICATIONS is a dict
-    if not isinstance(mod.SPECIFICATIONS, dict):
+    # ensure SPECIFICATIONS is a list
+    if not isinstance(mod.SPECIFICATIONS, list):
         sys.path = temp
-        msg = f'{filepath.as_posix()} SPECIFICATIONS attribute is not a '
-        msg += 'dictionary.'
+        msg = f'{filepath.as_posix()} SPECIFICATIONS attribute is not a list.'
         raise ValidationError(msg)
 
-    # ensure all SPECIFICATIONS values are SpecificationBase subclasses
-    errors = []
-    for val in mod.SPECIFICATIONS.values():
-        if not issubclass(val, SpecificationBase):
-            errors.append(val)
-
+    # ensure all SPECIFICATIONS are subclasses of SpecificationBase
+    errors = list(filter(
+        lambda x: not inspect.isclass(x) or not issubclass(x, SpecificationBase), mod.SPECIFICATIONS
+    ))
     if len(errors) > 0:
         sys.path = temp
         msg = f'{errors} are not subclasses of SpecificationBase.'
-        raise ValidationError(msg)
-
-    # ensure all SPECIFICATIONS keys are named correctly
-    keys = []
-    vals = []
-    for key, val in mod.SPECIFICATIONS.items():
-        if key != val.__name__.lower():
-            keys.append(key)
-            vals.append(val)
-
-    if len(keys) > 0:
-        sys.path = temp
-        msg = f'Improper SPECIFICATIONS keys: {keys}. Keys must be lowercase '
-        msg += f'version of class names: {vals}.'
         raise ValidationError(msg)
 
     sys.path = temp

@@ -1,10 +1,14 @@
 from collections import defaultdict
+from importlib import import_module
+import os
 from pathlib import Path
+import sys
 
 import numpy as np
 from pandas import DataFrame
 from schematics.exceptions import ValidationError
 
+from hidebound.config import Config
 from hidebound.parser import AssetNameParser
 from hidebound.specification_base import SpecificationBase
 import hidebound.tools as tools
@@ -36,27 +40,65 @@ class Database:
         # 'asset_id',
     ]
 
+    @staticmethod
+    def from_config(config):
+        '''
+        Constructs a Database instance given a valid config.
+
+        Args:
+            config (dict): Dictionary that meets Config class standards.
+
+        Raises:
+            DataError: If config is invalid.
+
+        Returns:
+            Database: Database instance.
+        '''
+        Config(config).validate()
+
+        specs = []
+        for path in config['specification_files']:
+            sys.path.append(path)
+
+            filepath = Path(path)
+            filename = filepath.name
+            filename, _ = os.path.splitext(filename)
+            module = import_module(filename, filepath)
+
+            specs.extend(module.SPECIFICATIONS)
+
+        specs = list(set(specs))
+        config['specifications'] = specs
+
+        return Database(
+            config['root_directory'],
+            config['hidebound_parent_directory'],
+            specifications=specs,
+            include_regex=config['include_regex'],
+            exclude_regex=config['exclude_regex'],
+        )
+
     def __init__(
         self,
-        root,
+        root_directory,
+        hidebound_parent_directory,
         specifications=[],
         include_regex='',
         exclude_regex=r'\.DS_Store',
-        ignore_order=False
     ):
         r'''
         Creates an instance of Database but does not populate it with data.
 
         Args:
-            root (str or Path): Root directory to recurse.
+            root_directory (str or Path): Root directory to recurse.
+            hidebound_parent_directory (str or Path): Directory where hidebound
+                directory will be created and hidebound data saved.
             specifications (list[SpecificationBase], optional): List of asset
                 specifications. Default: [].
             include_regex (str, optional): Include filenames that match this
                 regex. Default: None.
             exclude_regex (str, optional): Exclude filenames that match this
                 regex. Default: '\.DS_Store'.
-            ignore_order (bool, optional): Whether to ignore the filename_ order
-                in filenames. Default: False.
 
         Raises:
             FileNotFoundError: If root is not a directory or does not exist.
@@ -65,12 +107,7 @@ class Database:
         Returns:
             Database: Database instance.
         '''
-        if not isinstance(root, Path):
-            root = Path(root)
-        if not root.is_dir():
-            msg = f'{root} is not a directory or does not exist.'
-            raise FileNotFoundError(msg)
-
+        # validate spec classes
         bad_specs = list(filter(
             lambda x: not issubclass(x, SpecificationBase), specifications
         ))
@@ -79,11 +116,31 @@ class Database:
             msg += f'SpecificationBase. Found: {bad_specs}.'
             raise TypeError(msg)
 
+        # validate root dir
+        root = root_directory
+        if not isinstance(root, Path):
+            root = Path(root)
+        if not root.is_dir():
+            msg = f'{root} is not a directory or does not exist.'
+            raise FileNotFoundError(msg)
+
+        # validate hidebound root dir
+        hb_root = hidebound_parent_directory
+        if not isinstance(hb_root, Path):
+            hb_root = Path(hb_root)
+        if not hb_root.is_dir():
+            msg = f'{hb_root} is not a directory or does not exist.'
+            raise FileNotFoundError(msg)
+
+        # create hidebound root dir
+        hb_root = Path(hb_root, 'hidebound')
+        os.makedirs(hb_root, exist_ok=True)
+
         self._root = root
+        self._hb_root = hb_root
         self._include_regex = include_regex
         self._exclude_regex = exclude_regex
-        self._ignore_order = ignore_order
-        self._specifications = {x.name: x for x in specifications}
+        self._specifications = {x.__name__.lower(): x for x in specifications}
         self.data = None
 
     def update(self):

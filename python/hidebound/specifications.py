@@ -52,6 +52,6 @@ class Raw001(SequenceSpecificationBase):
     )
 
 
-SPECIFICATIONS = {
-    'raw001': Raw001,
-}
+SPECIFICATIONS = [
+    Raw001,
+]

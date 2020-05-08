@@ -23,9 +23,7 @@ class IsSpecificationFileTests(unittest.TestCase):
                     foo = ListType(IntType(), required=True)
                     bar = ListType(StringType(), required=True)
 
-                SPECIFICATIONS = {
-                    'spec001': Spec001
-                }'''
+                SPECIFICATIONS = [Spec001]'''
             text = re.sub('                ', '', text)
             with open(filepath, 'w') as f:
                 f.write(text)
@@ -45,9 +43,7 @@ class IsSpecificationFileTests(unittest.TestCase):
                     foo = ListType(IntType(), required=True)
                     bar = ListType(StringType(), required=True)
 
-                SPECIFICATIONS = {
-                    'spec001': Spec001
-                }'''
+                SPECIFICATIONS = [Spec001]'''
             text = re.sub('                ', '', text)
             with open(filepath, 'w') as f:
                 f.write(text)
@@ -75,7 +71,7 @@ class IsSpecificationFileTests(unittest.TestCase):
             with self.assertRaisesRegexp(ValidationError, expected):
                 cfg.is_specification_file(filepath)
 
-    def test_specifications_is_dict(self):
+    def test_specifications_is_list(self):
         with TemporaryDirectory() as root:
             filepath = Path(root, 'specifications4.py')
 
@@ -87,15 +83,13 @@ class IsSpecificationFileTests(unittest.TestCase):
                     foo = ListType(IntType(), required=True)
                     bar = ListType(StringType(), required=True)
 
-                SPECIFICATIONS = [
-                    ('spec001', Spec001)
-                ]'''
+                SPECIFICATIONS = {'spec001': Spec001}'''
             text = re.sub('                ', '', text)
             with open(filepath, 'w') as f:
                 f.write(text)
 
             expected = f'{filepath.as_posix()} SPECIFICATIONS attribute is not '
-            expected += 'a dictionary.'
+            expected += 'a list.'
             with self.assertRaisesRegexp(ValidationError, expected):
                 cfg.is_specification_file(filepath)
 
@@ -111,37 +105,12 @@ class IsSpecificationFileTests(unittest.TestCase):
                     foo = ListType(IntType(), required=True)
                     bar = ListType(StringType(), required=True)
 
-                SPECIFICATIONS = {
-                    'spec001': Spec001
-                }'''
+                SPECIFICATIONS = [Spec001]'''
             text = re.sub('                ', '', text)
             with open(filepath, 'w') as f:
                 f.write(text)
 
             expected = 'are not subclasses of SpecificationBase.'
-            with self.assertRaisesRegexp(ValidationError, expected):
-                cfg.is_specification_file(filepath)
-
-    def test_correct_key_names(self):
-        with TemporaryDirectory() as root:
-            filepath = Path(root, 'specifications6.py')
-
-            text = '''
-                from schematics.types import IntType, ListType, StringType
-                from hidebound.specification_base import SpecificationBase
-
-                class Spec001(SpecificationBase):
-                    foo = ListType(IntType(), required=True)
-                    bar = ListType(StringType(), required=True)
-
-                SPECIFICATIONS = {
-                    'Spec001': Spec001
-                }'''
-            text = re.sub('                ', '', text)
-            with open(filepath, 'w') as f:
-                f.write(text)
-
-            expected = r"Improper SPECIFICATIONS keys: \['Spec001'\]\."
             with self.assertRaisesRegexp(ValidationError, expected):
                 cfg.is_specification_file(filepath)
 
@@ -159,9 +128,7 @@ class ConfigTests(unittest.TestCase):
                 foo = ListType(IntType(), required=True)
                 bar = ListType(StringType(), required=True)
 
-            SPECIFICATIONS = {
-                'spec001': Spec001
-            }'''
+            SPECIFICATIONS = [Spec001]'''
         text = re.sub('            ', '', text)
         with open(filepath, 'w') as f:
             f.write(text)
@@ -178,9 +145,7 @@ class ConfigTests(unittest.TestCase):
                 foo = ListType(IntType(), required=True)
                 bar = ListType(StringType(), required=True)
 
-            SPECIFICATIONS = {
-                'PIZZA': Spec001
-            }'''
+            SPECIFICATIONS = ['Foobar']'''
         text = re.sub('            ', '', text)
         with open(filepath, 'w') as f:
             f.write(text)
@@ -262,6 +227,6 @@ class ConfigTests(unittest.TestCase):
             bad = self.write_bad_spec(temp)
             self.config['specification_files'] = [good, bad]
 
-            expected = 'Improper SPECIFICATIONS keys'
+            expected = 'Foobar.* are not subclasses of SpecificationBase'
             with self.assertRaisesRegexp(DataError, expected):
                 cfg.Config(self.config).validate()
