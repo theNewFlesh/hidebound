@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import os
@@ -11,32 +12,35 @@ from hidebound.database_test_base import DatabaseTestBase
 
 
 class DatabaseTests(DatabaseTestBase):
+    def write_spec_file(self, root):
+        os.makedirs(Path(root, 'specs'))
+        spec_file = Path(root, 'specs', 'specs.py').as_posix()
+
+        text = '''
+            from schematics.types import IntType, ListType, StringType
+            from hidebound.specification_base import SpecificationBase
+
+            class Spec001(SpecificationBase):
+                foo = ListType(IntType(), required=True)
+                bar = ListType(StringType(), required=True)
+
+            class Spec002(SpecificationBase):
+                boo = ListType(IntType(), required=True)
+                far = ListType(StringType(), required=True)
+
+            SPECIFICATIONS = [Spec001, Spec002]'''
+        text = re.sub('            ', '', text)
+        with open(spec_file, 'w') as f:
+            f.write(text)
+
+        return spec_file
+
     def test_from_config(self):
         with TemporaryDirectory() as root:
             # create hb root dir
             hb_root = Path(root, 'hb_root').as_posix()
             os.makedirs(hb_root)
-
-            # write specs file
-            os.makedirs(Path(root, 'specs'))
-            spec_file = Path(root, 'specs', 'specs.py').as_posix()
-
-            text = '''
-                from schematics.types import IntType, ListType, StringType
-                from hidebound.specification_base import SpecificationBase
-
-                class Spec001(SpecificationBase):
-                    foo = ListType(IntType(), required=True)
-                    bar = ListType(StringType(), required=True)
-
-                class Spec002(SpecificationBase):
-                    boo = ListType(IntType(), required=True)
-                    far = ListType(StringType(), required=True)
-
-                SPECIFICATIONS = [Spec001, Spec002]'''
-            text = re.sub('                ', '', text)
-            with open(spec_file, 'w') as f:
-                f.write(text)
+            spec_file = self.write_spec_file(root)
 
             config = dict(
                 root_directory=root,
@@ -51,6 +55,27 @@ class DatabaseTests(DatabaseTestBase):
             config['specification_files'] = ['/foo/bar.py']
             with self.assertRaises(DataError):
                 Database.from_config(config)
+
+    def test_from_json(self):
+        with TemporaryDirectory() as root:
+            # create hb root dir
+            hb_root = Path(root, 'hb_root').as_posix()
+            os.makedirs(hb_root)
+            spec_file = self.write_spec_file(root)
+
+            config = dict(
+                root_directory=root,
+                hidebound_parent_directory=hb_root,
+                specification_files=[spec_file],
+                include_regex='foo',
+                exclude_regex='bar',
+                extraction_mode='copy',
+            )
+            config_file = Path(root, 'config.json')
+            with open(config_file, 'w') as f:
+                json.dump(config, f)
+
+            Database.from_json(config_file)
 
     def test_init(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
