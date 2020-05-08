@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.2.6
+                0.2.7
               </div>
             
           
@@ -434,7 +434,7 @@
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cp /root/</span><span class="si">{repo}</span><span class="s1">/pip/version.txt /tmp/</span><span class="si">{repo}</span><span class="s1">/; &#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cp /root/</span><span class="si">{repo}</span><span class="s1">/docker/dev_requirements.txt /tmp/</span><span class="si">{repo}</span><span class="s1">/; &#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cp /root/</span><span class="si">{repo}</span><span class="s1">/docker/prod_requirements.txt /tmp/</span><span class="si">{repo}</span><span class="s1">/; &#39;</span>
-    <span class="n">cmd</span> <span class="o">+=</span> <span class="sa">r</span><span class="s2">&quot;find /tmp/</span><span class="si">{repo}</span><span class="s2"> | grep -E &#39;_test\.py$&#39; | parallel rm -rf&quot;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="sa">r</span><span class="s2">&quot;find /tmp/</span><span class="si">{repo}</span><span class="s2"> | grep -E &#39;_test(_base)?\.py$&#39; | parallel rm -rf&quot;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;&quot;; &#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{exec2}</span><span class="s1"> python3.7 setup.py sdist; &#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{exec2}</span><span class="s1"> twine upload dist/*; &#39;</span>

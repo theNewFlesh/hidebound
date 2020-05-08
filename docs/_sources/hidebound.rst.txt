@@ -17,6 +17,14 @@ database
     :undoc-members:
     :show-inheritance:
 
+database_tools
+--------------
+.. automodule:: hidebound.database_tools
+    :members:
+    :private-members:
+    :undoc-members:
+    :show-inheritance:
+
 parser
 ------
 .. automodule:: hidebound.parser
