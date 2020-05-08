@@ -276,6 +276,28 @@ class DatabaseTests(DatabaseTestBase):
             expected = data.asset_path.nunique()
             self.assertEqual(result, expected)
 
+    def test_create_all_invalid(self):
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hb_root')
+            os.makedirs(hb_root)
+            Spec001, Spec002, BadSpec = self.get_specifications()
+            self.create_files(root)
+
+            db = Database(root, hb_root, [Spec001, Spec002])
+            db.update()
+            data = db.data
+            data['asset_valid'] = False
+            db.create()
+
+            result = Path(hb_root, 'hidebound/data')
+            self.assertFalse(result.exists())
+
+            result = Path(hb_root, 'hidebound/metadata/file')
+            self.assertFalse(result.exists())
+
+            result = Path(hb_root, 'hidebound/metadata/asset')
+            self.assertFalse(result.exists())
+
     def test_create_copy(self):
         with TemporaryDirectory() as root:
             hb_root = Path(root, 'hb_root')

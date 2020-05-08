@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.3.1
+                0.3.2
               </div>
             
           
@@ -235,8 +235,8 @@ Default: ‘.DS_Store’.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="hidebound.config.Config.extraction_mode">
-<code class="sig-name descname">extraction_mode</code><a class="headerlink" href="#hidebound.config.Config.extraction_mode" title="Permalink to this definition">¶</a></dt>
+<dt id="hidebound.config.Config.write_mode">
+<code class="sig-name descname">write_mode</code><a class="headerlink" href="#hidebound.config.Config.write_mode" title="Permalink to this definition">¶</a></dt>
 <dd><p>How assets will be extracted to
 hidebound/data directory. Default: copy.</p>
 <dl class="field-list simple">
@@ -258,27 +258,27 @@ hidebound/data directory. Default: copy.</p>
 
 <dl class="py attribute">
 <dt id="id1">
-<code class="sig-name descname">extraction_mode</code><em class="property"> = &lt;StringType() instance on Config as 'extraction_mode'&gt;</em><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">hidebound_parent_directory</code><em class="property"> = &lt;StringType() instance on Config as 'hidebound_parent_directory'&gt;</em><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id2">
-<code class="sig-name descname">hidebound_parent_directory</code><em class="property"> = &lt;StringType() instance on Config as 'hidebound_parent_directory'&gt;</em><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">include_regex</code><em class="property"> = &lt;StringType() instance on Config as 'include_regex'&gt;</em><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id3">
-<code class="sig-name descname">include_regex</code><em class="property"> = &lt;StringType() instance on Config as 'include_regex'&gt;</em><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">root_directory</code><em class="property"> = &lt;StringType() instance on Config as 'root_directory'&gt;</em><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id4">
-<code class="sig-name descname">root_directory</code><em class="property"> = &lt;StringType() instance on Config as 'root_directory'&gt;</em><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">specification_files</code><em class="property"> = &lt;ListType(StringType) instance on Config as 'specification_files'&gt;</em><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id5">
-<code class="sig-name descname">specification_files</code><em class="property"> = &lt;ListType(StringType) instance on Config as 'specification_files'&gt;</em><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">write_mode</code><em class="property"> = &lt;StringType() instance on Config as 'write_mode'&gt;</em><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -310,9 +310,32 @@ hidebound/data directory. Default: copy.</p>
 <span id="database"></span><h2>database<a class="headerlink" href="#module-hidebound.database" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="hidebound.database.Database">
-<em class="property">class </em><code class="sig-prename descclassname">hidebound.database.</code><code class="sig-name descname">Database</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root_directory</span></em>, <em class="sig-param"><span class="n">hidebound_parent_directory</span></em>, <em class="sig-param"><span class="n">specifications</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">include_regex</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">exclude_regex</span><span class="o">=</span><span class="default_value">'\\.DS_Store'</span></em>, <em class="sig-param"><span class="n">extraction_mode</span><span class="o">=</span><span class="default_value">'copy'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/database.html#Database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.database.Database" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">hidebound.database.</code><code class="sig-name descname">Database</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root_dir</span></em>, <em class="sig-param"><span class="n">hidebound_parent_dir</span></em>, <em class="sig-param"><span class="n">specifications</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">include_regex</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">exclude_regex</span><span class="o">=</span><span class="default_value">'\\.DS_Store'</span></em>, <em class="sig-param"><span class="n">write_mode</span><span class="o">=</span><span class="default_value">'copy'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/database.html#Database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.database.Database" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Generates a DataFrame using the files within a given directory as rows.</p>
+<dl class="py method">
+<dt id="hidebound.database.Database.create">
+<code class="sig-name descname">create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/database.html#Database.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.database.Database.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract valid assets as data and metadata within the hidebound
+directory.</p>
+<p>Writes:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>file data to hb_parent/hidebound/data - under same directory structure</p></li>
+<li><p>file metadata as json to hb_parent/hidebound/metadata/file</p></li>
+<li><p>asset metadata as json to hb_parent/hidebound/metadata/asset</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>self.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#hidebound.database.Database" title="hidebound.database.Database">Database</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt id="hidebound.database.Database.from_config">
 <em class="property">static </em><code class="sig-name descname">from_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/database.html#Database.from_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.database.Database.from_config" title="Permalink to this definition">¶</a></dt>
@@ -474,6 +497,37 @@ are converted to strings.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.database_tools._get_data_for_write">
+<code class="sig-prename descclassname">hidebound.database_tools.</code><code class="sig-name descname">_get_data_for_write</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">source_dir</span></em>, <em class="sig-param"><span class="n">target_dir</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/database_tools.html#_get_data_for_write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.database_tools._get_data_for_write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split given data into three DataFrame creating files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – DataFrame: DataFrame to be transformed.</p></li>
+<li><p><strong>source_dir</strong> (<em>str</em><em> or </em><em>Path</em>) – Source directory of asset files.</p></li>
+<li><p><strong>target_dir</strong> (<em>str</em><em> or </em><em>Path</em>) – Target directory where data will be written.</p></li>
+</ul>
+</dd>
+</dl>
+<p>DataFrames:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>File data - For writing asset file data to a target filepath.</p></li>
+<li><p>File metadata - For writing file metadata to a target json file.</p></li>
+<li><p>Asset metadata - For writing asset metadata to a target json file.</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>file_data, file_metadata, asset_metadata.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list[DataFrame]</p>
 </dd>
 </dl>
 </dd></dl>

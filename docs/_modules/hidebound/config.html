@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.3.1
+                0.3.2
               </div>
             
           
@@ -241,7 +241,7 @@
 <span class="sd">            Default: &#39;&#39;.</span>
 <span class="sd">        exclude_regex (str, optional): Exclude filenames that match this regex.</span>
 <span class="sd">            Default: &#39;\.DS_Store&#39;.</span>
-<span class="sd">        extraction_mode (str, optional): How assets will be extracted to</span>
+<span class="sd">        write_mode (str, optional): How assets will be extracted to</span>
 <span class="sd">            hidebound/data directory. Default: copy.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">root_directory</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_directory</span><span class="p">])</span>
@@ -253,7 +253,7 @@
     <span class="p">)</span>
     <span class="n">include_regex</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">exclude_regex</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;\.DS_Store&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">extraction_mode</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
+    <span class="n">write_mode</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_in</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;copy&#39;</span><span class="p">,</span> <span class="s1">&#39;move&#39;</span><span class="p">])]</span>
     <span class="p">)</span></div>

@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.3.1
+                0.3.2
               </div>
             
           
@@ -152,6 +152,8 @@
   <h1>Source code for hidebound.database_tools</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
@@ -441,6 +443,94 @@
         <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span>\
             <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">())</span>
     <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="_get_data_for_write"><a class="viewcode-back" href="../../hidebound.html#hidebound.database_tools._get_data_for_write">[docs]</a><span class="k">def</span> <span class="nf">_get_data_for_write</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">source_dir</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Split given data into three DataFrame creating files.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data: DataFrame: DataFrame to be transformed.</span>
+<span class="sd">        source_dir (str or Path): Source directory of asset files.</span>
+<span class="sd">        target_dir (str or Path): Target directory where data will be written.</span>
+
+<span class="sd">    DataFrames:</span>
+
+<span class="sd">        * File data - For writing asset file data to a target filepath.</span>
+<span class="sd">        * File metadata - For writing file metadata to a target json file.</span>
+<span class="sd">        * Asset metadata - For writing asset metadata to a target json file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[DataFrame]: file_data, file_metadata, asset_metadata.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># get valid asset data</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">asset_valid</span><span class="p">]</span>
+
+    <span class="c1"># return if there is no valid asset data</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="n">source_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">source_dir</span><span class="p">)</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+    <span class="n">data_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+    <span class="n">meta_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="s1">&#39;metadata&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+
+    <span class="c1"># add asset id</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">asset_path</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">vals</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">]</span>
+    <span class="n">lut</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">vals</span><span class="p">))</span>
+    <span class="n">lut</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">lut</span><span class="p">)</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;asset_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">asset_path</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">lut</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+
+    <span class="c1"># create file id and metadata</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;file_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">asset_name</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()))</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">asset_id</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">asset_id</span><span class="p">,</span>
+            <span class="n">asset_path</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">asset_path</span><span class="p">,</span>
+            <span class="n">asset_name</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">asset_name</span><span class="p">,</span>
+            <span class="n">asset_type</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">asset_type</span><span class="p">,</span>
+            <span class="n">file_id</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">file_id</span><span class="p">,</span>
+            <span class="n">file_traits</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">file_traits</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span>
+            <span class="n">filepath</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">filepath</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+    <span class="p">)</span>
+
+    <span class="c1"># create asset metadata</span>
+    <span class="n">asset_meta</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>\
+        <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;asset_id&#39;</span><span class="p">,</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>\
+        <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">asset_id</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">asset_id</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">asset_path</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">asset_path</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">asset_name</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">asset_name</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">asset_traits</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">asset_traits</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">asset_type</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">asset_type</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">file_ids</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">file_id</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+            <span class="n">file_traits</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">file_traits</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+            <span class="n">filenames</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">filename</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+            <span class="n">filepaths</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+        <span class="p">)])</span>
+    <span class="n">asset_meta</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">asset_meta</span><span class="o">.</span><span class="n">asset_name</span>
+    <span class="n">asset_meta</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">asset_meta</span><span class="o">.</span><span class="n">asset_id</span>\
+        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">Path</span><span class="p">(</span><span class="n">meta_dir</span><span class="p">,</span> <span class="s1">&#39;asset&#39;</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="s1">&#39;.json&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">())</span>
+    <span class="n">asset_meta</span> <span class="o">=</span> <span class="n">asset_meta</span><span class="p">[[</span><span class="s1">&#39;metadata&#39;</span><span class="p">,</span> <span class="s1">&#39;target&#39;</span><span class="p">]]</span>
+
+    <span class="c1"># create file data</span>
+    <span class="n">file_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">file_data</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">file_data</span><span class="o">.</span><span class="n">filepath</span>
+    <span class="n">file_data</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">file_data</span><span class="o">.</span><span class="n">source</span>\
+        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">source_dir</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+    <span class="n">file_data</span> <span class="o">=</span> <span class="n">file_data</span><span class="p">[[</span><span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;target&#39;</span><span class="p">]]</span>
+
+    <span class="c1"># create file metadata</span>
+    <span class="n">file_meta</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">file_meta</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">file_meta</span><span class="o">.</span><span class="n">file_id</span>\
+        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">Path</span><span class="p">(</span><span class="n">meta_dir</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="s1">&#39;.json&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">())</span>
+    <span class="n">file_meta</span> <span class="o">=</span> <span class="n">file_meta</span><span class="p">[[</span><span class="s1">&#39;metadata&#39;</span><span class="p">,</span> <span class="s1">&#39;target&#39;</span><span class="p">]]</span>
+
+    <span class="k">return</span> <span class="n">file_data</span><span class="p">,</span> <span class="n">file_meta</span><span class="p">,</span> <span class="n">asset_meta</span></div>
 </pre></div>
 
            </div>
