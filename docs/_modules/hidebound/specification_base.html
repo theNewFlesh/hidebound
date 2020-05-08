@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.2.3
+                0.2.5
               </div>
             
           
@@ -182,7 +182,6 @@
 <span class="sd">        version (int): Asset version.</span>
 <span class="sd">        extension (str): File extension.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">asset_type</span> <span class="o">=</span> <span class="s1">&#39;specification&#39;</span>
     <span class="n">filename_fields</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="s1">&#39;specification&#39;</span><span class="p">,</span> <span class="s1">&#39;descriptor&#39;</span><span class="p">,</span> <span class="s1">&#39;version&#39;</span><span class="p">,</span> <span class="s1">&#39;extension&#39;</span>
@@ -203,15 +202,14 @@
     <span class="p">)</span>
     <span class="n">file_traits</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{}):</span>
+<div class="viewcode-block" id="SpecificationBase.__init__"><a class="viewcode-back" href="../../hidebound.html#hidebound.specification_base.SpecificationBase.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{}):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns a new specification instance.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            data (dict, optional): Dictionary of asset data.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">raw_data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">raw_data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SpecificationBase.get_asset_name"><a class="viewcode-back" href="../../hidebound.html#hidebound.specification_base.SpecificationBase.get_asset_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_asset_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>

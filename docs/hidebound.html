@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.2.3
+                0.2.5
               </div>
             
           
@@ -88,6 +88,7 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">hidebound</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-hidebound.config">config</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-hidebound.database">database</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-hidebound.parser">parser</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-hidebound.specification_base">specification_base</a></li>
@@ -166,6 +167,148 @@
             
   <div class="section" id="hidebound">
 <h1>hidebound<a class="headerlink" href="#hidebound" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-hidebound.config">
+<span id="config"></span><h2>config<a class="headerlink" href="#module-hidebound.config" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="hidebound.config.Config">
+<em class="property">class </em><code class="sig-prename descclassname">hidebound.config.</code><code class="sig-name descname">Config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">raw_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">trusted_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">deserialize_mapping</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">init</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">partial</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">strict</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">validate</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">app_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">lazy</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/config.html#Config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.config.Config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">schematics.deprecated.patch_models.&lt;locals&gt;.Model</span></code></p>
+<p>A class for validating configurations supplied to Database.</p>
+<dl class="py attribute">
+<dt id="hidebound.config.Config.root_directory">
+<code class="sig-name descname">root_directory</code><a class="headerlink" href="#hidebound.config.Config.root_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Root directory to recurse.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str or Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="hidebound.config.Config.asset_directory">
+<code class="sig-name descname">asset_directory</code><a class="headerlink" href="#hidebound.config.Config.asset_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Directory where assets will be saved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str or Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="hidebound.config.Config.specification_files">
+<code class="sig-name descname">specification_files</code><a class="headerlink" href="#hidebound.config.Config.specification_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of asset specification
+files. Default: [].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list[str], optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="hidebound.config.Config.include_regex">
+<code class="sig-name descname">include_regex</code><a class="headerlink" href="#hidebound.config.Config.include_regex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Include filenames that match this regex.
+Default: ‘’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="hidebound.config.Config.exclude_regex">
+<code class="sig-name descname">exclude_regex</code><a class="headerlink" href="#hidebound.config.Config.exclude_regex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exclude filenames that match this regex.
+Default: ‘.DS_Store’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="hidebound.config.Config.extraction_mode">
+<code class="sig-name descname">extraction_mode</code><a class="headerlink" href="#hidebound.config.Config.extraction_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>How assets will be extracted to asset
+directory. Default: copy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="hidebound.config.Config.__module__">
+<code class="sig-name descname">__module__</code><em class="property"> = 'hidebound.config'</em><a class="headerlink" href="#hidebound.config.Config.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="hidebound.config.Config._schema">
+<code class="sig-name descname">_schema</code><em class="property"> = &lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema object&gt;</em><a class="headerlink" href="#hidebound.config.Config._schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id0">
+<code class="sig-name descname">asset_directory</code><em class="property"> = &lt;StringType() instance on Config as 'asset_directory'&gt;</em><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id1">
+<code class="sig-name descname">exclude_regex</code><em class="property"> = &lt;StringType() instance on Config as 'exclude_regex'&gt;</em><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id2">
+<code class="sig-name descname">extraction_mode</code><em class="property"> = &lt;StringType() instance on Config as 'extraction_mode'&gt;</em><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id3">
+<code class="sig-name descname">include_regex</code><em class="property"> = &lt;StringType() instance on Config as 'include_regex'&gt;</em><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id4">
+<code class="sig-name descname">root_directory</code><em class="property"> = &lt;StringType() instance on Config as 'root_directory'&gt;</em><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id5">
+<code class="sig-name descname">specification_files</code><em class="property"> = &lt;ListType(StringType) instance on Config as 'specification_files'&gt;</em><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.config.is_specification_file">
+<code class="sig-prename descclassname">hidebound.config.</code><code class="sig-name descname">is_specification_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/config.html#is_specification_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.config.is_specification_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validator for specification files given to Database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filepath</strong> (<em>str</em><em> or </em><em>Path</em>) – Filepath of python specification file.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValidationError</strong> – If module could not be imported.</p></li>
+<li><p><strong>ValidationError</strong> – If module has no SPECIFICATIONS attribute.</p></li>
+<li><p><strong>ValidationError</strong> – If module SPECIFICATIONS attribute is not a dictionary.</p></li>
+<li><p><strong>ValidationError</strong> – If modules classes in SPECIFICATIONS attribute are not
+    subclasses of SpecificationBase.</p></li>
+<li><p><strong>ValidationError</strong> – If keys in SPECIFICATIONS attribute are not lowercase
+    versions of class names.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
 <div class="section" id="module-hidebound.database">
 <span id="database"></span><h2>database<a class="headerlink" href="#module-hidebound.database" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
@@ -177,6 +320,55 @@
 <dt id="hidebound.database.Database.COLUMNS">
 <code class="sig-name descname">COLUMNS</code><em class="property"> = ['project', 'specification', 'descriptor', 'version', 'coordinate', 'frame', 'extension', 'filename', 'filepath', 'file_error', 'file_traits', 'asset_name', 'asset_path', 'asset_type', 'asset_traits', 'asset_error', 'asset_valid']</em><a class="headerlink" href="#hidebound.database.Database.COLUMNS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="hidebound.database.Database.__dict__">
+<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'hidebound.database', '__doc__': '\n    Generates a DataFrame using the files within a given directory as rows.\n    ', 'COLUMNS': ['project', 'specification', 'descriptor', 'version', 'coordinate', 'frame', 'extension', 'filename', 'filepath', 'file_error', 'file_traits', 'asset_name', 'asset_path', 'asset_type', 'asset_traits', 'asset_error', 'asset_valid'], '__init__': &lt;function Database.__init__&gt;, 'update': &lt;function Database.update&gt;, '_add_specification': &lt;staticmethod object&gt;, '_validate_filepath': &lt;staticmethod object&gt;, '_add_file_traits': &lt;staticmethod object&gt;, '_add_asset_traits': &lt;staticmethod object&gt;, '_validate_assets': &lt;staticmethod object&gt;, '_add_asset_id': &lt;staticmethod object&gt;, '_add_asset_name': &lt;staticmethod object&gt;, '_add_asset_path': &lt;staticmethod object&gt;, '_add_asset_type': &lt;staticmethod object&gt;, '_cleanup': &lt;staticmethod object&gt;, '__dict__': &lt;attribute '__dict__' of 'Database' objects&gt;, '__weakref__': &lt;attribute '__weakref__' of 'Database' objects&gt;})</em><a class="headerlink" href="#hidebound.database.Database.__dict__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="hidebound.database.Database.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span></em>, <em class="sig-param"><span class="n">specifications</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">include_regex</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">exclude_regex</span><span class="o">=</span><span class="default_value">'\\.DS_Store'</span></em>, <em class="sig-param"><span class="n">ignore_order</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/database.html#Database.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.database.Database.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an instance of Database but does not populate it with data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root</strong> (<em>str</em><em> or </em><em>Path</em>) – Root directory to recurse.</p></li>
+<li><p><strong>specifications</strong> (<em>list</em><em>[</em><a class="reference internal" href="#hidebound.specification_base.SpecificationBase" title="hidebound.specification_base.SpecificationBase"><em>SpecificationBase</em></a><em>]</em><em>, </em><em>optional</em>) – List of asset
+specifications. Default: [].</p></li>
+<li><p><strong>include_regex</strong> (<em>str</em><em>, </em><em>optional</em>) – Include filenames that match this
+regex. Default: None.</p></li>
+<li><p><strong>exclude_regex</strong> (<em>str</em><em>, </em><em>optional</em>) – Exclude filenames that match this
+regex. Default: ‘.DS_Store’.</p></li>
+<li><p><strong>ignore_order</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to ignore the <a href="#id20"><span class="problematic" id="id21">filename_</span></a> order
+in filenames. Default: False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>FileNotFoundError</strong> – If root is not a directory or does not exist.</p></li>
+<li><p><strong>TypeError</strong> – If specifications contains a non-SpecificationBase object.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Database instance.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#hidebound.database.Database" title="hidebound.database.Database">Database</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="hidebound.database.Database.__module__">
+<code class="sig-name descname">__module__</code><em class="property"> = 'hidebound.database'</em><a class="headerlink" href="#hidebound.database.Database.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="hidebound.database.Database.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#hidebound.database.Database.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="hidebound.database.Database._add_asset_id">
@@ -401,6 +593,47 @@ according to a dynimcally defined grammar.</p>
 <code class="sig-name descname">VERSION_PADDING</code><em class="property"> = 3</em><a class="headerlink" href="#hidebound.parser.AssetNameParser.VERSION_PADDING" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py attribute">
+<dt id="hidebound.parser.AssetNameParser.__dict__">
+<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'hidebound.parser', '__doc__': '\n    A class for converting asset names to metadata and metadata to asset names,\n    according to a dynimcally defined grammar.\n    ', 'FIELD_SEPARATOR': '_', 'TOKEN_SEPARATOR': '-', 'PROJECT_INDICATOR': 'p-', 'SPECIFICATION_INDICATOR': 's-', 'DESCRIPTOR_INDICATOR': 'd-', 'VERSION_INDICATOR': 'v', 'COORDINATE_INDICATOR': 'c', 'FRAME_INDICATOR': 'f', 'EXTENSION_INDICATOR': '.', 'LEGAL_FIELDS': ['project', 'specification', 'descriptor', 'version', 'coordinate', 'frame', 'extension'], 'VERSION_PADDING': 3, 'COORDINATE_PADDING': 3, 'FRAME_PADDING': 4, '__init__': &lt;function AssetNameParser.__init__&gt;, '_raise_field_error': &lt;staticmethod object&gt;, '_get_grammar': &lt;staticmethod object&gt;, '_get_extension_parser': &lt;staticmethod object&gt;, '_get_parser': &lt;staticmethod object&gt;, '_get_specification_parser': &lt;staticmethod object&gt;, 'parse_specification': &lt;staticmethod object&gt;, 'parse': &lt;function AssetNameParser.parse&gt;, 'to_string': &lt;function AssetNameParser.to_string&gt;, '__dict__': &lt;attribute '__dict__' of 'AssetNameParser' objects&gt;, '__weakref__': &lt;attribute '__weakref__' of 'AssetNameParser' objects&gt;})</em><a class="headerlink" href="#hidebound.parser.AssetNameParser.__dict__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="hidebound.parser.AssetNameParser.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fields</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/parser.html#AssetNameParser.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.parser.AssetNameParser.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a AssetNameParser instance with given fields.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fields</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – An ordered list of asset fields.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If fields is empty.</p></li>
+<li><p><strong>ValueError</strong> – If fields are duplicated.</p></li>
+<li><p><strong>ValueError</strong> – If illegal fields are given.</p></li>
+<li><p><strong>ValueError</strong> – If illegal field order given.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>instance.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#hidebound.parser.AssetNameParser" title="hidebound.parser.AssetNameParser">AssetNameParser</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="hidebound.parser.AssetNameParser.__module__">
+<code class="sig-name descname">__module__</code><em class="property"> = 'hidebound.parser'</em><a class="headerlink" href="#hidebound.parser.AssetNameParser.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="hidebound.parser.AssetNameParser.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#hidebound.parser.AssetNameParser.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
 <dl class="py method">
 <dt id="hidebound.parser.AssetNameParser._get_extension_parser">
 <em class="property">static </em><code class="sig-name descname">_get_extension_parser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">grammar</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/parser.html#AssetNameParser._get_extension_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.parser.AssetNameParser._get_extension_parser" title="Permalink to this definition">¶</a></dt>
@@ -565,13 +798,18 @@ according to a dynimcally defined grammar.</p>
 </dd></dl>
 
 <dl class="py attribute">
+<dt id="hidebound.specification_base.ComplexSpecificationBase.__module__">
+<code class="sig-name descname">__module__</code><em class="property"> = 'hidebound.specification_base'</em><a class="headerlink" href="#hidebound.specification_base.ComplexSpecificationBase.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt id="hidebound.specification_base.ComplexSpecificationBase._schema">
 <code class="sig-name descname">_schema</code><em class="property"> = &lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema object&gt;</em><a class="headerlink" href="#hidebound.specification_base.ComplexSpecificationBase._schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id0">
-<code class="sig-name descname">asset_type</code><em class="property"> = 'complex'</em><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dt id="id6">
+<code class="sig-name descname">asset_type</code><em class="property"> = 'complex'</em><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -618,13 +856,18 @@ according to a dynimcally defined grammar.</p>
 </dd></dl>
 
 <dl class="py attribute">
+<dt id="hidebound.specification_base.FileSpecificationBase.__module__">
+<code class="sig-name descname">__module__</code><em class="property"> = 'hidebound.specification_base'</em><a class="headerlink" href="#hidebound.specification_base.FileSpecificationBase.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt id="hidebound.specification_base.FileSpecificationBase._schema">
 <code class="sig-name descname">_schema</code><em class="property"> = &lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema object&gt;</em><a class="headerlink" href="#hidebound.specification_base.FileSpecificationBase._schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id1">
-<code class="sig-name descname">asset_type</code><em class="property"> = 'file'</em><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<dt id="id7">
+<code class="sig-name descname">asset_type</code><em class="property"> = 'file'</em><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -689,13 +932,18 @@ directory.</p>
 </dd></dl>
 
 <dl class="py attribute">
+<dt id="hidebound.specification_base.SequenceSpecificationBase.__module__">
+<code class="sig-name descname">__module__</code><em class="property"> = 'hidebound.specification_base'</em><a class="headerlink" href="#hidebound.specification_base.SequenceSpecificationBase.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt id="hidebound.specification_base.SequenceSpecificationBase._schema">
 <code class="sig-name descname">_schema</code><em class="property"> = &lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema object&gt;</em><a class="headerlink" href="#hidebound.specification_base.SequenceSpecificationBase._schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id2">
-<code class="sig-name descname">asset_type</code><em class="property"> = 'sequence'</em><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dt id="id8">
+<code class="sig-name descname">asset_type</code><em class="property"> = 'sequence'</em><a class="headerlink" href="#id8" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -824,29 +1072,45 @@ directory.</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt id="hidebound.specification_base.SpecificationBase.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/specification_base.html#SpecificationBase.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.specification_base.SpecificationBase.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a new specification instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>dict</em><em>, </em><em>optional</em>) – Dictionary of asset data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="hidebound.specification_base.SpecificationBase.__module__">
+<code class="sig-name descname">__module__</code><em class="property"> = 'hidebound.specification_base'</em><a class="headerlink" href="#hidebound.specification_base.SpecificationBase.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py attribute">
 <dt id="hidebound.specification_base.SpecificationBase._schema">
 <code class="sig-name descname">_schema</code><em class="property"> = &lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema object&gt;</em><a class="headerlink" href="#hidebound.specification_base.SpecificationBase._schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id3">
-<code class="sig-name descname">asset_name_fields</code><em class="property"> = ['project', 'specification', 'descriptor', 'version']</em><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<dt id="id9">
+<code class="sig-name descname">asset_name_fields</code><em class="property"> = ['project', 'specification', 'descriptor', 'version']</em><a class="headerlink" href="#id9" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id4">
-<code class="sig-name descname">asset_type</code><em class="property"> = 'specification'</em><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
+<dt id="id10">
+<code class="sig-name descname">asset_type</code><em class="property"> = 'specification'</em><a class="headerlink" href="#id10" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id5">
-<code class="sig-name descname">descriptor</code><em class="property"> = &lt;ListType(StringType) instance on SpecificationBase as 'descriptor'&gt;</em><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
+<dt id="id11">
+<code class="sig-name descname">descriptor</code><em class="property"> = &lt;ListType(StringType) instance on SpecificationBase as 'descriptor'&gt;</em><a class="headerlink" href="#id11" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id6">
-<code class="sig-name descname">extension</code><em class="property"> = &lt;ListType(StringType) instance on SpecificationBase as 'extension'&gt;</em><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
+<dt id="id12">
+<code class="sig-name descname">extension</code><em class="property"> = &lt;ListType(StringType) instance on SpecificationBase as 'extension'&gt;</em><a class="headerlink" href="#id12" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -855,8 +1119,8 @@ directory.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id7">
-<code class="sig-name descname">filename_fields</code><em class="property"> = ['project', 'specification', 'descriptor', 'version', 'extension']</em><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
+<dt id="id13">
+<code class="sig-name descname">filename_fields</code><em class="property"> = ['project', 'specification', 'descriptor', 'version', 'extension']</em><a class="headerlink" href="#id13" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -969,13 +1233,8 @@ Errors are captured in their respective keys.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="hidebound.specification_base.SpecificationBase.name">
-<code class="sig-name descname">name</code><em class="property"> = None</em><a class="headerlink" href="#hidebound.specification_base.SpecificationBase.name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="id8">
-<code class="sig-name descname">project</code><em class="property"> = &lt;ListType(StringType) instance on SpecificationBase as 'project'&gt;</em><a class="headerlink" href="#id8" title="Permalink to this definition">¶</a></dt>
+<dt id="id14">
+<code class="sig-name descname">project</code><em class="property"> = &lt;ListType(StringType) instance on SpecificationBase as 'project'&gt;</em><a class="headerlink" href="#id14" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1001,8 +1260,8 @@ Errors are captured in their respective keys.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="id9">
-<code class="sig-name descname">version</code><em class="property"> = &lt;ListType(IntType) instance on SpecificationBase as 'version'&gt;</em><a class="headerlink" href="#id9" title="Permalink to this definition">¶</a></dt>
+<dt id="id15">
+<code class="sig-name descname">version</code><em class="property"> = &lt;ListType(IntType) instance on SpecificationBase as 'version'&gt;</em><a class="headerlink" href="#id15" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1073,6 +1332,11 @@ version,</p>
 </dd></dl>
 
 <dl class="py attribute">
+<dt id="hidebound.specifications.Raw001.__module__">
+<code class="sig-name descname">__module__</code><em class="property"> = 'hidebound.specifications'</em><a class="headerlink" href="#hidebound.specifications.Raw001.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt id="hidebound.specifications.Raw001._schema">
 <code class="sig-name descname">_schema</code><em class="property"> = &lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema object&gt;</em><a class="headerlink" href="#hidebound.specifications.Raw001._schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -1083,8 +1347,8 @@ version,</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id10">
-<code class="sig-name descname">extension</code><em class="property"> = &lt;ListType(StringType) instance on Raw001 as 'extension'&gt;</em><a class="headerlink" href="#id10" title="Permalink to this definition">¶</a></dt>
+<dt id="id16">
+<code class="sig-name descname">extension</code><em class="property"> = &lt;ListType(StringType) instance on Raw001 as 'extension'&gt;</em><a class="headerlink" href="#id16" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1093,8 +1357,8 @@ version,</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id11">
-<code class="sig-name descname">filename_fields</code><em class="property"> = ['project', 'specification', 'descriptor', 'version', 'frame', 'extension']</em><a class="headerlink" href="#id11" title="Permalink to this definition">¶</a></dt>
+<dt id="id17">
+<code class="sig-name descname">filename_fields</code><em class="property"> = ['project', 'specification', 'descriptor', 'version', 'frame', 'extension']</em><a class="headerlink" href="#id17" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1103,13 +1367,8 @@ version,</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id12">
-<code class="sig-name descname">height</code><em class="property"> = &lt;ListType(IntType) instance on Raw001 as 'height'&gt;</em><a class="headerlink" href="#id12" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="hidebound.specifications.Raw001.name">
-<code class="sig-name descname">name</code><em class="property"> = 'raw001'</em><a class="headerlink" href="#hidebound.specifications.Raw001.name" title="Permalink to this definition">¶</a></dt>
+<dt id="id18">
+<code class="sig-name descname">height</code><em class="property"> = &lt;ListType(IntType) instance on Raw001 as 'height'&gt;</em><a class="headerlink" href="#id18" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1128,8 +1387,8 @@ version,</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id13">
-<code class="sig-name descname">width</code><em class="property"> = &lt;ListType(IntType) instance on Raw001 as 'width'&gt;</em><a class="headerlink" href="#id13" title="Permalink to this definition">¶</a></dt>
+<dt id="id19">
+<code class="sig-name descname">width</code><em class="property"> = &lt;ListType(IntType) instance on Raw001 as 'width'&gt;</em><a class="headerlink" href="#id19" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1142,6 +1401,28 @@ version,</p>
 <em class="property">class </em><code class="sig-prename descclassname">hidebound.tools.</code><code class="sig-name descname">StopWatch</code><a class="reference internal" href="_modules/hidebound/tools.html#StopWatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.tools.StopWatch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>StopWatch is used for timing blocks of code.</p>
+<dl class="py attribute">
+<dt id="hidebound.tools.StopWatch.__dict__">
+<code class="sig-name descname">__dict__</code><em class="property"> = mappingproxy({'__module__': 'hidebound.tools', '__doc__': '\n    StopWatch is used for timing blocks of code.\n    ', '__init__': &lt;function StopWatch.__init__&gt;, 'start': &lt;function StopWatch.start&gt;, 'stop': &lt;function StopWatch.stop&gt;, 'delta': &lt;property object&gt;, 'human_readable_delta': &lt;property object&gt;, '__dict__': &lt;attribute '__dict__' of 'StopWatch' objects&gt;, '__weakref__': &lt;attribute '__weakref__' of 'StopWatch' objects&gt;})</em><a class="headerlink" href="#hidebound.tools.StopWatch.__dict__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="hidebound.tools.StopWatch.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/tools.html#StopWatch.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.tools.StopWatch.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="hidebound.tools.StopWatch.__module__">
+<code class="sig-name descname">__module__</code><em class="property"> = 'hidebound.tools'</em><a class="headerlink" href="#hidebound.tools.StopWatch.__module__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="hidebound.tools.StopWatch.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#hidebound.tools.StopWatch.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
 <dl class="py method">
 <dt id="hidebound.tools.StopWatch.delta">
 <em class="property">property </em><code class="sig-name descname">delta</code><a class="headerlink" href="#hidebound.tools.StopWatch.delta" title="Permalink to this definition">¶</a></dt>
@@ -1368,6 +1649,27 @@ specification class attribute. They succeed silently and raise DataError when
 the trait they validate fails. Schematics captures these error messages and
 pipes them to an error call.</p>
 <dl class="py function">
+<dt id="hidebound.validators.is_attribute_of">
+<code class="sig-prename descclassname">hidebound.validators.</code><code class="sig-name descname">is_attribute_of</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">object</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/validators.html#is_attribute_of"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.validators.is_attribute_of" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that each name is an attribute of given object.
+:param a: Attribute name.
+:type a: str
+:param b: Object.
+:type b: object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>ValidationError</strong> – If an name is not an attribute of given object.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Alls names are attributes of object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="hidebound.validators.is_coordinate">
 <code class="sig-prename descclassname">hidebound.validators.</code><code class="sig-name descname">is_coordinate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">item</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/validators.html#is_coordinate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.validators.is_coordinate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates a coordinate.</p>
@@ -1403,6 +1705,25 @@ pipes them to an error call.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.validators.is_directory">
+<code class="sig-prename descclassname">hidebound.validators.</code><code class="sig-name descname">is_directory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">item</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/validators.html#is_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.validators.is_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates thats item is a directory.
+:param item: Directory path.
+:type item: str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>ValidationError</strong> – If item is not a directory or does not exist.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>State of item.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1446,6 +1767,25 @@ pipes them to an error call.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.validators.is_file">
+<code class="sig-prename descclassname">hidebound.validators.</code><code class="sig-name descname">is_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">item</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/validators.html#is_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.validators.is_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates thats item is a file.
+:param item: Filepath.
+:type item: str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>ValidationError</strong> – If item is not a file or does not exist.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>State of item.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1509,6 +1849,27 @@ pipes them to an error call.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.validators.is_in">
+<code class="sig-prename descclassname">hidebound.validators.</code><code class="sig-name descname">is_in</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">b</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/validators.html#is_in"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.validators.is_in" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that each a is in b.
+:param a: Object.
+:type a: object
+:param b: Object.
+:type b: object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>ValidationError</strong> – If a is not in b.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Alls a’s in b.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>

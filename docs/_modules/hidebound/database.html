@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.2.3
+                0.2.5
               </div>
             
           
@@ -158,8 +158,8 @@
 <span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">ValidationError</span>
 
 <span class="kn">from</span> <span class="nn">hidebound.parser</span> <span class="kn">import</span> <span class="n">AssetNameParser</span>
-<span class="kn">import</span> <span class="nn">hidebound.tools</span> <span class="k">as</span> <span class="nn">tools</span>
 <span class="kn">from</span> <span class="nn">hidebound.specification_base</span> <span class="kn">import</span> <span class="n">SpecificationBase</span>
+<span class="kn">import</span> <span class="nn">hidebound.tools</span> <span class="k">as</span> <span class="nn">tools</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
@@ -188,7 +188,7 @@
         <span class="c1"># &#39;asset_id&#39;,</span>
     <span class="p">]</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<div class="viewcode-block" id="Database.__init__"><a class="viewcode-back" href="../../hidebound.html#hidebound.database.Database.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">root</span><span class="p">,</span>
         <span class="n">specifications</span><span class="o">=</span><span class="p">[],</span>
@@ -236,7 +236,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_exclude_regex</span> <span class="o">=</span> <span class="n">exclude_regex</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_order</span> <span class="o">=</span> <span class="n">ignore_order</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_specifications</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">specifications</span><span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="Database.update"><a class="viewcode-back" href="../../hidebound.html#hidebound.database.Database.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>

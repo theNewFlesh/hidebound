@@ -113,7 +113,7 @@ def get_architecture_diagram_command(info):
         str: Command.
     '''
     cmd = '{exec} python3.7 -c "from rolling_pin.repo_etl import RepoETL; '
-    cmd += "RepoETL('/root/{repo}/python').write('/root/{repo}/docs/architecture.svg')"
+    cmd += "RepoETL('/root/{repo}/python').write('/root/{repo}/docs/architecture.svg', orient='lr')"
     cmd += '"'
     cmd = cmd.format(
         repo=REPO,

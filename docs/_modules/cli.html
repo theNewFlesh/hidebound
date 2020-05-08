@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.2.3
+                0.2.5
               </div>
             
           
@@ -265,7 +265,7 @@
 <span class="sd">        str: Command.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{exec}</span><span class="s1"> python3.7 -c &quot;from rolling_pin.repo_etl import RepoETL; &#39;</span>
-    <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot;RepoETL(&#39;/root/</span><span class="si">{repo}</span><span class="s2">/python&#39;).write(&#39;/root/</span><span class="si">{repo}</span><span class="s2">/docs/architecture.svg&#39;)&quot;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot;RepoETL(&#39;/root/</span><span class="si">{repo}</span><span class="s2">/python&#39;).write(&#39;/root/</span><span class="si">{repo}</span><span class="s2">/docs/architecture.svg&#39;, orient=&#39;lr&#39;)&quot;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;&quot;&#39;</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">,</span>
