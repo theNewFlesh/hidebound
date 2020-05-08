@@ -253,12 +253,12 @@ class AssetNameParser:
             msg = f'Specification not found in "{text}".'
             raise ParseException(msg)
 
-    def parse(self, text, ignore_order=False):
+    def parse(self, text):
         '''
         Parse a given string.
 
         Args:
-            text (str): Strign to be parsed.
+            text (str): String to be parsed.
 
         Raises:
             ParseException: If parse fails.
