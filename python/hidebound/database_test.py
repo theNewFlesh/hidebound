@@ -96,6 +96,16 @@ class DatabaseTests(DatabaseTestBase):
             with self.assertRaisesRegexp(TypeError, expected):
                 Database(root, hb_root, [Spec001, BadSpec])
 
+    def test_init_bad_extraction_mode(self):
+        Spec001, Spec002, BadSpec = self.get_specifications()
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hb_root')
+            os.makedirs(hb_root)
+
+            expected = r"Invalid extraction mode: foo not in \['copy', 'move'\]\."
+            with self.assertRaisesRegexp(ValueError, expected):
+                Database(root, hb_root, [Spec001], extraction_mode='foo')
+
     # UPDATE--------------------------------------------------------------------
     def test_update(self):
         with TemporaryDirectory() as root:
