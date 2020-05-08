@@ -220,3 +220,21 @@ class Database:
         asset_meta.apply(lambda x: write_json(x.metadata, x.target), axis=1)
 
         return self
+
+    def delete(self):
+        '''
+        Deletes hidebound/data and hidebound/metadata directories and all their
+        contents.
+
+        Returns:
+            Database: self.
+        '''
+        data_dir = Path(self._hb_root, 'data')
+        if data_dir.exists():
+            shutil.rmtree(data_dir)
+
+        meta_dir = Path(self._hb_root, 'metadata')
+        if meta_dir.exists():
+            shutil.rmtree(meta_dir)
+
+        return self

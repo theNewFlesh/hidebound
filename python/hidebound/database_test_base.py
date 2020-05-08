@@ -93,6 +93,7 @@ class DatabaseTestBase(unittest.TestCase):
         return data
 
     def create_files(self, root):
+        root = Path(root).as_posix()
         data = self.get_data(root)
         for filepath in data.filepath.tolist():
             os.makedirs(filepath.parent, exist_ok=True)

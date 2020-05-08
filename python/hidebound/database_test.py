@@ -359,3 +359,32 @@ class DatabaseTests(DatabaseTestBase):
             self.assertGreater(result, 0)
             expected = data.asset_path.nunique()
             self.assertEqual(result, expected)
+
+    # DELETE--------------------------------------------------------------------
+    def test_delete(self):
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hb_root')
+            os.makedirs(hb_root)
+
+            data_dir = Path(hb_root, 'hidebound', 'data')
+            os.makedirs(data_dir)
+
+            meta_dir = Path(hb_root, 'hidebound', 'metadata')
+            os.makedirs(meta_dir)
+
+            root = Path(root, 'projects')
+            os.makedirs(root)
+
+            self.create_files(root)
+            expected = tools.directory_to_dataframe(root).filepath.tolist()
+            expected = sorted(expected)
+
+            db = Database(root, hb_root, [])
+            db.delete()
+
+            self.assertFalse(data_dir.exists())
+            self.assertFalse(meta_dir.exists())
+
+            result = tools.directory_to_dataframe(root).filepath.tolist()
+            result = sorted(result)
+            self.assertEqual(result, expected)
