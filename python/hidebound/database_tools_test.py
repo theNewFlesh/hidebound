@@ -1,6 +1,8 @@
+import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
+import pandas as pd
 from pandas import DataFrame
 import numpy as np
 
@@ -9,6 +11,7 @@ from hidebound.specification_base import ComplexSpecificationBase
 from hidebound.specification_base import FileSpecificationBase
 from hidebound.specification_base import SequenceSpecificationBase
 import hidebound.database_tools as db_tools
+import hidebound.tools as tools
 # ------------------------------------------------------------------------------
 
 
@@ -339,3 +342,66 @@ class DatabaseTests(DatabaseTestBase):
             for i, row in data.iterrows():
                 self.assertRegex(row.asset_error, '400 != 4')
                 self.assertFalse(row.asset_valid)
+
+    def test_get_data_for_write(self):
+        data = tools.relative_path(__file__, '../../resources/fake_data.csv')
+        data = pd.read_csv(data)
+
+        file_data, file_meta, asset_meta = db_tools._get_data_for_write(
+            data,
+            '/tmp/projects',
+            '/tmp/hidebound'
+        )
+
+        data = data[data.asset_valid]
+
+        expected = data.shape[0]
+        self.assertEqual(file_data.shape[0], expected)
+        self.assertEqual(file_meta.shape[0], expected)
+
+        expected = data.asset_path.nunique()
+        self.assertEqual(asset_meta.shape[0], expected)
+
+        expected = set(data.filename.tolist())
+        result = file_data.target.apply(lambda x: Path(x).name).tolist()
+        result = set(result)
+        self.assertEqual(result, expected)
+
+        file_meta.metadata.apply(json.dumps)
+        asset_meta.metadata.apply(json.dumps)
+
+        result = file_data.source\
+            .apply(lambda x: '/tmp/projects' in x).unique().tolist()
+        self.assertEqual(result, [True])
+
+        for item in [file_data, file_meta, asset_meta]:
+            result = item.target\
+                .apply(lambda x: '/tmp/hidebound' in x).unique().tolist()
+            self.assertEqual(result, [True])
+
+    def test_get_data_for_write_asset_id_file_ids_pair(self):
+        data = tools.relative_path(__file__, '../../resources/fake_data.csv')
+        data = pd.read_csv(data)
+
+        file_data, file_meta, asset_meta = db_tools._get_data_for_write(
+            data,
+            '/tmp/projects',
+            '/tmp/hidebound'
+        )
+
+        a = asset_meta
+        a['asset_id'] = a.metadata.apply(lambda x: x['asset_id'])
+        a['file_ids'] = a.metadata.apply(lambda x: x['file_ids'])
+        keys = sorted(a.asset_id.tolist())
+        vals = sorted(a.file_ids.tolist())
+        a = dict(zip(keys, vals))
+
+        b = file_meta
+        b['asset_id'] = b.metadata.apply(lambda x: x['asset_id'])
+        b['file_ids'] = b.metadata.apply(lambda x: x['file_id'])
+        b = b.groupby('asset_id', as_index=False).agg(lambda x: x.tolist())
+        keys = sorted(b.asset_id.tolist())
+        vals = sorted(b.file_ids.tolist())
+        b = dict(zip(keys, vals))
+
+        self.assertEqual(a, b)

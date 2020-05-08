@@ -1,5 +1,7 @@
 from collections import defaultdict
 from pathlib import Path
+import re
+import uuid
 
 import numpy as np
 from pandas import DataFrame
@@ -289,3 +291,100 @@ def _cleanup(data):
         data.loc[mask, col] = data.loc[mask, col]\
             .apply(lambda x: x.absolute().as_posix())
     return data
+
+
+def _get_data_for_write(data, source_dir, target_dir):
+    '''
+    Split given data into three DataFrame creating files.
+
+    Args:
+        data: DataFrame: DataFrame to be transformed.
+        source_dir (str or Path): Source directory of asset files.
+        target_dir (str or Path): Target directory where data will be written.
+
+    DataFrames:
+
+        * File data - For writing asset file data to a target filepath.
+        * File metadata - For writing file metadata to a target json file.
+        * Asset metadata - For writing asset metadata to a target json file.
+
+    Returns:
+        list[DataFrame]: file_data, file_metadata, asset_metadata.
+    '''
+    # get valid asset data
+    data = data.copy()
+    data = data[data.asset_valid]
+
+    # return if there is no valid asset data
+    if len(data) == 0:
+        return
+
+    source_dir = Path(source_dir).absolute().as_posix()
+    data_dir = Path(target_dir, 'data').absolute().as_posix()
+    meta_dir = Path(target_dir, 'metadata').absolute().as_posix()
+
+    # add asset id
+    keys = data.asset_path.unique().tolist()
+    vals = [str(uuid.uuid4()) for x in keys]
+    lut = dict(zip(keys, vals))
+    lut = defaultdict(lambda: np.nan, lut)
+    data['asset_id'] = data.asset_path.apply(lambda x: lut[x])
+
+    # create target data path
+    data['data_path'] = data.filepath\
+        .apply(lambda x: re.sub(source_dir, data_dir, x))
+
+    # create file id and metadata
+    data['file_id'] = data.asset_name.apply(lambda x: str(uuid.uuid4()))
+    data['metadata'] = data.apply(
+        lambda x: dict(
+            asset_id=x.asset_id,
+            asset_path=x.asset_path,
+            asset_name=x.asset_name,
+            asset_type=x.asset_type,
+            file_id=x.file_id,
+            file_traits=x.file_traits,
+            filename=x.filename,
+            filepath=x.filepath,
+        ),
+        axis=1
+    )
+
+    # create target metadata path
+    data['metadata_path'] = data.file_id\
+        .apply(lambda x: Path(meta_dir, x + '.json').as_posix())
+
+    # create asset metadata
+    asset_meta = data\
+        .groupby('asset_id', as_index=False)\
+        .agg(lambda x: [dict(
+            asset_id=x.asset_id.tolist()[0],
+            asset_path=x.asset_path.tolist()[0],
+            asset_name=x.asset_name.tolist()[0],
+            asset_traits=x.asset_traits.tolist()[0],
+            asset_type=x.asset_type.tolist()[0],
+            file_ids=x.file_id.tolist(),
+            file_traits=x.file_traits.tolist(),
+            filenames=x.filename.tolist(),
+            filepaths=x.filepath.tolist(),
+        )])
+    asset_meta['metadata'] = asset_meta.asset_name
+    asset_meta['metadata_path'] = asset_meta.asset_id\
+        .apply(lambda x: Path(data_dir, x + '.json').as_posix())
+
+    # create file data
+    cols = ['filepath', 'data_path']
+    file_data = data[cols].copy()
+    file_data.columns = ['source', 'target']
+
+    # create file metadata
+    cols = ['metadata', 'metadata_path']
+    file_meta = data[cols].copy()
+    file_meta.columns = ['metadata', 'target']
+
+    # restrict asset metadata columns
+    cols = ['metadata', 'metadata_path']
+    asset_meta = asset_meta[cols]
+    asset_meta.columns = ['metadata', 'target']
+
+    return file_data, file_meta, asset_meta

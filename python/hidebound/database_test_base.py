@@ -37,37 +37,40 @@ class DatabaseTestBase(unittest.TestCase):
 
     def get_data(self, root, nans=False):
         data = [
-            [0, 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v001', 'p-proj001_s-spec001_d-pizza_v001_c000-001_f0001.png',  None                                ],  # noqa E501 E241
-            [0, 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v001', 'p-proj001_s-spec001_d-pizza_v001_c000-001_f0002.png',  None                                ],  # noqa E501 E241
-            [0, 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v001', 'p-proj001_s-spec001_d-pizza_v001_c000-001_f0003.png',  None                                ],  # noqa E501 E241
-            [1, 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v002', 'p-proj001_s-spec001_d-pizza_v002_c000-000_f0001.png',  None                                ],  # noqa E501 E241
-            [1, 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v002', 'p-proj001_s-spec001_d-pizza_v002_c000-000_f0002.png',  None                                ],  # noqa E501 E241
-            [1, 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v002', 'p-proj001_s-spec001_d-pizza_v002_c000-000_f0003.png',  None                                ],  # noqa E501 E241
-            [1, 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v002', 'p-proj001_s-spec001_d-pizza_v002_c000-000_f0004.png',  None                                ],  # noqa E501 E241
-            [2, 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v002', 'p-proj001_s-spec001_d-pizza_v002_c000-001_f0001.png',  None                                ],  # noqa E501 E241
-            [2, 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v002', 'p-proj001_s-spec001_d-pizza_v002_c000-001_f0002.png',  None                                ],  # noqa E501 E241
-            [2, 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v002', 'p-proj001_s-spec001_d-pizza_v002_c000-001_f0003.png',  None                                ],  # noqa E501 E241
-            [2, 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v002', 'p-proj001_s-spec001_d-pizza_v002_c000-001_f0004.png',  None                                ],  # noqa E501 E241
-            [3, 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v003', 'p-proj001_s-spec001_d-kiwi_v003_c000-001_f0001.png', ' Inconsistent descriptor field token'],  # noqa E501 E241
-            [3, 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v003', 'p-proj001_s-spec001_d-pizza_v003_c000-001_f0002.png',  None                                ],  # noqa E501 E241
-            [3, 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v003', 'p-proj001_s-spec001_d-PIZZA_v003_c000-001_f0003.png',  'Illegal descriptor field token'    ],  # noqa E501 E241
-            [3, 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v003', 'p-proj001_s-spec001_d-pizza_v003_c000-001_f0004.png',  None                                ],  # noqa E501 E241
-            [3, None,      'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v003', 'p-proj001_s-spec0001_d-pizza_v003_c000-001_f0005.png', 'Illegal specification field token' ],  # noqa E501 E241
-            [3, None,      'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v003', 'misc.txt',                                             'SpecificationBase not found'       ],  # noqa E501 E241
-            [4, 'spec002', 'proj001/spec002/taco/p-proj001_s-spec002_d-taco_v001',   'p-proj001_s-spec002_d-taco_v001_f0000.jpg',            None                                ],  # noqa E501 E241
-            [4, 'spec002', 'proj001/spec002/taco/p-proj001_s-spec002_d-taco_v001',   'p-proj001_s-spec002_d-taco_v001_f0001.jpg',            None                                ],  # noqa E501 E241
-            [4, 'spec002', 'proj001/spec002/taco/p-proj001_s-spec002_d-taco_v001',   'p-proj001_s-spec002_d-taco_v001_f0002.jpg',            None                                ],  # noqa E501 E241
-            [5, 'spec002', 'proj001/spec002/taco/p-proj001_s-spec002_d-taco_v002',   'p-proj001_s-spec002_d-taco_v001_f0000.jpg',            'Invalid asset directory name'      ],  # noqa E501 E241
-            [5, 'spec002', 'proj001/spec002/taco/p-proj001_s-spec002_d-taco_v002',   'p-proj001_s-spec002_d-taco_v002_f0001.jpg',            None                                ],  # noqa E501 E241
-            [5, 'spec002', 'proj001/spec002/taco/p-proj001_s-spec002_d-taco_v002',   'p-proj001_s-spec002_d-taco_v002',                      'Expected "_"'                      ],  # noqa E501 E241
-            [5, 'spec002', 'proj001/spec002/taco/p-proj001_s-spec002_d-taco_v002',   'p-proj001_s-spec002_d-taco_v02_f0003.jpg',             'Illegal version field token'       ],  # noqa E501 E241
-            [6, 'vdb001',  'proj002/vdb001',                                         'p-proj002_s-vdb001_d-bagel_v001.vdb',                  'Specification not found'           ],  # noqa E501 E241
-            [6, 'vdb001',  'proj002/vdb001',                                         'p-proj002_s-vdb001_d-bagel_v002.vdb',                  'Specification not found'           ],  # noqa E501 E241
-            [6, 'vdb001',  'proj002/vdb001',                                         'p-proj002_s-vdb001_d-bagel_v003.vdb',                  'Specification not found'           ],  # noqa E501 E241
+            [0, True,  'sequence', 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v001', 'p-proj001_s-spec001_d-pizza_v001_c000-001_f0001.png',  None                                ],  # noqa E501 E241
+            [0, True,  'sequence', 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v001', 'p-proj001_s-spec001_d-pizza_v001_c000-001_f0002.png',  None                                ],  # noqa E501 E241
+            [0, True,  'sequence', 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v001', 'p-proj001_s-spec001_d-pizza_v001_c000-001_f0003.png',  None                                ],  # noqa E501 E241
+            [1, True,  'sequence', 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v002', 'p-proj001_s-spec001_d-pizza_v002_c000-000_f0001.png',  None                                ],  # noqa E501 E241
+            [1, True,  'sequence', 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v002', 'p-proj001_s-spec001_d-pizza_v002_c000-000_f0002.png',  None                                ],  # noqa E501 E241
+            [1, True,  'sequence', 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v002', 'p-proj001_s-spec001_d-pizza_v002_c000-000_f0003.png',  None                                ],  # noqa E501 E241
+            [1, True,  'sequence', 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v002', 'p-proj001_s-spec001_d-pizza_v002_c000-000_f0004.png',  None                                ],  # noqa E501 E241
+            [2, True,  'sequence', 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v002', 'p-proj001_s-spec001_d-pizza_v002_c000-001_f0001.png',  None                                ],  # noqa E501 E241
+            [2, True,  'sequence', 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v002', 'p-proj001_s-spec001_d-pizza_v002_c000-001_f0002.png',  None                                ],  # noqa E501 E241
+            [2, True,  'sequence', 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v002', 'p-proj001_s-spec001_d-pizza_v002_c000-001_f0003.png',  None                                ],  # noqa E501 E241
+            [2, True,  'sequence', 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v002', 'p-proj001_s-spec001_d-pizza_v002_c000-001_f0004.png',  None                                ],  # noqa E501 E241
+            [3, False, 'sequence', 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v003', 'p-proj001_s-spec001_d-kiwi_v003_c000-001_f0001.png', ' Inconsistent descriptor field token'],  # noqa E501 E241
+            [3, False, 'sequence', 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v003', 'p-proj001_s-spec001_d-pizza_v003_c000-001_f0002.png',  None                                ],  # noqa E501 E241
+            [3, False, 'sequence', 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v003', 'p-proj001_s-spec001_d-PIZZA_v003_c000-001_f0003.png',  'Illegal descriptor field token'    ],  # noqa E501 E241
+            [3, False, 'sequence', 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v003', 'p-proj001_s-spec001_d-pizza_v003_c000-001_f0004.png',  None                                ],  # noqa E501 E241
+            [3, False, np.nan,     None,      'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v003', 'p-proj001_s-spec0001_d-pizza_v003_c000-001_f0005.png', 'Illegal specification field token' ],  # noqa E501 E241
+            [3, False, np.nan,     None,      'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v003', 'misc.txt',                                             'SpecificationBase not found'       ],  # noqa E501 E241
+            [4, False, 'sequence', 'spec002', 'proj001/spec002/taco/p-proj001_s-spec002_d-taco_v001',   'p-proj001_s-spec002_d-taco_v001_f0000.jpg',            None                                ],  # noqa E501 E241
+            [4, False, 'sequence', 'spec002', 'proj001/spec002/taco/p-proj001_s-spec002_d-taco_v001',   'p-proj001_s-spec002_d-taco_v001_f0001.jpg',            None                                ],  # noqa E501 E241
+            [4, False, 'sequence', 'spec002', 'proj001/spec002/taco/p-proj001_s-spec002_d-taco_v001',   'p-proj001_s-spec002_d-taco_v001_f0002.jpg',            None                                ],  # noqa E501 E241
+            [5, False, 'sequence', 'spec002', 'proj001/spec002/taco/p-proj001_s-spec002_d-taco_v002',   'p-proj001_s-spec002_d-taco_v001_f0000.jpg',            'Invalid asset directory name'      ],  # noqa E501 E241
+            [5, False, 'sequence', 'spec002', 'proj001/spec002/taco/p-proj001_s-spec002_d-taco_v002',   'p-proj001_s-spec002_d-taco_v002_f0001.jpg',            None                                ],  # noqa E501 E241
+            [5, False, 'sequence', 'spec002', 'proj001/spec002/taco/p-proj001_s-spec002_d-taco_v002',   'p-proj001_s-spec002_d-taco_v002',                      'Expected "_"'                      ],  # noqa E501 E241
+            [5, False, 'sequence', 'spec002', 'proj001/spec002/taco/p-proj001_s-spec002_d-taco_v002',   'p-proj001_s-spec002_d-taco_v02_f0003.jpg',             'Illegal version field token'       ],  # noqa E501 E241
+            [6, False, 'sequence', 'vdb001',  'proj002/vdb001',                                         'p-proj002_s-vdb001_d-bagel_v001.vdb',                  'Specification not found'           ],  # noqa E501 E241
+            [6, False, 'sequence', 'vdb001',  'proj002/vdb001',                                         'p-proj002_s-vdb001_d-bagel_v002.vdb',                  'Specification not found'           ],  # noqa E501 E241
+            [6, False, 'sequence', 'vdb001',  'proj002/vdb001',                                         'p-proj002_s-vdb001_d-bagel_v003.vdb',                  'Specification not found'           ],  # noqa E501 E241
         ]
 
         data = DataFrame(data)
-        data.columns = ['asset_id', 'specification', 'asset_path', 'filename', 'file_error']
+        data.columns = [
+            'asset_id', 'asset_valid', 'asset_type', 'specification',
+            'asset_path', 'filename', 'file_error'
+        ]
 
         data.asset_path = data.asset_path.apply(lambda x: root + '/' + x)
         data['asset_name'] = data.asset_path.apply(lambda x: x.split('/')[-1])

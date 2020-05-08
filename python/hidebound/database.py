@@ -77,8 +77,8 @@ class Database:
 
     def __init__(
         self,
-        root_directory,
-        hidebound_parent_directory,
+        root_dir,
+        hidebound_parent_dir,
         specifications=[],
         include_regex='',
         exclude_regex=r'\.DS_Store',
@@ -88,8 +88,8 @@ class Database:
         Creates an instance of Database but does not populate it with data.
 
         Args:
-            root_directory (str or Path): Root directory to recurse.
-            hidebound_parent_directory (str or Path): Directory where hidebound
+            root_dir (str or Path): Root directory to recurse.
+            hidebound_parent_dir (str or Path): Directory where hidebound
                 directory will be created and hidebound data saved.
             specifications (list[SpecificationBase], optional): List of asset
                 specifications. Default: [].
@@ -105,7 +105,7 @@ class Database:
                 object.
             ValueError: If extraction_mode not is not "copy" or "move".
             FileNotFoundError: If root is not a directory or does not exist.
-            FileNotFoundError: If hidebound_parent_directory is not directory or
+            FileNotFoundError: If hidebound_parent_dir is not directory or
                 does not exist.
 
 
@@ -122,7 +122,7 @@ class Database:
             raise TypeError(msg)
 
         # validate root dir
-        root = root_directory
+        root = root_dir
         if not isinstance(root, Path):
             root = Path(root)
         if not root.is_dir():
@@ -136,7 +136,7 @@ class Database:
             raise ValueError(msg)
 
         # validate hidebound root dir
-        hb_root = hidebound_parent_directory
+        hb_root = hidebound_parent_dir
         if not isinstance(hb_root, Path):
             hb_root = Path(hb_root)
         if not hb_root.is_dir():
@@ -151,6 +151,7 @@ class Database:
         self._hb_root = hb_root
         self._include_regex = include_regex
         self._exclude_regex = exclude_regex
+        self._extraction_mode = extraction_mode
         self._specifications = {x.__name__.lower(): x for x in specifications}
         self.data = None
 
