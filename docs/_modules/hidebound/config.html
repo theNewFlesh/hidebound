@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.2.5
+                0.2.6
               </div>
             
           
@@ -152,6 +152,7 @@
   <h1>Source code for hidebound.config</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
 <span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">import_module</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -207,36 +208,19 @@
         <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filepath</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span><span class="si">}</span><span class="s1"> has no SPECIFICATIONS attribute.&#39;</span>
         <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
-    <span class="c1"># ensure SPECIFICATIONS is a dict</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mod</span><span class="o">.</span><span class="n">SPECIFICATIONS</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="c1"># ensure SPECIFICATIONS is a list</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mod</span><span class="o">.</span><span class="n">SPECIFICATIONS</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">temp</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filepath</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span><span class="si">}</span><span class="s1"> SPECIFICATIONS attribute is not a &#39;</span>
-        <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;dictionary.&#39;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filepath</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span><span class="si">}</span><span class="s1"> SPECIFICATIONS attribute is not a list.&#39;</span>
         <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
-    <span class="c1"># ensure all SPECIFICATIONS values are SpecificationBase subclasses</span>
-    <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">mod</span><span class="o">.</span><span class="n">SPECIFICATIONS</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">SpecificationBase</span><span class="p">):</span>
-            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-
+    <span class="c1"># ensure all SPECIFICATIONS are subclasses of SpecificationBase</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="ow">not</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">SpecificationBase</span><span class="p">),</span> <span class="n">mod</span><span class="o">.</span><span class="n">SPECIFICATIONS</span>
+    <span class="p">))</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">temp</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">errors</span><span class="si">}</span><span class="s1"> are not subclasses of SpecificationBase.&#39;</span>
-        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-
-    <span class="c1"># ensure all SPECIFICATIONS keys are named correctly</span>
-    <span class="n">keys</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">vals</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">mod</span><span class="o">.</span><span class="n">SPECIFICATIONS</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">key</span> <span class="o">!=</span> <span class="n">val</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
-            <span class="n">keys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-            <span class="n">vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">temp</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Improper SPECIFICATIONS keys: </span><span class="si">{</span><span class="n">keys</span><span class="si">}</span><span class="s1">. Keys must be lowercase &#39;</span>
-        <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;version of class names: </span><span class="si">{</span><span class="n">vals</span><span class="si">}</span><span class="s1">.&#39;</span>
         <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="n">sys</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">temp</span></div>
@@ -249,18 +233,19 @@
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        root_directory (str or Path): Root directory to recurse.</span>
-<span class="sd">        asset_directory (str or Path): Directory where assets will be saved.</span>
+<span class="sd">        hidebound_parent_directory (str or Path): Directory where hidebound</span>
+<span class="sd">            directory will be created and hidebound data saved.</span>
 <span class="sd">        specification_files (list[str], optional): List of asset specification</span>
 <span class="sd">            files. Default: [].</span>
 <span class="sd">        include_regex (str, optional): Include filenames that match this regex.</span>
 <span class="sd">            Default: &#39;&#39;.</span>
 <span class="sd">        exclude_regex (str, optional): Exclude filenames that match this regex.</span>
 <span class="sd">            Default: &#39;\.DS_Store&#39;.</span>
-<span class="sd">        extraction_mode (str, optional): How assets will be extracted to asset</span>
-<span class="sd">            directory. Default: copy.</span>
+<span class="sd">        extraction_mode (str, optional): How assets will be extracted to</span>
+<span class="sd">            hidebound/data directory. Default: copy.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">root_directory</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_directory</span><span class="p">])</span>
-    <span class="n">asset_directory</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_directory</span><span class="p">])</span>
+    <span class="n">hidebound_parent_directory</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_directory</span><span class="p">])</span>
     <span class="n">specification_files</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
         <span class="n">StringType</span><span class="p">(</span><span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">is_specification_file</span><span class="p">]),</span>
         <span class="n">default</span><span class="o">=</span><span class="p">[],</span>

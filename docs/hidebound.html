@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.2.5
+                0.2.6
               </div>
             
           
@@ -186,9 +186,10 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="hidebound.config.Config.asset_directory">
-<code class="sig-name descname">asset_directory</code><a class="headerlink" href="#hidebound.config.Config.asset_directory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Directory where assets will be saved.</p>
+<dt id="hidebound.config.Config.hidebound_parent_directory">
+<code class="sig-name descname">hidebound_parent_directory</code><a class="headerlink" href="#hidebound.config.Config.hidebound_parent_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Directory where hidebound
+directory will be created and hidebound data saved.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>str or Path</p>
@@ -235,8 +236,8 @@ Default: ‘.DS_Store’.</p>
 <dl class="py attribute">
 <dt id="hidebound.config.Config.extraction_mode">
 <code class="sig-name descname">extraction_mode</code><a class="headerlink" href="#hidebound.config.Config.extraction_mode" title="Permalink to this definition">¶</a></dt>
-<dd><p>How assets will be extracted to asset
-directory. Default: copy.</p>
+<dd><p>How assets will be extracted to
+hidebound/data directory. Default: copy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>str, optional</p>
@@ -251,17 +252,17 @@ directory. Default: copy.</p>
 
 <dl class="py attribute">
 <dt id="id0">
-<code class="sig-name descname">asset_directory</code><em class="property"> = &lt;StringType() instance on Config as 'asset_directory'&gt;</em><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">exclude_regex</code><em class="property"> = &lt;StringType() instance on Config as 'exclude_regex'&gt;</em><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id1">
-<code class="sig-name descname">exclude_regex</code><em class="property"> = &lt;StringType() instance on Config as 'exclude_regex'&gt;</em><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">extraction_mode</code><em class="property"> = &lt;StringType() instance on Config as 'extraction_mode'&gt;</em><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id2">
-<code class="sig-name descname">extraction_mode</code><em class="property"> = &lt;StringType() instance on Config as 'extraction_mode'&gt;</em><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">hidebound_parent_directory</code><em class="property"> = &lt;StringType() instance on Config as 'hidebound_parent_directory'&gt;</em><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -308,7 +309,7 @@ directory. Default: copy.</p>
 <span id="database"></span><h2>database<a class="headerlink" href="#module-hidebound.database" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="hidebound.database.Database">
-<em class="property">class </em><code class="sig-prename descclassname">hidebound.database.</code><code class="sig-name descname">Database</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span></em>, <em class="sig-param"><span class="n">specifications</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">include_regex</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">exclude_regex</span><span class="o">=</span><span class="default_value">'\\.DS_Store'</span></em>, <em class="sig-param"><span class="n">ignore_order</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/database.html#Database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.database.Database" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">hidebound.database.</code><code class="sig-name descname">Database</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root_directory</span></em>, <em class="sig-param"><span class="n">hidebound_parent_directory</span></em>, <em class="sig-param"><span class="n">specifications</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">include_regex</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">exclude_regex</span><span class="o">=</span><span class="default_value">'\\.DS_Store'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/database.html#Database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.database.Database" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Generates a DataFrame using the files within a given directory as rows.</p>
 <dl class="py attribute">
@@ -444,6 +445,26 @@ Adds error to error column if invalid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>data</strong> (<em>DataFrame</em>) – DataFrame.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hidebound.database.Database.from_config">
+<em class="property">static </em><code class="sig-name descname">from_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/database.html#Database.from_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.database.Database.from_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a Database instance given a valid config.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>dict</em>) – Dictionary that meets Config class standards.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>DataError</strong> – If config is invalid.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Database instance.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#hidebound.database.Database" title="hidebound.database.Database">Database</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -626,11 +647,11 @@ according to a dynimcally defined grammar.</p>
 
 <dl class="py method">
 <dt id="hidebound.parser.AssetNameParser.parse">
-<code class="sig-name descname">parse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em>, <em class="sig-param"><span class="n">ignore_order</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/parser.html#AssetNameParser.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.parser.AssetNameParser.parse" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">parse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/parser.html#AssetNameParser.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.parser.AssetNameParser.parse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse a given string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – Strign to be parsed.</p>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – String to be parsed.</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p><strong>ParseException</strong> – If parse fails.</p>

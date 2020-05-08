@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.2.5
+                0.2.6
               </div>
             
           
@@ -151,12 +151,16 @@
             
   <h1>Source code for hidebound.database</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">import_module</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
 <span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">ValidationError</span>
 
+<span class="kn">from</span> <span class="nn">hidebound.config</span> <span class="kn">import</span> <span class="n">Config</span>
 <span class="kn">from</span> <span class="nn">hidebound.parser</span> <span class="kn">import</span> <span class="n">AssetNameParser</span>
 <span class="kn">from</span> <span class="nn">hidebound.specification_base</span> <span class="kn">import</span> <span class="n">SpecificationBase</span>
 <span class="kn">import</span> <span class="nn">hidebound.tools</span> <span class="k">as</span> <span class="nn">tools</span>
@@ -188,27 +192,65 @@
         <span class="c1"># &#39;asset_id&#39;,</span>
     <span class="p">]</span>
 
-<div class="viewcode-block" id="Database.__init__"><a class="viewcode-back" href="../../hidebound.html#hidebound.database.Database.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<div class="viewcode-block" id="Database.from_config"><a class="viewcode-back" href="../../hidebound.html#hidebound.database.Database.from_config">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_config</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Constructs a Database instance given a valid config.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            config (dict): Dictionary that meets Config class standards.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            DataError: If config is invalid.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Database: Database instance.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">Config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+
+        <span class="n">specs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;specification_files&#39;</span><span class="p">]:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+            <span class="n">filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">filepath</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">filename</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="n">import_module</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">filepath</span><span class="p">)</span>
+
+            <span class="n">specs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">SPECIFICATIONS</span><span class="p">)</span>
+
+        <span class="n">specs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">specs</span><span class="p">))</span>
+        <span class="n">config</span><span class="p">[</span><span class="s1">&#39;specifications&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">specs</span>
+
+        <span class="k">return</span> <span class="n">Database</span><span class="p">(</span>
+            <span class="n">config</span><span class="p">[</span><span class="s1">&#39;root_directory&#39;</span><span class="p">],</span>
+            <span class="n">config</span><span class="p">[</span><span class="s1">&#39;hidebound_parent_directory&#39;</span><span class="p">],</span>
+            <span class="n">specifications</span><span class="o">=</span><span class="n">specs</span><span class="p">,</span>
+            <span class="n">include_regex</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;include_regex&#39;</span><span class="p">],</span>
+            <span class="n">exclude_regex</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;exclude_regex&#39;</span><span class="p">],</span>
+        <span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">root</span><span class="p">,</span>
+        <span class="n">root_directory</span><span class="p">,</span>
+        <span class="n">hidebound_parent_directory</span><span class="p">,</span>
         <span class="n">specifications</span><span class="o">=</span><span class="p">[],</span>
         <span class="n">include_regex</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
         <span class="n">exclude_regex</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;\.DS_Store&#39;</span><span class="p">,</span>
-        <span class="n">ignore_order</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">):</span>
         <span class="sa">r</span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Creates an instance of Database but does not populate it with data.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            root (str or Path): Root directory to recurse.</span>
+<span class="sd">            root_directory (str or Path): Root directory to recurse.</span>
+<span class="sd">            hidebound_parent_directory (str or Path): Directory where hidebound</span>
+<span class="sd">                directory will be created and hidebound data saved.</span>
 <span class="sd">            specifications (list[SpecificationBase], optional): List of asset</span>
 <span class="sd">                specifications. Default: [].</span>
 <span class="sd">            include_regex (str, optional): Include filenames that match this</span>
 <span class="sd">                regex. Default: None.</span>
 <span class="sd">            exclude_regex (str, optional): Exclude filenames that match this</span>
 <span class="sd">                regex. Default: &#39;\.DS_Store&#39;.</span>
-<span class="sd">            ignore_order (bool, optional): Whether to ignore the filename_ order</span>
-<span class="sd">                in filenames. Default: False.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            FileNotFoundError: If root is not a directory or does not exist.</span>
@@ -217,12 +259,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Database: Database instance.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
-            <span class="n">root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">root</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">root</span><span class="si">}</span><span class="s1"> is not a directory or does not exist.&#39;</span>
-            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-
+        <span class="c1"># validate spec classes</span>
         <span class="n">bad_specs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">SpecificationBase</span><span class="p">),</span> <span class="n">specifications</span>
         <span class="p">))</span>
@@ -231,12 +268,32 @@
             <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;SpecificationBase. Found: </span><span class="si">{</span><span class="n">bad_specs</span><span class="si">}</span><span class="s1">.&#39;</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
+        <span class="c1"># validate root dir</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">root_directory</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
+            <span class="n">root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">root</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">root</span><span class="si">}</span><span class="s1"> is not a directory or does not exist.&#39;</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="c1"># validate hidebound root dir</span>
+        <span class="n">hb_root</span> <span class="o">=</span> <span class="n">hidebound_parent_directory</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hb_root</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
+            <span class="n">hb_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">hb_root</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">hb_root</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hb_root</span><span class="si">}</span><span class="s1"> is not a directory or does not exist.&#39;</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="c1"># create hidebound root dir</span>
+        <span class="n">hb_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">hb_root</span><span class="p">,</span> <span class="s1">&#39;hidebound&#39;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">hb_root</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hb_root</span> <span class="o">=</span> <span class="n">hb_root</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_include_regex</span> <span class="o">=</span> <span class="n">include_regex</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_exclude_regex</span> <span class="o">=</span> <span class="n">exclude_regex</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ignore_order</span> <span class="o">=</span> <span class="n">ignore_order</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_specifications</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">specifications</span><span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="kc">None</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_specifications</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">specifications</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="Database.update"><a class="viewcode-back" href="../../hidebound.html#hidebound.database.Database.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
