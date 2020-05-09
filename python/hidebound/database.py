@@ -5,6 +5,10 @@ import os
 import shutil
 import sys
 
+from pandas import DataFrame
+import pandasql
+import numpy as np
+
 from hidebound.config import Config
 import hidebound.database_tools as db_tools
 from hidebound.specification_base import SpecificationBase
@@ -238,3 +242,90 @@ class Database:
             shutil.rmtree(meta_dir)
 
         return self
+
+    def read(self, group_by_asset=False):
+        '''
+        Return a DataFrame which can be easily be queried and has only cells
+        with scalar values.
+
+        Args:
+            group_by_asset (bool, optional): Whether to group the data by asset.
+                Default: False.
+
+        Returns:
+            DataFrame: Formatted data.
+        '''
+        def coordinate_to_dict(item):
+            if 'coordinate' in item.keys():
+                keys = ['coordinate_x', 'coordinate_y', 'coordinate_z']
+                coords = dict(zip(keys, item['coordinate']))
+                del item['coordinate']
+                item.update(coords)
+            return item
+
+        data = self.data.copy()
+
+        col = 'file_traits'
+        if group_by_asset:
+            col = 'asset_traits'
+            data = data.groupby('asset_path', as_index=False).first()
+
+        data[col] = data[col].apply(coordinate_to_dict)
+        traits = DataFrame(data[col].tolist())
+
+        for col in traits.columns:
+            if col not in data.columns:
+                data[col] = np.nan
+
+            mask = traits[col].notnull()
+            data.loc[mask, col] = traits.loc[mask, col]
+
+        # find columns by legal type
+        cols = data.applymap(type).apply(lambda x: set(x.unique()))
+        legal_cols = set([int, float, str, None])
+        mask = cols.apply(lambda x: x.difference(legal_cols) == set())
+        cols = cols[mask].index.tolist()
+
+        # nicely order columns
+        head_cols = [
+            'project',
+            'specification',
+            'descriptor',
+            'version',
+            'coordinate_x',
+            'coordinate_y',
+            'coordinate_z',
+            'frame',
+            'extension',
+            'filename',
+            'filepath',
+            'file_error',
+            'asset_name',
+            'asset_path',
+            'asset_type',
+            'asset_error',
+            'asset_valid',
+        ]
+        head_cols = list(filter(lambda x: x in cols, head_cols))
+        tail_cols = sorted(list(set(cols).difference(head_cols)))
+        cols = head_cols + tail_cols
+        data = data[cols]
+
+        return data
+
+    def search(self, query, group_by_asset=False):
+        '''
+        Search data according to given SQL query.
+
+        Args:
+            query (str): SQL query. Make sure to use "FROM data" in query.
+            group_by_asset (bool, optional): Whether to group the data by asset.
+                Default: False.
+
+        Returns:
+            DataFrame: Formatted data.
+        '''
+        return pandasql.sqldf(
+            query,
+            {'data': self.read(group_by_asset=group_by_asset)}
+        )

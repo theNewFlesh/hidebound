@@ -1,4 +1,5 @@
 import json
+from itertools import chain
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import os
@@ -387,4 +388,163 @@ class DatabaseTests(DatabaseTestBase):
 
             result = tools.directory_to_dataframe(root).filepath.tolist()
             result = sorted(result)
+            self.assertEqual(result, expected)
+
+    # SEARCH--------------------------------------------------------------------
+    def test_search(self):
+        Spec001, Spec002, BadSpec = self.get_specifications()
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hb_root')
+            os.makedirs(hb_root)
+
+            root = Path(root, 'projects')
+            os.makedirs(root)
+
+            self.create_files(root)
+            db = Database(root, hb_root, [Spec001, Spec002])
+            db.update()
+            db.search('SELECT * FROM data WHERE version == 3')
+
+    # READ----------------------------------------------------------------------
+    def test_read_legal_types(self):
+        Spec001, Spec002, BadSpec = self.get_specifications()
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hb_root')
+            os.makedirs(hb_root)
+
+            root = Path(root, 'projects')
+            os.makedirs(root)
+
+            self.create_files(root)
+            db = Database(root, hb_root, [Spec001, Spec002])
+            db.update()
+            data = db.read()
+
+            # test types by file
+            result = data.applymap(type)\
+                .apply(lambda x: x.unique().tolist())\
+                .tolist()
+            result = list(chain(*result))
+            result = set(result)
+
+            expected = set([int, float, str, None])
+            result = result.difference(expected)
+            self.assertEqual(len(result), 0)
+
+            # test types by asset
+            data = db.read(group_by_asset=True)
+            result = data.applymap(type)\
+                .apply(lambda x: x.unique().tolist())\
+                .tolist()
+            result = list(chain(*result))
+            result = set(result)
+
+            expected = set([int, float, str, None])
+            result = result.difference(expected)
+            self.assertEqual(len(result), 0)
+
+    def test_read_traits(self):
+        Spec001, Spec002, BadSpec = self.get_specifications()
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hb_root')
+            os.makedirs(hb_root)
+
+            root = Path(root, 'projects')
+            os.makedirs(root)
+
+            self.create_files(root)
+            db = Database(root, hb_root, [Spec001, Spec002])
+            db.update()
+
+            # test file traits
+            db.data.file_traits = db.data.file_traits\
+                .apply(lambda x: {'foo': 'bar', 'illegal': set()})
+            data = db.read()
+
+            result = data.columns
+            self.assertIn('foo', result)
+            self.assertNotIn('illegal', result)
+
+            # test asset traits
+            db.update()
+
+            db.data.asset_traits = db.data.asset_traits\
+                .apply(lambda x: {'foo': 'bar', 'illegal': set()})
+            data = db.read(group_by_asset=True)
+
+            result = data.columns
+            self.assertIn('foo', result)
+            self.assertNotIn('illegal', result)
+
+    def test_read_coordinates(self):
+        Spec001, Spec002, BadSpec = self.get_specifications()
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hb_root')
+            os.makedirs(hb_root)
+
+            root = Path(root, 'projects')
+            os.makedirs(root)
+
+            self.create_files(root)
+            db = Database(root, hb_root, [Spec001, Spec002])
+            db.update()
+
+            db.data.file_traits = db.data.file_traits\
+                .apply(lambda x: {'coordinate': [0, 1]})
+            data = db.read()
+
+            # xy
+            result = data.columns
+            expected = ['coordinate_x', 'coordinate_y']
+            for col in expected:
+                self.assertIn(col, result)
+            self.assertNotIn('coordinate_z', result)
+
+            # xyz
+            db.update()
+
+            db.data.file_traits = db.data.file_traits\
+                .apply(lambda x: {'coordinate': [0, 1, 0]})
+            data = db.read()
+
+            result = data.columns
+            expected = ['coordinate_x', 'coordinate_y', 'coordinate_z']
+            for col in expected:
+                self.assertIn(col, result)
+
+    def test_read_column_order(self):
+        Spec001, Spec002, BadSpec = self.get_specifications()
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hb_root')
+            os.makedirs(hb_root)
+
+            root = Path(root, 'projects')
+            os.makedirs(root)
+
+            self.create_files(root)
+            db = Database(root, hb_root, [Spec001, Spec002])
+            db.update()
+
+            result = db.read().columns.tolist()
+            expected = [
+                'project',
+                'specification',
+                'descriptor',
+                'version',
+                'coordinate_x',
+                'coordinate_y',
+                'coordinate_z',
+                'frame',
+                'extension',
+                'filename',
+                'filepath',
+                'file_error',
+                'asset_name',
+                'asset_path',
+                'asset_type',
+                'asset_error',
+                'asset_valid'
+            ]
+            expected = list(filter(lambda x: x in result, expected))
+            result = result[:len(expected)]
             self.assertEqual(result, expected)

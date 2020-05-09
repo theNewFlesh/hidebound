@@ -15,12 +15,7 @@ import hidebound.validators as vd
 
 class DatabaseTestBase(unittest.TestCase):
     columns = [
-        'project',
         'specification',
-        'descriptor',
-        'version',
-        'coordinate',
-        'frame',
         'extension',
         'filename',
         'filepath',
@@ -32,7 +27,6 @@ class DatabaseTestBase(unittest.TestCase):
         'asset_traits',
         'asset_error',
         'asset_valid',
-        # 'asset_id',
     ]
 
     def get_data(self, root, nans=False):

@@ -261,7 +261,6 @@ class DatabaseTests(DatabaseTestBase):
         self.assertEqual(result, self.columns)
 
         data['filepath'] = [np.nan, Path('/foo/bar'), Path('/bar/foo')]
-        data['version'] = [1, 2, 3]
         expected = [np.nan, '/foo/bar', '/bar/foo']
         result = db_tools._cleanup(data).filepath.tolist()
         self.assertEqual(result, expected)

@@ -17,28 +17,6 @@ A library of tools for Database to use in construction of its central DataFrame.
 '''
 
 
-COLUMNS = [
-    'project',
-    'specification',
-    'descriptor',
-    'version',
-    'coordinate',
-    'frame',
-    'extension',
-    'filename',
-    'filepath',
-    'file_error',
-    'file_traits',
-    'asset_name',
-    'asset_path',
-    'asset_type',
-    'asset_traits',
-    'asset_error',
-    'asset_valid',
-    # 'asset_id',
-]
-
-
 def _add_specification(data, specifications):
     '''
     Adds specification data to given DataFrame.
@@ -124,15 +102,6 @@ def _add_file_traits(data):
             lambda x: x.specification_class().get_traits(x.filepath),
             axis=1
         )
-
-    traits = DataFrame(data.file_traits.tolist())
-    # merge data and traits
-    for col in traits.columns:
-        if col not in data.columns:
-            data[col] = np.nan
-
-        mask = traits[col].notnull()
-        data.loc[mask, col] = traits.loc[mask, col]
 
 
 def _add_asset_traits(data):
@@ -266,24 +235,32 @@ def _cleanup(data):
     Returns:
         DataFrame: Cleaned up DataFrame.
     '''
+    columns = [
+        'specification',
+        'extension',
+        'filename',
+        'filepath',
+        'file_error',
+        'file_traits',
+        'asset_name',
+        'asset_path',
+        'asset_type',
+        'asset_traits',
+        'asset_error',
+        'asset_valid',
+    ]
     # if no files are found return empty DataFrame
-    for col in COLUMNS:
+    for col in columns:
         if col not in data.columns:
             data[col] = np.nan
     # use copy to avoid SettingWithCopyWarning
     # TODO: figure out a way to prevent warning without copy.
     cols = data.columns
-    cols = set(cols).difference(COLUMNS)
+    cols = set(cols).difference(columns)
     cols = sorted(cols)
-    cols = COLUMNS + cols
+    cols = columns + cols
     cols = list(filter(lambda x: x != 'specification_class', cols))
     data = data[cols].copy()
-
-    # copy filename_error to file_error
-    if 'filename_error' in data.columns:
-        mask = data.filename_error.notnull()
-        data.loc[mask, 'file_error'] = data.loc[mask, 'filename_error']
-        del data['filename_error']
 
     # convert Paths to str
     for col in data.columns:
