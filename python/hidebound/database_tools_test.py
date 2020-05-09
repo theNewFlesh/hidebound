@@ -411,7 +411,7 @@ class DatabaseTests(DatabaseTestBase):
 
     def test_get_data_for_write_asset_id_file_ids_pair(self):
         data = tools.relative_path(__file__, '../../resources/fake_data.csv')
-        data = pd.read_csv(data)
+        data = pd.read_csv(data, index_col=0)
 
         file_data, file_meta, asset_meta = db_tools._get_data_for_write(
             data,

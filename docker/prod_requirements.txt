@@ -1,6 +1,10 @@
-flask
 flasgger
+flask
 humanfriendly
+numpy
+pandas
 pandasql
-scikit-image
+pyparsing
 schematics
+scikit-image
+wrapt

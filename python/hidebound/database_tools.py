@@ -112,9 +112,9 @@ def _add_asset_traits(data):
     Args:
         data (DataFrame): DataFrame.
     '''
-    lut = data\
-        .groupby('asset_path', as_index=False)\
-        .file_traits.agg(lambda x: tools.to_prototype(x.tolist()))\
+    cols = ['asset_path', 'file_traits']
+    lut = data[cols].groupby('asset_path', as_index=False)\
+        .agg(lambda x: tools.to_prototype(x.tolist()))\
         .apply(lambda x: x.tolist(), axis=1)\
         .tolist()
     lut = defaultdict(lambda: {}, lut)
@@ -324,20 +324,30 @@ def _get_data_for_write(data, source_dir, target_dir):
     )
 
     # create asset metadata
-    asset_meta = data.copy()\
+    asset_meta = data\
         .groupby('asset_id', as_index=False)\
-        .agg(lambda x: [dict(
-            asset_id=x.asset_id.tolist()[0],
-            asset_path=x.asset_path.tolist()[0],
-            asset_name=x.asset_name.tolist()[0],
-            asset_traits=x.asset_traits.tolist()[0],
-            asset_type=x.asset_type.tolist()[0],
-            file_ids=x.file_id.tolist(),
-            file_traits=x.file_traits.tolist(),
-            filenames=x.filename.tolist(),
-            filepaths=x.filepath.tolist(),
-        )])
-    asset_meta['metadata'] = asset_meta.asset_name
+        .agg(lambda x: x.tolist())
+
+    meta = []
+    lut = dict(
+        asset_id='asset_id',
+        asset_path='asset_path',
+        asset_name='asset_name',
+        asset_traits='asset_traits',
+        asset_type='asset_type',
+        file_id='file_ids',
+        file_traits='file_traits',
+        filename='filenames',
+        filepath='filepaths',
+    )
+    keys = asset_meta.columns.tolist()
+    for i, row in asset_meta.iterrows():
+        vals = row.tolist()
+        item = dict(zip(keys, vals))
+        item = {lut[k]: item[k] for k in lut.keys()}
+        meta.append(item)
+    asset_meta['metadata'] = meta
+
     asset_meta['target'] = asset_meta.asset_id\
         .apply(lambda x: Path(meta_dir, 'asset', x + '.json').as_posix())
     asset_meta = asset_meta[['metadata', 'target']]
