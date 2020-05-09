@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.3.2
+                0.3.3
               </div>
             
           
@@ -169,28 +169,6 @@
 <span class="sd">&#39;&#39;&#39;</span>
 
 
-<span class="n">COLUMNS</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s1">&#39;project&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;specification&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;descriptor&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;version&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;coordinate&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;frame&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;extension&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;filename&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;filepath&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;file_error&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;file_traits&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;asset_name&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;asset_path&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;asset_type&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;asset_traits&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;asset_error&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;asset_valid&#39;</span><span class="p">,</span>
-    <span class="c1"># &#39;asset_id&#39;,</span>
-<span class="p">]</span>
-
-
 <div class="viewcode-block" id="_add_specification"><a class="viewcode-back" href="../../hidebound.html#hidebound.database_tools._add_specification">[docs]</a><span class="k">def</span> <span class="nf">_add_specification</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">specifications</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Adds specification data to given DataFrame.</span>
@@ -275,16 +253,7 @@
         <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;file_traits&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">()</span><span class="o">.</span><span class="n">get_traits</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">filepath</span><span class="p">),</span>
             <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
-        <span class="p">)</span>
-
-    <span class="n">traits</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">file_traits</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
-    <span class="c1"># merge data and traits</span>
-    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">traits</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-
-        <span class="n">mask</span> <span class="o">=</span> <span class="n">traits</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
-        <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span></div>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="_add_asset_traits"><a class="viewcode-back" href="../../hidebound.html#hidebound.database_tools._add_asset_traits">[docs]</a><span class="k">def</span> <span class="nf">_add_asset_traits</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
@@ -418,24 +387,32 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        DataFrame: Cleaned up DataFrame.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;specification&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;extension&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;filename&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;filepath&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;file_error&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;file_traits&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;asset_name&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;asset_path&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;asset_type&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;asset_traits&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;asset_error&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;asset_valid&#39;</span><span class="p">,</span>
+    <span class="p">]</span>
     <span class="c1"># if no files are found return empty DataFrame</span>
-    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">COLUMNS</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
             <span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
     <span class="c1"># use copy to avoid SettingWithCopyWarning</span>
     <span class="c1"># TODO: figure out a way to prevent warning without copy.</span>
     <span class="n">cols</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span>
-    <span class="n">cols</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">COLUMNS</span><span class="p">)</span>
+    <span class="n">cols</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span>
     <span class="n">cols</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span>
-    <span class="n">cols</span> <span class="o">=</span> <span class="n">COLUMNS</span> <span class="o">+</span> <span class="n">cols</span>
+    <span class="n">cols</span> <span class="o">=</span> <span class="n">columns</span> <span class="o">+</span> <span class="n">cols</span>
     <span class="n">cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">!=</span> <span class="s1">&#39;specification_class&#39;</span><span class="p">,</span> <span class="n">cols</span><span class="p">))</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-
-    <span class="c1"># copy filename_error to file_error</span>
-    <span class="k">if</span> <span class="s1">&#39;filename_error&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-        <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">filename_error</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
-        <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;file_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;filename_error&#39;</span><span class="p">]</span>
-        <span class="k">del</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;filename_error&#39;</span><span class="p">]</span>
 
     <span class="c1"># convert Paths to str</span>
     <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>

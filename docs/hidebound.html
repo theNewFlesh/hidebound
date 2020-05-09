@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.3.2
+                0.3.3
               </div>
             
           
@@ -337,6 +337,21 @@ directory.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="hidebound.database.Database.delete">
+<code class="sig-name descname">delete</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/database.html#Database.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.database.Database.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes hidebound/data and hidebound/metadata directories and all their
+contents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>self.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#hidebound.database.Database" title="hidebound.database.Database">Database</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="hidebound.database.Database.from_config">
 <em class="property">static </em><code class="sig-name descname">from_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/database.html#Database.from_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.database.Database.from_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs a Database instance given a valid config.</p>
@@ -369,6 +384,46 @@ directory.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#hidebound.database.Database" title="hidebound.database.Database">Database</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hidebound.database.Database.read">
+<code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">group_by_asset</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/database.html#Database.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.database.Database.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a DataFrame which can be easily be queried and has only cells
+with scalar values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>group_by_asset</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to group the data by asset.
+Default: False.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Formatted data.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hidebound.database.Database.search">
+<code class="sig-name descname">search</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query</span></em>, <em class="sig-param"><span class="n">group_by_asset</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/database.html#Database.search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.database.Database.search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search data according to given SQL query.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>query</strong> (<em>str</em>) – SQL query. Make sure to use “FROM data” in query.</p></li>
+<li><p><strong>group_by_asset</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to group the data by asset.
+Default: False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Formatted data.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
