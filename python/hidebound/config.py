@@ -95,7 +95,7 @@ class Config(Model):
     root_directory = StringType(required=True, validators=[vd.is_directory])
     hidebound_parent_directory = StringType(required=True, validators=[vd.is_directory])
     specification_files = ListType(
-        StringType(validators=[is_specification_file]),
+        StringType(validators=[is_specification_file, vd.is_file]),
         default=[],
         required=True
     )
@@ -103,5 +103,6 @@ class Config(Model):
     exclude_regex = StringType(default=r'\.DS_Store', required=True)
     write_mode = StringType(
         required=True,
-        validators=[lambda x: vd.is_in(x, ['copy', 'move'])]
+        validators=[lambda x: vd.is_in(x, ['copy', 'move'])],
+        default="copy",
     )
