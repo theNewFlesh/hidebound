@@ -23,7 +23,7 @@ app._config = None
 
 # API---------------------------------------------------------------------------
 @app.route('/api')
-def index():
+def api():
     '''
     Route to Hidebound API documentation.
 
