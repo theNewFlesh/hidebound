@@ -192,9 +192,16 @@ class Database:
             * file metadata as json to hb_parent/hidebound/metadata/file
             * asset metadata as json to hb_parent/hidebound/metadata/asset
 
+        Raises:
+            RunTimeError: If data has not been initialized.
+
         Returns:
             Database: self.
         '''
+        if self.data is None:
+            msg = 'Data not initialized. Please call update.'
+            raise RuntimeError(msg)
+
         def write_json(obj, filepath):
             with open(filepath, 'w') as f:
                 json.dump(obj, f)
@@ -252,9 +259,16 @@ class Database:
             group_by_asset (bool, optional): Whether to group the data by asset.
                 Default: False.
 
+        Raises:
+            RunTimeError: If data has not been initialized.
+
         Returns:
             DataFrame: Formatted data.
         '''
+        if self.data is None:
+            msg = 'Data not initialized. Please call update.'
+            raise RuntimeError(msg)
+
         def coordinate_to_dict(item):
             if 'coordinate' in item.keys():
                 keys = ['coordinate_x', 'coordinate_y', 'coordinate_z']

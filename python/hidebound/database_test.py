@@ -251,6 +251,12 @@ class DatabaseTests(DatabaseTestBase):
             self.create_files(root)
 
             db = Database(root, hb_root, [Spec001, Spec002])
+
+            # test data initiliazation error
+            expected = 'Data not initialized. Please call update.'
+            with self.assertRaisesRegexp(RuntimeError, expected):
+                db.create()
+
             db.update()
             data = db.data
             db.create()
@@ -417,6 +423,12 @@ class DatabaseTests(DatabaseTestBase):
 
             self.create_files(root)
             db = Database(root, hb_root, [Spec001, Spec002])
+
+            # test data initiliazation error
+            expected = 'Data not initialized. Please call update.'
+            with self.assertRaisesRegexp(RuntimeError, expected):
+                db.read()
+
             db.update()
             data = db.read()
 
