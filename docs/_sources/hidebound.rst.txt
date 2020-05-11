@@ -1,6 +1,14 @@
 hidebound
 =========
 
+app
+------
+.. automodule:: hidebound.app
+    :members:
+    :private-members:
+    :undoc-members:
+    :show-inheritance:
+
 config
 ------
 .. automodule:: hidebound.config

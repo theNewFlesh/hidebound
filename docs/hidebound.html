@@ -88,6 +88,7 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">hidebound</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-hidebound.app">app</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-hidebound.config">config</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-hidebound.database">database</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-hidebound.database_tools">database_tools</a></li>
@@ -168,6 +169,99 @@
             
   <div class="section" id="hidebound">
 <h1>hidebound<a class="headerlink" href="#hidebound" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-hidebound.app">
+<span id="app"></span><h2>app<a class="headerlink" href="#module-hidebound.app" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="hidebound.app.error_to_response">
+<code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">error_to_response</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">error</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#error_to_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.error_to_response" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function for formatting a given exception as a Flask Response.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>error</strong> (<em>Exception</em>) – Error to be formatted.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Flask response.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.app.handle_data_error">
+<code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">handle_data_error</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">error</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#handle_data_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.handle_data_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles errors raise by config validation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>error</strong> (<em>DataError</em>) – Config validation error.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataError response.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.app.index">
+<code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">index</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Route to Hidebound API documentation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Flassger generated API page.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>html</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.app.initialize">
+<code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize database with given config.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Flask Response instance.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.app.read">
+<code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Flask Response instance.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.app.update">
+<code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Flask Response instance.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
 <div class="section" id="module-hidebound.config">
 <span id="config"></span><h2>config<a class="headerlink" href="#module-hidebound.config" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
