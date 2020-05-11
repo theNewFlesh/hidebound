@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.3.4
+                0.4.0
               </div>
             
           
@@ -344,9 +344,16 @@
 <span class="sd">            * file metadata as json to hb_parent/hidebound/metadata/file</span>
 <span class="sd">            * asset metadata as json to hb_parent/hidebound/metadata/asset</span>
 
+<span class="sd">        Raises:</span>
+<span class="sd">            RunTimeError: If data has not been initialized.</span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            Database: self.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Data not initialized. Please call update.&#39;</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
         <span class="k">def</span> <span class="nf">write_json</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
@@ -404,9 +411,16 @@
 <span class="sd">            group_by_asset (bool, optional): Whether to group the data by asset.</span>
 <span class="sd">                Default: False.</span>
 
+<span class="sd">        Raises:</span>
+<span class="sd">            RunTimeError: If data has not been initialized.</span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            DataFrame: Formatted data.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Data not initialized. Please call update.&#39;</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
         <span class="k">def</span> <span class="nf">coordinate_to_dict</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
             <span class="k">if</span> <span class="s1">&#39;coordinate&#39;</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                 <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;coordinate_x&#39;</span><span class="p">,</span> <span class="s1">&#39;coordinate_y&#39;</span><span class="p">,</span> <span class="s1">&#39;coordinate_z&#39;</span><span class="p">]</span>

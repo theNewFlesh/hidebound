@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.3.4
+                0.4.0
               </div>
             
           
@@ -327,11 +327,14 @@ directory.</p>
 </ul>
 </div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>self.</p>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>RunTimeError</strong> – If data has not been initialized.</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="#hidebound.database.Database" title="hidebound.database.Database">Database</a></p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#hidebound.database.Database" title="hidebound.database.Database">Database</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -398,11 +401,14 @@ with scalar values.</p>
 <dd class="field-odd"><p><strong>group_by_asset</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to group the data by asset.
 Default: False.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Formatted data.</p>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>RunTimeError</strong> – If data has not been initialized.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>DataFrame</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Formatted data.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
