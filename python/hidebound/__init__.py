@@ -14,6 +14,7 @@ import hidebound.database_tools  # noqa F401
 import hidebound.parser  # noqa F401
 import hidebound.specification_base  # noqa F401
 import hidebound.specifications  # noqa F401
+import hidebound.test_specifications  # noqa F401
 import hidebound.tools  # noqa F401
 import hidebound.traits  # noqa F401
 import hidebound.validators  # noqa F401
