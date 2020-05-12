@@ -1,7 +1,6 @@
 import json
 import os
 from pathlib import Path
-import time
 from tempfile import TemporaryDirectory
 
 import numpy as np
