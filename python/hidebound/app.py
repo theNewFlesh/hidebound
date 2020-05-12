@@ -194,6 +194,7 @@ def read():
     Returns:
         Response: Flask Response instance.
     '''
+    # TODO: add group_by_asset support
     if app._database is None:
         msg = 'Database not initialized. Please call initialize.'
         error = RuntimeError(msg)
