@@ -1,4 +1,5 @@
 from copy import copy
+from json import JSONDecodeError
 import json
 
 from flask import Flask, Response, request, redirect, url_for
@@ -114,7 +115,7 @@ def initialize():
     temp = request.get_json()
     try:
         temp = json.loads(temp)
-    except TypeError:
+    except (JSONDecodeError, TypeError):
         return get_config_error()
     if not isinstance(temp, dict):
         return get_config_error()
@@ -204,6 +205,59 @@ def read():
     )
 
 
+@app.route('/api/search', methods=['POST'])
+@swag_from(dict(
+    parameters=[
+        dict(
+            name='query',
+            type='string',
+            description='SQL query for searching database. Make sure to use "FROM data" in query.',
+            required=True,
+        )
+    ],
+    responses={
+        200: dict(
+            description='Returns a list of JSON compatible dictionaries, one per row.',
+            content='application/json',
+        ),
+        500: dict(
+            description='Internal server error.',
+        )
+    }
+))
+def search():
+    '''
+    Search database with a given SQL query.
+
+    Returns:
+        Response: Flask Response instance.
+    '''
+    query = request.get_json()
+    try:
+        query = json.loads(query)['query']
+    except (JSONDecodeError, TypeError, KeyError):
+        return get_query_error()
+
+    # TODO: add group_by_asset support
+    if app._database is None:
+        return get_initialization_error()
+
+    if app._database.data is None:
+        return get_update_error()
+
+    response = None
+    try:
+        response = app._database.search(query)
+    except Exception as e:
+        return error_to_response(e)
+
+    response = response.replace({np.nan: None}).to_dict(orient='records')
+    return Response(
+        response=json.dumps(response),
+        mimetype='application/json'
+    )
+
+
 @app.route('/api/create', methods=['POST'])
 @swag_from(dict(
     parameters=[],
@@ -283,6 +337,18 @@ def get_config_error():
         Response: Config error.
     '''
     msg = 'Please supply a config dictionary.'
+    error = TypeError(msg)
+    return error_to_response(error)
+
+
+def get_query_error():
+    '''
+    Convenience function for returning a query error response.
+
+    Returns:
+        Response: Query error.
+    '''
+    msg = 'Please supply a valid query of the form {"query": SQL}.'
     error = TypeError(msg)
     return error_to_response(error)
 

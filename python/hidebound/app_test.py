@@ -141,6 +141,82 @@ class AppTests(DatabaseTestBase):
         expected = 'Database not updated. Please call update.'
         self.assertRegex(result, expected)
 
+    # SEARCH--------------------------------------------------------------------
+    def test_search(self):
+        # init database
+        config = dict(
+            root_directory=self.root,
+            hidebound_parent_directory=self.hb_root,
+            specification_files=[self.specs],
+        )
+        config = json.dumps(config)
+        self.client.post('/api/initialize', json=config)
+        self.client.post('/api/update')
+
+        # call search
+        query = 'SELECT * FROM data WHERE specification == "spec001"'
+        temp = {'query': query}
+        temp = json.dumps(temp)
+        result = self.client.post('/api/search', json=temp).json
+        expected = self.app._database.search(query)\
+            .replace({np.nan: None})\
+            .to_dict(orient='records')
+        self.assertEqual(result, expected)
+
+    def test_search_no_query(self):
+        result = self.client.post('/api/search').json['message']
+        expected = 'Please supply a valid query of the form {"query": SQL}.'
+        self.assertRegex(result, expected)
+
+    def test_search_bad_json(self):
+        query = {'foo': 'bar'}
+        query = json.dumps(query)
+        result = self.client.post('/api/search', json=query).json['message']
+        expected = 'Please supply a valid query of the form {"query": SQL}.'
+        self.assertRegex(result, expected)
+
+    def test_search_bad_query(self):
+        # init database
+        config = dict(
+            root_directory=self.root,
+            hidebound_parent_directory=self.hb_root,
+            specification_files=[self.specs],
+        )
+        config = json.dumps(config)
+        self.client.post('/api/initialize', json=config)
+        self.client.post('/api/update')
+
+        # call search
+        query = {'query': 'SELECT * FROM data WHERE foo == "bar"'}
+        query = json.dumps(query)
+        result = self.client.post('/api/search', json=query).json['error']
+        expected = 'PandaSQLException'
+        self.assertEqual(result, expected)
+
+    def test_search_no_init(self):
+        query = {'query': 'SELECT * FROM data WHERE specification == "spec001"'}
+        query = json.dumps(query)
+        result = self.client.post('/api/search', json=query).json['message']
+        expected = 'Database not initialized. Please call initialize.'
+        self.assertRegex(result, expected)
+
+    def test_search_no_update(self):
+        # init database
+        config = dict(
+            root_directory=self.root,
+            hidebound_parent_directory=self.hb_root,
+            specification_files=[self.specs],
+        )
+        config = json.dumps(config)
+        self.client.post('/api/initialize', json=config)
+
+        # call search
+        query = {'query': 'SELECT * FROM data WHERE specification == "spec001"'}
+        query = json.dumps(query)
+        result = self.client.post('/api/search', json=query).json['message']
+        expected = 'Database not updated. Please call update.'
+        self.assertRegex(result, expected)
+
     # CREATE--------------------------------------------------------------------
     def test_create(self):
         config = dict(
@@ -241,6 +317,11 @@ class AppTests(DatabaseTestBase):
     def test_get_update_error(self):
         result = application.get_update_error().json['message']
         expected = 'Database not updated. Please call update.'
+        self.assertRegex(result, expected)
+
+    def test_get_query_error(self):
+        result = application.get_query_error().json['message']
+        expected = 'Please supply a valid query of the form {"query": SQL}.'
         self.assertRegex(result, expected)
 
     # ERROR-HANDLERS------------------------------------------------------------
