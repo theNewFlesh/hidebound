@@ -141,6 +141,22 @@ class AppTests(DatabaseTestBase):
         expected = 'Database not updated. Please call update.'
         self.assertRegex(result, expected)
 
+    # ERRORS--------------------------------------------------------------------
+    def test_get_config_error(self):
+        result = application.get_config_error().json['message']
+        expected = 'Please supply a config dictionary.'
+        self.assertRegex(result, expected)
+
+    def test_get_initialization_error(self):
+        result = application.get_initialization_error().json['message']
+        expected = 'Database not initialized. Please call initialize.'
+        self.assertRegex(result, expected)
+
+    def test_get_update_error(self):
+        result = application.get_update_error().json['message']
+        expected = 'Database not updated. Please call update.'
+        self.assertRegex(result, expected)
+
     # ERROR-HANDLERS------------------------------------------------------------
     def test_error_to_response(self):
         error = TypeError('foo')

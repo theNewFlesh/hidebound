@@ -111,18 +111,13 @@ def initialize():
         write_mode='copy',
     )
 
-    # ensure valid json
-    msg = 'Please supply a config dictionary.'
-    error = TypeError(msg)
-    error = error_to_response(error)
-
     temp = request.get_json()
     try:
         temp = json.loads(temp)
     except TypeError:
-        return error
+        return get_config_error()
     if not isinstance(temp, dict):
-        return error
+        return get_config_error()
 
     config.update(temp)
     app._database = Database.from_config(config)
@@ -160,9 +155,7 @@ def update():
         Response: Flask Response instance.
     '''
     if app._database is None:
-        msg = 'Database not initialized. Please call initialize.'
-        error = RuntimeError(msg)
-        return error_to_response(error)
+        return get_initialization_error()
 
     app._database.update()
     return Response(
@@ -196,23 +189,89 @@ def read():
     '''
     # TODO: add group_by_asset support
     if app._database is None:
-        msg = 'Database not initialized. Please call initialize.'
-        error = RuntimeError(msg)
-        return error_to_response(error)
+        return get_initialization_error()
 
     response = {}
     try:
         response = app._database.read()
     except RuntimeError:
-        msg = 'Database not updated. Please call update.'
-        error = RuntimeError(msg)
-        return error_to_response(error)
+        return get_update_error()
 
     response = response.replace({np.nan: None}).to_dict(orient='records')
     return Response(
         response=json.dumps(response),
         mimetype='application/json'
     )
+
+
+@app.route('/api/delete', methods=['POST'])
+@swag_from(dict(
+    parameters=[],
+    responses={
+        200: dict(
+            description='Hidebound data successfully deleted.',
+            content='application/json',
+        ),
+        500: dict(
+            description='Internal server error.',
+        )
+    }
+))
+def delete():
+    '''
+    Delete hidebound data.
+
+    Returns:
+        Response: Flask Response instance.
+    '''
+    if app._database is None:
+        return get_initialization_error()
+
+    app._database.delete()
+    return Response(
+        response=json.dumps(dict(
+            message='Hidebound data deleted.',
+            config=app._config,
+        )),
+        mimetype='application/json'
+    )
+
+
+# ERRORS------------------------------------------------------------------------
+def get_config_error():
+    '''
+    Convenience function for returning a config error response.
+
+    Returns:
+        Response: Config error.
+    '''
+    msg = 'Please supply a config dictionary.'
+    error = TypeError(msg)
+    return error_to_response(error)
+
+
+def get_initialization_error():
+    '''
+    Convenience function for returning a initialization error response.
+
+    Returns:
+        Response: Initialization error.
+    '''
+    msg = 'Database not initialized. Please call initialize.'
+    error = RuntimeError(msg)
+    return error_to_response(error)
+
+
+def get_update_error():
+    '''
+    Convenience function for returning a update error response.
+
+    Returns:
+        Response: Update error.
+    '''
+    msg = 'Database not updated. Please call update.'
+    error = RuntimeError(msg)
+    return error_to_response(error)
 
 
 # ERROR-HANDLERS----------------------------------------------------------------
