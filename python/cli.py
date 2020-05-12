@@ -282,12 +282,16 @@ def get_publish_command(info):
     cmd += 'cp /root/{repo}/pip/version.txt /tmp/{repo}/; '
     cmd += 'cp /root/{repo}/docker/dev_requirements.txt /tmp/{repo}/; '
     cmd += 'cp /root/{repo}/docker/prod_requirements.txt /tmp/{repo}/; '
-    cmd += r"find /tmp/{repo} | grep -E '_test(_base)?\.py$' | parallel rm -rf"
+    cmd += r"find /tmp/{repo} | grep -E '.*test.*\.py$' | parallel rm -rf; "
+    cmd += "find /tmp/{repo} -type f | grep __init__.py | parallel '"
+    cmd += "mv {x} /tmp/delete_me; cat /tmp/delete_me | grep -v test > {x}; "
+    cmd += "rm /tmp/delete_me'"
     cmd += '"; '
     cmd += '{exec2} python3.7 setup.py sdist; '
     cmd += '{exec2} twine upload dist/*; '
     cmd += '{exec} rm -rf /tmp/{repo}; '
     cmd = cmd.format(
+        x='{}',
         repo=REPO,
         exec=get_docker_exec_command(info),
         exec2=get_docker_exec_command(info, '/tmp/' + REPO),
