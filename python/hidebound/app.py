@@ -204,6 +204,43 @@ def read():
     )
 
 
+@app.route('/api/create', methods=['POST'])
+@swag_from(dict(
+    parameters=[],
+    responses={
+        200: dict(
+            description='Hidebound data successfully deleted.',
+            content='application/json',
+        ),
+        500: dict(
+            description='Internal server error.',
+        )
+    }
+))
+def create():
+    '''
+    Create hidebound data.
+
+    Returns:
+        Response: Flask Response instance.
+    '''
+    if app._database is None:
+        return get_initialization_error()
+
+    try:
+        app._database.create()
+    except RuntimeError:
+        return get_update_error()
+
+    return Response(
+        response=json.dumps(dict(
+            message='Hidebound data created.',
+            config=app._config,
+        )),
+        mimetype='application/json'
+    )
+
+
 @app.route('/api/delete', methods=['POST'])
 @swag_from(dict(
     parameters=[],
