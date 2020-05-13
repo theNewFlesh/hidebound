@@ -1,6 +1,7 @@
 # Hidebound
+A local database service for converting directories of arbitrary files into validated assets and derived metadata for export to databases like AWS S3 and MongoDB.
 
-**[Documentation](https://thenewflesh.github.io/hidebound/)**
+See **[documentation](https://thenewflesh.github.io/hidebound/)** for details.
 
 # Installation
 `pip install hidebound`
