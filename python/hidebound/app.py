@@ -2,12 +2,16 @@ from copy import copy
 from json import JSONDecodeError
 import json
 
-from flask import Flask, Response, request, redirect, url_for
-from flasgger import Swagger, swag_from
+from dash.dependencies import Input, Output, State
+from flask import Response, request, redirect, url_for
+from flasgger import swag_from
+import jinja2
 import numpy as np
 from schematics.exceptions import DataError
 
 from hidebound.database import Database
+import hidebound.client as client
+import hidebound.tools as tools
 # ------------------------------------------------------------------------------
 
 
@@ -16,14 +20,58 @@ Hidebound service used for displaying and interacting with Hidebound database.
 '''
 
 
-app = Flask(__name__)
-swagger = Swagger(app)
-app._database = None
-app._config = None
+app = client.get_app()
+
+
+def render_template(filename, parameters):
+    '''
+    Renders a jinja2 template given by filename with given parameters.
+
+    Args:
+        filename (str): Filename of template.
+        parameters (dict): Dictionary of template parameters.
+
+    Returns:
+        str: HTML string.
+    '''
+    template = tools.relative_path(__file__, '../../templates').as_posix()
+    env = jinja2.Environment(
+        loader=jinja2.FileSystemLoader(template),
+        keep_trailing_newline=True
+    )
+
+    output = env.get_template(filename).render(parameters)
+    return output.encode('utf-8')
+
+
+# CLIENT------------------------------------------------------------------------
+@app.server.route('/static/<stylesheet>')
+def serve_stylesheet(stylesheet):
+    '''
+    Serve stylesheet to app.
+
+    Args:
+        stylesheet (str): stylesheet filename.
+
+    Returns:
+        flask.Response: Response.
+    '''
+    params = dict(
+        COLOR_SCHEME=client.COLOR_SCHEME,
+        FONT_FAMILY=client.FONT_FAMILY,
+    )
+    content = render_template(stylesheet + '.j2', params)
+    return Response(content, mimetype='text/css')
+
+
+@app.callback(Output('content', 'children'), [Input('tabs', 'value')])
+def render_content(tab):
+    if tab == 'data':
+        return client.get_data_tab()
 
 
 # API---------------------------------------------------------------------------
-@app.route('/api')
+@app.server.route('/api')
 def api():
     '''
     Route to Hidebound API documentation.
@@ -34,7 +82,7 @@ def api():
     return redirect(url_for('flasgger.apidocs'))  # pragma: no cover
 
 
-@app.route('/api/initialize', methods=['POST'])
+@app.server.route('/api/initialize', methods=['POST'])
 @swag_from(dict(
     parameters=[
         dict(
@@ -121,11 +169,11 @@ def initialize():
         return get_config_error()
 
     config.update(temp)
-    app._database = Database.from_config(config)
+    app._hb_database = Database.from_config(config)
 
     config = copy(config)
     config['specifications'] = [x.__name__.lower() for x in config['specifications']]
-    app._config = config
+    app._hb_config = config
     return Response(
         response=json.dumps(dict(
             message='Database initialized.',
@@ -135,7 +183,7 @@ def initialize():
     )
 
 
-@app.route('/api/update', methods=['POST'])
+@app.server.route('/api/update', methods=['POST'])
 @swag_from(dict(
     parameters=[],
     responses={
@@ -155,20 +203,20 @@ def update():
     Returns:
         Response: Flask Response instance.
     '''
-    if app._database is None:
+    if app._hb_database is None:
         return get_initialization_error()
 
-    app._database.update()
+    app._hb_database.update()
     return Response(
         response=json.dumps(dict(
             message='Database updated.',
-            config=app._config,
+            config=app._hb_config,
         )),
         mimetype='application/json'
     )
 
 
-@app.route('/api/read', methods=['GET', 'POST'])
+@app.server.route('/api/read', methods=['GET', 'POST'])
 @swag_from(dict(
     parameters=[],
     responses={
@@ -189,12 +237,12 @@ def read():
         Response: Flask Response instance.
     '''
     # TODO: add group_by_asset support
-    if app._database is None:
+    if app._hb_database is None:
         return get_initialization_error()
 
     response = {}
     try:
-        response = app._database.read()
+        response = app._hb_database.read()
     except RuntimeError:
         return get_update_error()
 
@@ -205,7 +253,7 @@ def read():
     )
 
 
-@app.route('/api/search', methods=['POST'])
+@app.server.route('/api/search', methods=['POST'])
 @swag_from(dict(
     parameters=[
         dict(
@@ -239,15 +287,15 @@ def search():
         return get_query_error()
 
     # TODO: add group_by_asset support
-    if app._database is None:
+    if app._hb_database is None:
         return get_initialization_error()
 
-    if app._database.data is None:
+    if app._hb_database.data is None:
         return get_update_error()
 
     response = None
     try:
-        response = app._database.search(query)
+        response = app._hb_database.search(query)
     except Exception as e:
         return error_to_response(e)
 
@@ -258,7 +306,7 @@ def search():
     )
 
 
-@app.route('/api/create', methods=['POST'])
+@app.server.route('/api/create', methods=['POST'])
 @swag_from(dict(
     parameters=[],
     responses={
@@ -278,24 +326,24 @@ def create():
     Returns:
         Response: Flask Response instance.
     '''
-    if app._database is None:
+    if app._hb_database is None:
         return get_initialization_error()
 
     try:
-        app._database.create()
+        app._hb_database.create()
     except RuntimeError:
         return get_update_error()
 
     return Response(
         response=json.dumps(dict(
             message='Hidebound data created.',
-            config=app._config,
+            config=app._hb_config,
         )),
         mimetype='application/json'
     )
 
 
-@app.route('/api/delete', methods=['POST'])
+@app.server.route('/api/delete', methods=['POST'])
 @swag_from(dict(
     parameters=[],
     responses={
@@ -315,14 +363,14 @@ def delete():
     Returns:
         Response: Flask Response instance.
     '''
-    if app._database is None:
+    if app._hb_database is None:
         return get_initialization_error()
 
-    app._database.delete()
+    app._hb_database.delete()
     return Response(
         response=json.dumps(dict(
             message='Hidebound data deleted.',
-            config=app._config,
+            config=app._hb_config,
         )),
         mimetype='application/json'
     )
@@ -404,7 +452,7 @@ def error_to_response(error):
     )
 
 
-@app.errorhandler(DataError)
+@app.server.errorhandler(DataError)
 def handle_data_error(error):
     '''
     Handles errors raise by config validation.
@@ -419,8 +467,8 @@ def handle_data_error(error):
 # ------------------------------------------------------------------------------
 
 
-app.register_error_handler(500, handle_data_error)
+app.server.register_error_handler(500, handle_data_error)
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')  # pragma: no cover
+    app.run_server(debug=True, host='0.0.0.0', port=5000)  # pragma: no cover
