@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.4.2
+                0.4.3
               </div>
             
           
@@ -154,12 +154,14 @@
 <span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">JSONDecodeError</span>
 <span class="kn">import</span> <span class="nn">json</span>
 
-<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">Response</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">url_for</span>
-<span class="kn">from</span> <span class="nn">flasgger</span> <span class="kn">import</span> <span class="n">Swagger</span><span class="p">,</span> <span class="n">swag_from</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">dash.dependencies</span> <span class="kn">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Output</span>
+<span class="kn">from</span> <span class="nn">flasgger</span> <span class="kn">import</span> <span class="n">swag_from</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Response</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">url_for</span>
 <span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">DataError</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">hidebound.database</span> <span class="kn">import</span> <span class="n">Database</span>
+<span class="kn">import</span> <span class="nn">hidebound.client</span> <span class="k">as</span> <span class="nn">client</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
@@ -168,14 +170,37 @@
 <span class="sd">&#39;&#39;&#39;</span>
 
 
-<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
-<span class="n">swagger</span> <span class="o">=</span> <span class="n">Swagger</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
-<span class="n">app</span><span class="o">.</span><span class="n">_database</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="n">app</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">APP</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_app</span><span class="p">()</span>
+
+
+<span class="c1"># CLIENT------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="serve_stylesheet"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.serve_stylesheet">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/static/&lt;stylesheet&gt;&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">serve_stylesheet</span><span class="p">(</span><span class="n">stylesheet</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Serve stylesheet to app.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        stylesheet (str): stylesheet filename.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        flask.Response: Response.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">COLOR_SCHEME</span><span class="o">=</span><span class="n">client</span><span class="o">.</span><span class="n">COLOR_SCHEME</span><span class="p">,</span>
+        <span class="n">FONT_FAMILY</span><span class="o">=</span><span class="n">client</span><span class="o">.</span><span class="n">FONT_FAMILY</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">render_template</span><span class="p">(</span><span class="n">stylesheet</span> <span class="o">+</span> <span class="s1">&#39;.j2&#39;</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;text/css&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="render_content"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.render_content">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">Output</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">,</span> <span class="s1">&#39;children&#39;</span><span class="p">),</span> <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s1">&#39;tabs&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">)])</span>
+<span class="k">def</span> <span class="nf">render_content</span><span class="p">(</span><span class="n">tab</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">tab</span> <span class="o">==</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">get_data_tab</span><span class="p">()</span>  <span class="c1"># pragma: no cover</span></div>
 
 
 <span class="c1"># API---------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="api"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.api">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="api"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.api">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">api</span><span class="p">():</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Route to Hidebound API documentation.</span>
@@ -186,7 +211,7 @@
     <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;flasgger.apidocs&#39;</span><span class="p">))</span>  <span class="c1"># pragma: no cover</span></div>
 
 
-<div class="viewcode-block" id="initialize"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.initialize">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="initialize"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.initialize">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="nd">@swag_from</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
     <span class="n">parameters</span><span class="o">=</span><span class="p">[</span>
         <span class="nb">dict</span><span class="p">(</span>
@@ -273,11 +298,11 @@
         <span class="k">return</span> <span class="n">get_config_error</span><span class="p">()</span>
 
     <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">_database</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">from_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">from_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
     <span class="n">config</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
     <span class="n">config</span><span class="p">[</span><span class="s1">&#39;specifications&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;specifications&#39;</span><span class="p">]]</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">config</span>
+    <span class="n">APP</span><span class="o">.</span><span class="n">_hb_config</span> <span class="o">=</span> <span class="n">config</span>
     <span class="k">return</span> <span class="n">Response</span><span class="p">(</span>
         <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
             <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Database initialized.&#39;</span><span class="p">,</span>
@@ -287,7 +312,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="update"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.update">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/update&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="update"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.update">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/update&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="nd">@swag_from</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
     <span class="n">parameters</span><span class="o">=</span><span class="p">[],</span>
     <span class="n">responses</span><span class="o">=</span><span class="p">{</span>
@@ -307,20 +332,20 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Response: Flask Response instance.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">_database</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">get_initialization_error</span><span class="p">()</span>
 
-    <span class="n">app</span><span class="o">.</span><span class="n">_database</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+    <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">Response</span><span class="p">(</span>
         <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
             <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Database updated.&#39;</span><span class="p">,</span>
-            <span class="n">config</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">APP</span><span class="o">.</span><span class="n">_hb_config</span><span class="p">,</span>
         <span class="p">)),</span>
         <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span>
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="read"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.read">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/read&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="read"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.read">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/read&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="nd">@swag_from</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
     <span class="n">parameters</span><span class="o">=</span><span class="p">[],</span>
     <span class="n">responses</span><span class="o">=</span><span class="p">{</span>
@@ -341,12 +366,12 @@
 <span class="sd">        Response: Flask Response instance.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># TODO: add group_by_asset support</span>
-    <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">_database</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">get_initialization_error</span><span class="p">()</span>
 
     <span class="n">response</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">_database</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
     <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">get_update_error</span><span class="p">()</span>
 
@@ -357,7 +382,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="search"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.search">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/search&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="search"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.search">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/search&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="nd">@swag_from</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
     <span class="n">parameters</span><span class="o">=</span><span class="p">[</span>
         <span class="nb">dict</span><span class="p">(</span>
@@ -391,15 +416,15 @@
         <span class="k">return</span> <span class="n">get_query_error</span><span class="p">()</span>
 
     <span class="c1"># TODO: add group_by_asset support</span>
-    <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">_database</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">get_initialization_error</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">_database</span><span class="o">.</span><span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span><span class="o">.</span><span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">get_update_error</span><span class="p">()</span>
 
     <span class="n">response</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">_database</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
@@ -410,7 +435,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="create"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.create">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/create&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="create"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.create">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/create&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="nd">@swag_from</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
     <span class="n">parameters</span><span class="o">=</span><span class="p">[],</span>
     <span class="n">responses</span><span class="o">=</span><span class="p">{</span>
@@ -430,24 +455,24 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Response: Flask Response instance.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">_database</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">get_initialization_error</span><span class="p">()</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">app</span><span class="o">.</span><span class="n">_database</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
+        <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
     <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">get_update_error</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="n">Response</span><span class="p">(</span>
         <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
             <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Hidebound data created.&#39;</span><span class="p">,</span>
-            <span class="n">config</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">APP</span><span class="o">.</span><span class="n">_hb_config</span><span class="p">,</span>
         <span class="p">)),</span>
         <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span>
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="delete"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.delete">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/delete&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="delete"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.delete">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/delete&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="nd">@swag_from</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
     <span class="n">parameters</span><span class="o">=</span><span class="p">[],</span>
     <span class="n">responses</span><span class="o">=</span><span class="p">{</span>
@@ -467,14 +492,14 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Response: Flask Response instance.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">_database</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">get_initialization_error</span><span class="p">()</span>
 
-    <span class="n">app</span><span class="o">.</span><span class="n">_database</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+    <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">Response</span><span class="p">(</span>
         <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
             <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Hidebound data deleted.&#39;</span><span class="p">,</span>
-            <span class="n">config</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">APP</span><span class="o">.</span><span class="n">_hb_config</span><span class="p">,</span>
         <span class="p">)),</span>
         <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span>
     <span class="p">)</span></div>
@@ -556,7 +581,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="handle_data_error"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.handle_data_error">[docs]</a><span class="nd">@app</span><span class="o">.</span><span class="n">errorhandler</span><span class="p">(</span><span class="n">DataError</span><span class="p">)</span>
+<div class="viewcode-block" id="handle_data_error"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.handle_data_error">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">errorhandler</span><span class="p">(</span><span class="n">DataError</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">handle_data_error</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Handles errors raise by config validation.</span>
@@ -571,11 +596,11 @@
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
-<span class="n">app</span><span class="o">.</span><span class="n">register_error_handler</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="n">handle_data_error</span><span class="p">)</span>
+<span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">register_error_handler</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="n">handle_data_error</span><span class="p">)</span>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span>
+    <span class="n">APP</span><span class="o">.</span><span class="n">run_server</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span>
 </pre></div>
 
            </div>
