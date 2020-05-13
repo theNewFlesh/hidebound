@@ -64,7 +64,8 @@ class ClientTests(unittest.TestCase):
 
         query = searchbar.children[0].children[0]
         self.assertEqual(query.id, 'query')
-        self.assertEqual(query.placeholder, 'SELECT * FROM data WHERE ')
+        self.assertEqual(query.value, 'SELECT * FROM data WHERE ')
+        self.assertEqual(query.placeholder, 'SQL query that uses "FROM data"')
 
         button = searchbar.children[0].children[2]
         self.assertEqual(button.id, 'button')

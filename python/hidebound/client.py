@@ -198,8 +198,8 @@ def get_searchbar():
     query = dcc.Input(
         id='query',
         className='col query',
-        value='',
-        placeholder='SELECT * FROM data WHERE ',
+        value='SELECT * FROM data WHERE ',
+        placeholder='SQL query that uses "FROM data"',
         type='text'
     )
     button = get_button('search')
