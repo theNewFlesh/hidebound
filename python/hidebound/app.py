@@ -43,7 +43,16 @@ def serve_stylesheet(stylesheet):
 
 @APP.callback(Output('content', 'children'), [Input('tabs', 'value')])
 def render_content(tab):
-    if tab == 'data':
+    '''
+    Serve content for app tabs.
+
+    Args:
+        tab (str): Name of tab to render.
+
+    Returns:
+        flask.Response: Response.
+    '''
+    if tab == 'data':  # pragma: no cover
         return client.get_data_tab()  # pragma: no cover
 
 

@@ -221,20 +221,6 @@ def get_searchbar():
     return searchbar
 
 
-def get_logo():
-    '''
-    Get Hidebound logo for menu bar.
-
-    Returns:
-        Div: Hidebound text and logo.
-    '''
-    return html.Span(
-        id='logo',
-        className='logo',
-        children='hidebound',
-    )
-
-
 def get_data_tab():
     '''
     Get tab element for Hidebound data.
