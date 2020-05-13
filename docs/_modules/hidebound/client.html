@@ -1,0 +1,417 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>hidebound.client &mdash; hidebound  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> hidebound
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.4.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../hidebound.html">hidebound</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli.html">cli</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">hidebound</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>hidebound.client</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for hidebound.client</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">dash</span>
+<span class="kn">import</span> <span class="nn">dash_core_components</span> <span class="k">as</span> <span class="nn">dcc</span>
+<span class="kn">import</span> <span class="nn">dash_html_components</span> <span class="k">as</span> <span class="nn">html</span>
+<span class="kn">from</span> <span class="nn">flasgger</span> <span class="kn">import</span> <span class="n">Swagger</span>
+<span class="kn">import</span> <span class="nn">jinja2</span>
+
+<span class="kn">import</span> <span class="nn">hidebound.tools</span> <span class="k">as</span> <span class="nn">tools</span>
+
+
+<span class="c1"># TOOLS-------------------------------------------------------------------------</span>
+<span class="n">COLOR_SCHEME</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">dark1</span><span class="o">=</span><span class="s1">&#39;#040404&#39;</span><span class="p">,</span>
+    <span class="n">dark2</span><span class="o">=</span><span class="s1">&#39;#141414&#39;</span><span class="p">,</span>
+    <span class="n">bg</span><span class="o">=</span><span class="s1">&#39;#181818&#39;</span><span class="p">,</span>
+    <span class="n">grey1</span><span class="o">=</span><span class="s1">&#39;#242424&#39;</span><span class="p">,</span>
+    <span class="n">grey2</span><span class="o">=</span><span class="s1">&#39;#444444&#39;</span><span class="p">,</span>
+    <span class="n">light1</span><span class="o">=</span><span class="s1">&#39;#A4A4A4&#39;</span><span class="p">,</span>
+    <span class="n">light2</span><span class="o">=</span><span class="s1">&#39;#F4F4F4&#39;</span><span class="p">,</span>
+    <span class="n">dialog1</span><span class="o">=</span><span class="s1">&#39;#444459&#39;</span><span class="p">,</span>
+    <span class="n">dialog2</span><span class="o">=</span><span class="s1">&#39;#5D5D7A&#39;</span><span class="p">,</span>
+    <span class="n">red1</span><span class="o">=</span><span class="s1">&#39;#F77E70&#39;</span><span class="p">,</span>
+    <span class="n">red2</span><span class="o">=</span><span class="s1">&#39;#DE958E&#39;</span><span class="p">,</span>
+    <span class="n">orange1</span><span class="o">=</span><span class="s1">&#39;#EB9E58&#39;</span><span class="p">,</span>
+    <span class="n">orange2</span><span class="o">=</span><span class="s1">&#39;#EBB483&#39;</span><span class="p">,</span>
+    <span class="n">yellow1</span><span class="o">=</span><span class="s1">&#39;#E8EA7E&#39;</span><span class="p">,</span>
+    <span class="n">yellow2</span><span class="o">=</span><span class="s1">&#39;#E9EABE&#39;</span><span class="p">,</span>
+    <span class="n">green1</span><span class="o">=</span><span class="s1">&#39;#8BD155&#39;</span><span class="p">,</span>
+    <span class="n">green2</span><span class="o">=</span><span class="s1">&#39;#A0D17B&#39;</span><span class="p">,</span>
+    <span class="n">cyan1</span><span class="o">=</span><span class="s1">&#39;#7EC4CF&#39;</span><span class="p">,</span>
+    <span class="n">cyan2</span><span class="o">=</span><span class="s1">&#39;#B6ECF3&#39;</span><span class="p">,</span>
+    <span class="n">blue1</span><span class="o">=</span><span class="s1">&#39;#5F95DE&#39;</span><span class="p">,</span>
+    <span class="n">blue2</span><span class="o">=</span><span class="s1">&#39;#93B6E6&#39;</span><span class="p">,</span>
+    <span class="n">purple1</span><span class="o">=</span><span class="s1">&#39;#C98FDE&#39;</span><span class="p">,</span>
+    <span class="n">purple2</span><span class="o">=</span><span class="s1">&#39;#AC92DE&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">COLORS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;cyan1&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;red1&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;green1&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;blue1&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;purple1&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;orange1&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;yellow1&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;light1&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;cyan2&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;red2&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;blue2&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;green2&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">FONT_FAMILY</span> <span class="o">=</span> <span class="s1">&#39;Courier&#39;</span>
+
+
+<div class="viewcode-block" id="render_template"><a class="viewcode-back" href="../../hidebound.html#hidebound.client.render_template">[docs]</a><span class="k">def</span> <span class="nf">render_template</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Renders a jinja2 template given by filename with given parameters.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        filename (str): Filename of template.</span>
+<span class="sd">        parameters (dict): Dictionary of template parameters.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: HTML string.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">tempdir</span> <span class="o">=</span> <span class="n">tools</span><span class="o">.</span><span class="n">relative_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s1">&#39;../../templates&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">jinja2</span><span class="o">.</span><span class="n">Environment</span><span class="p">(</span>
+        <span class="n">loader</span><span class="o">=</span><span class="n">jinja2</span><span class="o">.</span><span class="n">FileSystemLoader</span><span class="p">(</span><span class="n">tempdir</span><span class="p">),</span>
+        <span class="n">keep_trailing_newline</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output</span></div>
+
+
+<span class="c1"># ELEMENTS----------------------------------------------------------------------</span>
+<div class="viewcode-block" id="get_app"><a class="viewcode-back" href="../../hidebound.html#hidebound.client.get_app">[docs]</a><span class="k">def</span> <span class="nf">get_app</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Generate Dash Flask app instance.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dash: Dash app instance.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">store</span> <span class="o">=</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Store</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;session-store&#39;</span><span class="p">,</span> <span class="n">storage_type</span><span class="o">=</span><span class="s1">&#39;session&#39;</span><span class="p">)</span>
+
+    <span class="n">tab_style</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;padding&#39;</span><span class="p">:</span> <span class="s1">&#39;4px&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;background&#39;</span><span class="p">:</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;bg&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;light1&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;border&#39;</span><span class="p">:</span> <span class="s1">&#39;0px&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">tab_selected_style</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;padding&#39;</span><span class="p">:</span> <span class="s1">&#39;4px&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;background&#39;</span><span class="p">:</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;grey1&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;cyan2&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;border&#39;</span><span class="p">:</span> <span class="s1">&#39;0px&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">tabs</span> <span class="o">=</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Tabs</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;tabs&#39;</span><span class="p">,</span>
+        <span class="n">className</span><span class="o">=</span><span class="s1">&#39;tabs&#39;</span><span class="p">,</span>
+        <span class="n">value</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span>
+        <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">dcc</span><span class="o">.</span><span class="n">Tab</span><span class="p">(</span>
+                <span class="n">className</span><span class="o">=</span><span class="s1">&#39;tab&#39;</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Data&#39;</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span>
+                <span class="n">style</span><span class="o">=</span><span class="n">tab_style</span><span class="p">,</span>
+                <span class="n">selected_style</span><span class="o">=</span><span class="n">tab_selected_style</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="c1"># dcc.Tab(</span>
+            <span class="c1">#     className=&#39;tab&#39;,</span>
+            <span class="c1">#     label=&#39;Metrics&#39;,</span>
+            <span class="c1">#     value=&#39;metrics&#39;,</span>
+            <span class="c1">#     style=tab_style,</span>
+            <span class="c1">#     selected_style=tab_selected_style,</span>
+            <span class="c1"># )</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;content&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;content&#39;</span><span class="p">)</span>
+
+    <span class="n">app</span> <span class="o">=</span> <span class="n">dash</span><span class="o">.</span><span class="n">Dash</span><span class="p">(</span>
+        <span class="vm">__name__</span><span class="p">,</span>
+        <span class="n">external_stylesheets</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;http://0.0.0.0:5000/static/style.css&#39;</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">Swagger</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">server</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;layout&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">store</span><span class="p">,</span> <span class="n">tabs</span><span class="p">,</span> <span class="n">content</span><span class="p">])</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;suppress_callback_exceptions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="n">app</span></div>
+
+
+<div class="viewcode-block" id="get_dropdown"><a class="viewcode-back" href="../../hidebound.html#hidebound.client.get_dropdown">[docs]</a><span class="k">def</span> <span class="nf">get_dropdown</span><span class="p">(</span><span class="n">options</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Gets html dropdown element with given options.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        options (list[str]): List of options.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        TypeError: If options is not a list.</span>
+<span class="sd">        TypeError: If any option is not a string.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dropdown: Dropdown element.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">options</span><span class="si">}</span><span class="s1"> is not a list.&#39;</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="n">illegal</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="n">options</span><span class="p">))</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">illegal</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">illegal</span><span class="si">}</span><span class="s1"> are not strings.&#39;</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;drop-down&#39;</span><span class="p">,</span>
+        <span class="n">className</span><span class="o">=</span><span class="s1">&#39;col drop-down&#39;</span><span class="p">,</span>
+        <span class="n">value</span><span class="o">=</span><span class="n">options</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="n">options</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">}</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">options</span><span class="p">],</span>
+        <span class="n">placeholder</span><span class="o">=</span><span class="n">options</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="n">optionHeight</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+        <span class="n">style</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;background&#39;</span><span class="p">:</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;grey1&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;light1&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;border&#39;</span><span class="p">:</span> <span class="s1">&#39;0px&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;min-width&#39;</span><span class="p">:</span> <span class="s1">&#39;225px&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;max-width&#39;</span><span class="p">:</span> <span class="s1">&#39;550px&#39;</span>
+        <span class="p">}</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_button"><a class="viewcode-back" href="../../hidebound.html#hidebound.client.get_button">[docs]</a><span class="k">def</span> <span class="nf">get_button</span><span class="p">(</span><span class="n">title</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Get a html button with a given title.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        title (str): Title of button.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        TypeError: If title is not a string.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Button: Button element.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s1"> is not a string.&#39;</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;button&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">title</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="get_searchbar"><a class="viewcode-back" href="../../hidebound.html#hidebound.client.get_searchbar">[docs]</a><span class="k">def</span> <span class="nf">get_searchbar</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Get a row of elements used for querying Hidebound data.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Div: Div with query, search button and dropdown elements.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">spacer</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;col spacer&#39;</span><span class="p">)</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;query&#39;</span><span class="p">,</span>
+        <span class="n">className</span><span class="o">=</span><span class="s1">&#39;col query&#39;</span><span class="p">,</span>
+        <span class="n">value</span><span class="o">=</span><span class="s1">&#39;SELECT * FROM data WHERE &#39;</span><span class="p">,</span>
+        <span class="n">placeholder</span><span class="o">=</span><span class="s1">&#39;SQL query that uses &quot;FROM data&quot;&#39;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;text&#39;</span>
+    <span class="p">)</span>
+    <span class="n">button</span> <span class="o">=</span> <span class="n">get_button</span><span class="p">(</span><span class="s1">&#39;search&#39;</span><span class="p">)</span>
+    <span class="n">dropdown</span> <span class="o">=</span> <span class="n">get_dropdown</span><span class="p">([</span><span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;asset&#39;</span><span class="p">])</span>
+
+    <span class="n">row</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+        <span class="n">className</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">,</span>
+        <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">query</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">button</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">dropdown</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">searchbar</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;searchbar&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;searchbar&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">row</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">searchbar</span></div>
+
+
+<div class="viewcode-block" id="get_data_tab"><a class="viewcode-back" href="../../hidebound.html#hidebound.client.get_data_tab">[docs]</a><span class="k">def</span> <span class="nf">get_data_tab</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Get tab element for Hidebound data.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        list: List of elements for data tab.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">get_searchbar</span><span class="p">()]</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Alex Braun &lt;TheNewFlesh@github.com&gt;
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

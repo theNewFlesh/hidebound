@@ -2,12 +2,14 @@ from copy import copy
 from json import JSONDecodeError
 import json
 
-from flask import Flask, Response, request, redirect, url_for
-from flasgger import Swagger, swag_from
-import numpy as np
+from dash.dependencies import Input, Output
+from flasgger import swag_from
+from flask import Response, request, redirect, url_for
 from schematics.exceptions import DataError
+import numpy as np
 
 from hidebound.database import Database
+import hidebound.client as client
 # ------------------------------------------------------------------------------
 
 
@@ -16,14 +18,37 @@ Hidebound service used for displaying and interacting with Hidebound database.
 '''
 
 
-app = Flask(__name__)
-swagger = Swagger(app)
-app._database = None
-app._config = None
+APP = client.get_app()
+
+
+# CLIENT------------------------------------------------------------------------
+@APP.server.route('/static/<stylesheet>')
+def serve_stylesheet(stylesheet):
+    '''
+    Serve stylesheet to app.
+
+    Args:
+        stylesheet (str): stylesheet filename.
+
+    Returns:
+        flask.Response: Response.
+    '''
+    params = dict(
+        COLOR_SCHEME=client.COLOR_SCHEME,
+        FONT_FAMILY=client.FONT_FAMILY,
+    )
+    content = client.render_template(stylesheet + '.j2', params)
+    return Response(content, mimetype='text/css')
+
+
+@APP.callback(Output('content', 'children'), [Input('tabs', 'value')])
+def render_content(tab):
+    if tab == 'data':
+        return client.get_data_tab()  # pragma: no cover
 
 
 # API---------------------------------------------------------------------------
-@app.route('/api')
+@APP.server.route('/api')
 def api():
     '''
     Route to Hidebound API documentation.
@@ -34,7 +59,7 @@ def api():
     return redirect(url_for('flasgger.apidocs'))  # pragma: no cover
 
 
-@app.route('/api/initialize', methods=['POST'])
+@APP.server.route('/api/initialize', methods=['POST'])
 @swag_from(dict(
     parameters=[
         dict(
@@ -121,11 +146,11 @@ def initialize():
         return get_config_error()
 
     config.update(temp)
-    app._database = Database.from_config(config)
+    APP.server._database = Database.from_config(config)
 
     config = copy(config)
     config['specifications'] = [x.__name__.lower() for x in config['specifications']]
-    app._config = config
+    APP._hb_config = config
     return Response(
         response=json.dumps(dict(
             message='Database initialized.',
@@ -135,7 +160,7 @@ def initialize():
     )
 
 
-@app.route('/api/update', methods=['POST'])
+@APP.server.route('/api/update', methods=['POST'])
 @swag_from(dict(
     parameters=[],
     responses={
@@ -155,20 +180,20 @@ def update():
     Returns:
         Response: Flask Response instance.
     '''
-    if app._database is None:
+    if APP.server._database is None:
         return get_initialization_error()
 
-    app._database.update()
+    APP.server._database.update()
     return Response(
         response=json.dumps(dict(
             message='Database updated.',
-            config=app._config,
+            config=APP._hb_config,
         )),
         mimetype='application/json'
     )
 
 
-@app.route('/api/read', methods=['GET', 'POST'])
+@APP.server.route('/api/read', methods=['GET', 'POST'])
 @swag_from(dict(
     parameters=[],
     responses={
@@ -189,12 +214,12 @@ def read():
         Response: Flask Response instance.
     '''
     # TODO: add group_by_asset support
-    if app._database is None:
+    if APP.server._database is None:
         return get_initialization_error()
 
     response = {}
     try:
-        response = app._database.read()
+        response = APP.server._database.read()
     except RuntimeError:
         return get_update_error()
 
@@ -205,7 +230,7 @@ def read():
     )
 
 
-@app.route('/api/search', methods=['POST'])
+@APP.server.route('/api/search', methods=['POST'])
 @swag_from(dict(
     parameters=[
         dict(
@@ -239,15 +264,15 @@ def search():
         return get_query_error()
 
     # TODO: add group_by_asset support
-    if app._database is None:
+    if APP.server._database is None:
         return get_initialization_error()
 
-    if app._database.data is None:
+    if APP.server._database.data is None:
         return get_update_error()
 
     response = None
     try:
-        response = app._database.search(query)
+        response = APP.server._database.search(query)
     except Exception as e:
         return error_to_response(e)
 
@@ -258,7 +283,7 @@ def search():
     )
 
 
-@app.route('/api/create', methods=['POST'])
+@APP.server.route('/api/create', methods=['POST'])
 @swag_from(dict(
     parameters=[],
     responses={
@@ -278,24 +303,24 @@ def create():
     Returns:
         Response: Flask Response instance.
     '''
-    if app._database is None:
+    if APP.server._database is None:
         return get_initialization_error()
 
     try:
-        app._database.create()
+        APP.server._database.create()
     except RuntimeError:
         return get_update_error()
 
     return Response(
         response=json.dumps(dict(
             message='Hidebound data created.',
-            config=app._config,
+            config=APP._hb_config,
         )),
         mimetype='application/json'
     )
 
 
-@app.route('/api/delete', methods=['POST'])
+@APP.server.route('/api/delete', methods=['POST'])
 @swag_from(dict(
     parameters=[],
     responses={
@@ -315,14 +340,14 @@ def delete():
     Returns:
         Response: Flask Response instance.
     '''
-    if app._database is None:
+    if APP.server._database is None:
         return get_initialization_error()
 
-    app._database.delete()
+    APP.server._database.delete()
     return Response(
         response=json.dumps(dict(
             message='Hidebound data deleted.',
-            config=app._config,
+            config=APP._hb_config,
         )),
         mimetype='application/json'
     )
@@ -404,7 +429,7 @@ def error_to_response(error):
     )
 
 
-@app.errorhandler(DataError)
+@APP.server.errorhandler(DataError)
 def handle_data_error(error):
     '''
     Handles errors raise by config validation.
@@ -419,8 +444,8 @@ def handle_data_error(error):
 # ------------------------------------------------------------------------------
 
 
-app.register_error_handler(500, handle_data_error)
+APP.server.register_error_handler(500, handle_data_error)
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')  # pragma: no cover
+    APP.run_server(debug=True, host='0.0.0.0', port=5000)  # pragma: no cover

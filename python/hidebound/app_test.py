@@ -7,6 +7,7 @@ import numpy as np
 
 from hidebound.database_test_base import DatabaseTestBase
 import hidebound.app as application
+import hidebound.client as client
 import hidebound.tools as tools
 # ------------------------------------------------------------------------------
 
@@ -25,7 +26,7 @@ class AppTests(DatabaseTestBase):
         self.create_files(self.root)
 
         # setup app
-        self.context = application.app.app_context()
+        self.context = application.APP.server.app_context()
         self.context.push()
 
         self.app = self.context.app
@@ -43,6 +44,16 @@ class AppTests(DatabaseTestBase):
     def tearDown(self):
         self.context.pop()
         self.tempdir.cleanup()
+
+    # CLIENT--------------------------------------------------------------------
+    def test_serve_stylesheet(self):
+        params = dict(
+            COLOR_SCHEME=client.COLOR_SCHEME,
+            FONT_FAMILY=client.FONT_FAMILY,
+        )
+        expected = client.render_template('style.css.j2', params)
+        result = next(self.client.get('/static/style.css').response)
+        self.assertEqual(result, expected)
 
     # INITIALIZE----------------------------------------------------------------
     def test_initialize(self):

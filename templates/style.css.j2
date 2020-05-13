@@ -1,0 +1,495 @@
+*,
+*:focus,
+*:visited {
+    outline: none !important;
+    border: 0px solid {{ COLOR_SCHEME['bg'] }};
+    -webkit-box-shadow: 0 0px 0px rgb(0,0,0,0) !important;
+    -moz-box-shadow: 0 0px 0px rgb(0,0,0,0) !important;
+    box-shadow: 0 0px 0px rgb(0,0,0,0) !important;
+    border-radius: 0px;
+}
+
+body {
+    background: {{ COLOR_SCHEME['bg'] }};
+    margin: 0px;
+    padding: 0px;
+}
+
+/* Tabs */
+#tabs .tab:hover {
+    background: {{ COLOR_SCHEME['grey2'] }} !important;
+    color: {{ COLOR_SCHEME['cyan2'] }} !important;
+}
+
+#tabs .tab--selected:hover {
+    background: {{ COLOR_SCHEME['grey1'] }} !important;
+    color: {{ COLOR_SCHEME['cyan2'] }} !important;
+}
+
+/*  Scrollbar */
+.scrollbar {
+    display: none;
+}
+
+/* Text Input */
+input {
+    caret-color: {{ COLOR_SCHEME['cyan2'] }};
+}
+
+/* Button */
+button {
+    background: {{ COLOR_SCHEME['grey1'] }};
+    color: {{ COLOR_SCHEME['light1'] }};
+    font-family: {{ FONT_FAMILY }};
+}
+
+button:hover {
+    background: {{ COLOR_SCHEME['grey2'] }};
+    color: {{ COLOR_SCHEME['cyan2'] }};
+}
+
+button:active {
+    background: {{ COLOR_SCHEME['cyan2'] }};
+    color: {{ COLOR_SCHEME['grey2'] }};
+}
+
+/* Tabs */
+.tabs {
+    z-index: 1;
+    height: 27px;
+    width: 100%;
+    padding: 0px;
+    position: fixed;
+}
+
+/* Searchbar */
+#searchbar {
+    font-size: 13px;
+}
+
+.spacer {
+    width: 4px;
+}
+
+.query {
+    background: {{ COLOR_SCHEME['grey1'] }};
+    color: {{ COLOR_SCHEME['cyan2'] }};
+    flex-grow: 10;
+    font-size: 15px;
+    padding-left: 10px;
+}
+
+.searchbar .row {
+    display: flex;
+    height: 27px;
+}
+
+.searchbar {
+    z-index: 1;
+    top: 27px;
+    position: fixed;
+    background: {{ COLOR_SCHEME['bg'] }};
+    color: {{ COLOR_SCHEME['cyan2'] }};
+    border-width: 4px 0px 4px 0px;
+    border-color: {{ COLOR_SCHEME['bg'] }};
+    font-family: {{ FONT_FAMILY }};
+    text-align: left;
+    width: 100vw;
+}
+
+/* Content */
+.content {
+    z-index: 0;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    background: {{ COLOR_SCHEME['bg'] }};
+    color: {{ COLOR_SCHEME['cyan2'] }};
+    font-family: {{ FONT_FAMILY }};
+    text-align: center;
+    padding-top: 56px;
+    overflow-x: hidden;
+}
+
+#layout {
+    background: {{ COLOR_SCHEME['bg'] }};
+    color: {{ COLOR_SCHEME['cyan2'] }};
+    font-family: {{ FONT_FAMILY }};
+    text-align: center;
+    height: 100vh;
+    width: 100vw;
+}
+
+/* Stats Card */
+.stats-card {
+    background: {{ COLOR_SCHEME['grey1'] }};
+    width: 100%;
+    height: 100%;
+}
+
+.stats-card-item {
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-between;
+    padding-left: 10%;
+    padding-right: 10%;
+    font-size: 40px;
+    font-family: {{ FONT_FAMILY }};
+}
+
+.stats-card-key {
+    color: {{ COLOR_SCHEME['light1'] }};
+}
+
+.stats-card-value {
+    color: {{ COLOR_SCHEME['cyan2'] }};
+}
+
+/* Plot */
+.plot {
+    flex-grow: 1;
+    min-width: 50%;
+}
+
+/* RangeSlider */
+#rangeslider-container {
+    background: {{ COLOR_SCHEME['grey1'] }};
+    flex-grow: 3;
+    min-width: 200px;
+}
+
+#rangeslider-row {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 2px;
+    padding-right: 2px;
+    font-size: 11px;
+}
+
+.rangeslider-span {
+    color: {{ COLOR_SCHEME['light1'] }};
+}
+
+.rangeslider-span-handle {
+    color: {{ COLOR_SCHEME['cyan2'] }};
+}
+
+#rangeslider {
+    padding-left: 6px;
+    padding-right: 8px;
+}
+
+#rangeslider .rc-slider-handle {
+    background: {{ COLOR_SCHEME['cyan2'] }};
+    border: 0px;
+    height: 10px;
+    width: 10px;
+    margin-top: -3.5px;
+    margin-left: -3.5px;
+}
+
+#rangeslider .rc-slider-dot {
+    display: none;
+}
+
+#rangeslider .rc-slider-track {
+    background: {{ COLOR_SCHEME['light1'] }};
+}
+
+#rangeslider .rc-slider-rail {
+    background: {{ COLOR_SCHEME['grey2'] }};
+}
+
+/* DatePicker */
+.DateInput_input,
+.DateRangePickerInput {
+    background: {{ COLOR_SCHEME['grey1'] }};
+    font-size: 13px;
+    height: 27px;
+    border-bottom-width: 0px;
+}
+
+.DateInput_input__focused {
+    background: {{ COLOR_SCHEME['grey2'] }};
+    border: 0px;
+}
+
+.DateRangePickerInput__withBorder {
+    border: 0px;
+}
+
+.DateRangePickerInput_arrow {
+    background: {{ COLOR_SCHEME['grey1'] }};
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+.DateRangePickerInput_arrow_svg {
+    fill: {{ COLOR_SCHEME['grey2'] }};
+}
+
+.DateInput {
+    background: {{ COLOR_SCHEME['grey1'] }};
+    width: 75px;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+.DateInput:first-child {
+    padding-right: 0px;
+}
+
+.DateInput:last-child {
+    padding-right: 4px;
+}
+
+.DateInput:hover,
+.DateInput:active,
+.DateInput:focus,
+.DateInput:focus-within {
+    background: {{ COLOR_SCHEME['grey2'] }};
+}
+
+#startDate,
+#endDate {
+    color: {{ COLOR_SCHEME['light1'] }};
+    padding: 0px 0px 0px 0px;
+}
+
+#startDate:hover,
+#startDate:focus,
+#startDate:active,
+#endDate:hover,
+#endDate:focus,
+#endDate:active {
+    background: {{ COLOR_SCHEME['grey2'] }};
+    color: {{ COLOR_SCHEME['cyan2'] }};
+    height: 27px;
+}
+
+/* Calendar */
+.DayPicker_focusRegion,
+.CalendarMonthGrid,
+.CalendarMonth,
+.CalendarMonth_table {
+    background: {{ COLOR_SCHEME['grey1'] }};
+    color: {{ COLOR_SCHEME['light1'] }};
+}
+
+.CalendarDay {
+    background: {{ COLOR_SCHEME['bg'] }};
+    color: {{ COLOR_SCHEME['light1'] }};
+    border-color: {{ COLOR_SCHEME['grey1'] }};
+}
+
+.CalendarDay__default:hover {
+    background: {{ COLOR_SCHEME['grey2'] }};
+    color: {{ COLOR_SCHEME['cyan2'] }};
+    border: 0px;
+}
+
+.CalendarDay__selected,
+.CalendarDay__selected_span {
+    background: {{ COLOR_SCHEME['cyan2'] }};
+    color: {{ COLOR_SCHEME['grey2'] }};
+    border-color: {{ COLOR_SCHEME['grey1'] }};
+}
+
+.CalendarDay__selected:hover {
+    background: {{ COLOR_SCHEME['grey2'] }};
+    color: {{ COLOR_SCHEME['cyan2'] }};
+}
+
+.DayPicker {
+    background: {{ COLOR_SCHEME['grey1'] }};
+}
+
+.DayPickerNavigation_button {
+    background: {{ COLOR_SCHEME['grey1'] }};
+    border: 0px;
+    border-radius: 0px;
+}
+
+.DayPickerNavigation_button:hover {
+    background: {{ COLOR_SCHEME['grey2'] }};
+    border: 0px;
+    border-radius: 0px;
+}
+
+.DayPickerNavigation_svg__horizontal {
+    fill: {{ COLOR_SCHEME['light1'] }};
+}
+
+.DayPickerNavigation_svg__horizontal:hover {
+    fill: {{ COLOR_SCHEME['cyan2'] }};
+}
+
+.DayPickerKeyboardShortcuts_buttonReset:before {
+    border-right-color: {{ COLOR_SCHEME['light1'] }};
+}
+
+#datepicker .DayPickerKeyboardShortcuts_show__bottomRight:hover::before {
+    border-right-color: {{ COLOR_SCHEME['cyan2'] }};
+}
+
+.DayPickerKeyboardShortcuts_showSpan {
+    color: {{ COLOR_SCHEME['grey1'] }};
+}
+
+.CalendarMonth_caption strong {
+    color: {{ COLOR_SCHEME['light1'] }};
+    font-family: {{ FONT_FAMILY }};
+}
+
+.DayPicker_weekHeader_li small {
+    color: {{ COLOR_SCHEME['light1'] }};
+    font-family: {{ FONT_FAMILY }};
+}
+
+.DateInput_fangShape {
+    fill: {{ COLOR_SCHEME['cyan2'] }};
+    border: 0px;
+}
+
+#datepicker button {
+    background: {{ COLOR_SCHEME['grey1'] }};
+}
+
+/* Dropdown */
+.Select-menu,
+#drop-down > div > div.Select-menu-outer {
+    background: {{ COLOR_SCHEME['grey1'] }};
+    color: {{ COLOR_SCHEME['light1'] }};
+    border: 0px;
+    outline: none;
+    min-width: 225px;
+    max-width: 550px;
+}
+
+#drop-down .Select-control .Select-value .Select-value-label {
+    color: {{ COLOR_SCHEME['light1'] }};
+}
+
+#drop-down .Select-control {
+    height: 24px;
+    line-height: 24px;
+}
+
+#drop-down .Select-placeholder {
+    height: 32px;
+}
+
+#drop-down .Select-input {
+    height: 21px;
+}
+
+#react-select-2--value > div.Select-value {
+    border-color: {{ COLOR_SCHEME['cyan2'] }};
+}
+
+.Select-value-label,
+.Select-value-icon {
+    background: {{ COLOR_SCHEME['grey1'] }};
+    color: {{ COLOR_SCHEME['cyan2'] }};
+}
+
+#drop-down .Select-value-icon {
+    border-right: 1px solid {{ COLOR_SCHEME['cyan2'] }};
+}
+
+#drop-down .Select-value-icon:hover {
+    background: {{ COLOR_SCHEME['grey1'] }};
+    color: {{ COLOR_SCHEME['red2'] }};
+}
+
+#react-select-2--value > div.Select-placeholder {
+    color: {{ COLOR_SCHEME['light1'] }};
+}
+
+#react-select-2--list {
+    color: {{ COLOR_SCHEME['light1'] }};
+}
+
+#drop-down .VirtualizedSelectFocusedOption {
+    background: {{ COLOR_SCHEME['grey2'] }};
+    color: {{ COLOR_SCHEME['cyan2'] }};
+}
+
+/* DataTable */
+.dash-cell div.dash-cell-value {
+    display: inline;
+    white-space: inherit;
+    overflow: inherit;
+    text-overflow: inherit;
+}
+
+#table .row.row-0 {
+    border-bottom: 2px solid {{ COLOR_SCHEME['cyan2'] }};
+}
+
+#table .dash-spreadsheet-container .dash-spreadsheet-inner table {
+    --accent: none;
+}
+
+#table .dash-cell.cell--selected {
+    background: {{ COLOR_SCHEME['grey2'] }} !important;
+    color: {{ COLOR_SCHEME['cyan2'] }} !important;
+}
+
+#table .dash-header {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+
+#table .dash-header div {
+    transform: translateY(5px);
+}
+
+#table .dash-filter input {
+    color: {{ COLOR_SCHEME['cyan2'] }};
+    padding: 0px 5px 0px 5px;
+    border-left: 1px solid {{ COLOR_SCHEME['grey1'] }};
+    border-right: 1px solid {{ COLOR_SCHEME['grey1'] }};
+}
+
+#table .sort {
+    color: {{ COLOR_SCHEME['cyan2'] }};
+    transform: translateY(-6px);
+}
+
+.previous-page {
+    border-right: 3px solid {{ COLOR_SCHEME['bg'] }};
+}
+
+#table .dash-delete-cell {
+    color: {{ COLOR_SCHEME['cyan2'] }} !important;
+}
+
+#table .dash-delete-cell:hover {
+    color: {{ COLOR_SCHEME['red2'] }} !important;
+}
+
+/* Config */
+.config-row {
+    display: flex;
+    height: 27px;
+    width: 100%;
+    padding-bottom: 2px;
+}
+
+.config-key {
+    background: {{ COLOR_SCHEME['grey2'] }};
+    color: {{ COLOR_SCHEME['light1'] }};
+    padding: 4px 8px 4px 8px;
+    min-width: 200px;
+    text-align: right;
+    border-right: 2px solid {{ COLOR_SCHEME['bg'] }};
+}
+
+.config-value {
+    background: {{ COLOR_SCHEME['grey1'] }};
+    color: {{ COLOR_SCHEME['cyan2'] }};
+    flex-grow: 10;
+    font-size: 15px;
+    padding-left: 10px;
+}
