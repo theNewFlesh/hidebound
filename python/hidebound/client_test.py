@@ -41,7 +41,7 @@ class ClientTests(unittest.TestCase):
             client.get_dropdown(['foo', 2, 3])
 
         result = client.get_dropdown(['foo', 'bar'])
-        self.assertEqual(result.id, 'drop-down')
+        self.assertEqual(result.id, 'dropdown')
         self.assertEqual(result.value, 'foo')
         self.assertEqual(result.placeholder, 'foo')
 
@@ -55,7 +55,7 @@ class ClientTests(unittest.TestCase):
             client.get_button(10)
 
         result = client.get_button('foo')
-        self.assertEqual(result.id, 'button')
+        self.assertEqual(result.id, 'foo-button')
         self.assertEqual(result.children[0], 'foo')
 
     def test_get_searchbar(self):
@@ -68,8 +68,29 @@ class ClientTests(unittest.TestCase):
         self.assertEqual(query.placeholder, 'SQL query that uses "FROM data"')
 
         button = searchbar.children[0].children[2]
-        self.assertEqual(button.id, 'button')
+        self.assertEqual(button.id, 'search-button')
         self.assertEqual(button.children[0], 'search')
+
+        button = searchbar.children[0].children[4]
+        self.assertEqual(button.id, 'init-button')
+        self.assertEqual(button.children[0], 'init')
+
+        button = searchbar.children[0].children[6]
+        self.assertEqual(button.id, 'update-button')
+        self.assertEqual(button.children[0], 'update')
+
+        button = searchbar.children[0].children[8]
+        self.assertEqual(button.id, 'create-button')
+        self.assertEqual(button.children[0], 'create')
+
+        button = searchbar.children[0].children[10]
+        self.assertEqual(button.id, 'delete-button')
+        self.assertEqual(button.children[0], 'delete')
+
+        dropdown = searchbar.children[0].children[12]
+        self.assertEqual(dropdown.id, 'dropdown')
+        self.assertEqual(dropdown.options[0]['label'], 'file')
+        self.assertEqual(dropdown.options[1]['label'], 'asset')
 
     def test_get_data_tab(self):
         tab = client.get_data_tab()

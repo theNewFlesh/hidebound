@@ -20,7 +20,7 @@ body {
 #tabs #logo .tab:hover {
     width: 130px;
     background: linear-gradient(
-        102deg,
+        100deg,
         {{ COLOR_SCHEME['bg'] }} 48%,
         {{ COLOR_SCHEME['cyan1'] }} 48%
     ) !important;
@@ -33,7 +33,7 @@ body {
 
 #tabs #logo span {
     background: linear-gradient(
-        102deg,
+        100deg,
         {{ COLOR_SCHEME['cyan1'] }} 46.5%,
         {{ COLOR_SCHEME['bg'] }} 46.5%
     ) !important;
@@ -65,7 +65,7 @@ input {
 /* Button */
 button {
     background: {{ COLOR_SCHEME['grey1'] }};
-    color: {{ COLOR_SCHEME['light1'] }};
+    color: {{ COLOR_SCHEME['cyan2'] }};
     font-family: {{ FONT_FAMILY }};
     font-size: medium !important;
 }
@@ -78,6 +78,14 @@ button:hover {
 button:active {
     background: {{ COLOR_SCHEME['cyan2'] }};
     color: {{ COLOR_SCHEME['grey2'] }};
+}
+
+#create-button {
+    color: {{ COLOR_SCHEME['green2'] }};
+}
+
+#delete-button {
+    color: {{ COLOR_SCHEME['red2'] }};
 }
 
 /* Tabs */
@@ -388,7 +396,7 @@ button:active {
 }
 
 .Select-menu,
-#drop-down > div > div.Select-menu-outer {
+#dropdown > div > div.Select-menu-outer {
     background: {{ COLOR_SCHEME['grey1'] }};
     color: {{ COLOR_SCHEME['light1'] }};
     border: 0px;
@@ -397,14 +405,14 @@ button:active {
     max-width: 550px;
 }
 
-#drop-down .Select-control .Select-value .Select-value-label {
+#dropdown .Select-control .Select-value .Select-value-label {
     color: {{ COLOR_SCHEME['light1'] }};
 }
 
-#drop-down .Select-value,
-#drop-down .Select-input,
-#drop-down .Select-control,
-#drop-down .Select-placeholder {
+#dropdown .Select-value,
+#dropdown .Select-input,
+#dropdown .Select-control,
+#dropdown .Select-placeholder {
     height: 26px !important;
     line-height: 26px !important;
 }
@@ -423,15 +431,15 @@ button:active {
     color: {{ COLOR_SCHEME['cyan2'] }};
 }
 
-#drop-down .Select {
+#dropdown .Select {
     font-size: medium !important;
 }
 
-#drop-down .Select-value-icon {
+#dropdown .Select-value-icon {
     border-right: 1px solid {{ COLOR_SCHEME['cyan2'] }};
 }
 
-#drop-down .Select-value-icon:hover {
+#dropdown .Select-value-icon:hover {
     background: {{ COLOR_SCHEME['grey1'] }};
     color: {{ COLOR_SCHEME['red2'] }};
 }
@@ -444,7 +452,7 @@ button:active {
     color: {{ COLOR_SCHEME['light1'] }};
 }
 
-#drop-down .VirtualizedSelectFocusedOption {
+#dropdown .VirtualizedSelectFocusedOption {
     background: {{ COLOR_SCHEME['grey2'] }};
     color: {{ COLOR_SCHEME['cyan2'] }};
 }

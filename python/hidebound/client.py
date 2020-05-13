@@ -119,7 +119,14 @@ def get_app():
             #     value='metrics',
             #     style=tab_style,
             #     selected_style=tab_selected_style,
-            # )
+            # ),
+            dcc.Tab(
+                className='tab',
+                label='config',
+                value='config',
+                style=tab_style,
+                selected_style=tab_selected_style,
+            )
         ],
     )
     content = html.Div(id='content', className='content')
@@ -161,8 +168,8 @@ def get_dropdown(options):
         raise TypeError(msg)
 
     return dcc.Dropdown(
-        id='drop-down',
-        className='col drop-down',
+        id='dropdown',
+        className='col dropdown',
         value=options[0],
         options=[{'label': x, 'value': x} for x in options],
         placeholder=options[0],
@@ -193,7 +200,7 @@ def get_button(title):
     if not isinstance(title, str):
         msg = f'{title} is not a string.'
         raise TypeError(msg)
-    return html.Button(id='button', children=[title])
+    return html.Button(id=f'{title}-button', children=[title])
 
 
 def get_searchbar():
@@ -201,7 +208,7 @@ def get_searchbar():
     Get a row of elements used for querying Hidebound data.
 
     Returns:
-        Div: Div with query, search button and dropdown elements.
+        Div: Div with query field, buttons and dropdown.
     '''
     spacer = html.Div(className='col spacer')
     query = dcc.Input(
@@ -211,12 +218,31 @@ def get_searchbar():
         placeholder='SQL query that uses "FROM data"',
         type='text'
     )
-    button = get_button('search')
     dropdown = get_dropdown(['file', 'asset'])
+
+    search = get_button('search')
+    init = get_button('init')
+    update = get_button('update')
+    create = get_button('create')
+    delete = get_button('delete')
 
     row = html.Div(
         className='row',
-        children=[query, spacer, button, spacer, dropdown],
+        children=[
+            query,
+            spacer,
+            search,
+            spacer,
+            init,
+            spacer,
+            update,
+            spacer,
+            create,
+            spacer,
+            delete,
+            spacer,
+            dropdown
+        ],
     )
     searchbar = html.Div(id='searchbar', className='searchbar', children=[row])
     return searchbar
