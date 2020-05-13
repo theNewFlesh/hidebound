@@ -195,7 +195,16 @@
 
 <div class="viewcode-block" id="render_content"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.render_content">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">Output</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">,</span> <span class="s1">&#39;children&#39;</span><span class="p">),</span> <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s1">&#39;tabs&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">)])</span>
 <span class="k">def</span> <span class="nf">render_content</span><span class="p">(</span><span class="n">tab</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">tab</span> <span class="o">==</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Serve content for app tabs.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        tab (str): Name of tab to render.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        flask.Response: Response.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">tab</span> <span class="o">==</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">get_data_tab</span><span class="p">()</span>  <span class="c1"># pragma: no cover</span></div>
 
 
