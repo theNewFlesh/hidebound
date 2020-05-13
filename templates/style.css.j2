@@ -67,6 +67,7 @@ button {
     background: {{ COLOR_SCHEME['grey1'] }};
     color: {{ COLOR_SCHEME['light1'] }};
     font-family: {{ FONT_FAMILY }};
+    font-size: medium !important;
 }
 
 button:hover {
@@ -382,6 +383,10 @@ button:active {
 }
 
 /* Dropdown */
+.Select-clear-zone {
+    display: none !important;
+}
+
 .Select-menu,
 #drop-down > div > div.Select-menu-outer {
     background: {{ COLOR_SCHEME['grey1'] }};
@@ -396,17 +401,16 @@ button:active {
     color: {{ COLOR_SCHEME['light1'] }};
 }
 
-#drop-down .Select-control {
-    height: 24px;
-    line-height: 24px;
-}
-
+#drop-down .Select-value,
+#drop-down .Select-input,
+#drop-down .Select-control,
 #drop-down .Select-placeholder {
-    height: 32px;
+    height: 26px !important;
+    line-height: 26px !important;
 }
 
-#drop-down .Select-input {
-    height: 21px;
+.Select-input > input {
+    padding: 0px 0px 0px 0px !important;
 }
 
 #react-select-2--value > div.Select-value {
@@ -417,6 +421,10 @@ button:active {
 .Select-value-icon {
     background: {{ COLOR_SCHEME['grey1'] }};
     color: {{ COLOR_SCHEME['cyan2'] }};
+}
+
+#drop-down .Select {
+    font-size: medium !important;
 }
 
 #drop-down .Select-value-icon {

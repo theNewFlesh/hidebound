@@ -85,6 +85,7 @@ def get_app():
         'background': COLOR_SCHEME['bg'],
         'color': COLOR_SCHEME['light1'],
         'border': '0px',
+        'min-width': '200px',
     }
     tab_selected_style = {
         'padding': '4px',
@@ -171,7 +172,7 @@ def get_dropdown(options):
             'color': COLOR_SCHEME['light1'],
             'border': '0px',
             'min-width': '225px',
-            'max-width': '550px'
+            'max-width': '550px',
         }
     )
 
