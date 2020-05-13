@@ -1,6 +1,10 @@
+dash
+dash-core-components
+dash-html-components
 flasgger
 flask
 humanfriendly
+jinja2
 numpy
 pandas
 pandasql

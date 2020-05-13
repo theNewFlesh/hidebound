@@ -2,8 +2,12 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from flasgger import Swagger
-# ------------------------------------------------------------------------------
+import jinja2
 
+import hidebound.tools as tools
+
+
+# TOOLS-------------------------------------------------------------------------
 COLOR_SCHEME = dict(
     dark1='#040404',
     dark2='#141414',
@@ -29,8 +33,6 @@ COLOR_SCHEME = dict(
     purple1='#C98FDE',
     purple2='#AC92DE',
 )
-
-
 COLORS = [
     'cyan1',
     'red1',
@@ -45,18 +47,36 @@ COLORS = [
     'blue2',
     'green2',
 ]
-
-
 FONT_FAMILY = 'Courier'
-# ------------------------------------------------------------------------------
 
 
-def get_app():
+def render_template(filename, parameters):
     '''
-    Generate dash app container.
+    Renders a jinja2 template given by filename with given parameters.
+
+    Args:
+        filename (str): Filename of template.
+        parameters (dict): Dictionary of template parameters.
 
     Returns:
-        Dash.Dash: Dash app instance.
+        str: HTML string.
+    '''
+    tempdir = tools.relative_path(__file__, '../../templates').as_posix()
+    env = jinja2.Environment(
+        loader=jinja2.FileSystemLoader(tempdir),
+        keep_trailing_newline=True
+    )
+    output = env.get_template(filename).render(parameters).encode('utf-8')
+    return output
+
+
+# ELEMENTS----------------------------------------------------------------------
+def get_app():
+    '''
+    Generate Dash Flask app instance.
+
+    Returns:
+        Dash: Dash app instance.
     '''
     store = dcc.Store(id='session-store', storage_type='session')
 
@@ -100,21 +120,42 @@ def get_app():
         external_stylesheets=['http://0.0.0.0:5000/static/style.css']
     )
     Swagger(app.server)
-    # app.css.append_css({'external_url': '/static/style.css'})
     app.layout = html.Div(id='layout', children=[store, tabs, content])
     app.config['suppress_callback_exceptions'] = True
-    app._hb_database = None
-    app._hb_config = None
+    app.server._database = None
+    app.server._config = None
+
     return app
 
 
 def get_dropdown(options):
+    '''
+    Gets html dropdown element with given options.
+
+    Args:
+        options (list[str]): List of options.
+
+    Raises:
+        TypeError: If options is not a list.
+        TypeError: If any option is not a string.
+
+    Returns:
+        Dropdown: Dropdown element.
+    '''
+    if not isinstance(options, list):
+        msg = f'{options} is not a list.'
+        raise TypeError(msg)
+
+    illegal = list(filter(lambda x: not isinstance(x, str), options))
+    if len(illegal) > 0:
+        msg = f'{illegal} are not strings.'
+        raise TypeError(msg)
+
     return dcc.Dropdown(
         id='drop-down',
         className='col drop-down',
         value=options[0],
         options=[{'label': x, 'value': x} for x in options],
-        # multi=True,
         placeholder=options[0],
         optionHeight=20,
         style={
@@ -128,30 +169,55 @@ def get_dropdown(options):
 
 
 def get_button(title):
+    '''
+    Get a html button with a given title.
+
+    Args:
+        title (str): Title of button.
+
+    Raises:
+        TypeError: If title is not a string.
+
+    Returns:
+        Button: Button element.
+    '''
+    if not isinstance(title, str):
+        msg = f'{title} is not a string.'
+        raise TypeError(msg)
     return html.Button(id='button', children=[title])
 
 
 def get_searchbar():
+    '''
+    Get a row of elements used for querying Hidebound data.
+
+    Returns:
+        Div: Div with query, search button and dropdown elements.
+    '''
     spacer = html.Div(className='col spacer')
-    searchval = dcc.Input(
-        id='search-val', className='col search-val', value='', type='text'
+    query = dcc.Input(
+        id='query',
+        className='col query',
+        value='',
+        placeholder='SELECT * FROM data WHERE ',
+        type='text'
     )
     button = get_button('search')
     dropdown = get_dropdown(['file', 'asset'])
 
     row = html.Div(
         className='row',
-        children=[
-            searchval,
-            spacer,
-            button,
-            spacer,
-            dropdown,
-        ],
+        children=[query, spacer, button, spacer, dropdown],
     )
     searchbar = html.Div(id='searchbar', className='searchbar', children=[row])
     return searchbar
 
 
 def get_data_tab():
+    '''
+    Get tab element for Hidebound data.
+
+    Return:
+        list: List of elements for data tab.
+    '''
     return [get_searchbar()]
