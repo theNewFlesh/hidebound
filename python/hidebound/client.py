@@ -114,7 +114,7 @@ def get_app():
             ),
             # dcc.Tab(
             #     className='tab',
-            #     label='Metrics',
+            #     label='metrics',
             #     value='metrics',
             #     style=tab_style,
             #     selected_style=tab_selected_style,
