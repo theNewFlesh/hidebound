@@ -15,6 +15,32 @@ body {
     padding: 0px;
 }
 
+/* Logo */
+#tabs #logo,
+#tabs #logo .tab:hover {
+    width: 130px;
+    background: linear-gradient(
+        -12deg,
+        {{ COLOR_SCHEME['bg'] }} 50%,
+        {{ COLOR_SCHEME['cyan1'] }} 50%
+    ) !important;
+    border: 0px !important;
+    font-size: large !important;
+    font-style: italic !important;
+    font-family: sans-serif !important;
+    font-weight: bold !important;
+}
+
+#tabs #logo span {
+    background: linear-gradient(
+        -12deg,
+        {{ COLOR_SCHEME['cyan1'] }} 50%,
+        {{ COLOR_SCHEME['bg'] }} 50%
+    ) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+}
+
 /* Tabs */
 #tabs .tab:hover {
     background: {{ COLOR_SCHEME['grey2'] }} !important;

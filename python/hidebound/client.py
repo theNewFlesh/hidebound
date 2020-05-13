@@ -98,8 +98,16 @@ def get_app():
         value='data',
         children=[
             dcc.Tab(
+                id='logo',
                 className='tab',
-                label='Data',
+                label='HIDEBOUND',
+                value='',
+                disabled_style=tab_style,
+                disabled=True,
+            ),
+            dcc.Tab(
+                className='tab',
+                label='data',
                 value='data',
                 style=tab_style,
                 selected_style=tab_selected_style,
@@ -211,6 +219,20 @@ def get_searchbar():
     )
     searchbar = html.Div(id='searchbar', className='searchbar', children=[row])
     return searchbar
+
+
+def get_logo():
+    '''
+    Get Hidebound logo for menu bar.
+
+    Returns:
+        Div: Hidebound text and logo.
+    '''
+    return html.Span(
+        id='logo',
+        className='logo',
+        children='hidebound',
+    )
 
 
 def get_data_tab():
