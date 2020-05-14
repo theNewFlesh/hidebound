@@ -34,6 +34,7 @@ def get_info():
                         action='store',
                         help='''Command to run in {repo} service.
 
+    app          - Run Flask app inside {repo} container
     bash         - Run BASH session inside {repo} container
     container    - Display the Docker container id for {repo} service
     coverage     - Generate coverage report for {repo} service
@@ -145,6 +146,23 @@ def get_radon_metrics_command(info):
 
 
 # COMMANDS----------------------------------------------------------------------
+def get_app_command(info):
+    '''
+    Starts Flask app.
+
+    Args:
+        info (dict): Info dictionary.
+
+    Returns:
+        str: Command.
+    '''
+    cmd = "{exec} python3.7 /root/{repo}/python/{repo}/app.py".format(
+        exec=get_docker_exec_command(info),
+        repo=REPO,
+    )
+    return cmd
+
+
 def get_bash_command(info):
     '''
     Opens a bash session inside a running container.
@@ -511,7 +529,10 @@ def main():
     docs = os.path.join('/root', REPO, 'docs')
     cmd = get_docker_command(info)
 
-    if mode == 'bash':
+    if mode == 'app':
+        cmd = get_app_command(info)
+
+    elif mode == 'bash':
         cmd = get_bash_command(info)
 
     elif mode == 'container':
