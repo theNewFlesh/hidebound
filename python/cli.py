@@ -157,7 +157,7 @@ def get_app_command(info):
         str: Command.
     '''
     cmd = "{exec} python3.7 /root/{repo}/python/{repo}/app.py".format(
-        exec=get_docker_exec_command(info),
+        exec=get_docker_exec_command(info, env_vars=['DEBUG_MODE=True']),
         repo=REPO,
     )
     return cmd
@@ -529,13 +529,14 @@ def get_docker_command(info):
     return cmd
 
 
-def get_docker_exec_command(info, working_directory=None):
+def get_docker_exec_command(info, working_directory=None, env_vars=None):
     '''
     Gets docker exec command.
 
     Args:
         info (dict): Info dictionary.
         working_directory (str, optional): Working directory.
+        env_vars (list[str], optional): Optional environment variables.
 
     Returns:
         str: Command.
@@ -543,6 +544,8 @@ def get_docker_exec_command(info, working_directory=None):
     cmd = '{up_command}; '
     cmd += 'CONTAINER_ID=$({container_command}); '
     cmd += 'docker exec --interactive --tty --user \"root:root\" -e {env} '
+    if env_vars is not None and len(env_vars) > 0:
+        cmd += '-e ' + '-e '.join(env_vars) + ' '
     if working_directory is not None:
         cmd += '-w {} '.format(working_directory)
     cmd += '$CONTAINER_ID '

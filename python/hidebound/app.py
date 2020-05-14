@@ -1,6 +1,7 @@
 from copy import copy
 from json import JSONDecodeError
 import json
+import os
 
 from dash.dependencies import Input, Output
 from flasgger import swag_from
@@ -459,4 +460,5 @@ APP.server.register_error_handler(500, handle_data_error)
 
 
 if __name__ == '__main__':
-    APP.run_server(debug=True, host='0.0.0.0', port=5000)  # pragma: no cover
+    debug = 'DEBUG_MODE' in os.environ.keys()  # pragma: no cover
+    APP.run_server(debug=debug, host='0.0.0.0', port=5000)  # pragma: no cover
