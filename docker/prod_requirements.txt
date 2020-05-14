@@ -1,3 +1,4 @@
+apispec
 dash
 dash-core-components
 dash-html-components
@@ -5,6 +6,7 @@ flasgger
 flask
 humanfriendly
 jinja2
+marshmallow
 numpy
 pandas
 pandasql

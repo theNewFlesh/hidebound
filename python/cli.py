@@ -184,7 +184,7 @@ def get_container_id_command():
     Returns:
         str: Command.
     '''
-    cmd = 'docker ps | grep {repo} '.format(repo=REPO)
+    cmd = 'docker ps | grep "{repo} " '.format(repo=REPO)
     cmd += "| head -n 1 | awk '{print $1}'"
     return cmd
 
@@ -244,7 +244,7 @@ def get_image_id_command():
     Returns:
         str: Command.
     '''
-    cmd = 'docker image ls | grep {repo} '.format(repo=REPO)
+    cmd = 'docker image ls | grep "{repo} " '.format(repo=REPO)
     cmd += "| head -n 1 | awk '{print $3}'"
     return cmd
 
@@ -276,6 +276,63 @@ def get_lint_command(info):
     '''
     cmd = '{exec} flake8 /root/{repo}/python --config /root/{repo}/docker/flake8.ini'
     cmd = cmd.format(repo=REPO, exec=get_docker_exec_command(info))
+    return cmd
+
+
+def get_production_image_command(info):
+    '''
+    Create production docker image.
+
+    Args:age
+        info (dict): Info dictionary.
+
+    Returns:
+        str: Command.
+    '''
+    cmd = 'CWD=$(pwd); '
+    cmd += 'cd {repo_path}/docker; '
+    cmd += 'docker build --force-rm '
+    cmd += '--file {repo}_prod.dockerfile '
+    cmd += '--tag {repo}-prod:latest ./; cd $CWD'
+    cmd = cmd.format(
+        repo=REPO,
+        repo_path=REPO_PATH
+    )
+    return cmd
+
+
+def get_production_container_command(info):
+    '''
+    Run production docker container.
+
+    Args:age
+        info (dict): Info dictionary.
+
+    Returns:
+        str: Command.
+    '''
+    cmd = 'CWD=$(pwd); '
+    cmd += 'cd {repo_path}/docker; '
+    cmd += 'CURRENT_USER="{user}" '
+    cmd += 'docker run --volume {volume}:{volume} --publish {port}:5000 '
+    cmd += '--name {repo}-prod {repo}-prod; cd $CWD'
+
+    if info['args'] == ['']:
+        cmd = 'echo "Please provide a volume to mount inside the container, as '
+        cmd += 'the first argument to -a."'
+        return cmd
+
+    port = 5000
+    if len(info['args']) > 1:
+        port = info['args'][1]
+
+    cmd = cmd.format(
+        volume=info['args'][0],
+        port=port,
+        user=info['user'],
+        repo=REPO,
+        repo_path=REPO_PATH
+    )
     return cmd
 
 
@@ -565,6 +622,10 @@ def main():
 
     elif mode == 'lint':
         cmd = get_lint_command(info)
+
+    elif mode == 'prod':
+        cmd = get_production_image_command(info)
+        cmd += ' && ' + get_production_container_command(info)
 
     elif mode == 'publish':
         cmd = get_tox_command(info)
