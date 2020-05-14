@@ -18,14 +18,18 @@ setup(
     packages=['hidebound'],
     version=VERSION,
     license='MIT',
-    description='A library for creating assets from files on disk.',
+    description='A local database service for converting directories of \
+arbitrary files into validated assets and derived JSON metadata.',
     long_description=README,
     long_description_content_type='text/markdown',
     author='Alex Braun',
     author_email='Alexander.G.Braun@gmail.com',
     url='https://github.com/theNewFlesh/hidebound',
     download_url='https://github.com/theNewFlesh/hidebound/archive/' + VERSION + '.tar.gz',
-    keywords=['asset', 'project', 'data'],
+    keywords=[
+        'asset', 'project', 'data', 'json', 'database', 'datastore', 'flask',
+        'service'
+    ],
     install_requires=PROD_REQUIREMENTS,
     classifiers=[
       'Development Status :: 4 - Beta',
