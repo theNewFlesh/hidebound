@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.4.3
+                0.4.6
               </div>
             
           
@@ -237,6 +237,7 @@
         <span class="s1">&#39;background&#39;</span><span class="p">:</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;bg&#39;</span><span class="p">],</span>
         <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;light1&#39;</span><span class="p">],</span>
         <span class="s1">&#39;border&#39;</span><span class="p">:</span> <span class="s1">&#39;0px&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;min-width&#39;</span><span class="p">:</span> <span class="s1">&#39;200px&#39;</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="n">tab_selected_style</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;padding&#39;</span><span class="p">:</span> <span class="s1">&#39;4px&#39;</span><span class="p">,</span>
@@ -270,7 +271,14 @@
             <span class="c1">#     value=&#39;metrics&#39;,</span>
             <span class="c1">#     style=tab_style,</span>
             <span class="c1">#     selected_style=tab_selected_style,</span>
-            <span class="c1"># )</span>
+            <span class="c1"># ),</span>
+            <span class="n">dcc</span><span class="o">.</span><span class="n">Tab</span><span class="p">(</span>
+                <span class="n">className</span><span class="o">=</span><span class="s1">&#39;tab&#39;</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="s1">&#39;config&#39;</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">=</span><span class="s1">&#39;config&#39;</span><span class="p">,</span>
+                <span class="n">style</span><span class="o">=</span><span class="n">tab_style</span><span class="p">,</span>
+                <span class="n">selected_style</span><span class="o">=</span><span class="n">tab_selected_style</span><span class="p">,</span>
+            <span class="p">)</span>
         <span class="p">],</span>
     <span class="p">)</span>
     <span class="n">content</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;content&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;content&#39;</span><span class="p">)</span>
@@ -312,8 +320,8 @@
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
-        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;drop-down&#39;</span><span class="p">,</span>
-        <span class="n">className</span><span class="o">=</span><span class="s1">&#39;col drop-down&#39;</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;dropdown&#39;</span><span class="p">,</span>
+        <span class="n">className</span><span class="o">=</span><span class="s1">&#39;col dropdown&#39;</span><span class="p">,</span>
         <span class="n">value</span><span class="o">=</span><span class="n">options</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
         <span class="n">options</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">}</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">options</span><span class="p">],</span>
         <span class="n">placeholder</span><span class="o">=</span><span class="n">options</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
@@ -323,7 +331,7 @@
             <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;light1&#39;</span><span class="p">],</span>
             <span class="s1">&#39;border&#39;</span><span class="p">:</span> <span class="s1">&#39;0px&#39;</span><span class="p">,</span>
             <span class="s1">&#39;min-width&#39;</span><span class="p">:</span> <span class="s1">&#39;225px&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;max-width&#39;</span><span class="p">:</span> <span class="s1">&#39;550px&#39;</span>
+            <span class="s1">&#39;max-width&#39;</span><span class="p">:</span> <span class="s1">&#39;550px&#39;</span><span class="p">,</span>
         <span class="p">}</span>
     <span class="p">)</span></div>
 
@@ -344,7 +352,7 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s1"> is not a string.&#39;</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;button&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">title</span><span class="p">])</span></div>
+    <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s1">-button&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">title</span><span class="p">])</span></div>
 
 
 <div class="viewcode-block" id="get_searchbar"><a class="viewcode-back" href="../../hidebound.html#hidebound.client.get_searchbar">[docs]</a><span class="k">def</span> <span class="nf">get_searchbar</span><span class="p">():</span>
@@ -352,7 +360,7 @@
 <span class="sd">    Get a row of elements used for querying Hidebound data.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Div: Div with query, search button and dropdown elements.</span>
+<span class="sd">        Div: Div with query field, buttons and dropdown.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">spacer</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;col spacer&#39;</span><span class="p">)</span>
     <span class="n">query</span> <span class="o">=</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span>
@@ -362,12 +370,31 @@
         <span class="n">placeholder</span><span class="o">=</span><span class="s1">&#39;SQL query that uses &quot;FROM data&quot;&#39;</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;text&#39;</span>
     <span class="p">)</span>
-    <span class="n">button</span> <span class="o">=</span> <span class="n">get_button</span><span class="p">(</span><span class="s1">&#39;search&#39;</span><span class="p">)</span>
     <span class="n">dropdown</span> <span class="o">=</span> <span class="n">get_dropdown</span><span class="p">([</span><span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;asset&#39;</span><span class="p">])</span>
+
+    <span class="n">search</span> <span class="o">=</span> <span class="n">get_button</span><span class="p">(</span><span class="s1">&#39;search&#39;</span><span class="p">)</span>
+    <span class="n">init</span> <span class="o">=</span> <span class="n">get_button</span><span class="p">(</span><span class="s1">&#39;init&#39;</span><span class="p">)</span>
+    <span class="n">update</span> <span class="o">=</span> <span class="n">get_button</span><span class="p">(</span><span class="s1">&#39;update&#39;</span><span class="p">)</span>
+    <span class="n">create</span> <span class="o">=</span> <span class="n">get_button</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">)</span>
+    <span class="n">delete</span> <span class="o">=</span> <span class="n">get_button</span><span class="p">(</span><span class="s1">&#39;delete&#39;</span><span class="p">)</span>
 
     <span class="n">row</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
         <span class="n">className</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">,</span>
-        <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">query</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">button</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">dropdown</span><span class="p">],</span>
+        <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">query</span><span class="p">,</span>
+            <span class="n">spacer</span><span class="p">,</span>
+            <span class="n">search</span><span class="p">,</span>
+            <span class="n">spacer</span><span class="p">,</span>
+            <span class="n">init</span><span class="p">,</span>
+            <span class="n">spacer</span><span class="p">,</span>
+            <span class="n">update</span><span class="p">,</span>
+            <span class="n">spacer</span><span class="p">,</span>
+            <span class="n">create</span><span class="p">,</span>
+            <span class="n">spacer</span><span class="p">,</span>
+            <span class="n">delete</span><span class="p">,</span>
+            <span class="n">spacer</span><span class="p">,</span>
+            <span class="n">dropdown</span>
+        <span class="p">],</span>
     <span class="p">)</span>
     <span class="n">searchbar</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;searchbar&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;searchbar&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">row</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">searchbar</span></div>

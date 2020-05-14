@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.4.3
+                0.4.6
               </div>
             
           
@@ -204,7 +204,7 @@
 
         <span class="k">return</span> <span class="n">Database</span><span class="p">(</span>
             <span class="n">config</span><span class="p">[</span><span class="s1">&#39;root_directory&#39;</span><span class="p">],</span>
-            <span class="n">config</span><span class="p">[</span><span class="s1">&#39;hidebound_parent_directory&#39;</span><span class="p">],</span>
+            <span class="n">config</span><span class="p">[</span><span class="s1">&#39;hidebound_directory&#39;</span><span class="p">],</span>
             <span class="n">specifications</span><span class="o">=</span><span class="n">specs</span><span class="p">,</span>
             <span class="n">include_regex</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;include_regex&#39;</span><span class="p">],</span>
             <span class="n">exclude_regex</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;exclude_regex&#39;</span><span class="p">],</span>
@@ -229,7 +229,7 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">root_dir</span><span class="p">,</span>
-        <span class="n">hidebound_parent_dir</span><span class="p">,</span>
+        <span class="n">hidebound_dir</span><span class="p">,</span>
         <span class="n">specifications</span><span class="o">=</span><span class="p">[],</span>
         <span class="n">include_regex</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
         <span class="n">exclude_regex</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;\.DS_Store&#39;</span><span class="p">,</span>
@@ -240,8 +240,8 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            root_dir (str or Path): Root directory to recurse.</span>
-<span class="sd">            hidebound_parent_dir (str or Path): Directory where hidebound</span>
-<span class="sd">                directory will be created and hidebound data saved.</span>
+<span class="sd">            hidebound_dir (str or Path): Directory where hidebound data will be</span>
+<span class="sd">                saved.</span>
 <span class="sd">            specifications (list[SpecificationBase], optional): List of asset</span>
 <span class="sd">                specifications. Default: [].</span>
 <span class="sd">            include_regex (str, optional): Include filenames that match this</span>
@@ -256,9 +256,9 @@
 <span class="sd">                object.</span>
 <span class="sd">            ValueError: If write_mode not is not &quot;copy&quot; or &quot;move&quot;.</span>
 <span class="sd">            FileNotFoundError: If root is not a directory or does not exist.</span>
-<span class="sd">            FileNotFoundError: If hidebound_parent_dir is not directory or</span>
-<span class="sd">                does not exist.</span>
-
+<span class="sd">            FileNotFoundError: If hidebound_dir is not directory or does not</span>
+<span class="sd">                exist.</span>
+<span class="sd">            NameError: If hidebound_dir is not named &quot;hidebound&quot;.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Database: Database instance.</span>
@@ -286,17 +286,16 @@
             <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Invalid write mode: </span><span class="si">{</span><span class="n">write_mode</span><span class="si">}</span><span class="s1"> not in </span><span class="si">{</span><span class="n">modes</span><span class="si">}</span><span class="s1">.&#39;</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
-        <span class="c1"># validate hidebound root dir</span>
-        <span class="n">hb_root</span> <span class="o">=</span> <span class="n">hidebound_parent_dir</span>
+        <span class="c1"># validate hidebound dir</span>
+        <span class="n">hb_root</span> <span class="o">=</span> <span class="n">hidebound_dir</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hb_root</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
             <span class="n">hb_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">hb_root</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">hb_root</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hb_root</span><span class="si">}</span><span class="s1"> is not a directory or does not exist.&#39;</span>
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-
-        <span class="c1"># create hidebound root dir</span>
-        <span class="n">hb_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">hb_root</span><span class="p">,</span> <span class="s1">&#39;hidebound&#39;</span><span class="p">)</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">hb_root</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">hb_root</span><span class="p">)</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s1">&#39;hidebound&#39;</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hb_root</span><span class="si">}</span><span class="s1"> directory is not named hidebound.&#39;</span>
+            <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_hb_root</span> <span class="o">=</span> <span class="n">hb_root</span>

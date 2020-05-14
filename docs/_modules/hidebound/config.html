@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.4.3
+                0.4.6
               </div>
             
           
@@ -224,6 +224,21 @@
         <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="n">sys</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">temp</span></div>
+
+
+<div class="viewcode-block" id="is_hidebound_directory"><a class="viewcode-back" href="../../hidebound.html#hidebound.config.is_hidebound_directory">[docs]</a><span class="k">def</span> <span class="nf">is_hidebound_directory</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Ensures directory name is &quot;hidebound&quot;.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        directory (str or Path): Hidebound directory.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValidationError: If directory is not named &quot;hidebound&quot;.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s1">&#39;hidebound&#39;</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">directory</span><span class="si">}</span><span class="s1"> directory is not named hidebound.&#39;</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
@@ -233,8 +248,8 @@
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        root_directory (str or Path): Root directory to recurse.</span>
-<span class="sd">        hidebound_parent_directory (str or Path): Directory where hidebound</span>
-<span class="sd">            directory will be created and hidebound data saved.</span>
+<span class="sd">        hidebound_directory (str or Path): Directory where hidebound data will</span>
+<span class="sd">            be saved.</span>
 <span class="sd">        specification_files (list[str], optional): List of asset specification</span>
 <span class="sd">            files. Default: [].</span>
 <span class="sd">        include_regex (str, optional): Include filenames that match this regex.</span>
@@ -245,7 +260,9 @@
 <span class="sd">            hidebound/data directory. Default: copy.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">root_directory</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_directory</span><span class="p">])</span>
-    <span class="n">hidebound_parent_directory</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_directory</span><span class="p">])</span>
+    <span class="n">hidebound_directory</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_directory</span><span class="p">,</span> <span class="n">is_hidebound_directory</span><span class="p">]</span>
+    <span class="p">)</span>
     <span class="n">specification_files</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
         <span class="n">StringType</span><span class="p">(</span><span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">is_specification_file</span><span class="p">,</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_file</span><span class="p">]),</span>
         <span class="n">default</span><span class="o">=</span><span class="p">[],</span>

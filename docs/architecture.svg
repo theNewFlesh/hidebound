@@ -339,119 +339,119 @@
 <path fill="none" stroke="#de958e" d="M1024.5366,-920.6336C1055.1432,-914.922 1097.9855,-906.9271 1136.5925,-899.7225"/>
 <polygon fill="#de958e" stroke="#de958e" points="1137.641,-903.0874 1146.8292,-897.8122 1136.3568,-896.2062 1137.641,-903.0874"/>
 </g>
-<!-- numpy -->
-<g id="node23" class="node">
-<title>numpy</title>
-<polygon fill="#343434" stroke="#343434" points="473,-768.3848 415,-768.3848 415,-732.3848 473,-732.3848 473,-768.3848"/>
-<text text-anchor="middle" x="444" y="-746.6848" font-family="Courier,monospace" font-size="14.00" fill="#de958e">numpy</text>
-</g>
-<!-- numpy&#45;&gt;hidebound.app -->
-<g id="edge34" class="edge">
-<title>numpy&#45;&gt;hidebound.app</title>
-<path fill="none" stroke="#de958e" d="M473.2584,-749.42C567.0053,-746.8957 867.9886,-743.1942 1111,-789.3848 1203.3722,-806.9426 1237.0595,-798.5975 1312,-855.3848 1353.4545,-886.7976 1383.1376,-941.0656 1398.3564,-973.8536"/>
-<polygon fill="#de958e" stroke="#de958e" points="1395.3105,-975.6135 1402.6121,-983.2906 1401.6917,-972.7358 1395.3105,-975.6135"/>
-</g>
-<!-- numpy&#45;&gt;hidebound.database -->
-<g id="edge35" class="edge">
-<title>numpy&#45;&gt;hidebound.database</title>
-<path fill="none" stroke="#de958e" d="M473.0562,-757.9067C498.6686,-764.2688 537.0813,-773.1603 571,-778.3848 809.1379,-815.0651 878.4684,-763.2645 1111,-826.3848 1138.5999,-833.8768 1167.6618,-847.5102 1190.0977,-859.449"/>
-<polygon fill="#de958e" stroke="#de958e" points="1188.5143,-862.5719 1198.9727,-864.2667 1191.8539,-856.4198 1188.5143,-862.5719"/>
-</g>
-<!-- numpy&#45;&gt;hidebound.database_test_base -->
-<g id="edge36" class="edge">
-<title>numpy&#45;&gt;hidebound.database_test_base</title>
-<path fill="none" stroke="#de958e" d="M473.2965,-740.3281C537.9153,-717.5964 696.6456,-658.7196 819,-588.3848 869.1238,-559.5714 922.0749,-518.2449 953.8239,-492.1174"/>
-<polygon fill="#de958e" stroke="#de958e" points="956.3452,-494.5735 961.8102,-485.4969 951.8778,-489.1844 956.3452,-494.5735"/>
-</g>
-<!-- numpy&#45;&gt;hidebound.database_tools -->
-<g id="edge37" class="edge">
-<title>numpy&#45;&gt;hidebound.database_tools</title>
-<path fill="none" stroke="#de958e" d="M473.2482,-757.3016C491.8045,-762.4833 515.8392,-770.7033 535,-782.3848 553.7911,-793.8409 553.287,-803.3236 571,-816.3848 595.3471,-834.338 624.7502,-851.1217 648.8129,-863.752"/>
-<polygon fill="#de958e" stroke="#de958e" points="647.2628,-866.8907 657.752,-868.3831 650.4829,-860.6753 647.2628,-866.8907"/>
-</g>
 <!-- hidebound -->
-<g id="node24" class="node">
+<g id="node23" class="node">
 <title>hidebound</title>
 <polygon fill="#343434" stroke="#343434" points="91,-608.3848 0,-608.3848 0,-572.3848 91,-572.3848 91,-608.3848"/>
 <text text-anchor="middle" x="45.5" y="-586.6848" font-family="Courier,monospace" font-size="14.00" fill="#a0d17b">hidebound</text>
 </g>
 <!-- hidebound&#45;&gt;hidebound.app -->
-<g id="edge38" class="edge">
+<g id="edge34" class="edge">
 <title>hidebound&#45;&gt;hidebound.app</title>
 <path fill="none" stroke="#a0d17b" d="M45.7904,-608.659C47.5754,-702.5017 59.3578,-1130.1087 127,-1240.3848 212.1759,-1379.2457 281.0973,-1424.3848 444,-1424.3848 444,-1424.3848 444,-1424.3848 983,-1424.3848 1208.5232,-1424.3848 1357.595,-1122.8965 1398.5628,-1028.9759"/>
 <polygon fill="#a0d17b" stroke="#a0d17b" points="1401.8762,-1030.1301 1402.6089,-1019.5606 1395.4449,-1027.3662 1401.8762,-1030.1301"/>
 </g>
 <!-- hidebound&#45;&gt;hidebound.client -->
-<g id="edge39" class="edge">
+<g id="edge35" class="edge">
 <title>hidebound&#45;&gt;hidebound.client</title>
 <path fill="none" stroke="#a0d17b" d="M47.0253,-608.471C54.0031,-688.8212 84.3821,-1013.5169 127,-1105.3848 191.7148,-1244.8853 213.188,-1303.3457 353,-1367.3848 426.5415,-1401.0696 460.0251,-1397.7456 535,-1367.3848 599.2161,-1341.3807 651.9068,-1275.8719 677.7577,-1238.8793"/>
 <polygon fill="#a0d17b" stroke="#a0d17b" points="680.6874,-1240.7957 683.4497,-1230.5672 674.9118,-1236.8406 680.6874,-1240.7957"/>
 </g>
 <!-- hidebound&#45;&gt;hidebound.config -->
-<g id="edge40" class="edge">
+<g id="edge36" class="edge">
 <title>hidebound&#45;&gt;hidebound.config</title>
 <path fill="none" stroke="#a0d17b" d="M91.0367,-607.4698C150.3463,-628.7747 257.7189,-664.127 353,-678.3848 557.8381,-709.0368 616.0805,-723.8799 819,-682.3848 863.0296,-673.3812 909.8607,-652.0792 942.1575,-635.3221"/>
 <polygon fill="#a0d17b" stroke="#a0d17b" points="944.069,-638.2709 951.2802,-630.5088 940.8025,-632.0798 944.069,-638.2709"/>
 </g>
 <!-- hidebound&#45;&gt;hidebound.database -->
-<g id="edge41" class="edge">
+<g id="edge37" class="edge">
 <title>hidebound&#45;&gt;hidebound.database</title>
 <path fill="none" stroke="#a0d17b" d="M63.9197,-608.4002C79.8145,-623.3912 103.8094,-644.7338 127,-660.3848 220.7532,-723.6575 244.8941,-744.1253 353,-777.3848 497.8968,-821.9633 942.2977,-860.3489 1136.759,-875.4906"/>
 <polygon fill="#a0d17b" stroke="#a0d17b" points="1136.7134,-878.9974 1146.9541,-876.2809 1137.2545,-872.0184 1136.7134,-878.9974"/>
 </g>
 <!-- hidebound&#45;&gt;hidebound.database_test_base -->
-<g id="edge42" class="edge">
+<g id="edge38" class="edge">
 <title>hidebound&#45;&gt;hidebound.database_test_base</title>
 <path fill="none" stroke="#a0d17b" d="M91.3388,-589.4839C211.7985,-586.3815 546.7613,-573.0075 819,-517.3848 853.9997,-510.2338 892.2262,-498.7991 922.9622,-488.6685"/>
 <polygon fill="#a0d17b" stroke="#a0d17b" points="924.2858,-491.9167 932.6646,-485.4323 922.0709,-485.2763 924.2858,-491.9167"/>
 </g>
 <!-- hidebound&#45;&gt;hidebound.database_tools -->
-<g id="edge43" class="edge">
+<g id="edge39" class="edge">
 <title>hidebound&#45;&gt;hidebound.database_tools</title>
 <path fill="none" stroke="#a0d17b" d="M48.5569,-608.6605C57.9329,-662.3542 88.0277,-817.7736 127,-848.3848 194.4095,-901.3325 431.249,-899.9736 576.9627,-893.5935"/>
 <polygon fill="#a0d17b" stroke="#a0d17b" points="577.4614,-897.0746 587.293,-893.1261 577.145,-890.0817 577.4614,-897.0746"/>
 </g>
 <!-- hidebound&#45;&gt;hidebound.parser -->
-<g id="edge44" class="edge">
+<g id="edge40" class="edge">
 <title>hidebound&#45;&gt;hidebound.parser</title>
 <path fill="none" stroke="#a0d17b" d="M54.8852,-572.3546C67.9943,-548.8578 93.9401,-507.9924 127,-484.3848 131.8996,-480.8861 137.2098,-477.7486 142.7301,-474.9386"/>
 <polygon fill="#a0d17b" stroke="#a0d17b" points="144.6108,-477.9228 152.1834,-470.5128 141.6427,-471.5831 144.6108,-477.9228"/>
 </g>
 <!-- hidebound&#45;&gt;hidebound.specification_base -->
-<g id="edge45" class="edge">
+<g id="edge41" class="edge">
 <title>hidebound&#45;&gt;hidebound.specification_base</title>
 <path fill="none" stroke="#a0d17b" d="M59.423,-572.1497C74.0724,-554.5449 98.8777,-528.9107 127,-517.3848 202.6029,-486.399 417.907,-484.1953 560.6451,-486.5078"/>
 <polygon fill="#a0d17b" stroke="#a0d17b" points="560.7354,-490.0098 570.7939,-486.6818 560.8554,-483.0108 560.7354,-490.0098"/>
 </g>
 <!-- hidebound&#45;&gt;hidebound.specifications -->
-<g id="edge46" class="edge">
+<g id="edge42" class="edge">
 <title>hidebound&#45;&gt;hidebound.specifications</title>
 <path fill="none" stroke="#a0d17b" d="M48.897,-572.1632C62.5722,-499.2211 113.5069,-231.6246 127,-219.3848 355.1402,-12.4363 524.5119,-91.0942 819,-181.3848 873.615,-198.1299 926.42,-239.8968 956.7584,-267.1518"/>
 <polygon fill="#a0d17b" stroke="#a0d17b" points="954.5968,-269.9178 964.3387,-274.0826 959.3202,-264.7517 954.5968,-269.9178"/>
 </g>
 <!-- hidebound&#45;&gt;hidebound.test_specifications -->
-<g id="edge47" class="edge">
+<g id="edge43" class="edge">
 <title>hidebound&#45;&gt;hidebound.test_specifications</title>
 <path fill="none" stroke="#a0d17b" d="M49.0091,-572.2986C56.9203,-531.2931 76.5801,-428.0838 91,-341.3848 99.8482,-288.1856 87.404,-137.999 127,-101.3848 360.111,114.1717 798.2866,-71.4155 938.5866,-139.6635"/>
 <polygon fill="#a0d17b" stroke="#a0d17b" points="937.2606,-142.9115 947.7797,-144.1758 940.3449,-136.6276 937.2606,-142.9115"/>
 </g>
 <!-- hidebound&#45;&gt;hidebound.tools -->
-<g id="edge48" class="edge">
+<g id="edge44" class="edge">
 <title>hidebound&#45;&gt;hidebound.tools</title>
 <path fill="none" stroke="#a0d17b" d="M46.3565,-608.6866C50.1842,-682.2632 68.202,-955.3132 127,-1013.3848 135.4603,-1021.7406 272.6681,-1044.1629 363.7712,-1058.2662"/>
 <polygon fill="#a0d17b" stroke="#a0d17b" points="363.3964,-1061.7497 373.8133,-1059.816 364.4642,-1054.8316 363.3964,-1061.7497"/>
 </g>
 <!-- hidebound&#45;&gt;hidebound.traits -->
-<g id="edge49" class="edge">
+<g id="edge45" class="edge">
 <title>hidebound&#45;&gt;hidebound.traits</title>
 <path fill="none" stroke="#a0d17b" d="M46.5336,-572.2156C50.0245,-526.7066 64.9432,-406.266 127,-333.3848 246.1818,-193.4145 483.1416,-189.3131 610.0659,-198.6179"/>
 <polygon fill="#a0d17b" stroke="#a0d17b" points="609.8897,-202.1146 620.131,-199.4009 610.4327,-195.1357 609.8897,-202.1146"/>
 </g>
 <!-- hidebound&#45;&gt;hidebound.validators -->
-<g id="edge50" class="edge">
+<g id="edge46" class="edge">
 <title>hidebound&#45;&gt;hidebound.validators</title>
 <path fill="none" stroke="#a0d17b" d="M48.3677,-572.3138C55.0258,-537.0623 75.1156,-459.5853 127,-425.3848 161.3652,-402.7324 263.5393,-400.7259 342.6985,-402.9849"/>
 <polygon fill="#a0d17b" stroke="#a0d17b" points="342.618,-406.484 352.722,-403.2969 342.8358,-399.4874 342.618,-406.484"/>
+</g>
+<!-- numpy -->
+<g id="node24" class="node">
+<title>numpy</title>
+<polygon fill="#343434" stroke="#343434" points="473,-768.3848 415,-768.3848 415,-732.3848 473,-732.3848 473,-768.3848"/>
+<text text-anchor="middle" x="444" y="-746.6848" font-family="Courier,monospace" font-size="14.00" fill="#de958e">numpy</text>
+</g>
+<!-- numpy&#45;&gt;hidebound.app -->
+<g id="edge47" class="edge">
+<title>numpy&#45;&gt;hidebound.app</title>
+<path fill="none" stroke="#de958e" d="M473.2584,-749.42C567.0053,-746.8957 867.9886,-743.1942 1111,-789.3848 1203.3722,-806.9426 1237.0595,-798.5975 1312,-855.3848 1353.4545,-886.7976 1383.1376,-941.0656 1398.3564,-973.8536"/>
+<polygon fill="#de958e" stroke="#de958e" points="1395.3105,-975.6135 1402.6121,-983.2906 1401.6917,-972.7358 1395.3105,-975.6135"/>
+</g>
+<!-- numpy&#45;&gt;hidebound.database -->
+<g id="edge48" class="edge">
+<title>numpy&#45;&gt;hidebound.database</title>
+<path fill="none" stroke="#de958e" d="M473.0562,-757.9067C498.6686,-764.2688 537.0813,-773.1603 571,-778.3848 809.1379,-815.0651 878.4684,-763.2645 1111,-826.3848 1138.5999,-833.8768 1167.6618,-847.5102 1190.0977,-859.449"/>
+<polygon fill="#de958e" stroke="#de958e" points="1188.5143,-862.5719 1198.9727,-864.2667 1191.8539,-856.4198 1188.5143,-862.5719"/>
+</g>
+<!-- numpy&#45;&gt;hidebound.database_test_base -->
+<g id="edge49" class="edge">
+<title>numpy&#45;&gt;hidebound.database_test_base</title>
+<path fill="none" stroke="#de958e" d="M473.2965,-740.3281C537.9153,-717.5964 696.6456,-658.7196 819,-588.3848 869.1238,-559.5714 922.0749,-518.2449 953.8239,-492.1174"/>
+<polygon fill="#de958e" stroke="#de958e" points="956.3452,-494.5735 961.8102,-485.4969 951.8778,-489.1844 956.3452,-494.5735"/>
+</g>
+<!-- numpy&#45;&gt;hidebound.database_tools -->
+<g id="edge50" class="edge">
+<title>numpy&#45;&gt;hidebound.database_tools</title>
+<path fill="none" stroke="#de958e" d="M473.2482,-757.3016C491.8045,-762.4833 515.8392,-770.7033 535,-782.3848 553.7911,-793.8409 553.287,-803.3236 571,-816.3848 595.3471,-834.338 624.7502,-851.1217 648.8129,-863.752"/>
+<polygon fill="#de958e" stroke="#de958e" points="647.2628,-866.8907 657.752,-868.3831 650.4829,-860.6753 647.2628,-866.8907"/>
 </g>
 <!-- pandas -->
 <g id="node25" class="node">

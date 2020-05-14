@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.4.3
+                0.4.6
               </div>
             
           
@@ -161,6 +161,23 @@
 <code class="sig-prename descclassname">cli.</code><code class="sig-name descname">REPO_PATH</code><em class="property"> = '/root/hidebound'</em><a class="headerlink" href="#cli.REPO_PATH" title="Permalink to this definition">¶</a></dt>
 <dd><p>A CLI for developing and deploying a service deeply integrated with this
 repository’s structure. Written to be python version agnostic.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cli.get_app_command">
+<code class="sig-prename descclassname">cli.</code><code class="sig-name descname">get_app_command</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">info</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#get_app_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cli.get_app_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts Flask app.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<em>dict</em>) – Info dictionary.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Command.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -265,13 +282,14 @@ repository’s structure. Written to be python version agnostic.</p>
 
 <dl class="py function">
 <dt id="cli.get_docker_exec_command">
-<code class="sig-prename descclassname">cli.</code><code class="sig-name descname">get_docker_exec_command</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">info</span></em>, <em class="sig-param"><span class="n">working_directory</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#get_docker_exec_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cli.get_docker_exec_command" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">cli.</code><code class="sig-name descname">get_docker_exec_command</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">info</span></em>, <em class="sig-param"><span class="n">working_directory</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">env_vars</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#get_docker_exec_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cli.get_docker_exec_command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets docker exec command.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>info</strong> (<em>dict</em>) – Info dictionary.</p></li>
 <li><p><strong>working_directory</strong> (<em>str</em><em>, </em><em>optional</em>) – Working directory.</p></li>
+<li><p><strong>env_vars</strong> (<em>list</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Optional environment variables.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -374,6 +392,42 @@ repository’s structure. Written to be python version agnostic.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cli.get_production_container_command">
+<code class="sig-prename descclassname">cli.</code><code class="sig-name descname">get_production_container_command</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">info</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#get_production_container_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cli.get_production_container_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run production docker container.</p>
+<dl class="simple">
+<dt>Args:age</dt><dd><p>info (dict): Info dictionary.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Command.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cli.get_production_image_command">
+<code class="sig-prename descclassname">cli.</code><code class="sig-name descname">get_production_image_command</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">info</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#get_production_image_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cli.get_production_image_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create production docker image.</p>
+<dl class="simple">
+<dt>Args:age</dt><dd><p>info (dict): Info dictionary.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Command.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
 </dd>
 </dl>
 </dd></dl>

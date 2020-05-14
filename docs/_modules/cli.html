@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.4.3
+                0.4.6
               </div>
             
           
@@ -186,6 +186,7 @@
                         <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">,</span>
                         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;&#39;&#39;Command to run in </span><span class="si">{repo}</span><span class="s1"> service.</span>
 
+<span class="s1">    app          - Run Flask app inside </span><span class="si">{repo}</span><span class="s1"> container</span>
 <span class="s1">    bash         - Run BASH session inside </span><span class="si">{repo}</span><span class="s1"> container</span>
 <span class="s1">    container    - Display the Docker container id for </span><span class="si">{repo}</span><span class="s1"> service</span>
 <span class="s1">    coverage     - Generate coverage report for </span><span class="si">{repo}</span><span class="s1"> service</span>
@@ -297,6 +298,23 @@
 
 
 <span class="c1"># COMMANDS----------------------------------------------------------------------</span>
+<div class="viewcode-block" id="get_app_command"><a class="viewcode-back" href="../cli.html#cli.get_app_command">[docs]</a><span class="k">def</span> <span class="nf">get_app_command</span><span class="p">(</span><span class="n">info</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Starts Flask app.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        info (dict): Info dictionary.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Command.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{exec}</span><span class="s2"> python3.7 /root/</span><span class="si">{repo}</span><span class="s2">/python/</span><span class="si">{repo}</span><span class="s2">/app.py&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">exec</span><span class="o">=</span><span class="n">get_docker_exec_command</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">env_vars</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;DEBUG_MODE=True&#39;</span><span class="p">]),</span>
+        <span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">cmd</span></div>
+
+
 <div class="viewcode-block" id="get_bash_command"><a class="viewcode-back" href="../cli.html#cli.get_bash_command">[docs]</a><span class="k">def</span> <span class="nf">get_bash_command</span><span class="p">(</span><span class="n">info</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Opens a bash session inside a running container.</span>
@@ -318,7 +336,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        str: Command.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;docker ps | grep </span><span class="si">{repo}</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">)</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;docker ps | grep &quot;</span><span class="si">{repo}</span><span class="s1"> &quot; &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">)</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot;| head -n 1 | awk &#39;{print $1}&#39;&quot;</span>
     <span class="k">return</span> <span class="n">cmd</span></div>
 
@@ -378,7 +396,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        str: Command.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;docker image ls | grep </span><span class="si">{repo}</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">)</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;docker image ls | grep &quot;</span><span class="si">{repo}</span><span class="s1"> &quot; &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">)</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot;| head -n 1 | awk &#39;{print $3}&#39;&quot;</span>
     <span class="k">return</span> <span class="n">cmd</span></div>
 
@@ -410,6 +428,63 @@
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{exec}</span><span class="s1"> flake8 /root/</span><span class="si">{repo}</span><span class="s1">/python --config /root/</span><span class="si">{repo}</span><span class="s1">/docker/flake8.ini&#39;</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">,</span> <span class="n">exec</span><span class="o">=</span><span class="n">get_docker_exec_command</span><span class="p">(</span><span class="n">info</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">cmd</span></div>
+
+
+<div class="viewcode-block" id="get_production_image_command"><a class="viewcode-back" href="../cli.html#cli.get_production_image_command">[docs]</a><span class="k">def</span> <span class="nf">get_production_image_command</span><span class="p">(</span><span class="n">info</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Create production docker image.</span>
+
+<span class="sd">    Args:age</span>
+<span class="sd">        info (dict): Info dictionary.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Command.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;CWD=$(pwd); &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cd </span><span class="si">{repo_path}</span><span class="s1">/docker; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;docker build --force-rm &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;--file </span><span class="si">{repo}</span><span class="s1">_prod.dockerfile &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;--tag </span><span class="si">{repo}</span><span class="s1">-prod:latest ./; cd $CWD&#39;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">,</span>
+        <span class="n">repo_path</span><span class="o">=</span><span class="n">REPO_PATH</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">cmd</span></div>
+
+
+<div class="viewcode-block" id="get_production_container_command"><a class="viewcode-back" href="../cli.html#cli.get_production_container_command">[docs]</a><span class="k">def</span> <span class="nf">get_production_container_command</span><span class="p">(</span><span class="n">info</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Run production docker container.</span>
+
+<span class="sd">    Args:age</span>
+<span class="sd">        info (dict): Info dictionary.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Command.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;CWD=$(pwd); &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cd </span><span class="si">{repo_path}</span><span class="s1">/docker; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;CURRENT_USER=&quot;</span><span class="si">{user}</span><span class="s1">&quot; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;docker run --volume </span><span class="si">{volume}</span><span class="s1">:</span><span class="si">{volume}</span><span class="s1"> --publish </span><span class="si">{port}</span><span class="s1">:5000 &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;--name </span><span class="si">{repo}</span><span class="s1">-prod </span><span class="si">{repo}</span><span class="s1">-prod; cd $CWD&#39;</span>
+
+    <span class="k">if</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;echo &quot;Please provide a volume to mount inside the container, as &#39;</span>
+        <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;the first argument to -a.&quot;&#39;</span>
+        <span class="k">return</span> <span class="n">cmd</span>
+
+    <span class="n">port</span> <span class="o">=</span> <span class="mi">5000</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">port</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">volume</span><span class="o">=</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+        <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span>
+        <span class="n">user</span><span class="o">=</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">],</span>
+        <span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">,</span>
+        <span class="n">repo_path</span><span class="o">=</span><span class="n">REPO_PATH</span>
+    <span class="p">)</span>
     <span class="k">return</span> <span class="n">cmd</span></div>
 
 
@@ -606,13 +681,14 @@
     <span class="k">return</span> <span class="n">cmd</span></div>
 
 
-<div class="viewcode-block" id="get_docker_exec_command"><a class="viewcode-back" href="../cli.html#cli.get_docker_exec_command">[docs]</a><span class="k">def</span> <span class="nf">get_docker_exec_command</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">working_directory</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="get_docker_exec_command"><a class="viewcode-back" href="../cli.html#cli.get_docker_exec_command">[docs]</a><span class="k">def</span> <span class="nf">get_docker_exec_command</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">working_directory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">env_vars</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Gets docker exec command.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        info (dict): Info dictionary.</span>
 <span class="sd">        working_directory (str, optional): Working directory.</span>
+<span class="sd">        env_vars (list[str], optional): Optional environment variables.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        str: Command.</span>
@@ -620,6 +696,8 @@
     <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{up_command}</span><span class="s1">; &#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;CONTAINER_ID=$(</span><span class="si">{container_command}</span><span class="s1">); &#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;docker exec --interactive --tty --user </span><span class="se">\&quot;</span><span class="s1">root:root</span><span class="se">\&quot;</span><span class="s1"> -e </span><span class="si">{env}</span><span class="s1"> &#39;</span>
+    <span class="k">if</span> <span class="n">env_vars</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">env_vars</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;-e &#39;</span> <span class="o">+</span> <span class="s1">&#39;-e &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">env_vars</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
     <span class="k">if</span> <span class="n">working_directory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;-w </span><span class="si">{}</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">working_directory</span><span class="p">)</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;$CONTAINER_ID &#39;</span>
@@ -663,7 +741,10 @@
     <span class="n">docs</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;/root&#39;</span><span class="p">,</span> <span class="n">REPO</span><span class="p">,</span> <span class="s1">&#39;docs&#39;</span><span class="p">)</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_docker_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;bash&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;app&#39;</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_app_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;bash&#39;</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_bash_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;container&#39;</span><span class="p">:</span>
@@ -696,6 +777,10 @@
 
     <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;lint&#39;</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_lint_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;prod&#39;</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_production_image_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+        <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39; &amp;&amp; &#39;</span> <span class="o">+</span> <span class="n">get_production_container_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;publish&#39;</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_tox_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
