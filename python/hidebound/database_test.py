@@ -40,13 +40,13 @@ class DatabaseTests(DatabaseTestBase):
     def test_from_config(self):
         with TemporaryDirectory() as root:
             # create hb root dir
-            hb_root = Path(root, 'hb_root').as_posix()
+            hb_root = Path(root, 'hidebound').as_posix()
             os.makedirs(hb_root)
             spec_file = self.write_spec_file(root)
 
             config = dict(
                 root_directory=root,
-                hidebound_parent_directory=hb_root,
+                hidebound_directory=hb_root,
                 specification_files=[spec_file],
                 include_regex='foo',
                 exclude_regex='bar',
@@ -61,13 +61,13 @@ class DatabaseTests(DatabaseTestBase):
     def test_from_json(self):
         with TemporaryDirectory() as root:
             # create hb root dir
-            hb_root = Path(root, 'hb_root').as_posix()
+            hb_root = Path(root, 'hidebound').as_posix()
             os.makedirs(hb_root)
             spec_file = self.write_spec_file(root)
 
             config = dict(
                 root_directory=root,
-                hidebound_parent_directory=hb_root,
+                hidebound_directory=hb_root,
                 specification_files=[spec_file],
                 include_regex='foo',
                 exclude_regex='bar',
@@ -82,16 +82,16 @@ class DatabaseTests(DatabaseTestBase):
     def test_init(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hb_root')
+            root = Path(root, 'projects')
+            os.makedirs(root)
+
+            hb_root = Path(root, 'hidebound')
             os.makedirs(hb_root)
 
             self.create_files(root)
             Database(root, hb_root)
             Database(root, hb_root, [Spec001])
             Database(root, hb_root, [Spec001, Spec002])
-
-            expected = Path(hb_root, 'hidebound')
-            self.assertTrue(os.path.exists(expected))
 
     def test_init_bad_root(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
@@ -102,15 +102,21 @@ class DatabaseTests(DatabaseTestBase):
     def test_init_bad_hb_root(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hb_root')
-            expected = '/hb_root is not a directory or does not exist'
+            hb_root = Path(root, 'hidebound')
+            expected = '/hidebound is not a directory or does not exist'
             with self.assertRaisesRegexp(FileNotFoundError, expected):
                 Database(root, hb_root)
+
+            temp = Path(root, 'Hidebound')
+            os.makedirs(temp)
+            expected = 'Hidebound directory is not named hidebound'
+            with self.assertRaisesRegexp(NameError, expected):
+                Database(root, temp)
 
     def test_init_bad_specifications(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hb_root')
+            hb_root = Path(root, 'hidebound')
             os.makedirs(hb_root)
 
             self.create_files(root)
@@ -126,7 +132,7 @@ class DatabaseTests(DatabaseTestBase):
     def test_init_bad_write_mode(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hb_root')
+            hb_root = Path(root, 'hidebound')
             os.makedirs(hb_root)
 
             expected = r"Invalid write mode: foo not in \['copy', 'move'\]\."
@@ -136,7 +142,7 @@ class DatabaseTests(DatabaseTestBase):
     # UPDATE--------------------------------------------------------------------
     def test_update(self):
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hb_root')
+            hb_root = Path(root, 'hidebound')
             os.makedirs(hb_root)
             Spec001, Spec002, BadSpec = self.get_specifications()
 
@@ -155,7 +161,7 @@ class DatabaseTests(DatabaseTestBase):
 
     def test_update_exclude(self):
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hb_root')
+            hb_root = Path(root, 'hidebound')
             os.makedirs(hb_root)
             Spec001, Spec002, BadSpec = self.get_specifications()
 
@@ -172,7 +178,7 @@ class DatabaseTests(DatabaseTestBase):
 
     def test_update_include(self):
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hb_root')
+            hb_root = Path(root, 'hidebound')
             os.makedirs(hb_root)
             Spec001, Spec002, BadSpec = self.get_specifications()
 
@@ -191,7 +197,7 @@ class DatabaseTests(DatabaseTestBase):
         Spec001, Spec002, BadSpec = self.get_specifications()
 
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hb_root')
+            hb_root = Path(root, 'hidebound')
             os.makedirs(hb_root)
 
             expected = self.create_files(root).filepath\
@@ -217,7 +223,7 @@ class DatabaseTests(DatabaseTestBase):
         Spec001, Spec002, BadSpec = self.get_specifications()
 
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hb_root')
+            hb_root = Path(root, 'hidebound')
             os.makedirs(hb_root)
             result = Database(root, hb_root, [Spec001]).update().data
             self.assertEqual(len(result), 0)
@@ -227,7 +233,7 @@ class DatabaseTests(DatabaseTestBase):
         Spec001, Spec002, BadSpec = self.get_specifications()
 
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hb_root')
+            hb_root = Path(root, 'hidebound')
             os.makedirs(hb_root)
             files = self.create_files(root)
             data = Database(root, hb_root, [Spec001, Spec002]).update().data
@@ -245,7 +251,7 @@ class DatabaseTests(DatabaseTestBase):
     # CREATE--------------------------------------------------------------------
     def test_create(self):
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hb_root')
+            hb_root = Path(root, 'hidebound')
             os.makedirs(hb_root)
             Spec001, Spec002, BadSpec = self.get_specifications()
             self.create_files(root)
@@ -264,7 +270,7 @@ class DatabaseTests(DatabaseTestBase):
             data = data[data.asset_valid]
 
             # ensure files are written
-            result = Path(hb_root, 'hidebound/data')
+            result = Path(hb_root, 'data')
             result = tools.directory_to_dataframe(result)
             result = sorted(result.filename.tolist())
             self.assertGreater(len(result), 0)
@@ -272,20 +278,20 @@ class DatabaseTests(DatabaseTestBase):
             self.assertEqual(result, expected)
 
             # ensure file metadata is written
-            result = len(os.listdir(Path(hb_root, 'hidebound/metadata/file')))
+            result = len(os.listdir(Path(hb_root, 'metadata', 'file')))
             self.assertGreater(result, 0)
             expected = data.filepath.nunique()
             self.assertEqual(result, expected)
 
             # ensure asset metadata is written
-            result = len(os.listdir(Path(hb_root, 'hidebound/metadata/asset')))
+            result = len(os.listdir(Path(hb_root, 'metadata', 'asset')))
             self.assertGreater(result, 0)
             expected = data.asset_path.nunique()
             self.assertEqual(result, expected)
 
     def test_create_all_invalid(self):
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hb_root')
+            hb_root = Path(root, 'hidebound')
             os.makedirs(hb_root)
             Spec001, Spec002, BadSpec = self.get_specifications()
             self.create_files(root)
@@ -296,18 +302,18 @@ class DatabaseTests(DatabaseTestBase):
             data['asset_valid'] = False
             db.create()
 
-            result = Path(hb_root, 'hidebound/data')
+            result = Path(hb_root, 'data')
             self.assertFalse(result.exists())
 
-            result = Path(hb_root, 'hidebound/metadata/file')
+            result = Path(hb_root, 'metadata', 'file')
             self.assertFalse(result.exists())
 
-            result = Path(hb_root, 'hidebound/metadata/asset')
+            result = Path(hb_root, 'metadata', 'asset')
             self.assertFalse(result.exists())
 
     def test_create_copy(self):
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hb_root')
+            hb_root = Path(root, 'hidebound')
             os.makedirs(hb_root)
 
             root = Path(root, 'projects').as_posix()
@@ -329,7 +335,7 @@ class DatabaseTests(DatabaseTestBase):
 
     def test_create_move(self):
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hb_root')
+            hb_root = Path(root, 'hidebound')
             os.makedirs(hb_root)
 
             root = Path(root, 'projects').as_posix()
@@ -348,7 +354,7 @@ class DatabaseTests(DatabaseTestBase):
             self.assertEqual(result, [False])
 
             # ensure files are written
-            result = Path(hb_root, 'hidebound/data')
+            result = Path(hb_root, 'data')
             result = tools.directory_to_dataframe(result)
             result = sorted(result.filename.tolist())
             self.assertGreater(len(result), 0)
@@ -356,13 +362,13 @@ class DatabaseTests(DatabaseTestBase):
             self.assertEqual(result, expected)
 
             # ensure file metadata is written
-            result = len(os.listdir(Path(hb_root, 'hidebound/metadata/file')))
+            result = len(os.listdir(Path(hb_root, 'metadata', 'file')))
             self.assertGreater(result, 0)
             expected = data.filepath.nunique()
             self.assertEqual(result, expected)
 
             # ensure asset metadata is written
-            result = len(os.listdir(Path(hb_root, 'hidebound/metadata/asset')))
+            result = len(os.listdir(Path(hb_root, 'metadata', 'asset')))
             self.assertGreater(result, 0)
             expected = data.asset_path.nunique()
             self.assertEqual(result, expected)
@@ -370,13 +376,13 @@ class DatabaseTests(DatabaseTestBase):
     # DELETE--------------------------------------------------------------------
     def test_delete(self):
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hb_root')
+            hb_root = Path(root, 'hidebound')
             os.makedirs(hb_root)
 
-            data_dir = Path(hb_root, 'hidebound', 'data')
+            data_dir = Path(hb_root, 'data')
             os.makedirs(data_dir)
 
-            meta_dir = Path(hb_root, 'hidebound', 'metadata')
+            meta_dir = Path(hb_root, 'metadata')
             os.makedirs(meta_dir)
 
             root = Path(root, 'projects')
@@ -400,7 +406,7 @@ class DatabaseTests(DatabaseTestBase):
     def test_search(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hb_root')
+            hb_root = Path(root, 'hidebound')
             os.makedirs(hb_root)
 
             root = Path(root, 'projects')
@@ -415,7 +421,7 @@ class DatabaseTests(DatabaseTestBase):
     def test_read_legal_types(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hb_root')
+            hb_root = Path(root, 'hidebound')
             os.makedirs(hb_root)
 
             root = Path(root, 'projects')
@@ -458,7 +464,7 @@ class DatabaseTests(DatabaseTestBase):
     def test_read_traits(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hb_root')
+            hb_root = Path(root, 'hidebound')
             os.makedirs(hb_root)
 
             root = Path(root, 'projects')
@@ -491,7 +497,7 @@ class DatabaseTests(DatabaseTestBase):
     def test_read_coordinates(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hb_root')
+            hb_root = Path(root, 'hidebound')
             os.makedirs(hb_root)
 
             root = Path(root, 'projects')
@@ -527,7 +533,7 @@ class DatabaseTests(DatabaseTestBase):
     def test_read_column_order(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hb_root')
+            hb_root = Path(root, 'hidebound')
             os.makedirs(hb_root)
 
             root = Path(root, 'projects')

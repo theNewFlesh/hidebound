@@ -17,7 +17,7 @@ class AppTests(DatabaseTestBase):
         # setup files and dirs
         self.tempdir = TemporaryDirectory()
         temp = self.tempdir.name
-        self.hb_root = Path(temp, 'hb_root').as_posix()
+        self.hb_root = Path(temp, 'hidebound').as_posix()
         os.makedirs(self.hb_root)
 
         self.root = Path(temp, 'projects').as_posix()
@@ -59,7 +59,7 @@ class AppTests(DatabaseTestBase):
     def test_initialize(self):
         config = dict(
             root_directory=self.root,
-            hidebound_parent_directory=self.hb_root,
+            hidebound_directory=self.hb_root,
             specification_files=[self.specs],
         )
         config = json.dumps(config)
@@ -83,7 +83,7 @@ class AppTests(DatabaseTestBase):
     def test_initialize_bad_config(self):
         config = dict(
             root_directory='/foo/bar',
-            hidebound_parent_directory=self.hb_root,
+            hidebound_directory=self.hb_root,
             specification_files=[self.specs],
         )
         config = json.dumps(config)
@@ -97,7 +97,7 @@ class AppTests(DatabaseTestBase):
         # init database
         config = dict(
             root_directory=self.root,
-            hidebound_parent_directory=self.hb_root,
+            hidebound_directory=self.hb_root,
             specification_files=[self.specs],
         )
         config = json.dumps(config)
@@ -118,7 +118,7 @@ class AppTests(DatabaseTestBase):
         # init database
         config = dict(
             root_directory=self.root,
-            hidebound_parent_directory=self.hb_root,
+            hidebound_directory=self.hb_root,
             specification_files=[self.specs],
         )
         config = json.dumps(config)
@@ -126,11 +126,10 @@ class AppTests(DatabaseTestBase):
         self.client.post('/api/update')
 
         # call read
-        result = self.client.post('/api/read').json
+        result = self.client.post('/api/read').json['response']
         expected = self.app._database.read()\
             .replace({np.nan: None})\
             .to_dict(orient='records')
-        expected = {'response': expected}
         self.assertEqual(result, expected)
 
     def test_read_no_init(self):
@@ -142,7 +141,7 @@ class AppTests(DatabaseTestBase):
         # init database
         config = dict(
             root_directory=self.root,
-            hidebound_parent_directory=self.hb_root,
+            hidebound_directory=self.hb_root,
             specification_files=[self.specs],
         )
         config = json.dumps(config)
@@ -158,7 +157,7 @@ class AppTests(DatabaseTestBase):
         # init database
         config = dict(
             root_directory=self.root,
-            hidebound_parent_directory=self.hb_root,
+            hidebound_directory=self.hb_root,
             specification_files=[self.specs],
         )
         config = json.dumps(config)
@@ -169,11 +168,10 @@ class AppTests(DatabaseTestBase):
         query = 'SELECT * FROM data WHERE specification == "spec001"'
         temp = {'query': query}
         temp = json.dumps(temp)
-        result = self.client.post('/api/search', json=temp).json
+        result = self.client.post('/api/search', json=temp).json['response']
         expected = self.app._database.search(query)\
             .replace({np.nan: None})\
             .to_dict(orient='records')
-        expected = {'response': expected}
         self.assertEqual(result, expected)
 
     def test_search_no_query(self):
@@ -192,7 +190,7 @@ class AppTests(DatabaseTestBase):
         # init database
         config = dict(
             root_directory=self.root,
-            hidebound_parent_directory=self.hb_root,
+            hidebound_directory=self.hb_root,
             specification_files=[self.specs],
         )
         config = json.dumps(config)
@@ -217,7 +215,7 @@ class AppTests(DatabaseTestBase):
         # init database
         config = dict(
             root_directory=self.root,
-            hidebound_parent_directory=self.hb_root,
+            hidebound_directory=self.hb_root,
             specification_files=[self.specs],
         )
         config = json.dumps(config)
@@ -234,15 +232,15 @@ class AppTests(DatabaseTestBase):
     def test_create(self):
         config = dict(
             root_directory=self.root,
-            hidebound_parent_directory=self.hb_root,
+            hidebound_directory=self.hb_root,
             specification_files=[self.specs],
         )
         config = json.dumps(config)
         self.client.post('/api/initialize', json=config)
         self.client.post('/api/update')
 
-        data = Path(self.hb_root, 'hidebound', 'data')
-        meta = Path(self.hb_root, 'hidebound', 'metadata')
+        data = Path(self.hb_root, 'data')
+        meta = Path(self.hb_root, 'metadata')
         self.assertFalse(os.path.exists(data))
         self.assertFalse(os.path.exists(meta))
 
@@ -255,7 +253,7 @@ class AppTests(DatabaseTestBase):
     def test_create_no_update(self):
         config = dict(
             root_directory=self.root,
-            hidebound_parent_directory=self.hb_root,
+            hidebound_directory=self.hb_root,
             specification_files=[self.specs],
         )
         config = json.dumps(config)
@@ -274,7 +272,7 @@ class AppTests(DatabaseTestBase):
     def test_delete(self):
         config = dict(
             root_directory=self.root,
-            hidebound_parent_directory=self.hb_root,
+            hidebound_directory=self.hb_root,
             specification_files=[self.specs],
         )
         config = json.dumps(config)
@@ -282,8 +280,8 @@ class AppTests(DatabaseTestBase):
         self.client.post('/api/update')
         self.client.post('/api/create')
 
-        data = Path(self.hb_root, 'hidebound', 'data')
-        meta = Path(self.hb_root, 'hidebound', 'metadata')
+        data = Path(self.hb_root, 'data')
+        meta = Path(self.hb_root, 'metadata')
         self.assertTrue(os.path.exists(data))
         self.assertTrue(os.path.exists(meta))
 
@@ -296,7 +294,7 @@ class AppTests(DatabaseTestBase):
     def test_delete_no_create(self):
         config = dict(
             root_directory=self.root,
-            hidebound_parent_directory=self.hb_root,
+            hidebound_directory=self.hb_root,
             specification_files=[self.specs],
         )
         config = json.dumps(config)
@@ -306,8 +304,8 @@ class AppTests(DatabaseTestBase):
         expected = 'Hidebound data deleted.'
         self.assertEqual(result, expected)
 
-        data = Path(self.hb_root, 'hidebound', 'data')
-        meta = Path(self.hb_root, 'hidebound', 'metadata')
+        data = Path(self.hb_root, 'data')
+        meta = Path(self.hb_root, 'metadata')
         self.assertFalse(os.path.exists(data))
         self.assertFalse(os.path.exists(meta))
 

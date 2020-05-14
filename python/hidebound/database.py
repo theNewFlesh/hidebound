@@ -52,7 +52,7 @@ class Database:
 
         return Database(
             config['root_directory'],
-            config['hidebound_parent_directory'],
+            config['hidebound_directory'],
             specifications=specs,
             include_regex=config['include_regex'],
             exclude_regex=config['exclude_regex'],
@@ -77,7 +77,7 @@ class Database:
     def __init__(
         self,
         root_dir,
-        hidebound_parent_dir,
+        hidebound_dir,
         specifications=[],
         include_regex='',
         exclude_regex=r'\.DS_Store',
@@ -88,8 +88,8 @@ class Database:
 
         Args:
             root_dir (str or Path): Root directory to recurse.
-            hidebound_parent_dir (str or Path): Directory where hidebound
-                directory will be created and hidebound data saved.
+            hidebound_dir (str or Path): Directory where hidebound data will be
+                saved.
             specifications (list[SpecificationBase], optional): List of asset
                 specifications. Default: [].
             include_regex (str, optional): Include filenames that match this
@@ -104,9 +104,9 @@ class Database:
                 object.
             ValueError: If write_mode not is not "copy" or "move".
             FileNotFoundError: If root is not a directory or does not exist.
-            FileNotFoundError: If hidebound_parent_dir is not directory or
-                does not exist.
-
+            FileNotFoundError: If hidebound_dir is not directory or does not
+                exist.
+            NameError: If hidebound_dir is not named "hidebound".
 
         Returns:
             Database: Database instance.
@@ -134,17 +134,16 @@ class Database:
             msg = f'Invalid write mode: {write_mode} not in {modes}.'
             raise ValueError(msg)
 
-        # validate hidebound root dir
-        hb_root = hidebound_parent_dir
+        # validate hidebound dir
+        hb_root = hidebound_dir
         if not isinstance(hb_root, Path):
             hb_root = Path(hb_root)
         if not hb_root.is_dir():
             msg = f'{hb_root} is not a directory or does not exist.'
             raise FileNotFoundError(msg)
-
-        # create hidebound root dir
-        hb_root = Path(hb_root, 'hidebound')
-        os.makedirs(hb_root, exist_ok=True)
+        if Path(hb_root).name != 'hidebound':
+            msg = f'{hb_root} directory is not named hidebound.'
+            raise NameError(msg)
 
         self._root = root
         self._hb_root = hb_root

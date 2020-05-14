@@ -72,6 +72,21 @@ def is_specification_file(filepath):
         raise ValidationError(msg)
 
     sys.path = temp
+
+
+def is_hidebound_directory(directory):
+    '''
+    Ensures directory name is "hidebound".
+
+    Args:
+        directory (str or Path): Hidebound directory.
+
+    Raises:
+        ValidationError: If directory is not named "hidebound".
+    '''
+    if Path(directory).name != 'hidebound':
+        msg = f'{directory} directory is not named hidebound.'
+        raise ValidationError(msg)
 # ------------------------------------------------------------------------------
 
 
@@ -81,8 +96,8 @@ class Config(Model):
 
     Attributes:
         root_directory (str or Path): Root directory to recurse.
-        hidebound_parent_directory (str or Path): Directory where hidebound
-            directory will be created and hidebound data saved.
+        hidebound_directory (str or Path): Directory where hidebound data will
+            be saved.
         specification_files (list[str], optional): List of asset specification
             files. Default: [].
         include_regex (str, optional): Include filenames that match this regex.
@@ -93,7 +108,9 @@ class Config(Model):
             hidebound/data directory. Default: copy.
     '''
     root_directory = StringType(required=True, validators=[vd.is_directory])
-    hidebound_parent_directory = StringType(required=True, validators=[vd.is_directory])
+    hidebound_directory = StringType(
+        required=True, validators=[vd.is_directory, is_hidebound_directory]
+    )
     specification_files = ListType(
         StringType(validators=[is_specification_file, vd.is_file]),
         default=[],

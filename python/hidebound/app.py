@@ -79,7 +79,7 @@ def api():
             default='',
         ),
         dict(
-            name='hidebound_parent_directory',
+            name='hidebound_directory',
             type='string',
             description='Directory where hidebound directory will be created and hidebound data saved.',  # noqa E501
             required=True,

@@ -115,6 +115,19 @@ class IsSpecificationFileTests(unittest.TestCase):
                 cfg.is_specification_file(filepath)
 
 
+class IsHideboundDirectory(unittest.TestCase):
+    def test_is_hidebound_directory(self):
+        cfg.is_hidebound_directory('/foo/bar/hidebound')
+
+        expected = '/foo/bar directory is not named hidebound.'
+        with self.assertRaisesRegexp(ValidationError, expected):
+            cfg.is_hidebound_directory('/foo/bar')
+
+        expected = '/foo/bar/Hidebound directory is not named hidebound.'
+        with self.assertRaisesRegexp(ValidationError, expected):
+            cfg.is_hidebound_directory('/foo/bar/Hidebound')
+
+
 # CONFIG------------------------------------------------------------------------
 class ConfigTests(unittest.TestCase):
     def write_good_spec(self, temp):
@@ -153,10 +166,10 @@ class ConfigTests(unittest.TestCase):
 
     def set_data(self, temp):
         self.root = Path(temp, 'root').as_posix()
-        self.asset_dir = Path(temp, 'assets').as_posix()
+        self.hb_root = Path(temp, 'hidebound').as_posix()
         self.config = dict(
             root_directory=self.root,
-            hidebound_parent_directory=self.asset_dir,
+            hidebound_directory=self.hb_root,
             specification_files=[],
             include_regex='foo',
             exclude_regex='bar',
@@ -167,24 +180,24 @@ class ConfigTests(unittest.TestCase):
         with TemporaryDirectory() as temp:
             self.set_data(temp)
             os.makedirs(self.root)
-            os.makedirs(self.asset_dir)
+            os.makedirs(self.hb_root)
             cfg.Config(self.config).validate()
 
     def test_config_root(self):
         with TemporaryDirectory() as temp:
             self.set_data(temp)
-            os.makedirs(self.asset_dir)
+            os.makedirs(self.hb_root)
 
             expected = 'root_directory.*is not a directory or does not exist'
             with self.assertRaisesRegex(DataError, expected):
                 cfg.Config(self.config).validate()
 
-    def test_config_asset_dir(self):
+    def test_config_hb_root(self):
         with TemporaryDirectory() as temp:
             self.set_data(temp)
             os.makedirs(self.root)
 
-            expected = 'hidebound_parent_directory.*is not a directory or does '
+            expected = 'hidebound_directory.*is not a directory or does '
             expected += 'not exist'
             with self.assertRaisesRegex(DataError, expected):
                 cfg.Config(self.config).validate()
@@ -193,7 +206,7 @@ class ConfigTests(unittest.TestCase):
         with TemporaryDirectory() as temp:
             self.set_data(temp)
             os.makedirs(self.root)
-            os.makedirs(self.asset_dir)
+            os.makedirs(self.hb_root)
 
             self.config['write_mode'] = 'copy'
             cfg.Config(self.config).validate()
@@ -210,7 +223,7 @@ class ConfigTests(unittest.TestCase):
         with TemporaryDirectory() as temp:
             self.set_data(temp)
             os.makedirs(self.root)
-            os.makedirs(self.asset_dir)
+            os.makedirs(self.hb_root)
 
             spec = self.write_good_spec(temp)
             self.config['specification_files'] = [spec]
@@ -221,7 +234,7 @@ class ConfigTests(unittest.TestCase):
         with TemporaryDirectory() as temp:
             self.set_data(temp)
             os.makedirs(self.root)
-            os.makedirs(self.asset_dir)
+            os.makedirs(self.hb_root)
 
             good = self.write_good_spec(temp)
             bad = self.write_bad_spec(temp)
