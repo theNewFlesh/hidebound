@@ -1,3 +1,4 @@
+import json
 import unittest
 
 import jinja2
@@ -58,6 +59,14 @@ class ClientTests(unittest.TestCase):
         self.assertEqual(result.id, 'foo-button')
         self.assertEqual(result.children[0], 'foo')
 
+    def test_get_json_editor(self):
+        value = {'foo': 'bar'}
+        result = client.get_json_editor(value)
+        self.assertEqual(result.id, 'json-editor')
+
+        expected = json.dumps(value, indent=4, sort_keys=True)
+        self.assertEqual(result.value, expected)
+
     def test_get_searchbar(self):
         searchbar = client.get_searchbar()
         self.assertEqual(searchbar.id, 'searchbar')
@@ -92,6 +101,37 @@ class ClientTests(unittest.TestCase):
         self.assertEqual(dropdown.options[0]['label'], 'file')
         self.assertEqual(dropdown.options[1]['label'], 'asset')
 
+    def test_get_configbar(self):
+        configbar = client.get_configbar({'foo': 'bar'})
+        self.assertEqual(configbar.id, 'configbar')
+
+        row_spacer = configbar.children[1]
+        self.assertEqual(row_spacer.className, 'row-spacer')
+
+        editor_row = configbar.children[2]
+        self.assertEqual(editor_row.id, 'json-editor-row')
+
+        buttons = configbar.children[0].children
+
+        button = buttons[0]
+        self.assertEqual(button.className, 'col expander')
+
+        button = buttons[2]
+        self.assertEqual(button.id, 'upload-button')
+        self.assertEqual(button.children[0], 'upload')
+
+        button = buttons[4]
+        self.assertEqual(button.id, 'validate-button')
+        self.assertEqual(button.children[0], 'validate')
+
+        button = buttons[6]
+        self.assertEqual(button.id, 'write-button')
+        self.assertEqual(button.children[0], 'write')
+
     def test_get_data_tab(self):
         tab = client.get_data_tab()
         self.assertEqual(tab[0].id, 'searchbar')
+
+    def test_get_config_tab(self):
+        tab = client.get_config_tab({'foo': 'bar'})
+        self.assertEqual(tab[0].id, 'configbar')

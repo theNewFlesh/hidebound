@@ -88,6 +88,14 @@ button:active {
     color: {{ COLOR_SCHEME['red2'] }};
 }
 
+#validate-button {
+    color: {{ COLOR_SCHEME['green2'] }};
+}
+
+#write-button {
+    color: {{ COLOR_SCHEME['red2'] }};
+}
+
 /* Tabs */
 .tabs {
     z-index: 1;
@@ -97,13 +105,19 @@ button:active {
     position: fixed;
 }
 
-/* Searchbar */
-#searchbar {
+/* Menubar */
+#searchbar,
+#configbar {
     font-size: 13px;
 }
 
 .spacer {
     width: 4px;
+}
+
+.expander {
+    background: {{ COLOR_SCHEME['grey1'] }};
+    flex-grow: 1;
 }
 
 .query {
@@ -114,12 +128,22 @@ button:active {
     padding-left: 10px;
 }
 
-.searchbar .row {
+.menubar .row {
     display: flex;
     height: 27px;
 }
 
-.searchbar {
+.menubar .row-spacer {
+    background: {{ COLOR_SCHEME['bg'] }};
+    height: 4px;
+}
+
+.menubar .json-editor-row {
+    min-height: 400px;
+    /* height: 100%; */
+}
+
+.menubar {
     z-index: 1;
     top: 27px;
     position: fixed;
@@ -534,4 +558,81 @@ button:active {
     flex-grow: 10;
     font-size: 15px;
     padding-left: 10px;
+}
+
+/* JSON Editor */
+#json-editor {
+    font-size: x-large !important;
+    background: {{ COLOR_SCHEME['bg'] }} !important;
+}
+
+/*    gutter */
+.ace_gutter {
+    background: {{ COLOR_SCHEME['bg'] }} !important;
+}
+
+/*    white line on right*/
+.ace_layer.ace_print-margin-layer {
+    display: none !important;
+}
+
+.ace_gutter-cell {
+    color: {{ COLOR_SCHEME['cyan2'] }} !important;
+}
+
+/*    text */
+.ace_line,
+.ace_escape,
+.ace_string {
+    color: {{ COLOR_SCHEME['light1'] }} !important;
+}
+
+/*    quotes */
+.ace_string.ace_start,
+.ace_string.ace_end {
+    color: {{ COLOR_SCHEME['cyan2'] }} !important;
+}
+
+/*    numbers */
+.ace_constant.ace_numeric {
+    color: {{ COLOR_SCHEME['green2'] }} !important;
+}
+
+/*    highlight line */
+.ace_active-line {
+    background: {{ COLOR_SCHEME['grey1'] }} !important;
+}
+
+/*    cursor */
+.ace_cursor {
+    color: {{ COLOR_SCHEME['red2'] }} !important;
+}
+
+/*    highlighted word */
+.ace_selection {
+    background: {{ COLOR_SCHEME['dialog1'] }} !important;
+}
+
+/*    highlighted word clones */
+.ace_selected-word {
+    background: {{ COLOR_SCHEME['dialog1'] }} !important;
+    border: 0px !important;
+}
+
+/*    highlight gutter */
+.ace_gutter-active-line {
+    background: {{ COLOR_SCHEME['grey1'] }} !important;
+}
+
+/*    errors */
+.ace_error,
+.ace_invalid,
+.ace_illegal {
+    background: {{ COLOR_SCHEME['orange2'] }} !important;
+    color: {{ COLOR_SCHEME['bg'] }} !important;
+}
+
+/*    invisibles */
+.ace_indent-guide {
+    background: transparent !important;
 }

@@ -1,3 +1,6 @@
+import json
+
+from dash_ace_editor import DashAceEditor
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -70,7 +73,7 @@ def render_template(filename, parameters):
     return output
 
 
-# ELEMENTS----------------------------------------------------------------------
+# APP---------------------------------------------------------------------------
 def get_app():
     '''
     Generate Dash Flask app instance.
@@ -139,11 +142,117 @@ def get_app():
     app.layout = html.Div(id='layout', children=[store, tabs, content])
     app.config['suppress_callback_exceptions'] = True
     app.server._database = None
-    app.server._config = None
+    app.server._config = {}
 
     return app
 
 
+# TABS--------------------------------------------------------------------------
+def get_data_tab():
+    '''
+    Get tab element for Hidebound data.
+
+    Return:
+        list: List of elements for data tab.
+    '''
+    return [get_searchbar()]
+
+
+def get_config_tab(config):
+    '''
+    Get tab element for Hidebound config.
+
+    Args:
+        config (dict): Configuration to be displayed.
+
+    Return:
+        list: List of elements for config tab.
+    '''
+    return [get_configbar(config)]
+
+
+# MENUBARS----------------------------------------------------------------------
+def get_searchbar():
+    '''
+    Get a row of elements used for querying Hidebound data.
+
+    Returns:
+        Div: Div with query field, buttons and dropdown.
+    '''
+    spacer = html.Div(className='col spacer')
+    query = dcc.Input(
+        id='query',
+        className='col query',
+        value='SELECT * FROM data WHERE ',
+        placeholder='SQL query that uses "FROM data"',
+        type='text'
+    )
+    dropdown = get_dropdown(['file', 'asset'])
+
+    search = get_button('search')
+    init = get_button('init')
+    update = get_button('update')
+    create = get_button('create')
+    delete = get_button('delete')
+
+    row = html.Div(
+        className='row',
+        children=[
+            query,
+            spacer,
+            search,
+            spacer,
+            init,
+            spacer,
+            update,
+            spacer,
+            create,
+            spacer,
+            delete,
+            spacer,
+            dropdown
+        ],
+    )
+    searchbar = html.Div(id='searchbar', className='menubar', children=[row])
+    return searchbar
+
+
+def get_configbar(config):
+    '''
+    Get a row of elements used for configuring Hidebound.
+
+    Args:
+        config (dict): Configuration to be displayed.
+
+    Returns:
+        Div: Div with buttons and JSON editor.
+    '''
+    expander = html.Div(className='col expander')
+    spacer = html.Div(className='col spacer')
+
+    upload = get_button('upload')
+    validate = get_button('validate')
+    write = get_button('write')
+
+    row0 = html.Div(
+        className='row',
+        children=[expander, spacer, upload, spacer, validate, spacer, write],
+    )
+    row1 = html.Div(
+        className='row-spacer'
+    )
+    row2 = html.Div(
+        id='json-editor-row',
+        className='row json-editor-row',
+        children=[get_json_editor(config)]
+    )
+    configbar = html.Div(
+        id='configbar', className='menubar', children=[row0, row1, row2]
+    )
+    return configbar
+
+
+# ELEMENTS----------------------------------------------------------------------
 def get_dropdown(options):
     '''
     Gets html dropdown element with given options.
@@ -203,56 +312,23 @@ def get_button(title):
     return html.Button(id=f'{title}-button', children=[title])
 
 
-def get_searchbar():
+def get_json_editor(value={}):
     '''
-    Get a row of elements used for querying Hidebound data.
+    Gets a JSON editor element.
+
+    Args:
+        value (dict, optional): Dictionary to be edited. Default: {}.
 
     Returns:
-        Div: Div with query field, buttons and dropdown.
+        DashAceEditor: JSON editor.
     '''
-    spacer = html.Div(className='col spacer')
-    query = dcc.Input(
-        id='query',
-        className='col query',
-        value='SELECT * FROM data WHERE ',
-        placeholder='SQL query that uses "FROM data"',
-        type='text'
+    return DashAceEditor(
+        id='json-editor',
+        value=json.dumps(value, indent=4, sort_keys=True),
+        height='100%',
+        width='100%',
+        showLineNumbers=True,
+        tabSize=4,
+        enableLiveAutocompletion=False,
+        enableBasicAutocompletion=False
     )
-    dropdown = get_dropdown(['file', 'asset'])
-
-    search = get_button('search')
-    init = get_button('init')
-    update = get_button('update')
-    create = get_button('create')
-    delete = get_button('delete')
-
-    row = html.Div(
-        className='row',
-        children=[
-            query,
-            spacer,
-            search,
-            spacer,
-            init,
-            spacer,
-            update,
-            spacer,
-            create,
-            spacer,
-            delete,
-            spacer,
-            dropdown
-        ],
-    )
-    searchbar = html.Div(id='searchbar', className='searchbar', children=[row])
-    return searchbar
-
-
-def get_data_tab():
-    '''
-    Get tab element for Hidebound data.
-
-    Return:
-        list: List of elements for data tab.
-    '''
-    return [get_searchbar()]

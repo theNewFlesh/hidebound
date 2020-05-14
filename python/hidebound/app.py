@@ -55,6 +55,8 @@ def render_content(tab):
     '''
     if tab == 'data':  # pragma: no cover
         return client.get_data_tab()  # pragma: no cover
+    elif tab == 'config':  # pragma: no cover
+        return client.get_config_tab(APP.server._config)  # pragma: no cover
 
 
 # API---------------------------------------------------------------------------
