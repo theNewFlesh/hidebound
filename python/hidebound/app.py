@@ -233,6 +233,7 @@ def read():
         return get_update_error()
 
     response = response.replace({np.nan: None}).to_dict(orient='records')
+    response = {'response': response}
     return Response(
         response=json.dumps(response),
         mimetype='application/json'
@@ -286,6 +287,7 @@ def search():
         return error_to_response(e)
 
     response = response.replace({np.nan: None}).to_dict(orient='records')
+    response = {'response': response}
     return Response(
         response=json.dumps(response),
         mimetype='application/json'

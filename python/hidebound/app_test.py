@@ -130,6 +130,7 @@ class AppTests(DatabaseTestBase):
         expected = self.app._database.read()\
             .replace({np.nan: None})\
             .to_dict(orient='records')
+        expected = {'response': expected}
         self.assertEqual(result, expected)
 
     def test_read_no_init(self):
@@ -172,6 +173,7 @@ class AppTests(DatabaseTestBase):
         expected = self.app._database.search(query)\
             .replace({np.nan: None})\
             .to_dict(orient='records')
+        expected = {'response': expected}
         self.assertEqual(result, expected)
 
     def test_search_no_query(self):
