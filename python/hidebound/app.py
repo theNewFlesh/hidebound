@@ -2,6 +2,7 @@ from copy import copy
 from json import JSONDecodeError
 import json
 import os
+from pathlib import Path
 
 from dash.dependencies import Input, Output
 from flasgger import swag_from
@@ -17,6 +18,36 @@ import hidebound.client as client
 '''
 Hidebound service used for displaying and interacting with Hidebound database.
 '''
+
+
+def setup_hidebound_directory(target='/mnt/storage'):
+    '''
+    Creates /mnt/storage/hidebound and /mnt/storage/hidebound/specifications
+    directories. Writes a default hidebound config to
+    /mnt/storage/hidebound/hidebound_config.json if one does not exist.
+
+    Args:
+        target (str, optional): For testing only. Do not call with argument.
+            Default: "/mnt/storage".
+    '''
+    target = Path(target, 'hidebound')
+    os.makedirs(target, exist_ok=True)
+    os.makedirs(Path(target, 'specifications'), exist_ok=True)
+
+    config = {
+        'root_directory': '/mnt/storage/projects',
+        'hidebound_directory': '/mnt/storage/hidebound',
+        'specification_files': [],
+        'include_regex': '',
+        'exclude_regex': r'\.DS_Store',
+        'write_mode': 'copy'
+    }
+    config = json.dumps(config, indent=4, sort_keys=True)
+
+    target = Path(target, 'hidebound_config.json')
+    if not target.is_file():
+        with open(target, 'w') as f:
+            f.write(config)
 
 
 APP = client.get_app()
@@ -463,4 +494,6 @@ APP.server.register_error_handler(500, handle_data_error)
 
 if __name__ == '__main__':
     debug = 'DEBUG_MODE' in os.environ.keys()  # pragma: no cover
+    if not debug:  # pragma: no cover
+        setup_hidebound_directory()  # pragma: no cover
     APP.run_server(debug=debug, host='0.0.0.0', port=5000)  # pragma: no cover

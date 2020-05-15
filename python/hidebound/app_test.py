@@ -45,6 +45,32 @@ class AppTests(DatabaseTestBase):
         self.context.pop()
         self.tempdir.cleanup()
 
+    # SETUP---------------------------------------------------------------------
+    def test_setup_hidebound_directory(self):
+        with TemporaryDirectory() as root:
+            application.setup_hidebound_directory(root)
+
+            hb_dir = Path(root, 'hidebound')
+            self.assertTrue(hb_dir.is_dir())
+
+            specs = Path(hb_dir, 'specifications')
+            self.assertTrue(specs.is_dir())
+
+            config = Path(hb_dir, 'hidebound_config.json')
+            self.assertTrue(config.is_file())
+
+            with open(config) as f:
+                result = json.load(f)
+            expected = {
+                'root_directory': '/mnt/storage/projects',
+                'hidebound_directory': '/mnt/storage/hidebound',
+                'specification_files': [],
+                'include_regex': '',
+                'exclude_regex': r'\.DS_Store',
+                'write_mode': 'copy'
+            }
+            self.assertEqual(result, expected)
+
     # CLIENT--------------------------------------------------------------------
     def test_serve_stylesheet(self):
         params = dict(
