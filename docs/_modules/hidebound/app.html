@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.4.8
+                0.4.9
               </div>
             
           
@@ -163,7 +163,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">hidebound.database</span> <span class="kn">import</span> <span class="n">Database</span>
-<span class="kn">import</span> <span class="nn">hidebound.client</span> <span class="k">as</span> <span class="nn">client</span>
+<span class="kn">import</span> <span class="nn">hidebound.components</span> <span class="k">as</span> <span class="nn">components</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
@@ -172,7 +172,7 @@
 <span class="sd">&#39;&#39;&#39;</span>
 
 
-<span class="n">APP</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_app</span><span class="p">()</span>
+<span class="n">APP</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">get_app</span><span class="p">()</span>
 
 
 <span class="c1"># SETUP-------------------------------------------------------------------------</span>
@@ -240,10 +240,10 @@
 <span class="sd">        flask.Response: Response.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-        <span class="n">COLOR_SCHEME</span><span class="o">=</span><span class="n">client</span><span class="o">.</span><span class="n">COLOR_SCHEME</span><span class="p">,</span>
-        <span class="n">FONT_FAMILY</span><span class="o">=</span><span class="n">client</span><span class="o">.</span><span class="n">FONT_FAMILY</span><span class="p">,</span>
+        <span class="n">COLOR_SCHEME</span><span class="o">=</span><span class="n">components</span><span class="o">.</span><span class="n">COLOR_SCHEME</span><span class="p">,</span>
+        <span class="n">FONT_FAMILY</span><span class="o">=</span><span class="n">components</span><span class="o">.</span><span class="n">FONT_FAMILY</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">content</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">render_template</span><span class="p">(</span><span class="n">stylesheet</span> <span class="o">+</span> <span class="s1">&#39;.j2&#39;</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">render_template</span><span class="p">(</span><span class="n">stylesheet</span> <span class="o">+</span> <span class="s1">&#39;.j2&#39;</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;text/css&#39;</span><span class="p">)</span></div>
 
 
@@ -259,9 +259,9 @@
 <span class="sd">        flask.Response: Response.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">if</span> <span class="n">tab</span> <span class="o">==</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">get_data_tab</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">components</span><span class="o">.</span><span class="n">get_data_tab</span><span class="p">()</span>
     <span class="k">elif</span> <span class="n">tab</span> <span class="o">==</span> <span class="s1">&#39;config&#39;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">get_config_tab</span><span class="p">(</span><span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_config</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">components</span><span class="o">.</span><span class="n">get_config_tab</span><span class="p">(</span><span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_config</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="init_button"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.init_button">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span>
@@ -297,7 +297,7 @@
     <span class="k">if</span> <span class="n">n_clicks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">test_client</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/api/read&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
-        <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">get_datatable</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;response&#39;</span><span class="p">])</span></div>
+        <span class="k">return</span> <span class="n">components</span><span class="o">.</span><span class="n">get_datatable</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;response&#39;</span><span class="p">])</span></div>
 
 
 <div class="viewcode-block" id="create_button"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.create_button">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span>
