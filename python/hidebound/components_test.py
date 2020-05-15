@@ -80,26 +80,27 @@ class ComponentsTests(unittest.TestCase):
         self.assertEqual(button.id, 'search-button')
         self.assertEqual(button.children[0], 'search')
 
-        button = searchbar.children[0].children[4]
-        self.assertEqual(button.id, 'init-button')
-        self.assertEqual(button.children[0], 'init')
-
-        button = searchbar.children[0].children[6]
-        self.assertEqual(button.id, 'update-button')
-        self.assertEqual(button.children[0], 'update')
-
-        button = searchbar.children[0].children[8]
-        self.assertEqual(button.id, 'create-button')
-        self.assertEqual(button.children[0], 'create')
-
-        button = searchbar.children[0].children[10]
-        self.assertEqual(button.id, 'delete-button')
-        self.assertEqual(button.children[0], 'delete')
-
-        dropdown = searchbar.children[0].children[12]
+        dropdown = searchbar.children[0].children[4]
         self.assertEqual(dropdown.id, 'dropdown')
         self.assertEqual(dropdown.options[0]['label'], 'file')
         self.assertEqual(dropdown.options[1]['label'], 'asset')
+
+        button = searchbar.children[0].children[6]
+        self.assertEqual(button.id, 'init-button')
+        self.assertEqual(button.children[0], 'init')
+
+        button = searchbar.children[0].children[8]
+        self.assertEqual(button.id, 'update-button')
+        self.assertEqual(button.children[0], 'update')
+
+        button = searchbar.children[0].children[10]
+        self.assertEqual(button.id, 'create-button')
+        self.assertEqual(button.children[0], 'create')
+
+        button = searchbar.children[0].children[12]
+        self.assertEqual(button.id, 'delete-button')
+        self.assertEqual(button.children[0], 'delete')
+
 
     def test_get_configbar(self):
         configbar = components.get_configbar({'foo': 'bar'})

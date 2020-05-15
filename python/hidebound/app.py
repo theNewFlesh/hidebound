@@ -4,7 +4,8 @@ import json
 import os
 from pathlib import Path
 
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
+from dash.exceptions import PreventUpdate
 from flasgger import swag_from
 from flask import Response, request, redirect, url_for
 from schematics.exceptions import DataError
@@ -75,7 +76,6 @@ def get_startup_parameters():
     return debug, config, config_path
 
 
-# CLIENT------------------------------------------------------------------------
 @APP.server.route('/static/<stylesheet>')
 def serve_stylesheet(stylesheet):
     '''
@@ -95,8 +95,9 @@ def serve_stylesheet(stylesheet):
     return Response(content, mimetype='text/css')
 
 
+# EVENTS------------------------------------------------------------------------
 @APP.callback(Output('content', 'children'), [Input('tabs', 'value')])
-def render_content(tab):
+def on_get_tab(tab):
     '''
     Serve content for app tabs.
 
@@ -115,7 +116,7 @@ def render_content(tab):
 @APP.callback(
     Output('content', 'data-init-button'), [Input('init-button', 'n_clicks')]
 )
-def init_button(n_clicks):
+def on_init_button_click(n_clicks):
     '''
     Updates the Database with the current config.
 
@@ -130,9 +131,11 @@ def init_button(n_clicks):
 
 
 @APP.callback(
-    Output('table-content', 'children'), [Input('update-button', 'n_clicks')]
+    Output('session-store', 'data'),
+    [Input('update-button', 'n_clicks')],
+    [State('session-store', 'data')]
 )
-def update_button(n_clicks):
+def on_update_button_click(n_clicks, data):
     '''
     Updates the Database with the current config.
 
@@ -142,16 +145,43 @@ def update_button(n_clicks):
     Returns:
         flask.Response: Response.
     '''
-    if n_clicks is not None:
-        APP.server._database.update()
-        data = APP.server.test_client().get('/api/read').json
-        return components.get_datatable(data['response'])
+    if n_clicks is None:
+        raise PreventUpdate
+
+    if APP.server._database is None:
+        APP.server._database = Database.from_json(APP.server._config_path)
+    APP.server._database.update()
+    data = APP.server.test_client().get('/api/read').json
+    return {'read': data}
+
+
+@APP.callback(
+    Output('table-content', 'children'),
+    [Input('session-store', 'modified_timestamp')],
+    [State('session-store', 'data')]
+)
+def on_session_data_update(timestamp, data):
+    '''
+    Updates the datatable with session data.
+
+    Args:
+        timestamp (int): Session timestamp.
+        data (dict): Session data.
+
+    Returns:
+        flask.Response: Response.
+    '''
+    if timestamp is None:
+        raise PreventUpdate
+    data = data or {'read': {'response': []}}
+    data = data['read']['response']
+    return components.get_datatable(data)
 
 
 @APP.callback(
     Output('content', 'data-create-button'), [Input('create-button', 'n_clicks')]
 )
-def create_button(n_clicks):
+def on_create_button_click(n_clicks):
     '''
     Writes data to hidebound/data and hidebound/metadata.
 
@@ -168,7 +198,7 @@ def create_button(n_clicks):
 @APP.callback(
     Output('content', 'data-delete-button'), [Input('delete-button', 'n_clicks')]
 )
-def delete_button(n_clicks):
+def on_delete_button_click(n_clicks):
     '''
     Deletes all data in hidebound/data and hidebound/metadata.
 

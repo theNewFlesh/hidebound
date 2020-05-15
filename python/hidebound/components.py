@@ -76,14 +76,17 @@ def render_template(filename, parameters):
 
 
 # APP---------------------------------------------------------------------------
-def get_app():
+def get_app(storage_type='session'):
     '''
     Generate Dash Flask app instance.
+
+    Args:
+        storage_type (str): Storage type (used for testing). Default: session.
 
     Returns:
         Dash: Dash app instance.
     '''
-    store = dcc.Store(id='session-store', storage_type='session')
+    store = dcc.Store(id='session-store', storage_type=storage_type)
 
     tab_style = {
         'padding': '4px',
@@ -143,7 +146,7 @@ def get_app():
     Swagger(app.server)
     app.layout = html.Div(id='layout', children=[store, tabs, content])
     app.config['suppress_callback_exceptions'] = True
-    app.server._database = Database
+    app.server._database = None
     app.server._config = {}
     app.server._config_path = ''
 
@@ -205,6 +208,8 @@ def get_searchbar():
             spacer,
             search,
             spacer,
+            dropdown,
+            spacer,
             init,
             spacer,
             update,
@@ -212,8 +217,6 @@ def get_searchbar():
             create,
             spacer,
             delete,
-            spacer,
-            dropdown
         ],
     )
     row1 = html.Div(className='row-spacer')
