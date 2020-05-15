@@ -8,7 +8,6 @@ import dash_html_components as html
 import dash_table
 import jinja2
 
-from hidebound.database import Database
 import hidebound.tools as tools
 
 

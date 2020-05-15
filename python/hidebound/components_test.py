@@ -101,7 +101,6 @@ class ComponentsTests(unittest.TestCase):
         self.assertEqual(button.id, 'delete-button')
         self.assertEqual(button.children[0], 'delete')
 
-
     def test_get_configbar(self):
         configbar = components.get_configbar({'foo': 'bar'})
         self.assertEqual(configbar.id, 'configbar')
