@@ -20,6 +20,10 @@ Hidebound service used for displaying and interacting with Hidebound database.
 '''
 
 
+APP = client.get_app()
+
+
+# SETUP-------------------------------------------------------------------------
 def setup_hidebound_directory(target='/mnt/storage'):
     '''
     Creates /mnt/storage/hidebound and /mnt/storage/hidebound/specifications
@@ -50,7 +54,25 @@ def setup_hidebound_directory(target='/mnt/storage'):
             f.write(config)
 
 
-APP = client.get_app()
+def get_startup_parameters():
+    '''
+    Gets debug_mode and in initial configuration values. Also sets up hidebound
+    directory.
+
+    Returns:
+        list: Debug mode bool and configuration dict.
+    '''
+    debug = 'DEBUG_MODE' in os.environ.keys()                  # pragma no cover
+    config = '/mnt/storage/hidebound/hidebound_config.json'    # pragma no cover
+    if debug:                                                  # pragma no cover
+        config = '/root/hidebound/resources/test_config.json'  # pragma no cover
+        setup_hidebound_directory('/tmp')                      # pragma no cover
+    else:                                                      # pragma no cover
+        setup_hidebound_directory()                            # pragma no cover
+
+    with open(config) as f:                                    # pragma no cover
+        config = json.load(f)                                  # pragma no cover
+    return debug, config                                       # pragma no cover
 
 
 # CLIENT------------------------------------------------------------------------
@@ -193,7 +215,7 @@ def initialize():
 
     config = copy(config)
     config['specifications'] = [x.__name__.lower() for x in config['specifications']]
-    APP._hb_config = config
+    APP.server._config = config
     return Response(
         response=json.dumps(dict(
             message='Database initialized.',
@@ -230,7 +252,7 @@ def update():
     return Response(
         response=json.dumps(dict(
             message='Database updated.',
-            config=APP._hb_config,
+            config=APP.server._config,
         )),
         mimetype='application/json'
     )
@@ -359,7 +381,7 @@ def create():
     return Response(
         response=json.dumps(dict(
             message='Hidebound data created.',
-            config=APP._hb_config,
+            config=APP.server._config,
         )),
         mimetype='application/json'
     )
@@ -392,7 +414,7 @@ def delete():
     return Response(
         response=json.dumps(dict(
             message='Hidebound data deleted.',
-            config=APP._hb_config,
+            config=APP.server._config,
         )),
         mimetype='application/json'
     )
@@ -493,7 +515,6 @@ APP.server.register_error_handler(500, handle_data_error)
 
 
 if __name__ == '__main__':
-    debug = 'DEBUG_MODE' in os.environ.keys()  # pragma: no cover
-    if not debug:  # pragma: no cover
-        setup_hidebound_directory()  # pragma: no cover
+    debug, config = get_startup_parameters()                # pragma: no cover
+    APP.server._config = config                             # pragma: no cover
     APP.run_server(debug=debug, host='0.0.0.0', port=5000)  # pragma: no cover
