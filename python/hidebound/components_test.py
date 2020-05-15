@@ -3,17 +3,17 @@ import unittest
 
 import jinja2
 
-import hidebound.client as client
+import hidebound.components as components
 import hidebound.tools as tools
 # ------------------------------------------------------------------------------
 
 
-class ClientTests(unittest.TestCase):
+class ComponentsTests(unittest.TestCase):
     def test_render_template(self):
         tempdir = tools.relative_path(__file__, '../../templates').as_posix()
         params = dict(
-            COLOR_SCHEME=client.COLOR_SCHEME,
-            FONT_FAMILY=client.FONT_FAMILY,
+            COLOR_SCHEME=components.COLOR_SCHEME,
+            FONT_FAMILY=components.FONT_FAMILY,
         )
         env = jinja2.Environment(
             loader=jinja2.FileSystemLoader(tempdir),
@@ -24,24 +24,24 @@ class ClientTests(unittest.TestCase):
             .render(params)\
             .encode('utf-8')
 
-        result = client.render_template('style.css.j2', params)
+        result = components.render_template('style.css.j2', params)
         self.assertEqual(result, expected)
 
     def test_get_app(self):
-        result = client.get_app()
+        result = components.get_app()
         self.assertTrue(hasattr(result.server, '_database'))
         self.assertTrue(hasattr(result.server, '_config'))
 
     def test_get_dropdown(self):
         expected = 'foo is not a list.'
         with self.assertRaisesRegexp(TypeError, expected):
-            client.get_dropdown('foo')
+            components.get_dropdown('foo')
 
         expected = r'\[2, 3\] are not strings\.'
         with self.assertRaisesRegexp(TypeError, expected):
-            client.get_dropdown(['foo', 2, 3])
+            components.get_dropdown(['foo', 2, 3])
 
-        result = client.get_dropdown(['foo', 'bar'])
+        result = components.get_dropdown(['foo', 'bar'])
         self.assertEqual(result.id, 'dropdown')
         self.assertEqual(result.value, 'foo')
         self.assertEqual(result.placeholder, 'foo')
@@ -53,22 +53,22 @@ class ClientTests(unittest.TestCase):
     def test_get_button(self):
         expected = '10 is not a string.'
         with self.assertRaisesRegexp(TypeError, expected):
-            client.get_button(10)
+            components.get_button(10)
 
-        result = client.get_button('foo')
+        result = components.get_button('foo')
         self.assertEqual(result.id, 'foo-button')
         self.assertEqual(result.children[0], 'foo')
 
     def test_get_json_editor(self):
         value = {'foo': 'bar'}
-        result = client.get_json_editor(value)
+        result = components.get_json_editor(value)
         self.assertEqual(result.id, 'json-editor')
 
         expected = json.dumps(value, indent=4, sort_keys=True)
         self.assertEqual(result.value, expected)
 
     def test_get_searchbar(self):
-        searchbar = client.get_searchbar()
+        searchbar = components.get_searchbar()
         self.assertEqual(searchbar.id, 'searchbar')
 
         query = searchbar.children[0].children[0]
@@ -102,7 +102,7 @@ class ClientTests(unittest.TestCase):
         self.assertEqual(dropdown.options[1]['label'], 'asset')
 
     def test_get_configbar(self):
-        configbar = client.get_configbar({'foo': 'bar'})
+        configbar = components.get_configbar({'foo': 'bar'})
         self.assertEqual(configbar.id, 'configbar')
 
         row_spacer = configbar.children[1]
@@ -129,11 +129,11 @@ class ClientTests(unittest.TestCase):
         self.assertEqual(button.children[0], 'write')
 
     def test_get_data_tab(self):
-        tab = client.get_data_tab()
+        tab = components.get_data_tab()
         self.assertEqual(tab[0].id, 'searchbar')
 
     def test_get_config_tab(self):
-        tab = client.get_config_tab({'foo': 'bar'})
+        tab = components.get_config_tab({'foo': 'bar'})
         self.assertEqual(tab[0].id, 'configbar')
 
     def test_get_datatable(self):
@@ -141,7 +141,7 @@ class ClientTests(unittest.TestCase):
             {'foo': 'pizza', 'bar': 'taco'},
             {'foo': 'kiwi', 'bar': 'potato'},
         ]
-        result = client.get_datatable(data)
+        result = components.get_datatable(data)
         self.assertEqual(result.id, 'datatable')
         expected = [
             {'name': 'foo', 'id': 'foo'},
@@ -149,5 +149,5 @@ class ClientTests(unittest.TestCase):
         ]
         self.assertEqual(result.columns, expected)
 
-        result = client.get_datatable([])
+        result = components.get_datatable([])
         self.assertEqual(result.columns, [])

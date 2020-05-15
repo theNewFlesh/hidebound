@@ -8,7 +8,7 @@ Github: https://github.com/theNewFlesh
 
 
 import hidebound.config  # noqa F401
-import hidebound.client  # noqa F401
+import hidebound.components  # noqa F401
 import hidebound.database  # noqa F401
 import hidebound.database_test_base  # noqa F401
 import hidebound.database_tools  # noqa F401

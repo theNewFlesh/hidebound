@@ -9,9 +9,9 @@ app
     :undoc-members:
     :show-inheritance:
 
-client
-------
-.. automodule:: hidebound.client
+components
+----------
+.. automodule:: hidebound.components
     :members:
     :private-members:
     :undoc-members:

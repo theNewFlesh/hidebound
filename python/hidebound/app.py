@@ -11,7 +11,7 @@ from schematics.exceptions import DataError
 import numpy as np
 
 from hidebound.database import Database
-import hidebound.client as client
+import hidebound.components as components
 # ------------------------------------------------------------------------------
 
 
@@ -20,7 +20,7 @@ Hidebound service used for displaying and interacting with Hidebound database.
 '''
 
 
-APP = client.get_app()
+APP = components.get_app()
 
 
 # SETUP-------------------------------------------------------------------------
@@ -88,10 +88,10 @@ def serve_stylesheet(stylesheet):
         flask.Response: Response.
     '''
     params = dict(
-        COLOR_SCHEME=client.COLOR_SCHEME,
-        FONT_FAMILY=client.FONT_FAMILY,
+        COLOR_SCHEME=components.COLOR_SCHEME,
+        FONT_FAMILY=components.FONT_FAMILY,
     )
-    content = client.render_template(stylesheet + '.j2', params)
+    content = components.render_template(stylesheet + '.j2', params)
     return Response(content, mimetype='text/css')
 
 
@@ -107,9 +107,9 @@ def render_content(tab):
         flask.Response: Response.
     '''
     if tab == 'data':
-        return client.get_data_tab()
+        return components.get_data_tab()
     elif tab == 'config':
-        return client.get_config_tab(APP.server._config)
+        return components.get_config_tab(APP.server._config)
 
 
 @APP.callback(
@@ -145,7 +145,7 @@ def update_button(n_clicks):
     if n_clicks is not None:
         APP.server._database.update()
         data = APP.server.test_client().get('/api/read').json
-        return client.get_datatable(data['response'])
+        return components.get_datatable(data['response'])
 
 
 @APP.callback(

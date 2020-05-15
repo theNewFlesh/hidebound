@@ -7,7 +7,7 @@ import numpy as np
 
 from hidebound.database_test_base import DatabaseTestBase
 import hidebound.app as application
-import hidebound.client as client
+import hidebound.components as components
 import hidebound.tools as tools
 # ------------------------------------------------------------------------------
 
@@ -74,10 +74,10 @@ class AppTests(DatabaseTestBase):
     # CLIENT--------------------------------------------------------------------
     def test_serve_stylesheet(self):
         params = dict(
-            COLOR_SCHEME=client.COLOR_SCHEME,
-            FONT_FAMILY=client.FONT_FAMILY,
+            COLOR_SCHEME=components.COLOR_SCHEME,
+            FONT_FAMILY=components.FONT_FAMILY,
         )
-        expected = client.render_template('style.css.j2', params)
+        expected = components.render_template('style.css.j2', params)
         result = next(self.client.get('/static/style.css').response)
         self.assertEqual(result, expected)
 
