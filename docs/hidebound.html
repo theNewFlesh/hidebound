@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.4.9
+                0.4.10
               </div>
             
           
@@ -201,23 +201,6 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="hidebound.app.create_button">
-<code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">create_button</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_clicks</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#create_button"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.create_button" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes data to hidebound/data and hidebound/metadata.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>n_clicks</strong> (<em>int</em>) – Number of button clicks.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Response.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>flask.Response</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt id="hidebound.app.delete">
 <code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">delete</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.delete" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete hidebound data.</p>
@@ -227,23 +210,6 @@
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>Response</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="hidebound.app.delete_button">
-<code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">delete_button</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_clicks</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#delete_button"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.delete_button" title="Permalink to this definition">¶</a></dt>
-<dd><p>Deletes all data in hidebound/data and hidebound/metadata.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>n_clicks</strong> (<em>int</em>) – Number of button clicks.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Response.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>flask.Response</p>
 </dd>
 </dl>
 </dd></dl>
@@ -354,8 +320,73 @@ directory.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="hidebound.app.init_button">
-<code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">init_button</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_clicks</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#init_button"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.init_button" title="Permalink to this definition">¶</a></dt>
+<dt id="hidebound.app.initialize">
+<code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize database with given config.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Flask Response instance.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.app.on_create_button_click">
+<code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">on_create_button_click</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_clicks</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#on_create_button_click"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.on_create_button_click" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes data to hidebound/data and hidebound/metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n_clicks</strong> (<em>int</em>) – Number of button clicks.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Response.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>flask.Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.app.on_delete_button_click">
+<code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">on_delete_button_click</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_clicks</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#on_delete_button_click"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.on_delete_button_click" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes all data in hidebound/data and hidebound/metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n_clicks</strong> (<em>int</em>) – Number of button clicks.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Response.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>flask.Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.app.on_get_tab">
+<code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">on_get_tab</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tab</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#on_get_tab"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.on_get_tab" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serve content for app tabs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tab</strong> (<em>str</em>) – Name of tab to render.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Response.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>flask.Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.app.on_init_button_click">
+<code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">on_init_button_click</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_clicks</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#on_init_button_click"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.on_init_button_click" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates the Database with the current config.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -371,15 +402,38 @@ directory.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="hidebound.app.initialize">
-<code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.initialize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize database with given config.</p>
+<dt id="hidebound.app.on_session_data_update">
+<code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">on_session_data_update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timestamp</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#on_session_data_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.on_session_data_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the datatable with session data.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Flask Response instance.</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timestamp</strong> (<em>int</em>) – Session timestamp.</p></li>
+<li><p><strong>data</strong> (<em>dict</em>) – Session data.</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>Response</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Response.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>flask.Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.app.on_update_button_click">
+<code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">on_update_button_click</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_clicks</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#on_update_button_click"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.on_update_button_click" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the Database with the current config.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n_clicks</strong> (<em>int</em>) – Number of button clicks.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Response.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>flask.Response</p>
 </dd>
 </dl>
 </dd></dl>
@@ -394,23 +448,6 @@ directory.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>Response</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="hidebound.app.render_content">
-<code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">render_content</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tab</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#render_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.render_content" title="Permalink to this definition">¶</a></dt>
-<dd><p>Serve content for app tabs.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>tab</strong> (<em>str</em>) – Name of tab to render.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Response.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>flask.Response</p>
 </dd>
 </dl>
 </dd></dl>
@@ -474,36 +511,22 @@ Default: “/mnt/storage”.</p>
 </dl>
 </dd></dl>
 
-<dl class="py function">
-<dt id="hidebound.app.update_button">
-<code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">update_button</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_clicks</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#update_button"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.update_button" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates the Database with the current config.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>n_clicks</strong> (<em>int</em>) – Number of button clicks.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Response.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>flask.Response</p>
-</dd>
-</dl>
-</dd></dl>
-
 </div>
 <div class="section" id="module-hidebound.components">
 <span id="components"></span><h2>components<a class="headerlink" href="#module-hidebound.components" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="hidebound.components.get_app">
-<code class="sig-prename descclassname">hidebound.components.</code><code class="sig-name descname">get_app</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/components.html#get_app"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.components.get_app" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">hidebound.components.</code><code class="sig-name descname">get_app</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">storage_type</span><span class="o">=</span><span class="default_value">'session'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/components.html#get_app"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.components.get_app" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate Dash Flask app instance.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Dash app instance.</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>storage_type</strong> (<em>str</em>) – Storage type (used for testing). Default: session.</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>Dash</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dash app instance.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dash</p>
 </dd>
 </dl>
 </dd></dl>

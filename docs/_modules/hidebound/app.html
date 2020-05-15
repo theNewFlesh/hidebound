@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.4.9
+                0.4.10
               </div>
             
           
@@ -156,7 +156,8 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">from</span> <span class="nn">dash.dependencies</span> <span class="kn">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Output</span>
+<span class="kn">from</span> <span class="nn">dash.dependencies</span> <span class="kn">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">State</span>
+<span class="kn">from</span> <span class="nn">dash.exceptions</span> <span class="kn">import</span> <span class="n">PreventUpdate</span>
 <span class="kn">from</span> <span class="nn">flasgger</span> <span class="kn">import</span> <span class="n">swag_from</span>
 <span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Response</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">url_for</span>
 <span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">DataError</span>
@@ -227,7 +228,6 @@
     <span class="k">return</span> <span class="n">debug</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">config_path</span></div>
 
 
-<span class="c1"># CLIENT------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="serve_stylesheet"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.serve_stylesheet">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/static/&lt;stylesheet&gt;&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">serve_stylesheet</span><span class="p">(</span><span class="n">stylesheet</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
@@ -247,8 +247,9 @@
     <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;text/css&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="render_content"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.render_content">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">Output</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">,</span> <span class="s1">&#39;children&#39;</span><span class="p">),</span> <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s1">&#39;tabs&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">)])</span>
-<span class="k">def</span> <span class="nf">render_content</span><span class="p">(</span><span class="n">tab</span><span class="p">):</span>
+<span class="c1"># EVENTS------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="on_get_tab"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.on_get_tab">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">Output</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">,</span> <span class="s1">&#39;children&#39;</span><span class="p">),</span> <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s1">&#39;tabs&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">)])</span>
+<span class="k">def</span> <span class="nf">on_get_tab</span><span class="p">(</span><span class="n">tab</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Serve content for app tabs.</span>
 
@@ -264,10 +265,10 @@
         <span class="k">return</span> <span class="n">components</span><span class="o">.</span><span class="n">get_config_tab</span><span class="p">(</span><span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_config</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="init_button"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.init_button">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span>
+<div class="viewcode-block" id="on_init_button_click"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.on_init_button_click">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span>
     <span class="n">Output</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">,</span> <span class="s1">&#39;data-init-button&#39;</span><span class="p">),</span> <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s1">&#39;init-button&#39;</span><span class="p">,</span> <span class="s1">&#39;n_clicks&#39;</span><span class="p">)]</span>
 <span class="p">)</span>
-<span class="k">def</span> <span class="nf">init_button</span><span class="p">(</span><span class="n">n_clicks</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">on_init_button_click</span><span class="p">(</span><span class="n">n_clicks</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Updates the Database with the current config.</span>
 
@@ -281,10 +282,12 @@
         <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_config_path</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="update_button"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.update_button">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span>
-    <span class="n">Output</span><span class="p">(</span><span class="s1">&#39;table-content&#39;</span><span class="p">,</span> <span class="s1">&#39;children&#39;</span><span class="p">),</span> <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s1">&#39;update-button&#39;</span><span class="p">,</span> <span class="s1">&#39;n_clicks&#39;</span><span class="p">)]</span>
+<div class="viewcode-block" id="on_update_button_click"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.on_update_button_click">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s1">&#39;session-store&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">),</span>
+    <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s1">&#39;update-button&#39;</span><span class="p">,</span> <span class="s1">&#39;n_clicks&#39;</span><span class="p">)],</span>
+    <span class="p">[</span><span class="n">State</span><span class="p">(</span><span class="s1">&#39;session-store&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)]</span>
 <span class="p">)</span>
-<span class="k">def</span> <span class="nf">update_button</span><span class="p">(</span><span class="n">n_clicks</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">on_update_button_click</span><span class="p">(</span><span class="n">n_clicks</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Updates the Database with the current config.</span>
 
@@ -294,16 +297,43 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        flask.Response: Response.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">if</span> <span class="n">n_clicks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">test_client</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/api/read&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
-        <span class="k">return</span> <span class="n">components</span><span class="o">.</span><span class="n">get_datatable</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;response&#39;</span><span class="p">])</span></div>
+    <span class="k">if</span> <span class="n">n_clicks</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">PreventUpdate</span>
+
+    <span class="k">if</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_config_path</span><span class="p">)</span>
+    <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">test_client</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/api/read&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;read&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">}</span></div>
 
 
-<div class="viewcode-block" id="create_button"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.create_button">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span>
+<div class="viewcode-block" id="on_session_data_update"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.on_session_data_update">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s1">&#39;table-content&#39;</span><span class="p">,</span> <span class="s1">&#39;children&#39;</span><span class="p">),</span>
+    <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s1">&#39;session-store&#39;</span><span class="p">,</span> <span class="s1">&#39;modified_timestamp&#39;</span><span class="p">)],</span>
+    <span class="p">[</span><span class="n">State</span><span class="p">(</span><span class="s1">&#39;session-store&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)]</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">on_session_data_update</span><span class="p">(</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Updates the datatable with session data.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        timestamp (int): Session timestamp.</span>
+<span class="sd">        data (dict): Session data.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        flask.Response: Response.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">timestamp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">PreventUpdate</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="ow">or</span> <span class="p">{</span><span class="s1">&#39;read&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="p">[]}}</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;read&#39;</span><span class="p">][</span><span class="s1">&#39;response&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">components</span><span class="o">.</span><span class="n">get_datatable</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="on_create_button_click"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.on_create_button_click">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span>
     <span class="n">Output</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">,</span> <span class="s1">&#39;data-create-button&#39;</span><span class="p">),</span> <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s1">&#39;create-button&#39;</span><span class="p">,</span> <span class="s1">&#39;n_clicks&#39;</span><span class="p">)]</span>
 <span class="p">)</span>
-<span class="k">def</span> <span class="nf">create_button</span><span class="p">(</span><span class="n">n_clicks</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">on_create_button_click</span><span class="p">(</span><span class="n">n_clicks</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Writes data to hidebound/data and hidebound/metadata.</span>
 
@@ -317,10 +347,10 @@
         <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span><span class="o">.</span><span class="n">create</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="delete_button"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.delete_button">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span>
+<div class="viewcode-block" id="on_delete_button_click"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.on_delete_button_click">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span>
     <span class="n">Output</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">,</span> <span class="s1">&#39;data-delete-button&#39;</span><span class="p">),</span> <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s1">&#39;delete-button&#39;</span><span class="p">,</span> <span class="s1">&#39;n_clicks&#39;</span><span class="p">)]</span>
 <span class="p">)</span>
-<span class="k">def</span> <span class="nf">delete_button</span><span class="p">(</span><span class="n">n_clicks</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">on_delete_button_click</span><span class="p">(</span><span class="n">n_clicks</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Deletes all data in hidebound/data and hidebound/metadata.</span>
 
