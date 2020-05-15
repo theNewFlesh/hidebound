@@ -63,6 +63,7 @@ def get_startup_parameters():
     Returns:
         list: Debug mode bool, configuration dict and filepath.
     '''
+    # TODO: Find a way to test this.
     debug = 'DEBUG_MODE' in os.environ.keys()
     config_path = '/mnt/storage/hidebound/hidebound_config.json'
     if debug:
@@ -96,6 +97,7 @@ def serve_stylesheet(stylesheet):
 
 
 # EVENTS------------------------------------------------------------------------
+# TODO: Find a way to test events.
 @APP.callback(Output('content', 'children'), [Input('tabs', 'value')])
 def on_get_tab(tab):
     '''
