@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.4.6
+                0.4.7
               </div>
             
           
@@ -381,6 +381,20 @@
 </dd></dl>
 
 <dl class="py function">
+<dt id="hidebound.app.setup_hidebound_directory">
+<code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">setup_hidebound_directory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">target</span><span class="o">=</span><span class="default_value">'/mnt/storage'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#setup_hidebound_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.setup_hidebound_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates /mnt/storage/hidebound and /mnt/storage/hidebound/specifications
+directories. Writes a default hidebound config to
+/mnt/storage/hidebound/hidebound_config.json if one does not exist.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>target</strong> (<em>str</em><em>, </em><em>optional</em>) – For testing only. Do not call with argument.
+Default: “/mnt/storage”.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="hidebound.app.update">
 <code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update database.</p>
@@ -432,6 +446,40 @@
 </dd></dl>
 
 <dl class="py function">
+<dt id="hidebound.client.get_config_tab">
+<code class="sig-prename descclassname">hidebound.client.</code><code class="sig-name descname">get_config_tab</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/client.html#get_config_tab"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.client.get_config_tab" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get tab element for Hidebound config.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>dict</em>) – Configuration to be displayed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of elements for config tab.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.client.get_configbar">
+<code class="sig-prename descclassname">hidebound.client.</code><code class="sig-name descname">get_configbar</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/client.html#get_configbar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.client.get_configbar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a row of elements used for configuring Hidebound.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>dict</em>) – Configuration to be displayed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Div with buttons and JSON editor.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Div</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="hidebound.client.get_data_tab">
 <code class="sig-prename descclassname">hidebound.client.</code><code class="sig-name descname">get_data_tab</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/client.html#get_data_tab"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.client.get_data_tab" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get tab element for Hidebound data.</p>
@@ -464,6 +512,23 @@
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>Dropdown</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.client.get_json_editor">
+<code class="sig-prename descclassname">hidebound.client.</code><code class="sig-name descname">get_json_editor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/client.html#get_json_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.client.get_json_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a JSON editor element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>dict</em><em>, </em><em>optional</em>) – Dictionary to be edited. Default: {}.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>JSON editor.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DashAceEditor</p>
 </dd>
 </dl>
 </dd></dl>

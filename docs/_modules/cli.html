@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.4.6
+                0.4.7
               </div>
             
           
@@ -191,6 +191,7 @@
 <span class="s1">    container    - Display the Docker container id for </span><span class="si">{repo}</span><span class="s1"> service</span>
 <span class="s1">    coverage     - Generate coverage report for </span><span class="si">{repo}</span><span class="s1"> service</span>
 <span class="s1">    destroy      - Shutdown </span><span class="si">{repo}</span><span class="s1"> service and destroy its Docker image</span>
+<span class="s1">    destroy-prod - Shutdown </span><span class="si">{repo}</span><span class="s1">-prod container and destroy its Docker image</span>
 <span class="s1">    docs         - Generate documentation for </span><span class="si">{repo}</span><span class="s1"> service</span>
 <span class="s1">    full-docs    - Generates documentation, coverage report and metrics</span>
 <span class="s1">    image        - Display the Docker image id for </span><span class="si">{repo}</span><span class="s1"> service</span>
@@ -442,10 +443,11 @@
 <span class="sd">        str: Command.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;CWD=$(pwd); &#39;</span>
-    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cd </span><span class="si">{repo_path}</span><span class="s1">/docker; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cd </span><span class="si">{repo_path}</span><span class="s1">; &#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;docker build --force-rm &#39;</span>
-    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;--file </span><span class="si">{repo}</span><span class="s1">_prod.dockerfile &#39;</span>
-    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;--tag </span><span class="si">{repo}</span><span class="s1">-prod:latest ./; cd $CWD&#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;--file docker/</span><span class="si">{repo}</span><span class="s1">_prod.dockerfile &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;--tag </span><span class="si">{repo}</span><span class="s1">-prod:latest ./; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cd $CWD&#39;</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">,</span>
         <span class="n">repo_path</span><span class="o">=</span><span class="n">REPO_PATH</span>
@@ -463,25 +465,48 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        str: Command.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;CWD=$(pwd); &#39;</span>
-    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cd </span><span class="si">{repo_path}</span><span class="s1">/docker; &#39;</span>
-    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;CURRENT_USER=&quot;</span><span class="si">{user}</span><span class="s1">&quot; &#39;</span>
-    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;docker run --volume </span><span class="si">{volume}</span><span class="s1">:</span><span class="si">{volume}</span><span class="s1"> --publish </span><span class="si">{port}</span><span class="s1">:5000 &#39;</span>
-    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;--name </span><span class="si">{repo}</span><span class="s1">-prod </span><span class="si">{repo}</span><span class="s1">-prod; cd $CWD&#39;</span>
-
     <span class="k">if</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]:</span>
-        <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;echo &quot;Please provide a volume to mount inside the container, as &#39;</span>
-        <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;the first argument to -a.&quot;&#39;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;echo &quot;Please provide a directory to map into the container &#39;</span>
+        <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;after the -a flag.&quot;&#39;</span>
         <span class="k">return</span> <span class="n">cmd</span>
 
-    <span class="n">port</span> <span class="o">=</span> <span class="mi">5000</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">port</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;CWD=$(pwd); &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cd </span><span class="si">{repo_path}</span><span class="s1">; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;CURRENT_USER=&quot;</span><span class="si">{user}</span><span class="s1">&quot; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;docker run &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;--volume </span><span class="si">{volume}</span><span class="s1">:/mnt/storage &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;--publish 5000:5000 &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;--name </span><span class="si">{repo}</span><span class="s1">-prod &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;--workdir /root/</span><span class="si">{repo}</span><span class="s1">/python &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{repo}</span><span class="s1">-prod; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cd $CWD&#39;</span>
 
     <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="n">volume</span><span class="o">=</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-        <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span>
         <span class="n">user</span><span class="o">=</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;user&#39;</span><span class="p">],</span>
+        <span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">,</span>
+        <span class="n">repo_path</span><span class="o">=</span><span class="n">REPO_PATH</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">cmd</span></div>
+
+
+<div class="viewcode-block" id="get_destroy_production_container_command"><a class="viewcode-back" href="../cli.html#cli.get_destroy_production_container_command">[docs]</a><span class="k">def</span> <span class="nf">get_destroy_production_container_command</span><span class="p">(</span><span class="n">info</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Destroy production container and image.</span>
+
+<span class="sd">    Args:age</span>
+<span class="sd">        info (dict): Info dictionary.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Command.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;CWD=$(pwd); &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cd </span><span class="si">{repo_path}</span><span class="s1">/docker; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;docker stop </span><span class="si">{repo}</span><span class="s1">-prod; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;docker rm </span><span class="si">{repo}</span><span class="s1">-prod; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;docker image remove </span><span class="si">{repo}</span><span class="s1">-prod; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cd $CWD&#39;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">,</span>
         <span class="n">repo_path</span><span class="o">=</span><span class="n">REPO_PATH</span>
     <span class="p">)</span>
@@ -758,6 +783,9 @@
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_stop_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
         <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;; &#39;</span> <span class="o">+</span> <span class="n">get_remove_image_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
 
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;destroy-prod&#39;</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_destroy_production_container_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+
     <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;docs&#39;</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_docs_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
         <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;; &#39;</span> <span class="o">+</span> <span class="n">get_fix_permissions_command</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">docs</span><span class="p">)</span>
@@ -779,8 +807,13 @@
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_lint_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;prod&#39;</span><span class="p">:</span>
-        <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_production_image_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
-        <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39; &amp;&amp; &#39;</span> <span class="o">+</span> <span class="n">get_production_container_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]:</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;echo &quot;Please provide a directory to map into the container &#39;</span>
+            <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;after the -a flag.&quot;&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_destroy_production_container_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+            <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39; &amp;&amp; &#39;</span> <span class="o">+</span> <span class="n">get_production_image_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+            <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39; &amp;&amp; &#39;</span> <span class="o">+</span> <span class="n">get_production_container_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;publish&#39;</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_tox_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
