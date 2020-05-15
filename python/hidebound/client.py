@@ -7,6 +7,7 @@ import dash_html_components as html
 from flasgger import Swagger
 import jinja2
 
+from hidebound.database import Database
 import hidebound.tools as tools
 
 
@@ -141,8 +142,9 @@ def get_app():
     Swagger(app.server)
     app.layout = html.Div(id='layout', children=[store, tabs, content])
     app.config['suppress_callback_exceptions'] = True
-    app.server._database = None
+    app.server._database = Database
     app.server._config = {}
+    app.server._config_path = ''
 
     return app
 

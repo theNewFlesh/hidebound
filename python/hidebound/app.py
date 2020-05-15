@@ -60,19 +60,19 @@ def get_startup_parameters():
     directory.
 
     Returns:
-        list: Debug mode bool and configuration dict.
+        list: Debug mode bool, configuration dict and filepath.
     '''
-    debug = 'DEBUG_MODE' in os.environ.keys()                  # pragma no cover
-    config = '/mnt/storage/hidebound/hidebound_config.json'    # pragma no cover
-    if debug:                                                  # pragma no cover
-        config = '/root/hidebound/resources/test_config.json'  # pragma no cover
-        setup_hidebound_directory('/tmp')                      # pragma no cover
-    else:                                                      # pragma no cover
-        setup_hidebound_directory()                            # pragma no cover
+    debug = 'DEBUG_MODE' in os.environ.keys()
+    config_path = '/mnt/storage/hidebound/hidebound_config.json'
+    if debug:
+        config_path = '/root/hidebound/resources/test_config.json'
+        setup_hidebound_directory('/tmp')
+    else:
+        setup_hidebound_directory()
 
-    with open(config) as f:                                    # pragma no cover
-        config = json.load(f)                                  # pragma no cover
-    return debug, config                                       # pragma no cover
+    with open(config_path) as f:
+        config = json.load(f)
+    return debug, config, config_path
 
 
 # CLIENT------------------------------------------------------------------------
@@ -106,10 +106,78 @@ def render_content(tab):
     Returns:
         flask.Response: Response.
     '''
-    if tab == 'data':  # pragma: no cover
-        return client.get_data_tab()  # pragma: no cover
-    elif tab == 'config':  # pragma: no cover
-        return client.get_config_tab(APP.server._config)  # pragma: no cover
+    if tab == 'data':
+        return client.get_data_tab()
+    elif tab == 'config':
+        return client.get_config_tab(APP.server._config)
+
+
+@APP.callback(
+    Output('content', 'data-init-button'), [Input('init-button', 'n_clicks')]
+)
+def init_button(n_clicks):
+    '''
+    Updates the Database with the current config.
+
+    Args:
+        n_clicks (int): Number of button clicks.
+
+    Returns:
+        flask.Response: Response.
+    '''
+    if n_clicks is not None:
+        APP.server._database = Database.from_json(APP.server._config_path)
+
+
+@APP.callback(
+    Output('content', 'data-update-button'), [Input('update-button', 'n_clicks')]
+)
+def update_button(n_clicks):
+    '''
+    Updates the Database with the current config.
+
+    Args:
+        n_clicks (int): Number of button clicks.
+
+    Returns:
+        flask.Response: Response.
+    '''
+    if n_clicks is not None:
+        APP.server._database.update()
+
+
+@APP.callback(
+    Output('content', 'data-create-button'), [Input('create-button', 'n_clicks')]
+)
+def create_button(n_clicks):
+    '''
+    Writes data to hidebound/data and hidebound/metadata.
+
+    Args:
+        n_clicks (int): Number of button clicks.
+
+    Returns:
+        flask.Response: Response.
+    '''
+    if n_clicks is not None:
+        APP.server._database.create()
+
+
+@APP.callback(
+    Output('content', 'data-delete-button'), [Input('delete-button', 'n_clicks')]
+)
+def delete_button(n_clicks):
+    '''
+    Deletes all data in hidebound/data and hidebound/metadata.
+
+    Args:
+        n_clicks (int): Number of button clicks.
+
+    Returns:
+        flask.Response: Response.
+    '''
+    if n_clicks is not None:
+        APP.server._database.delete()
 
 
 # API---------------------------------------------------------------------------
@@ -121,7 +189,7 @@ def api():
     Returns:
         html: Flassger generated API page.
     '''
-    return redirect(url_for('flasgger.apidocs'))  # pragma: no cover
+    return redirect(url_for('flasgger.apidocs'))
 
 
 @APP.server.route('/api/initialize', methods=['POST'])
@@ -507,7 +575,7 @@ def handle_data_error(error):
     Returns:
         Response: DataError response.
     '''
-    return error_to_response(error)  # pragma: no cover
+    return error_to_response(error)
 # ------------------------------------------------------------------------------
 
 
@@ -515,6 +583,7 @@ APP.server.register_error_handler(500, handle_data_error)
 
 
 if __name__ == '__main__':
-    debug, config = get_startup_parameters()                # pragma: no cover
-    APP.server._config = config                             # pragma: no cover
-    APP.run_server(debug=debug, host='0.0.0.0', port=5000)  # pragma: no cover
+    debug, config, config_path = get_startup_parameters()
+    APP.server._config = config
+    APP.server._config_path = config_path
+    APP.run_server(debug=debug, host='0.0.0.0', port=5000)
