@@ -2,7 +2,7 @@ hidebound
 =========
 
 app
-------
+---
 .. automodule:: hidebound.app
     :members:
     :private-members:

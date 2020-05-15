@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.4.7
+                0.4.8
               </div>
             
           
@@ -153,12 +153,14 @@
 <span></span><span class="kn">import</span> <span class="nn">json</span>
 
 <span class="kn">from</span> <span class="nn">dash_ace_editor</span> <span class="kn">import</span> <span class="n">DashAceEditor</span>
+<span class="kn">from</span> <span class="nn">flasgger</span> <span class="kn">import</span> <span class="n">Swagger</span>
 <span class="kn">import</span> <span class="nn">dash</span>
 <span class="kn">import</span> <span class="nn">dash_core_components</span> <span class="k">as</span> <span class="nn">dcc</span>
 <span class="kn">import</span> <span class="nn">dash_html_components</span> <span class="k">as</span> <span class="nn">html</span>
-<span class="kn">from</span> <span class="nn">flasgger</span> <span class="kn">import</span> <span class="n">Swagger</span>
+<span class="kn">import</span> <span class="nn">dash_table</span>
 <span class="kn">import</span> <span class="nn">jinja2</span>
 
+<span class="kn">from</span> <span class="nn">hidebound.database</span> <span class="kn">import</span> <span class="n">Database</span>
 <span class="kn">import</span> <span class="nn">hidebound.tools</span> <span class="k">as</span> <span class="nn">tools</span>
 
 
@@ -293,8 +295,9 @@
     <span class="n">Swagger</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">server</span><span class="p">)</span>
     <span class="n">app</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;layout&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">store</span><span class="p">,</span> <span class="n">tabs</span><span class="p">,</span> <span class="n">content</span><span class="p">])</span>
     <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;suppress_callback_exceptions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span> <span class="o">=</span> <span class="n">Database</span>
     <span class="n">app</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_config_path</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
     <span class="k">return</span> <span class="n">app</span></div>
 
@@ -347,7 +350,7 @@
     <span class="n">create</span> <span class="o">=</span> <span class="n">get_button</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">)</span>
     <span class="n">delete</span> <span class="o">=</span> <span class="n">get_button</span><span class="p">(</span><span class="s1">&#39;delete&#39;</span><span class="p">)</span>
 
-    <span class="n">row</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+    <span class="n">row0</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
         <span class="n">className</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">,</span>
         <span class="n">children</span><span class="o">=</span><span class="p">[</span>
             <span class="n">query</span><span class="p">,</span>
@@ -365,7 +368,11 @@
             <span class="n">dropdown</span>
         <span class="p">],</span>
     <span class="p">)</span>
-    <span class="n">searchbar</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;searchbar&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;menubar&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">row</span><span class="p">])</span>
+    <span class="n">row1</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;row-spacer&#39;</span><span class="p">)</span>
+    <span class="n">row2</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;table-content&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[])</span>
+    <span class="n">searchbar</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;searchbar&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;menubar&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">row0</span><span class="p">,</span> <span class="n">row1</span><span class="p">,</span> <span class="n">row2</span><span class="p">]</span>
+    <span class="p">)</span>
     <span class="k">return</span> <span class="n">searchbar</span></div>
 
 
@@ -483,6 +490,78 @@
         <span class="n">tabSize</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
         <span class="n">enableLiveAutocompletion</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">enableBasicAutocompletion</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_datatable"><a class="viewcode-back" href="../../hidebound.html#hidebound.client.get_datatable">[docs]</a><span class="k">def</span> <span class="nf">get_datatable</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Gets a Dash DataTable element using given data.</span>
+<span class="sd">    Assumes dict element has all columns of table as keys.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (list[dict]): List of dicts.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataTable: Table of data.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">cols</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    <span class="n">cols</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">}</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">dash_table</span><span class="o">.</span><span class="n">DataTable</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+        <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;datatable&#39;</span><span class="p">,</span>
+        <span class="n">css</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s1">&#39;selector&#39;</span><span class="p">:</span> <span class="s1">&#39;.dash-cell div.dash-cell-value&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;rule&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;&#39;display: inline;</span>
+<span class="s1">                            white-space: inherit;</span>
+<span class="s1">                            overflow: inherit;</span>
+<span class="s1">                            text-overflow: inherit;&#39;&#39;&#39;</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="n">style_data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;whiteSpace&#39;</span><span class="p">:</span> <span class="s1">&#39;normal&#39;</span><span class="p">},</span>
+        <span class="n">style_table</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;zIndex&#39;</span><span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="s1">&#39;99.7vw&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;maxHeight&#39;</span><span class="p">:</span> <span class="s1">&#39;95vh&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;overflowX&#39;</span><span class="p">:</span> <span class="s1">&#39;scroll&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;overflowY&#39;</span><span class="p">:</span> <span class="s1">&#39;scroll&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;padding&#39;</span><span class="p">:</span> <span class="s1">&#39;0px 4px 0px 4px&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;borderWidth&#39;</span><span class="p">:</span> <span class="s1">&#39;0px 1px 0px 1px&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;borderColor&#39;</span><span class="p">:</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;grey1&#39;</span><span class="p">],</span>
+        <span class="p">},</span>
+        <span class="n">style_header</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;light2&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;background&#39;</span><span class="p">:</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;grey1&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;fontWeight&#39;</span><span class="p">:</span> <span class="s1">&#39;bold&#39;</span>
+        <span class="p">},</span>
+        <span class="n">style_filter</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;cyan2&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;background&#39;</span><span class="p">:</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;bg&#39;</span><span class="p">]</span>
+        <span class="p">},</span>
+        <span class="n">style_cell</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;textAlign&#39;</span><span class="p">:</span> <span class="s1">&#39;left&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;maxWidth&#39;</span><span class="p">:</span> <span class="s1">&#39;300px&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;borderColor&#39;</span><span class="p">:</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;grey1&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;border&#39;</span><span class="p">:</span> <span class="s1">&#39;0px&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="s1">&#39;25px&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;padding&#39;</span><span class="p">:</span> <span class="s1">&#39;3px 0px 3px 10px&#39;</span>
+        <span class="p">},</span>
+        <span class="n">style_data_conditional</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s1">&#39;if&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;row_index&#39;</span><span class="p">:</span> <span class="s1">&#39;odd&#39;</span><span class="p">},</span>
+                <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;light1&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;background&#39;</span><span class="p">:</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;grey1&#39;</span><span class="p">]</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s1">&#39;if&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;row_index&#39;</span><span class="p">:</span> <span class="s1">&#39;even&#39;</span><span class="p">},</span>
+                <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;light1&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;background&#39;</span><span class="p">:</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;bg&#39;</span><span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
     <span class="p">)</span></div>
 </pre></div>
 

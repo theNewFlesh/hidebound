@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.4.7
+                0.4.8
               </div>
             
           
@@ -172,6 +172,10 @@
 <span class="sd">&#39;&#39;&#39;</span>
 
 
+<span class="n">APP</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_app</span><span class="p">()</span>
+
+
+<span class="c1"># SETUP-------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="setup_hidebound_directory"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.setup_hidebound_directory">[docs]</a><span class="k">def</span> <span class="nf">setup_hidebound_directory</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s1">&#39;/mnt/storage&#39;</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Creates /mnt/storage/hidebound and /mnt/storage/hidebound/specifications</span>
@@ -202,7 +206,25 @@
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
 
 
-<span class="n">APP</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_app</span><span class="p">()</span>
+<div class="viewcode-block" id="get_startup_parameters"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.get_startup_parameters">[docs]</a><span class="k">def</span> <span class="nf">get_startup_parameters</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Gets debug_mode and in initial configuration values. Also sets up hidebound</span>
+<span class="sd">    directory.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: Debug mode bool, configuration dict and filepath.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">debug</span> <span class="o">=</span> <span class="s1">&#39;DEBUG_MODE&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    <span class="n">config_path</span> <span class="o">=</span> <span class="s1">&#39;/mnt/storage/hidebound/hidebound_config.json&#39;</span>
+    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+        <span class="n">config_path</span> <span class="o">=</span> <span class="s1">&#39;/root/hidebound/resources/test_config.json&#39;</span>
+        <span class="n">setup_hidebound_directory</span><span class="p">(</span><span class="s1">&#39;/tmp&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">setup_hidebound_directory</span><span class="p">()</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">debug</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">config_path</span></div>
 
 
 <span class="c1"># CLIENT------------------------------------------------------------------------</span>
@@ -236,10 +258,80 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        flask.Response: Response.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">if</span> <span class="n">tab</span> <span class="o">==</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-        <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">get_data_tab</span><span class="p">()</span>  <span class="c1"># pragma: no cover</span>
-    <span class="k">elif</span> <span class="n">tab</span> <span class="o">==</span> <span class="s1">&#39;config&#39;</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-        <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">get_config_tab</span><span class="p">(</span><span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_config</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span></div>
+    <span class="k">if</span> <span class="n">tab</span> <span class="o">==</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">get_data_tab</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">tab</span> <span class="o">==</span> <span class="s1">&#39;config&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">get_config_tab</span><span class="p">(</span><span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_config</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="init_button"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.init_button">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">,</span> <span class="s1">&#39;data-init-button&#39;</span><span class="p">),</span> <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s1">&#39;init-button&#39;</span><span class="p">,</span> <span class="s1">&#39;n_clicks&#39;</span><span class="p">)]</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">init_button</span><span class="p">(</span><span class="n">n_clicks</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Updates the Database with the current config.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n_clicks (int): Number of button clicks.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        flask.Response: Response.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">n_clicks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_config_path</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="update_button"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.update_button">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s1">&#39;table-content&#39;</span><span class="p">,</span> <span class="s1">&#39;children&#39;</span><span class="p">),</span> <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s1">&#39;update-button&#39;</span><span class="p">,</span> <span class="s1">&#39;n_clicks&#39;</span><span class="p">)]</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">update_button</span><span class="p">(</span><span class="n">n_clicks</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Updates the Database with the current config.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n_clicks (int): Number of button clicks.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        flask.Response: Response.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">n_clicks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">test_client</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/api/read&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
+        <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="n">get_datatable</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;response&#39;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="create_button"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.create_button">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">,</span> <span class="s1">&#39;data-create-button&#39;</span><span class="p">),</span> <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s1">&#39;create-button&#39;</span><span class="p">,</span> <span class="s1">&#39;n_clicks&#39;</span><span class="p">)]</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">create_button</span><span class="p">(</span><span class="n">n_clicks</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Writes data to hidebound/data and hidebound/metadata.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n_clicks (int): Number of button clicks.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        flask.Response: Response.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">n_clicks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span><span class="o">.</span><span class="n">create</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="delete_button"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.delete_button">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span>
+    <span class="n">Output</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">,</span> <span class="s1">&#39;data-delete-button&#39;</span><span class="p">),</span> <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s1">&#39;delete-button&#39;</span><span class="p">,</span> <span class="s1">&#39;n_clicks&#39;</span><span class="p">)]</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">delete_button</span><span class="p">(</span><span class="n">n_clicks</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Deletes all data in hidebound/data and hidebound/metadata.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n_clicks (int): Number of button clicks.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        flask.Response: Response.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">n_clicks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span></div>
 
 
 <span class="c1"># API---------------------------------------------------------------------------</span>
@@ -251,7 +343,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        html: Flassger generated API page.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;flasgger.apidocs&#39;</span><span class="p">))</span>  <span class="c1"># pragma: no cover</span></div>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;flasgger.apidocs&#39;</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="initialize"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.initialize">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
@@ -345,7 +437,7 @@
 
     <span class="n">config</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
     <span class="n">config</span><span class="p">[</span><span class="s1">&#39;specifications&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;specifications&#39;</span><span class="p">]]</span>
-    <span class="n">APP</span><span class="o">.</span><span class="n">_hb_config</span> <span class="o">=</span> <span class="n">config</span>
+    <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">config</span>
     <span class="k">return</span> <span class="n">Response</span><span class="p">(</span>
         <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
             <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Database initialized.&#39;</span><span class="p">,</span>
@@ -382,7 +474,7 @@
     <span class="k">return</span> <span class="n">Response</span><span class="p">(</span>
         <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
             <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Database updated.&#39;</span><span class="p">,</span>
-            <span class="n">config</span><span class="o">=</span><span class="n">APP</span><span class="o">.</span><span class="n">_hb_config</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
         <span class="p">)),</span>
         <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span>
     <span class="p">)</span></div>
@@ -511,7 +603,7 @@
     <span class="k">return</span> <span class="n">Response</span><span class="p">(</span>
         <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
             <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Hidebound data created.&#39;</span><span class="p">,</span>
-            <span class="n">config</span><span class="o">=</span><span class="n">APP</span><span class="o">.</span><span class="n">_hb_config</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
         <span class="p">)),</span>
         <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span>
     <span class="p">)</span></div>
@@ -544,7 +636,7 @@
     <span class="k">return</span> <span class="n">Response</span><span class="p">(</span>
         <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
             <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Hidebound data deleted.&#39;</span><span class="p">,</span>
-            <span class="n">config</span><span class="o">=</span><span class="n">APP</span><span class="o">.</span><span class="n">_hb_config</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
         <span class="p">)),</span>
         <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span>
     <span class="p">)</span></div>
@@ -637,7 +729,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Response: DataError response.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">return</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span></div>
+    <span class="k">return</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
@@ -645,10 +737,10 @@
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="n">debug</span> <span class="o">=</span> <span class="s1">&#39;DEBUG_MODE&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>  <span class="c1"># pragma: no cover</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">debug</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-        <span class="n">setup_hidebound_directory</span><span class="p">()</span>  <span class="c1"># pragma: no cover</span>
-    <span class="n">APP</span><span class="o">.</span><span class="n">run_server</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span>
+    <span class="n">debug</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">config_path</span> <span class="o">=</span> <span class="n">get_startup_parameters</span><span class="p">()</span>
+    <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">config</span>
+    <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_config_path</span> <span class="o">=</span> <span class="n">config_path</span>
+    <span class="n">APP</span><span class="o">.</span><span class="n">run_server</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
 </pre></div>
 
            </div>
