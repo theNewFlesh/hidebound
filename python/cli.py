@@ -39,6 +39,7 @@ def get_info():
     container    - Display the Docker container id for {repo} service
     coverage     - Generate coverage report for {repo} service
     destroy      - Shutdown {repo} service and destroy its Docker image
+    destroy-prod - Shutdown {repo}-prod container and destroy its Docker image
     docs         - Generate documentation for {repo} service
     full-docs    - Generates documentation, coverage report and metrics
     image        - Display the Docker image id for {repo} service
@@ -290,10 +291,11 @@ def get_production_image_command(info):
         str: Command.
     '''
     cmd = 'CWD=$(pwd); '
-    cmd += 'cd {repo_path}/docker; '
+    cmd += 'cd {repo_path}; '
     cmd += 'docker build --force-rm '
-    cmd += '--file {repo}_prod.dockerfile '
-    cmd += '--tag {repo}-prod:latest ./; cd $CWD'
+    cmd += '--file docker/{repo}_prod.dockerfile '
+    cmd += '--tag {repo}-prod:latest ./; '
+    cmd += 'cd $CWD'
     cmd = cmd.format(
         repo=REPO,
         repo_path=REPO_PATH
@@ -311,25 +313,48 @@ def get_production_container_command(info):
     Returns:
         str: Command.
     '''
-    cmd = 'CWD=$(pwd); '
-    cmd += 'cd {repo_path}/docker; '
-    cmd += 'CURRENT_USER="{user}" '
-    cmd += 'docker run --volume {volume}:{volume} --publish {port}:5000 '
-    cmd += '--name {repo}-prod {repo}-prod; cd $CWD'
-
     if info['args'] == ['']:
-        cmd = 'echo "Please provide a volume to mount inside the container, as '
-        cmd += 'the first argument to -a."'
+        cmd = 'echo "Please provide a directory to map into the container '
+        cmd += 'after the -a flag."'
         return cmd
 
-    port = 5000
-    if len(info['args']) > 1:
-        port = info['args'][1]
+    cmd = 'CWD=$(pwd); '
+    cmd += 'cd {repo_path}; '
+    cmd += 'CURRENT_USER="{user}" '
+    cmd += 'docker run '
+    cmd += '--volume {volume}:/mnt/storage '
+    cmd += '--publish 5000:5000 '
+    cmd += '--name {repo}-prod '
+    cmd += '--workdir /root/{repo}/python '
+    cmd += '{repo}-prod; '
+    cmd += 'cd $CWD'
 
     cmd = cmd.format(
         volume=info['args'][0],
-        port=port,
         user=info['user'],
+        repo=REPO,
+        repo_path=REPO_PATH
+    )
+    return cmd
+
+
+def get_destroy_production_container_command(info):
+    '''
+    Destroy production container and image.
+
+    Args:age
+        info (dict): Info dictionary.
+
+    Returns:
+        str: Command.
+    '''
+    cmd = 'CWD=$(pwd); '
+    cmd += 'cd {repo_path}/docker; '
+    cmd += 'docker stop {repo}-prod; '
+    cmd += 'docker rm {repo}-prod; '
+    cmd += 'docker image remove {repo}-prod; '
+    cmd += 'cd $CWD'
+    cmd = cmd.format(
         repo=REPO,
         repo_path=REPO_PATH
     )
@@ -606,6 +631,9 @@ def main():
         cmd = get_stop_command(info)
         cmd += '; ' + get_remove_image_command(info)
 
+    elif mode == 'destroy-prod':
+        cmd = get_destroy_production_container_command(info)
+
     elif mode == 'docs':
         cmd = get_docs_command(info)
         cmd += '; ' + get_fix_permissions_command(info, docs)
@@ -627,8 +655,13 @@ def main():
         cmd = get_lint_command(info)
 
     elif mode == 'prod':
-        cmd = get_production_image_command(info)
-        cmd += ' && ' + get_production_container_command(info)
+        if info['args'] == ['']:
+            cmd = 'echo "Please provide a directory to map into the container '
+            cmd += 'after the -a flag."'
+        else:
+            cmd = get_destroy_production_container_command(info)
+            cmd += ' && ' + get_production_image_command(info)
+            cmd += ' && ' + get_production_container_command(info)
 
     elif mode == 'publish':
         cmd = get_tox_command(info)
