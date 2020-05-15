@@ -1,10 +1,11 @@
 import json
 
 from dash_ace_editor import DashAceEditor
+from flasgger import Swagger
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-from flasgger import Swagger
+import dash_table
 import jinja2
 
 from hidebound.database import Database
@@ -197,7 +198,7 @@ def get_searchbar():
     create = get_button('create')
     delete = get_button('delete')
 
-    row = html.Div(
+    row0 = html.Div(
         className='row',
         children=[
             query,
@@ -215,7 +216,11 @@ def get_searchbar():
             dropdown
         ],
     )
-    searchbar = html.Div(id='searchbar', className='menubar', children=[row])
+    row1 = html.Div(className='row-spacer')
+    row2 = html.Div(id='table-content', children=[])
+    searchbar = html.Div(
+        id='searchbar', className='menubar', children=[row0, row1, row2]
+    )
     return searchbar
 
 
@@ -333,4 +338,76 @@ def get_json_editor(value={}):
         tabSize=4,
         enableLiveAutocompletion=False,
         enableBasicAutocompletion=False
+    )
+
+
+def get_datatable(data):
+    '''
+    Gets a Dash DataTable element using given data.
+    Assumes dict element has all columns of table as keys.
+
+    Args:
+        data (list[dict]): List of dicts.
+
+    Returns:
+        DataTable: Table of data.
+    '''
+    cols = []
+    if len(data) > 0:
+        cols = data[0].keys()
+    cols = [{'name': x, 'id': x} for x in cols]
+
+    return dash_table.DataTable(
+        data=data,
+        columns=cols,
+        id='datatable',
+        css=[
+            {
+                'selector': '.dash-cell div.dash-cell-value',
+                'rule': '''display: inline;
+                            white-space: inherit;
+                            overflow: inherit;
+                            text-overflow: inherit;'''
+            }
+        ],
+        style_data={'whiteSpace': 'normal'},
+        style_table={
+            'zIndex': '0',
+            'width': '99.7vw',
+            'maxHeight': '95vh',
+            'overflowX': 'scroll',
+            'overflowY': 'scroll',
+            'padding': '0px 4px 0px 4px',
+            'borderWidth': '0px 1px 0px 1px',
+            'borderColor': COLOR_SCHEME['grey1'],
+        },
+        style_header={
+            'color': COLOR_SCHEME['light2'],
+            'background': COLOR_SCHEME['grey1'],
+            'fontWeight': 'bold'
+        },
+        style_filter={
+            'color': COLOR_SCHEME['cyan2'],
+            'background': COLOR_SCHEME['bg']
+        },
+        style_cell={
+            'textAlign': 'left',
+            'maxWidth': '300px',
+            'borderColor': COLOR_SCHEME['grey1'],
+            'border': '0px',
+            'height': '25px',
+            'padding': '3px 0px 3px 10px'
+        },
+        style_data_conditional=[
+            {
+                'if': {'row_index': 'odd'},
+                'color': COLOR_SCHEME['light1'],
+                'background': COLOR_SCHEME['grey1']
+            },
+            {
+                'if': {'row_index': 'even'},
+                'color': COLOR_SCHEME['light1'],
+                'background': COLOR_SCHEME['bg']
+            }
+        ]
     )

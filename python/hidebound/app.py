@@ -130,7 +130,7 @@ def init_button(n_clicks):
 
 
 @APP.callback(
-    Output('content', 'data-update-button'), [Input('update-button', 'n_clicks')]
+    Output('table-content', 'children'), [Input('update-button', 'n_clicks')]
 )
 def update_button(n_clicks):
     '''
@@ -144,6 +144,8 @@ def update_button(n_clicks):
     '''
     if n_clicks is not None:
         APP.server._database.update()
+        data = APP.server.test_client().get('/api/read').json
+        return client.get_datatable(data['response'])
 
 
 @APP.callback(

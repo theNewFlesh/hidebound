@@ -135,3 +135,19 @@ class ClientTests(unittest.TestCase):
     def test_get_config_tab(self):
         tab = client.get_config_tab({'foo': 'bar'})
         self.assertEqual(tab[0].id, 'configbar')
+
+    def test_get_datatable(self):
+        data = [
+            {'foo': 'pizza', 'bar': 'taco'},
+            {'foo': 'kiwi', 'bar': 'potato'},
+        ]
+        result = client.get_datatable(data)
+        self.assertEqual(result.id, 'datatable')
+        expected = [
+            {'name': 'foo', 'id': 'foo'},
+            {'name': 'bar', 'id': 'bar'}
+        ]
+        self.assertEqual(result.columns, expected)
+
+        result = client.get_datatable([])
+        self.assertEqual(result.columns, [])
