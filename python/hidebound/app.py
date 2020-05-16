@@ -133,9 +133,9 @@ def on_init_button_click(n_clicks):
 
 
 @APP.callback(
-    Output('session-store', 'data'),
+    Output('store', 'data'),
     [Input('update-button', 'n_clicks')],
-    [State('session-store', 'data')]
+    [State('store', 'data')]
 )
 def on_update_button_click(n_clicks, data):
     '''
@@ -159,8 +159,8 @@ def on_update_button_click(n_clicks, data):
 
 @APP.callback(
     Output('table-content', 'children'),
-    [Input('session-store', 'modified_timestamp')],
-    [State('session-store', 'data')]
+    [Input('store', 'modified_timestamp')],
+    [State('store', 'data')]
 )
 def on_session_data_update(timestamp, data):
     '''

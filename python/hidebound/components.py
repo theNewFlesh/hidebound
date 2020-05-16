@@ -85,7 +85,7 @@ def get_app(storage_type='session'):
     Returns:
         Dash: Dash app instance.
     '''
-    store = dcc.Store(id='session-store', storage_type=storage_type)
+    store = dcc.Store(id='store', storage_type=storage_type)
 
     tab_style = {
         'padding': '4px',
