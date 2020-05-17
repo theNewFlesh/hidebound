@@ -75,7 +75,7 @@ def render_template(filename, parameters):
 
 
 # APP---------------------------------------------------------------------------
-def get_app(storage_type='session'):
+def get_app(storage_type='memory'):
     '''
     Generate Dash Flask app instance.
 
@@ -188,7 +188,7 @@ def get_searchbar():
     query = dcc.Input(
         id='query',
         className='col query',
-        value='SELECT * FROM data WHERE ',
+        value='SELECT * FROM data',
         placeholder='SQL query that uses "FROM data"',
         type='text'
     )
@@ -318,7 +318,7 @@ def get_button(title):
     if not isinstance(title, str):
         msg = f'{title} is not a string.'
         raise TypeError(msg)
-    return html.Button(id=f'{title}-button', children=[title])
+    return html.Button(id=f'{title}-button', children=[title], n_clicks=0)
 
 
 def get_json_editor(value={}):
@@ -367,15 +367,15 @@ def get_datatable(data):
             {
                 'selector': '.dash-cell div.dash-cell-value',
                 'rule': '''display: inline;
-                            white-space: inherit;
-                            overflow: inherit;
-                            text-overflow: inherit;'''
+                           white-space: inherit;
+                           overflow: inherit;
+                           text-overflow: inherit;'''
             }
         ],
         style_data={'whiteSpace': 'normal'},
         style_table={
             'zIndex': '0',
-            'width': '99.7vw',
+            'maxWidth': '99.5vw',
             'maxHeight': '95vh',
             'overflowX': 'scroll',
             'overflowY': 'scroll',

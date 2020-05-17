@@ -514,6 +514,25 @@ button:active {
     color: {{ COLOR_SCHEME['cyan2'] }};
 }
 
+/* ScrollBar */
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    display: none;
+}
+
+::-webkit-scrollbar-track {
+  background: {{ COLOR_SCHEME['dark2'] }};
+}
+
+::-webkit-scrollbar-thumb {
+  background: {{ COLOR_SCHEME['grey2'] }};
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: {{ COLOR_SCHEME['cyan2'] }};
+}
+
 /* DataTable */
 .dash-cell div.dash-cell-value {
     display: inline;
