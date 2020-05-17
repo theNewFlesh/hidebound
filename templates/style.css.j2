@@ -21,8 +21,8 @@ body {
     width: 130px;
     background: linear-gradient(
         100deg,
-        {{ COLOR_SCHEME['bg'] }} 48%,
-        {{ COLOR_SCHEME['cyan1'] }} 48%
+        {{ COLOR_SCHEME['bg'] }} 45%,
+        {{ COLOR_SCHEME['cyan1'] }} 45%
     ) !important;
     border: 0px !important;
     font-size: large !important;
@@ -34,8 +34,8 @@ body {
 #tabs #logo span {
     background: linear-gradient(
         100deg,
-        {{ COLOR_SCHEME['cyan1'] }} 46.5%,
-        {{ COLOR_SCHEME['bg'] }} 46.5%
+        {{ COLOR_SCHEME['cyan1'] }} 41.5%,
+        {{ COLOR_SCHEME['bg'] }} 41.5%
     ) !important;
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
@@ -539,6 +539,10 @@ button:active {
     white-space: inherit;
     overflow: inherit;
     text-overflow: inherit;
+}
+
+#datatable .dash-spreadsheet {
+    max-height: unset;
 }
 
 #datatable .row.row-0 {
