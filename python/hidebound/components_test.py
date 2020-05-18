@@ -73,7 +73,7 @@ class ComponentsTests(unittest.TestCase):
 
         query = searchbar.children[0].children[0]
         self.assertEqual(query.id, 'query')
-        self.assertEqual(query.value, 'SELECT * FROM data WHERE ')
+        self.assertEqual(query.value, 'SELECT * FROM data')
         self.assertEqual(query.placeholder, 'SQL query that uses "FROM data"')
 
         button = searchbar.children[0].children[2]
