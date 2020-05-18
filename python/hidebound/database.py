@@ -116,7 +116,7 @@ class Database:
             lambda x: not issubclass(x, SpecificationBase), specifications
         ))
         if len(bad_specs) > 0:
-            msg = f'SpecificationBase may only contain subclasses of '
+            msg = 'SpecificationBase may only contain subclasses of '
             msg += f'SpecificationBase. Found: {bad_specs}.'
             raise TypeError(msg)
 
