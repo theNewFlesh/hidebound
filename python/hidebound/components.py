@@ -51,7 +51,7 @@ COLORS = [
     'blue2',
     'green2',
 ]
-FONT_FAMILY = 'Courier'
+FONT_FAMILY = 'sans serif'
 
 
 def render_template(filename, parameters):
@@ -80,7 +80,7 @@ def get_app(storage_type='memory'):
     Generate Dash Flask app instance.
 
     Args:
-        storage_type (str): Storage type (used for testing). Default: session.
+        storage_type (str): Storage type (used for testing). Default: memory.
 
     Returns:
         Dash: Dash app instance.
