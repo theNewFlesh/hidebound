@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.5.0
+                0.5.1
               </div>
             
           
@@ -259,6 +259,7 @@
         <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;create-button&#39;</span><span class="p">,</span> <span class="s1">&#39;n_clicks&#39;</span><span class="p">),</span>
         <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;delete-button&#39;</span><span class="p">,</span> <span class="s1">&#39;n_clicks&#39;</span><span class="p">),</span>
         <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;search-button&#39;</span><span class="p">,</span> <span class="s1">&#39;n_clicks&#39;</span><span class="p">),</span>
+        <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;dropdown&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">),</span>
         <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">),</span>
     <span class="p">],</span>
     <span class="p">[</span><span class="n">State</span><span class="p">(</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)]</span>
@@ -275,6 +276,13 @@
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">context</span> <span class="o">=</span> <span class="n">dash</span><span class="o">.</span><span class="n">callback_context</span>
     <span class="n">inputs</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">context</span><span class="o">.</span><span class="n">inputs_list</span><span class="p">}</span>
+
+    <span class="c1"># convert search dropdown to boolean</span>
+    <span class="n">grp</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;dropdown&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;asset&#39;</span><span class="p">:</span>
+        <span class="n">grp</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;dropdown&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grp</span>
+
     <span class="n">input_id</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">triggered</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;prop_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">store</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -285,7 +293,9 @@
         <span class="k">if</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_config_path</span><span class="p">)</span>
         <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-        <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/api/read&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">test_client</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/api/read&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s1">&#39;group_by_asset&#39;</span><span class="p">:</span> <span class="n">grp</span><span class="p">})</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">test_client</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/api/read&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">params</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
+        <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/api/read&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span>
 
     <span class="k">elif</span> <span class="n">input_id</span> <span class="o">==</span> <span class="s1">&#39;create-button&#39;</span><span class="p">:</span>
         <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
@@ -295,7 +305,8 @@
 
     <span class="k">elif</span> <span class="n">input_id</span> <span class="o">==</span> <span class="s1">&#39;search-button&#39;</span><span class="p">:</span>
         <span class="n">query</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
-            <span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;query&#39;</span><span class="p">]</span>
+            <span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;query&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;group_by_asset&#39;</span><span class="p">:</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;dropdown&#39;</span><span class="p">]</span>
         <span class="p">})</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">test_client</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/api/search&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
         <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/api/read&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span>
@@ -530,10 +541,7 @@
             <span class="n">grp</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;group_by_asset&#39;</span><span class="p">]</span>
             <span class="k">assert</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">grp</span><span class="p">,</span> <span class="nb">bool</span><span class="p">))</span>
         <span class="k">except</span> <span class="p">(</span><span class="n">JSONDecodeError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">,</span> <span class="ne">AssertionError</span><span class="p">):</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Please supply valid read params in the form &#39;</span>
-            <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;{&quot;group_by_asset&quot;: BOOL}.&#39;</span>
-            <span class="n">error</span> <span class="o">=</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">get_read_error</span><span class="p">()</span>
 
     <span class="n">response</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">try</span><span class="p">:</span>
@@ -559,7 +567,14 @@
             <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;string&#39;</span><span class="p">,</span>
             <span class="n">description</span><span class="o">=</span><span class="s1">&#39;SQL query for searching database. Make sure to use &quot;FROM data&quot; in query.&#39;</span><span class="p">,</span>
             <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">)</span>
+        <span class="p">),</span>
+        <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;group_by_asset&#39;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;bool&#39;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Whether to group resulting search by asset.&#39;</span><span class="p">,</span>
+            <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">),</span>
     <span class="p">],</span>
     <span class="n">responses</span><span class="o">=</span><span class="p">{</span>
         <span class="mi">200</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span>
@@ -578,13 +593,17 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Response: Flask Response instance.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">query</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>
+    <span class="n">grp</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">query</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">query</span><span class="p">)[</span><span class="s1">&#39;query&#39;</span><span class="p">]</span>
-    <span class="k">except</span> <span class="p">(</span><span class="n">JSONDecodeError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">get_query_error</span><span class="p">()</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;query&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;group_by_asset&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">grp</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;group_by_asset&#39;</span><span class="p">]</span>
+            <span class="k">assert</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">grp</span><span class="p">,</span> <span class="nb">bool</span><span class="p">))</span>
+    <span class="k">except</span> <span class="p">(</span><span class="n">JSONDecodeError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">,</span> <span class="ne">AssertionError</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">get_search_error</span><span class="p">()</span>
 
-    <span class="c1"># TODO: add group_by_asset support</span>
     <span class="k">if</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">get_initialization_error</span><span class="p">()</span>
 
@@ -593,7 +612,7 @@
 
     <span class="n">response</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">group_by_asset</span><span class="o">=</span><span class="n">grp</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
@@ -688,18 +707,6 @@
     <span class="k">return</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_query_error"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.get_query_error">[docs]</a><span class="k">def</span> <span class="nf">get_query_error</span><span class="p">():</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Convenience function for returning a query error response.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        Response: Query error.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Please supply a valid query of the form {&quot;query&quot;: SQL}.&#39;</span>
-    <span class="n">error</span> <span class="o">=</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
-
-
 <div class="viewcode-block" id="get_initialization_error"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.get_initialization_error">[docs]</a><span class="k">def</span> <span class="nf">get_initialization_error</span><span class="p">():</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Convenience function for returning a initialization error response.</span>
@@ -721,6 +728,32 @@
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Database not updated. Please call update.&#39;</span>
     <span class="n">error</span> <span class="o">=</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_read_error"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.get_read_error">[docs]</a><span class="k">def</span> <span class="nf">get_read_error</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Convenience function for returning a read error response.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Response: Update error.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Please supply valid read params in the form &#39;</span>
+    <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;{&quot;group_by_asset&quot;: BOOL}.&#39;</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_search_error"><a class="viewcode-back" href="../../hidebound.html#hidebound.app.get_search_error">[docs]</a><span class="k">def</span> <span class="nf">get_search_error</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Convenience function for returning a search error response.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Response: Update error.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Please supply valid search params in the form &#39;</span>
+    <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;{&quot;query&quot;: SQL query, &quot;group_by_asset&quot;: BOOL}.&#39;</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
 
 
