@@ -295,7 +295,7 @@ class Database:
 
         # find columns by legal type
         cols = data.applymap(type).apply(lambda x: set(x.unique()))
-        legal_cols = set([int, float, str, None])
+        legal_cols = set([int, float, str, bool, None])
         mask = cols.apply(lambda x: x.difference(legal_cols) == set())
         cols = cols[mask].index.tolist()
 

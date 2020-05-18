@@ -445,7 +445,7 @@ class DatabaseTests(DatabaseTestBase):
             result = list(chain(*result))
             result = set(result)
 
-            expected = set([int, float, str, None])
+            expected = set([int, float, str, bool, None])
             result = result.difference(expected)
             self.assertEqual(len(result), 0)
 
@@ -457,7 +457,7 @@ class DatabaseTests(DatabaseTestBase):
             result = list(chain(*result))
             result = set(result)
 
-            expected = set([int, float, str, None])
+            expected = set([int, float, str, bool, None])
             result = result.difference(expected)
             self.assertEqual(len(result), 0)
 
