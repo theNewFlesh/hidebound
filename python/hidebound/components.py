@@ -296,8 +296,7 @@ def get_dropdown(options):
             'background': COLOR_SCHEME['grey1'],
             'color': COLOR_SCHEME['light1'],
             'border': '0px',
-            'min-width': '225px',
-            'max-width': '550px',
+            'width': '90px',
         }
     )
 
