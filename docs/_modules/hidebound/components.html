@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.4.10
+                0.5.0
               </div>
             
           
@@ -160,7 +160,6 @@
 <span class="kn">import</span> <span class="nn">dash_table</span>
 <span class="kn">import</span> <span class="nn">jinja2</span>
 
-<span class="kn">from</span> <span class="nn">hidebound.database</span> <span class="kn">import</span> <span class="n">Database</span>
 <span class="kn">import</span> <span class="nn">hidebound.tools</span> <span class="k">as</span> <span class="nn">tools</span>
 
 
@@ -228,7 +227,7 @@
 
 
 <span class="c1"># APP---------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="get_app"><a class="viewcode-back" href="../../hidebound.html#hidebound.components.get_app">[docs]</a><span class="k">def</span> <span class="nf">get_app</span><span class="p">(</span><span class="n">storage_type</span><span class="o">=</span><span class="s1">&#39;session&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="get_app"><a class="viewcode-back" href="../../hidebound.html#hidebound.components.get_app">[docs]</a><span class="k">def</span> <span class="nf">get_app</span><span class="p">(</span><span class="n">storage_type</span><span class="o">=</span><span class="s1">&#39;memory&#39;</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Generate Dash Flask app instance.</span>
 
@@ -238,7 +237,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Dash: Dash app instance.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">store</span> <span class="o">=</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Store</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;session-store&#39;</span><span class="p">,</span> <span class="n">storage_type</span><span class="o">=</span><span class="n">storage_type</span><span class="p">)</span>
+    <span class="n">store</span> <span class="o">=</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Store</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="n">storage_type</span><span class="o">=</span><span class="n">storage_type</span><span class="p">)</span>
 
     <span class="n">tab_style</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;padding&#39;</span><span class="p">:</span> <span class="s1">&#39;4px&#39;</span><span class="p">,</span>
@@ -341,7 +340,7 @@
     <span class="n">query</span> <span class="o">=</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span>
         <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;query&#39;</span><span class="p">,</span>
         <span class="n">className</span><span class="o">=</span><span class="s1">&#39;col query&#39;</span><span class="p">,</span>
-        <span class="n">value</span><span class="o">=</span><span class="s1">&#39;SELECT * FROM data WHERE &#39;</span><span class="p">,</span>
+        <span class="n">value</span><span class="o">=</span><span class="s1">&#39;SELECT * FROM data&#39;</span><span class="p">,</span>
         <span class="n">placeholder</span><span class="o">=</span><span class="s1">&#39;SQL query that uses &quot;FROM data&quot;&#39;</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;text&#39;</span>
     <span class="p">)</span>
@@ -471,7 +470,7 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s1"> is not a string.&#39;</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s1">-button&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">title</span><span class="p">])</span></div>
+    <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s1">-button&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">title</span><span class="p">],</span> <span class="n">n_clicks</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="get_json_editor"><a class="viewcode-back" href="../../hidebound.html#hidebound.components.get_json_editor">[docs]</a><span class="k">def</span> <span class="nf">get_json_editor</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">{}):</span>
@@ -516,22 +515,28 @@
         <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
         <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span>
         <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;datatable&#39;</span><span class="p">,</span>
+        <span class="c1"># fixed_rows={&#39;headers&#39;: True},</span>
         <span class="n">css</span><span class="o">=</span><span class="p">[</span>
             <span class="p">{</span>
                 <span class="s1">&#39;selector&#39;</span><span class="p">:</span> <span class="s1">&#39;.dash-cell div.dash-cell-value&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;rule&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;&#39;display: inline;</span>
-<span class="s1">                            white-space: inherit;</span>
-<span class="s1">                            overflow: inherit;</span>
-<span class="s1">                            text-overflow: inherit;&#39;&#39;&#39;</span>
+<span class="s1">                           white-space: inherit;</span>
+<span class="s1">                           overflow: inherit;</span>
+<span class="s1">                           text-overflow: inherit;&#39;&#39;&#39;</span>
             <span class="p">}</span>
         <span class="p">],</span>
-        <span class="n">style_data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;whiteSpace&#39;</span><span class="p">:</span> <span class="s1">&#39;normal&#39;</span><span class="p">},</span>
+        <span class="n">style_data</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;whiteSpace&#39;</span><span class="p">:</span> <span class="s1">&#39;normal&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="s1">&#39;auto&#39;</span>
+
+        <span class="p">},</span>
         <span class="n">style_table</span><span class="o">=</span><span class="p">{</span>
             <span class="s1">&#39;zIndex&#39;</span><span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="s1">&#39;99.7vw&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;maxWidth&#39;</span><span class="p">:</span> <span class="s1">&#39;99.5vw&#39;</span><span class="p">,</span>
             <span class="s1">&#39;maxHeight&#39;</span><span class="p">:</span> <span class="s1">&#39;95vh&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;overflowX&#39;</span><span class="p">:</span> <span class="s1">&#39;scroll&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;overflowY&#39;</span><span class="p">:</span> <span class="s1">&#39;scroll&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;overflowX&#39;</span><span class="p">:</span> <span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;overflowY&#39;</span><span class="p">:</span> <span class="s1">&#39;auto&#39;</span><span class="p">,</span>
             <span class="s1">&#39;padding&#39;</span><span class="p">:</span> <span class="s1">&#39;0px 4px 0px 4px&#39;</span><span class="p">,</span>
             <span class="s1">&#39;borderWidth&#39;</span><span class="p">:</span> <span class="s1">&#39;0px 1px 0px 1px&#39;</span><span class="p">,</span>
             <span class="s1">&#39;borderColor&#39;</span><span class="p">:</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;grey1&#39;</span><span class="p">],</span>
@@ -547,6 +552,7 @@
         <span class="p">},</span>
         <span class="n">style_cell</span><span class="o">=</span><span class="p">{</span>
             <span class="s1">&#39;textAlign&#39;</span><span class="p">:</span> <span class="s1">&#39;left&#39;</span><span class="p">,</span>
+            <span class="c1"># &#39;minWidth&#39;: &#39;105px&#39;,</span>
             <span class="s1">&#39;maxWidth&#39;</span><span class="p">:</span> <span class="s1">&#39;300px&#39;</span><span class="p">,</span>
             <span class="s1">&#39;borderColor&#39;</span><span class="p">:</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;grey1&#39;</span><span class="p">],</span>
             <span class="s1">&#39;border&#39;</span><span class="p">:</span> <span class="s1">&#39;0px&#39;</span><span class="p">,</span>

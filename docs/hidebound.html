@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.4.10
+                0.5.0
               </div>
             
           
@@ -334,35 +334,35 @@ directory.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="hidebound.app.on_create_button_click">
-<code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">on_create_button_click</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_clicks</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#on_create_button_click"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.on_create_button_click" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes data to hidebound/data and hidebound/metadata.</p>
+<dt id="hidebound.app.on_datatable_update">
+<code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">on_datatable_update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">store</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#on_datatable_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.on_datatable_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates datatable with read information from store.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>n_clicks</strong> (<em>int</em>) – Number of button clicks.</p>
+<dd class="field-odd"><p><strong>store</strong> (<em>dict</em>) – Store data.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Response.</p>
+<dd class="field-even"><p>Dash DataTable.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>flask.Response</p>
+<dd class="field-odd"><p>DataTable</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="hidebound.app.on_delete_button_click">
-<code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">on_delete_button_click</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_clicks</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#on_delete_button_click"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.on_delete_button_click" title="Permalink to this definition">¶</a></dt>
-<dd><p>Deletes all data in hidebound/data and hidebound/metadata.</p>
+<dt id="hidebound.app.on_event">
+<code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">on_event</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">inputs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#on_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.on_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update Hidebound database instance, and updates store with input data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>n_clicks</strong> (<em>int</em>) – Number of button clicks.</p>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>tuple</em>) – Input elements.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Response.</p>
+<dd class="field-even"><p>Store data.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>flask.Response</p>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
@@ -374,60 +374,6 @@ directory.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>tab</strong> (<em>str</em>) – Name of tab to render.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Response.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>flask.Response</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="hidebound.app.on_init_button_click">
-<code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">on_init_button_click</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_clicks</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#on_init_button_click"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.on_init_button_click" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates the Database with the current config.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>n_clicks</strong> (<em>int</em>) – Number of button clicks.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Response.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>flask.Response</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="hidebound.app.on_session_data_update">
-<code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">on_session_data_update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timestamp</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#on_session_data_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.on_session_data_update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates the datatable with session data.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>timestamp</strong> (<em>int</em>) – Session timestamp.</p></li>
-<li><p><strong>data</strong> (<em>dict</em>) – Session data.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Response.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>flask.Response</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="hidebound.app.on_update_button_click">
-<code class="sig-prename descclassname">hidebound.app.</code><code class="sig-name descname">on_update_button_click</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_clicks</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/app.html#on_update_button_click"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.app.on_update_button_click" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates the Database with the current config.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>n_clicks</strong> (<em>int</em>) – Number of button clicks.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Response.</p>
@@ -516,7 +462,7 @@ Default: “/mnt/storage”.</p>
 <span id="components"></span><h2>components<a class="headerlink" href="#module-hidebound.components" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="hidebound.components.get_app">
-<code class="sig-prename descclassname">hidebound.components.</code><code class="sig-name descname">get_app</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">storage_type</span><span class="o">=</span><span class="default_value">'session'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/components.html#get_app"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.components.get_app" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">hidebound.components.</code><code class="sig-name descname">get_app</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">storage_type</span><span class="o">=</span><span class="default_value">'memory'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/components.html#get_app"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.components.get_app" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate Dash Flask app instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
