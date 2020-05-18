@@ -107,6 +107,7 @@ def serve_stylesheet(stylesheet):
         Input('create-button', 'n_clicks'),
         Input('delete-button', 'n_clicks'),
         Input('search-button', 'n_clicks'),
+        Input('dropdown', 'value'),
         Input('query', 'value'),
     ],
     [State('store', 'data')]
@@ -123,6 +124,13 @@ def on_event(*inputs):
     '''
     context = dash.callback_context
     inputs = {x['id']: x['value'] for x in context.inputs_list}
+
+    # convert search dropdown to boolean
+    grp = False
+    if inputs['dropdown'] == 'asset':
+        grp = True
+    inputs['dropdown'] = grp
+
     input_id = context.triggered[0]['prop_id'].split('.')[0]
     store = {}
 
@@ -133,7 +141,9 @@ def on_event(*inputs):
         if APP.server._database is None:
             APP.server._database = Database.from_json(APP.server._config_path)
         APP.server._database.update()
-        store['/api/read'] = APP.server.test_client().post('/api/read').json
+        params = json.dumps({'group_by_asset': grp})
+        response = APP.server.test_client().post('/api/read', json=params).json
+        store['/api/read'] = response
 
     elif input_id == 'create-button':
         APP.server._database.create()
@@ -143,7 +153,8 @@ def on_event(*inputs):
 
     elif input_id == 'search-button':
         query = json.dumps({
-            'query': inputs['query']
+            'query': inputs['query'],
+            'group_by_asset': inputs['dropdown']
         })
         response = APP.server.test_client().post('/api/search', json=query).json
         store['/api/read'] = response
@@ -378,10 +389,7 @@ def read():
             grp = params['group_by_asset']
             assert(isinstance(grp, bool))
         except (JSONDecodeError, TypeError, KeyError, AssertionError):
-            msg = 'Please supply valid read params in the form '
-            msg += '{"group_by_asset": BOOL}.'
-            error = TypeError(msg)
-            return error_to_response(error)
+            return get_read_error()
 
     response = {}
     try:
@@ -407,7 +415,14 @@ def read():
             type='string',
             description='SQL query for searching database. Make sure to use "FROM data" in query.',
             required=True,
-        )
+        ),
+        dict(
+            name='group_by_asset',
+            type='bool',
+            description='Whether to group resulting search by asset.',
+            required=False,
+            default=False,
+        ),
     ],
     responses={
         200: dict(
@@ -426,13 +441,17 @@ def search():
     Returns:
         Response: Flask Response instance.
     '''
-    query = request.get_json()
+    params = request.get_json()
+    grp = False
     try:
-        query = json.loads(query)['query']
-    except (JSONDecodeError, TypeError, KeyError):
-        return get_query_error()
+        params = json.loads(params)
+        query = params['query']
+        if 'group_by_asset' in params.keys():
+            grp = params['group_by_asset']
+            assert(isinstance(grp, bool))
+    except (JSONDecodeError, TypeError, KeyError, AssertionError):
+        return get_search_error()
 
-    # TODO: add group_by_asset support
     if APP.server._database is None:
         return get_initialization_error()
 
@@ -441,7 +460,7 @@ def search():
 
     response = None
     try:
-        response = APP.server._database.search(query)
+        response = APP.server._database.search(query, group_by_asset=grp)
     except Exception as e:
         return error_to_response(e)
 
@@ -536,18 +555,6 @@ def get_config_error():
     return error_to_response(error)
 
 
-def get_query_error():
-    '''
-    Convenience function for returning a query error response.
-
-    Returns:
-        Response: Query error.
-    '''
-    msg = 'Please supply a valid query of the form {"query": SQL}.'
-    error = TypeError(msg)
-    return error_to_response(error)
-
-
 def get_initialization_error():
     '''
     Convenience function for returning a initialization error response.
@@ -569,6 +576,32 @@ def get_update_error():
     '''
     msg = 'Database not updated. Please call update.'
     error = RuntimeError(msg)
+    return error_to_response(error)
+
+
+def get_read_error():
+    '''
+    Convenience function for returning a read error response.
+
+    Returns:
+        Response: Update error.
+    '''
+    msg = 'Please supply valid read params in the form '
+    msg += '{"group_by_asset": BOOL}.'
+    error = ValueError(msg)
+    return error_to_response(error)
+
+
+def get_search_error():
+    '''
+    Convenience function for returning a search error response.
+
+    Returns:
+        Response: Update error.
+    '''
+    msg = 'Please supply valid search params in the form '
+    msg += '{"query": SQL query, "group_by_asset": BOOL}.'
+    error = ValueError(msg)
     return error_to_response(error)
 
 

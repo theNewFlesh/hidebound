@@ -232,16 +232,50 @@ class AppTests(DatabaseTestBase):
             .to_dict(orient='records')
         self.assertEqual(result, expected)
 
+    def test_search_group_by_asset(self):
+        # init database
+        config = dict(
+            root_directory=self.root,
+            hidebound_directory=self.hb_root,
+            specification_files=[self.specs],
+        )
+        config = json.dumps(config)
+        self.client.post('/api/initialize', json=config)
+        self.client.post('/api/update')
+
+        # call search
+        query = 'SELECT * FROM data WHERE asset_type == "sequence"'
+        temp = {'query': query, 'group_by_asset': True}
+        temp = json.dumps(temp)
+        result = self.client.post('/api/search', json=temp).json['response']
+        expected = self.app._database.search(query, group_by_asset=True)\
+            .replace({np.nan: None})\
+            .to_dict(orient='records')
+        self.assertEqual(result, expected)
+
     def test_search_no_query(self):
         result = self.client.post('/api/search').json['message']
-        expected = 'Please supply a valid query of the form {"query": SQL}.'
+        expected = 'Please supply valid search params in the form '
+        expected += r'\{"query": SQL query, "group_by_asset": BOOL\}\.'
         self.assertRegex(result, expected)
 
     def test_search_bad_json(self):
         query = {'foo': 'bar'}
         query = json.dumps(query)
         result = self.client.post('/api/search', json=query).json['message']
-        expected = 'Please supply a valid query of the form {"query": SQL}.'
+        expected = 'Please supply valid search params in the form '
+        expected += r'\{"query": SQL query, "group_by_asset": BOOL\}\.'
+        self.assertRegex(result, expected)
+
+    def test_search_bad_group_by_asset(self):
+        params = dict(
+            query='SELECT * FROM data WHERE asset_type == "sequence"',
+            group_by_asset='foo'
+        )
+        params = json.dumps(params)
+        result = self.client.post('/api/search', json=params).json['message']
+        expected = 'Please supply valid search params in the form '
+        expected += r'\{"query": SQL query, "group_by_asset": BOOL\}\.'
         self.assertRegex(result, expected)
 
     def test_search_bad_query(self):
@@ -388,9 +422,16 @@ class AppTests(DatabaseTestBase):
         expected = 'Database not updated. Please call update.'
         self.assertRegex(result, expected)
 
-    def test_get_query_error(self):
-        result = application.get_query_error().json['message']
-        expected = 'Please supply a valid query of the form {"query": SQL}.'
+    def test_get_read_error(self):
+        result = application.get_read_error().json['message']
+        expected = 'Please supply valid read params in the form '
+        expected += r'\{"group_by_asset": BOOL\}\.'
+        self.assertRegex(result, expected)
+
+    def test_get_search_error(self):
+        result = application.get_search_error().json['message']
+        expected = 'Please supply valid search params in the form '
+        expected += r'\{"query": SQL query, "group_by_asset": BOOL\}\.'
         self.assertRegex(result, expected)
 
     # ERROR-HANDLERS------------------------------------------------------------
