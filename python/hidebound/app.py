@@ -341,7 +341,15 @@ def update():
 
 @APP.server.route('/api/read', methods=['GET', 'POST'])
 @swag_from(dict(
-    parameters=[],
+    parameters=[
+        dict(
+            name='group_by_asset',
+            type='bool',
+            description='Whether to group resulting data by asset.',
+            required=False,
+            default=False,
+        ),
+    ],
     responses={
         200: dict(
             description='Read all data from database.',
@@ -359,15 +367,29 @@ def read():
     Returns:
         Response: Flask Response instance.
     '''
-    # TODO: add group_by_asset support
     if APP.server._database is None:
         return get_initialization_error()
 
+    params = request.get_json()
+    grp = False
+    if params is not None:
+        try:
+            params = json.loads(params)
+            grp = params['group_by_asset']
+            assert(isinstance(grp, bool))
+        except (JSONDecodeError, TypeError, KeyError, AssertionError):
+            msg = 'Please supply valid read params in the form '
+            msg += '{"group_by_asset": BOOL}.'
+            error = TypeError(msg)
+            return error_to_response(error)
+
     response = {}
     try:
-        response = APP.server._database.read()
-    except RuntimeError:
-        return get_update_error()
+        response = APP.server._database.read(group_by_asset=grp)
+    except Exception as error:
+        if isinstance(error, RuntimeError):
+            return get_update_error()
+        return error_to_response(error)
 
     response = response.replace({np.nan: None}).to_dict(orient='records')
     response = {'response': response}

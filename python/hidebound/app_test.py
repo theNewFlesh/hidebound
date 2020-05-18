@@ -158,6 +158,38 @@ class AppTests(DatabaseTestBase):
             .to_dict(orient='records')
         self.assertEqual(result, expected)
 
+    def test_read_group_by_asset(self):
+        # init database
+        config = dict(
+            root_directory=self.root,
+            hidebound_directory=self.hb_root,
+            specification_files=[self.specs],
+        )
+        config = json.dumps(config)
+        self.client.post('/api/initialize', json=config)
+        self.client.post('/api/update')
+
+        # good params
+        params = json.dumps({'group_by_asset': True})
+        result = self.client.post('/api/read', json=params).json['response']
+        expected = self.app._database.read(group_by_asset=True)\
+            .replace({np.nan: None})\
+            .to_dict(orient='records')
+        self.assertEqual(result, expected)
+
+        # bad params
+        params = json.dumps({'foo': True})
+        result = self.client.post('/api/read', json=params).json['message']
+        expected = 'Please supply valid read params in the form '
+        expected += r'\{"group_by_asset": BOOL\}\.'
+        self.assertRegex(result, expected)
+
+        params = json.dumps({'group_by_asset': 'foo'})
+        result = self.client.post('/api/read', json=params).json['message']
+        expected = 'Please supply valid read params in the form '
+        expected += r'\{"group_by_asset": BOOL\}\.'
+        self.assertRegex(result, expected)
+
     def test_read_no_init(self):
         result = self.client.post('/api/read').json['message']
         expected = 'Database not initialized. Please call initialize.'
