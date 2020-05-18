@@ -363,6 +363,7 @@ def get_datatable(data):
         data=data,
         columns=cols,
         id='datatable',
+        # fixed_rows={'headers': True},
         css=[
             {
                 'selector': '.dash-cell div.dash-cell-value',
@@ -372,13 +373,18 @@ def get_datatable(data):
                            text-overflow: inherit;'''
             }
         ],
-        style_data={'whiteSpace': 'normal'},
+        style_data={
+            'whiteSpace': 'normal',
+            'height': 'auto',
+            'width': 'auto'
+
+        },
         style_table={
             'zIndex': '0',
             'maxWidth': '99.5vw',
             'maxHeight': '95vh',
-            'overflowX': 'scroll',
-            'overflowY': 'scroll',
+            'overflowX': 'auto',
+            'overflowY': 'auto',
             'padding': '0px 4px 0px 4px',
             'borderWidth': '0px 1px 0px 1px',
             'borderColor': COLOR_SCHEME['grey1'],
@@ -394,6 +400,7 @@ def get_datatable(data):
         },
         style_cell={
             'textAlign': 'left',
+            # 'minWidth': '105px',
             'maxWidth': '300px',
             'borderColor': COLOR_SCHEME['grey1'],
             'border': '0px',
