@@ -1,0 +1,756 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>server &mdash; hidebound  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/style.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="cli" href="cli.html" />
+    <link rel="prev" title="core" href="core.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> hidebound
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="core.html">core</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">server</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-hidebound.server.app">app</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-hidebound.server.components">components</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">cli</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">hidebound</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="modules.html">&lt;no title&gt;</a> &raquo;</li>
+        
+      <li>server</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/server.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="server">
+<h1>server<a class="headerlink" href="#server" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-hidebound.server.app">
+<span id="app"></span><h2>app<a class="headerlink" href="#module-hidebound.server.app" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="hidebound.server.app.api">
+<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">api</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#api"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.api" title="Permalink to this definition">¶</a></dt>
+<dd><p>Route to Hidebound API documentation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Flassger generated API page.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>html</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.app.create">
+<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create hidebound data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Flask Response instance.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.app.delete">
+<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">delete</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete hidebound data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Flask Response instance.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.app.error_to_response">
+<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">error_to_response</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">error</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#error_to_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.error_to_response" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function for formatting a given exception as a Flask Response.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>error</strong> (<em>Exception</em>) – Error to be formatted.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Flask response.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.app.get_config_error">
+<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">get_config_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#get_config_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.get_config_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function for returning a config error response.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Config error.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.app.get_initialization_error">
+<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">get_initialization_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#get_initialization_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.get_initialization_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function for returning a initialization error response.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Initialization error.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.app.get_read_error">
+<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">get_read_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#get_read_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.get_read_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function for returning a read error response.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Update error.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.app.get_search_error">
+<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">get_search_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#get_search_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.get_search_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function for returning a search error response.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Update error.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.app.get_startup_parameters">
+<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">get_startup_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#get_startup_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.get_startup_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets debug_mode and in initial configuration values. Also sets up hidebound
+directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Debug mode bool, configuration dict and filepath.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.app.get_update_error">
+<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">get_update_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#get_update_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.get_update_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function for returning a update error response.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Update error.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.app.handle_data_error">
+<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">handle_data_error</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">error</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#handle_data_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.handle_data_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles errors raise by config validation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>error</strong> (<em>DataError</em>) – Config validation error.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataError response.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.app.initialize">
+<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize database with given config.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Flask Response instance.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.app.on_datatable_update">
+<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">on_datatable_update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">store</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#on_datatable_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.on_datatable_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates datatable with read information from store.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>store</strong> (<em>dict</em>) – Store data.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dash DataTable.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DataTable</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.app.on_event">
+<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">on_event</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">inputs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#on_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.on_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update Hidebound database instance, and updates store with input data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>tuple</em>) – Input elements.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Store data.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.app.on_get_tab">
+<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">on_get_tab</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tab</span></em>, <em class="sig-param"><span class="n">store</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#on_get_tab"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.on_get_tab" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serve content for app tabs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tab</strong> (<em>str</em>) – Name of tab to render.</p></li>
+<li><p><strong>store</strong> (<em>dict</em>) – Store.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Response.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>flask.Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.app.on_json_editor_update">
+<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">on_json_editor_update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">store</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#on_json_editor_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.on_json_editor_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates JSON editor with config information from store.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>store</strong> (<em>dict</em>) – Store data.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Response.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>flask.Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.app.parse_json_file_content">
+<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">parse_json_file_content</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">raw_content</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#parse_json_file_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.parse_json_file_content" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses JSON file content as supplied by HTML request.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>raw_content</strong> (<em>bytes</em>) – Raw JSON file content.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If header is invalid.</p></li>
+<li><p><strong>JSONDecodeError</strong> – If JSON is invalid.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>JSON content or reponse dict with error.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.app.read">
+<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Flask Response instance.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.app.search">
+<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">search</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search database with a given SQL query.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Flask Response instance.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.app.serve_stylesheet">
+<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">serve_stylesheet</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">stylesheet</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#serve_stylesheet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.serve_stylesheet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serve stylesheet to app.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>stylesheet</strong> (<em>str</em>) – stylesheet filename.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Response.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>flask.Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.app.setup_hidebound_directory">
+<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">setup_hidebound_directory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">target</span><span class="o">=</span><span class="default_value">'/mnt/storage'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#setup_hidebound_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.setup_hidebound_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates /mnt/storage/hidebound and /mnt/storage/hidebound/specifications
+directories. Writes a default hidebound config to
+/mnt/storage/hidebound/hidebound_config.json if one does not exist.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>target</strong> (<em>str</em><em>, </em><em>optional</em>) – For testing only. Do not call with argument.
+Default: “/mnt/storage”.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.app.update">
+<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Flask Response instance.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-hidebound.server.components">
+<span id="components"></span><h2>components<a class="headerlink" href="#module-hidebound.server.components" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="hidebound.server.components.get_app">
+<code class="sig-prename descclassname">hidebound.server.components.</code><code class="sig-name descname">get_app</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">storage_type</span><span class="o">=</span><span class="default_value">'memory'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/components.html#get_app"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.components.get_app" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate Dash Flask app instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>storage_type</strong> (<em>str</em>) – Storage type (used for testing). Default: memory.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dash app instance.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dash</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.components.get_button">
+<code class="sig-prename descclassname">hidebound.server.components.</code><code class="sig-name descname">get_button</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">title</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/components.html#get_button"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.components.get_button" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a html button with a given title.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>title</strong> (<em>str</em>) – Title of button.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>TypeError</strong> – If title is not a string.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Button element.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Button</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.components.get_config_tab">
+<code class="sig-prename descclassname">hidebound.server.components.</code><code class="sig-name descname">get_config_tab</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/components.html#get_config_tab"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.components.get_config_tab" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get tab element for Hidebound config.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>dict</em>) – Configuration to be displayed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of elements for config tab.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.components.get_configbar">
+<code class="sig-prename descclassname">hidebound.server.components.</code><code class="sig-name descname">get_configbar</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/components.html#get_configbar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.components.get_configbar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a row of elements used for configuring hidebound.core.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>dict</em>) – Configuration to be displayed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Div with buttons and JSON editor.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Div</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.components.get_data_tab">
+<code class="sig-prename descclassname">hidebound.server.components.</code><code class="sig-name descname">get_data_tab</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/components.html#get_data_tab"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.components.get_data_tab" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get tab element for Hidebound data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>List of elements for data tab.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.components.get_datatable">
+<code class="sig-prename descclassname">hidebound.server.components.</code><code class="sig-name descname">get_datatable</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/components.html#get_datatable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.components.get_datatable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a Dash DataTable element using given data.
+Assumes dict element has all columns of table as keys.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>list</em><em>[</em><em>dict</em><em>]</em>) – List of dicts.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Table of data.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DataTable</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.components.get_dropdown">
+<code class="sig-prename descclassname">hidebound.server.components.</code><code class="sig-name descname">get_dropdown</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">options</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/components.html#get_dropdown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.components.get_dropdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets html dropdown element with given options.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>options</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – List of options.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – If options is not a list.</p></li>
+<li><p><strong>TypeError</strong> – If any option is not a string.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Dropdown element.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Dropdown</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.components.get_dummy_elements">
+<code class="sig-prename descclassname">hidebound.server.components.</code><code class="sig-name descname">get_dummy_elements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/components.html#get_dummy_elements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.components.get_dummy_elements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all elements with callbacks so that the client will not
+throw errors in each tab.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>List of html elements.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.components.get_json_editor">
+<code class="sig-prename descclassname">hidebound.server.components.</code><code class="sig-name descname">get_json_editor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/components.html#get_json_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.components.get_json_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a JSON editor element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>dict</em><em>, </em><em>optional</em>) – Dictionary to be edited. Default: {}.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>JSON editor.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DashAceEditor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.components.get_searchbar">
+<code class="sig-prename descclassname">hidebound.server.components.</code><code class="sig-name descname">get_searchbar</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/components.html#get_searchbar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.components.get_searchbar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a row of elements used for querying Hidebound data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Div with query field, buttons and dropdown.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Div</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.server.components.render_template">
+<code class="sig-prename descclassname">hidebound.server.components.</code><code class="sig-name descname">render_template</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">parameters</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/components.html#render_template"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.components.render_template" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renders a jinja2 template given by filename with given parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – Filename of template.</p></li>
+<li><p><strong>parameters</strong> (<em>dict</em>) – Dictionary of template parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>HTML string.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="cli.html" class="btn btn-neutral float-right" title="cli" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="core.html" class="btn btn-neutral float-left" title="core" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Alex Braun &lt;TheNewFlesh@github.com&gt;
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
