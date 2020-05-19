@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.8
+                0.5.9
               </div>
             
           
@@ -571,21 +571,6 @@ throw errors in each tab.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="hidebound.server.server_tools.get_app">
-<code class="sig-prename descclassname">hidebound.server.server_tools.</code><code class="sig-name descname">get_app</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/server_tools.html#get_app"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.server_tools.get_app" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get Flask app.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – App name. Should always be __name__.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>Retruns:</dt><dd><p>flask.Flask: Flask app.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt id="hidebound.server.server_tools.get_config_error">
 <code class="sig-prename descclassname">hidebound.server.server_tools.</code><code class="sig-name descname">get_config_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/server_tools.html#get_config_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.server_tools.get_config_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convenience function for returning a config error response.</p>
@@ -637,21 +622,6 @@ throw errors in each tab.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>Response</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="hidebound.server.server_tools.get_startup_parameters">
-<code class="sig-prename descclassname">hidebound.server.server_tools.</code><code class="sig-name descname">get_startup_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/server_tools.html#get_startup_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.server_tools.get_startup_parameters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets debug_mode and in initial configuration values. Also sets up hidebound
-directory.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Debug mode bool, configuration dict and filepath.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>list</p>
 </dd>
 </dl>
 </dd></dl>
@@ -715,14 +685,23 @@ directory.</p>
 
 <dl class="py function">
 <dt id="hidebound.server.server_tools.setup_hidebound_directory">
-<code class="sig-prename descclassname">hidebound.server.server_tools.</code><code class="sig-name descname">setup_hidebound_directory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">target</span><span class="o">=</span><span class="default_value">'/mnt/storage'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/server_tools.html#setup_hidebound_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.server_tools.setup_hidebound_directory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates /mnt/storage/hidebound and /mnt/storage/hidebound/specifications
+<code class="sig-prename descclassname">hidebound.server.server_tools.</code><code class="sig-name descname">setup_hidebound_directory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span></em>, <em class="sig-param"><span class="n">config_path</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/server_tools.html#setup_hidebound_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.server_tools.setup_hidebound_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates [root]/hidebound and [root]/hidebound/specifications
 directories. Writes a default hidebound config to
-/mnt/storage/hidebound/hidebound_config.json if one does not exist.</p>
+[root]/hidebound/hidebound_config.json if one does not exist.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>target</strong> (<em>str</em><em>, </em><em>optional</em>) – For testing only. Do not call with argument.
-Default: “/mnt/storage”.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root</strong> (<em>str</em><em> or </em><em>Path</em>) – Root directory of hidebound data.</p></li>
+<li><p><strong>config_path</strong> (<em>str</em><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Filepath of config data to be
+written to [root]/hidebound/hideebiund_config.json. Default: None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Config data and filepath.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple[dict, str]</p>
 </dd>
 </dl>
 </dd></dl>
