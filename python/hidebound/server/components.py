@@ -1,17 +1,13 @@
 import json
 
 from dash_ace_editor import DashAceEditor
-from flasgger import Swagger
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_table
-import jinja2
-
-import hidebound.core.tools as tools
+# ------------------------------------------------------------------------------
 
 
-# TOOLS-------------------------------------------------------------------------
 COLOR_SCHEME = dict(
     dark1='#040404',
     dark2='#141414',
@@ -54,32 +50,13 @@ COLORS = [
 FONT_FAMILY = 'sans serif'
 
 
-def render_template(filename, parameters):
-    '''
-    Renders a jinja2 template given by filename with given parameters.
-
-    Args:
-        filename (str): Filename of template.
-        parameters (dict): Dictionary of template parameters.
-
-    Returns:
-        str: HTML string.
-    '''
-    tempdir = tools.relative_path(__file__, '../../../templates').as_posix()
-    env = jinja2.Environment(
-        loader=jinja2.FileSystemLoader(tempdir),
-        keep_trailing_newline=True
-    )
-    output = env.get_template(filename).render(parameters).encode('utf-8')
-    return output
-
-
 # APP---------------------------------------------------------------------------
-def get_app(storage_type='memory'):
+def get_dash_app(server, storage_type='memory'):
     '''
     Generate Dash Flask app instance.
 
     Args:
+        server (Flask): Flask instance.
         storage_type (str): Storage type (used for testing). Default: memory.
 
     Returns:
@@ -140,14 +117,11 @@ def get_app(storage_type='memory'):
 
     app = dash.Dash(
         __name__,
-        external_stylesheets=['http://0.0.0.0:5000/static/style.css']
+        server=server,
+        external_stylesheets=['http://0.0.0.0:5000/static/style.css'],
     )
-    Swagger(app.server)
     app.layout = html.Div(id='layout', children=[store, tabs, content])
     app.config['suppress_callback_exceptions'] = True
-    app.server._database = None
-    app.server._config = {}
-    app.server._config_path = ''
 
     return app
 

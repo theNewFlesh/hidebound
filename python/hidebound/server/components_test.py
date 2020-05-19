@@ -1,36 +1,18 @@
 import json
 import unittest
 
-import jinja2
+import flask
 
 import hidebound.server.components as components
-import hidebound.core.tools as tools
 # ------------------------------------------------------------------------------
 
 
 class ComponentsTests(unittest.TestCase):
-    def test_render_template(self):
-        tempdir = tools.relative_path(__file__, '../../../templates').as_posix()
-        params = dict(
-            COLOR_SCHEME=components.COLOR_SCHEME,
-            FONT_FAMILY=components.FONT_FAMILY,
-        )
-        env = jinja2.Environment(
-            loader=jinja2.FileSystemLoader(tempdir),
-            keep_trailing_newline=True
-        )
-        expected = env\
-            .get_template('style.css.j2')\
-            .render(params)\
-            .encode('utf-8')
-
-        result = components.render_template('style.css.j2', params)
-        self.assertEqual(result, expected)
-
-    def test_get_app(self):
-        result = components.get_app()
-        self.assertTrue(hasattr(result.server, '_database'))
-        self.assertTrue(hasattr(result.server, '_config'))
+    def test_get_dash_app(self):
+        result = components.get_dash_app(flask.Flask('foo'))._layout
+        self.assertEqual(result.children[0].id, 'store')
+        self.assertEqual(result.children[1].id, 'tabs')
+        self.assertEqual(result.children[2].id, 'content')
 
     def test_get_dropdown(self):
         expected = 'foo is not a list.'
