@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.5.2
+                0.5.8
               </div>
             
           
@@ -154,17 +154,13 @@
 <span></span><span class="kn">import</span> <span class="nn">json</span>
 
 <span class="kn">from</span> <span class="nn">dash_ace_editor</span> <span class="kn">import</span> <span class="n">DashAceEditor</span>
-<span class="kn">from</span> <span class="nn">flasgger</span> <span class="kn">import</span> <span class="n">Swagger</span>
 <span class="kn">import</span> <span class="nn">dash</span>
 <span class="kn">import</span> <span class="nn">dash_core_components</span> <span class="k">as</span> <span class="nn">dcc</span>
 <span class="kn">import</span> <span class="nn">dash_html_components</span> <span class="k">as</span> <span class="nn">html</span>
 <span class="kn">import</span> <span class="nn">dash_table</span>
-<span class="kn">import</span> <span class="nn">jinja2</span>
-
-<span class="kn">import</span> <span class="nn">hidebound.core.tools</span> <span class="k">as</span> <span class="nn">tools</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
 
 
-<span class="c1"># TOOLS-------------------------------------------------------------------------</span>
 <span class="n">COLOR_SCHEME</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
     <span class="n">dark1</span><span class="o">=</span><span class="s1">&#39;#040404&#39;</span><span class="p">,</span>
     <span class="n">dark2</span><span class="o">=</span><span class="s1">&#39;#141414&#39;</span><span class="p">,</span>
@@ -207,32 +203,13 @@
 <span class="n">FONT_FAMILY</span> <span class="o">=</span> <span class="s1">&#39;sans serif&#39;</span>
 
 
-<div class="viewcode-block" id="render_template"><a class="viewcode-back" href="../../../server.html#hidebound.server.components.render_template">[docs]</a><span class="k">def</span> <span class="nf">render_template</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Renders a jinja2 template given by filename with given parameters.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        filename (str): Filename of template.</span>
-<span class="sd">        parameters (dict): Dictionary of template parameters.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        str: HTML string.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">tempdir</span> <span class="o">=</span> <span class="n">tools</span><span class="o">.</span><span class="n">relative_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s1">&#39;../../../templates&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
-    <span class="n">env</span> <span class="o">=</span> <span class="n">jinja2</span><span class="o">.</span><span class="n">Environment</span><span class="p">(</span>
-        <span class="n">loader</span><span class="o">=</span><span class="n">jinja2</span><span class="o">.</span><span class="n">FileSystemLoader</span><span class="p">(</span><span class="n">tempdir</span><span class="p">),</span>
-        <span class="n">keep_trailing_newline</span><span class="o">=</span><span class="kc">True</span>
-    <span class="p">)</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">output</span></div>
-
-
 <span class="c1"># APP---------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="get_app"><a class="viewcode-back" href="../../../server.html#hidebound.server.components.get_app">[docs]</a><span class="k">def</span> <span class="nf">get_app</span><span class="p">(</span><span class="n">storage_type</span><span class="o">=</span><span class="s1">&#39;memory&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="get_dash_app"><a class="viewcode-back" href="../../../server.html#hidebound.server.components.get_dash_app">[docs]</a><span class="k">def</span> <span class="nf">get_dash_app</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="n">storage_type</span><span class="o">=</span><span class="s1">&#39;memory&#39;</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Generate Dash Flask app instance.</span>
 
 <span class="sd">    Args:</span>
+<span class="sd">        server (Flask): Flask instance.</span>
 <span class="sd">        storage_type (str): Storage type (used for testing). Default: memory.</span>
 
 <span class="sd">    Returns:</span>
@@ -293,14 +270,11 @@
 
     <span class="n">app</span> <span class="o">=</span> <span class="n">dash</span><span class="o">.</span><span class="n">Dash</span><span class="p">(</span>
         <span class="vm">__name__</span><span class="p">,</span>
-        <span class="n">external_stylesheets</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;http://0.0.0.0:5000/static/style.css&#39;</span><span class="p">]</span>
+        <span class="n">server</span><span class="o">=</span><span class="n">server</span><span class="p">,</span>
+        <span class="n">external_stylesheets</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;http://0.0.0.0:5000/static/style.css&#39;</span><span class="p">],</span>
     <span class="p">)</span>
-    <span class="n">Swagger</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">server</span><span class="p">)</span>
     <span class="n">app</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;layout&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">store</span><span class="p">,</span> <span class="n">tabs</span><span class="p">,</span> <span class="n">content</span><span class="p">])</span>
     <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;suppress_callback_exceptions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_database</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">_config_path</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
     <span class="k">return</span> <span class="n">app</span></div>
 

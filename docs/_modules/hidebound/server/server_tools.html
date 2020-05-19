@@ -1,0 +1,407 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>hidebound.server.server_tools &mdash; hidebound  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> hidebound
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../core.html">core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../server.html">server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">hidebound</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>hidebound.server.server_tools</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for hidebound.server.server_tools</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">flasgger</span> <span class="k">as</span> <span class="nn">swg</span>
+<span class="kn">import</span> <span class="nn">flask</span>
+<span class="kn">import</span> <span class="nn">jinja2</span>
+
+<span class="kn">import</span> <span class="nn">hidebound.core.tools</span> <span class="k">as</span> <span class="nn">tools</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="get_app"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.get_app">[docs]</a><span class="k">def</span> <span class="nf">get_app</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Get Flask app.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): App name. Should always be __name__.</span>
+
+<span class="sd">    Retruns:</span>
+<span class="sd">        flask.Flask: Flask app.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">flask</span><span class="o">.</span><span class="n">Flask</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">swg</span><span class="o">.</span><span class="n">Swagger</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">app</span></div>
+
+
+<div class="viewcode-block" id="render_template"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.render_template">[docs]</a><span class="k">def</span> <span class="nf">render_template</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Renders a jinja2 template given by filename with given parameters.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        filename (str): Filename of template.</span>
+<span class="sd">        parameters (dict): Dictionary of template parameters.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: HTML string.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">tempdir</span> <span class="o">=</span> <span class="n">tools</span><span class="o">.</span><span class="n">relative_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s1">&#39;../../../templates&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">jinja2</span><span class="o">.</span><span class="n">Environment</span><span class="p">(</span>
+        <span class="n">loader</span><span class="o">=</span><span class="n">jinja2</span><span class="o">.</span><span class="n">FileSystemLoader</span><span class="p">(</span><span class="n">tempdir</span><span class="p">),</span>
+        <span class="n">keep_trailing_newline</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output</span></div>
+
+
+<div class="viewcode-block" id="parse_json_file_content"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.parse_json_file_content">[docs]</a><span class="k">def</span> <span class="nf">parse_json_file_content</span><span class="p">(</span><span class="n">raw_content</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Parses JSON file content as supplied by HTML request.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        raw_content (bytes): Raw JSON file content.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If header is invalid.</span>
+<span class="sd">        JSONDecodeError: If JSON is invalid.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: JSON content or reponse dict with error.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">header</span><span class="p">,</span> <span class="n">content</span> <span class="o">=</span> <span class="n">raw_content</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="n">header</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">temp</span> <span class="o">!=</span> <span class="s1">&#39;json&#39;</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;File header is not JSON. Header: </span><span class="si">{</span><span class="n">header</span><span class="si">}</span><span class="s1">.&#39;</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="n">output</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">content</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">output</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="error_to_response"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.error_to_response">[docs]</a><span class="k">def</span> <span class="nf">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Convenience function for formatting a given exception as a Flask Response.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        error (Exception): Error to be formatted.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        flask.Response: Flask response.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;    &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">error</span><span class="o">.</span><span class="n">args</span><span class="p">]</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">klass</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">klass</span><span class="si">}</span><span class="s1">(</span><span class="se">\n</span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="se">\n</span><span class="s1">)&#39;</span>
+    <span class="k">return</span> <span class="n">flask</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span>
+        <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">error</span><span class="o">.</span><span class="n">args</span><span class="p">)),</span>
+            <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">,</span>
+            <span class="n">code</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+        <span class="p">)),</span>
+        <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span><span class="p">,</span>
+        <span class="n">status</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<span class="c1"># SETUP-------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="setup_hidebound_directory"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.setup_hidebound_directory">[docs]</a><span class="k">def</span> <span class="nf">setup_hidebound_directory</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s1">&#39;/mnt/storage&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Creates /mnt/storage/hidebound and /mnt/storage/hidebound/specifications</span>
+<span class="sd">    directories. Writes a default hidebound config to</span>
+<span class="sd">    /mnt/storage/hidebound/hidebound_config.json if one does not exist.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        target (str, optional): For testing only. Do not call with argument.</span>
+<span class="sd">            Default: &quot;/mnt/storage&quot;.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s1">&#39;hidebound&#39;</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s1">&#39;specifications&#39;</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;root_directory&#39;</span><span class="p">:</span> <span class="s1">&#39;/mnt/storage/projects&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;hidebound_directory&#39;</span><span class="p">:</span> <span class="s1">&#39;/mnt/storage/hidebound&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;specification_files&#39;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="s1">&#39;include_regex&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;exclude_regex&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;\.DS_Store&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;write_mode&#39;</span><span class="p">:</span> <span class="s1">&#39;copy&#39;</span>
+    <span class="p">}</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">target</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s1">&#39;hidebound_config.json&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">target</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_startup_parameters"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.get_startup_parameters">[docs]</a><span class="k">def</span> <span class="nf">get_startup_parameters</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Gets debug_mode and in initial configuration values. Also sets up hidebound</span>
+<span class="sd">    directory.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: Debug mode bool, configuration dict and filepath.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># TODO: Find a way to test this.</span>
+    <span class="n">debug</span> <span class="o">=</span> <span class="s1">&#39;DEBUG_MODE&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    <span class="n">config_path</span> <span class="o">=</span> <span class="s1">&#39;/mnt/storage/hidebound/hidebound_config.json&#39;</span>
+    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+        <span class="n">config_path</span> <span class="o">=</span> <span class="s1">&#39;/root/hidebound/resources/test_config.json&#39;</span>
+        <span class="n">setup_hidebound_directory</span><span class="p">(</span><span class="s1">&#39;/tmp&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">setup_hidebound_directory</span><span class="p">()</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">debug</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">config_path</span></div>
+
+
+<span class="c1"># ERRORS------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="get_config_error"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.get_config_error">[docs]</a><span class="k">def</span> <span class="nf">get_config_error</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Convenience function for returning a config error response.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Response: Config error.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Please supply a config dictionary.&#39;</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_initialization_error"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.get_initialization_error">[docs]</a><span class="k">def</span> <span class="nf">get_initialization_error</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Convenience function for returning a initialization error response.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Response: Initialization error.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Database not initialized. Please call initialize.&#39;</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_update_error"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.get_update_error">[docs]</a><span class="k">def</span> <span class="nf">get_update_error</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Convenience function for returning a update error response.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Response: Update error.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Database not updated. Please call update.&#39;</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_read_error"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.get_read_error">[docs]</a><span class="k">def</span> <span class="nf">get_read_error</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Convenience function for returning a read error response.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Response: Update error.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Please supply valid read params in the form &#39;</span>
+    <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;{&quot;group_by_asset&quot;: BOOL}.&#39;</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_search_error"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.get_search_error">[docs]</a><span class="k">def</span> <span class="nf">get_search_error</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Convenience function for returning a search error response.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Response: Update error.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Please supply valid search params in the form &#39;</span>
+    <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;{&quot;query&quot;: SQL query, &quot;group_by_asset&quot;: BOOL}.&#39;</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Alex Braun &lt;TheNewFlesh@github.com&gt;
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
