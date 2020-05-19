@@ -1,3 +1,4 @@
+from copy import deepcopy
 from importlib import import_module
 from pathlib import Path
 import json
@@ -34,6 +35,7 @@ class Database:
         Returns:
             Database: Database instance.
         '''
+        config = deepcopy(config)
         Config(config).validate()
 
         specs = []

@@ -1,3 +1,4 @@
+from copy import copy
 import json
 from itertools import chain
 from pathlib import Path
@@ -52,7 +53,9 @@ class DatabaseTests(DatabaseTestBase):
                 exclude_regex='bar',
                 write_mode='copy',
             )
+            expected = copy(config)
             Database.from_config(config)
+            self.assertEqual(config, expected)
 
             config['specification_files'] = ['/foo/bar.py']
             with self.assertRaises(DataError):
