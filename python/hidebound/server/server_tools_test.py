@@ -11,7 +11,16 @@ import hidebound.server.server_tools as server_tools
 class ServerToolsTests(DatabaseTestBase):
     def test_setup_hidebound_directory(self):
         with TemporaryDirectory() as root:
-            server_tools.setup_hidebound_directory(root)
+            config, config_path = server_tools.setup_hidebound_directory(root)
+            expected_config = {
+                'root_directory': Path(root, 'projects').as_posix(),
+                'hidebound_directory': Path(root, 'hidebound').as_posix(),
+                'specification_files': [],
+                'include_regex': '',
+                'exclude_regex': r'\.DS_Store',
+                'write_mode': 'copy'
+            }
+            self.assertEqual(config, expected_config)
 
             hb_dir = Path(root, 'hidebound')
             self.assertTrue(hb_dir.is_dir())
@@ -19,27 +28,30 @@ class ServerToolsTests(DatabaseTestBase):
             specs = Path(hb_dir, 'specifications')
             self.assertTrue(specs.is_dir())
 
-            config = Path(hb_dir, 'hidebound_config.json')
-            self.assertTrue(config.is_file())
+            expected_config_path = Path(hb_dir, 'hidebound_config.json')
+            self.assertEqual(config_path, expected_config_path.as_posix())
+            self.assertTrue(expected_config_path.is_file())
 
-            with open(config) as f:
+            with open(config_path) as f:
                 result = json.load(f)
-            expected = {
-                'root_directory': '/mnt/storage/projects',
-                'hidebound_directory': '/mnt/storage/hidebound',
-                'specification_files': [],
-                'include_regex': '',
-                'exclude_regex': r'\.DS_Store',
-                'write_mode': 'copy'
-            }
-            self.assertEqual(result, expected)
+            self.assertEqual(result, expected_config)
 
-    # APP-----------------------------------------------------------------------
-    def test_get_app(self):
-        server_tools.get_app(__name__)
-        # self.assertEqual(result._database, None)
-        # self.assertEqual(result._config, {})
-        # self.assertEqual(result._config_path, '')
+    def test_setup_hidebound_directory_config_path(self):
+        with TemporaryDirectory() as root:
+            fake_config = Path(root, 'fake-config.json')
+            with open(fake_config, 'w') as f:
+                json.dump({}, f)
+
+            config, config_path = server_tools\
+                .setup_hidebound_directory(root, config_path=fake_config)
+            expected_config = {}
+            self.assertEqual(config, expected_config)
+
+            config_path = Path(root, 'hidebound', 'hidebound_config.json')
+
+            with open(config_path) as f:
+                result = json.load(f)
+            self.assertEqual(result, expected_config)
 
     # ERRORS--------------------------------------------------------------------
     def test_get_config_error(self):

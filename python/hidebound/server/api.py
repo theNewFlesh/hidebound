@@ -30,6 +30,7 @@ def api():
     Returns:
         html: Flassger generated API page.
     '''
+    # TODO: Test this with selenium.
     return flask.redirect(flask.url_for('flasgger.apidocs'))
 
 

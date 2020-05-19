@@ -3,12 +3,13 @@ import os
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
+import flasgger as swg
+import flask
 import numpy as np
 
 from hidebound.core.database_test_base import DatabaseTestBase
 import hidebound.core.tools as tools
 import hidebound.server.api as api
-import hidebound.server.server_tools as server_tools
 # ------------------------------------------------------------------------------
 
 
@@ -26,7 +27,8 @@ class ApiTests(DatabaseTestBase):
         self.create_files(self.root)
 
         # setup app
-        app = server_tools.get_app(__name__)
+        app = flask.Flask(__name__)
+        swg.Swagger(app)
         app.register_blueprint(api.API)
         self.context = app.app_context()
         self.context.push()
@@ -123,6 +125,11 @@ class ApiTests(DatabaseTestBase):
             .replace({np.nan: None})\
             .to_dict(orient='records')
         self.assertEqual(result, expected)
+
+        # test general exceptions
+        api.DATABASE = 'foo'
+        result = self.client.post('/api/read').json['error']
+        self.assertEqual(result, 'AttributeError')
 
     def test_read_group_by_asset(self):
         # init database

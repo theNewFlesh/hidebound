@@ -1,8 +1,10 @@
 import json
+import os
 
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 import dash
+import flasgger as swg
 import flask
 
 import hidebound.server.api as api
@@ -16,7 +18,8 @@ Hidebound service used for displaying and interacting with Hidebound database.
 '''
 
 
-APP = server_tools.get_app(__name__)
+APP = flask.Flask(__name__)
+swg.Swagger(APP)
 APP.register_blueprint(api.API)
 APP = components.get_dash_app(APP)
 CONFIG_PATH = None
@@ -205,7 +208,16 @@ def on_json_editor_update(store):
 
 
 if __name__ == '__main__':
-    debug, config, config_path = server_tools.get_startup_parameters()
+    debug = 'DEBUG_MODE' in os.environ.keys()
+    if debug:
+        config, config_path = server_tools\
+            .setup_hidebound_directory(
+                '/tmp',
+                config_path='/root/hidebound/resources/test_config.json'
+            )
+    else:
+        config, config_path = server_tools\
+            .setup_hidebound_directory('/mnt/storage')
     api.CONFIG = config
     CONFIG_PATH = config_path
     APP.run_server(debug=debug, host='0.0.0.0', port=5000)

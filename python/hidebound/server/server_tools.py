@@ -3,27 +3,11 @@ import base64
 import json
 import os
 
-import flasgger as swg
 import flask
 import jinja2
 
 import hidebound.core.tools as tools
 # ------------------------------------------------------------------------------
-
-
-def get_app(name):
-    '''
-    Get Flask app.
-
-    Args:
-        name (str): App name. Should always be __name__.
-
-    Retruns:
-        flask.Flask: Flask app.
-    '''
-    app = flask.Flask(name)
-    swg.Swagger(app)
-    return app
 
 
 def render_template(filename, parameters):
@@ -97,56 +81,43 @@ def error_to_response(error):
 
 
 # SETUP-------------------------------------------------------------------------
-def setup_hidebound_directory(target='/mnt/storage'):
+def setup_hidebound_directory(root, config_path=None):
     '''
-    Creates /mnt/storage/hidebound and /mnt/storage/hidebound/specifications
+    Creates [root]/hidebound and [root]/hidebound/specifications
     directories. Writes a default hidebound config to
-    /mnt/storage/hidebound/hidebound_config.json if one does not exist.
+    [root]/hidebound/hidebound_config.json if one does not exist.
 
     Args:
-        target (str, optional): For testing only. Do not call with argument.
-            Default: "/mnt/storage".
+        root (str or Path): Root directory of hidebound data.
+        config_path (str or Path, optional): Filepath of config data to be
+            written to [root]/hidebound/hideebiund_config.json. Default: None.
+
+    Return:
+        tuple[dict, str]: Config data and filepath.
     '''
-    target = Path(target, 'hidebound')
-    os.makedirs(target, exist_ok=True)
-    os.makedirs(Path(target, 'specifications'), exist_ok=True)
+    root = Path(root)
+    hb_root = Path(root, 'hidebound')
+    os.makedirs(hb_root, exist_ok=True)
+    os.makedirs(Path(hb_root, 'specifications'), exist_ok=True)
 
     config = {
-        'root_directory': '/mnt/storage/projects',
-        'hidebound_directory': '/mnt/storage/hidebound',
+        'root_directory': Path(root, 'projects').as_posix(),
+        'hidebound_directory': hb_root.as_posix(),
         'specification_files': [],
         'include_regex': '',
         'exclude_regex': r'\.DS_Store',
         'write_mode': 'copy'
     }
-    config = json.dumps(config, indent=4, sort_keys=True)
+    if config_path is not None:
+        with open(config_path) as f:
+            config = json.load(f)
 
-    target = Path(target, 'hidebound_config.json')
-    if not target.is_file():
-        with open(target, 'w') as f:
-            f.write(config)
+    config_path = Path(root, 'hidebound', 'hidebound_config.json')
+    if not config_path.is_file():
+        with open(config_path, 'w') as f:
+            json.dump(config, f, indent=4, sort_keys=True)
 
-
-def get_startup_parameters():
-    '''
-    Gets debug_mode and in initial configuration values. Also sets up hidebound
-    directory.
-
-    Returns:
-        list: Debug mode bool, configuration dict and filepath.
-    '''
-    # TODO: Find a way to test this.
-    debug = 'DEBUG_MODE' in os.environ.keys()
-    config_path = '/mnt/storage/hidebound/hidebound_config.json'
-    if debug:
-        config_path = '/root/hidebound/resources/test_config.json'
-        setup_hidebound_directory('/tmp')
-    else:
-        setup_hidebound_directory()
-
-    with open(config_path) as f:
-        config = json.load(f)
-    return debug, config, config_path
+    return config, config_path.as_posix()
 
 
 # ERRORS------------------------------------------------------------------------
