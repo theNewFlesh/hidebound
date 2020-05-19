@@ -41,6 +41,11 @@ body {
     -webkit-text-fill-color: transparent !important;
 }
 
+/* Dummy elements */
+.dummy {
+    display: none !important;
+}
+
 /* Tabs */
 #tabs .tab:hover {
     background: {{ COLOR_SCHEME['grey2'] }} !important;
@@ -95,6 +100,11 @@ button:active {
 #delete-button {
     color: {{ COLOR_SCHEME['red2'] }};
 }
+
+#upload-button {
+    height: 27px !important;
+}
+
 
 #validate-button {
     color: {{ COLOR_SCHEME['green2'] }};
@@ -458,7 +468,7 @@ button:active {
     color: {{ COLOR_SCHEME['light1'] }};
     border: 0px;
     outline: none;
-    width: 90px;
+    width: 110px;
 }
 
 #dropdown .Select-control .Select-value .Select-value-label {

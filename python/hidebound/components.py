@@ -226,6 +226,28 @@ def get_searchbar():
     return searchbar
 
 
+def get_dummy_elements():
+    '''
+    Returns a list of all elements with callbacks so that the client will not
+    throw errors in each tab.
+
+    Returns:
+        list: List of html elements.
+    '''
+    return [
+        dcc.Input(className='dummy', id='query', value=None),
+        dcc.Dropdown(className='dummy', id='dropdown', value=None),
+        html.Div(className='dummy', id='search-button', n_clicks=None),
+        html.Div(className='dummy', id='init-button', n_clicks=None),
+        html.Div(className='dummy', id='update-button', n_clicks=None),
+        html.Div(className='dummy', id='create-button', n_clicks=None),
+        html.Div(className='dummy', id='delete-button', n_clicks=None),
+        dcc.Upload(className='dummy', id='upload', contents=None),
+        html.Div(className='dummy', id='validate-button', n_clicks=None),
+        html.Div(className='dummy', id='write-button', n_clicks=None),
+    ]
+
+
 def get_configbar(config):
     '''
     Get a row of elements used for configuring Hidebound.
@@ -239,7 +261,10 @@ def get_configbar(config):
     expander = html.Div(className='col expander')
     spacer = html.Div(className='col spacer')
 
-    upload = get_button('upload')
+    upload = dcc.Upload(
+        id='upload',
+        children=[get_button('upload')]
+    )
     validate = get_button('validate')
     write = get_button('write')
 
@@ -296,7 +321,7 @@ def get_dropdown(options):
             'background': COLOR_SCHEME['grey1'],
             'color': COLOR_SCHEME['light1'],
             'border': '0px',
-            'width': '90px',
+            'width': '100px',
         }
     )
 

@@ -1,3 +1,4 @@
+import base64
 from copy import copy
 from json import JSONDecodeError
 import json
@@ -109,6 +110,9 @@ def serve_stylesheet(stylesheet):
         Input('search-button', 'n_clicks'),
         Input('dropdown', 'value'),
         Input('query', 'value'),
+        Input('upload', 'contents'),
+        Input('validate-button', 'n_clicks'),
+        Input('write-button', 'n_clicks'),
     ],
     [State('store', 'data')]
 )
@@ -123,7 +127,13 @@ def on_event(*inputs):
         dict: Store data.
     '''
     context = dash.callback_context
-    inputs = {x['id']: x['value'] for x in context.inputs_list}
+    inputs = {}
+    for item in context.inputs_list:
+        key = item['id']
+        val = None
+        if 'value' in item.keys():
+            val = item['value']
+        inputs[key] = val
 
     # convert search dropdown to boolean
     grp = False
@@ -159,7 +169,40 @@ def on_event(*inputs):
         response = APP.server.test_client().post('/api/search', json=query).json
         store['/api/read'] = response
 
+    elif input_id == 'upload':
+        store['config'] = parse_json_file_content(inputs['upload'])
+
+    elif input_id == 'validate-button':
+        pass
+
+    elif input_id == 'write-button':
+        pass
+
     return store
+
+
+def parse_json_file_content(raw_content):
+    '''
+    Parses JSON file content as supplied by HTML request.
+
+    Args:
+        raw_content (bytes): Raw JSON file content.
+
+    Returns:
+        dict: JSON content or reponse dict with error.
+    '''
+    header, content = raw_content.split(',')
+    temp = header.split('/')[-1].split(';')[0]
+    if temp != 'json':
+        msg = f'File header is not JSON. Header: {header}.'
+        error = TypeError(msg)
+        return error_to_response(error)
+
+    output = base64.b64decode(content).decode('utf-8')
+    try:
+        return json.loads(output)
+    except JSONDecodeError as error:
+        return error_to_response(error)
 
 
 @APP.callback(
