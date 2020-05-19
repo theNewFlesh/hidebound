@@ -117,8 +117,8 @@ class ComponentsTests(unittest.TestCase):
         self.assertEqual(button.className, 'col expander')
 
         button = buttons[2]
-        self.assertEqual(button.id, 'upload-button')
-        self.assertEqual(button.children[0], 'upload')
+        self.assertEqual(button.id, 'upload')
+        self.assertEqual(button.children[0].id, 'upload-button')
 
         button = buttons[4]
         self.assertEqual(button.id, 'validate-button')
@@ -130,11 +130,11 @@ class ComponentsTests(unittest.TestCase):
 
     def test_get_data_tab(self):
         tab = components.get_data_tab()
-        self.assertEqual(tab[0].id, 'searchbar')
+        self.assertEqual(tab[-1].id, 'searchbar')
 
     def test_get_config_tab(self):
         tab = components.get_config_tab({'foo': 'bar'})
-        self.assertEqual(tab[0].id, 'configbar')
+        self.assertEqual(tab[-1].id, 'configbar')
 
     def test_get_datatable(self):
         data = [

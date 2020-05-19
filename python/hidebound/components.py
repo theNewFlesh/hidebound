@@ -160,6 +160,7 @@ def get_data_tab():
     Return:
         list: List of elements for data tab.
     '''
+    # dummies muist go first for element props behavior to work
     return [*get_dummy_elements(), get_searchbar()]
 
 
@@ -173,6 +174,7 @@ def get_config_tab(config):
     Return:
         list: List of elements for config tab.
     '''
+    # dummies muist go first for element props behavior to work
     return [*get_dummy_elements(), get_configbar(config)]
 
 

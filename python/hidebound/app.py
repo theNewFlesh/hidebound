@@ -1,5 +1,4 @@
 import base64
-from copy import copy
 from json import JSONDecodeError
 import json
 import os
@@ -126,6 +125,9 @@ def on_event(*inputs):
     Returns:
         dict: Store data.
     '''
+    store = inputs[-1] or {}
+    config = store.get('config', APP.server._config)
+
     context = dash.callback_context
     inputs = {}
     for item in context.inputs_list:
@@ -142,14 +144,13 @@ def on_event(*inputs):
     inputs['dropdown'] = grp
 
     input_id = context.triggered[0]['prop_id'].split('.')[0]
-    store = {}
 
     if input_id == 'init-button':
-        APP.server._database = Database.from_json(APP.server._config_path)
+        APP.server._database = Database.from_config(config)
 
     elif input_id == 'update-button':
         if APP.server._database is None:
-            APP.server._database = Database.from_json(APP.server._config_path)
+            APP.server._database = Database.from_config(config)
         APP.server._database.update()
         params = json.dumps({'group_by_asset': grp})
         response = APP.server.test_client().post('/api/read', json=params).json
@@ -170,7 +171,10 @@ def on_event(*inputs):
         store['/api/read'] = response
 
     elif input_id == 'upload':
-        store['config'] = parse_json_file_content(inputs['upload'])
+        try:
+            store['config'] = parse_json_file_content(inputs['upload'])
+        except Exception as error:
+            store['config'] = error_to_response(error).json
 
     elif input_id == 'validate-button':
         pass
@@ -179,30 +183,6 @@ def on_event(*inputs):
         pass
 
     return store
-
-
-def parse_json_file_content(raw_content):
-    '''
-    Parses JSON file content as supplied by HTML request.
-
-    Args:
-        raw_content (bytes): Raw JSON file content.
-
-    Returns:
-        dict: JSON content or reponse dict with error.
-    '''
-    header, content = raw_content.split(',')
-    temp = header.split('/')[-1].split(';')[0]
-    if temp != 'json':
-        msg = f'File header is not JSON. Header: {header}.'
-        error = TypeError(msg)
-        return error_to_response(error)
-
-    output = base64.b64decode(content).decode('utf-8')
-    try:
-        return json.loads(output)
-    except JSONDecodeError as error:
-        return error_to_response(error)
 
 
 @APP.callback(
@@ -376,10 +356,8 @@ def initialize():
 
     config.update(temp)
     APP.server._database = Database.from_config(config)
-
-    config = copy(config)
-    config['specifications'] = [x.__name__.lower() for x in config['specifications']]
     APP.server._config = config
+
     return Response(
         response=json.dumps(dict(
             message='Database initialized.',
@@ -675,6 +653,30 @@ def get_search_error():
     msg += '{"query": SQL query, "group_by_asset": BOOL}.'
     error = ValueError(msg)
     return error_to_response(error)
+
+
+def parse_json_file_content(raw_content):
+    '''
+    Parses JSON file content as supplied by HTML request.
+
+    Args:
+        raw_content (bytes): Raw JSON file content.
+
+    Raises:
+        ValueError: If header is invalid.
+        JSONDecodeError: If JSON is invalid.
+
+    Returns:
+        dict: JSON content or reponse dict with error.
+    '''
+    header, content = raw_content.split(',')
+    temp = header.split('/')[-1].split(';')[0]
+    if temp != 'json':
+        msg = f'File header is not JSON. Header: {header}.'
+        raise ValueError(msg)
+
+    output = base64.b64decode(content).decode('utf-8')
+    return json.loads(output)
 
 
 # ERROR-HANDLERS----------------------------------------------------------------
