@@ -296,10 +296,12 @@ class Database:
             data.loc[mask, col] = traits.loc[mask, col]
 
         # find columns by legal type
-        cols = data.applymap(type).apply(lambda x: set(x.unique()))
-        legal_cols = set([int, float, str, bool, None])
-        mask = cols.apply(lambda x: x.difference(legal_cols) == set())
-        cols = cols[mask].index.tolist()
+        cols = self.data.columns.tolist()
+        if len(self.data) > 0:
+            cols = data.applymap(type).apply(lambda x: set(x.unique()))
+            legal_cols = set([int, float, str, bool, None])
+            mask = cols.apply(lambda x: x.difference(legal_cols) == set())
+            cols = cols[mask].index.tolist()
 
         # nicely order columns
         head_cols = [

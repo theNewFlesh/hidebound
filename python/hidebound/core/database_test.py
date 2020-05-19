@@ -569,3 +569,18 @@ class DatabaseTests(DatabaseTestBase):
             expected = list(filter(lambda x: x in result, expected))
             result = result[:len(expected)]
             self.assertEqual(result, expected)
+
+    def test_read_no_files(self):
+        Spec001, Spec002, BadSpec = self.get_specifications()
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hidebound')
+            os.makedirs(hb_root)
+
+            root = Path(root, 'projects')
+            os.makedirs(root)
+
+            db = Database(root, hb_root, [Spec001, Spec002])
+
+            db.update()
+            result = db.read()
+            self.assertEqual(len(result), 0)
