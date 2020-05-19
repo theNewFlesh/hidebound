@@ -160,7 +160,7 @@ def get_data_tab():
     Return:
         list: List of elements for data tab.
     '''
-    return [get_searchbar()]
+    return [*get_dummy_elements(), get_searchbar()]
 
 
 def get_config_tab(config):
@@ -173,7 +173,7 @@ def get_config_tab(config):
     Return:
         list: List of elements for config tab.
     '''
-    return [get_configbar(config)]
+    return [*get_dummy_elements(), get_configbar(config)]
 
 
 # MENUBARS----------------------------------------------------------------------
