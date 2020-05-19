@@ -2,7 +2,7 @@
     "root_directory": "/tmp/projects",
     "hidebound_directory": "/tmp/hidebound",
     "specification_files": [
-        "/root/hidebound/python/hidebound/test_specifications.py"
+        "/root/hidebound/python/hidebound/core/test_specifications.py"
     ],
     "include_regex": "",
     "exclude_regex": "\\.DS_Store",
