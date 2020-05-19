@@ -7,8 +7,8 @@ import numpy as np
 from schematics.exceptions import ValidationError
 import skimage.io
 
-import hidebound.specification_base as sb
-import hidebound.traits as traits
+import hidebound.core.specification_base as sb
+import hidebound.core.traits as traits
 # ------------------------------------------------------------------------------
 
 

@@ -7,8 +7,8 @@ import numpy as np
 from pandas import DataFrame
 from schematics.exceptions import ValidationError
 
-from hidebound.parser import AssetNameParser
-import hidebound.tools as tools
+from hidebound.core.parser import AssetNameParser
+import hidebound.core.tools as tools
 # ------------------------------------------------------------------------------
 
 

@@ -1,5 +1,6 @@
 .. toctree::
    :maxdepth: 4
 
-   hidebound
+   core
+   server
    cli

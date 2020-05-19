@@ -9,8 +9,8 @@ from schematics.exceptions import ValidationError
 from schematics.types import ListType, StringType
 from schematics import Model
 
-from hidebound.specification_base import SpecificationBase
-import hidebound.validators as vd
+from hidebound.core.specification_base import SpecificationBase
+import hidebound.core.validators as vd
 # ------------------------------------------------------------------------------
 
 
@@ -85,7 +85,7 @@ def is_hidebound_directory(directory):
         ValidationError: If directory is not named "hidebound".
     '''
     if Path(directory).name != 'hidebound':
-        msg = f'{directory} directory is not named hidebound.'
+        msg = f'{directory} directory is not named hidebound.core.'
         raise ValidationError(msg)
 # ------------------------------------------------------------------------------
 

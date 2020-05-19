@@ -9,7 +9,7 @@ from schematics.exceptions import DataError, ValidationError
 from schematics.models import Model
 from schematics.types import StringType
 
-import hidebound.tools as tools
+import hidebound.core.tools as tools
 # ------------------------------------------------------------------------------
 
 
@@ -43,7 +43,7 @@ class ToolsTests(unittest.TestCase):
         self.assertIsInstance(result, ValueError)
 
     def test_relative_path(self):
-        result = tools.relative_path(__file__, '../../resources/foo.txt')
+        result = tools.relative_path(__file__, '../../../resources/foo.txt')
         self.assertTrue(os.path.exists(result))
 
     def test_error_to_string(self):

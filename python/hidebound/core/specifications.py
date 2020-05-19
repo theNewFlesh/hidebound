@@ -1,8 +1,8 @@
 from schematics.types import IntType, ListType, StringType
 
-import hidebound.validators as vd
-import hidebound.traits as tr
-from hidebound.specification_base import SequenceSpecificationBase
+import hidebound.core.validators as vd
+import hidebound.core.traits as tr
+from hidebound.core.specification_base import SequenceSpecificationBase
 # ------------------------------------------------------------------------------
 
 

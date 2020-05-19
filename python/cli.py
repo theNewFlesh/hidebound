@@ -157,7 +157,7 @@ def get_app_command(info):
     Returns:
         str: Command.
     '''
-    cmd = "{exec} python3.7 /root/{repo}/python/{repo}/app.py".format(
+    cmd = "{exec} python3.7 /root/{repo}/python/{repo}/server/app.py".format(
         exec=get_docker_exec_command(info, env_vars=['DEBUG_MODE=True']),
         repo=REPO,
     )

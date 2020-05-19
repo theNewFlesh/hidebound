@@ -8,9 +8,9 @@ import re
 
 from schematics.exceptions import DataError
 
-from hidebound.database import Database
-from hidebound.database_test_base import DatabaseTestBase
-import hidebound.tools as tools
+from hidebound.core.database import Database
+from hidebound.core.database_test_base import DatabaseTestBase
+import hidebound.core.tools as tools
 # ------------------------------------------------------------------------------
 
 
@@ -21,7 +21,7 @@ class DatabaseTests(DatabaseTestBase):
 
         text = '''
             from schematics.types import IntType, ListType, StringType
-            from hidebound.specification_base import SpecificationBase
+            from hidebound.core.specification_base import SpecificationBase
 
             class Spec001(SpecificationBase):
                 foo = ListType(IntType(), required=True)

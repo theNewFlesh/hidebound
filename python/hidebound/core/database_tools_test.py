@@ -6,12 +6,12 @@ import pandas as pd
 from pandas import DataFrame
 import numpy as np
 
-from hidebound.database_test_base import DatabaseTestBase
-from hidebound.specification_base import ComplexSpecificationBase
-from hidebound.specification_base import FileSpecificationBase
-from hidebound.specification_base import SequenceSpecificationBase
-import hidebound.database_tools as db_tools
-import hidebound.tools as tools
+from hidebound.core.database_test_base import DatabaseTestBase
+from hidebound.core.specification_base import ComplexSpecificationBase
+from hidebound.core.specification_base import FileSpecificationBase
+from hidebound.core.specification_base import SequenceSpecificationBase
+import hidebound.core.database_tools as db_tools
+import hidebound.core.tools as tools
 # ------------------------------------------------------------------------------
 
 
@@ -343,7 +343,7 @@ class DatabaseTests(DatabaseTestBase):
                 self.assertFalse(row.asset_valid)
 
     def test_get_data_for_write(self):
-        data = tools.relative_path(__file__, '../../resources/fake_data.csv')
+        data = tools.relative_path(__file__, '../../../resources/fake_data.csv')
         data = pd.read_csv(data)
 
         file_data, file_meta, asset_meta = db_tools._get_data_for_write(
@@ -379,7 +379,7 @@ class DatabaseTests(DatabaseTestBase):
             self.assertEqual(result, [True])
 
     def test_get_data_for_write_dirs(self):
-        data = tools.relative_path(__file__, '../../resources/fake_data.csv')
+        data = tools.relative_path(__file__, '../../../resources/fake_data.csv')
         data = pd.read_csv(data)
 
         file_data, file_meta, asset_meta = db_tools._get_data_for_write(
@@ -410,7 +410,7 @@ class DatabaseTests(DatabaseTestBase):
         self.assertIs(result, None)
 
     def test_get_data_for_write_asset_id_file_ids_pair(self):
-        data = tools.relative_path(__file__, '../../resources/fake_data.csv')
+        data = tools.relative_path(__file__, '../../../resources/fake_data.csv')
         data = pd.read_csv(data, index_col=0)
 
         file_data, file_meta, asset_meta = db_tools._get_data_for_write(

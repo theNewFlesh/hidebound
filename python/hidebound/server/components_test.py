@@ -3,14 +3,14 @@ import unittest
 
 import jinja2
 
-import hidebound.components as components
-import hidebound.tools as tools
+import hidebound.server.components as components
+import hidebound.core.tools as tools
 # ------------------------------------------------------------------------------
 
 
 class ComponentsTests(unittest.TestCase):
     def test_render_template(self):
-        tempdir = tools.relative_path(__file__, '../../templates').as_posix()
+        tempdir = tools.relative_path(__file__, '../../../templates').as_posix()
         params = dict(
             COLOR_SCHEME=components.COLOR_SCHEME,
             FONT_FAMILY=components.FONT_FAMILY,

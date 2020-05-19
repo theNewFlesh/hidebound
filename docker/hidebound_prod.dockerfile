@@ -39,7 +39,7 @@ ENV PYTHONPATH "${PYTHONPATH}:/root/hidebound/python"
 
 ENTRYPOINT [\
     "python3.7",\
-    "/root/hidebound/python/hidebound/app.py"\
+    "/root/hidebound/python/hidebound/server/app.py"\
 ]
 
 # install hidebound

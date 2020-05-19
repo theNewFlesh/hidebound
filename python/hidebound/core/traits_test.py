@@ -5,7 +5,7 @@ import unittest
 import numpy as np
 import skimage.io
 
-import hidebound.traits as traits
+import hidebound.core.traits as traits
 # ------------------------------------------------------------------------------
 
 

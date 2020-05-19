@@ -15,7 +15,7 @@ from pyparsing import ParseException
 from schematics.exceptions import ValidationError
 import wrapt
 
-from hidebound.parser import AssetNameParser
+from hidebound.core.parser import AssetNameParser
 # ------------------------------------------------------------------------------
 
 

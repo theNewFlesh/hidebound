@@ -1,25 +1,9 @@
-hidebound
-=========
-
-app
----
-.. automodule:: hidebound.app
-    :members:
-    :private-members:
-    :undoc-members:
-    :show-inheritance:
-
-components
-----------
-.. automodule:: hidebound.components
-    :members:
-    :private-members:
-    :undoc-members:
-    :show-inheritance:
+core
+====
 
 config
 ------
-.. automodule:: hidebound.config
+.. automodule:: hidebound.core.config
     :members:
     :private-members:
     :undoc-members:
@@ -27,7 +11,7 @@ config
 
 database
 --------
-.. automodule:: hidebound.database
+.. automodule:: hidebound.core.database
     :members:
     :private-members:
     :undoc-members:
@@ -35,7 +19,7 @@ database
 
 database_tools
 --------------
-.. automodule:: hidebound.database_tools
+.. automodule:: hidebound.core.database_tools
     :members:
     :private-members:
     :undoc-members:
@@ -43,7 +27,7 @@ database_tools
 
 parser
 ------
-.. automodule:: hidebound.parser
+.. automodule:: hidebound.core.parser
     :members:
     :private-members:
     :undoc-members:
@@ -51,7 +35,7 @@ parser
 
 specification_base
 ------------------
-.. automodule:: hidebound.specification_base
+.. automodule:: hidebound.core.specification_base
     :members:
     :private-members:
     :undoc-members:
@@ -59,7 +43,7 @@ specification_base
 
 specifications
 --------------
-.. automodule:: hidebound.specifications
+.. automodule:: hidebound.core.specifications
     :members:
     :private-members:
     :undoc-members:
@@ -67,7 +51,7 @@ specifications
 
 tools
 ------
-.. automodule:: hidebound.tools
+.. automodule:: hidebound.core.tools
     :members:
     :private-members:
     :undoc-members:
@@ -75,7 +59,7 @@ tools
 
 traits
 ------
-.. automodule:: hidebound.traits
+.. automodule:: hidebound.core.traits
     :members:
     :private-members:
     :undoc-members:
@@ -83,7 +67,7 @@ traits
 
 validators
 ----------
-.. automodule:: hidebound.validators
+.. automodule:: hidebound.core.validators
     :members:
     :private-members:
     :undoc-members:

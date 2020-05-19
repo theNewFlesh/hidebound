@@ -1,6 +1,6 @@
 import unittest
 from pyparsing import ParseException, Regex
-from hidebound.parser import AssetNameParser
+from hidebound.core.parser import AssetNameParser
 # ------------------------------------------------------------------------------
 
 

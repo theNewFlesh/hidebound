@@ -6,9 +6,9 @@ from schematics import Model
 from schematics.exceptions import ValidationError
 from schematics.types import IntType, ListType, StringType
 
-from hidebound.parser import AssetNameParser
-import hidebound.tools as tools
-import hidebound.validators as vd
+from hidebound.core.parser import AssetNameParser
+import hidebound.core.tools as tools
+import hidebound.core.validators as vd
 # ------------------------------------------------------------------------------
 
 

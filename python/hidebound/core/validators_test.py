@@ -5,7 +5,7 @@ import unittest
 import numpy as np
 from schematics.exceptions import ValidationError
 
-import hidebound.validators as vd
+import hidebound.core.validators as vd
 # ------------------------------------------------------------------------------
 
 

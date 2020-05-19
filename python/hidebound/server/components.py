@@ -8,7 +8,7 @@ import dash_html_components as html
 import dash_table
 import jinja2
 
-import hidebound.tools as tools
+import hidebound.core.tools as tools
 
 
 # TOOLS-------------------------------------------------------------------------
@@ -65,7 +65,7 @@ def render_template(filename, parameters):
     Returns:
         str: HTML string.
     '''
-    tempdir = tools.relative_path(__file__, '../../templates').as_posix()
+    tempdir = tools.relative_path(__file__, '../../../templates').as_posix()
     env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(tempdir),
         keep_trailing_newline=True
@@ -252,7 +252,7 @@ def get_dummy_elements():
 
 def get_configbar(config):
     '''
-    Get a row of elements used for configuring Hidebound.
+    Get a row of elements used for configuring hidebound.core.
 
     Args:
         config (dict): Configuration to be displayed.

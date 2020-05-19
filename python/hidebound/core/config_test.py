@@ -6,7 +6,7 @@ import unittest
 
 from schematics.exceptions import ValidationError, DataError
 
-import hidebound.config as cfg
+import hidebound.core.config as cfg
 # ------------------------------------------------------------------------------
 
 
@@ -17,7 +17,7 @@ class IsSpecificationFileTests(unittest.TestCase):
 
             text = '''
                 from schematics.types import IntType, ListType, StringType
-                from hidebound.specification_base import SpecificationBase
+                from hidebound.core.specification_base import SpecificationBase
 
                 class Spec001(SpecificationBase):
                     foo = ListType(IntType(), required=True)
@@ -35,7 +35,7 @@ class IsSpecificationFileTests(unittest.TestCase):
 
             text = '''
                 from schematics.types import IntType, ListType, StringType
-                from hidebound.specification_base import SpecificationBase
+                from hidebound.core.specification_base import SpecificationBase
 
                 BIG DUMB ERROR
 
@@ -58,7 +58,7 @@ class IsSpecificationFileTests(unittest.TestCase):
 
             text = '''
                 from schematics.types import IntType, ListType, StringType
-                from hidebound.specification_base import SpecificationBase
+                from hidebound.core.specification_base import SpecificationBase
 
                 class Spec001(SpecificationBase):
                     foo = ListType(IntType(), required=True)
@@ -77,7 +77,7 @@ class IsSpecificationFileTests(unittest.TestCase):
 
             text = '''
                 from schematics.types import IntType, ListType, StringType
-                from hidebound.specification_base import SpecificationBase
+                from hidebound.core.specification_base import SpecificationBase
 
                 class Spec001(SpecificationBase):
                     foo = ListType(IntType(), required=True)
@@ -99,7 +99,7 @@ class IsSpecificationFileTests(unittest.TestCase):
 
             text = '''
                 from schematics.types import IntType, ListType, StringType
-                from hidebound.specification_base import SpecificationBase
+                from hidebound.core.specification_base import SpecificationBase
 
                 class Spec001:
                     foo = ListType(IntType(), required=True)
@@ -119,11 +119,11 @@ class IsHideboundDirectory(unittest.TestCase):
     def test_is_hidebound_directory(self):
         cfg.is_hidebound_directory('/foo/bar/hidebound')
 
-        expected = '/foo/bar directory is not named hidebound.'
+        expected = '/foo/bar directory is not named hidebound.core.'
         with self.assertRaisesRegexp(ValidationError, expected):
             cfg.is_hidebound_directory('/foo/bar')
 
-        expected = '/foo/bar/Hidebound directory is not named hidebound.'
+        expected = '/foo/bar/Hidebound directory is not named hidebound.core.'
         with self.assertRaisesRegexp(ValidationError, expected):
             cfg.is_hidebound_directory('/foo/bar/Hidebound')
 
@@ -135,7 +135,7 @@ class ConfigTests(unittest.TestCase):
 
         text = '''
             from schematics.types import IntType, ListType, StringType
-            from hidebound.specification_base import SpecificationBase
+            from hidebound.core.specification_base import SpecificationBase
 
             class Spec001(SpecificationBase):
                 foo = ListType(IntType(), required=True)
@@ -152,7 +152,7 @@ class ConfigTests(unittest.TestCase):
 
         text = '''
             from schematics.types import IntType, ListType, StringType
-            from hidebound.specification_base import SpecificationBase
+            from hidebound.core.specification_base import SpecificationBase
 
             class Spec001(SpecificationBase):
                 foo = ListType(IntType(), required=True)

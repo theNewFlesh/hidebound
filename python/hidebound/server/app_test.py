@@ -6,10 +6,10 @@ from tempfile import TemporaryDirectory
 
 import numpy as np
 
-from hidebound.database_test_base import DatabaseTestBase
-import hidebound.app as application
-import hidebound.components as components
-import hidebound.tools as tools
+from hidebound.core.database_test_base import DatabaseTestBase
+import hidebound.server.app as application
+import hidebound.server.components as components
+import hidebound.core.tools as tools
 # ------------------------------------------------------------------------------
 
 
@@ -39,7 +39,7 @@ class AppTests(DatabaseTestBase):
 
         self.specs = tools.relative_path(
             __file__,
-            '../hidebound/test_specifications.py'
+            '../core/test_specifications.py'
         ).absolute().as_posix()
 
     def tearDown(self):

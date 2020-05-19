@@ -12,8 +12,8 @@ from flask import Response, request, redirect, url_for
 from schematics.exceptions import DataError
 import numpy as np
 
-from hidebound.database import Database
-import hidebound.components as components
+from hidebound.core.database import Database
+import hidebound.server.components as components
 # ------------------------------------------------------------------------------
 
 

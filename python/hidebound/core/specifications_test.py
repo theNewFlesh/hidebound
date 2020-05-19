@@ -3,7 +3,7 @@ import unittest
 
 from schematics.exceptions import DataError
 
-import hidebound.specifications as spec
+import hidebound.core.specifications as spec
 # ------------------------------------------------------------------------------
 
 

@@ -7,9 +7,9 @@ from schematics.types import ListType, IntType, StringType
 import numpy as np
 import skimage.io
 
-from hidebound.specification_base import SpecificationBase
-import hidebound.traits as tr
-import hidebound.validators as vd
+from hidebound.core.specification_base import SpecificationBase
+import hidebound.core.traits as tr
+import hidebound.core.validators as vd
 # ------------------------------------------------------------------------------
 
 
