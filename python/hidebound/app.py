@@ -230,13 +230,18 @@ def on_datatable_update(store):
     return components.get_datatable(data['response'])
 
 
-@APP.callback(Output('content', 'children'), [Input('tabs', 'value')])
-def on_get_tab(tab):
+@APP.callback(
+    Output('content', 'children'),
+    [Input('tabs', 'value')],
+    [State('store', 'data')]
+)
+def on_get_tab(tab, store):
     '''
     Serve content for app tabs.
 
     Args:
         tab (str): Name of tab to render.
+        store (dict): Store.
 
     Returns:
         flask.Response: Response.
@@ -244,7 +249,31 @@ def on_get_tab(tab):
     if tab == 'data':
         return components.get_data_tab()
     elif tab == 'config':
-        return components.get_config_tab(APP.server._config)
+        store = store or {}
+        config = store.get('config', APP.server._config)
+        return components.get_config_tab(config)
+
+
+@APP.callback(
+    Output('json-editor-row', 'children'),
+    [Input('store', 'data')]
+)
+def on_json_editor_update(store):
+    '''
+    Updates JSON editor with config information from store.
+
+    Args:
+        store (dict): Store data.
+
+    Returns:
+        flask.Response: Response.
+    '''
+    if store in [{}, None]:
+        raise PreventUpdate
+    config = store.get('config', None)
+    if config is None:
+        raise PreventUpdate
+    return components.get_json_editor(config)
 
 
 # API---------------------------------------------------------------------------
