@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.5.9
+                0.5.10
               </div>
             
           
@@ -151,10 +151,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for hidebound.server.components</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">json</span>
-
-<span class="kn">from</span> <span class="nn">dash_ace_editor</span> <span class="kn">import</span> <span class="n">DashAceEditor</span>
-<span class="kn">import</span> <span class="nn">dash</span>
+<span></span><span class="kn">import</span> <span class="nn">dash</span>
 <span class="kn">import</span> <span class="nn">dash_core_components</span> <span class="k">as</span> <span class="nn">dcc</span>
 <span class="kn">import</span> <span class="nn">dash_html_components</span> <span class="k">as</span> <span class="nn">html</span>
 <span class="kn">import</span> <span class="nn">dash_table</span>
@@ -181,6 +178,7 @@
     <span class="n">green2</span><span class="o">=</span><span class="s1">&#39;#A0D17B&#39;</span><span class="p">,</span>
     <span class="n">cyan1</span><span class="o">=</span><span class="s1">&#39;#7EC4CF&#39;</span><span class="p">,</span>
     <span class="n">cyan2</span><span class="o">=</span><span class="s1">&#39;#B6ECF3&#39;</span><span class="p">,</span>
+    <span class="n">cyan3</span><span class="o">=</span><span class="s1">&#39;#59777A&#39;</span><span class="p">,</span>
     <span class="n">blue1</span><span class="o">=</span><span class="s1">&#39;#5F95DE&#39;</span><span class="p">,</span>
     <span class="n">blue2</span><span class="o">=</span><span class="s1">&#39;#93B6E6&#39;</span><span class="p">,</span>
     <span class="n">purple1</span><span class="o">=</span><span class="s1">&#39;#C98FDE&#39;</span><span class="p">,</span>
@@ -388,6 +386,7 @@
 <span class="sd">        Div: Div with buttons and JSON editor.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">expander</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;col expander&#39;</span><span class="p">)</span>
+    <span class="n">card_expander</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;col card-expander&#39;</span><span class="p">)</span>
     <span class="n">spacer</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;col spacer&#39;</span><span class="p">)</span>
 
     <span class="n">upload</span> <span class="o">=</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Upload</span><span class="p">(</span>
@@ -397,21 +396,22 @@
     <span class="n">validate</span> <span class="o">=</span> <span class="n">get_button</span><span class="p">(</span><span class="s1">&#39;validate&#39;</span><span class="p">)</span>
     <span class="n">write</span> <span class="o">=</span> <span class="n">get_button</span><span class="p">(</span><span class="s1">&#39;write&#39;</span><span class="p">)</span>
 
-    <span class="n">row0</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
-        <span class="n">className</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">,</span>
-        <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">expander</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">upload</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">validate</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">write</span><span class="p">],</span>
-    <span class="p">)</span>
-    <span class="n">row1</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
-        <span class="n">className</span><span class="o">=</span><span class="s1">&#39;row-spacer&#39;</span>
-    <span class="p">)</span>
-    <span class="n">row2</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
-        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;json-editor-row&#39;</span><span class="p">,</span>
-        <span class="n">className</span><span class="o">=</span><span class="s1">&#39;row json-editor-row&#39;</span><span class="p">,</span>
-        <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">get_json_editor</span><span class="p">(</span><span class="n">config</span><span class="p">)]</span>
-    <span class="p">)</span>
-    <span class="n">configbar</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
-        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;configbar&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;menubar&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">row0</span><span class="p">,</span> <span class="n">row1</span><span class="p">,</span> <span class="n">row2</span><span class="p">]</span>
-    <span class="p">)</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+            <span class="n">className</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">,</span>
+            <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">expander</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">upload</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">validate</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">write</span><span class="p">],</span>
+        <span class="p">),</span>
+        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;row-spacer&#39;</span><span class="p">),</span>
+        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+            <span class="n">className</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">,</span>
+            <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+                <span class="n">card_expander</span><span class="p">,</span>
+                <span class="n">get_key_value_card</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="n">id_</span><span class="o">=</span><span class="s1">&#39;config-card&#39;</span><span class="p">),</span>
+                <span class="n">card_expander</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">configbar</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;configbar&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;menubar&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="n">rows</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">configbar</span></div>
 
 
@@ -474,26 +474,56 @@
     <span class="k">return</span> <span class="n">html</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s1">-button&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">title</span><span class="p">],</span> <span class="n">n_clicks</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_json_editor"><a class="viewcode-back" href="../../../server.html#hidebound.server.components.get_json_editor">[docs]</a><span class="k">def</span> <span class="nf">get_json_editor</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">{}):</span>
+<div class="viewcode-block" id="get_key_value_card"><a class="viewcode-back" href="../../../server.html#hidebound.server.components.get_key_value_card">[docs]</a><span class="k">def</span> <span class="nf">get_key_value_card</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">id_</span><span class="o">=</span><span class="s1">&#39;key-value-card&#39;</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Gets a JSON editor element.</span>
+<span class="sd">    Creates a key-value card using the keys and values from the given data.</span>
+<span class="sd">    One key-value pair per row.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        value (dict, optional): Dictionary to be edited. Default: {}.</span>
+<span class="sd">        data (dict): Dictionary to be represented.</span>
+<span class="sd">        header (str, optional): Name of header. Default: None.</span>
+<span class="sd">        id_ (str): Name of id property. Default: &quot;key-value-card&quot;.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        DashAceEditor: JSON editor.</span>
+<span class="sd">        Div: Card with key-value child elements.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">return</span> <span class="n">DashAceEditor</span><span class="p">(</span>
-        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;json-editor&#39;</span><span class="p">,</span>
-        <span class="n">value</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-        <span class="n">height</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span>
-        <span class="n">width</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">,</span>
-        <span class="n">showLineNumbers</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">tabSize</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
-        <span class="n">enableLiveAutocompletion</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">enableBasicAutocompletion</span><span class="o">=</span><span class="kc">False</span>
-    <span class="p">)</span></div>
+    <span class="n">children</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">header</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s1">-header&#39;</span><span class="p">,</span>
+            <span class="n">className</span><span class="o">=</span><span class="s1">&#39;key-value-card-header&#39;</span><span class="p">,</span>
+            <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">header</span><span class="p">)]</span>
+        <span class="p">)</span>
+        <span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">())):</span>
+        <span class="n">even</span> <span class="o">=</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="n">klass</span> <span class="o">=</span> <span class="s1">&#39;odd&#39;</span>
+        <span class="k">if</span> <span class="n">even</span><span class="p">:</span>
+            <span class="n">klass</span> <span class="o">=</span> <span class="s1">&#39;even&#39;</span>
+
+        <span class="n">key</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">-key&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;key-value-card-key&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)]</span>
+        <span class="p">)</span>
+        <span class="n">sep</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;key-value-card-separator&#39;</span><span class="p">)</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">-value&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;key-value-card-value&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)]</span>
+        <span class="p">)</span>
+
+        <span class="n">row</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s1">-row&#39;</span><span class="p">,</span>
+            <span class="n">className</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;key-value-card-row </span><span class="si">{</span><span class="n">klass</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">key</span><span class="p">,</span> <span class="n">sep</span><span class="p">,</span> <span class="n">val</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+    <span class="n">children</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">className</span> <span class="o">+=</span> <span class="s1">&#39; last&#39;</span>
+
+    <span class="n">card</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">id_</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="n">className</span><span class="o">=</span><span class="s1">&#39;key-value-card&#39;</span><span class="p">,</span>
+        <span class="n">children</span><span class="o">=</span><span class="n">children</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">card</span></div>
 
 
 <div class="viewcode-block" id="get_datatable"><a class="viewcode-back" href="../../../server.html#hidebound.server.components.get_datatable">[docs]</a><span class="k">def</span> <span class="nf">get_datatable</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
