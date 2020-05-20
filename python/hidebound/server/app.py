@@ -214,7 +214,7 @@ def on_config_card_update(timestamp, store):
     if store in [{}, None]:
         raise PreventUpdate
 
-    config = store.get('config', None) or {}
+    config = store.get('config', None)
     if config is None:
         raise PreventUpdate
 
