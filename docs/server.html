@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.10
+                0.5.11
               </div>
             
           
@@ -285,6 +285,26 @@
 <div class="section" id="module-hidebound.server.app">
 <span id="app"></span><h2>app<a class="headerlink" href="#module-hidebound.server.app" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
+<dt id="hidebound.server.app.on_config_card_update">
+<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">on_config_card_update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timestamp</span></em>, <em class="sig-param"><span class="n">store</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#on_config_card_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.on_config_card_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates config card with config information from store.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timestamp</strong> (<em>int</em>) – Store modification timestamp.</p></li>
+<li><p><strong>store</strong> (<em>dict</em>) – Store data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Response.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>flask.Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="hidebound.server.app.on_datatable_update">
 <code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">on_datatable_update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">store</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#on_datatable_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.on_datatable_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates datatable with read information from store.</p>
@@ -328,23 +348,6 @@
 <li><p><strong>tab</strong> (<em>str</em>) – Name of tab to render.</p></li>
 <li><p><strong>store</strong> (<em>dict</em>) – Store.</p></li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Response.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>flask.Response</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="hidebound.server.app.on_json_editor_update">
-<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">on_json_editor_update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">store</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#on_json_editor_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.on_json_editor_update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates JSON editor with config information from store.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>store</strong> (<em>dict</em>) – Store data.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Response.</p>

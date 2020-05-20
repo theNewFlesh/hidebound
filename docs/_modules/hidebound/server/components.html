@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.5.10
+                0.5.11
               </div>
             
           
@@ -178,7 +178,6 @@
     <span class="n">green2</span><span class="o">=</span><span class="s1">&#39;#A0D17B&#39;</span><span class="p">,</span>
     <span class="n">cyan1</span><span class="o">=</span><span class="s1">&#39;#7EC4CF&#39;</span><span class="p">,</span>
     <span class="n">cyan2</span><span class="o">=</span><span class="s1">&#39;#B6ECF3&#39;</span><span class="p">,</span>
-    <span class="n">cyan3</span><span class="o">=</span><span class="s1">&#39;#59777A&#39;</span><span class="p">,</span>
     <span class="n">blue1</span><span class="o">=</span><span class="s1">&#39;#5F95DE&#39;</span><span class="p">,</span>
     <span class="n">blue2</span><span class="o">=</span><span class="s1">&#39;#93B6E6&#39;</span><span class="p">,</span>
     <span class="n">purple1</span><span class="o">=</span><span class="s1">&#39;#C98FDE&#39;</span><span class="p">,</span>
@@ -370,7 +369,6 @@
         <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;dummy&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;create-button&#39;</span><span class="p">,</span> <span class="n">n_clicks</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
         <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;dummy&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;delete-button&#39;</span><span class="p">,</span> <span class="n">n_clicks</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
         <span class="n">dcc</span><span class="o">.</span><span class="n">Upload</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;dummy&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;upload&#39;</span><span class="p">,</span> <span class="n">contents</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
-        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;dummy&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;validate-button&#39;</span><span class="p">,</span> <span class="n">n_clicks</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
         <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;dummy&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;write-button&#39;</span><span class="p">,</span> <span class="n">n_clicks</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>
     <span class="p">]</span></div>
 
@@ -386,30 +384,23 @@
 <span class="sd">        Div: Div with buttons and JSON editor.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">expander</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;col expander&#39;</span><span class="p">)</span>
-    <span class="n">card_expander</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;col card-expander&#39;</span><span class="p">)</span>
     <span class="n">spacer</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;col spacer&#39;</span><span class="p">)</span>
 
     <span class="n">upload</span> <span class="o">=</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Upload</span><span class="p">(</span>
         <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;upload&#39;</span><span class="p">,</span>
         <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">get_button</span><span class="p">(</span><span class="s1">&#39;upload&#39;</span><span class="p">)]</span>
     <span class="p">)</span>
-    <span class="n">validate</span> <span class="o">=</span> <span class="n">get_button</span><span class="p">(</span><span class="s1">&#39;validate&#39;</span><span class="p">)</span>
     <span class="n">write</span> <span class="o">=</span> <span class="n">get_button</span><span class="p">(</span><span class="s1">&#39;write&#39;</span><span class="p">)</span>
 
     <span class="n">rows</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
             <span class="n">className</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">,</span>
-            <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">expander</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">upload</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">validate</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">write</span><span class="p">],</span>
+            <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">expander</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">upload</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">write</span><span class="p">],</span>
         <span class="p">),</span>
         <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;row-spacer&#39;</span><span class="p">),</span>
-        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
-            <span class="n">className</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">,</span>
-            <span class="n">children</span><span class="o">=</span><span class="p">[</span>
-                <span class="n">card_expander</span><span class="p">,</span>
-                <span class="n">get_key_value_card</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="n">id_</span><span class="o">=</span><span class="s1">&#39;config-card&#39;</span><span class="p">),</span>
-                <span class="n">card_expander</span>
-            <span class="p">]</span>
-        <span class="p">)</span>
+        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;config-content&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">get_key_value_card</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="n">id_</span><span class="o">=</span><span class="s1">&#39;config-card&#39;</span><span class="p">)</span>
+        <span class="p">])</span>
     <span class="p">]</span>
     <span class="n">configbar</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;configbar&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;menubar&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="n">rows</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">configbar</span></div>
