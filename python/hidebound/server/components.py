@@ -25,7 +25,6 @@ COLOR_SCHEME = dict(
     green2='#A0D17B',
     cyan1='#7EC4CF',
     cyan2='#B6ECF3',
-    cyan3='#59777A',
     blue1='#5F95DE',
     blue2='#93B6E6',
     purple1='#C98FDE',
@@ -217,7 +216,6 @@ def get_dummy_elements():
         html.Div(className='dummy', id='create-button', n_clicks=None),
         html.Div(className='dummy', id='delete-button', n_clicks=None),
         dcc.Upload(className='dummy', id='upload', contents=None),
-        html.Div(className='dummy', id='validate-button', n_clicks=None),
         html.Div(className='dummy', id='write-button', n_clicks=None),
     ]
 
@@ -239,16 +237,17 @@ def get_configbar(config):
         id='upload',
         children=[get_button('upload')]
     )
-    validate = get_button('validate')
     write = get_button('write')
 
     rows = [
         html.Div(
             className='row',
-            children=[expander, spacer, upload, spacer, validate, spacer, write],
+            children=[expander, spacer, upload, spacer, write],
         ),
         html.Div(className='row-spacer'),
-        get_key_value_card(config, header='config', id_='config-card')
+        html.Div(id='config-content', children=[
+            get_key_value_card(config, header='config', id_='config-card')
+        ])
     ]
     configbar = html.Div(id='configbar', className='menubar', children=rows)
     return configbar

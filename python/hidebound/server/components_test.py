@@ -130,7 +130,7 @@ class ComponentsTests(unittest.TestCase):
         self.assertEqual(row_spacer.className, 'row-spacer')
 
         card = configbar.children[2]
-        self.assertEqual(card.id, 'config-card')
+        self.assertEqual(card.id, 'config-content')
 
         buttons = configbar.children[0].children
 
@@ -142,10 +142,6 @@ class ComponentsTests(unittest.TestCase):
         self.assertEqual(button.children[0].id, 'upload-button')
 
         button = buttons[4]
-        self.assertEqual(button.id, 'validate-button')
-        self.assertEqual(button.children[0], 'validate')
-
-        button = buttons[6]
         self.assertEqual(button.id, 'write-button')
         self.assertEqual(button.children[0], 'write')
 

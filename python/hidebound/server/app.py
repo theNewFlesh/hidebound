@@ -4,12 +4,14 @@ import os
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 import dash
+import dash_html_components as html
 import flasgger as swg
 import flask
 
 import hidebound.server.api as api
 import hidebound.server.components as components
 import hidebound.server.server_tools as server_tools
+from hidebound.core.config import Config
 # ------------------------------------------------------------------------------
 
 
@@ -57,7 +59,6 @@ def serve_stylesheet(stylesheet):
         Input('dropdown', 'value'),
         Input('query', 'value'),
         Input('upload', 'contents'),
-        Input('validate-button', 'n_clicks'),
         Input('write-button', 'n_clicks'),
     ],
     [State('store', 'data')]
@@ -121,16 +122,26 @@ def on_event(*inputs):
         store['/api/read'] = response
 
     elif input_id == 'upload':
+        temp = 'invalid'
         try:
-            store['config'] = server_tools.parse_json_file_content(inputs['upload'])
+            temp = server_tools.parse_json_file_content(inputs['upload'])
+            Config(temp).validate()
+            store['config'] = temp
+            store['config_error'] = None
         except Exception as error:
-            store['config'] = server_tools.error_to_response(error).json
-
-    elif input_id == 'validate-button':
-        pass
+            response = server_tools.error_to_response(error)
+            store['config'] = temp
+            store['config_error'] = server_tools.error_to_response(error).json
 
     elif input_id == 'write-button':
-        pass
+        try:
+            config = store['config']
+            Config(config).validate()
+            with open(CONFIG_PATH, 'w') as f:
+                json.dump(config, f, indent=4, sort_keys=True)
+            store['config_error'] = None
+        except Exception as error:
+            store['config_error'] = server_tools.error_to_response(error).json
 
     return store
 
@@ -185,14 +196,16 @@ def on_get_tab(tab, store):
 
 
 @APP.callback(
-    Output('json-editor-row', 'children'),
-    [Input('store', 'data')]
+    Output('config-content', 'children'),
+    [Input('store', 'modified_timestamp')],
+    [State('store', 'data')]
 )
-def on_json_editor_update(store):
+def on_config_card_update(timestamp, store):
     '''
-    Updates JSON editor with config information from store.
+    Updates config card with config information from store.
 
     Args:
+        timestamp (int): Store modification timestamp.
         store (dict): Store data.
 
     Returns:
@@ -200,10 +213,24 @@ def on_json_editor_update(store):
     '''
     if store in [{}, None]:
         raise PreventUpdate
-    config = store.get('config', None)
+
+    config = store.get('config', None) or {}
     if config is None:
         raise PreventUpdate
-    return components.get_json_editor(config)
+
+    if config == 'invalid':
+        config = {}
+
+    error = store.get('config_error', None)
+
+    output = components.get_key_value_card(config, 'config', 'config-card')
+    if error is not None:
+        output = [
+            output,
+            html.Div(className='row-spacer'),
+            components.get_key_value_card(error, 'error', 'error')
+        ]
+    return output
 # ------------------------------------------------------------------------------
 
 
