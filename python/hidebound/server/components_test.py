@@ -1,4 +1,3 @@
-import json
 import unittest
 
 import flask
@@ -41,13 +40,53 @@ class ComponentsTests(unittest.TestCase):
         self.assertEqual(result.id, 'foo-button')
         self.assertEqual(result.children[0], 'foo')
 
-    def test_get_json_editor(self):
-        value = {'foo': 'bar'}
-        result = components.get_json_editor(value)
-        self.assertEqual(result.id, 'json-editor')
+    def test_get_key_value_card(self):
+        items = {'foo': 'bar', 'taco': 'pizza'}
+        result = components.get_key_value_card(items, id_='foo')
+        self.assertEqual(result.id, 'foo')
+        self.assertEqual(len(result.children), 2)
 
-        expected = json.dumps(value, indent=4, sort_keys=True)
-        self.assertEqual(result.value, expected)
+        row = result.children[0]
+        key = row.children[0]
+        val = row.children[2]
+        self.assertEqual(key.id, 'foo-key')
+        self.assertEqual(key.children[0], 'foo')
+        self.assertEqual(val.id, 'foo-value')
+        self.assertEqual(val.children[0], 'bar')
+
+        row = result.children[1]
+        key = row.children[0]
+        val = row.children[2]
+        self.assertEqual(key.id, 'taco-key')
+        self.assertEqual(key.children[0], 'taco')
+        self.assertEqual(val.id, 'taco-value')
+        self.assertEqual(val.children[0], 'pizza')
+
+    def test_get_key_value_card_header(self):
+        items = {'foo': 'bar', 'taco': 'pizza'}
+        result = components.get_key_value_card(items, id_='foo', header='bar')
+        self.assertEqual(result.id, 'foo')
+        self.assertEqual(len(result.children), 3)
+
+        row = result.children[0]
+        self.assertEqual(row.id, 'foo-header')
+        self.assertEqual(row.children[0], 'bar')
+
+        row = result.children[1]
+        key = row.children[0]
+        val = row.children[2]
+        self.assertEqual(key.id, 'foo-key')
+        self.assertEqual(key.children[0], 'foo')
+        self.assertEqual(val.id, 'foo-value')
+        self.assertEqual(val.children[0], 'bar')
+
+        row = result.children[2]
+        key = row.children[0]
+        val = row.children[2]
+        self.assertEqual(key.id, 'taco-key')
+        self.assertEqual(key.children[0], 'taco')
+        self.assertEqual(val.id, 'taco-value')
+        self.assertEqual(val.children[0], 'pizza')
 
     def test_get_searchbar(self):
         searchbar = components.get_searchbar()
@@ -90,8 +129,8 @@ class ComponentsTests(unittest.TestCase):
         row_spacer = configbar.children[1]
         self.assertEqual(row_spacer.className, 'row-spacer')
 
-        editor_row = configbar.children[2]
-        self.assertEqual(editor_row.id, 'json-editor-row')
+        card = configbar.children[2].children[1]
+        self.assertEqual(card.id, 'config-card')
 
         buttons = configbar.children[0].children
 

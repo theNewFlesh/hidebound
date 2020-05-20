@@ -1,6 +1,3 @@
-import json
-
-from dash_ace_editor import DashAceEditor
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -28,6 +25,7 @@ COLOR_SCHEME = dict(
     green2='#A0D17B',
     cyan1='#7EC4CF',
     cyan2='#B6ECF3',
+    cyan3='#59777A',
     blue1='#5F95DE',
     blue2='#93B6E6',
     purple1='#C98FDE',
@@ -235,6 +233,7 @@ def get_configbar(config):
         Div: Div with buttons and JSON editor.
     '''
     expander = html.Div(className='col expander')
+    card_expander = html.Div(className='col card-expander')
     spacer = html.Div(className='col spacer')
 
     upload = dcc.Upload(
@@ -244,21 +243,22 @@ def get_configbar(config):
     validate = get_button('validate')
     write = get_button('write')
 
-    row0 = html.Div(
-        className='row',
-        children=[expander, spacer, upload, spacer, validate, spacer, write],
-    )
-    row1 = html.Div(
-        className='row-spacer'
-    )
-    row2 = html.Div(
-        id='json-editor-row',
-        className='row json-editor-row',
-        children=[get_json_editor(config)]
-    )
-    configbar = html.Div(
-        id='configbar', className='menubar', children=[row0, row1, row2]
-    )
+    rows = [
+        html.Div(
+            className='row',
+            children=[expander, spacer, upload, spacer, validate, spacer, write],
+        ),
+        html.Div(className='row-spacer'),
+        html.Div(
+            className='row',
+            children=[
+                card_expander,
+                get_key_value_card(config, header='config', id_='config-card'),
+                card_expander
+            ]
+        )
+    ]
+    configbar = html.Div(id='configbar', className='menubar', children=rows)
     return configbar
 
 
@@ -321,26 +321,56 @@ def get_button(title):
     return html.Button(id=f'{title}-button', children=[title], n_clicks=0)
 
 
-def get_json_editor(value={}):
+def get_key_value_card(data, header=None, id_='key-value-card'):
     '''
-    Gets a JSON editor element.
+    Creates a key-value card using the keys and values from the given data.
+    One key-value pair per row.
 
     Args:
-        value (dict, optional): Dictionary to be edited. Default: {}.
+        data (dict): Dictionary to be represented.
+        header (str, optional): Name of header. Default: None.
+        id_ (str): Name of id property. Default: "key-value-card".
 
     Returns:
-        DashAceEditor: JSON editor.
+        Div: Card with key-value child elements.
     '''
-    return DashAceEditor(
-        id='json-editor',
-        value=json.dumps(value, indent=4, sort_keys=True),
-        height='100%',
-        width='100%',
-        showLineNumbers=True,
-        tabSize=4,
-        enableLiveAutocompletion=False,
-        enableBasicAutocompletion=False
+    children = []
+    if header is not None:
+        header = html.Div(
+            id=f'{id_}-header',
+            className='key-value-card-header',
+            children=[str(header)]
+        )
+        children.append(header)
+
+    for i, (k, v) in enumerate(sorted(data.items())):
+        even = i % 2 == 0
+        klass = 'odd'
+        if even:
+            klass = 'even'
+
+        key = html.Div(
+            id=f'{k}-key', className='key-value-card-key', children=[str(k)]
+        )
+        sep = html.Div(className='key-value-card-separator')
+        val = html.Div(
+            id=f'{k}-value', className='key-value-card-value', children=[str(v)]
+        )
+
+        row = html.Div(
+            id=f'{id_}-row',
+            className=f'key-value-card-row {klass}',
+            children=[key, sep, val]
+        )
+        children.append(row)
+    children[-1].className += ' last'
+
+    card = html.Div(
+        id=f'{id_}',
+        className='key-value-card',
+        children=children
     )
+    return card
 
 
 def get_datatable(data):

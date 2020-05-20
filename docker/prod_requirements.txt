@@ -1,7 +1,6 @@
 apispec
 dash
 dash_table
-dash-ace-editor
 dash-core-components
 dash-html-components
 flasgger

@@ -160,11 +160,6 @@ button:active {
     height: 4px;
 }
 
-.menubar .json-editor-row {
-    min-height: 400px;
-    /* height: 100%; */
-}
-
 .menubar {
     z-index: 1;
     top: 27px;
@@ -200,57 +195,80 @@ button:active {
     height: 100vh;
     width: 100vw;
 }
-
-/* Card */
-.card {
-    background: {{ COLOR_SCHEME['grey1'] }};
-    width: 100%;
-    height: 100%;
+foo {
+    color: rgb(182, 236, 243);
 }
 
-.card-item {
-    flex-grow: 1;
-    display: flex;
-    justify-content: space-between;
-    /* padding-left: 10%;
-    padding-right: 10%; */
+/* Key Value Card */
+.card-expander {
+    background: {{ COLOR_SCHEME['bg'] }};
+    flex-grow: 10;
+}
+
+.key-value-card {
+    background: {{ COLOR_SCHEME['bg'] }};
     font-size: 20px;
     font-family: {{ FONT_FAMILY }};
 }
 
-.card-key {
-    color: {{ COLOR_SCHEME['light1'] }};
+.key-value-card-row {
+    height: 32px;
+    padding-left: 10px;
+    padding-right: 10px;
+    flex-grow: 1;
+    display: flex;
+    border-color: {{ COLOR_SCHEME['cyan3'] }};
+    border-left-width: 2px;
+    border-right-width: 2px;
 }
 
-.card-value {
+.key-value-card-row.last {
+    border-bottom-width: 2px;
+}
+
+.key-value-card-header {
+    background: {{ COLOR_SCHEME['cyan3'] }};
+    color: {{ COLOR_SCHEME['bg'] }};
+    padding-left: 15px;
+    font-weight: bold;
+}
+
+.key-value-card-row.odd {
+    background: {{ COLOR_SCHEME['grey1'] }};
+}
+
+.key-value-card-separator {
+    min-width: 10px;
+    max-width: 10px;
+}
+
+.key-value-card-key {
+    color: {{ COLOR_SCHEME['light2'] }};
+    font-style: italic;
+    min-width: 210px;
+    max-width: 210px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 2px;
+    flex-grow: 1;
+    text-align: right;
+    border-color: {{ COLOR_SCHEME['cyan3'] }};
+    border-right-width: 2px;
+}
+
+.key-value-card-value {
     color: {{ COLOR_SCHEME['cyan2'] }};
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 2px;
+    flex-grow: 1;
+    word-wrap: break-word;
 }
 
 /* Plot */
 .plot {
     flex-grow: 1;
     min-width: 50%;
-}
-
-/* Error Card */
-#error-card.card {
-    padding: 10px 10px 10px 10px;
-}
-
-#error-card .card-item {
-    justify-content: left;
-}
-
-#error-card .card-spacer {
-    width: 20px;
-}
-
-#error-card .card-key {
-    color: {{ COLOR_SCHEME['light2'] }};
-}
-
-#error-card .card-value {
-    color: {{ COLOR_SCHEME['red2'] }};
 }
 
 /* RangeSlider */
@@ -637,81 +655,4 @@ button:active {
     flex-grow: 10;
     font-size: 15px;
     padding-left: 10px;
-}
-
-/* JSON Editor */
-#json-editor {
-    font-size: x-large !important;
-    background: {{ COLOR_SCHEME['bg'] }} !important;
-}
-
-/*    gutter */
-.ace_gutter {
-    background: {{ COLOR_SCHEME['bg'] }} !important;
-}
-
-/*    white line on right*/
-.ace_layer.ace_print-margin-layer {
-    display: none !important;
-}
-
-.ace_gutter-cell {
-    color: {{ COLOR_SCHEME['cyan2'] }} !important;
-}
-
-/*    text */
-.ace_line,
-.ace_escape,
-.ace_string {
-    color: {{ COLOR_SCHEME['light1'] }} !important;
-}
-
-/*    quotes */
-.ace_string.ace_start,
-.ace_string.ace_end {
-    color: {{ COLOR_SCHEME['cyan2'] }} !important;
-}
-
-/*    numbers */
-.ace_constant.ace_numeric {
-    color: {{ COLOR_SCHEME['green2'] }} !important;
-}
-
-/*    highlight line */
-.ace_active-line {
-    background: {{ COLOR_SCHEME['grey1'] }} !important;
-}
-
-/*    cursor */
-.ace_cursor {
-    color: {{ COLOR_SCHEME['red2'] }} !important;
-}
-
-/*    highlighted word */
-.ace_selection {
-    background: {{ COLOR_SCHEME['dialog1'] }} !important;
-}
-
-/*    highlighted word clones */
-.ace_selected-word {
-    background: {{ COLOR_SCHEME['dialog1'] }} !important;
-    border: 0px !important;
-}
-
-/*    highlight gutter */
-.ace_gutter-active-line {
-    background: {{ COLOR_SCHEME['grey1'] }} !important;
-}
-
-/*    errors */
-.ace_error,
-.ace_invalid,
-.ace_illegal {
-    background: {{ COLOR_SCHEME['orange2'] }} !important;
-    color: {{ COLOR_SCHEME['bg'] }} !important;
-}
-
-/*    invisibles */
-.ace_indent-guide {
-    background: transparent !important;
 }
