@@ -156,7 +156,7 @@ def on_datatable_update(store):
         raise PreventUpdate
 
     if 'error' in data.keys():
-        return json.dumps(data, indent=4, sort_keys=True)
+        return components.get_key_value_card(data, header='error', id_='error')
     return components.get_datatable(data['response'])
 
 

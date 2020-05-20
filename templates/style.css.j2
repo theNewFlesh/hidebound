@@ -200,11 +200,6 @@ foo {
 }
 
 /* Key Value Card */
-.card-expander {
-    background: {{ COLOR_SCHEME['bg'] }};
-    flex-grow: 10;
-}
-
 .key-value-card {
     background: {{ COLOR_SCHEME['bg'] }};
     font-size: 20px;
@@ -212,7 +207,7 @@ foo {
 }
 
 .key-value-card-row {
-    height: 32px;
+    min-height: 32px;
     padding-left: 10px;
     padding-right: 10px;
     flex-grow: 1;
@@ -263,6 +258,24 @@ foo {
     padding-top: 2px;
     flex-grow: 1;
     word-wrap: break-word;
+}
+
+/* Error Card */
+#error .key-value-card-row {
+    border-color: {{ COLOR_SCHEME['red2'] }};
+}
+
+#error .key-value-card-header {
+    background: {{ COLOR_SCHEME['red2'] }};
+}
+
+#error .key-value-card-key {
+    color: {{ COLOR_SCHEME['light1'] }};
+    border-color: {{ COLOR_SCHEME['red2'] }};
+}
+
+#error .key-value-card-value {
+    color: {{ COLOR_SCHEME['red2'] }};
 }
 
 /* Plot */

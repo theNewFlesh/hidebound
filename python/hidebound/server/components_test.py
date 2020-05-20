@@ -129,7 +129,7 @@ class ComponentsTests(unittest.TestCase):
         row_spacer = configbar.children[1]
         self.assertEqual(row_spacer.className, 'row-spacer')
 
-        card = configbar.children[2].children[1]
+        card = configbar.children[2]
         self.assertEqual(card.id, 'config-card')
 
         buttons = configbar.children[0].children

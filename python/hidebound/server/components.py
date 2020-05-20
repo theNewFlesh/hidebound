@@ -233,7 +233,6 @@ def get_configbar(config):
         Div: Div with buttons and JSON editor.
     '''
     expander = html.Div(className='col expander')
-    card_expander = html.Div(className='col card-expander')
     spacer = html.Div(className='col spacer')
 
     upload = dcc.Upload(
@@ -249,14 +248,7 @@ def get_configbar(config):
             children=[expander, spacer, upload, spacer, validate, spacer, write],
         ),
         html.Div(className='row-spacer'),
-        html.Div(
-            className='row',
-            children=[
-                card_expander,
-                get_key_value_card(config, header='config', id_='config-card'),
-                card_expander
-            ]
-        )
+        get_key_value_card(config, header='config', id_='config-card')
     ]
     configbar = html.Div(id='configbar', className='menubar', children=rows)
     return configbar
