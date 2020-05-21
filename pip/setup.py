@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 with open('version.txt') as f:
     VERSION = f.read().strip('\n')
@@ -15,7 +15,7 @@ with open('README.md') as f:
 
 setup(
     name='hidebound',
-    packages=['hidebound'],
+    packages=find_packages(),
     version=VERSION,
     license='MIT',
     description='A local database service for converting directories of \
