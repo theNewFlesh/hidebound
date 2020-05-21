@@ -412,6 +412,28 @@ def get_datatable(data):
             'width': 'auto'
 
         },
+        style_data_conditional=[
+            {
+                'if': {'row_index': 'odd'},
+                'color': COLOR_SCHEME['light1'],
+                'background': COLOR_SCHEME['grey1']
+            },
+            {
+                'if': {'row_index': 'even'},
+                'color': COLOR_SCHEME['light1'],
+                'background': COLOR_SCHEME['bg']
+            },
+            {
+                'if': {
+                    'column_id': [
+                        'asset_error',
+                        'file_error',
+                        'filename_error'
+                    ]
+                },
+                'color': COLOR_SCHEME['red2'],
+            }
+        ],
         style_table={
             'zIndex': '0',
             'maxWidth': '99.5vw',
@@ -439,19 +461,7 @@ def get_datatable(data):
             'border': '0px',
             'height': '25px',
             'padding': '3px 0px 3px 10px'
-        },
-        style_data_conditional=[
-            {
-                'if': {'row_index': 'odd'},
-                'color': COLOR_SCHEME['light1'],
-                'background': COLOR_SCHEME['grey1']
-            },
-            {
-                'if': {'row_index': 'even'},
-                'color': COLOR_SCHEME['light1'],
-                'background': COLOR_SCHEME['bg']
-            }
-        ]
+        }
     )
 
 
