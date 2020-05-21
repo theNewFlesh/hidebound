@@ -44,9 +44,13 @@ ENTRYPOINT [\
 
 # install hidebound
 # RUN echo "\n${CYAN}INSTALL HIDEBOUND${NO_COLOR}"; \
+#     apt update && \
+#     apt install -y \
+#         graphviz \
+#         python3-pydot && \
 #     pip3.7 install hidebound;
 
 # ENTRYPOINT [\
 #     "python3.7",\
-#     "/usr/local/lib/python3.7/dist-packages/hidebound/app.py"\
+#     "/usr/local/lib/python3.7/dist-packages/hidebound/server/app.py"\
 # ]
