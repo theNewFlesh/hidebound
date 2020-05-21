@@ -4,6 +4,7 @@ import os
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 import dash
+import dash_core_components as dcc
 import dash_html_components as html
 import flasgger as swg
 import flask
@@ -217,6 +218,15 @@ def on_get_tab(tab, store):
     elif tab == 'config':
         config = store.get('config', api.CONFIG)
         return components.get_config_tab(config)
+
+    elif tab == 'api':
+        return dcc.Location(id='api', pathname='/api')
+
+    elif tab == 'docs':
+        return dcc.Location(
+            id='docs',
+            href='https://thenewflesh.github.io/hidebound'
+        )
 
 
 @APP.callback(

@@ -110,6 +110,20 @@ def get_dash_app(server, storage_type='memory'):
                 value='config',
                 style=tab_style,
                 selected_style=tab_selected_style,
+            ),
+            dcc.Tab(
+                className='tab',
+                label='api',
+                value='api',
+                style=tab_style,
+                selected_style=tab_selected_style,
+            ),
+            dcc.Tab(
+                className='tab',
+                label='docs',
+                value='docs',
+                style=tab_style,
+                selected_style=tab_selected_style,
             )
         ],
     )
