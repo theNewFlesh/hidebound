@@ -73,6 +73,8 @@ def on_event(*inputs):
     Returns:
         dict: Store data.
     '''
+    APP.logger.debug(f'on_event called with inputs: {str(inputs)[:50]}')
+
     store = inputs[-1] or {}
     config = store.get('config', api.CONFIG)
     conf = json.dumps(config)
@@ -160,6 +162,10 @@ def on_datatable_update(store):
     Returns:
         DataTable: Dash DataTable.
     '''
+    APP.logger.debug(
+        f'on_datatable_update called with store: {str(store)[:50]}'
+    )
+
     if store in [{}, None]:
         raise PreventUpdate
     data = store.get('/api/read', None)
@@ -187,8 +193,24 @@ def on_get_tab(tab, store):
     Returns:
         flask.Response: Response.
     '''
+    APP.logger.debug(
+        f'on_get_tab called with tab: {tab} and store: {str(store)[:50]}'
+    )
+
     if tab == 'data':
         return components.get_data_tab()
+
+    elif tab == 'graph':
+        data = store.get('/api/read', None)
+        if data is None:
+            return
+
+        if 'error' in data.keys():
+            return components.get_key_value_card(
+                data, header='error', id_='error'
+            )
+        return components.get_asset_graph(data['response'])
+
     elif tab == 'config':
         store = store or {}
         config = store.get('config', api.CONFIG)
@@ -230,6 +252,10 @@ def on_config_card_update(timestamp, store):
             html.Div(className='row-spacer'),
             components.get_key_value_card(error, 'error', 'error')
         ]
+
+    msg = 'on_config_card_update called with'
+    msg += f'config: {config} and error: {str(error)[:50]}'
+    APP.logger.debug(msg)
     return output
 # ------------------------------------------------------------------------------
 

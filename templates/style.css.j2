@@ -22,7 +22,7 @@ body {
     background: linear-gradient(
         100deg,
         {{ COLOR_SCHEME['bg'] }} 45%,
-        {{ COLOR_SCHEME['cyan1'] }} 45%
+        {{ COLOR_SCHEME['cyan2'] }} 45%
     ) !important;
     border: 0px !important;
     font-size: large !important;
@@ -34,7 +34,7 @@ body {
 #tabs #logo span {
     background: linear-gradient(
         100deg,
-        {{ COLOR_SCHEME['cyan1'] }} 41.5%,
+        {{ COLOR_SCHEME['cyan2'] }} 41.5%,
         {{ COLOR_SCHEME['bg'] }} 41.5%
     ) !important;
     -webkit-background-clip: text !important;
@@ -663,4 +663,17 @@ foo {
     flex-grow: 10;
     font-size: 15px;
     padding-left: 10px;
+}
+
+/* Asset Graph */
+#asset-graph,
+#asset-graph canvas[data-id="layer0-selectbox"],
+#asset-graph canvas[data-id="layer1-drag"],
+#asset-graph canvas[data-id="layer2-node"] {
+    width: 98% !important;
+    height: 98% !important;
+}
+
+#asset-graph canvas[data-id="layer2-node"] {
+    position: relative !important;
 }

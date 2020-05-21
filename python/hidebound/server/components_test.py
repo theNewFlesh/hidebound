@@ -168,3 +168,44 @@ class ComponentsTests(unittest.TestCase):
 
         result = components.get_datatable([])
         self.assertEqual(result.columns, [])
+
+    def test_get_asset_graph(self):
+        expected = r"Rows must contain \['asset_path', 'asset_valid'\] "
+        expected += r"keys\. Keys found: \[\]\."
+        with self.assertRaisesRegexp(KeyError, expected):
+            components.get_asset_graph([])
+
+        expected = r"Rows must contain \['asset_path', 'asset_valid'\] "
+        expected += r"keys\. Keys found: \['asset_valid']\."
+        with self.assertRaisesRegexp(KeyError, expected):
+            components.get_asset_graph([{'asset_valid': 'foo'}])
+
+        expected = r"Rows must contain \['asset_path', 'asset_valid'\] "
+        expected += r"keys\. Keys found: \['asset_path']\."
+        with self.assertRaisesRegexp(KeyError, expected):
+            components.get_asset_graph([{'asset_path': 'foo'}])
+
+        data = [
+            {'asset_path': '/foo/foo.bar', 'asset_valid': True},
+            {'asset_path': '/foo/kiwi.taco', 'asset_valid': False},
+        ]
+        output = components.get_asset_graph(data).elements
+
+        red2 = '#DE958E'
+        green2 = '#A0D17B'
+        cyan2 = '#B6ECF3'
+
+        result = output[0]['data']
+        self.assertEqual(result['id'], 'root/foo')
+        self.assertEqual(result['label'], 'foo')
+        self.assertEqual(result['color'], cyan2)
+
+        result = output[1]['data']
+        self.assertEqual(result['id'], 'root/foo/foo.bar')
+        self.assertEqual(result['label'], 'foo.bar')
+        self.assertEqual(result['color'], green2)
+
+        result = output[2]['data']
+        self.assertEqual(result['id'], 'root/foo/kiwi.taco')
+        self.assertEqual(result['label'], 'kiwi.taco')
+        self.assertEqual(result['color'], red2)

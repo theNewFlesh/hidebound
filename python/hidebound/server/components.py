@@ -1,7 +1,10 @@
+from pandas import DataFrame
 import dash
 import dash_core_components as dcc
+import dash_cytoscape as cyto
 import dash_html_components as html
 import dash_table
+import rolling_pin.blob_etl as blob_etl
 # ------------------------------------------------------------------------------
 
 
@@ -94,13 +97,13 @@ def get_dash_app(server, storage_type='memory'):
                 style=tab_style,
                 selected_style=tab_selected_style,
             ),
-            # dcc.Tab(
-            #     className='tab',
-            #     label='metrics',
-            #     value='metrics',
-            #     style=tab_style,
-            #     selected_style=tab_selected_style,
-            # ),
+            dcc.Tab(
+                className='tab',
+                label='graph',
+                value='graph',
+                style=tab_style,
+                selected_style=tab_selected_style,
+            ),
             dcc.Tab(
                 className='tab',
                 label='config',
@@ -439,5 +442,92 @@ def get_datatable(data):
                 'color': COLOR_SCHEME['light1'],
                 'background': COLOR_SCHEME['bg']
             }
+        ]
+    )
+
+
+def get_asset_graph(data):
+    '''
+    Creates asset graph data for cytoscape component.
+
+    Args:
+        data (list[dict]): List of dicts.
+
+    Raises:
+        KeyError: If asset_valid or asset_path keys not found.
+
+    Returns:
+        Cytoscape: Cytoscape graph.
+    '''
+    data = DataFrame(data)
+    cols = ['asset_path', 'asset_valid']
+
+    temp = data.columns.tolist()
+    if cols[0] not in temp or cols[1] not in temp:
+        msg = f'Rows must contain {cols} keys. Keys found: {temp}.'
+        raise KeyError(msg)
+
+    data = data[cols]
+    keys = data.asset_path.tolist()
+    vals = data.asset_valid.apply(lambda x: f'asset_valid: {x}').tolist()
+    data = dict(zip(keys, vals))
+    graph = blob_etl.BlobETL(data).to_networkx_graph()
+
+    edges = []
+    for i, e in enumerate(list(graph.edges)):
+        edge = dict(group='edges', source=e[0], target=e[1])
+        edges.append(edge)
+
+    nodes = []
+    for n in list(graph.nodes):
+        attrs = graph.nodes.get(n)
+
+        color = COLOR_SCHEME['cyan2']
+        val = attrs.get('value', [None])[0]
+        if val == 'asset_valid: True':
+            color = COLOR_SCHEME['green2']
+        elif val == 'asset_valid: False':
+            color = COLOR_SCHEME['red2']
+
+        label = attrs['short_name']
+        if not label.startswith('"asset_valid'):
+            node = dict(id=n, group='nodes', label=label, color=color)
+            nodes.append(node)
+
+    nodes.extend(edges)
+    data = [{'data': x} for x in nodes]
+
+    root = data[0]['data']['id']
+    return cyto.Cytoscape(
+        id='asset-graph',
+        elements=data,
+        layout={'name': 'breadthfirst', 'roots': [root]},
+        style=dict(
+            width='98% !important',
+            height='98% !important',
+            position='relative !important'
+        ),
+        stylesheet=[
+            dict(
+                selector='node',
+                style={
+                    'background-color': 'data(color)',
+                    'color': COLOR_SCHEME['bg'],
+                    'content': 'data(label)',
+                    'padding': '10px 10px 10px 10px',
+                    'shape': 'rectangle',
+                    'text-halign': 'center',
+                    'text-valign': 'center',
+                    'width': 'label',
+                    'height': 'label',
+                    'font-size': '25px',
+                }
+            ),
+            dict(
+                selector='edge',
+                style={
+                    'line-color': COLOR_SCHEME['grey2'],
+                }
+            )
         ]
     )
