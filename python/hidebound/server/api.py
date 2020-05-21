@@ -292,6 +292,7 @@ def search():
     except Exception as e:
         return server_tools.error_to_response(e)
 
+    response.asset_valid = response.asset_valid.astype(bool)
     response = response.replace({np.nan: None}).to_dict(orient='records')
     response = {'response': response}
     return flask.Response(
