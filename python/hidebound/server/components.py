@@ -127,15 +127,18 @@ def get_dash_app(server, storage_type='memory'):
 
 
 # TABS--------------------------------------------------------------------------
-def get_data_tab():
+def get_data_tab(query=None):
     '''
     Get tab element for Hidebound data.
+
+    Args:
+        query (str, optional): Query string. Default: None.
 
     Return:
         list: List of elements for data tab.
     '''
     # dummies muist go first for element props behavior to work
-    return [*get_dummy_elements(), get_searchbar()]
+    return [*get_dummy_elements(), get_searchbar(query)]
 
 
 def get_config_tab(config):
@@ -153,18 +156,24 @@ def get_config_tab(config):
 
 
 # MENUBARS----------------------------------------------------------------------
-def get_searchbar():
+def get_searchbar(query=None):
     '''
     Get a row of elements used for querying Hidebound data.
+
+    Args:
+        query (str, optional): Query string. Default: None.
 
     Returns:
         Div: Div with query field, buttons and dropdown.
     '''
+    if query is None:
+        query = 'SELECT * FROM data'
+
     spacer = html.Div(className='col spacer')
     query = dcc.Input(
         id='query',
         className='col query',
-        value='SELECT * FROM data',
+        value=query,
         placeholder='SQL query that uses "FROM data"',
         type='text'
     )

@@ -89,6 +89,11 @@ class ComponentsTests(unittest.TestCase):
         self.assertEqual(val.children[0], 'pizza')
 
     def test_get_searchbar(self):
+        searchbar = components.get_searchbar('foo')
+
+        query = searchbar.children[0].children[0]
+        self.assertEqual(query.value, 'foo')
+
         searchbar = components.get_searchbar()
         self.assertEqual(searchbar.id, 'searchbar')
 

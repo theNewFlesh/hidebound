@@ -122,6 +122,7 @@ def on_event(*inputs):
         })
         response = APP.server.test_client().post('/api/search', json=query).json
         store['/api/read'] = response
+        store['query'] = inputs['query']
 
     elif input_id == 'upload':
         temp = 'invalid'
@@ -196,9 +197,11 @@ def on_get_tab(tab, store):
     APP.logger.debug(
         f'on_get_tab called with tab: {tab} and store: {str(store)[:50]}'
     )
+    store = store or {}
 
     if tab == 'data':
-        return components.get_data_tab()
+        query = store.get('query', None)
+        return components.get_data_tab(query)
 
     elif tab == 'graph':
         data = store.get('/api/read', None)
@@ -212,7 +215,6 @@ def on_get_tab(tab, store):
         return components.get_asset_graph(data['response'])
 
     elif tab == 'config':
-        store = store or {}
         config = store.get('config', api.CONFIG)
         return components.get_config_tab(config)
 
