@@ -13,6 +13,7 @@ numpy
 pandas
 pandasql
 pyparsing
+rolling-pin
 schematics
 scikit-image
 wrapt

@@ -22,7 +22,7 @@ def render_template(filename, parameters):
         str: HTML string.
     '''
     # path to templates inside pip package
-    tempdir = tools.relative_path(__file__, '../../templates').as_posix()
+    tempdir = tools.relative_path(__file__, '../templates').as_posix()
 
     # path to templates inside repo
     if 'REPO_ENV' in os.environ.keys():

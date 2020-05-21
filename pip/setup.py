@@ -15,7 +15,9 @@ with open('README.md') as f:
 
 setup(
     name='hidebound',
-    packages=find_packages(),
+    packages=find_packages(where='./', exclude=['.*test.*.py', '.*.pyc']),
+    package_dir={'hidebound': 'hidebound'},
+    include_package_data=True,
     version=VERSION,
     license='MIT',
     description='A local database service for converting directories of \
