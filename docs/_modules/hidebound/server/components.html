@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.6.0
+                0.6.1
               </div>
             
           
@@ -280,15 +280,18 @@
 
 
 <span class="c1"># TABS--------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="get_data_tab"><a class="viewcode-back" href="../../../server.html#hidebound.server.components.get_data_tab">[docs]</a><span class="k">def</span> <span class="nf">get_data_tab</span><span class="p">():</span>
+<div class="viewcode-block" id="get_data_tab"><a class="viewcode-back" href="../../../server.html#hidebound.server.components.get_data_tab">[docs]</a><span class="k">def</span> <span class="nf">get_data_tab</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Get tab element for Hidebound data.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        query (str, optional): Query string. Default: None.</span>
 
 <span class="sd">    Return:</span>
 <span class="sd">        list: List of elements for data tab.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># dummies muist go first for element props behavior to work</span>
-    <span class="k">return</span> <span class="p">[</span><span class="o">*</span><span class="n">get_dummy_elements</span><span class="p">(),</span> <span class="n">get_searchbar</span><span class="p">()]</span></div>
+    <span class="k">return</span> <span class="p">[</span><span class="o">*</span><span class="n">get_dummy_elements</span><span class="p">(),</span> <span class="n">get_searchbar</span><span class="p">(</span><span class="n">query</span><span class="p">)]</span></div>
 
 
 <div class="viewcode-block" id="get_config_tab"><a class="viewcode-back" href="../../../server.html#hidebound.server.components.get_config_tab">[docs]</a><span class="k">def</span> <span class="nf">get_config_tab</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
@@ -306,18 +309,24 @@
 
 
 <span class="c1"># MENUBARS----------------------------------------------------------------------</span>
-<div class="viewcode-block" id="get_searchbar"><a class="viewcode-back" href="../../../server.html#hidebound.server.components.get_searchbar">[docs]</a><span class="k">def</span> <span class="nf">get_searchbar</span><span class="p">():</span>
+<div class="viewcode-block" id="get_searchbar"><a class="viewcode-back" href="../../../server.html#hidebound.server.components.get_searchbar">[docs]</a><span class="k">def</span> <span class="nf">get_searchbar</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Get a row of elements used for querying Hidebound data.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        query (str, optional): Query string. Default: None.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Div: Div with query field, buttons and dropdown.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">query</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;SELECT * FROM data&#39;</span>
+
     <span class="n">spacer</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;col spacer&#39;</span><span class="p">)</span>
     <span class="n">query</span> <span class="o">=</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span>
         <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;query&#39;</span><span class="p">,</span>
         <span class="n">className</span><span class="o">=</span><span class="s1">&#39;col query&#39;</span><span class="p">,</span>
-        <span class="n">value</span><span class="o">=</span><span class="s1">&#39;SELECT * FROM data&#39;</span><span class="p">,</span>
+        <span class="n">value</span><span class="o">=</span><span class="n">query</span><span class="p">,</span>
         <span class="n">placeholder</span><span class="o">=</span><span class="s1">&#39;SQL query that uses &quot;FROM data&quot;&#39;</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;text&#39;</span>
     <span class="p">)</span>

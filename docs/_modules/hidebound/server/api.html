@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.6.0
+                0.6.1
               </div>
             
           
@@ -445,6 +445,7 @@
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
+    <span class="n">response</span><span class="o">.</span><span class="n">asset_valid</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">asset_valid</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s1">&#39;records&#39;</span><span class="p">)</span>
     <span class="n">response</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="n">response</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">flask</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span>
