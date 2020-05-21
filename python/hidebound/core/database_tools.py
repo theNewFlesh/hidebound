@@ -288,6 +288,7 @@ def _get_data_for_write(data, source_dir, target_dir):
     Returns:
         list[DataFrame]: file_data, file_metadata, asset_metadata.
     '''
+    # TODO: flatten file_traits and flatten asset_traits
     # get valid asset data
     data = data.copy()
     data = data[data.asset_valid]
