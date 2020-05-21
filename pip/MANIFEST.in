@@ -2,3 +2,5 @@ include README.md
 include dev_requirements.txt
 include prod_requirements.txt
 include version.txt
+graft templates
+graft hidebound

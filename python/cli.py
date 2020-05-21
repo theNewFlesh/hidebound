@@ -158,7 +158,9 @@ def get_app_command(info):
         str: Command.
     '''
     cmd = "{exec} python3.7 /root/{repo}/python/{repo}/server/app.py".format(
-        exec=get_docker_exec_command(info, env_vars=['DEBUG_MODE=True']),
+        exec=get_docker_exec_command(
+            info, env_vars=['DEBUG_MODE=True', 'REPO_ENV=True']
+        ),
         repo=REPO,
     )
     return cmd
@@ -373,7 +375,7 @@ def get_publish_command(info):
     '''
     cmd = '{exec} bash -c "'
     cmd += 'rm -rf /tmp/{repo}; '
-    cmd += 'cp -r /root/{repo}/python /tmp/{repo}; '
+    cmd += 'cp -R /root/{repo}/python /tmp/{repo}; '
     cmd += 'cp /root/{repo}/README.md /tmp/{repo}/README.md; '
     cmd += 'cp /root/{repo}/LICENSE /tmp/{repo}/LICENSE; '
     cmd += 'cp /root/{repo}/pip/MANIFEST.in /tmp/{repo}/MANIFEST.in; '
@@ -382,7 +384,9 @@ def get_publish_command(info):
     cmd += 'cp /root/{repo}/pip/version.txt /tmp/{repo}/; '
     cmd += 'cp /root/{repo}/docker/dev_requirements.txt /tmp/{repo}/; '
     cmd += 'cp /root/{repo}/docker/prod_requirements.txt /tmp/{repo}/; '
-    cmd += r"find /tmp/{repo} | grep -E '.*test.*\.py$' | parallel rm -rf; "
+    cmd += 'cp -r /root/{repo}/templates /tmp/{repo}/templates; '
+    cmd += r"find /tmp/{repo} | grep -E '.*test.*\.py$|__pycache__' "
+    cmd += r"| parallel 'rm -rf {x}'; "
     cmd += "find /tmp/{repo} -type f | grep __init__.py | parallel '"
     cmd += "mv {x} /tmp/delete_me; cat /tmp/delete_me | grep -v test > {x}; "
     cmd += "rm /tmp/delete_me'"
@@ -393,8 +397,8 @@ def get_publish_command(info):
     cmd = cmd.format(
         x='{}',
         repo=REPO,
-        exec=get_docker_exec_command(info),
-        exec2=get_docker_exec_command(info, '/tmp/' + REPO),
+        exec=get_docker_exec_command(info, env_vars=[]),
+        exec2=get_docker_exec_command(info, '/tmp/' + REPO, env_vars=[]),
     )
     return cmd
 
@@ -518,12 +522,13 @@ def get_tox_command(info):
     cmd += 'cp /root/{repo}/docker/* /tmp/{repo}/; '
     cmd += 'cp /root/{repo}/pip/* /tmp/{repo}/; '
     cmd += 'cp -R /root/{repo}/resources /tmp; '
+    cmd += 'cp -R /root/{repo}/templates /tmp/{repo}; '
     cmd += r"find /tmp/{repo} | grep -E '__pycache__|\.pyc$' | parallel 'rm -rf'; "
     cmd += 'cd /tmp/{repo}; tox'
     cmd += '"'
     cmd = cmd.format(
         repo=REPO,
-        exec=get_docker_exec_command(info),
+        exec=get_docker_exec_command(info, env_vars=[]),
     )
     return cmd
 
@@ -554,7 +559,9 @@ def get_docker_command(info):
     return cmd
 
 
-def get_docker_exec_command(info, working_directory=None, env_vars=None):
+def get_docker_exec_command(
+    info, working_directory=None, env_vars=['REPO_ENV=True']
+):
     '''
     Gets docker exec command.
 
@@ -562,6 +569,7 @@ def get_docker_exec_command(info, working_directory=None, env_vars=None):
         info (dict): Info dictionary.
         working_directory (str, optional): Working directory.
         env_vars (list[str], optional): Optional environment variables.
+            Default: ['REPO_ENV=True'].
 
     Returns:
         str: Command.
@@ -664,8 +672,9 @@ def main():
             cmd += ' && ' + get_production_container_command(info)
 
     elif mode == 'publish':
-        cmd = get_tox_command(info)
-        cmd += ' && ' + get_publish_command(info)
+        # cmd = get_tox_command(info)
+        # cmd += ' && ' + get_publish_command(info)
+        cmd = get_publish_command(info)
 
     elif mode == 'python':
         cmd = get_python_command(info)
