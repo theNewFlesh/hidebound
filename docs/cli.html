@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.6.1
+                0.6.2
               </div>
             
           
@@ -301,14 +301,15 @@ repository’s structure. Written to be python version agnostic.</p>
 
 <dl class="py function">
 <dt id="cli.get_docker_exec_command">
-<code class="sig-prename descclassname">cli.</code><code class="sig-name descname">get_docker_exec_command</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">info</span></em>, <em class="sig-param"><span class="n">working_directory</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">env_vars</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#get_docker_exec_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cli.get_docker_exec_command" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">cli.</code><code class="sig-name descname">get_docker_exec_command</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">info</span></em>, <em class="sig-param"><span class="n">working_directory</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">env_vars</span><span class="o">=</span><span class="default_value">['REPO_ENV=True']</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#get_docker_exec_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cli.get_docker_exec_command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets docker exec command.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>info</strong> (<em>dict</em>) – Info dictionary.</p></li>
 <li><p><strong>working_directory</strong> (<em>str</em><em>, </em><em>optional</em>) – Working directory.</p></li>
-<li><p><strong>env_vars</strong> (<em>list</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Optional environment variables.</p></li>
+<li><p><strong>env_vars</strong> (<em>list</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Optional environment variables.
+Default: [‘REPO_ENV=True’].</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

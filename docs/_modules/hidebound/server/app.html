@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.6.1
+                0.6.2
               </div>
             
           
@@ -157,6 +157,7 @@
 <span class="kn">from</span> <span class="nn">dash.dependencies</span> <span class="kn">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">State</span>
 <span class="kn">from</span> <span class="nn">dash.exceptions</span> <span class="kn">import</span> <span class="n">PreventUpdate</span>
 <span class="kn">import</span> <span class="nn">dash</span>
+<span class="kn">import</span> <span class="nn">dash_core_components</span> <span class="k">as</span> <span class="nn">dcc</span>
 <span class="kn">import</span> <span class="nn">dash_html_components</span> <span class="k">as</span> <span class="nn">html</span>
 <span class="kn">import</span> <span class="nn">flasgger</span> <span class="k">as</span> <span class="nn">swg</span>
 <span class="kn">import</span> <span class="nn">flask</span>
@@ -369,7 +370,16 @@
 
     <span class="k">elif</span> <span class="n">tab</span> <span class="o">==</span> <span class="s1">&#39;config&#39;</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="n">api</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">components</span><span class="o">.</span><span class="n">get_config_tab</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">components</span><span class="o">.</span><span class="n">get_config_tab</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">tab</span> <span class="o">==</span> <span class="s1">&#39;api&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Location</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;api&#39;</span><span class="p">,</span> <span class="n">pathname</span><span class="o">=</span><span class="s1">&#39;/api&#39;</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">tab</span> <span class="o">==</span> <span class="s1">&#39;docs&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Location</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;docs&#39;</span><span class="p">,</span>
+            <span class="n">href</span><span class="o">=</span><span class="s1">&#39;https://thenewflesh.github.io/hidebound&#39;</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="on_config_card_update"><a class="viewcode-back" href="../../../server.html#hidebound.server.app.on_config_card_update">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span>

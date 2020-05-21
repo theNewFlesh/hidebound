@@ -672,9 +672,8 @@ def main():
             cmd += ' && ' + get_production_container_command(info)
 
     elif mode == 'publish':
-        # cmd = get_tox_command(info)
-        # cmd += ' && ' + get_publish_command(info)
-        cmd = get_publish_command(info)
+        cmd = get_tox_command(info)
+        cmd += ' && ' + get_publish_command(info)
 
     elif mode == 'python':
         cmd = get_python_command(info)

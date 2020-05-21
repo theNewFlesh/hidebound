@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.6.1
+                0.6.2
               </div>
             
           
@@ -174,7 +174,13 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        str: HTML string.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">tempdir</span> <span class="o">=</span> <span class="n">tools</span><span class="o">.</span><span class="n">relative_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s1">&#39;../../../templates&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+    <span class="c1"># path to templates inside pip package</span>
+    <span class="n">tempdir</span> <span class="o">=</span> <span class="n">tools</span><span class="o">.</span><span class="n">relative_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s1">&#39;../../templates&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+
+    <span class="c1"># path to templates inside repo</span>
+    <span class="k">if</span> <span class="s1">&#39;REPO_ENV&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">tempdir</span> <span class="o">=</span> <span class="n">tools</span><span class="o">.</span><span class="n">relative_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s1">&#39;../../../templates&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+
     <span class="n">env</span> <span class="o">=</span> <span class="n">jinja2</span><span class="o">.</span><span class="n">Environment</span><span class="p">(</span>
         <span class="n">loader</span><span class="o">=</span><span class="n">jinja2</span><span class="o">.</span><span class="n">FileSystemLoader</span><span class="p">(</span><span class="n">tempdir</span><span class="p">),</span>
         <span class="n">keep_trailing_newline</span><span class="o">=</span><span class="kc">True</span>
