@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.6.3
+                0.6.4
               </div>
             
           
@@ -537,7 +537,7 @@
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cp /root/</span><span class="si">{repo}</span><span class="s1">/pip/version.txt /tmp/</span><span class="si">{repo}</span><span class="s1">/; &#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cp /root/</span><span class="si">{repo}</span><span class="s1">/docker/dev_requirements.txt /tmp/</span><span class="si">{repo}</span><span class="s1">/; &#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cp /root/</span><span class="si">{repo}</span><span class="s1">/docker/prod_requirements.txt /tmp/</span><span class="si">{repo}</span><span class="s1">/; &#39;</span>
-    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cp -r /root/</span><span class="si">{repo}</span><span class="s1">/templates /tmp/</span><span class="si">{repo}</span><span class="s1">/templates; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cp -r /root/</span><span class="si">{repo}</span><span class="s1">/templates /tmp/</span><span class="si">{repo}</span><span class="s1">/</span><span class="si">{repo}</span><span class="s1">; &#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="sa">r</span><span class="s2">&quot;find /tmp/</span><span class="si">{repo}</span><span class="s2"> | grep -E &#39;.*test.*\.py$|__pycache__&#39; &quot;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="sa">r</span><span class="s2">&quot;| parallel &#39;rm -rf </span><span class="si">{x}</span><span class="s2">&#39;; &quot;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot;find /tmp/</span><span class="si">{repo}</span><span class="s2"> -type f | grep __init__.py | parallel &#39;&quot;</span>
@@ -675,7 +675,7 @@
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cp /root/</span><span class="si">{repo}</span><span class="s1">/docker/* /tmp/</span><span class="si">{repo}</span><span class="s1">/; &#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cp /root/</span><span class="si">{repo}</span><span class="s1">/pip/* /tmp/</span><span class="si">{repo}</span><span class="s1">/; &#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cp -R /root/</span><span class="si">{repo}</span><span class="s1">/resources /tmp; &#39;</span>
-    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cp -R /root/</span><span class="si">{repo}</span><span class="s1">/templates /tmp/</span><span class="si">{repo}</span><span class="s1">; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cp -R /root/</span><span class="si">{repo}</span><span class="s1">/templates /tmp/</span><span class="si">{repo}</span><span class="s1">/</span><span class="si">{repo}</span><span class="s1">; &#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="sa">r</span><span class="s2">&quot;find /tmp/</span><span class="si">{repo}</span><span class="s2"> | grep -E &#39;__pycache__|\.pyc$&#39; | parallel &#39;rm -rf&#39;; &quot;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cd /tmp/</span><span class="si">{repo}</span><span class="s1">; tox&#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;&quot;&#39;</span>
