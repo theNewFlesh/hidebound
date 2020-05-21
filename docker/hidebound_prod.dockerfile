@@ -22,35 +22,35 @@ RUN echo "\n${CYAN}SETUP PYTHON3.7${NO_COLOR}"; \
     python3.7 get-pip.py && \
     rm -rf /root/get-pip.py
 
-# install python dependencies
-COPY ./ /root/hidebound
-RUN echo "\n${CYAN}INSTALL PYTHON DEPENDECIES${NO_COLOR}"; \
-    apt update && \
-    apt install -y \
-        graphviz \
-        python3-pydot && \
-    pip3.7 install -r /root/hidebound/docker/prod_requirements.txt;
-
-# added aliases to bashrc
-RUN echo "\n${CYAN}CONFIGURE BASHRC${NO_COLOR}"; \
-    echo 'export PYTHONPATH="/root/hidebound/python"' >> /root/.bashrc;
-
-ENV PYTHONPATH "${PYTHONPATH}:/root/hidebound/python"
-
-ENTRYPOINT [\
-    "python3.7",\
-    "/root/hidebound/python/hidebound/server/app.py"\
-]
-
-# install hidebound
-# RUN echo "\n${CYAN}INSTALL HIDEBOUND${NO_COLOR}"; \
+# # install python dependencies
+# COPY ./ /root/hidebound
+# RUN echo "\n${CYAN}INSTALL PYTHON DEPENDECIES${NO_COLOR}"; \
 #     apt update && \
 #     apt install -y \
 #         graphviz \
 #         python3-pydot && \
-#     pip3.7 install hidebound;
+#     pip3.7 install -r /root/hidebound/docker/prod_requirements.txt;
+
+# # added aliases to bashrc
+# RUN echo "\n${CYAN}CONFIGURE BASHRC${NO_COLOR}"; \
+#     echo 'export PYTHONPATH="/root/hidebound/python"' >> /root/.bashrc;
+
+# ENV PYTHONPATH "${PYTHONPATH}:/root/hidebound/python"
 
 # ENTRYPOINT [\
 #     "python3.7",\
-#     "/usr/local/lib/python3.7/dist-packages/hidebound/server/app.py"\
+#     "/root/hidebound/python/hidebound/server/app.py"\
 # ]
+
+# install hidebound
+RUN echo "\n${CYAN}INSTALL HIDEBOUND${NO_COLOR}"; \
+    apt update && \
+    apt install -y \
+        graphviz \
+        python3-pydot && \
+    pip3.7 install hidebound>=0.6.4;
+
+ENTRYPOINT [\
+    "python3.7",\
+    "/usr/local/lib/python3.7/dist-packages/hidebound/server/app.py"\
+]
