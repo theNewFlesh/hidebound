@@ -578,7 +578,7 @@ def get_docker_exec_command(
     cmd += 'CONTAINER_ID=$({container_command}); '
     cmd += 'docker exec --interactive --tty --user \"root:root\" -e {env} '
     if env_vars is not None and len(env_vars) > 0:
-        cmd += '-e ' + '-e '.join(env_vars) + ' '
+        cmd += '-e ' + ' -e '.join(env_vars) + ' '
     if working_directory is not None:
         cmd += '-w {} '.format(working_directory)
     cmd += '$CONTAINER_ID '
