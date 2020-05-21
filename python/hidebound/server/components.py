@@ -391,12 +391,16 @@ def get_datatable(data):
     if len(data) > 0:
         cols = data[0].keys()
     cols = [{'name': x, 'id': x} for x in cols]
+    error_cols = [
+        'asset_error',
+        'file_error',
+        'filename_error'
+    ]
 
     return dash_table.DataTable(
         data=data,
         columns=cols,
         id='datatable',
-        # fixed_rows={'headers': True},
         css=[
             {
                 'selector': '.dash-cell div.dash-cell-value',
@@ -416,7 +420,7 @@ def get_datatable(data):
             {
                 'if': {'row_index': 'odd'},
                 'color': COLOR_SCHEME['light1'],
-                'background': COLOR_SCHEME['grey1']
+                'background': COLOR_SCHEME['grey1'],
             },
             {
                 'if': {'row_index': 'even'},
@@ -424,13 +428,7 @@ def get_datatable(data):
                 'background': COLOR_SCHEME['bg']
             },
             {
-                'if': {
-                    'column_id': [
-                        'asset_error',
-                        'file_error',
-                        'filename_error'
-                    ]
-                },
+                'if': {'column_id': error_cols},
                 'color': COLOR_SCHEME['red2'],
             }
         ],
@@ -447,7 +445,7 @@ def get_datatable(data):
         style_header={
             'color': COLOR_SCHEME['light2'],
             'background': COLOR_SCHEME['grey1'],
-            'fontWeight': 'bold'
+            'fontWeight': 'bold',
         },
         style_filter={
             'color': COLOR_SCHEME['cyan2'],
