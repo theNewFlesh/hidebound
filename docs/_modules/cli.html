@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.6.2
+                0.6.3
               </div>
             
           
@@ -825,9 +825,8 @@
             <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39; &amp;&amp; &#39;</span> <span class="o">+</span> <span class="n">get_production_container_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;publish&#39;</span><span class="p">:</span>
-        <span class="c1"># cmd = get_tox_command(info)</span>
-        <span class="c1"># cmd += &#39; &amp;&amp; &#39; + get_publish_command(info)</span>
-        <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_publish_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_tox_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+        <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39; &amp;&amp; &#39;</span> <span class="o">+</span> <span class="n">get_publish_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;python&#39;</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_python_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
