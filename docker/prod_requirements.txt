@@ -1,8 +1,9 @@
 apispec
 dash
-dash_table
 dash-core-components
+dash-cytoscape
 dash-html-components
+dash-table
 flasgger
 flask
 humanfriendly

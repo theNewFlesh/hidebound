@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.5.11
+                0.6.0
               </div>
             
           
@@ -151,10 +151,13 @@
            <div itemprop="articleBody">
             
   <h1>Source code for hidebound.server.components</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">dash</span>
+<span></span><span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
+<span class="kn">import</span> <span class="nn">dash</span>
 <span class="kn">import</span> <span class="nn">dash_core_components</span> <span class="k">as</span> <span class="nn">dcc</span>
+<span class="kn">import</span> <span class="nn">dash_cytoscape</span> <span class="k">as</span> <span class="nn">cyto</span>
 <span class="kn">import</span> <span class="nn">dash_html_components</span> <span class="k">as</span> <span class="nn">html</span>
 <span class="kn">import</span> <span class="nn">dash_table</span>
+<span class="kn">import</span> <span class="nn">rolling_pin.blob_etl</span> <span class="k">as</span> <span class="nn">blob_etl</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
@@ -247,13 +250,13 @@
                 <span class="n">style</span><span class="o">=</span><span class="n">tab_style</span><span class="p">,</span>
                 <span class="n">selected_style</span><span class="o">=</span><span class="n">tab_selected_style</span><span class="p">,</span>
             <span class="p">),</span>
-            <span class="c1"># dcc.Tab(</span>
-            <span class="c1">#     className=&#39;tab&#39;,</span>
-            <span class="c1">#     label=&#39;metrics&#39;,</span>
-            <span class="c1">#     value=&#39;metrics&#39;,</span>
-            <span class="c1">#     style=tab_style,</span>
-            <span class="c1">#     selected_style=tab_selected_style,</span>
-            <span class="c1"># ),</span>
+            <span class="n">dcc</span><span class="o">.</span><span class="n">Tab</span><span class="p">(</span>
+                <span class="n">className</span><span class="o">=</span><span class="s1">&#39;tab&#39;</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="s1">&#39;graph&#39;</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">=</span><span class="s1">&#39;graph&#39;</span><span class="p">,</span>
+                <span class="n">style</span><span class="o">=</span><span class="n">tab_style</span><span class="p">,</span>
+                <span class="n">selected_style</span><span class="o">=</span><span class="n">tab_selected_style</span><span class="p">,</span>
+            <span class="p">),</span>
             <span class="n">dcc</span><span class="o">.</span><span class="n">Tab</span><span class="p">(</span>
                 <span class="n">className</span><span class="o">=</span><span class="s1">&#39;tab&#39;</span><span class="p">,</span>
                 <span class="n">label</span><span class="o">=</span><span class="s1">&#39;config&#39;</span><span class="p">,</span>
@@ -592,6 +595,93 @@
                 <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;light1&#39;</span><span class="p">],</span>
                 <span class="s1">&#39;background&#39;</span><span class="p">:</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;bg&#39;</span><span class="p">]</span>
             <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_asset_graph"><a class="viewcode-back" href="../../../server.html#hidebound.server.components.get_asset_graph">[docs]</a><span class="k">def</span> <span class="nf">get_asset_graph</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Creates asset graph data for cytoscape component.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (list[dict]): List of dicts.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        KeyError: If asset_valid or asset_path keys not found.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Cytoscape: Cytoscape graph.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;asset_path&#39;</span><span class="p">,</span> <span class="s1">&#39;asset_valid&#39;</span><span class="p">]</span>
+
+    <span class="n">temp</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">temp</span> <span class="ow">or</span> <span class="n">cols</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">temp</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Rows must contain </span><span class="si">{</span><span class="n">cols</span><span class="si">}</span><span class="s1"> keys. Keys found: </span><span class="si">{</span><span class="n">temp</span><span class="si">}</span><span class="s1">.&#39;</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">asset_path</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">vals</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">asset_valid</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;asset_valid: </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">vals</span><span class="p">))</span>
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">blob_etl</span><span class="o">.</span><span class="n">BlobETL</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">to_networkx_graph</span><span class="p">()</span>
+
+    <span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">)):</span>
+        <span class="n">edge</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="s1">&#39;edges&#39;</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">target</span><span class="o">=</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
+
+    <span class="n">nodes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">):</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+        <span class="n">color</span> <span class="o">=</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;cyan2&#39;</span><span class="p">]</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="p">[</span><span class="kc">None</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">val</span> <span class="o">==</span> <span class="s1">&#39;asset_valid: True&#39;</span><span class="p">:</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;green2&#39;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">val</span> <span class="o">==</span> <span class="s1">&#39;asset_valid: False&#39;</span><span class="p">:</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;red2&#39;</span><span class="p">]</span>
+
+        <span class="n">label</span> <span class="o">=</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;short_name&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">label</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;&quot;asset_valid&#39;</span><span class="p">):</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;nodes&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+            <span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+
+    <span class="n">nodes</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">}</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">]</span>
+
+    <span class="n">root</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">cyto</span><span class="o">.</span><span class="n">Cytoscape</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;asset-graph&#39;</span><span class="p">,</span>
+        <span class="n">elements</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+        <span class="n">layout</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;breadthfirst&#39;</span><span class="p">,</span> <span class="s1">&#39;roots&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">root</span><span class="p">]},</span>
+        <span class="n">style</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">width</span><span class="o">=</span><span class="s1">&#39;98% !important&#39;</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="s1">&#39;98% !important&#39;</span><span class="p">,</span>
+            <span class="n">position</span><span class="o">=</span><span class="s1">&#39;relative !important&#39;</span>
+        <span class="p">),</span>
+        <span class="n">stylesheet</span><span class="o">=</span><span class="p">[</span>
+            <span class="nb">dict</span><span class="p">(</span>
+                <span class="n">selector</span><span class="o">=</span><span class="s1">&#39;node&#39;</span><span class="p">,</span>
+                <span class="n">style</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s1">&#39;background-color&#39;</span><span class="p">:</span> <span class="s1">&#39;data(color)&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;bg&#39;</span><span class="p">],</span>
+                    <span class="s1">&#39;content&#39;</span><span class="p">:</span> <span class="s1">&#39;data(label)&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;padding&#39;</span><span class="p">:</span> <span class="s1">&#39;10px 10px 10px 10px&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="s1">&#39;rectangle&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;text-halign&#39;</span><span class="p">:</span> <span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;text-valign&#39;</span><span class="p">:</span> <span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="s1">&#39;label&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="s1">&#39;label&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;font-size&#39;</span><span class="p">:</span> <span class="s1">&#39;25px&#39;</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="p">),</span>
+            <span class="nb">dict</span><span class="p">(</span>
+                <span class="n">selector</span><span class="o">=</span><span class="s1">&#39;edge&#39;</span><span class="p">,</span>
+                <span class="n">style</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s1">&#39;line-color&#39;</span><span class="p">:</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;grey2&#39;</span><span class="p">],</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
         <span class="p">]</span>
     <span class="p">)</span></div>
 </pre></div>

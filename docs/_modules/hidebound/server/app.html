@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.5.11
+                0.6.0
               </div>
             
           
@@ -226,6 +226,8 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        dict: Store data.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">APP</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;on_event called with inputs: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">inputs</span><span class="p">)[:</span><span class="mi">50</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
     <span class="n">store</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="p">{}</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="n">api</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">)</span>
     <span class="n">conf</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
@@ -313,6 +315,10 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        DataTable: Dash DataTable.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">APP</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s1">&#39;on_datatable_update called with store: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">store</span><span class="p">)[:</span><span class="mi">50</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="p">)</span>
+
     <span class="k">if</span> <span class="n">store</span> <span class="ow">in</span> <span class="p">[{},</span> <span class="kc">None</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="n">PreventUpdate</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/api/read&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -340,8 +346,24 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        flask.Response: Response.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">APP</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s1">&#39;on_get_tab called with tab: </span><span class="si">{</span><span class="n">tab</span><span class="si">}</span><span class="s1"> and store: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">store</span><span class="p">)[:</span><span class="mi">50</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="p">)</span>
+
     <span class="k">if</span> <span class="n">tab</span> <span class="o">==</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">components</span><span class="o">.</span><span class="n">get_data_tab</span><span class="p">()</span>
+
+    <span class="k">elif</span> <span class="n">tab</span> <span class="o">==</span> <span class="s1">&#39;graph&#39;</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/api/read&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="s1">&#39;error&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">components</span><span class="o">.</span><span class="n">get_key_value_card</span><span class="p">(</span>
+                <span class="n">data</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="n">id_</span><span class="o">=</span><span class="s1">&#39;error&#39;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">components</span><span class="o">.</span><span class="n">get_asset_graph</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;response&#39;</span><span class="p">])</span>
+
     <span class="k">elif</span> <span class="n">tab</span> <span class="o">==</span> <span class="s1">&#39;config&#39;</span><span class="p">:</span>
         <span class="n">store</span> <span class="o">=</span> <span class="n">store</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="n">api</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">)</span>
@@ -367,7 +389,7 @@
     <span class="k">if</span> <span class="n">store</span> <span class="ow">in</span> <span class="p">[{},</span> <span class="kc">None</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="n">PreventUpdate</span>
 
-    <span class="n">config</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">PreventUpdate</span>
 
@@ -383,6 +405,10 @@
             <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;row-spacer&#39;</span><span class="p">),</span>
             <span class="n">components</span><span class="o">.</span><span class="n">get_key_value_card</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">)</span>
         <span class="p">]</span>
+
+    <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;on_config_card_update called with&#39;</span>
+    <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;config: </span><span class="si">{</span><span class="n">config</span><span class="si">}</span><span class="s1"> and error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">)[:</span><span class="mi">50</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="n">APP</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">output</span></div>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 

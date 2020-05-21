@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.11
+                0.6.0
               </div>
             
           
@@ -378,6 +378,26 @@
 </div>
 <div class="section" id="module-hidebound.server.components">
 <span id="components"></span><h2>components<a class="headerlink" href="#module-hidebound.server.components" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="hidebound.server.components.get_asset_graph">
+<code class="sig-prename descclassname">hidebound.server.components.</code><code class="sig-name descname">get_asset_graph</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/components.html#get_asset_graph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.components.get_asset_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates asset graph data for cytoscape component.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>list</em><em>[</em><em>dict</em><em>]</em>) – List of dicts.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>KeyError</strong> – If asset_valid or asset_path keys not found.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Cytoscape graph.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Cytoscape</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py function">
 <dt id="hidebound.server.components.get_button">
 <code class="sig-prename descclassname">hidebound.server.components.</code><code class="sig-name descname">get_button</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">title</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/components.html#get_button"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.components.get_button" title="Permalink to this definition">¶</a></dt>
