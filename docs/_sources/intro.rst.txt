@@ -12,12 +12,22 @@ Installation
 ============
 
 Python
-^^^^^^
+~~~~~~
 
 ``pip install hidebound``
 
+Docker
+~~~~~~
+
+1. Install
+   `docker <https://docs.docker.com/v17.09/engine/installation>`__
+2. Install
+   `docker-machine <https://docs.docker.com/machine/install-machine>`__
+   (if running on macOS or Windows)
+3. ``docker pull thenewflesh/hidebound:latest``
+
 Docker For Developers
-^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~
 
 1. Install
    `docker <https://docs.docker.com/v17.09/engine/installation>`__
