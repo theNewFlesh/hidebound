@@ -230,6 +230,7 @@ def get_docs_command(info):
         str: Fully resolved build docs command.
     '''
     cmd = '{exec} mkdir -p /root/{repo}/docs; '
+    cmd += '{exec} bash -c "pandoc /root/{repo}/README.md -o /root/{repo}/sphinx/intro.rst"; '
     cmd += '{exec} sphinx-build /root/{repo}/sphinx /root/{repo}/docs; '
     cmd += '{exec} cp /root/{repo}/sphinx/style.css /root/{repo}/docs/_static/style.css; '
     cmd += '{exec} touch /root/{repo}/docs/.nojekyll'

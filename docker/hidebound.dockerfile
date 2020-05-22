@@ -10,14 +10,15 @@ ARG NO_COLOR='\033[0m'
 RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${NO_COLOR}"; \
     apt update && \
     apt install -y \
-    curl \
-    git \
-    parallel \
-    python3-dev \
-    software-properties-common \
-    tree \
-    vim \
-    wget
+        curl \
+        git \
+        parallel \
+        pandoc \
+        python3-dev \
+        software-properties-common \
+        tree \
+        vim \
+        wget
 
 # install python3.7 and pip
 ADD https://bootstrap.pypa.io/get-pip.py get-pip.py

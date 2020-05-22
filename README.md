@@ -1,13 +1,13 @@
-# Hidebound
+# Introduction
 A local database service for converting directories of arbitrary files into validated assets and derived metadata for export to databases like AWS S3 and MongoDB.
 
-See **[documentation](https://thenewflesh.github.io/hidebound/)** for details.
+See [documentation](https://thenewflesh.github.io/hidebound/) for details.
 
 # Installation
+### Python
 `pip install hidebound`
 
-# For Developers
-## Installation
+### Docker For Developers
 1. Install [docker](https://docs.docker.com/v17.09/engine/installation)
 2. Install [docker-machine](https://docs.docker.com/machine/install-machine)
    (if running on macOS or Windows)
