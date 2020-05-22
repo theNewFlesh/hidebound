@@ -7,6 +7,12 @@ See [documentation](https://thenewflesh.github.io/hidebound/) for details.
 ### Python
 `pip install hidebound`
 
+### Docker
+1. Install [docker](https://docs.docker.com/v17.09/engine/installation)
+2. Install [docker-machine](https://docs.docker.com/machine/install-machine)
+   (if running on macOS or Windows)
+4. `docker pull thenewflesh/hidebound:latest`
+
 ### Docker For Developers
 1. Install [docker](https://docs.docker.com/v17.09/engine/installation)
 2. Install [docker-machine](https://docs.docker.com/machine/install-machine)
