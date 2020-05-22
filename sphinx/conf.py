@@ -20,7 +20,7 @@ with open('../pip/version.txt') as f:
 # -- Project information -----------------------------------------------------
 
 project = 'hidebound'
-copyright = '2019, Alex Braun <TheNewFlesh@github.com>'
+copyright = '2020, Alex Braun <TheNewFlesh@github.com>'
 author = 'Alex Braun <TheNewFlesh@github.com>'
 version = VERSION
 # release = ''
@@ -48,7 +48,6 @@ templates_path = ['_templates']
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
-
 
 # -- Options for HTML output -------------------------------------------------
 
