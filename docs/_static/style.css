@@ -176,3 +176,27 @@ code.literal {
 span[id*='MathJax-Span'] {
     color: #E9EABE !important;
 }
+
+/* Markdown Tables */
+
+.rst-content table .row-even td {
+    background: #444444 !important;
+    color: #F4F4F4 !important;
+    border: 0px solid #242424 !important;
+}
+
+.rst-content table .row-odd td {
+    background: #343434 !important;
+    color: #F4F4F4 !important;
+    border: 0px solid #242424 !important;
+}
+
+.rst-content table.docutils thead th {
+    background: #343434 !important;
+    color: #B6ECF3 !important;
+    border-bottom: 1px solid #B6ECF3 !important;
+}
+
+.rst-content table.docutils {
+    border: 0px solid #343434 !important;
+}
