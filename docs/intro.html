@@ -116,6 +116,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#project-structure">Project Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#application">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#errors">Errors</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Python API</span></p>
 <ul>
@@ -250,31 +252,35 @@ by Hidebound.</p>
 <p>For example, an asset could be an image sequence, such as a directory
 full of PNG files, all of which have a frame number, have 3 (RGB)
 channels, and are 1024 pixels wide and 1024 pixels tall. Let’s call the
-specification for this type of asset “raw001”. We create an image
+specification for this type of asset “spec001”. We create an image
 sequence, and we move it into the Hidebound projects directory.</p>
 </div>
 <div class="section" id="update">
 <h2><em>Update</em><a class="headerlink" href="#update" title="Permalink to this headline">¶</a></h2>
-<p>We call the update function via Hidebound’s web client. Hidebound
-creates a new database based upon the recursive listing of all the files
-within said directory. This database is displayed to us as a table, with
-one file per row. If we choose to group by asset in the client, it will
-be, oneasset per row. Hidebound extracts metadata from each filename
-(not any directory name) as well as from the file itself. That metadata
-is called file_traits. Using only information derived from filename and
+<div class="figure align-default" id="id1">
+<img alt="update" src="resources/update.png" />
+<p class="caption"><span class="caption-text">update</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<p>We call the update function via Hidebound’s web app. Hidebound creates a
+new database based upon the recursive listing of all the files within
+said directory. This database is displayed to us as a table, with one
+file per row. If we choose to group by asset in the app, it will be,
+oneasset per row. Hidebound extracts metadata from each filename (not
+any directory name) as well as from the file itself. That metadata is
+called file_traits. Using only information derived from filename and
 file traits, Hidebound determines which files are grouped together as a
 single asset and the specification of that asset. Asset traits are then
 derived from this set (1 or more) of files. Finally, Hidebound validates
 each asset according to its determined specification. All of this data
-is displayed as a table within the web client. Importantly, all of the
+is displayed as a table within the web app. Importantly, all of the
 errors in filenames, file traits and asset traits are included.</p>
 </div>
 <div class="section" id="review-graph">
 <h2>Review <em>Graph</em><a class="headerlink" href="#review-graph" title="Permalink to this headline">¶</a></h2>
-<p>If we click on the graph tab, we are greeted by a hierarchical graph of
-all our assets in our project directory. Our asset is red, meaning it’s
-invalid. Valid asset’s are green, and all other files and directories,
-including parent directories, are cyan.</p>
+<p><img alt="update" src="resources/graph.png" /> If we click on the graph tab, we are greeted by a hierarchical
+graph of all our assets in our project directory. Our asset is red,
+meaning it’s invalid. Valid asset’s are green, and all other files and
+directories, including parent directories, are cyan.</p>
 </div>
 <div class="section" id="diagnose-and-repair">
 <h2>Diagnose and <em>Repair</em><a class="headerlink" href="#diagnose-and-repair" title="Permalink to this headline">¶</a></h2>
@@ -292,22 +298,33 @@ and the channels column says it has three.</p>
 generates file and asset metadata as JSON files within the
 hidebound/metadata directory. Hidebound also copies or moves (depending
 on config) valid files and directories into the hidebound/data
-directory. Thus we now have a hidebound directory that looks like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">hidebound</span>
-    <span class="o">|--</span> <span class="n">data</span>
-    <span class="o">|</span>   <span class="o">|--</span> <span class="n">p</span><span class="o">-</span><span class="n">proj001_s</span><span class="o">-</span><span class="n">raw001_d</span><span class="o">-</span><span class="n">running</span><span class="o">-</span><span class="n">cat_v001</span>
-    <span class="o">|</span>       <span class="o">|--</span> <span class="n">p</span><span class="o">-</span><span class="n">proj001_s</span><span class="o">-</span><span class="n">raw001_d</span><span class="o">-</span><span class="n">running</span><span class="o">-</span><span class="n">cat_v001_c000</span><span class="o">-</span><span class="mi">0005</span><span class="n">_f0001</span><span class="o">.</span><span class="n">png</span>
-    <span class="o">|</span>       <span class="o">|--</span> <span class="n">p</span><span class="o">-</span><span class="n">proj001_s</span><span class="o">-</span><span class="n">raw001_d</span><span class="o">-</span><span class="n">running</span><span class="o">-</span><span class="n">cat_v001_c000</span><span class="o">-</span><span class="mi">0005</span><span class="n">_f0002</span><span class="o">.</span><span class="n">png</span>
-    <span class="o">|</span>       <span class="o">|--</span> <span class="n">p</span><span class="o">-</span><span class="n">proj001_s</span><span class="o">-</span><span class="n">raw001_d</span><span class="o">-</span><span class="n">running</span><span class="o">-</span><span class="n">cat_v001_c000</span><span class="o">-</span><span class="mi">0005</span><span class="n">_f0003</span><span class="o">.</span><span class="n">png</span>
-    <span class="o">|</span>
-    <span class="o">|--</span> <span class="n">metadata</span>
-        <span class="o">|--</span> <span class="n">file</span>
-        <span class="o">|</span>   <span class="o">|--</span> <span class="n">fab4219b</span><span class="o">-</span><span class="n">b4a2</span><span class="o">-</span><span class="mi">4910</span><span class="o">-</span><span class="mi">976</span><span class="n">f</span><span class="o">-</span><span class="n">e06ab7e64bd9</span><span class="o">.</span><span class="n">json</span>
-        <span class="o">|</span>   <span class="o">|--</span> <span class="n">asgdhjhg</span><span class="o">-</span><span class="n">b4a2</span><span class="o">-</span><span class="mi">8765</span><span class="o">-</span><span class="mi">7896</span><span class="o">-</span><span class="n">jaskldj78211</span><span class="o">.</span><span class="n">json</span>
-        <span class="o">|</span>   <span class="o">|--</span> <span class="n">akjsd879</span><span class="o">-</span><span class="n">jahs</span><span class="o">-</span><span class="mi">1862</span><span class="o">-</span><span class="mi">871</span><span class="n">h</span><span class="o">-</span><span class="mi">891723</span><span class="n">hdsasd</span><span class="o">.</span><span class="n">json</span>
-        <span class="o">|</span>
-        <span class="o">|--</span> <span class="n">asset</span>
-            <span class="o">|--</span> <span class="n">kajsaks3</span><span class="o">-</span><span class="n">askl</span><span class="o">-</span><span class="mi">1233</span><span class="o">-</span><span class="n">mnas</span><span class="o">-</span><span class="n">alskhdu12632</span><span class="o">.</span><span class="n">json</span>
+directory. Thus we now have a hidebound directory that looks like this
+(unmentioned assets are collapsed behind the ellipses):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>/tmp/hidebound
+├── hidebound_config.json
+│
+├── specifications
+│   └── specifications.py
+│
+├── data
+│   ...
+│   └── p-cat001
+│       └── spec001
+│           └── p-cat001_s-spec001_d-running-cat_v001
+│               ├── p-cat001_s-spec001_d-running-cat_v001_c000-005_f0001.png
+│               ├── p-cat001_s-spec001_d-running-cat_v001_c000-005_f0002.png
+│               └── p-cat001_s-spec001_d-running-cat_v001_c000-005_f0003.png
+│
+├── metadata
+    ├── asset
+    │   ...
+    │   └── a9f3727c-cb9b-4eb1-bc84-a6bc3b756cc5.json
+    │
+    └── file
+        ...
+        ├── 279873a2-bfd0-4757-abf2-7dc4f771f992.json
+        ├── e50160ae-8678-40b3-b766-ee8311b1f0c9.json
+        └── ea95bd79-cb8f-4262-8489-efe734c5f65c.json
 </pre></div>
 </div>
 </div>
@@ -367,10 +384,10 @@ more in length, that define the field’s data</p>
 <div class="section" id="example-diagrams">
 <h2><strong>Example Diagrams</strong><a class="headerlink" href="#example-diagrams" title="Permalink to this headline">¶</a></h2>
 <p>In our example filename:
-<code class="docutils literal notranslate"><span class="pre">p-proj001_s-raw001_d-running-cat_v001_c000-005_f0003.png</span></code> the
+<code class="docutils literal notranslate"><span class="pre">p-cat001_s-spec001_d-running-cat_v001_c000-005_f0003.png</span></code> the
 metadata will be:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s1">&#39;project&#39;</span><span class="p">:</span> <span class="s1">&#39;proj001&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;project&#39;</span><span class="p">:</span> <span class="s1">&#39;cat001&#39;</span><span class="p">,</span>
     <span class="s1">&#39;specification&#39;</span><span class="p">:</span> <span class="s1">&#39;spec001&#39;</span><span class="p">,</span>
     <span class="s1">&#39;descriptor&#39;</span><span class="p">:</span> <span class="s1">&#39;running-cat&#39;</span><span class="p">,</span>
     <span class="s1">&#39;version&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -380,22 +397,22 @@ metadata will be:</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>The raw001 specification is derived from the second field of this
+<p>The spec001 specification is derived from the second field of this
 filename:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>       <span class="n">field</span>   <span class="n">field</span>
-   <span class="n">indicator</span>   <span class="n">token</span>
-           <span class="o">|</span> <span class="n">__</span><span class="o">|</span><span class="n">_</span>
-          <span class="o">|</span> <span class="o">|</span>    <span class="o">|</span>
-<span class="n">p</span><span class="o">-</span><span class="n">proj001_s</span><span class="o">-</span><span class="n">raw001_d</span><span class="o">-</span><span class="n">running</span><span class="o">-</span><span class="n">cat_v001_c000</span><span class="o">-</span><span class="mi">005</span><span class="n">_f0003</span><span class="o">.</span><span class="n">png</span>
-          <span class="o">|</span><span class="n">______</span><span class="o">|</span>
-              <span class="o">|</span>
-            <span class="n">field</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>      <span class="n">field</span>   <span class="n">field</span>
+  <span class="n">indicator</span>   <span class="n">token</span>
+          <span class="o">|</span> <span class="n">__</span><span class="o">|</span><span class="n">__</span>
+         <span class="o">|</span> <span class="o">|</span>     <span class="o">|</span>
+<span class="n">p</span><span class="o">-</span><span class="n">cat001_s</span><span class="o">-</span><span class="n">spec001_d</span><span class="o">-</span><span class="n">running</span><span class="o">-</span><span class="n">cat_v001_c000</span><span class="o">-</span><span class="mi">005</span><span class="n">_f0003</span><span class="o">.</span><span class="n">png</span>
+         <span class="o">|</span><span class="n">_______</span><span class="o">|</span>
+             <span class="o">|</span>
+           <span class="n">field</span>
 </pre></div>
 </div>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 43%" />
-<col style="width: 57%" />
+<col style="width: 42%" />
+<col style="width: 58%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Part</p></th>
@@ -404,16 +421,16 @@ filename:</p>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>Field</p></td>
-<td><p>s-raw001</p></td>
+<td><p>s-spec001</p></td>
 </tr>
 <tr class="row-odd"><td><p>Field indicator</p></td>
 <td><p>s-</p></td>
 </tr>
 <tr class="row-even"><td><p>Field token</p></td>
-<td><p>raw001</p></td>
+<td><p>spec001</p></td>
 </tr>
 <tr class="row-odd"><td><p>Derived metadata</p></td>
-<td><p>{specification: raw001}</p></td>
+<td><p>{specification: spec001}</p></td>
 </tr>
 </tbody>
 </table>
@@ -532,19 +549,95 @@ layout of directories and files.</p>
                 <span class="o">|-</span> <span class="n">file</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">-</span><span class="n">cat001</span>
-    <span class="o">|--</span> <span class="n">s</span><span class="o">-</span><span class="n">raw001</span>
-        <span class="o">|--</span> <span class="n">d</span><span class="o">-</span><span class="n">tabby</span><span class="o">-</span><span class="n">playing</span>
-        <span class="o">|</span>   <span class="o">|--</span> <span class="n">p</span><span class="o">-</span><span class="n">cat001_s</span><span class="o">-</span><span class="n">raw001_d</span><span class="o">-</span><span class="n">tabby</span><span class="o">-</span><span class="n">playing_v001</span>
-        <span class="o">|</span>       <span class="o">|--</span> <span class="n">p</span><span class="o">-</span><span class="n">cat001_s</span><span class="o">-</span><span class="n">raw001_d</span><span class="o">-</span><span class="n">tabby</span><span class="o">-</span><span class="n">playing_v001_f0001</span><span class="o">.</span><span class="n">png</span>
-        <span class="o">|</span>       <span class="o">|--</span> <span class="n">p</span><span class="o">-</span><span class="n">cat001_s</span><span class="o">-</span><span class="n">raw001_d</span><span class="o">-</span><span class="n">tabby</span><span class="o">-</span><span class="n">playing_v001_f0002</span><span class="o">.</span><span class="n">png</span>
-        <span class="o">|</span>       <span class="o">|--</span> <span class="n">p</span><span class="o">-</span><span class="n">cat001_s</span><span class="o">-</span><span class="n">raw001_d</span><span class="o">-</span><span class="n">tabby</span><span class="o">-</span><span class="n">playing_v001_f0003</span><span class="o">.</span><span class="n">png</span>
-        <span class="o">|--</span> <span class="n">d</span><span class="o">-</span><span class="n">calico</span><span class="o">-</span><span class="n">jumping</span>
-            <span class="o">|--</span> <span class="n">p</span><span class="o">-</span><span class="n">cat001_s</span><span class="o">-</span><span class="n">raw001_d</span><span class="o">-</span><span class="n">calico</span><span class="o">-</span><span class="n">jumping_v001</span>
-                <span class="o">|--</span> <span class="n">p</span><span class="o">-</span><span class="n">cat001_s</span><span class="o">-</span><span class="n">raw001_d</span><span class="o">-</span><span class="n">calico</span><span class="o">-</span><span class="n">jumping_v001_f0001</span><span class="o">.</span><span class="n">png</span>
-                <span class="o">|--</span> <span class="n">p</span><span class="o">-</span><span class="n">cat001_s</span><span class="o">-</span><span class="n">raw001_d</span><span class="o">-</span><span class="n">calico</span><span class="o">-</span><span class="n">jumping_v001_f0002</span><span class="o">.</span><span class="n">png</span>
-                <span class="o">|--</span> <span class="n">p</span><span class="o">-</span><span class="n">cat001_s</span><span class="o">-</span><span class="n">raw001_d</span><span class="o">-</span><span class="n">calico</span><span class="o">-</span><span class="n">jumping_v001_f0003</span><span class="o">.</span><span class="n">png</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>/tmp/projects
+└── p-cat001
+    ├── s-spec002
+    │   ├── d-calico-jumping
+    │   │   └── p-cat001_s-spec002_d-calico-jumping_v001
+    │   │       ├── p-cat001_s-spec002_d-calico-jumping_v001_f0001.png
+    │   │       ├── p-cat001_s-spec002_d-calico-jumping_v001_f0002.png
+    │   │       └── p-cat001_s-spec002_d-calico-jumping_v001_f0003.png
+    │   │
+    │   └── d-tabby-playing
+    │       ├── p-cat001_s-spec002_d-tabby-playing_v001
+    │       │   ├── p-cat001_s-spec002_d-tabby-playing_v001_f0001.png
+    │       │   ├── p-cat001_s-spec002_d-tabby-playing_v001_f0002.png
+    │       │   └── p-cat001_s-spec002_d-tabby-playing_v001_f0003.png
+    │       │
+    │       └── p-cat001_s-spec002_d-tabby-playing_v002
+    │           ├── p-cat001_s-spec002_d-tabby-playing_v002_f0001.png
+    │           ├── p-cat001_s-spec002_d-tabby-playing_v002_f0002.png
+    │           └── p-cat001_s-spec002_d-tabby-playing_v002_f0003.png
+    │
+    └── spec001
+        └── p-cat001_s-spec001_d-running-cat_v001
+            ├── p-cat001_s-spec001_d-Running-Cat_v001_c000-0005_f0002.png
+            ├── p-cat001_s-spec001_d-running-cat_v001_c000-0005_f0001.png
+            └── p-cat001_s-spec001_d-running-cat_v001_c000-0005_f0003.png
 </pre></div>
+</div>
+</div>
+<div class="section" id="application">
+<h1>Application<a class="headerlink" href="#application" title="Permalink to this headline">¶</a></h1>
+<p>The Hidebound web application has five sections: data, graph, config,
+api and docs.</p>
+<p>The data tab is the workhorse of the Hidebound app.</p>
+<div class="figure align-default" id="id2">
+<img alt="update" src="resources/update.png" />
+<p class="caption"><span class="caption-text">update</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+<p>Its functions are as follows:</p>
+<ul class="simple">
+<li><p>Search - Search the updated database’s data via SQL</p></li>
+<li><p>Dropdown - Groups search results by file or asset</p></li>
+<li><p>Init - Initialized the database with the current config</p></li>
+<li><p>Update - Initializes and updates the database with the current config</p></li>
+<li><p>Create - Copies or moves valid assets to hidebound/data directory and
+creates JSON files in hidebound/metadata directory</p></li>
+<li><p>Delete - Deletes hidebound/data and hidebound/metadata directories</p></li>
+</ul>
+<p>Prior to calling update, the application will look like this:</p>
+<div class="figure align-default" id="id3">
+<img alt="update" src="resources/pre_update.png" />
+<p class="caption"><span class="caption-text">update</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+<p>The graph tab is used for visualizing the state of all the assets within
+a root directory.</p>
+<div class="figure align-default" id="id4">
+<img alt="update" src="resources/graph.png" />
+<p class="caption"><span class="caption-text">update</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+<p>It’s color code is as follows: * Cyan - Non-asset file or directory *
+Green - Valid asset * Red - Invalid asset</p>
+<p>The config tab is used for uploading and writing Hidebound’s
+configuration file.</p>
+<div class="figure align-default" id="id5">
+<img alt="update" src="resources/config.png" />
+<p class="caption"><span class="caption-text">update</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+<p>Its functions are as follows:</p>
+<ul class="simple">
+<li><p>Upload - Upload a config JSON file</p></li>
+<li><p>Write - Write config to hidebound/hidebound_config.json</p></li>
+</ul>
+<p>The API tab is really a link to Hidebound’s REST API documentation.</p>
+<div class="figure align-default" id="id6">
+<img alt="update" src="resources/api.png" />
+<p class="caption"><span class="caption-text">update</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</div>
+<p>The API tab is really a link to Hidebound’s github documentation.</p>
+<div class="figure align-default" id="id7">
+<img alt="update" src="resources/docs.png" />
+<p class="caption"><span class="caption-text">update</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="errors">
+<h1>Errors<a class="headerlink" href="#errors" title="Permalink to this headline">¶</a></h1>
+<p>Hidebound is oriented towards developers and technically proficient
+users. It displays errors in their entirety with the application.</p>
+<div class="figure align-default" id="id8">
+<img alt="update" src="resources/error.png" />
+<p class="caption"><span class="caption-text">update</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 
