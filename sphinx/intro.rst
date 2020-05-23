@@ -188,7 +188,7 @@ together by spaces (ie underscores) in a particular order as detrmined
 by grammar (as defined in specifications).
 
 *Syntax*
---------
+~~~~~~~~
 
 -  Names consist of a series of field, each separated by a single
    underscore “\_”, also called a field separator.
@@ -272,7 +272,7 @@ filename:
    numbers 0 to 9
 
 *Semantics*
------------
+~~~~~~~~~~~
 
 Hidebound is highly opionated, especially with regards to its semantics.
 It contains exactly seven field types, as indicated by their field
@@ -297,7 +297,7 @@ indicators. They are:
 +-----------------+-------------+
 
 *Grammar*
----------
+~~~~~~~~~
 
 The grammar is fairly simple: - All names must contain a specification
 field - All specification must define a field order - All fields of a
@@ -316,7 +316,7 @@ single asset may broken into chunks, identified by 1, 2 or 3 coordinates
 - An single file has an extension
 
 *Encouraged Lexical Conventions*
---------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -  Specifications end with a triple padded number so that they may be
    explicitely version. You redefine an asset specification to something
@@ -395,7 +395,7 @@ The Hidebound web application has five sections: data, graph, config,
 api and docs.
 
 Data
-----
+~~~~
 
 The data tab is the workhorse of the Hidebound app.
 
@@ -418,7 +418,7 @@ Prior to calling update, the application will look like this:
    :alt: 
 
 Graph
------
+~~~~~
 
 The graph tab is used for visualizing the state of all the assets within
 a root directory.
@@ -430,7 +430,7 @@ It's color code is as follows: \* Cyan - Non-asset file or directory \*
 Green - Valid asset \* Red - Invalid asset
 
 Config
-------
+~~~~~~
 
 The config tab is used for uploading and writing Hidebound's
 configuration file.
@@ -444,7 +444,7 @@ Its functions are as follows:
 -  Write - Write config to hidebound/hidebound\_config.json
 
 API
----
+~~~
 
 The API tab is really a link to Hidebound's REST API documentation.
 
@@ -452,7 +452,7 @@ The API tab is really a link to Hidebound's REST API documentation.
    :alt: 
 
 Docs
-----
+~~~~
 
 The API tab is really a link to Hidebound's github documentation.
 
@@ -460,7 +460,7 @@ The API tab is really a link to Hidebound's github documentation.
    :alt: 
 
 Errors
-======
+~~~~~~
 
 Hidebound is oriented towards developers and technically proficient
 users. It displays errors in their entirety with the application.

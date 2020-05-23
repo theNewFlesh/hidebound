@@ -106,18 +106,24 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#naming-convention">Naming Convention</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#syntax"><em>Syntax</em></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example-diagrams"><strong>Example Diagrams</strong></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#special-field-syntax"><em>Special Field Syntax</em></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#semantics"><em>Semantics</em></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#grammar"><em>Grammar</em></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#encouraged-lexical-conventions"><em>Encouraged Lexical Conventions</em></a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#special-field-syntax"><em>Special Field Syntax</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#semantics"><em>Semantics</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#grammar"><em>Grammar</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#encouraged-lexical-conventions"><em>Encouraged Lexical Conventions</em></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#project-structure">Project Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#application">Application</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#errors">Errors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#application">Application</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#data">Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#graph">Graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#config">Config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#api">API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#docs">Docs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#errors">Errors</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">Python API</span></p>
 <ul>
@@ -361,6 +367,8 @@ semantics (as determines by field indicators). Each word is constructed
 according to a syntax (ie indicator + token). All words are joined
 together by spaces (ie underscores) in a particular order as detrmined
 by grammar (as defined in specifications).</p>
+<div class="section" id="syntax">
+<h2><em>Syntax</em><a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Names consist of a series of field, each separated by a single
 underscore “_”, also called a field separator.</p></li>
@@ -379,6 +387,7 @@ extension.</p></li>
 <p>Fields are comprised of two main parts: - The field indicator –&gt;
 determines metadata key - The field token –&gt; a set of characters, 1 or
 more in length, that define the field’s data</p>
+</div>
 <hr class="docutils" />
 <div class="section" id="example-diagrams">
 <h2><strong>Example Diagrams</strong><a class="headerlink" href="#example-diagrams" title="Permalink to this headline">¶</a></h2>
@@ -452,8 +461,9 @@ hyphens</p></li>
 <li><p>Extensions may only contain upper and lower case letters a to z and
 numbers 0 to 9</p></li>
 </ul>
+</div>
 <div class="section" id="semantics">
-<h3><em>Semantics</em><a class="headerlink" href="#semantics" title="Permalink to this headline">¶</a></h3>
+<h2><em>Semantics</em><a class="headerlink" href="#semantics" title="Permalink to this headline">¶</a></h2>
 <p>Hidebound is highly opionated, especially with regards to its semantics.
 It contains exactly seven field types, as indicated by their field
 indicators. They are:</p>
@@ -493,7 +503,7 @@ indicators. They are:</p>
 </table>
 </div>
 <div class="section" id="grammar">
-<h3><em>Grammar</em><a class="headerlink" href="#grammar" title="Permalink to this headline">¶</a></h3>
+<h2><em>Grammar</em><a class="headerlink" href="#grammar" title="Permalink to this headline">¶</a></h2>
 <p>The grammar is fairly simple: - All names must contain a specification
 field - All specification must define a field order - All fields of a
 name under that specification must occcur in its defined field order</p>
@@ -508,7 +518,7 @@ single asset may broken into chunks, identified by 1, 2 or 3 coordinates
 - An single file has an extension</p>
 </div>
 <div class="section" id="encouraged-lexical-conventions">
-<h3><em>Encouraged Lexical Conventions</em><a class="headerlink" href="#encouraged-lexical-conventions" title="Permalink to this headline">¶</a></h3>
+<h2><em>Encouraged Lexical Conventions</em><a class="headerlink" href="#encouraged-lexical-conventions" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Specifications end with a triple padded number so that they may be
 explicitely version. You redefine an asset specification to something
@@ -527,7 +537,6 @@ designates.</p></li>
 <li><p>Use of hyphens in descriptors is encouraged.</p></li>
 <li><p>When in doubt, hyphenate and put into the descriptor.</p></li>
 </ul>
-</div>
 </div>
 </div>
 <div class="section" id="project-structure">
@@ -580,6 +589,8 @@ layout of directories and files.</p>
 <h1>Application<a class="headerlink" href="#application" title="Permalink to this headline">¶</a></h1>
 <p>The Hidebound web application has five sections: data, graph, config,
 api and docs.</p>
+<div class="section" id="data">
+<h2>Data<a class="headerlink" href="#data" title="Permalink to this headline">¶</a></h2>
 <p>The data tab is the workhorse of the Hidebound app.</p>
 <div class="figure align-default">
 <img alt="" src="resources/screenshots/update.png" />
@@ -598,6 +609,9 @@ creates JSON files in hidebound/metadata directory</p></li>
 <div class="figure align-default">
 <img alt="" src="resources/screenshots/pre_update.png" />
 </div>
+</div>
+<div class="section" id="graph">
+<h2>Graph<a class="headerlink" href="#graph" title="Permalink to this headline">¶</a></h2>
 <p>The graph tab is used for visualizing the state of all the assets within
 a root directory.</p>
 <div class="figure align-default">
@@ -605,6 +619,9 @@ a root directory.</p>
 </div>
 <p>It’s color code is as follows: * Cyan - Non-asset file or directory *
 Green - Valid asset * Red - Invalid asset</p>
+</div>
+<div class="section" id="config">
+<h2>Config<a class="headerlink" href="#config" title="Permalink to this headline">¶</a></h2>
 <p>The config tab is used for uploading and writing Hidebound’s
 configuration file.</p>
 <div class="figure align-default">
@@ -615,21 +632,28 @@ configuration file.</p>
 <li><p>Upload - Upload a config JSON file</p></li>
 <li><p>Write - Write config to hidebound/hidebound_config.json</p></li>
 </ul>
+</div>
+<div class="section" id="api">
+<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
 <p>The API tab is really a link to Hidebound’s REST API documentation.</p>
 <div class="figure align-default">
 <img alt="" src="resources/screenshots/api.png" />
 </div>
+</div>
+<div class="section" id="docs">
+<h2>Docs<a class="headerlink" href="#docs" title="Permalink to this headline">¶</a></h2>
 <p>The API tab is really a link to Hidebound’s github documentation.</p>
 <div class="figure align-default">
 <img alt="" src="resources/screenshots/docs.png" />
 </div>
 </div>
 <div class="section" id="errors">
-<h1>Errors<a class="headerlink" href="#errors" title="Permalink to this headline">¶</a></h1>
+<h2>Errors<a class="headerlink" href="#errors" title="Permalink to this headline">¶</a></h2>
 <p>Hidebound is oriented towards developers and technically proficient
 users. It displays errors in their entirety with the application.</p>
 <div class="figure align-default">
 <img alt="" src="resources/screenshots/error.png" />
+</div>
 </div>
 </div>
 

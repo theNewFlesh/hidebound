@@ -146,7 +146,7 @@ indicators). Each word is constructed according to a syntax
 (ie indicator + token). All words are joined together by spaces (ie underscores)
 in a particular order as detrmined by grammar (as defined in specifications).
 
-## *Syntax*
+### *Syntax*
 - Names consist of a series of field, each separated by a single underscore “_”,
   also called a field separator.
 - Period, ".", is the exception to this, as it indicates file extension.
@@ -212,7 +212,7 @@ p-cat001_s-spec001_d-running-cat_v001_c000-005_f0003.png
 - Extensions may only contain upper and lower case letters a to z and numbers 0
   to 9
 
-## *Semantics*
+### *Semantics*
 Hidebound is highly opionated, especially with regards to its semantics. It
 contains exactly seven field types, as indicated by their field indicators.
 They are:
@@ -227,7 +227,7 @@ They are:
 | frame         | f         |
 | extension     | .         |
 
-## *Grammar*
+### *Grammar*
 The grammar is fairly simple:
   - All names must contain a specification field
   - All specification must define a field order
@@ -247,7 +247,7 @@ The grammatical concept of field order here is one of rough encapsulation:
 - Each chunk may consist of a series of files seperated by frame number
 - An single file has an extension
 
-## *Encouraged Lexical Conventions*
+### *Encouraged Lexical Conventions*
 - Specifications end with a triple padded number so that they may be explicitely
   version. You redefine an asset specification to something slightly different,
   by copying its specification class, adding one to its name and change the
@@ -315,7 +315,7 @@ project
 # Application
 The Hidebound web application has five sections: data, graph, config, api and docs.
 
-## Data
+### Data
 The data tab is the workhorse of the Hidebound app.
 
 ![](resources/screenshots/update.png)
@@ -334,7 +334,7 @@ Prior to calling update, the application will look like this:
 
 ![](resources/screenshots/pre_update.png)
 
-## Graph
+### Graph
 The graph tab is used for visualizing the state of all the assets within a root
 directory.
 
@@ -345,7 +345,7 @@ It's color code is as follows:
 * Green - Valid asset
 * Red - Invalid asset
 
-## Config
+### Config
 The config tab is used for uploading and writing Hidebound's configuration file.
 
 ![](resources/screenshots/config.png)
@@ -355,17 +355,17 @@ Its functions are as follows:
 * Upload - Upload a config JSON file
 * Write - Write config to hidebound/hidebound_config.json
 
-## API
+### API
 The API tab is really a link to Hidebound's REST API documentation.
 
 ![](resources/screenshots/api.png)
 
-## Docs
+### Docs
 The API tab is really a link to Hidebound's github documentation.
 
 ![](resources/screenshots/docs.png)
 
-# Errors
+### Errors
 Hidebound is oriented towards developers and technically proficient users. It
 displays errors in their entirety with the application.
 
