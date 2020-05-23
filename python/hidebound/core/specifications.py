@@ -29,6 +29,7 @@ class Raw001(SequenceSpecificationBase):
         width (int): Image width. Must be 1024.
         extension (str): File extension. Must be "png".
     '''
+    asset_name_fields = ['project', 'specification', 'descriptor', 'version']
     filename_fields = [
         'project', 'specification', 'descriptor', 'version', 'frame',
         'extension'

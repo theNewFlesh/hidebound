@@ -46,25 +46,28 @@ discovered, validated, extracted, and copied or moved by Hidebound.
 For example, an asset could be an image sequence, such as a directory full of
 PNG files, all of which have a frame number, have 3 (RGB) channels, and are 1024
 pixels wide and 1024 pixels tall. Let's call the specification for this type of
-asset "raw001". We create an image sequence, and we move it into the Hidebound
+asset "spec001". We create an image sequence, and we move it into the Hidebound
 projects directory.
 
 ### *Update*
-We call the update function via Hidebound's web client. Hidebound creates
+![update](resources/update.png)
+
+We call the update function via Hidebound's web app. Hidebound creates
 a new database based upon the recursive listing of all the files within said
 directory. This database is displayed to us as a table, with one file per row.
-If we choose to group by asset in the client, it will be, oneasset per row.
+If we choose to group by asset in the app, it will be, oneasset per row.
 Hidebound extracts metadata from each filename (not any directory name) as well
 as from the file itself. That metadata is called file_traits. Using only
 information derived from filename and file traits, Hidebound determines which
 files are grouped together as a single asset and the specification of that
 asset. Asset traits are then derived from this set (1 or more) of files.
 Finally, Hidebound validates each asset according to its determined
-specification. All of this data is displayed as a table within the web client.
+specification. All of this data is displayed as a table within the web app.
 Importantly, all of the errors in filenames, file traits and asset traits are
 included.
 
 ### Review *Graph*
+![update](resources/graph.png)
 If we click on the graph tab, we are greeted by a hierarchical graph of all our
 assets in our project directory. Our asset is red, meaning it's invalid. Valid
 asset's are green, and all other files and directories, including parent
@@ -84,23 +87,33 @@ Next we click the create button. For each valid asset, Hidebound generates file
 and asset metadata as JSON files within the hidebound/metadata directory.
 Hidebound also copies or moves (depending on config) valid files and directories
 into the hidebound/data directory. Thus we now have a hidebound directory that
-looks like this:
+looks like this (unmentioned assets are collapsed behind the ellipses):
 ```
-    /hidebound
-        |-- data
-        |   |-- p-proj001_s-raw001_d-running-cat_v001
-        |       |-- p-proj001_s-raw001_d-running-cat_v001_c000-0005_f0001.png
-        |       |-- p-proj001_s-raw001_d-running-cat_v001_c000-0005_f0002.png
-        |       |-- p-proj001_s-raw001_d-running-cat_v001_c000-0005_f0003.png
-        |
-        |-- metadata
-            |-- file
-            |   |-- fab4219b-b4a2-4910-976f-e06ab7e64bd9.json
-            |   |-- asgdhjhg-b4a2-8765-7896-jaskldj78211.json
-            |   |-- akjsd879-jahs-1862-871h-891723hdsasd.json
-            |
-            |-- asset
-                |-- kajsaks3-askl-1233-mnas-alskhdu12632.json
+/tmp/hidebound
+├── hidebound_config.json
+│
+├── specifications
+│   └── specifications.py
+│
+├── data
+│   ...
+│   └── p-cat001
+│       └── spec001
+│           └── p-cat001_s-spec001_d-running-cat_v001
+│               ├── p-cat001_s-spec001_d-running-cat_v001_c000-005_f0001.png
+│               ├── p-cat001_s-spec001_d-running-cat_v001_c000-005_f0002.png
+│               └── p-cat001_s-spec001_d-running-cat_v001_c000-005_f0003.png
+│
+├── metadata
+    ├── asset
+    │   ...
+    │   └── a9f3727c-cb9b-4eb1-bc84-a6bc3b756cc5.json
+    │
+    └── file
+        ...
+        ├── 279873a2-bfd0-4757-abf2-7dc4f771f992.json
+        ├── e50160ae-8678-40b3-b766-ee8311b1f0c9.json
+        └── ea95bd79-cb8f-4262-8489-efe734c5f65c.json
 ```
 
 ### *Upload*
@@ -152,10 +165,10 @@ Fields are comprised of two main parts:
 ---
 ### **Example Diagrams**
 In our example filename:
-`p-proj001_s-raw001_d-running-cat_v001_c000-005_f0003.png` the metadata will be:
+`p-cat001_s-spec001_d-running-cat_v001_c000-005_f0003.png` the metadata will be:
 ```
 {
-    'project': 'proj001',
+    'project': 'cat001',
     'specification': 'spec001',
     'descriptor': 'running-cat',
     'version': 1,
@@ -165,24 +178,24 @@ In our example filename:
 }
 ```
 
-The raw001 specification is derived from the second field of this filename:
+The spec001 specification is derived from the second field of this filename:
 ```
-       field   field
-   indicator   token
-           | __|_
-          | |    |
-p-proj001_s-raw001_d-running-cat_v001_c000-005_f0003.png
-          |______|
-              |
-            field
+      field   field
+  indicator   token
+          | __|__
+         | |     |
+p-cat001_s-spec001_d-running-cat_v001_c000-005_f0003.png
+         |_______|
+             |
+           field
 ```
 
-| Part             | Value                   |
-| ---------------- | ------------------------|
-| Field            | s-raw001                |
-| Field indicator  | s-                      |
-| Field token      | raw001                  |
-| Derived metadata | {specification: raw001} |
+| Part             | Value                    |
+| ---------------- | ------------------------ |
+| Field            | s-spec001                |
+| Field indicator  | s-                       |
+| Field token      | spec001                  |
+| Derived metadata | {specification: spec001} |
 
 ### *Special Field Syntax*
 
@@ -272,17 +285,88 @@ project
 
 #### For Example
 ```
-p-cat001
-    |-- s-raw001
-        |-- d-tabby-playing
-        |   |-- p-cat001_s-raw001_d-tabby-playing_v001
-        |       |-- p-cat001_s-raw001_d-tabby-playing_v001_f0001.png
-        |       |-- p-cat001_s-raw001_d-tabby-playing_v001_f0002.png
-        |       |-- p-cat001_s-raw001_d-tabby-playing_v001_f0003.png
-        |-- d-calico-jumping
-            |-- p-cat001_s-raw001_d-calico-jumping_v001
-                |-- p-cat001_s-raw001_d-calico-jumping_v001_f0001.png
-                |-- p-cat001_s-raw001_d-calico-jumping_v001_f0002.png
-                |-- p-cat001_s-raw001_d-calico-jumping_v001_f0003.png
+/tmp/projects
+└── p-cat001
+    ├── s-spec002
+    │   ├── d-calico-jumping
+    │   │   └── p-cat001_s-spec002_d-calico-jumping_v001
+    │   │       ├── p-cat001_s-spec002_d-calico-jumping_v001_f0001.png
+    │   │       ├── p-cat001_s-spec002_d-calico-jumping_v001_f0002.png
+    │   │       └── p-cat001_s-spec002_d-calico-jumping_v001_f0003.png
+    │   │
+    │   └── d-tabby-playing
+    │       ├── p-cat001_s-spec002_d-tabby-playing_v001
+    │       │   ├── p-cat001_s-spec002_d-tabby-playing_v001_f0001.png
+    │       │   ├── p-cat001_s-spec002_d-tabby-playing_v001_f0002.png
+    │       │   └── p-cat001_s-spec002_d-tabby-playing_v001_f0003.png
+    │       │
+    │       └── p-cat001_s-spec002_d-tabby-playing_v002
+    │           ├── p-cat001_s-spec002_d-tabby-playing_v002_f0001.png
+    │           ├── p-cat001_s-spec002_d-tabby-playing_v002_f0002.png
+    │           └── p-cat001_s-spec002_d-tabby-playing_v002_f0003.png
+    │
+    └── spec001
+        └── p-cat001_s-spec001_d-running-cat_v001
+            ├── p-cat001_s-spec001_d-Running-Cat_v001_c000-0005_f0002.png
+            ├── p-cat001_s-spec001_d-running-cat_v001_c000-0005_f0001.png
+            └── p-cat001_s-spec001_d-running-cat_v001_c000-0005_f0003.png
 ```
 
+# Application
+The Hidebound web application has five sections: data, graph, config, api and docs.
+
+## Data
+The data tab is the workhorse of the Hidebound app.
+
+![update](resources/update.png)
+
+Its functions are as follows:
+
+* Search - Search the updated database's data via SQL
+* Dropdown - Groups search results by file or asset
+* Init - Initialized the database with the current config
+* Update - Initializes and updates the database with the current config
+* Create - Copies or moves valid assets to hidebound/data directory and creates
+           JSON files in hidebound/metadata directory
+* Delete - Deletes hidebound/data and hidebound/metadata directories
+
+Prior to calling update, the application will look like this:
+
+![update](resources/pre_update.png)
+
+## Graph
+The graph tab is used for visualizing the state of all the assets within a root
+directory.
+
+![update](resources/graph.png)
+
+It's color code is as follows:
+* Cyan - Non-asset file or directory
+* Green - Valid asset
+* Red - Invalid asset
+
+## Config
+The config tab is used for uploading and writing Hidebound's configuration file.
+
+![update](resources/config.png)
+
+Its functions are as follows:
+
+* Upload - Upload a config JSON file
+* Write - Write config to hidebound/hidebound_config.json
+
+## API
+The API tab is really a link to Hidebound's REST API documentation.
+
+![update](resources/api.png)
+
+## Docs
+The API tab is really a link to Hidebound's github documentation.
+
+![update](resources/docs.png)
+
+# Errors
+Hidebound is oriented towards developers and technically proficient users. It
+displays errors in their entirety with the application.
+
+![update](resources/error.png)

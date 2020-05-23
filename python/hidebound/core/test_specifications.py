@@ -8,7 +8,7 @@ import hidebound.core.validators as vd
 
 
 class Spec001(SequenceSpecificationBase):
-    name = 'spec001'
+    asset_name_fields = ['project', 'specification', 'descriptor', 'version']
     filename_fields = [
         'project', 'specification', 'descriptor', 'version', 'coordinate',
         'frame', 'extension'
@@ -31,17 +31,33 @@ class Spec001(SequenceSpecificationBase):
     coordinate = ListType(
         ListType(IntType(), required=True, validators=[vd.is_coordinate])
     )
-#     file_traits = dict(
-#         width=tr.get_image_width
-#     )
+
+    height = ListType(IntType(), required=True)
+    width = ListType(IntType(), required=True)
+    channels = ListType(IntType(), required=True)
+    file_traits = dict(
+        width=tr.get_image_width,
+        height=tr.get_image_height,
+        channels=tr.get_image_channels
+    )
 
 
 class Spec002(SequenceSpecificationBase):
-    name = 'spec002'
+    asset_name_fields = ['project', 'specification', 'descriptor', 'version']
     filename_fields = [
         'project', 'specification', 'descriptor', 'version', 'frame',
         'extension'
     ]
+    frame = ListType(
+        IntType(),
+        required=True,
+        validators=[vd.is_frame, lambda x: vd.is_gt(x, -1)]
+    )
+    extension = ListType(
+        StringType(),
+        required=True,
+        validators=[vd.is_extension, lambda x: vd.is_eq(x, 'jpg')]
+    )
     width = ListType(
         IntType(),
         required=True,
@@ -52,23 +68,19 @@ class Spec002(SequenceSpecificationBase):
         required=True,
         validators=[lambda x: vd.is_eq(x, 1024)]
     )
-    frame = ListType(
+    channels = ListType(
         IntType(),
         required=True,
-        validators=[vd.is_frame, lambda x: vd.is_gt(x, -1)]
-    )
-    extension = ListType(
-        StringType(),
-        required=True,
-        validators=[vd.is_extension, lambda x: vd.is_eq(x, 'exr')]
+        validators=[lambda x: vd.is_eq(x, 3)]
     )
     file_traits = dict(
-        width=tr.get_image_width
+        width=tr.get_image_width,
+        height=tr.get_image_height,
+        channels=tr.get_image_channels
     )
 
 
 class Vdb001(FileSpecificationBase):
-    name = 'vdb001'
     filename_fields = [
         'project', 'specification', 'descriptor', 'version', 'extension'
     ]
