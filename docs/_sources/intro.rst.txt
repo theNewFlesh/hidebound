@@ -75,10 +75,8 @@ sequence, and we move it into the Hidebound projects directory.
 *Update*
 ~~~~~~~~
 
-.. figure:: resources/update.png
-   :alt: update
-
-   update
+.. figure:: resources/screenshots/update.png
+   :alt: 
 
 We call the update function via Hidebound's web app. Hidebound creates a
 new database based upon the recursive listing of all the files within
@@ -97,7 +95,7 @@ errors in filenames, file traits and asset traits are included.
 Review *Graph*
 ~~~~~~~~~~~~~~
 
-|update| If we click on the graph tab, we are greeted by a hierarchical
+|image0| If we click on the graph tab, we are greeted by a hierarchical
 graph of all our assets in our project directory. Our asset is red,
 meaning it's invalid. Valid asset's are green, and all other files and
 directories, including parent directories, are cyan.
@@ -401,10 +399,8 @@ Data
 
 The data tab is the workhorse of the Hidebound app.
 
-.. figure:: resources/update.png
-   :alt: update
-
-   update
+.. figure:: resources/screenshots/update.png
+   :alt: 
 
 Its functions are as follows:
 
@@ -418,10 +414,8 @@ Its functions are as follows:
 
 Prior to calling update, the application will look like this:
 
-.. figure:: resources/pre_update.png
-   :alt: update
-
-   update
+.. figure:: resources/screenshots/pre_update.png
+   :alt: 
 
 Graph
 -----
@@ -429,10 +423,8 @@ Graph
 The graph tab is used for visualizing the state of all the assets within
 a root directory.
 
-.. figure:: resources/graph.png
-   :alt: update
-
-   update
+.. figure:: resources/screenshots/graph.png
+   :alt: 
 
 It's color code is as follows: \* Cyan - Non-asset file or directory \*
 Green - Valid asset \* Red - Invalid asset
@@ -443,10 +435,8 @@ Config
 The config tab is used for uploading and writing Hidebound's
 configuration file.
 
-.. figure:: resources/config.png
-   :alt: update
-
-   update
+.. figure:: resources/screenshots/config.png
+   :alt: 
 
 Its functions are as follows:
 
@@ -458,20 +448,16 @@ API
 
 The API tab is really a link to Hidebound's REST API documentation.
 
-.. figure:: resources/api.png
-   :alt: update
-
-   update
+.. figure:: resources/screenshots/api.png
+   :alt: 
 
 Docs
 ----
 
 The API tab is really a link to Hidebound's github documentation.
 
-.. figure:: resources/docs.png
-   :alt: update
-
-   update
+.. figure:: resources/screenshots/docs.png
+   :alt: 
 
 Errors
 ======
@@ -479,10 +465,8 @@ Errors
 Hidebound is oriented towards developers and technically proficient
 users. It displays errors in their entirety with the application.
 
-.. figure:: resources/error.png
-   :alt: update
+.. figure:: resources/screenshots/error.png
+   :alt: 
 
-   update
-
-.. |update| image:: resources/graph.png
+.. |image0| image:: resources/screenshots/graph.png
 

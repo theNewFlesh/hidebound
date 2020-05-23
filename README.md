@@ -50,7 +50,7 @@ asset "spec001". We create an image sequence, and we move it into the Hidebound
 projects directory.
 
 ### *Update*
-![update](resources/update.png)
+![](resources/screenshots/update.png)
 
 We call the update function via Hidebound's web app. Hidebound creates
 a new database based upon the recursive listing of all the files within said
@@ -67,7 +67,7 @@ Importantly, all of the errors in filenames, file traits and asset traits are
 included.
 
 ### Review *Graph*
-![update](resources/graph.png)
+![](resources/screenshots/graph.png)
 If we click on the graph tab, we are greeted by a hierarchical graph of all our
 assets in our project directory. Our asset is red, meaning it's invalid. Valid
 asset's are green, and all other files and directories, including parent
@@ -318,7 +318,7 @@ The Hidebound web application has five sections: data, graph, config, api and do
 ## Data
 The data tab is the workhorse of the Hidebound app.
 
-![update](resources/update.png)
+![](resources/screenshots/update.png)
 
 Its functions are as follows:
 
@@ -332,13 +332,13 @@ Its functions are as follows:
 
 Prior to calling update, the application will look like this:
 
-![update](resources/pre_update.png)
+![](resources/screenshots/pre_update.png)
 
 ## Graph
 The graph tab is used for visualizing the state of all the assets within a root
 directory.
 
-![update](resources/graph.png)
+![](resources/screenshots/graph.png)
 
 It's color code is as follows:
 * Cyan - Non-asset file or directory
@@ -348,7 +348,7 @@ It's color code is as follows:
 ## Config
 The config tab is used for uploading and writing Hidebound's configuration file.
 
-![update](resources/config.png)
+![](resources/screenshots/config.png)
 
 Its functions are as follows:
 
@@ -358,15 +358,15 @@ Its functions are as follows:
 ## API
 The API tab is really a link to Hidebound's REST API documentation.
 
-![update](resources/api.png)
+![](resources/screenshots/api.png)
 
 ## Docs
 The API tab is really a link to Hidebound's github documentation.
 
-![update](resources/docs.png)
+![](resources/screenshots/docs.png)
 
 # Errors
 Hidebound is oriented towards developers and technically proficient users. It
 displays errors in their entirety with the application.
 
-![update](resources/error.png)
+![](resources/screenshots/error.png)

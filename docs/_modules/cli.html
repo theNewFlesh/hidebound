@@ -394,10 +394,14 @@
 <span class="sd">        str: Fully resolved build docs command.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{exec}</span><span class="s1"> mkdir -p /root/</span><span class="si">{repo}</span><span class="s1">/docs; &#39;</span>
-    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{exec}</span><span class="s1"> bash -c &quot;pandoc /root/</span><span class="si">{repo}</span><span class="s1">/README.md -o /root/</span><span class="si">{repo}</span><span class="s1">/sphinx/intro.rst&quot;; &#39;</span>
-    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{exec}</span><span class="s1"> sphinx-build /root/</span><span class="si">{repo}</span><span class="s1">/sphinx /root/</span><span class="si">{repo}</span><span class="s1">/docs; &#39;</span>
-    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{exec}</span><span class="s1"> cp /root/</span><span class="si">{repo}</span><span class="s1">/sphinx/style.css /root/</span><span class="si">{repo}</span><span class="s1">/docs/_static/style.css; &#39;</span>
-    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{exec}</span><span class="s1"> touch /root/</span><span class="si">{repo}</span><span class="s1">/docs/.nojekyll&#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{exec}</span><span class="s1"> bash -c &quot;&#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;pandoc /root/</span><span class="si">{repo}</span><span class="s1">/README.md -o /root/</span><span class="si">{repo}</span><span class="s1">/sphinx/intro.rst; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;sphinx-build /root/</span><span class="si">{repo}</span><span class="s1">/sphinx /root/</span><span class="si">{repo}</span><span class="s1">/docs; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cp /root/</span><span class="si">{repo}</span><span class="s1">/sphinx/style.css /root/</span><span class="si">{repo}</span><span class="s1">/docs/_static/style.css; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;touch /root/</span><span class="si">{repo}</span><span class="s1">/docs/.nojekyll; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;mkdir /root/</span><span class="si">{repo}</span><span class="s1">/docs/resources; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cp -R /root/</span><span class="si">{repo}</span><span class="s1">/resources/screenshots /root/</span><span class="si">{repo}</span><span class="s1">/docs/resources/ &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;&quot;&#39;</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">,</span>
         <span class="n">exec</span><span class="o">=</span><span class="n">get_docker_exec_command</span><span class="p">(</span><span class="n">info</span><span class="p">),</span>
