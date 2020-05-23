@@ -398,7 +398,7 @@
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;sphinx-build /root/</span><span class="si">{repo}</span><span class="s1">/sphinx /root/</span><span class="si">{repo}</span><span class="s1">/docs; &#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cp /root/</span><span class="si">{repo}</span><span class="s1">/sphinx/style.css /root/</span><span class="si">{repo}</span><span class="s1">/docs/_static/style.css; &#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;touch /root/</span><span class="si">{repo}</span><span class="s1">/docs/.nojekyll; &#39;</span>
-    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;mkdir /root/</span><span class="si">{repo}</span><span class="s1">/docs/resources; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;mkdir -p /root/</span><span class="si">{repo}</span><span class="s1">/docs/resources; &#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cp -R /root/</span><span class="si">{repo}</span><span class="s1">/resources/screenshots /root/</span><span class="si">{repo}</span><span class="s1">/docs/resources/ &#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;&quot;&#39;</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>

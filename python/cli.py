@@ -235,7 +235,7 @@ def get_docs_command(info):
     cmd += 'sphinx-build /root/{repo}/sphinx /root/{repo}/docs; '
     cmd += 'cp /root/{repo}/sphinx/style.css /root/{repo}/docs/_static/style.css; '
     cmd += 'touch /root/{repo}/docs/.nojekyll; '
-    cmd += 'mkdir /root/{repo}/docs/resources; '
+    cmd += 'mkdir -p /root/{repo}/docs/resources; '
     cmd += 'cp -R /root/{repo}/resources/screenshots /root/{repo}/docs/resources/ '
     cmd += '"'
     cmd = cmd.format(
