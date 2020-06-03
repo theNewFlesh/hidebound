@@ -378,6 +378,17 @@ class DatabaseTests(DatabaseTestBase):
                 .apply(lambda x: '/tmp/hidebound' in x).unique().tolist()
             self.assertEqual(result, [True])
 
+        # ensure these columns do not have list values
+        cols = ['asset_name', 'asset_path', 'asset_type', 'asset_traits']
+        types = [str, str, str, dict]
+        for type_, col in zip(types, cols):
+            result = asset_meta['metadata']\
+                .apply(lambda x: x[col])\
+                .apply(lambda x: isinstance(x, list))\
+                .tolist()
+            for r in result:
+                self.assertFalse(r)
+
     def test_get_data_for_write_dirs(self):
         data = tools.relative_path(__file__, '../../../resources/fake_data.csv')
         data = pd.read_csv(data)

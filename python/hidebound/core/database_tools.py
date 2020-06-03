@@ -346,6 +346,13 @@ def _get_data_for_write(data, source_dir, target_dir):
         vals = row.tolist()
         item = dict(zip(keys, vals))
         item = {lut[k]: item[k] for k in lut.keys()}
+
+        # grab the first occurence of these columns
+        cols = ['asset_name', 'asset_path', 'asset_type', 'asset_traits']
+        for col in cols:
+            item[col] = item[col][0]
+        del item['file_traits']
+
         meta.append(item)
     asset_meta['metadata'] = meta
 
