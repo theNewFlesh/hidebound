@@ -123,9 +123,7 @@ class Database:
             raise TypeError(msg)
 
         # validate root dir
-        root = root_dir
-        if not isinstance(root, Path):
-            root = Path(root)
+        root = Path(root_dir)
         if not root.is_dir():
             msg = f'{root} is not a directory or does not exist.'
             raise FileNotFoundError(msg)
@@ -137,9 +135,7 @@ class Database:
             raise ValueError(msg)
 
         # validate hidebound dir
-        hb_root = hidebound_dir
-        if not isinstance(hb_root, Path):
-            hb_root = Path(hb_root)
+        hb_root = Path(hidebound_dir)
         if not hb_root.is_dir():
             msg = f'{hb_root} is not a directory or does not exist.'
             raise FileNotFoundError(msg)

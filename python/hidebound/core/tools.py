@@ -35,9 +35,7 @@ def list_all_files(directory, include_regex='', exclude_regex=''):
     Yields:
         Path: File.
     '''
-    if not isinstance(directory, Path):
-        directory = Path(directory)
-
+    directory = Path(directory)
     if not directory.is_dir():
         msg = f'{directory} is not a directory or does not exist.'
         raise FileNotFoundError(msg)
