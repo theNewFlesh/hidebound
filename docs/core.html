@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.6.6
+                0.6.7
               </div>
             
           
@@ -94,7 +94,6 @@
 <li class="toctree-l1"><a class="reference internal" href="intro.html#naming-convention">Naming Convention</a></li>
 <li class="toctree-l1"><a class="reference internal" href="intro.html#project-structure">Project Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="intro.html#application">Application</a></li>
-<li class="toctree-l1"><a class="reference internal" href="intro.html#errors">Errors</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Python API</span></p>
 <ul class="current">
@@ -544,6 +543,21 @@ Add file_traits column and one column per traits key.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>data</strong> (<em>DataFrame</em>) – DataFrame.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.core.database_tools._add_relative_path">
+<code class="sig-prename descclassname">hidebound.core.database_tools.</code><code class="sig-name descname">_add_relative_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">column</span></em>, <em class="sig-param"><span class="n">root_dir</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/database_tools.html#_add_relative_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.database_tools._add_relative_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds relative path column derived from given column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>DataFrame</em>) – DataFrame.</p></li>
+<li><p><strong>column</strong> (<em>str</em>) – Column to be made relative.</p></li>
+<li><p><strong>root_dir</strong> (<em>Path</em><em> or </em><em>str</em>) – Root path to be removed.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

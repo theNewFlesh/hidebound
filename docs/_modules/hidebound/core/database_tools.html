@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.6.6
+                0.6.7
               </div>
             
           
@@ -370,8 +370,27 @@
 
     <span class="c1"># overwrite asset_path for misnamed files within asset directory</span>
     <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">asset_path</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
-        <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">path</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span> <span class="ow">in</span> <span class="n">x</span><span class="p">)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">path</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span> <span class="ow">in</span> <span class="n">x</span><span class="p">)</span>
         <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;asset_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span></div>
+
+
+<div class="viewcode-block" id="_add_relative_path"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools._add_relative_path">[docs]</a><span class="k">def</span> <span class="nf">_add_relative_path</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">root_dir</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Adds relative path column derived from given column.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (DataFrame): DataFrame.</span>
+<span class="sd">        column (str): Column to be made relative.</span>
+<span class="sd">        root_dir (Path or str): Root path to be removed.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">root_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root_dir</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">root_dir</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">):</span>
+        <span class="n">root_dir</span> <span class="o">+=</span> <span class="s1">&#39;/&#39;</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
+    <span class="n">col</span> <span class="o">=</span> <span class="n">column</span> <span class="o">+</span> <span class="s1">&#39;_relative&#39;</span>
+    <span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="n">column</span><span class="p">]</span>\
+        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">root_dir</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()))</span></div>
 
 
 <div class="viewcode-block" id="_add_asset_type"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools._add_asset_type">[docs]</a><span class="k">def</span> <span class="nf">_add_asset_type</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
@@ -476,13 +495,15 @@
     <span class="n">data</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span>
             <span class="n">asset_id</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">asset_id</span><span class="p">,</span>
-            <span class="n">asset_path</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">asset_path</span><span class="p">,</span>
+            <span class="n">asset_path</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">asset_path_relative</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">(),</span>
+            <span class="n">asset_path_relative</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">asset_path_relative</span><span class="p">,</span>
             <span class="n">asset_name</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">asset_name</span><span class="p">,</span>
             <span class="n">asset_type</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">asset_type</span><span class="p">,</span>
             <span class="n">file_id</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">file_id</span><span class="p">,</span>
             <span class="n">file_traits</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">file_traits</span><span class="p">,</span>
             <span class="n">filename</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span>
-            <span class="n">filepath</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">filepath</span><span class="p">,</span>
+            <span class="n">filepath</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">filepath_relative</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">(),</span>
+            <span class="n">filepath_relative</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">filepath_relative</span><span class="p">,</span>
         <span class="p">),</span>
         <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
     <span class="p">)</span>
@@ -496,6 +517,7 @@
     <span class="n">lut</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
         <span class="n">asset_id</span><span class="o">=</span><span class="s1">&#39;asset_id&#39;</span><span class="p">,</span>
         <span class="n">asset_path</span><span class="o">=</span><span class="s1">&#39;asset_path&#39;</span><span class="p">,</span>
+        <span class="n">asset_path_relative</span><span class="o">=</span><span class="s1">&#39;asset_path_relative&#39;</span><span class="p">,</span>
         <span class="n">asset_name</span><span class="o">=</span><span class="s1">&#39;asset_name&#39;</span><span class="p">,</span>
         <span class="n">asset_traits</span><span class="o">=</span><span class="s1">&#39;asset_traits&#39;</span><span class="p">,</span>
         <span class="n">asset_type</span><span class="o">=</span><span class="s1">&#39;asset_type&#39;</span><span class="p">,</span>
@@ -503,12 +525,31 @@
         <span class="n">file_traits</span><span class="o">=</span><span class="s1">&#39;file_traits&#39;</span><span class="p">,</span>
         <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;filenames&#39;</span><span class="p">,</span>
         <span class="n">filepath</span><span class="o">=</span><span class="s1">&#39;filepaths&#39;</span><span class="p">,</span>
+        <span class="n">filepath_relative</span><span class="o">=</span><span class="s1">&#39;filepaths_relative&#39;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">keys</span> <span class="o">=</span> <span class="n">asset_meta</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">asset_meta</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
         <span class="n">vals</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
         <span class="n">item</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">vals</span><span class="p">))</span>
         <span class="n">item</span> <span class="o">=</span> <span class="p">{</span><span class="n">lut</span><span class="p">[</span><span class="n">k</span><span class="p">]:</span> <span class="n">item</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">lut</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+
+        <span class="c1"># grab the first occurence of these columns</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;asset_name&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;asset_path&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;asset_path_relative&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;asset_type&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;asset_traits&#39;</span>
+        <span class="p">]</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
+            <span class="n">item</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;file_traits&#39;</span><span class="p">]</span>
+
+        <span class="c1"># replace asset root</span>
+        <span class="n">item</span><span class="p">[</span><span class="s1">&#39;asset_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
+            <span class="n">data_dir</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;asset_path_relative&#39;</span><span class="p">]</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+
         <span class="n">meta</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
     <span class="n">asset_meta</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">meta</span>
 

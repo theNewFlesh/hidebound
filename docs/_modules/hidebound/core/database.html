@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.6.6
+                0.6.7
               </div>
             
           
@@ -286,9 +286,7 @@
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
         <span class="c1"># validate root dir</span>
-        <span class="n">root</span> <span class="o">=</span> <span class="n">root_dir</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
-            <span class="n">root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root_dir</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">root</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">root</span><span class="si">}</span><span class="s1"> is not a directory or does not exist.&#39;</span>
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
@@ -300,9 +298,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
         <span class="c1"># validate hidebound dir</span>
-        <span class="n">hb_root</span> <span class="o">=</span> <span class="n">hidebound_dir</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hb_root</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
-            <span class="n">hb_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">hb_root</span><span class="p">)</span>
+        <span class="n">hb_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">hidebound_dir</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">hb_root</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hb_root</span><span class="si">}</span><span class="s1"> is not a directory or does not exist.&#39;</span>
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
@@ -335,8 +331,10 @@
             <span class="n">db_tools</span><span class="o">.</span><span class="n">_add_specification</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_specifications</span><span class="p">)</span>
             <span class="n">db_tools</span><span class="o">.</span><span class="n">_validate_filepath</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
             <span class="n">db_tools</span><span class="o">.</span><span class="n">_add_file_traits</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">db_tools</span><span class="o">.</span><span class="n">_add_relative_path</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;filepath&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
             <span class="n">db_tools</span><span class="o">.</span><span class="n">_add_asset_name</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
             <span class="n">db_tools</span><span class="o">.</span><span class="n">_add_asset_path</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">db_tools</span><span class="o">.</span><span class="n">_add_relative_path</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;asset_path&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
             <span class="n">db_tools</span><span class="o">.</span><span class="n">_add_asset_type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
             <span class="n">db_tools</span><span class="o">.</span><span class="n">_add_asset_traits</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
             <span class="n">db_tools</span><span class="o">.</span><span class="n">_validate_assets</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>

@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.6.6
+                0.6.7
               </div>
             
           
@@ -198,9 +198,7 @@
 <span class="sd">    Yields:</span>
 <span class="sd">        Path: File.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
-        <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
-
+    <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">directory</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">directory</span><span class="si">}</span><span class="s1"> is not a directory or does not exist.&#39;</span>
         <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
