@@ -230,6 +230,32 @@ class DatabaseTests(DatabaseTestBase):
         result = data['asset_path'].dropna().nunique()
         self.assertEqual(result, 3)
 
+    def test_add_relative_path(self):
+        data = DataFrame()
+        data['foo'] = [
+            '/foo/bar/taco.txt',
+            '/foo/bar/kiwi.txt',
+            '/tmp/pizza.txt',
+        ]
+        db_tools._add_relative_path(data, 'foo', '/foo/bar')
+        result = data['foo_relative'].tolist()
+        expected = [
+            'taco.txt',
+            'kiwi.txt',
+            '/tmp/pizza.txt',
+        ]
+        self.assertEqual(result, expected)
+
+        del data['foo_relative']
+        db_tools._add_relative_path(data, 'foo', '/foo/bar/')
+        result = data['foo_relative'].tolist()
+        expected = [
+            'taco.txt',
+            'kiwi.txt',
+            '/tmp/pizza.txt',
+        ]
+        self.assertEqual(result, expected)
+
     def test_add_asset_type(self):
         class Spec001(FileSpecificationBase):
             name = 'spec001'
