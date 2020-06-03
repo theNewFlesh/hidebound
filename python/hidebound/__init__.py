@@ -8,4 +8,5 @@ Github: https://github.com/theNewFlesh
 
 
 import hidebound.core  # noqa F401
+import hidebound.exporters  # noqa F401
 import hidebound.server  # noqa F401
