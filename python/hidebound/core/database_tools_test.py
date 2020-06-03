@@ -389,6 +389,16 @@ class DatabaseTests(DatabaseTestBase):
             for r in result:
                 self.assertFalse(r)
 
+        # check asset_path root conversions
+        temp = asset_meta['metadata'].apply(lambda x: x['asset_path']).tolist()
+        for result in temp:
+            self.assertTrue(result.startswith('/tmp/hidebound/data'))
+
+        # check filepath root conversions
+        temp = file_meta['metadata'].apply(lambda x: x['filepath']).tolist()
+        for result in temp:
+            self.assertTrue(result.startswith('/tmp/hidebound/data'))
+
     def test_get_data_for_write_dirs(self):
         data = tools.relative_path(__file__, '../../../resources/fake_data.csv')
         data = pd.read_csv(data)

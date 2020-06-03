@@ -207,8 +207,27 @@ def _add_asset_path(data):
 
     # overwrite asset_path for misnamed files within asset directory
     for path in data.asset_path.dropna().unique():
-        mask = data.filepath.apply(lambda x: path.as_posix() in x)
+        mask = data.filepath.apply(lambda x: path.absolute().as_posix() in x)
         data.loc[mask, 'asset_path'] = path
+
+
+def _add_relative_path(data, column, root_dir):
+    '''
+    Adds relative path column derived from given column.
+
+    Args:
+        data (DataFrame): DataFrame.
+        column (str): Column to be made relative.
+        root_dir (Path or str): Root path to be removed.
+    '''
+    root_dir = Path(root_dir).as_posix()
+    if not root_dir.endswith('/'):
+        root_dir += '/'
+    mask = data[column].notnull()
+    col = column + '_relative'
+    data[col] = np.nan
+    data.loc[mask, col] = data.loc[mask, column]\
+        .apply(lambda x: re.sub(root_dir, '', Path(x).as_posix()))
 
 
 def _add_asset_type(data):
@@ -313,13 +332,15 @@ def _get_data_for_write(data, source_dir, target_dir):
     data['metadata'] = data.apply(
         lambda x: dict(
             asset_id=x.asset_id,
-            asset_path=x.asset_path,
+            asset_path=Path(data_dir, x.asset_path_relative).as_posix(),
+            asset_path_relative=x.asset_path_relative,
             asset_name=x.asset_name,
             asset_type=x.asset_type,
             file_id=x.file_id,
             file_traits=x.file_traits,
             filename=x.filename,
-            filepath=x.filepath,
+            filepath=Path(data_dir, x.filepath_relative).as_posix(),
+            filepath_relative=x.filepath_relative,
         ),
         axis=1
     )
@@ -333,6 +354,7 @@ def _get_data_for_write(data, source_dir, target_dir):
     lut = dict(
         asset_id='asset_id',
         asset_path='asset_path',
+        asset_path_relative='asset_path_relative',
         asset_name='asset_name',
         asset_traits='asset_traits',
         asset_type='asset_type',
@@ -340,6 +362,7 @@ def _get_data_for_write(data, source_dir, target_dir):
         file_traits='file_traits',
         filename='filenames',
         filepath='filepaths',
+        filepath_relative='filepaths_relative',
     )
     keys = asset_meta.columns.tolist()
     for i, row in asset_meta.iterrows():
@@ -348,10 +371,21 @@ def _get_data_for_write(data, source_dir, target_dir):
         item = {lut[k]: item[k] for k in lut.keys()}
 
         # grab the first occurence of these columns
-        cols = ['asset_name', 'asset_path', 'asset_type', 'asset_traits']
+        cols = [
+            'asset_name',
+            'asset_path',
+            'asset_path_relative',
+            'asset_type',
+            'asset_traits'
+        ]
         for col in cols:
             item[col] = item[col][0]
         del item['file_traits']
+
+        # replace asset root
+        item['asset_path'] = Path(
+            data_dir, item['asset_path_relative']
+        ).as_posix()
 
         meta.append(item)
     asset_meta['metadata'] = meta
