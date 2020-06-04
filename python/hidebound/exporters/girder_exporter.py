@@ -1,16 +1,69 @@
 from pathlib import Path
 
 from girder_client import HttpError
+from schematics import Model
+from schematics.types import IntType, StringType, IPv4Type
 import girder_client
 
 from hidebound.exporters.exporter_base import ExporterBase
+import hidebound.core.validators as vd
 # ------------------------------------------------------------------------------
+
+
+class GirderConfig(Model):
+    '''
+    A class for validating configurations supplied to GirderExporter.
+
+    Attributes:
+        api_key (str): Girder API key.
+        root_id (str): ID of folder or collection under which all data will
+            be exported.
+        root_type (str, optional): Root entity type. Default: collection.
+            Options: folder, collection
+        host (str, optional): Docker host IP address. Default: 0.0.0.0.
+        port (int, optional): Docker host port. Default: 8080.
+    '''
+    api_key = StringType(required=True)
+    root_id = StringType(required=True)
+    root_type = StringType(
+        required=True,
+        default='collection',
+        validators=[lambda x: vd.is_in([x], ['collection', 'folder'])]
+    )
+    host = IPv4Type(required=True, default='0.0.0.0')
+    port = IntType(
+        required=True,
+        default=8080,
+        validators=[
+            lambda x: vd.is_lt(x, 65536),
+            lambda x: vd.is_gt(x, 1023),
+        ]
+    )
 
 
 class GirderExporter(ExporterBase):
     '''
     Export for Girder asset framework.
     '''
+    @staticmethod
+    def from_config(config, client=None):
+        '''
+        Construct a GirderExporter from a given config.
+
+        Args:
+            config (dict): Config dictionary.
+            client (object, optional): Client instance, for testing.
+                Default: None.
+
+        Raises:
+            DataError: If config is invalid.
+
+        Returns:
+            GirderExporter: GirderExporter instance.
+        '''
+        GirderConfig(config).validate()
+        return GirderExporter(**config, client=client)
+
     def __init__(
         self,
         api_key,

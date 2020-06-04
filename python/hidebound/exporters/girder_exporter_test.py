@@ -1,8 +1,9 @@
 import unittest
 
 from girder_client import HttpError
+from schematics.exceptions import DataError
 
-from hidebound.exporters.girder_exporter import GirderExporter
+from hidebound.exporters.girder_exporter import GirderConfig, GirderExporter
 # ------------------------------------------------------------------------------
 
 
@@ -110,17 +111,66 @@ class MockGirderClient:
 # ------------------------------------------------------------------------------
 
 
-class GirderExporterTests(unittest.TestCase):
+class GirderConfigTests(unittest.TestCase):
     def setUp(self):
-        self.client = MockGirderClient()
-        self.exporter = GirderExporter(
-            'api_key',
-            'root_id',
+        self.config = dict(
+            api_key='api_key',
+            root_id='root_id',
             root_type='collection',
             host='0.0.0.0',
             port=8080,
-            client=self.client
         )
+
+    def test_validate(self):
+        config = self.config
+        GirderConfig(config).validate()
+        config['root_type'] = 'folder'
+        GirderConfig(config).validate()
+
+    def test_root_type(self):
+        config = self.config
+        expected = r"foo is not in \[\'collection\', \'folder\'\]"
+        config['root_type'] = 'foo'
+        with self.assertRaisesRegexp(DataError, expected):
+            GirderConfig(config).validate()
+
+    def test_host(self):
+        config = self.config
+        expected = 'Invalid IPv4 address'
+        config['host'] = '0.1.2'
+        with self.assertRaisesRegexp(DataError, expected):
+            GirderConfig(config).validate()
+
+    def test_port(self):
+        config = self.config
+        expected = '1023 !> 1023.'
+        config['port'] = 1023
+        with self.assertRaisesRegexp(DataError, expected):
+            GirderConfig(config).validate()
+
+        expected = '65536 !< 65536.'
+        config['port'] = 65536
+        with self.assertRaisesRegexp(DataError, expected):
+            GirderConfig(config).validate()
+
+
+class GirderExporterTests(unittest.TestCase):
+    def setUp(self):
+        self.client = MockGirderClient()
+        self.config = dict(
+            api_key='api_key',
+            root_id='root_id',
+            root_type='collection',
+            host='2.2.2.2',
+            port=5555,
+        )
+        self.exporter = GirderExporter(**self.config, client=self.client)
+
+    def test_from_config(self):
+        GirderExporter.from_config(self.config, client=self.client)
+        self.config['root_type'] = 'taco'
+        with self.assertRaises(DataError):
+            GirderExporter.from_config(self.config, client=self.client)
 
     def test_init(self):
         expected = 'Invalid root_type. foo is not folder or collection.'
