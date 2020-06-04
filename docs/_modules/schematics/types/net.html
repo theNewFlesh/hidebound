@@ -1,0 +1,495 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>schematics.types.net &mdash; hidebound  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> hidebound
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.6.11
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#overview">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#workflow">Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#naming-convention">Naming Convention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#project-structure">Project Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#application">Application</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../core.html">core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../exporters.html">exporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../server.html">server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">hidebound</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>schematics.types.net</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for schematics.types.net</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span><span class="p">,</span> <span class="n">absolute_import</span>
+
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="k">try</span><span class="p">:</span> <span class="c1"># PY3</span>
+    <span class="kn">from</span> <span class="nn">urllib.request</span> <span class="kn">import</span> <span class="n">urlopen</span>
+    <span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">urlunsplit</span><span class="p">,</span> <span class="n">quote</span> <span class="k">as</span> <span class="n">urlquote</span>
+    <span class="kn">from</span> <span class="nn">urllib.error</span> <span class="kn">import</span> <span class="n">URLError</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span> <span class="c1"># PY2</span>
+    <span class="kn">from</span> <span class="nn">urllib2</span> <span class="kn">import</span> <span class="n">urlopen</span><span class="p">,</span> <span class="n">URLError</span>
+    <span class="kn">from</span> <span class="nn">urlparse</span> <span class="kn">import</span> <span class="n">urlunsplit</span>
+    <span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">quote</span> <span class="k">as</span> <span class="n">urlquote</span>
+
+<span class="kn">from</span> <span class="nn">..common</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">..exceptions</span> <span class="kn">import</span> <span class="n">ValidationError</span><span class="p">,</span> <span class="n">StopValidationError</span>
+<span class="kn">from</span> <span class="nn">..translator</span> <span class="kn">import</span> <span class="n">_</span>
+
+<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">fill_template</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;IPAddressType&#39;</span><span class="p">,</span> <span class="s1">&#39;IPv4Type&#39;</span><span class="p">,</span> <span class="s1">&#39;IPv6Type&#39;</span><span class="p">,</span> <span class="s1">&#39;MACAddressType&#39;</span><span class="p">,</span> <span class="s1">&#39;URLType&#39;</span><span class="p">,</span> <span class="s1">&#39;EmailType&#39;</span><span class="p">]</span>
+
+
+<span class="c1">### Character ranges</span>
+
+<span class="n">HEX</span>      <span class="o">=</span> <span class="s1">&#39;0-9A-F&#39;</span>
+<span class="n">ALPHA</span>    <span class="o">=</span> <span class="s1">&#39;A-Z&#39;</span>
+<span class="n">ALPHANUM</span> <span class="o">=</span> <span class="s1">&#39;A-Z0-9&#39;</span>
+
+
+<span class="c1">### IP address patterns</span>
+
+<span class="n">IPV4_OCTET</span> <span class="o">=</span> <span class="s1">&#39;( 25[0-5] | 2[0-4][0-9] | [0-1]?[0-9]{1,2} )&#39;</span>
+<span class="n">IPV4</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;( ((</span><span class="si">%(oct)s</span><span class="s1">\.)</span><span class="si">{3}</span><span class="s1"> </span><span class="si">%(oct)s</span><span class="s1">) )&#39;</span> <span class="o">%</span> <span class="p">{</span><span class="s1">&#39;oct&#39;</span><span class="p">:</span> <span class="n">IPV4_OCTET</span><span class="p">}</span>
+
+<span class="n">IPV6_H16</span> <span class="o">=</span> <span class="s1">&#39;[</span><span class="si">%s</span><span class="s1">]{1,4}&#39;</span> <span class="o">%</span> <span class="n">HEX</span>
+<span class="n">IPV6_L32</span> <span class="o">=</span> <span class="s1">&#39;(</span><span class="si">%(h16)s</span><span class="s1">:</span><span class="si">%(h16)s</span><span class="s1">|</span><span class="si">%(ipv4)s</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">{</span><span class="s1">&#39;h16&#39;</span><span class="p">:</span> <span class="n">IPV6_H16</span><span class="p">,</span> <span class="s1">&#39;ipv4&#39;</span><span class="p">:</span> <span class="n">IPV4</span><span class="p">}</span>
+<span class="n">IPV6</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;&quot;&quot;(</span>
+<span class="s2">                                    (</span><span class="si">%(h16)s</span><span class="s2">:)</span><span class="si">{6}%(l32)s</span><span class="s2">  |</span>
+<span class="s2">                                ::  (</span><span class="si">%(h16)s</span><span class="s2">:)</span><span class="si">{5}%(l32)s</span><span class="s2">  |</span>
+<span class="s2">    (               </span><span class="si">%(h16)s</span><span class="s2"> )?  ::  (</span><span class="si">%(h16)s</span><span class="s2">:)</span><span class="si">{4}%(l32)s</span><span class="s2">  |</span>
+<span class="s2">    ( (</span><span class="si">%(h16)s</span><span class="s2">:){,1}</span><span class="si">%(h16)s</span><span class="s2"> )?  ::  (</span><span class="si">%(h16)s</span><span class="s2">:)</span><span class="si">{3}%(l32)s</span><span class="s2">  |</span>
+<span class="s2">    ( (</span><span class="si">%(h16)s</span><span class="s2">:){,2}</span><span class="si">%(h16)s</span><span class="s2"> )?  ::  (</span><span class="si">%(h16)s</span><span class="s2">:)</span><span class="si">{2}%(l32)s</span><span class="s2">  |</span>
+<span class="s2">    ( (</span><span class="si">%(h16)s</span><span class="s2">:){,3}</span><span class="si">%(h16)s</span><span class="s2"> )?  ::  (</span><span class="si">%(h16)s</span><span class="s2">:)</span><span class="si">{1}%(l32)s</span><span class="s2">  |</span>
+<span class="s2">    ( (</span><span class="si">%(h16)s</span><span class="s2">:){,4}</span><span class="si">%(h16)s</span><span class="s2"> )?  ::               </span><span class="si">%(l32)s</span><span class="s2">  |</span>
+<span class="s2">    ( (</span><span class="si">%(h16)s</span><span class="s2">:){,5}</span><span class="si">%(h16)s</span><span class="s2"> )?  ::               </span><span class="si">%(h16)s</span><span class="s2">  |</span>
+<span class="s2">    ( (</span><span class="si">%(h16)s</span><span class="s2">:){,6}</span><span class="si">%(h16)s</span><span class="s2"> )?  :: )&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">{</span><span class="s1">&#39;h16&#39;</span><span class="p">:</span> <span class="n">IPV6_H16</span><span class="p">,</span>
+                                           <span class="s1">&#39;l32&#39;</span><span class="p">:</span> <span class="n">IPV6_L32</span><span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">IPAddressType</span><span class="p">(</span><span class="n">StringType</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A field that stores a valid IPv4 or IPv6 address.&quot;&quot;&quot;</span>
+
+    <span class="n">VERSION</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">REGEX</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;^</span><span class="si">%s</span><span class="s1">|</span><span class="si">%s</span><span class="s1">$&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">IPV4</span><span class="p">,</span> <span class="n">IPV6</span><span class="p">),</span> <span class="n">re</span><span class="o">.</span><span class="n">I</span> <span class="o">+</span> <span class="n">re</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">valid_ip</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">REGEX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">validate_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">valid_ip</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s1">&#39;Invalid IP</span><span class="si">%s</span><span class="s1"> address&#39;</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">VERSION</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_mock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="n">IPv4Type</span><span class="p">,</span> <span class="n">IPv6Type</span><span class="p">])(</span><span class="n">required</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">required</span><span class="p">)</span><span class="o">.</span><span class="n">mock</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">IPv4Type</span><span class="p">(</span><span class="n">IPAddressType</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A field that stores a valid IPv4 address.&quot;&quot;&quot;</span>
+
+    <span class="n">VERSION</span> <span class="o">=</span> <span class="s1">&#39;v4&#39;</span>
+    <span class="n">REGEX</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;^</span><span class="si">%s</span><span class="s1">$&#39;</span> <span class="o">%</span> <span class="n">IPV4</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">I</span> <span class="o">+</span> <span class="n">re</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_mock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">256</span><span class="p">))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+
+
+<span class="k">class</span> <span class="nc">IPv6Type</span><span class="p">(</span><span class="n">IPAddressType</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A field that stores a valid IPv6 address.&quot;&quot;&quot;</span>
+
+    <span class="n">VERSION</span> <span class="o">=</span> <span class="s1">&#39;v6&#39;</span>
+    <span class="n">REGEX</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^</span><span class="si">%s</span><span class="s1">$&#39;</span> <span class="o">%</span> <span class="n">IPV6</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">I</span> <span class="o">+</span> <span class="n">re</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_mock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;2001:db8:&#39;</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="s1">&#39;</span><span class="si">%x</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+        <span class="p">)</span>
+
+
+<span class="c1">### MAC address</span>
+
+<span class="k">class</span> <span class="nc">MACAddressType</span><span class="p">(</span><span class="n">StringType</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A field that stores a valid MAC address.&quot;&quot;&quot;</span>
+
+    <span class="n">REGEX</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                         (</span>
+<span class="s2">                             ^([0-9a-f]</span><span class="si">{2}</span><span class="s2">[-])</span><span class="si">{5}</span><span class="s2">([0-9a-f]</span><span class="si">{2}</span><span class="s2">)$</span>
+<span class="s2">                            |^([0-9a-f]</span><span class="si">{2}</span><span class="s2">[:])</span><span class="si">{5}</span><span class="s2">([0-9a-f]</span><span class="si">{2}</span><span class="s2">)$</span>
+<span class="s2">                            |^([0-9a-f]</span><span class="si">{12}</span><span class="s2">)</span>
+<span class="s2">                            |^([0-9a-f]</span><span class="si">{6}</span><span class="s2">[-:]([0-9a-f]</span><span class="si">{6}</span><span class="s2">))$</span>
+<span class="s2">                            |^([0-9a-f]</span><span class="si">{4}</span><span class="s2">(\.[0-9a-f]</span><span class="si">{4}</span><span class="s2">)</span><span class="si">{2}</span><span class="s2">)$</span>
+<span class="s2">                         )</span>
+<span class="s2">                         &quot;&quot;&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">I</span> <span class="o">+</span> <span class="n">re</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_mock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;:&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%02x</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">256</span><span class="p">))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">validate_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">REGEX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">value</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s1">&#39;Invalid MAC address&#39;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">to_primitive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;:&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="mi">2</span><span class="p">))</span>
+
+
+<span class="c1">### URI patterns</span>
+
+<span class="n">GEN_DELIMS</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="s1">&#39;:/?#[]@&#39;</span><span class="p">)</span>
+<span class="n">SUB_DELIMS</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="s1">&#39;!$&amp;</span><span class="se">\&#39;</span><span class="s1">()*+,;=&#39;</span><span class="p">)</span>
+<span class="n">UNRESERVED</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="s1">&#39;-_.~&#39;</span><span class="p">)</span>
+<span class="n">PCHAR</span> <span class="o">=</span> <span class="n">SUB_DELIMS</span> <span class="o">|</span> <span class="n">UNRESERVED</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="s1">&#39;%:@&#39;</span><span class="p">)</span>
+<span class="n">QUERY_EXTRAS</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="s1">&#39;[]&#39;</span><span class="p">)</span> <span class="c1"># nonstandard</span>
+
+<span class="n">VALID_CHARS</span> <span class="o">=</span> <span class="n">GEN_DELIMS</span> <span class="o">|</span> <span class="n">SUB_DELIMS</span> <span class="o">|</span> <span class="n">UNRESERVED</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="s1">&#39;%&#39;</span><span class="p">)</span>
+<span class="n">VALID_CHAR_STRING</span> <span class="o">=</span> <span class="n">py_native_string</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">VALID_CHARS</span><span class="p">))</span>
+<span class="n">UNSAFE_CHAR_STRING</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">-</span><span class="se">\x20</span><span class="s1">&lt;&gt;</span><span class="si">{}</span><span class="s1">|&quot;`</span><span class="se">\\</span><span class="s1">^</span><span class="se">\x7F</span><span class="s1">-</span><span class="se">\x9F</span><span class="s1">&#39;</span>
+
+<span class="k">def</span> <span class="nf">_chrcls</span><span class="p">(</span><span class="n">allowed_chars</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a subset of the URL-compatible special characters ``!#$%&amp;&#39;()*+,-./:;=?@[]_~``,</span>
+<span class="sd">    returns a regex character class matching any URL-compatible character apart from the</span>
+<span class="sd">    special characters not present in the provided set.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;^&#39;</span>
+            <span class="o">+</span> <span class="n">UNSAFE_CHAR_STRING</span>
+            <span class="o">+</span> <span class="nb">str</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">VALID_CHARS</span> <span class="o">-</span> <span class="n">allowed_chars</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;%&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%%</span><span class="s1">&#39;</span><span class="p">)</span>
+                                                       <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;]&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\]&#39;</span><span class="p">)</span>
+                                                       <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\-&#39;</span><span class="p">))</span>
+
+<span class="n">URI_PATTERNS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;scheme&#39;</span> <span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;[</span><span class="si">%s</span><span class="s1">]+&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="s1">&#39;A-Z0-9.+-&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;user&#39;</span>   <span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;[</span><span class="si">%s</span><span class="s1">]+&#39;</span> <span class="o">%</span> <span class="n">_chrcls</span><span class="p">(</span><span class="n">UNRESERVED</span> <span class="o">|</span> <span class="n">SUB_DELIMS</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="s1">&#39;%:&#39;</span><span class="p">)),</span>
+    <span class="s1">&#39;port&#39;</span>   <span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;[0-9]{2,5}&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;host4&#39;</span>  <span class="p">:</span> <span class="n">IPV4</span><span class="p">,</span>
+    <span class="s1">&#39;host6&#39;</span>  <span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;[</span><span class="si">%s</span><span class="s1">]+&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">HEX</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;hostn&#39;</span>  <span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;[</span><span class="si">%s</span><span class="s1">]+&#39;</span> <span class="o">%</span> <span class="n">_chrcls</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="s1">&#39;.-&#39;</span><span class="p">)),</span>
+    <span class="s1">&#39;path&#39;</span>   <span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;[</span><span class="si">%s</span><span class="s1">]*&#39;</span> <span class="o">%</span> <span class="n">_chrcls</span><span class="p">(</span><span class="n">PCHAR</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)),</span>
+    <span class="s1">&#39;query&#39;</span>  <span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;[</span><span class="si">%s</span><span class="s1">]*&#39;</span> <span class="o">%</span> <span class="n">_chrcls</span><span class="p">(</span><span class="n">PCHAR</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="s1">&#39;/?&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="n">QUERY_EXTRAS</span><span class="p">),</span>
+    <span class="s1">&#39;frag&#39;</span>   <span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;[</span><span class="si">%s</span><span class="s1">]*&#39;</span> <span class="o">%</span> <span class="n">_chrcls</span><span class="p">(</span><span class="n">PCHAR</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="s1">&#39;/?&#39;</span><span class="p">)),</span>
+<span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">URLType</span><span class="p">(</span><span class="n">StringType</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;A field that validates the input as a URL.</span>
+
+<span class="sd">    :param fqdn:</span>
+<span class="sd">        if ``True`` the validation function will ensure hostname in URL</span>
+<span class="sd">        is a Fully Qualified Domain Name.</span>
+<span class="sd">    :param verify_exists:</span>
+<span class="sd">        if ``True`` the validation function will make sure</span>
+<span class="sd">        the URL is accessible (server responds with HTTP 2xx).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">MESSAGES</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;invalid_url&#39;</span><span class="p">:</span> <span class="s2">&quot;Not a well-formed URL.&quot;</span><span class="p">,</span>
+        <span class="s1">&#39;not_found&#39;</span><span class="p">:</span> <span class="s2">&quot;URL could not be retrieved.&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">URL_REGEX</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;&quot;&quot;^(</span>
+<span class="s2">            (?P&lt;scheme&gt; </span><span class="si">%(scheme)s</span><span class="s2"> ) ://</span>
+<span class="s2">        (   (?P&lt;user&gt;   </span><span class="si">%(user)s</span><span class="s2">   ) @   )?</span>
+<span class="s2">        (\[ (?P&lt;host6&gt;  </span><span class="si">%(host6)s</span><span class="s2">  ) ]</span>
+<span class="s2">          | (?P&lt;host4&gt;  </span><span class="si">%(host4)s</span><span class="s2">  )</span>
+<span class="s2">          | (?P&lt;hostn&gt;  </span><span class="si">%(hostn)s</span><span class="s2">  )     )</span>
+<span class="s2">        ( : (?P&lt;port&gt;   </span><span class="si">%(port)s</span><span class="s2">   )     )?</span>
+<span class="s2">            (?P&lt;path&gt; / </span><span class="si">%(path)s</span><span class="s2">   )?</span>
+<span class="s2">        (\? (?P&lt;query&gt;  </span><span class="si">%(query)s</span><span class="s2">  )     )?</span>
+<span class="s2">        (\# (?P&lt;frag&gt;   </span><span class="si">%(frag)s</span><span class="s2">   )     )?)$</span>
+<span class="s2">        &quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">URI_PATTERNS</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">I</span> <span class="o">+</span> <span class="n">re</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="n">TLD_REGEX</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^( ([a-z]{2,}) | (xn--[a-z0-9]{4,}) )$&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">I</span> <span class="o">+</span> <span class="n">re</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fqdn</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verify_exists</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">schemes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;http&#39;</span><span class="p">,</span> <span class="s1">&#39;https&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fqdn</span> <span class="o">=</span> <span class="n">fqdn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verify_exists</span> <span class="o">=</span> <span class="n">verify_exists</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">URLType</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_mock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">fill_template</span><span class="p">(</span><span class="s1">&#39;http://a</span><span class="si">%s</span><span class="s1">.ZZ&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_length</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_length</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">valid_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">URL_REGEX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groupdict</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">url</span><span class="p">[</span><span class="s1">&#39;scheme&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">schemes</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">url</span><span class="p">[</span><span class="s1">&#39;host6&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">IPv6Type</span><span class="o">.</span><span class="n">valid_ip</span><span class="p">(</span><span class="n">url</span><span class="p">[</span><span class="s1">&#39;host6&#39;</span><span class="p">]):</span>
+                <span class="k">return</span> <span class="n">url</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">url</span><span class="p">[</span><span class="s1">&#39;host4&#39;</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">url</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">hostname</span> <span class="o">=</span> <span class="n">url</span><span class="p">[</span><span class="s1">&#39;hostn&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">UnicodeError</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">hostname</span> <span class="o">=</span> <span class="n">url</span><span class="p">[</span><span class="s1">&#39;hostn&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;idna&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">UnicodeError</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">hostname</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;.&#39;</span><span class="p">:</span>
+            <span class="n">hostname</span> <span class="o">=</span> <span class="n">hostname</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">hostname</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">253</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">hostname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">label</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">64</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="s1">&#39;-&#39;</span> <span class="ow">in</span> <span class="p">(</span><span class="n">label</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fqdn</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> \
+              <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">TLD_REGEX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">labels</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">url</span><span class="p">[</span><span class="s1">&#39;hostn_enc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hostname</span>
+
+        <span class="k">return</span> <span class="n">url</span>
+
+    <span class="k">def</span> <span class="nf">validate_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">valid_url</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">url</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">StopValidationError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">messages</span><span class="p">[</span><span class="s1">&#39;invalid_url&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verify_exists</span><span class="p">:</span>
+            <span class="n">url_string</span> <span class="o">=</span> <span class="n">urlquote</span><span class="p">(</span><span class="n">urlunsplit</span><span class="p">((</span>
+                <span class="n">url</span><span class="p">[</span><span class="s1">&#39;scheme&#39;</span><span class="p">],</span>
+                <span class="p">(</span><span class="n">url</span><span class="p">[</span><span class="s1">&#39;host6&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">url</span><span class="p">[</span><span class="s1">&#39;host4&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">url</span><span class="p">[</span><span class="s1">&#39;hostn_enc&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span> <span class="o">+</span> <span class="p">(</span><span class="n">url</span><span class="p">[</span><span class="s1">&#39;port&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+                <span class="n">url</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">],</span>
+                <span class="n">url</span><span class="p">[</span><span class="s1">&#39;query&#39;</span><span class="p">],</span>
+                <span class="n">url</span><span class="p">[</span><span class="s1">&#39;frag&#39;</span><span class="p">])</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span> <span class="n">safe</span><span class="o">=</span><span class="n">VALID_CHAR_STRING</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">urlopen</span><span class="p">(</span><span class="n">url_string</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">URLError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">StopValidationError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">messages</span><span class="p">[</span><span class="s1">&#39;not_found&#39;</span><span class="p">])</span>
+
+
+<span class="k">class</span> <span class="nc">EmailType</span><span class="p">(</span><span class="n">StringType</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;A field that validates input as an E-Mail-Address.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">MESSAGES</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;email&#39;</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Not a well-formed email address.&quot;</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="n">EMAIL_REGEX</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;&quot;&quot;^(</span>
+<span class="s2">        ( ( [</span><span class="si">%(atext)s</span><span class="s2">]+ (\.[</span><span class="si">%(atext)s</span><span class="s2">]+)* ) | (&quot;( [</span><span class="si">%(qtext)s</span><span class="s2">\s] | \\[</span><span class="si">%(vchar)s</span><span class="s2">\s] )*&quot;) )</span>
+<span class="s2">        @((?!-)[A-Z0-9-]{1,63}(?&lt;!-)\.)+[A-Z]{2,63})$&quot;&quot;&quot;</span>
+        <span class="o">%</span> <span class="p">{</span>
+            <span class="s1">&#39;atext&#39;</span><span class="p">:</span> <span class="s1">&#39;-A-Z0-9!#$%&amp;</span><span class="se">\&#39;</span><span class="s1">*+/=?^_`{|}~&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;qtext&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="se">\x21\x23</span><span class="s1">-</span><span class="se">\x5B\\\x5D</span><span class="s1">-</span><span class="se">\x7E</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;vchar&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="se">\x21</span><span class="s1">-</span><span class="se">\x7E</span><span class="s1">&#39;</span>
+        <span class="p">},</span>
+        <span class="n">re</span><span class="o">.</span><span class="n">I</span> <span class="o">+</span> <span class="n">re</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_mock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">fill_template</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">@example.com&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_length</span><span class="p">,</span>
+                             <span class="bp">self</span><span class="o">.</span><span class="n">max_length</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">validate_email</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">EmailType</span><span class="o">.</span><span class="n">EMAIL_REGEX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">StopValidationError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">messages</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">])</span>
+
+
+<span class="k">if</span> <span class="n">PY2</span><span class="p">:</span>
+    <span class="c1"># Python 2 names cannot be unicode</span>
+    <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">__all__</span><span class="p">]</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Alex Braun &lt;TheNewFlesh@github.com&gt;
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

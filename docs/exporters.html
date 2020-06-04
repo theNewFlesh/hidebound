@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.6.10
+                0.6.11
               </div>
             
           
@@ -247,6 +247,100 @@
 <div class="section" id="module-hidebound.exporters.girder_exporter">
 <span id="girder-exporter"></span><h2>girder_exporter<a class="headerlink" href="#module-hidebound.exporters.girder_exporter" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
+<dt id="hidebound.exporters.girder_exporter.GirderConfig">
+<em class="property">class </em><code class="sig-prename descclassname">hidebound.exporters.girder_exporter.</code><code class="sig-name descname">GirderConfig</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">raw_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">trusted_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">deserialize_mapping</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">init</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">partial</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">strict</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">validate</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">app_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">lazy</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/exporters/girder_exporter.html#GirderConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">schematics.deprecated.patch_models.&lt;locals&gt;.Model</span></code></p>
+<p>A class for validating configurations supplied to GirderExporter.</p>
+<dl class="py attribute">
+<dt id="hidebound.exporters.girder_exporter.GirderConfig.api_key">
+<code class="sig-name descname">api_key</code><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderConfig.api_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Girder API key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="hidebound.exporters.girder_exporter.GirderConfig.root_id">
+<code class="sig-name descname">root_id</code><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderConfig.root_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>ID of folder or collection under which all data will
+be exported.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="hidebound.exporters.girder_exporter.GirderConfig.root_type">
+<code class="sig-name descname">root_type</code><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderConfig.root_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Root entity type. Default: collection.
+Options: folder, collection</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="hidebound.exporters.girder_exporter.GirderConfig.host">
+<code class="sig-name descname">host</code><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderConfig.host" title="Permalink to this definition">¶</a></dt>
+<dd><p>Docker host IP address. Default: 0.0.0.0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="hidebound.exporters.girder_exporter.GirderConfig.port">
+<code class="sig-name descname">port</code><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderConfig.port" title="Permalink to this definition">¶</a></dt>
+<dd><p>Docker host port. Default: 8080.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="hidebound.exporters.girder_exporter.GirderConfig._schema">
+<code class="sig-name descname">_schema</code><em class="property"> = &lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema object&gt;</em><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderConfig._schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id0">
+<code class="sig-name descname">api_key</code><em class="property"> = &lt;StringType() instance on GirderConfig as 'api_key'&gt;</em><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id1">
+<code class="sig-name descname">host</code><em class="property"> = &lt;IPv4Type() instance on GirderConfig as 'host'&gt;</em><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id2">
+<code class="sig-name descname">port</code><em class="property"> = &lt;IntType() instance on GirderConfig as 'port'&gt;</em><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id3">
+<code class="sig-name descname">root_id</code><em class="property"> = &lt;StringType() instance on GirderConfig as 'root_id'&gt;</em><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id4">
+<code class="sig-name descname">root_type</code><em class="property"> = &lt;StringType() instance on GirderConfig as 'root_type'&gt;</em><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt id="hidebound.exporters.girder_exporter.GirderExporter">
 <em class="property">class </em><code class="sig-prename descclassname">hidebound.exporters.girder_exporter.</code><code class="sig-name descname">GirderExporter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">api_key</span></em>, <em class="sig-param"><span class="n">root_id</span></em>, <em class="sig-param"><span class="n">root_type</span><span class="o">=</span><span class="default_value">'collection'</span></em>, <em class="sig-param"><span class="n">host</span><span class="o">=</span><span class="default_value">'0.0.0.0'</span></em>, <em class="sig-param"><span class="n">port</span><span class="o">=</span><span class="default_value">8080</span></em>, <em class="sig-param"><span class="n">client</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/exporters/girder_exporter.html#GirderExporter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderExporter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#hidebound.exporters.exporter_base.ExporterBase" title="hidebound.exporters.exporter_base.ExporterBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">hidebound.exporters.exporter_base.ExporterBase</span></code></a></p>
@@ -308,6 +402,30 @@ Metadata must contain these fields:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>metadata</strong> (<em>dict</em>) – File metadata.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hidebound.exporters.girder_exporter.GirderExporter.from_config">
+<em class="property">static </em><code class="sig-name descname">from_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">client</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/exporters/girder_exporter.html#GirderExporter.from_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderExporter.from_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a GirderExporter from a given config.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>dict</em>) – Config dictionary.</p></li>
+<li><p><strong>client</strong> (<em>object</em><em>, </em><em>optional</em>) – Client instance, for testing.
+Default: None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>DataError</strong> – If config is invalid.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>GirderExporter instance.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#hidebound.exporters.girder_exporter.GirderExporter" title="hidebound.exporters.girder_exporter.GirderExporter">GirderExporter</a></p>
 </dd>
 </dl>
 </dd></dl>

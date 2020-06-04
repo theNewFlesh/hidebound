@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.6.10
+                0.6.11
               </div>
             
           
@@ -165,16 +165,68 @@
 <span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
 <span class="kn">from</span> <span class="nn">girder_client</span> <span class="kn">import</span> <span class="n">HttpError</span>
+<span class="kn">from</span> <span class="nn">schematics</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">schematics.types</span> <span class="kn">import</span> <span class="n">IntType</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">IPv4Type</span>
 <span class="kn">import</span> <span class="nn">girder_client</span>
 
 <span class="kn">from</span> <span class="nn">hidebound.exporters.exporter_base</span> <span class="kn">import</span> <span class="n">ExporterBase</span>
+<span class="kn">import</span> <span class="nn">hidebound.core.validators</span> <span class="k">as</span> <span class="nn">vd</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="GirderConfig"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.girder_exporter.GirderConfig">[docs]</a><span class="k">class</span> <span class="nc">GirderConfig</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    A class for validating configurations supplied to GirderExporter.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        api_key (str): Girder API key.</span>
+<span class="sd">        root_id (str): ID of folder or collection under which all data will</span>
+<span class="sd">            be exported.</span>
+<span class="sd">        root_type (str, optional): Root entity type. Default: collection.</span>
+<span class="sd">            Options: folder, collection</span>
+<span class="sd">        host (str, optional): Docker host IP address. Default: 0.0.0.0.</span>
+<span class="sd">        port (int, optional): Docker host port. Default: 8080.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">api_key</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">root_id</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">root_type</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;collection&#39;</span><span class="p">,</span>
+        <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_in</span><span class="p">([</span><span class="n">x</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;collection&#39;</span><span class="p">,</span> <span class="s1">&#39;folder&#39;</span><span class="p">])]</span>
+    <span class="p">)</span>
+    <span class="n">host</span> <span class="o">=</span> <span class="n">IPv4Type</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">)</span>
+    <span class="n">port</span> <span class="o">=</span> <span class="n">IntType</span><span class="p">(</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">8080</span><span class="p">,</span>
+        <span class="n">validators</span><span class="o">=</span><span class="p">[</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_lt</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">65536</span><span class="p">),</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_gt</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1023</span><span class="p">),</span>
+        <span class="p">]</span>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="GirderExporter"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.girder_exporter.GirderExporter">[docs]</a><span class="k">class</span> <span class="nc">GirderExporter</span><span class="p">(</span><span class="n">ExporterBase</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Export for Girder asset framework.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
+<div class="viewcode-block" id="GirderExporter.from_config"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.girder_exporter.GirderExporter.from_config">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">client</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Construct a GirderExporter from a given config.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            config (dict): Config dictionary.</span>
+<span class="sd">            client (object, optional): Client instance, for testing.</span>
+<span class="sd">                Default: None.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            DataError: If config is invalid.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            GirderExporter: GirderExporter instance.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">GirderExporter</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="p">,</span> <span class="n">client</span><span class="o">=</span><span class="n">client</span><span class="p">)</span></div>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">api_key</span><span class="p">,</span>
@@ -199,14 +251,19 @@
 <span class="sd">                Default: None.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            ValueError: If invalid root_type given.</span>
+<span class="sd">            DataError: If config is invalid.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># sudo ip addr show docker0 | grep inet | grep docker0 | awk &#39;{print $2}&#39; | sed &#39;s/\/.*//&#39;</span>
         <span class="c1"># will give you the ip address of the docker network which binds to</span>
         <span class="c1"># localhost</span>
-        <span class="k">if</span> <span class="n">root_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;folder&#39;</span><span class="p">,</span> <span class="s1">&#39;collection&#39;</span><span class="p">]:</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Invalid root_type. </span><span class="si">{</span><span class="n">root_type</span><span class="si">}</span><span class="s1"> is not folder or collection.&#39;</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">api_key</span><span class="o">=</span><span class="n">api_key</span><span class="p">,</span>
+            <span class="n">root_id</span><span class="o">=</span><span class="n">root_id</span><span class="p">,</span>
+            <span class="n">root_type</span><span class="o">=</span><span class="n">root_type</span><span class="p">,</span>
+            <span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">,</span>
+            <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">GirderConfig</span><span class="p">(</span><span class="n">config</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;http://</span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s1">/api/v1&#39;</span>
 

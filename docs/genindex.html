@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.6.10
+                0.6.11
               </div>
             
           
@@ -251,6 +251,8 @@
 </li>
         <li><a href="core.html#hidebound.core.specifications.Raw001._schema">(hidebound.core.specifications.Raw001 attribute)</a>
 </li>
+        <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig._schema">(hidebound.exporters.girder_exporter.GirderConfig attribute)</a>
+</li>
       </ul></li>
       <li><a href="core.html#hidebound.core.database_tools._validate_assets">_validate_assets() (in module hidebound.core.database_tools)</a>
 </li>
@@ -264,12 +266,16 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="server.html#hidebound.server.api.api">api() (in module hidebound.server.api)</a>
 </li>
+      <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig.api_key">api_key (hidebound.exporters.girder_exporter.GirderConfig attribute)</a>, <a href="exporters.html#id0">[1]</a>
+</li>
       <li><a href="core.html#hidebound.core.specification_base.SpecificationBase.asset_name_fields">asset_name_fields (hidebound.core.specification_base.SpecificationBase attribute)</a>, <a href="core.html#id9">[1]</a>
 
       <ul>
         <li><a href="core.html#hidebound.core.specifications.Raw001.asset_name_fields">(hidebound.core.specifications.Raw001 attribute)</a>, <a href="core.html#id16">[1]</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="core.html#hidebound.core.specification_base.ComplexSpecificationBase.asset_type">asset_type (hidebound.core.specification_base.ComplexSpecificationBase attribute)</a>, <a href="core.html#id6">[1]</a>
 
       <ul>
@@ -280,8 +286,6 @@
         <li><a href="core.html#hidebound.core.specification_base.SpecificationBase.asset_type">(hidebound.core.specification_base.SpecificationBase attribute)</a>, <a href="core.html#id10">[1]</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="core.html#hidebound.core.parser.AssetNameParser">AssetNameParser (class in hidebound.core.parser)</a>
 </li>
   </ul></td>
@@ -399,10 +403,10 @@
         <li><a href="core.html#hidebound.core.specifications.Raw001.filename_fields">(hidebound.core.specifications.Raw001 attribute)</a>, <a href="core.html#id18">[1]</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="core.html#hidebound.core.specification_base.FileSpecificationBase">FileSpecificationBase (class in hidebound.core.specification_base)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="core.html#hidebound.core.specifications.Raw001.frame">frame (hidebound.core.specifications.Raw001 attribute)</a>
 </li>
       <li><a href="core.html#hidebound.core.parser.AssetNameParser.FRAME_INDICATOR">FRAME_INDICATOR (hidebound.core.parser.AssetNameParser attribute)</a>
@@ -410,7 +414,11 @@
       <li><a href="core.html#hidebound.core.parser.AssetNameParser.FRAME_PADDING">FRAME_PADDING (hidebound.core.parser.AssetNameParser attribute)</a>
 </li>
       <li><a href="core.html#hidebound.core.database.Database.from_config">from_config() (hidebound.core.database.Database static method)</a>
+
+      <ul>
+        <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderExporter.from_config">(hidebound.exporters.girder_exporter.GirderExporter static method)</a>
 </li>
+      </ul></li>
       <li><a href="core.html#hidebound.core.database.Database.from_json">from_json() (hidebound.core.database.Database static method)</a>
 </li>
   </ul></td>
@@ -528,6 +536,8 @@
       <li><a href="core.html#hidebound.core.specification_base.SpecificationBase.get_traits">get_traits() (hidebound.core.specification_base.SpecificationBase method)</a>
 </li>
       <li><a href="server.html#hidebound.server.server_tools.get_update_error">get_update_error() (in module hidebound.server.server_tools)</a>
+</li>
+      <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig">GirderConfig (class in hidebound.exporters.girder_exporter)</a>
 </li>
       <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderExporter">GirderExporter (class in hidebound.exporters.girder_exporter)</a>
 </li>
@@ -649,6 +659,8 @@
 </li>
       </ul></li>
       <li><a href="core.html#hidebound.core.config.Config.hidebound_directory">hidebound_directory (hidebound.core.config.Config attribute)</a>, <a href="core.html#id1">[1]</a>
+</li>
+      <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig.host">host (hidebound.exporters.girder_exporter.GirderConfig attribute)</a>, <a href="exporters.html#id1">[1]</a>
 </li>
       <li><a href="core.html#hidebound.core.tools.StopWatch.human_readable_delta">human_readable_delta() (hidebound.core.tools.StopWatch property)</a>
 </li>
@@ -781,6 +793,8 @@
 </li>
       <li><a href="core.html#hidebound.core.parser.AssetNameParser.parse_specification">parse_specification() (hidebound.core.parser.AssetNameParser static method)</a>
 </li>
+      <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig.port">port (hidebound.exporters.girder_exporter.GirderConfig attribute)</a>, <a href="exporters.html#id2">[1]</a>
+</li>
       <li><a href="core.html#hidebound.core.specification_base.ComplexSpecificationBase.project">project (hidebound.core.specification_base.ComplexSpecificationBase attribute)</a>
 
       <ul>
@@ -811,15 +825,19 @@
         <li><a href="server.html#hidebound.server.api.read">(in module hidebound.server.api)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="core.html#hidebound.core.tools.relative_path">relative_path() (in module hidebound.core.tools)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="server.html#hidebound.server.server_tools.render_template">render_template() (in module hidebound.server.server_tools)</a>
 </li>
       <li><a href="cli.html#cli.REPO_PATH">REPO_PATH (in module cli)</a>
 </li>
       <li><a href="core.html#hidebound.core.config.Config.root_directory">root_directory (hidebound.core.config.Config attribute)</a>, <a href="core.html#id3">[1]</a>
+</li>
+      <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig.root_id">root_id (hidebound.exporters.girder_exporter.GirderConfig attribute)</a>, <a href="exporters.html#id3">[1]</a>
+</li>
+      <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig.root_type">root_type (hidebound.exporters.girder_exporter.GirderConfig attribute)</a>, <a href="exporters.html#id4">[1]</a>
 </li>
   </ul></td>
 </tr></table>
