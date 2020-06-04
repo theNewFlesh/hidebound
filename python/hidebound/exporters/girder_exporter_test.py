@@ -173,14 +173,6 @@ class GirderExporterTests(unittest.TestCase):
             GirderExporter.from_config(self.config, client=self.client)
 
     def test_init(self):
-        expected = 'Invalid root_type. foo is not folder or collection.'
-        with self.assertRaisesRegexp(ValueError, expected):
-            GirderExporter(
-                'api_key',
-                'root_id',
-                root_type='foo'
-            )
-
         result = GirderExporter(
             'api_key',
             'root_id',

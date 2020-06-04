@@ -61,7 +61,6 @@ class GirderExporter(ExporterBase):
         Returns:
             GirderExporter: GirderExporter instance.
         '''
-        GirderConfig(config).validate()
         return GirderExporter(**config, client=client)
 
     def __init__(
@@ -88,14 +87,19 @@ class GirderExporter(ExporterBase):
                 Default: None.
 
         Raises:
-            ValueError: If invalid root_type given.
+            DataError: If config is invalid.
         '''
         # sudo ip addr show docker0 | grep inet | grep docker0 | awk '{print $2}' | sed 's/\/.*//'
         # will give you the ip address of the docker network which binds to
         # localhost
-        if root_type not in ['folder', 'collection']:
-            msg = f'Invalid root_type. {root_type} is not folder or collection.'
-            raise ValueError(msg)
+        config = dict(
+            api_key=api_key,
+            root_id=root_id,
+            root_type=root_type,
+            host=host,
+            port=port,
+        )
+        GirderConfig(config).validate()
 
         self._url = f'http://{host}:{port}/api/v1'
 
