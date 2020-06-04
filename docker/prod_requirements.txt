@@ -6,6 +6,7 @@ dash-html-components
 dash-table
 flasgger
 flask
+girder-client
 humanfriendly
 jinja2
 marshmallow
