@@ -47,8 +47,8 @@ class GirderExporter(ExporterBase):
         self._url = f'http://{host}:{port}/api/v1'
 
         if client is None:
-            client = girder_client.GirderClient(apiUrl=self._url)
-            client.authenticate(apiKey=api_key)
+            client = girder_client.GirderClient(apiUrl=self._url)  # pragma: no cover
+            client.authenticate(apiKey=api_key)  # pragma: no cover
         self._client = client
 
         self._root_id = root_id
