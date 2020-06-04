@@ -97,6 +97,7 @@
 <p class="caption"><span class="caption-text">Python API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="core.html">core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exporters.html">exporters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="server.html">server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cli.html">cli</a></li>
 </ul>
@@ -207,12 +208,28 @@
 </li>
       <li><a href="core.html#hidebound.core.database_tools._cleanup">_cleanup() (in module hidebound.core.database_tools)</a>
 </li>
+      <li><a href="exporters.html#hidebound.exporters.exporter_base.ExporterBase._enforce_directory_structure">_enforce_directory_structure() (hidebound.exporters.exporter_base.ExporterBase method)</a>
+</li>
+      <li><a href="exporters.html#hidebound.exporters.exporter_base.ExporterBase._export_asset">_export_asset() (hidebound.exporters.exporter_base.ExporterBase method)</a>
+
+      <ul>
+        <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderExporter._export_asset">(hidebound.exporters.girder_exporter.GirderExporter method)</a>
+</li>
+      </ul></li>
+      <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderExporter._export_dirs">_export_dirs() (hidebound.exporters.girder_exporter.GirderExporter method)</a>
+</li>
+      <li><a href="exporters.html#hidebound.exporters.exporter_base.ExporterBase._export_file">_export_file() (hidebound.exporters.exporter_base.ExporterBase method)</a>
+
+      <ul>
+        <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderExporter._export_file">(hidebound.exporters.girder_exporter.GirderExporter method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="core.html#hidebound.core.database_tools._get_data_for_write">_get_data_for_write() (in module hidebound.core.database_tools)</a>
 </li>
       <li><a href="core.html#hidebound.core.parser.AssetNameParser._get_extension_parser">_get_extension_parser() (hidebound.core.parser.AssetNameParser static method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="core.html#hidebound.core.parser.AssetNameParser._get_grammar">_get_grammar() (hidebound.core.parser.AssetNameParser static method)</a>
 </li>
       <li><a href="core.html#hidebound.core.parser.AssetNameParser._get_parser">_get_parser() (hidebound.core.parser.AssetNameParser static method)</a>
@@ -342,6 +359,12 @@
 </li>
       <li><a href="core.html#hidebound.core.config.Config.exclude_regex">exclude_regex (hidebound.core.config.Config attribute)</a>, <a href="core.html#id0">[1]</a>
 </li>
+      <li><a href="exporters.html#hidebound.exporters.exporter_base.ExporterBase.export">export() (hidebound.exporters.exporter_base.ExporterBase method)</a>
+</li>
+      <li><a href="exporters.html#hidebound.exporters.exporter_base.ExporterBase">ExporterBase (class in hidebound.exporters.exporter_base)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="core.html#hidebound.core.specification_base.ComplexSpecificationBase.extension">extension (hidebound.core.specification_base.ComplexSpecificationBase attribute)</a>
 
       <ul>
@@ -354,8 +377,6 @@
         <li><a href="core.html#hidebound.core.specifications.Raw001.extension">(hidebound.core.specifications.Raw001 attribute)</a>, <a href="core.html#id17">[1]</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="core.html#hidebound.core.parser.AssetNameParser.EXTENSION_INDICATOR">EXTENSION_INDICATOR (hidebound.core.parser.AssetNameParser attribute)</a>
 </li>
   </ul></td>
@@ -452,10 +473,10 @@
 </li>
       <li><a href="core.html#hidebound.core.specification_base.SpecificationBase.get_file_traits">get_file_traits() (hidebound.core.specification_base.SpecificationBase method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="core.html#hidebound.core.specification_base.SpecificationBase.get_filename_traits">get_filename_traits() (hidebound.core.specification_base.SpecificationBase method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cli.html#cli.get_fix_permissions_command">get_fix_permissions_command() (in module cli)</a>
 </li>
       <li><a href="core.html#hidebound.core.traits.get_image_channels">get_image_channels() (in module hidebound.core.traits)</a>
@@ -507,6 +528,8 @@
       <li><a href="core.html#hidebound.core.specification_base.SpecificationBase.get_traits">get_traits() (hidebound.core.specification_base.SpecificationBase method)</a>
 </li>
       <li><a href="server.html#hidebound.server.server_tools.get_update_error">get_update_error() (in module hidebound.server.server_tools)</a>
+</li>
+      <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderExporter">GirderExporter (class in hidebound.exporters.girder_exporter)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -567,8 +590,6 @@
         <li><a href="core.html#module-hidebound.core.tools">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     hidebound.core.traits
 
@@ -576,11 +597,27 @@
         <li><a href="core.html#module-hidebound.core.traits">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     hidebound.core.validators
 
       <ul>
         <li><a href="core.html#module-hidebound.core.validators">module</a>
+</li>
+      </ul></li>
+      <li>
+    hidebound.exporters.exporter_base
+
+      <ul>
+        <li><a href="exporters.html#module-hidebound.exporters.exporter_base">module</a>
+</li>
+      </ul></li>
+      <li>
+    hidebound.exporters.girder_exporter
+
+      <ul>
+        <li><a href="exporters.html#module-hidebound.exporters.girder_exporter">module</a>
 </li>
       </ul></li>
       <li>
@@ -702,6 +739,10 @@
         <li><a href="core.html#module-hidebound.core.traits">hidebound.core.traits</a>
 </li>
         <li><a href="core.html#module-hidebound.core.validators">hidebound.core.validators</a>
+</li>
+        <li><a href="exporters.html#module-hidebound.exporters.exporter_base">hidebound.exporters.exporter_base</a>
+</li>
+        <li><a href="exporters.html#module-hidebound.exporters.girder_exporter">hidebound.exporters.girder_exporter</a>
 </li>
         <li><a href="server.html#module-hidebound.server.api">hidebound.server.api</a>
 </li>

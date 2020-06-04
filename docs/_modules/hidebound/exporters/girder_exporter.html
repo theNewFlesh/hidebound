@@ -1,0 +1,361 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>hidebound.exporters.girder_exporter &mdash; hidebound  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> hidebound
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.6.10
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#overview">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#workflow">Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#naming-convention">Naming Convention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#project-structure">Project Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#application">Application</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../core.html">core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../exporters.html">exporters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../server.html">server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">hidebound</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>hidebound.exporters.girder_exporter</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for hidebound.exporters.girder_exporter</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span> <span class="nn">girder_client</span> <span class="kn">import</span> <span class="n">HttpError</span>
+<span class="kn">import</span> <span class="nn">girder_client</span>
+
+<span class="kn">from</span> <span class="nn">hidebound.exporters.exporter_base</span> <span class="kn">import</span> <span class="n">ExporterBase</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="GirderExporter"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.girder_exporter.GirderExporter">[docs]</a><span class="k">class</span> <span class="nc">GirderExporter</span><span class="p">(</span><span class="n">ExporterBase</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Export for Girder asset framework.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">api_key</span><span class="p">,</span>
+        <span class="n">root_id</span><span class="p">,</span>
+        <span class="n">root_type</span><span class="o">=</span><span class="s1">&#39;collection&#39;</span><span class="p">,</span>
+        <span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span>
+        <span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">,</span>
+        <span class="n">client</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Constructs a GirderExporter instances and creates a Girder client.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            api_key (str): Girder API key.</span>
+<span class="sd">            root_id (str): ID of folder or collection under which all data will</span>
+<span class="sd">                be exported.</span>
+<span class="sd">            root_type (str, optional): Root entity type. Default: collection.</span>
+<span class="sd">                Options: folder, collection</span>
+<span class="sd">            host (str, optional): Docker host IP address. Default: 0.0.0.0.</span>
+<span class="sd">            port (int, optional): Docker host port. Default: 8080.</span>
+<span class="sd">            client (object, optional): Client instance, for testing.</span>
+<span class="sd">                Default: None.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If invalid root_type given.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># sudo ip addr show docker0 | grep inet | grep docker0 | awk &#39;{print $2}&#39; | sed &#39;s/\/.*//&#39;</span>
+        <span class="c1"># will give you the ip address of the docker network which binds to</span>
+        <span class="c1"># localhost</span>
+        <span class="k">if</span> <span class="n">root_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;folder&#39;</span><span class="p">,</span> <span class="s1">&#39;collection&#39;</span><span class="p">]:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Invalid root_type. </span><span class="si">{</span><span class="n">root_type</span><span class="si">}</span><span class="s1"> is not folder or collection.&#39;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;http://</span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s1">/api/v1&#39;</span>
+
+        <span class="k">if</span> <span class="n">client</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">client</span> <span class="o">=</span> <span class="n">girder_client</span><span class="o">.</span><span class="n">GirderClient</span><span class="p">(</span><span class="n">apiUrl</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_url</span><span class="p">)</span>
+            <span class="n">client</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="n">apiKey</span><span class="o">=</span><span class="n">api_key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="o">=</span> <span class="n">client</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root_id</span> <span class="o">=</span> <span class="n">root_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root_type</span> <span class="o">=</span> <span class="n">root_type</span>
+
+<div class="viewcode-block" id="GirderExporter._export_dirs"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.girder_exporter.GirderExporter._export_dirs">[docs]</a>    <span class="k">def</span> <span class="nf">_export_dirs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dirpath</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="p">{},</span> <span class="n">exists_ok</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Recursively export all the dirtectories found in given path.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dirpath (Path or str): Directory paht to be exported.</span>
+<span class="sd">            metadata (dict, optional): Metadata to be appended to final</span>
+<span class="sd">                directory. Default: {}.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: Response (contains _id key).</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">dirs</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">dirpath</span><span class="p">)</span><span class="o">.</span><span class="n">parts</span>
+        <span class="n">dirs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">!=</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">dirs</span><span class="p">))</span>
+
+        <span class="c1"># if dirpath has no parents then export to root with metadata</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dirs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">createFolder</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_root_id</span><span class="p">,</span>
+                <span class="n">dirs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span><span class="p">,</span>
+                <span class="n">reuseExisting</span><span class="o">=</span><span class="n">exists_ok</span><span class="p">,</span>
+                <span class="n">parentType</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_root_type</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="c1"># if dirpath has parents then export all parent directories</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_root_id</span><span class="p">)</span>
+        <span class="n">parent_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root_type</span>
+        <span class="k">for</span> <span class="n">dir_</span> <span class="ow">in</span> <span class="n">dirs</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">createFolder</span><span class="p">(</span>
+                <span class="n">response</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">],</span>
+                <span class="n">dir_</span><span class="p">,</span>
+                <span class="n">reuseExisting</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">parentType</span><span class="o">=</span><span class="n">parent_type</span>
+            <span class="p">)</span>
+            <span class="n">parent_type</span> <span class="o">=</span> <span class="s1">&#39;folder&#39;</span>
+
+        <span class="c1"># then export last directory with metadata</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">createFolder</span><span class="p">(</span>
+            <span class="n">response</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">],</span>
+            <span class="n">dirs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span><span class="p">,</span>
+            <span class="n">reuseExisting</span><span class="o">=</span><span class="n">exists_ok</span><span class="p">,</span>
+            <span class="n">parentType</span><span class="o">=</span><span class="s1">&#39;folder&#39;</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="GirderExporter._export_asset"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.girder_exporter.GirderExporter._export_asset">[docs]</a>    <span class="k">def</span> <span class="nf">_export_asset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Export asset metadata to Girder.</span>
+<span class="sd">        Metadata must contain these fields:</span>
+<span class="sd">            * asset_type</span>
+<span class="sd">            * asset_path_relative</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            metadata (dict): Asset metadata.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            HttpError: If final asset directory already exists.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;asset_type&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;file&#39;</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_export_dirs</span><span class="p">(</span>
+                    <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;asset_path_relative&#39;</span><span class="p">],</span>
+                    <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="n">HttpError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;asset_path_relative&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> directory already &quot;</span>
+                <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;exists. &#39;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="n">responseText</span>
+                <span class="n">e</span><span class="o">.</span><span class="n">responseText</span> <span class="o">=</span> <span class="n">msg</span>
+                <span class="k">raise</span> <span class="n">e</span></div>
+
+<div class="viewcode-block" id="GirderExporter._export_file"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.girder_exporter.GirderExporter._export_file">[docs]</a>    <span class="k">def</span> <span class="nf">_export_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Export file metadata to Girder.</span>
+<span class="sd">        Metadata must contain these fields:</span>
+<span class="sd">            * filepath_relative</span>
+<span class="sd">            * filename</span>
+<span class="sd">            * filepath</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            metadata (dict): File metadata.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">filepath</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;filepath_relative&#39;</span><span class="p">]</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span>
+        <span class="n">parent_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_export_dirs</span><span class="p">(</span><span class="n">parent_dir</span><span class="p">,</span> <span class="n">exists_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># folder error will always be raised before duplicate file conflict is</span>
+        <span class="c1"># encountered, so don&#39;t test for duplicate files within directory</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">createItem</span><span class="p">(</span>
+            <span class="n">response</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">],</span>
+            <span class="n">filename</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span><span class="p">,</span>
+            <span class="n">reuseExisting</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span>\
+            <span class="o">.</span><span class="n">uploadFileToItem</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">],</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;filepath&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">response</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Alex Braun &lt;TheNewFlesh@github.com&gt;
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
