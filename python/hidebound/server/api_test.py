@@ -86,9 +86,29 @@ class ApiTests(DatabaseTestBase):
         expected = '/foo/bar is not a directory or does not exist.'
         self.assertRegex(result, expected)
 
-    # UPDATE--------------------------------------------------------------------
-    def test_update(self):
-        # init database
+    # CREATE--------------------------------------------------------------------
+    def test_create(self):
+        config = dict(
+            root_directory=self.root,
+            hidebound_directory=self.hb_root,
+            specification_files=[self.specs],
+        )
+        config = json.dumps(config)
+        self.client.post('/api/initialize', json=config)
+        self.client.post('/api/update')
+
+        data = Path(self.hb_root, 'data')
+        meta = Path(self.hb_root, 'metadata')
+        self.assertFalse(os.path.exists(data))
+        self.assertFalse(os.path.exists(meta))
+
+        result = self.client.post('/api/create').json['message']
+        expected = 'Hidebound data created.'
+        self.assertEqual(result, expected)
+        self.assertTrue(os.path.exists(data))
+        self.assertTrue(os.path.exists(meta))
+
+    def test_create_no_update(self):
         config = dict(
             root_directory=self.root,
             hidebound_directory=self.hb_root,
@@ -97,13 +117,12 @@ class ApiTests(DatabaseTestBase):
         config = json.dumps(config)
         self.client.post('/api/initialize', json=config)
 
-        # call update
-        result = self.client.post('/api/update').json['message']
-        expected = 'Database updated.'
-        self.assertEqual(result, expected)
+        result = self.client.post('/api/create').json['message']
+        expected = 'Database not updated. Please call update.'
+        self.assertRegex(result, expected)
 
-    def test_update_no_init(self):
-        result = self.client.post('/api/update').json['message']
+    def test_create_no_init(self):
+        result = self.client.post('/api/create').json['message']
         expected = 'Database not initialized. Please call initialize.'
         self.assertRegex(result, expected)
 
@@ -181,6 +200,73 @@ class ApiTests(DatabaseTestBase):
         # call read
         result = self.client.post('/api/read').json['message']
         expected = 'Database not updated. Please call update.'
+        self.assertRegex(result, expected)
+
+    # UPDATE--------------------------------------------------------------------
+    def test_update(self):
+        # init database
+        config = dict(
+            root_directory=self.root,
+            hidebound_directory=self.hb_root,
+            specification_files=[self.specs],
+        )
+        config = json.dumps(config)
+        self.client.post('/api/initialize', json=config)
+
+        # call update
+        result = self.client.post('/api/update').json['message']
+        expected = 'Database updated.'
+        self.assertEqual(result, expected)
+
+    def test_update_no_init(self):
+        result = self.client.post('/api/update').json['message']
+        expected = 'Database not initialized. Please call initialize.'
+        self.assertRegex(result, expected)
+
+    # DELETE--------------------------------------------------------------------
+    def test_delete(self):
+        config = dict(
+            root_directory=self.root,
+            hidebound_directory=self.hb_root,
+            specification_files=[self.specs],
+        )
+        config = json.dumps(config)
+        self.client.post('/api/initialize', json=config)
+        self.client.post('/api/update')
+        self.client.post('/api/create')
+
+        data = Path(self.hb_root, 'data')
+        meta = Path(self.hb_root, 'metadata')
+        self.assertTrue(os.path.exists(data))
+        self.assertTrue(os.path.exists(meta))
+
+        result = self.client.post('/api/delete').json['message']
+        expected = 'Hidebound data deleted.'
+        self.assertEqual(result, expected)
+        self.assertFalse(os.path.exists(data))
+        self.assertFalse(os.path.exists(meta))
+
+    def test_delete_no_create(self):
+        config = dict(
+            root_directory=self.root,
+            hidebound_directory=self.hb_root,
+            specification_files=[self.specs],
+        )
+        config = json.dumps(config)
+        self.client.post('/api/initialize', json=config)
+
+        result = self.client.post('/api/delete').json['message']
+        expected = 'Hidebound data deleted.'
+        self.assertEqual(result, expected)
+
+        data = Path(self.hb_root, 'data')
+        meta = Path(self.hb_root, 'metadata')
+        self.assertFalse(os.path.exists(data))
+        self.assertFalse(os.path.exists(meta))
+
+    def test_delete_no_init(self):
+        result = self.client.post('/api/delete').json['message']
+        expected = 'Database not initialized. Please call initialize.'
         self.assertRegex(result, expected)
 
     # SEARCH--------------------------------------------------------------------
@@ -291,90 +377,4 @@ class ApiTests(DatabaseTestBase):
         query = json.dumps(query)
         result = self.client.post('/api/search', json=query).json['message']
         expected = 'Database not updated. Please call update.'
-        self.assertRegex(result, expected)
-
-    # CREATE--------------------------------------------------------------------
-    def test_create(self):
-        config = dict(
-            root_directory=self.root,
-            hidebound_directory=self.hb_root,
-            specification_files=[self.specs],
-        )
-        config = json.dumps(config)
-        self.client.post('/api/initialize', json=config)
-        self.client.post('/api/update')
-
-        data = Path(self.hb_root, 'data')
-        meta = Path(self.hb_root, 'metadata')
-        self.assertFalse(os.path.exists(data))
-        self.assertFalse(os.path.exists(meta))
-
-        result = self.client.post('/api/create').json['message']
-        expected = 'Hidebound data created.'
-        self.assertEqual(result, expected)
-        self.assertTrue(os.path.exists(data))
-        self.assertTrue(os.path.exists(meta))
-
-    def test_create_no_update(self):
-        config = dict(
-            root_directory=self.root,
-            hidebound_directory=self.hb_root,
-            specification_files=[self.specs],
-        )
-        config = json.dumps(config)
-        self.client.post('/api/initialize', json=config)
-
-        result = self.client.post('/api/create').json['message']
-        expected = 'Database not updated. Please call update.'
-        self.assertRegex(result, expected)
-
-    def test_create_no_init(self):
-        result = self.client.post('/api/create').json['message']
-        expected = 'Database not initialized. Please call initialize.'
-        self.assertRegex(result, expected)
-
-    # DELETE--------------------------------------------------------------------
-    def test_delete(self):
-        config = dict(
-            root_directory=self.root,
-            hidebound_directory=self.hb_root,
-            specification_files=[self.specs],
-        )
-        config = json.dumps(config)
-        self.client.post('/api/initialize', json=config)
-        self.client.post('/api/update')
-        self.client.post('/api/create')
-
-        data = Path(self.hb_root, 'data')
-        meta = Path(self.hb_root, 'metadata')
-        self.assertTrue(os.path.exists(data))
-        self.assertTrue(os.path.exists(meta))
-
-        result = self.client.post('/api/delete').json['message']
-        expected = 'Hidebound data deleted.'
-        self.assertEqual(result, expected)
-        self.assertFalse(os.path.exists(data))
-        self.assertFalse(os.path.exists(meta))
-
-    def test_delete_no_create(self):
-        config = dict(
-            root_directory=self.root,
-            hidebound_directory=self.hb_root,
-            specification_files=[self.specs],
-        )
-        config = json.dumps(config)
-        self.client.post('/api/initialize', json=config)
-
-        result = self.client.post('/api/delete').json['message']
-        expected = 'Hidebound data deleted.'
-        self.assertEqual(result, expected)
-
-        data = Path(self.hb_root, 'data')
-        meta = Path(self.hb_root, 'metadata')
-        self.assertFalse(os.path.exists(data))
-        self.assertFalse(os.path.exists(meta))
-
-    def test_delete_no_init(self):
-        result = self.client.post('/api/delete').json['message']
-        expected = 'Database not initialized. Please call initialize.'
         self.assertRegex(result, expected)
