@@ -334,7 +334,11 @@ def export():
     if DATABASE is None:
         return server_tools.get_initialization_error()
 
-    DATABASE.export()
+    try:
+        DATABASE.export()
+    except Exception as error:
+        return server_tools.error_to_response(error)
+
     return flask.Response(
         response=json.dumps(dict(
             message='Hidebound data exported.',

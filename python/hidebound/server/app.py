@@ -115,7 +115,10 @@ def on_event(*inputs):
         APP.server.test_client().post('/api/create')
 
     elif input_id == 'export-button':
-        APP.server.test_client().post('/api/export')
+        response = APP.server.test_client().post('/api/export')
+        code = response.status_code
+        if code < 200 or code >= 300:
+            store['/api/read'] = response.json
 
     elif input_id == 'delete-button':
         APP.server.test_client().post('/api/delete')

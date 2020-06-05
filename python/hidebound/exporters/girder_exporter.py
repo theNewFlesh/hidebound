@@ -180,6 +180,7 @@ class GirderExporter(ExporterBase):
                 msg = f"{metadata['asset_path_relative']} directory already "
                 msg += 'exists. ' + e.responseText
                 e.responseText = msg
+                e.args = [msg]
                 raise e
 
     def _export_file(self, metadata):
