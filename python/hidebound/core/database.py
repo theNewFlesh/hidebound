@@ -356,6 +356,7 @@ class Database:
             shutil.rmtree(meta_dir)
 
         return self
+
     def search(self, query, group_by_asset=False):
         '''
         Search data according to given SQL query.
