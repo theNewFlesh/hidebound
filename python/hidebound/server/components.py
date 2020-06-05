@@ -351,43 +351,51 @@ def get_key_value_card(data, header=None, id_='key-value-card'):
     Returns:
         Div: Card with key-value child elements.
     '''
-    children = []
-    if header is not None:
-        header = html.Div(
-            id=f'{id_}-header',
-            className='key-value-card-header',
-            children=[str(header)]
-        )
-        children.append(header)
+    def _get_key_value_card(data, header, id_, nested):
+        children = []
+        if header is not None:
+            header = html.Div(
+                id=f'{id_}-header',
+                className='key-value-card-header',
+                children=[str(header)]
+            )
+            children.append(header)
 
-    for i, (k, v) in enumerate(sorted(data.items())):
-        even = i % 2 == 0
-        klass = 'odd'
-        if even:
-            klass = 'even'
+        for i, (k, v) in enumerate(sorted(data.items())):
+            even = i % 2 == 0
+            klass = 'odd'
+            if even:
+                klass = 'even'
 
-        key = html.Div(
-            id=f'{k}-key', className='key-value-card-key', children=[str(k)]
-        )
-        sep = html.Div(className='key-value-card-separator')
-        val = html.Div(
-            id=f'{k}-value', className='key-value-card-value', children=[str(v)]
-        )
+            key = html.Div(
+                id=f'{k}-key', className='key-value-card-key', children=[str(k)]
+            )
+            sep = html.Div(className='key-value-card-separator')
+            val = html.Div(
+                id=f'{k}-value', className='key-value-card-value', children=[str(v)]
+            )
+            if isinstance(v, dict):
+                val = _get_key_value_card(v, None, f'{k}-nested-card', True)
 
-        row = html.Div(
-            id=f'{id_}-row',
-            className=f'key-value-card-row {klass}',
-            children=[key, sep, val]
-        )
-        children.append(row)
-    children[-1].className += ' last'
+            row = html.Div(
+                id=f'{id_}-row',
+                className=f'key-value-card-row {klass}',
+                children=[key, sep, val]
+            )
+            children.append(row)
+        children[-1].className += ' last'
 
-    card = html.Div(
-        id=f'{id_}',
-        className='key-value-card',
-        children=children
-    )
-    return card
+        class_name = 'key-value-card'
+        if nested:
+            class_name = 'nested-' + class_name
+
+        card = html.Div(
+            id=f'{id_}',
+            className=class_name,
+            children=children,
+        )
+        return card
+    return _get_key_value_card(data, header, id_, False)
 
 
 def get_datatable(data):

@@ -240,11 +240,10 @@ foo {
     color: {{ COLOR_SCHEME['light1'] }};
     font-style: italic;
     min-width: 210px;
-    max-width: 210px;
+    /* max-width: 210px; */
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 2px;
-    flex-grow: 1;
     text-align: right;
     border-color: {{ COLOR_SCHEME['cyan2'] }};
     border-right-width: 2px;
@@ -255,8 +254,34 @@ foo {
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 2px;
-    flex-grow: 1;
+    flex-grow: 1000;
     word-wrap: break-word;
+}
+
+.nested-key-value-card {
+    flex-grow: 1000;
+}
+
+.nested-key-value-card .key-value-card-row {
+    border-width: 0px;
+}
+
+.nested-key-value-card .key-value-card-value {
+    flex-grow: 1000;
+    padding-left: 20px;
+}
+
+.nested-key-value-card .key-value-card-key {
+    min-width: 100px;
+}
+
+.nested-key-value-card .key-value-card-row.odd {
+    background: {{ COLOR_SCHEME['bg'] }};
+}
+
+.nested-key-value-card .key-value-card-separator {
+    min-width: 0px;
+    max-width: 0px;
 }
 
 /* Error Card */
