@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.7.0
+                0.7.1
               </div>
             
           
@@ -300,12 +300,12 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="update"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.update">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/update&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="create"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.create">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/create&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="nd">@swg</span><span class="o">.</span><span class="n">swag_from</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
     <span class="n">parameters</span><span class="o">=</span><span class="p">[],</span>
     <span class="n">responses</span><span class="o">=</span><span class="p">{</span>
         <span class="mi">200</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span>
-            <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Hidebound database successfully updated.&#39;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Hidebound data successfully deleted.&#39;</span><span class="p">,</span>
             <span class="n">content</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span><span class="p">,</span>
         <span class="p">),</span>
         <span class="mi">500</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span>
@@ -313,9 +313,9 @@
         <span class="p">)</span>
     <span class="p">}</span>
 <span class="p">))</span>
-<span class="k">def</span> <span class="nf">update</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">create</span><span class="p">():</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Update database.</span>
+<span class="sd">    Create hidebound data.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Response: Flask Response instance.</span>
@@ -326,10 +326,14 @@
     <span class="k">if</span> <span class="n">DATABASE</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">get_initialization_error</span><span class="p">()</span>
 
-    <span class="n">DATABASE</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">DATABASE</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">get_update_error</span><span class="p">()</span>
+
     <span class="k">return</span> <span class="n">flask</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span>
         <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
-            <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Database updated.&#39;</span><span class="p">,</span>
+            <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Hidebound data created.&#39;</span><span class="p">,</span>
             <span class="n">config</span><span class="o">=</span><span class="n">CONFIG</span><span class="p">,</span>
         <span class="p">)),</span>
         <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span>
@@ -392,6 +396,114 @@
     <span class="n">response</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="n">response</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">flask</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span>
         <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">response</span><span class="p">),</span>
+        <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="update"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.update">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/update&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="nd">@swg</span><span class="o">.</span><span class="n">swag_from</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
+    <span class="n">parameters</span><span class="o">=</span><span class="p">[],</span>
+    <span class="n">responses</span><span class="o">=</span><span class="p">{</span>
+        <span class="mi">200</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Hidebound database successfully updated.&#39;</span><span class="p">,</span>
+            <span class="n">content</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="mi">500</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Internal server error.&#39;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">))</span>
+<span class="k">def</span> <span class="nf">update</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Update database.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Response: Flask Response instance.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">global</span> <span class="n">DATABASE</span>
+    <span class="k">global</span> <span class="n">CONFIG</span>
+
+    <span class="k">if</span> <span class="n">DATABASE</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">get_initialization_error</span><span class="p">()</span>
+
+    <span class="n">DATABASE</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">flask</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span>
+        <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Database updated.&#39;</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">CONFIG</span><span class="p">,</span>
+        <span class="p">)),</span>
+        <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="delete"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.delete">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/delete&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="nd">@swg</span><span class="o">.</span><span class="n">swag_from</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
+    <span class="n">parameters</span><span class="o">=</span><span class="p">[],</span>
+    <span class="n">responses</span><span class="o">=</span><span class="p">{</span>
+        <span class="mi">200</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Hidebound data successfully deleted.&#39;</span><span class="p">,</span>
+            <span class="n">content</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="mi">500</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Internal server error.&#39;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">))</span>
+<span class="k">def</span> <span class="nf">delete</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Delete hidebound data.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Response: Flask Response instance.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">global</span> <span class="n">DATABASE</span>
+    <span class="k">global</span> <span class="n">CONFIG</span>
+
+    <span class="k">if</span> <span class="n">DATABASE</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">get_initialization_error</span><span class="p">()</span>
+
+    <span class="n">DATABASE</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">flask</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span>
+        <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Hidebound data deleted.&#39;</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">CONFIG</span><span class="p">,</span>
+        <span class="p">)),</span>
+        <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="export"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.export">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/export&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="nd">@swg</span><span class="o">.</span><span class="n">swag_from</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
+    <span class="n">parameters</span><span class="o">=</span><span class="p">[],</span>
+    <span class="n">responses</span><span class="o">=</span><span class="p">{</span>
+        <span class="mi">200</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Hidebound data successfully exported.&#39;</span><span class="p">,</span>
+            <span class="n">content</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="mi">500</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Internal server error.&#39;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">))</span>
+<span class="k">def</span> <span class="nf">export</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Export hidebound data.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Response: Flask Response instance.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">global</span> <span class="n">DATABASE</span>
+    <span class="k">global</span> <span class="n">CONFIG</span>
+
+    <span class="k">if</span> <span class="n">DATABASE</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">get_initialization_error</span><span class="p">()</span>
+
+    <span class="n">DATABASE</span><span class="o">.</span><span class="n">export</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">flask</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span>
+        <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Hidebound data exported.&#39;</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">CONFIG</span><span class="p">,</span>
+        <span class="p">)),</span>
         <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span>
     <span class="p">)</span></div>
 
@@ -461,82 +573,6 @@
     <span class="n">response</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="n">response</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">flask</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span>
         <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">response</span><span class="p">),</span>
-        <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span>
-    <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="create"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.create">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/create&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
-<span class="nd">@swg</span><span class="o">.</span><span class="n">swag_from</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
-    <span class="n">parameters</span><span class="o">=</span><span class="p">[],</span>
-    <span class="n">responses</span><span class="o">=</span><span class="p">{</span>
-        <span class="mi">200</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span>
-            <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Hidebound data successfully deleted.&#39;</span><span class="p">,</span>
-            <span class="n">content</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="mi">500</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span>
-            <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Internal server error.&#39;</span><span class="p">,</span>
-        <span class="p">)</span>
-    <span class="p">}</span>
-<span class="p">))</span>
-<span class="k">def</span> <span class="nf">create</span><span class="p">():</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Create hidebound data.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        Response: Flask Response instance.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">global</span> <span class="n">DATABASE</span>
-    <span class="k">global</span> <span class="n">CONFIG</span>
-
-    <span class="k">if</span> <span class="n">DATABASE</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">get_initialization_error</span><span class="p">()</span>
-
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">DATABASE</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
-    <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">get_update_error</span><span class="p">()</span>
-
-    <span class="k">return</span> <span class="n">flask</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span>
-        <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
-            <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Hidebound data created.&#39;</span><span class="p">,</span>
-            <span class="n">config</span><span class="o">=</span><span class="n">CONFIG</span><span class="p">,</span>
-        <span class="p">)),</span>
-        <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span>
-    <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="delete"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.delete">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/delete&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
-<span class="nd">@swg</span><span class="o">.</span><span class="n">swag_from</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
-    <span class="n">parameters</span><span class="o">=</span><span class="p">[],</span>
-    <span class="n">responses</span><span class="o">=</span><span class="p">{</span>
-        <span class="mi">200</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span>
-            <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Hidebound data successfully deleted.&#39;</span><span class="p">,</span>
-            <span class="n">content</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="mi">500</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span>
-            <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Internal server error.&#39;</span><span class="p">,</span>
-        <span class="p">)</span>
-    <span class="p">}</span>
-<span class="p">))</span>
-<span class="k">def</span> <span class="nf">delete</span><span class="p">():</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Delete hidebound data.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        Response: Flask Response instance.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">global</span> <span class="n">DATABASE</span>
-    <span class="k">global</span> <span class="n">CONFIG</span>
-
-    <span class="k">if</span> <span class="n">DATABASE</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">get_initialization_error</span><span class="p">()</span>
-
-    <span class="n">DATABASE</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">flask</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span>
-        <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
-            <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Hidebound data deleted.&#39;</span><span class="p">,</span>
-            <span class="n">config</span><span class="o">=</span><span class="n">CONFIG</span><span class="p">,</span>
-        <span class="p">)),</span>
         <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span>
     <span class="p">)</span></div>
 
