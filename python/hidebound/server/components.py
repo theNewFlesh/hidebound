@@ -1,3 +1,5 @@
+import re
+
 from pandas import DataFrame
 import dash
 import dash_core_components as dcc
@@ -351,6 +353,12 @@ def get_key_value_card(data, header=None, id_='key-value-card'):
     Returns:
         Div: Card with key-value child elements.
     '''
+    data = blob_etl.BlobETL(data)\
+        .set(
+            predicate=lambda k, v: re.search('<list_\d', k),
+            key_setter=lambda k, v: re.sub('<list_|>', '', k)
+        ).to_flat_dict()
+
     children = []
     if header is not None:
         header = html.Div(

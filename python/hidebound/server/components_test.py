@@ -41,10 +41,12 @@ class ComponentsTests(unittest.TestCase):
         self.assertEqual(result.children[0], 'foo')
 
     def test_get_key_value_card(self):
-        items = {'foo': 'bar', 'taco': 'pizza'}
+        items = {
+            'foo': 'bar', 'taco': 'pizza', 'parent': {'child': 'grandchild'}
+        }
         result = components.get_key_value_card(items, id_='foo')
         self.assertEqual(result.id, 'foo')
-        self.assertEqual(len(result.children), 2)
+        self.assertEqual(len(result.children), 3)
 
         row = result.children[0]
         key = row.children[0]
@@ -55,6 +57,14 @@ class ComponentsTests(unittest.TestCase):
         self.assertEqual(val.children[0], 'bar')
 
         row = result.children[1]
+        key = row.children[0]
+        val = row.children[2]
+        self.assertEqual(key.id, 'parent/child-key')
+        self.assertEqual(key.children[0], 'parent/child')
+        self.assertEqual(val.id, 'parent/child-value')
+        self.assertEqual(val.children[0], 'grandchild')
+
+        row = result.children[2]
         key = row.children[0]
         val = row.children[2]
         self.assertEqual(key.id, 'taco-key')
