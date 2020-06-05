@@ -355,9 +355,9 @@ def get_key_value_card(data, header=None, id_='key-value-card'):
     '''
     data = blob_etl.BlobETL(data)\
         .set(
-            predicate=lambda k, v: re.search('<list_\d', k),
-            key_setter=lambda k, v: re.sub('<list_|>', '', k)
-        ).to_flat_dict()
+            predicate=lambda k, v: re.search(r'<list_\d', k),
+            key_setter=lambda k, v: re.sub('<list_|>', '', k))\
+        .to_flat_dict()
 
     children = []
     if header is not None:
