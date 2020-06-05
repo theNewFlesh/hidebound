@@ -231,24 +231,6 @@ class Database:
 
         return self
 
-    def delete(self):
-        '''
-        Deletes hidebound/data and hidebound/metadata directories and all their
-        contents.
-
-        Returns:
-            Database: self.
-        '''
-        data_dir = Path(self._hb_root, 'data')
-        if data_dir.exists():
-            shutil.rmtree(data_dir)
-
-        meta_dir = Path(self._hb_root, 'metadata')
-        if meta_dir.exists():
-            shutil.rmtree(meta_dir)
-
-        return self
-
     def read(self, group_by_asset=False):
         '''
         Return a DataFrame which can be easily be queried and has only cells
@@ -328,6 +310,52 @@ class Database:
 
         return data
 
+    def update(self):
+        '''
+        Recurse root directory, populate self.data with its files, locate and
+        validate assets.
+
+        Returns:
+            Database: self.
+        '''
+        data = tools.directory_to_dataframe(
+            self._root,
+            include_regex=self._include_regex,
+            exclude_regex=self._exclude_regex
+        )
+        if len(data) > 0:
+            db_tools._add_specification(data, self._specifications)
+            db_tools._validate_filepath(data)
+            db_tools._add_file_traits(data)
+            db_tools._add_relative_path(data, 'filepath', self._root)
+            db_tools._add_asset_name(data)
+            db_tools._add_asset_path(data)
+            db_tools._add_relative_path(data, 'asset_path', self._root)
+            db_tools._add_asset_type(data)
+            db_tools._add_asset_traits(data)
+            db_tools._validate_assets(data)
+
+        data = db_tools._cleanup(data)
+        self.data = data
+        return self
+
+    def delete(self):
+        '''
+        Deletes hidebound/data and hidebound/metadata directories and all their
+        contents.
+
+        Returns:
+            Database: self.
+        '''
+        data_dir = Path(self._hb_root, 'data')
+        if data_dir.exists():
+            shutil.rmtree(data_dir)
+
+        meta_dir = Path(self._hb_root, 'metadata')
+        if meta_dir.exists():
+            shutil.rmtree(meta_dir)
+
+        return self
     def search(self, query, group_by_asset=False):
         '''
         Search data according to given SQL query.

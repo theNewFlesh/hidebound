@@ -142,115 +142,6 @@ class DatabaseTests(DatabaseTestBase):
             with self.assertRaisesRegexp(ValueError, expected):
                 Database(root, hb_root, [Spec001], write_mode='foo')
 
-    # UPDATE--------------------------------------------------------------------
-    def test_update(self):
-        with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
-            Spec001, Spec002, BadSpec = self.get_specifications()
-
-            expected = self.create_files(root).filepath\
-                .apply(lambda x: x.as_posix()).tolist()
-            expected = sorted(expected)
-
-            data = Database(root, hb_root, [Spec001, Spec002]).update().data
-            result = data.filepath.tolist()
-            result = sorted(result)
-            self.assertEqual(result, expected)
-
-            result = data.groupby('asset_path').asset_valid.first().tolist()
-            expected = [True, True, False, True, False]
-            self.assertEqual(result, expected)
-
-    def test_update_exclude(self):
-        with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
-            Spec001, Spec002, BadSpec = self.get_specifications()
-
-            expected = self.create_files(root).filepath\
-                .apply(lambda x: x.as_posix()).tolist()
-            regex = r'misc\.txt|vdb'
-            expected = list(filter(lambda x: not re.search(regex, x), expected))
-            expected = sorted(expected)
-
-            result = Database(root, hb_root, [Spec001, Spec002], exclude_regex=regex)\
-                .update().data.filepath.tolist()
-            result = sorted(result)
-            self.assertEqual(result, expected)
-
-    def test_update_include(self):
-        with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
-            Spec001, Spec002, BadSpec = self.get_specifications()
-
-            expected = self.create_files(root).filepath\
-                .apply(lambda x: x.as_posix()).tolist()
-            regex = r'misc\.txt|vdb'
-            expected = list(filter(lambda x: re.search(regex, x), expected))
-            expected = sorted(expected)
-
-            result = Database(root, hb_root, [Spec001, Spec002], include_regex=regex)\
-                .update().data.filepath.tolist()
-            result = sorted(result)
-            self.assertEqual(result, expected)
-
-    def test_update_include_exclude(self):
-        Spec001, Spec002, BadSpec = self.get_specifications()
-
-        with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
-
-            expected = self.create_files(root).filepath\
-                .apply(lambda x: x.as_posix()).tolist()
-            i_regex = r'pizza'
-            expected = list(filter(lambda x: re.search(i_regex, x), expected))
-            e_regex = r'misc\.txt|vdb'
-            expected = list(filter(lambda x: not re.search(e_regex, x), expected))
-            expected = sorted(expected)
-
-            result = Database(
-                root,
-                hb_root,
-                [Spec001, Spec002],
-                include_regex=i_regex,
-                exclude_regex=e_regex,
-            )
-            result = result.update().data.filepath.tolist()
-            result = sorted(result)
-            self.assertEqual(result, expected)
-
-    def test_update_no_files(self):
-        Spec001, Spec002, BadSpec = self.get_specifications()
-
-        with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
-            result = Database(root, hb_root, [Spec001]).update().data
-            self.assertEqual(len(result), 0)
-            self.assertEqual(result.columns.tolist(), self.columns)
-
-    def test_update_error(self):
-        Spec001, Spec002, BadSpec = self.get_specifications()
-
-        with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
-            files = self.create_files(root)
-            data = Database(root, hb_root, [Spec001, Spec002]).update().data
-
-            keys = files.filepath.tolist()
-            lut = dict(zip(keys, files.file_error.tolist()))
-
-            data = data[data.filepath.apply(lambda x: x in keys)]
-
-            regexes = data.filepath.apply(lambda x: lut[x.as_posix()]).tolist()
-            results = data.file_error.apply(lambda x: x[0]).tolist()
-            for result, regex in zip(results, regexes):
-                self.assertRegex(result, regex)
-
     # CREATE--------------------------------------------------------------------
     def test_create(self):
         with TemporaryDirectory() as root:
@@ -375,50 +266,6 @@ class DatabaseTests(DatabaseTestBase):
             self.assertGreater(result, 0)
             expected = data.asset_path.nunique()
             self.assertEqual(result, expected)
-
-    # DELETE--------------------------------------------------------------------
-    def test_delete(self):
-        with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
-
-            data_dir = Path(hb_root, 'data')
-            os.makedirs(data_dir)
-
-            meta_dir = Path(hb_root, 'metadata')
-            os.makedirs(meta_dir)
-
-            root = Path(root, 'projects')
-            os.makedirs(root)
-
-            self.create_files(root)
-            expected = tools.directory_to_dataframe(root).filepath.tolist()
-            expected = sorted(expected)
-
-            db = Database(root, hb_root, [])
-            db.delete()
-
-            self.assertFalse(data_dir.exists())
-            self.assertFalse(meta_dir.exists())
-
-            result = tools.directory_to_dataframe(root).filepath.tolist()
-            result = sorted(result)
-            self.assertEqual(result, expected)
-
-    # SEARCH--------------------------------------------------------------------
-    def test_search(self):
-        Spec001, Spec002, BadSpec = self.get_specifications()
-        with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
-
-            root = Path(root, 'projects')
-            os.makedirs(root)
-
-            self.create_files(root)
-            db = Database(root, hb_root, [Spec001, Spec002])
-            db.update()
-            db.search('SELECT * FROM data WHERE version == 3')
 
     # READ----------------------------------------------------------------------
     def test_read_legal_types(self):
@@ -584,3 +431,156 @@ class DatabaseTests(DatabaseTestBase):
             db.update()
             result = db.read()
             self.assertEqual(len(result), 0)
+
+        # UPDATE--------------------------------------------------------------------
+    def test_update(self):
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hidebound')
+            os.makedirs(hb_root)
+            Spec001, Spec002, BadSpec = self.get_specifications()
+
+            expected = self.create_files(root).filepath\
+                .apply(lambda x: x.as_posix()).tolist()
+            expected = sorted(expected)
+
+            data = Database(root, hb_root, [Spec001, Spec002]).update().data
+            result = data.filepath.tolist()
+            result = sorted(result)
+            self.assertEqual(result, expected)
+
+            result = data.groupby('asset_path').asset_valid.first().tolist()
+            expected = [True, True, False, True, False]
+            self.assertEqual(result, expected)
+
+    def test_update_exclude(self):
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hidebound')
+            os.makedirs(hb_root)
+            Spec001, Spec002, BadSpec = self.get_specifications()
+
+            expected = self.create_files(root).filepath\
+                .apply(lambda x: x.as_posix()).tolist()
+            regex = r'misc\.txt|vdb'
+            expected = list(filter(lambda x: not re.search(regex, x), expected))
+            expected = sorted(expected)
+
+            result = Database(root, hb_root, [Spec001, Spec002], exclude_regex=regex)\
+                .update().data.filepath.tolist()
+            result = sorted(result)
+            self.assertEqual(result, expected)
+
+    def test_update_include(self):
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hidebound')
+            os.makedirs(hb_root)
+            Spec001, Spec002, BadSpec = self.get_specifications()
+
+            expected = self.create_files(root).filepath\
+                .apply(lambda x: x.as_posix()).tolist()
+            regex = r'misc\.txt|vdb'
+            expected = list(filter(lambda x: re.search(regex, x), expected))
+            expected = sorted(expected)
+
+            result = Database(root, hb_root, [Spec001, Spec002], include_regex=regex)\
+                .update().data.filepath.tolist()
+            result = sorted(result)
+            self.assertEqual(result, expected)
+
+    def test_update_include_exclude(self):
+        Spec001, Spec002, BadSpec = self.get_specifications()
+
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hidebound')
+            os.makedirs(hb_root)
+
+            expected = self.create_files(root).filepath\
+                .apply(lambda x: x.as_posix()).tolist()
+            i_regex = r'pizza'
+            expected = list(filter(lambda x: re.search(i_regex, x), expected))
+            e_regex = r'misc\.txt|vdb'
+            expected = list(filter(lambda x: not re.search(e_regex, x), expected))
+            expected = sorted(expected)
+
+            result = Database(
+                root,
+                hb_root,
+                [Spec001, Spec002],
+                include_regex=i_regex,
+                exclude_regex=e_regex,
+            )
+            result = result.update().data.filepath.tolist()
+            result = sorted(result)
+            self.assertEqual(result, expected)
+
+    def test_update_no_files(self):
+        Spec001, Spec002, BadSpec = self.get_specifications()
+
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hidebound')
+            os.makedirs(hb_root)
+            result = Database(root, hb_root, [Spec001]).update().data
+            self.assertEqual(len(result), 0)
+            self.assertEqual(result.columns.tolist(), self.columns)
+
+    def test_update_error(self):
+        Spec001, Spec002, BadSpec = self.get_specifications()
+
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hidebound')
+            os.makedirs(hb_root)
+            files = self.create_files(root)
+            data = Database(root, hb_root, [Spec001, Spec002]).update().data
+
+            keys = files.filepath.tolist()
+            lut = dict(zip(keys, files.file_error.tolist()))
+
+            data = data[data.filepath.apply(lambda x: x in keys)]
+
+            regexes = data.filepath.apply(lambda x: lut[x.as_posix()]).tolist()
+            results = data.file_error.apply(lambda x: x[0]).tolist()
+            for result, regex in zip(results, regexes):
+                self.assertRegex(result, regex)
+
+    # DELETE--------------------------------------------------------------------
+    def test_delete(self):
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hidebound')
+            os.makedirs(hb_root)
+
+            data_dir = Path(hb_root, 'data')
+            os.makedirs(data_dir)
+
+            meta_dir = Path(hb_root, 'metadata')
+            os.makedirs(meta_dir)
+
+            root = Path(root, 'projects')
+            os.makedirs(root)
+
+            self.create_files(root)
+            expected = tools.directory_to_dataframe(root).filepath.tolist()
+            expected = sorted(expected)
+
+            db = Database(root, hb_root, [])
+            db.delete()
+
+            self.assertFalse(data_dir.exists())
+            self.assertFalse(meta_dir.exists())
+
+            result = tools.directory_to_dataframe(root).filepath.tolist()
+            result = sorted(result)
+            self.assertEqual(result, expected)
+
+    # SEARCH--------------------------------------------------------------------
+    def test_search(self):
+        Spec001, Spec002, BadSpec = self.get_specifications()
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hidebound')
+            os.makedirs(hb_root)
+
+            root = Path(root, 'projects')
+            os.makedirs(root)
+
+            self.create_files(root)
+            db = Database(root, hb_root, [Spec001, Spec002])
+            db.update()
+            db.search('SELECT * FROM data WHERE version == 3')
