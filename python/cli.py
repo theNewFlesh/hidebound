@@ -390,8 +390,8 @@ def get_publish_command(info):
     cmd += 'cp /root/{repo}/docker/dev_requirements.txt /tmp/{repo}/; '
     cmd += 'cp /root/{repo}/docker/prod_requirements.txt /tmp/{repo}/; '
     cmd += 'cp -r /root/{repo}/templates /tmp/{repo}/{repo}; '
-    cmd += r"find /tmp/{repo} | grep -E '.*test.*\.py$|mock.*\.py$|__pycache__' "
-    cmd += r"| parallel 'rm -rf {x}'; "
+    cmd += r"find /tmp/{repo} | grep -E '.*test.*\.py$|mock.*\.py$|__pycache__'"
+    cmd += " | parallel 'rm -rf {x}'; "
     cmd += "find /tmp/{repo} -type f | grep __init__.py | parallel '"
     cmd += "mv {x} /tmp/delete_me; cat /tmp/delete_me | grep -v test "
     cmd += "| grep -v mock > {x}; "
