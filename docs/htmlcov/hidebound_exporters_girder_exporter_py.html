@@ -21,8 +21,8 @@
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
-            53 statements &nbsp;
-            <span class="run shortkey_r button_toggle_run">53 run</span>
+            54 statements &nbsp;
+            <span class="run shortkey_r button_toggle_run">54 run</span>
             <span class="mis show_mis shortkey_m button_toggle_mis">0 missing</span>
             <span class="exc show_exc shortkey_x button_toggle_exc">2 excluded</span>
         </h2>
@@ -233,42 +233,43 @@
     <p id="t180" class="run"><span class="n"><a href="#t180">180</a></span><span class="t">                <span class="nam">msg</span> <span class="op">=</span> <span class="str">f"{metadata['asset_path_relative']} directory already "</span>&nbsp;</span><span class="r"></span></p>
     <p id="t181" class="run"><span class="n"><a href="#t181">181</a></span><span class="t">                <span class="nam">msg</span> <span class="op">+=</span> <span class="str">'exists. '</span> <span class="op">+</span> <span class="nam">e</span><span class="op">.</span><span class="nam">responseText</span>&nbsp;</span><span class="r"></span></p>
     <p id="t182" class="run"><span class="n"><a href="#t182">182</a></span><span class="t">                <span class="nam">e</span><span class="op">.</span><span class="nam">responseText</span> <span class="op">=</span> <span class="nam">msg</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t183" class="run"><span class="n"><a href="#t183">183</a></span><span class="t">                <span class="key">raise</span> <span class="nam">e</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t184" class="pln"><span class="n"><a href="#t184">184</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t185" class="run"><span class="n"><a href="#t185">185</a></span><span class="t">    <span class="key">def</span> <span class="nam">_export_file</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">metadata</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t186" class="pln"><span class="n"><a href="#t186">186</a></span><span class="t">        <span class="str">'''</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t187" class="pln"><span class="n"><a href="#t187">187</a></span><span class="t"><span class="str">        Export file metadata to Girder.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t188" class="pln"><span class="n"><a href="#t188">188</a></span><span class="t"><span class="str">        Metadata must contain these fields:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t189" class="pln"><span class="n"><a href="#t189">189</a></span><span class="t"><span class="str">            * filepath_relative</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t190" class="pln"><span class="n"><a href="#t190">190</a></span><span class="t"><span class="str">            * filename</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t191" class="pln"><span class="n"><a href="#t191">191</a></span><span class="t"><span class="str">            * filepath</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t192" class="pln"><span class="n"><a href="#t192">192</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t193" class="pln"><span class="n"><a href="#t193">193</a></span><span class="t"><span class="str">        Args:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t194" class="pln"><span class="n"><a href="#t194">194</a></span><span class="t"><span class="str">            metadata (dict): File metadata.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t195" class="pln"><span class="n"><a href="#t195">195</a></span><span class="t"><span class="str">        '''</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t196" class="run"><span class="n"><a href="#t196">196</a></span><span class="t">        <span class="nam">filepath</span> <span class="op">=</span> <span class="nam">metadata</span><span class="op">[</span><span class="str">'filepath_relative'</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t197" class="run"><span class="n"><a href="#t197">197</a></span><span class="t">        <span class="nam">filename</span> <span class="op">=</span> <span class="nam">metadata</span><span class="op">[</span><span class="str">'filename'</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t198" class="run"><span class="n"><a href="#t198">198</a></span><span class="t">        <span class="nam">parent_dir</span> <span class="op">=</span> <span class="nam">Path</span><span class="op">(</span><span class="nam">filepath</span><span class="op">)</span><span class="op">.</span><span class="nam">parent</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t199" class="run"><span class="n"><a href="#t199">199</a></span><span class="t">        <span class="nam">response</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_export_dirs</span><span class="op">(</span><span class="nam">parent_dir</span><span class="op">,</span> <span class="nam">exists_ok</span><span class="op">=</span><span class="key">True</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t200" class="pln"><span class="n"><a href="#t200">200</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t201" class="pln"><span class="n"><a href="#t201">201</a></span><span class="t">        <span class="com"># folder error will always be raised before duplicate file conflict is</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t202" class="pln"><span class="n"><a href="#t202">202</a></span><span class="t">        <span class="com"># encountered, so don't test for duplicate files within directory</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t203" class="pln"><span class="n"><a href="#t203">203</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t204" class="run"><span class="n"><a href="#t204">204</a></span><span class="t">        <span class="nam">response</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_client</span><span class="op">.</span><span class="nam">createItem</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t205" class="pln"><span class="n"><a href="#t205">205</a></span><span class="t">            <span class="nam">response</span><span class="op">[</span><span class="str">'_id'</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t206" class="pln"><span class="n"><a href="#t206">206</a></span><span class="t">            <span class="nam">filename</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t207" class="pln"><span class="n"><a href="#t207">207</a></span><span class="t">            <span class="nam">metadata</span><span class="op">=</span><span class="nam">metadata</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t208" class="pln"><span class="n"><a href="#t208">208</a></span><span class="t">            <span class="nam">reuseExisting</span><span class="op">=</span><span class="key">True</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t209" class="pln"><span class="n"><a href="#t209">209</a></span><span class="t">        <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t210" class="run"><span class="n"><a href="#t210">210</a></span><span class="t">        <span class="nam">response</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_client</span><span class="xx">\</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t211" class="pln"><span class="n"><a href="#t211">211</a></span><span class="t">            <span class="op">.</span><span class="nam">uploadFileToItem</span><span class="op">(</span><span class="nam">response</span><span class="op">[</span><span class="str">'_id'</span><span class="op">]</span><span class="op">,</span> <span class="nam">metadata</span><span class="op">[</span><span class="str">'filepath'</span><span class="op">]</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t212" class="run"><span class="n"><a href="#t212">212</a></span><span class="t">        <span class="key">return</span> <span class="nam">response</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t183" class="run"><span class="n"><a href="#t183">183</a></span><span class="t">                <span class="nam">e</span><span class="op">.</span><span class="nam">args</span> <span class="op">=</span> <span class="op">[</span><span class="nam">msg</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t184" class="run"><span class="n"><a href="#t184">184</a></span><span class="t">                <span class="key">raise</span> <span class="nam">e</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t185" class="pln"><span class="n"><a href="#t185">185</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t186" class="run"><span class="n"><a href="#t186">186</a></span><span class="t">    <span class="key">def</span> <span class="nam">_export_file</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">metadata</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t187" class="pln"><span class="n"><a href="#t187">187</a></span><span class="t">        <span class="str">'''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t188" class="pln"><span class="n"><a href="#t188">188</a></span><span class="t"><span class="str">        Export file metadata to Girder.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t189" class="pln"><span class="n"><a href="#t189">189</a></span><span class="t"><span class="str">        Metadata must contain these fields:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t190" class="pln"><span class="n"><a href="#t190">190</a></span><span class="t"><span class="str">            * filepath_relative</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t191" class="pln"><span class="n"><a href="#t191">191</a></span><span class="t"><span class="str">            * filename</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t192" class="pln"><span class="n"><a href="#t192">192</a></span><span class="t"><span class="str">            * filepath</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t193" class="pln"><span class="n"><a href="#t193">193</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t194" class="pln"><span class="n"><a href="#t194">194</a></span><span class="t"><span class="str">        Args:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t195" class="pln"><span class="n"><a href="#t195">195</a></span><span class="t"><span class="str">            metadata (dict): File metadata.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t196" class="pln"><span class="n"><a href="#t196">196</a></span><span class="t"><span class="str">        '''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t197" class="run"><span class="n"><a href="#t197">197</a></span><span class="t">        <span class="nam">filepath</span> <span class="op">=</span> <span class="nam">metadata</span><span class="op">[</span><span class="str">'filepath_relative'</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t198" class="run"><span class="n"><a href="#t198">198</a></span><span class="t">        <span class="nam">filename</span> <span class="op">=</span> <span class="nam">metadata</span><span class="op">[</span><span class="str">'filename'</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t199" class="run"><span class="n"><a href="#t199">199</a></span><span class="t">        <span class="nam">parent_dir</span> <span class="op">=</span> <span class="nam">Path</span><span class="op">(</span><span class="nam">filepath</span><span class="op">)</span><span class="op">.</span><span class="nam">parent</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t200" class="run"><span class="n"><a href="#t200">200</a></span><span class="t">        <span class="nam">response</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_export_dirs</span><span class="op">(</span><span class="nam">parent_dir</span><span class="op">,</span> <span class="nam">exists_ok</span><span class="op">=</span><span class="key">True</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t201" class="pln"><span class="n"><a href="#t201">201</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t202" class="pln"><span class="n"><a href="#t202">202</a></span><span class="t">        <span class="com"># folder error will always be raised before duplicate file conflict is</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t203" class="pln"><span class="n"><a href="#t203">203</a></span><span class="t">        <span class="com"># encountered, so don't test for duplicate files within directory</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t204" class="pln"><span class="n"><a href="#t204">204</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t205" class="run"><span class="n"><a href="#t205">205</a></span><span class="t">        <span class="nam">response</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_client</span><span class="op">.</span><span class="nam">createItem</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t206" class="pln"><span class="n"><a href="#t206">206</a></span><span class="t">            <span class="nam">response</span><span class="op">[</span><span class="str">'_id'</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t207" class="pln"><span class="n"><a href="#t207">207</a></span><span class="t">            <span class="nam">filename</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t208" class="pln"><span class="n"><a href="#t208">208</a></span><span class="t">            <span class="nam">metadata</span><span class="op">=</span><span class="nam">metadata</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t209" class="pln"><span class="n"><a href="#t209">209</a></span><span class="t">            <span class="nam">reuseExisting</span><span class="op">=</span><span class="key">True</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t210" class="pln"><span class="n"><a href="#t210">210</a></span><span class="t">        <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t211" class="run"><span class="n"><a href="#t211">211</a></span><span class="t">        <span class="nam">response</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_client</span><span class="xx">\</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t212" class="pln"><span class="n"><a href="#t212">212</a></span><span class="t">            <span class="op">.</span><span class="nam">uploadFileToItem</span><span class="op">(</span><span class="nam">response</span><span class="op">[</span><span class="str">'_id'</span><span class="op">]</span><span class="op">,</span> <span class="nam">metadata</span><span class="op">[</span><span class="str">'filepath'</span><span class="op">]</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t213" class="run"><span class="n"><a href="#t213">213</a></span><span class="t">        <span class="key">return</span> <span class="nam">response</span>&nbsp;</span><span class="r"></span></p>
 </div>
 <div id="footer">
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.1</a>,
-            created at 2020-06-05 05:27
+            created at 2020-06-05 08:22
         </p>
     </div>
 </div>

@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.7.1
+                0.7.2
               </div>
             
           
@@ -344,6 +344,7 @@
                 <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;asset_path_relative&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> directory already &quot;</span>
                 <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;exists. &#39;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="n">responseText</span>
                 <span class="n">e</span><span class="o">.</span><span class="n">responseText</span> <span class="o">=</span> <span class="n">msg</span>
+                <span class="n">e</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">msg</span><span class="p">]</span>
                 <span class="k">raise</span> <span class="n">e</span></div>
 
 <div class="viewcode-block" id="GirderExporter._export_file"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.girder_exporter.GirderExporter._export_file">[docs]</a>    <span class="k">def</span> <span class="nf">_export_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>

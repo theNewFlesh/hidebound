@@ -302,6 +302,23 @@ class ApiTests(DatabaseTestBase):
         expected = 'Database not initialized. Please call initialize.'
         self.assertRegex(result, expected)
 
+    def test_export_error(self):
+        config = dict(
+            root_directory=self.root,
+            hidebound_directory=self.hb_root,
+            specification_files=[self.specs],
+            exporters=dict(girder=dict(api_key='api_key', root_id='root_id'))
+        )
+        config = json.dumps(config)
+        self.client.post('/api/initialize', json=config)
+        self.api.DATABASE._Database__exporter_lut = dict(
+            girder=MockGirderExporter
+        )
+        self.client.post('/api/update')
+        result = self.client.post('/api/export').json['message']
+        expected = 'hidebound/data directory does not exist'
+        self.assertRegex(result, expected)
+
     # SEARCH--------------------------------------------------------------------
     def test_search(self):
         # init database
