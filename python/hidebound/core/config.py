@@ -6,10 +6,11 @@ from pathlib import Path
 import sys
 
 from schematics.exceptions import ValidationError
-from schematics.types import ListType, StringType
+from schematics.types import ListType, ModelType, StringType
 from schematics import Model
 
 from hidebound.core.specification_base import SpecificationBase
+from hidebound.exporters.girder_exporter import GirderConfig
 import hidebound.core.validators as vd
 # ------------------------------------------------------------------------------
 
@@ -106,6 +107,8 @@ class Config(Model):
             Default: '\.DS_Store'.
         write_mode (str, optional): How assets will be extracted to
             hidebound/data directory. Default: copy.
+        exporters (dict, optional): Dictionary of exporter configs, where the
+            key is the exporter name and the value is its config. Default: {}.
     '''
     root_directory = StringType(required=True, validators=[vd.is_directory])
     hidebound_directory = StringType(
@@ -123,3 +126,7 @@ class Config(Model):
         validators=[lambda x: vd.is_in(x, ['copy', 'move'])],
         default="copy",
     )
+
+    class ExportersConfig(Model):
+        girder = ModelType(GirderConfig, required=False, default=None)
+    exporters = ModelType(ExportersConfig, required=False, default={})

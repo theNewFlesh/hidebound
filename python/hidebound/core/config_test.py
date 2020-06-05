@@ -243,3 +243,33 @@ class ConfigTests(unittest.TestCase):
             expected = 'Foobar.* are not subclasses of SpecificationBase'
             with self.assertRaisesRegexp(DataError, expected):
                 cfg.Config(self.config).validate()
+
+    def test_exporters(self):
+        with TemporaryDirectory() as temp:
+            self.set_data(temp)
+            os.makedirs(self.root)
+            os.makedirs(self.hb_root)
+
+            config = self.config
+            config['exporters'] = dict(
+                girder=dict(
+                    api_key='api_key',
+                    root_id='root_id',
+                    root_type='collection',
+                    host='1.0.1.0',
+                    port=2020,
+                )
+            )
+            cfg.Config(config).validate()
+
+            #  bad girder config
+            config['exporters']['girder']['root_type'] = 'pizza'
+            expected = r"pizza is not in \[\'collection\', \'folder\'\]"
+            with self.assertRaisesRegexp(DataError, expected):
+                cfg.Config(self.config).validate()
+
+            #  bad exporter config
+            config['exporters'] = dict(bagel='lox')
+            expected = 'Rogue field'
+            with self.assertRaisesRegexp(DataError, expected):
+                cfg.Config(self.config).validate()
