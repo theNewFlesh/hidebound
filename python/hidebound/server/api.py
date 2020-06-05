@@ -136,12 +136,12 @@ def initialize():
     )
 
 
-@API.route('/api/update', methods=['POST'])
+@API.route('/api/create', methods=['POST'])
 @swg.swag_from(dict(
     parameters=[],
     responses={
         200: dict(
-            description='Hidebound database successfully updated.',
+            description='Hidebound data successfully deleted.',
             content='application/json',
         ),
         500: dict(
@@ -149,9 +149,9 @@ def initialize():
         )
     }
 ))
-def update():
+def create():
     '''
-    Update database.
+    Create hidebound data.
 
     Returns:
         Response: Flask Response instance.
@@ -162,10 +162,14 @@ def update():
     if DATABASE is None:
         return server_tools.get_initialization_error()
 
-    DATABASE.update()
+    try:
+        DATABASE.create()
+    except RuntimeError:
+        return server_tools.get_update_error()
+
     return flask.Response(
         response=json.dumps(dict(
-            message='Database updated.',
+            message='Hidebound data created.',
             config=CONFIG,
         )),
         mimetype='application/json'
@@ -228,6 +232,78 @@ def read():
     response = {'response': response}
     return flask.Response(
         response=json.dumps(response),
+        mimetype='application/json'
+    )
+
+
+@API.route('/api/update', methods=['POST'])
+@swg.swag_from(dict(
+    parameters=[],
+    responses={
+        200: dict(
+            description='Hidebound database successfully updated.',
+            content='application/json',
+        ),
+        500: dict(
+            description='Internal server error.',
+        )
+    }
+))
+def update():
+    '''
+    Update database.
+
+    Returns:
+        Response: Flask Response instance.
+    '''
+    global DATABASE
+    global CONFIG
+
+    if DATABASE is None:
+        return server_tools.get_initialization_error()
+
+    DATABASE.update()
+    return flask.Response(
+        response=json.dumps(dict(
+            message='Database updated.',
+            config=CONFIG,
+        )),
+        mimetype='application/json'
+    )
+
+
+@API.route('/api/delete', methods=['POST'])
+@swg.swag_from(dict(
+    parameters=[],
+    responses={
+        200: dict(
+            description='Hidebound data successfully deleted.',
+            content='application/json',
+        ),
+        500: dict(
+            description='Internal server error.',
+        )
+    }
+))
+def delete():
+    '''
+    Delete hidebound data.
+
+    Returns:
+        Response: Flask Response instance.
+    '''
+    global DATABASE
+    global CONFIG
+
+    if DATABASE is None:
+        return server_tools.get_initialization_error()
+
+    DATABASE.delete()
+    return flask.Response(
+        response=json.dumps(dict(
+            message='Hidebound data deleted.',
+            config=CONFIG,
+        )),
         mimetype='application/json'
     )
 
@@ -297,82 +373,6 @@ def search():
     response = {'response': response}
     return flask.Response(
         response=json.dumps(response),
-        mimetype='application/json'
-    )
-
-
-@API.route('/api/create', methods=['POST'])
-@swg.swag_from(dict(
-    parameters=[],
-    responses={
-        200: dict(
-            description='Hidebound data successfully deleted.',
-            content='application/json',
-        ),
-        500: dict(
-            description='Internal server error.',
-        )
-    }
-))
-def create():
-    '''
-    Create hidebound data.
-
-    Returns:
-        Response: Flask Response instance.
-    '''
-    global DATABASE
-    global CONFIG
-
-    if DATABASE is None:
-        return server_tools.get_initialization_error()
-
-    try:
-        DATABASE.create()
-    except RuntimeError:
-        return server_tools.get_update_error()
-
-    return flask.Response(
-        response=json.dumps(dict(
-            message='Hidebound data created.',
-            config=CONFIG,
-        )),
-        mimetype='application/json'
-    )
-
-
-@API.route('/api/delete', methods=['POST'])
-@swg.swag_from(dict(
-    parameters=[],
-    responses={
-        200: dict(
-            description='Hidebound data successfully deleted.',
-            content='application/json',
-        ),
-        500: dict(
-            description='Internal server error.',
-        )
-    }
-))
-def delete():
-    '''
-    Delete hidebound data.
-
-    Returns:
-        Response: Flask Response instance.
-    '''
-    global DATABASE
-    global CONFIG
-
-    if DATABASE is None:
-        return server_tools.get_initialization_error()
-
-    DATABASE.delete()
-    return flask.Response(
-        response=json.dumps(dict(
-            message='Hidebound data deleted.',
-            config=CONFIG,
-        )),
         mimetype='application/json'
     )
 
