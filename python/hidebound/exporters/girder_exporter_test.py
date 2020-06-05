@@ -4,110 +4,7 @@ from girder_client import HttpError
 from schematics.exceptions import DataError
 
 from hidebound.exporters.girder_exporter import GirderConfig, GirderExporter
-# ------------------------------------------------------------------------------
-
-
-class MockGirderClient:
-    def __init__(self, apiUrl=None):
-        self.apiUrl = apiUrl
-        self._folders = {}
-        self._items = {}
-        self._files = {}
-        self._id = -1
-
-    @property
-    def folders(self):
-        return {x['name']: x for x in self._folders.values()}
-
-    @property
-    def items(self):
-        return {x['name']: x for x in self._items.values()}
-
-    @property
-    def files(self):
-        return {x['name']: x for x in self._files.values()}
-
-    def _get_id(self):
-        self._id += 1
-        return self._id
-
-    def createFolder(
-        self,
-        parentId,
-        name,
-        description='',
-        parentType='folder',
-        public=None,
-        reuseExisting=False,
-        metadata=None
-    ):
-        id_ = None
-        if name in self.folders.keys():
-            id_ = self.folders[name]['_id']
-            if not reuseExisting:
-                msg = 'A folder with that name already exists here.'
-                url = 'http://0.0.0.0:8080/api/v1/folder'
-                raise HttpError(400, msg, url, 'POST')
-            else:
-                name += ' (1)'
-        else:
-            id_ = self._get_id()
-
-        temp = metadata or {}
-        response = dict(
-            _id=id_,
-            parentId=parentId,
-            name=name,
-            metadata=metadata,
-            items=temp.get('items', [])
-        )
-        self._folders[response['_id']] = response
-        return response
-
-    def listItem(
-        self,
-        folderId,
-        text=None,
-        name=None,
-        limit=None,
-        offset=None
-    ):
-        folder = self._folders.get(folderId, None)
-        if folder is None:
-            return []
-        return [self._items[x] for x in folder['items']]
-
-    def createItem(
-        self,
-        parentFolderId,
-        name,
-        description='',
-        reuseExisting=False,
-        metadata=None
-    ):
-        response = dict(
-            _id=self._get_id(),
-            parentFolderId=parentFolderId,
-            name=name,
-            metadata=metadata,
-        )
-        self._items[response['_id']] = response
-        self._folders[parentFolderId]['items'].append(response['_id'])
-        return response
-
-    def uploadFileToItem(
-        self,
-        itemId,
-        filepath,
-        reference=None,
-        mimeType=None,
-        filename=None,
-        progressCallback=None
-    ):
-        self._items[itemId]['file_content'] = filepath
-        return dict(
-            _id=self._get_id()
-        )
+from hidebound.exporters.mock_girder import MockGirderClient
 # ------------------------------------------------------------------------------
 
 
@@ -152,6 +49,7 @@ class GirderConfigTests(unittest.TestCase):
         config['port'] = 65536
         with self.assertRaisesRegexp(DataError, expected):
             GirderConfig(config).validate()
+# ------------------------------------------------------------------------------
 
 
 class GirderExporterTests(unittest.TestCase):

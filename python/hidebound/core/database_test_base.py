@@ -95,6 +95,7 @@ class DatabaseTestBase(unittest.TestCase):
             ext = os.path.splitext(filepath)[-1][1:]
             if ext in ['png', 'jpg']:
                 img = np.zeros((5, 4, 3), dtype=np.uint8)
+                img[:, :, 2] = 128
                 skimage.io.imsave(filepath.as_posix(), img)
             else:
                 with open(filepath, 'w') as f:

@@ -10,6 +10,7 @@ from schematics.exceptions import DataError
 
 from hidebound.core.database import Database
 from hidebound.core.database_test_base import DatabaseTestBase
+from hidebound.exporters.mock_girder import MockGirderExporter
 import hidebound.core.tools as tools
 # ------------------------------------------------------------------------------
 
@@ -569,6 +570,32 @@ class DatabaseTests(DatabaseTestBase):
             result = tools.directory_to_dataframe(root).filepath.tolist()
             result = sorted(result)
             self.assertEqual(result, expected)
+
+    # EXPORT--------------------------------------------------------------------
+    def test_export(self):
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hidebound')
+            os.makedirs(hb_root)
+            Spec001, Spec002, BadSpec = self.get_specifications()
+            self.create_files(root)
+
+            exporters = dict(girder=dict(api_key='api_key', root_id='root_id'))
+            db = Database(
+                root, hb_root, [Spec001, Spec002], exporters=exporters
+            )
+            db._Database__exporter_lut = dict(girder=MockGirderExporter)
+
+            db.update().create().export()
+
+            client = db._Database__exporter_lut['girder']._client
+            result = list(client.folders.keys())
+            asset_paths = [
+                'p-proj001_s-spec001_d-pizza_v001',
+                'p-proj001_s-spec001_d-pizza_v002',
+                'p-proj001_s-spec002_d-taco_v001',
+            ]
+            for expected in asset_paths:
+                self.assertIn(expected, result)
 
     # SEARCH--------------------------------------------------------------------
     def test_search(self):

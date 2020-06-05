@@ -11,8 +11,9 @@ import pandasql
 import numpy as np
 
 from hidebound.core.config import Config
-import hidebound.core.database_tools as db_tools
 from hidebound.core.specification_base import SpecificationBase
+from hidebound.exporters.girder_exporter import GirderExporter
+import hidebound.core.database_tools as db_tools
 import hidebound.core.tools as tools
 # ------------------------------------------------------------------------------
 
@@ -35,8 +36,11 @@ class Database:
         Returns:
             Database: Database instance.
         '''
+        # validate config and populate with default values
         config = deepcopy(config)
-        Config(config).validate()
+        config = Config(config)
+        config.validate()
+        config = config.to_primitive()
 
         specs = []
         for path in config['specification_files']:
@@ -59,6 +63,7 @@ class Database:
             include_regex=config['include_regex'],
             exclude_regex=config['exclude_regex'],
             write_mode=config['write_mode'],
+            exporters=config['exporters'],
         )
 
     @staticmethod
@@ -84,6 +89,7 @@ class Database:
         include_regex='',
         exclude_regex=r'\.DS_Store',
         write_mode='copy',
+        exporters={},
     ):
         r'''
         Creates an instance of Database but does not populate it with data.
@@ -100,6 +106,9 @@ class Database:
                 regex. Default: '\.DS_Store'.
             write_mode (str, optional): How assets will be extracted to
                 hidebound/data directory. Default: copy.
+            exporters (dict, optional): Dictionary of exporter configs, where
+                the key is the exporter name and the value is its config.
+                Default: {}.
 
         Raises:
             TypeError: If specifications contains a non-SpecificationBase
@@ -149,36 +158,11 @@ class Database:
         self._exclude_regex = exclude_regex
         self._write_mode = write_mode
         self._specifications = {x.__name__.lower(): x for x in specifications}
+        self._exporters = exporters
         self.data = None
 
-    def update(self):
-        '''
-        Recurse root directory, populate self.data with its files, locate and
-        validate assets.
-
-        Returns:
-            Database: self.
-        '''
-        data = tools.directory_to_dataframe(
-            self._root,
-            include_regex=self._include_regex,
-            exclude_regex=self._exclude_regex
-        )
-        if len(data) > 0:
-            db_tools._add_specification(data, self._specifications)
-            db_tools._validate_filepath(data)
-            db_tools._add_file_traits(data)
-            db_tools._add_relative_path(data, 'filepath', self._root)
-            db_tools._add_asset_name(data)
-            db_tools._add_asset_path(data)
-            db_tools._add_relative_path(data, 'asset_path', self._root)
-            db_tools._add_asset_type(data)
-            db_tools._add_asset_traits(data)
-            db_tools._validate_assets(data)
-
-        data = db_tools._cleanup(data)
-        self.data = data
-        return self
+        # needed for testing
+        self.__exporter_lut = None
 
     def create(self):
         '''
@@ -356,6 +340,26 @@ class Database:
             shutil.rmtree(meta_dir)
 
         return self
+
+    def export(self):
+        '''
+        Exports all the files found in in hidebound root directory.
+
+        Returns:
+            Database: self.
+        '''
+        lut = dict(girder=GirderExporter)
+
+        # reassign lut for testing
+        if self.__exporter_lut is not None:
+            lut = self.__exporter_lut
+
+        for key, config in self._exporters.items():
+            exporter = lut[key].from_config(config)
+            exporter.export(self._hb_root)
+
+            # assign instance tp exporter_lut for testing
+            self.__exporter_lut[key] = exporter
 
     def search(self, query, group_by_asset=False):
         '''

@@ -16,3 +16,11 @@ girder_exporter
     :private-members:
     :undoc-members:
     :show-inheritance:
+
+mock_girder
+-----------
+.. automodule:: hidebound.exporters.mock_girder
+    :members:
+    :private-members:
+    :undoc-members:
+    :show-inheritance:
