@@ -9,11 +9,11 @@
     "write_mode": "copy",
     "exporters": {
         "girder": {
-            "api_key": "api_key",
-            "root_id": "root_id",
+            "api_key": "eyS0nj9qPC5E7yK5l7nhGVPqDOBKPdA3EC60Rs9h",
+            "root_id": "5ed735c8d8dd6242642406e5",
             "root_type": "collection",
-            "host": "1.0.1.0",
-            "port": 2020
+            "host": "172.17.0.1",
+            "port": 8080
         }
     }
 }

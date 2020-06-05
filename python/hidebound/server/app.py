@@ -55,6 +55,7 @@ def serve_stylesheet(stylesheet):
         Input('init-button', 'n_clicks'),
         Input('update-button', 'n_clicks'),
         Input('create-button', 'n_clicks'),
+        Input('export-button', 'n_clicks'),
         Input('delete-button', 'n_clicks'),
         Input('search-button', 'n_clicks'),
         Input('dropdown', 'value'),
@@ -112,6 +113,9 @@ def on_event(*inputs):
 
     elif input_id == 'create-button':
         APP.server.test_client().post('/api/create')
+
+    elif input_id == 'export-button':
+        APP.server.test_client().post('/api/export')
 
     elif input_id == 'delete-button':
         APP.server.test_client().post('/api/delete')

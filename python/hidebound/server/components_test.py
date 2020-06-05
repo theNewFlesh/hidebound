@@ -134,6 +134,10 @@ class ComponentsTests(unittest.TestCase):
         self.assertEqual(button.children[0], 'create')
 
         button = searchbar.children[0].children[12]
+        self.assertEqual(button.id, 'export-button')
+        self.assertEqual(button.children[0], 'export')
+
+        button = searchbar.children[0].children[14]
         self.assertEqual(button.id, 'delete-button')
         self.assertEqual(button.children[0], 'delete')
 

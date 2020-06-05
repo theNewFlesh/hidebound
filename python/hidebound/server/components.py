@@ -199,6 +199,7 @@ def get_searchbar(query=None):
     init = get_button('init')
     update = get_button('update')
     create = get_button('create')
+    export = get_button('export')
     delete = get_button('delete')
 
     row0 = html.Div(
@@ -215,6 +216,8 @@ def get_searchbar(query=None):
             update,
             spacer,
             create,
+            spacer,
+            export,
             spacer,
             delete,
         ],
@@ -242,6 +245,7 @@ def get_dummy_elements():
         html.Div(className='dummy', id='init-button', n_clicks=None),
         html.Div(className='dummy', id='update-button', n_clicks=None),
         html.Div(className='dummy', id='create-button', n_clicks=None),
+        html.Div(className='dummy', id='export-button', n_clicks=None),
         html.Div(className='dummy', id='delete-button', n_clicks=None),
         dcc.Upload(className='dummy', id='upload', contents=None),
         html.Div(className='dummy', id='write-button', n_clicks=None),
