@@ -96,12 +96,12 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#overview">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#workflow">Workflow</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#create-asset">Create <em>Asset</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#create-asset"><em>Create Asset</em></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#update"><em>Update</em></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#review-graph">Review <em>Graph</em></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#diagnose-and-repair">Diagnose and <em>Repair</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#review-graph"><em>Review Graph</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#diagnose-and-repair"><em>Diagnose and Repair</em></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#create"><em>Create</em></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#upload"><em>Upload</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#export"><em>Export</em></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#delete"><em>Delete</em></a></li>
 </ul>
 </li>
@@ -254,8 +254,11 @@ by Hidebound.</p>
 </div>
 <div class="section" id="workflow">
 <h1>Workflow<a class="headerlink" href="#workflow" title="Permalink to this headline">¶</a></h1>
+<p>The acronynm to remember for workflows is <strong>CRUDES</strong>: create, read,
+update, delete, export and search. Those operations constitue the main
+functionality that Hidebound supports.</p>
 <div class="section" id="create-asset">
-<h2>Create <em>Asset</em><a class="headerlink" href="#create-asset" title="Permalink to this headline">¶</a></h2>
+<h2><em>Create Asset</em><a class="headerlink" href="#create-asset" title="Permalink to this headline">¶</a></h2>
 <p>For example, an asset could be an image sequence, such as a directory
 full of PNG files, all of which have a frame number, have 3 (RGB)
 channels, and are 1024 pixels wide by 1024 pixels tall. Let’s call the
@@ -284,14 +287,14 @@ app. Importantly, all of the errors in filenames, file traits and asset
 traits are included.</p>
 </div>
 <div class="section" id="review-graph">
-<h2>Review <em>Graph</em><a class="headerlink" href="#review-graph" title="Permalink to this headline">¶</a></h2>
+<h2><em>Review Graph</em><a class="headerlink" href="#review-graph" title="Permalink to this headline">¶</a></h2>
 <p><img alt="image0" src="resources/screenshots/graph.png" /> If we click on the graph tab, we are greeted by a hierarchical
 graph of all our assets in our project directory. Our asset is red,
 meaning it’s invalid. Valid asset’s are green, and all other files and
 directories, including parent directories, are cyan.</p>
 </div>
 <div class="section" id="diagnose-and-repair">
-<h2>Diagnose and <em>Repair</em><a class="headerlink" href="#diagnose-and-repair" title="Permalink to this headline">¶</a></h2>
+<h2><em>Diagnose and Repair</em><a class="headerlink" href="#diagnose-and-repair" title="Permalink to this headline">¶</a></h2>
 <p>We flip back to the data tab. Using table within it, we search (via SQL)
 for our asset within Hidebound’s freshly created database. We see an
 error in one of the filenames, conveniently displayed in red text. The
@@ -338,17 +341,23 @@ looks like this (unmentioned assets are collapsed behind the ellipses):</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="upload">
-<h2><em>Upload</em><a class="headerlink" href="#upload" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="export">
+<h2><em>Export</em><a class="headerlink" href="#export" title="Permalink to this headline">¶</a></h2>
 <p>This directory contains only valid assets and their associated metadata.
-We are now free to upload this data to various databases, such as AWS S3
-and MongoDB. I recommend a service that continually parses this
-directory and uploads whatever it finds. Currently, such a process is
-considered to be beyond the scope of Hidebound’s intent.</p>
+We are now free to export this data to various databases, such as AWS
+S3, MongoDB, and Girder. Exporters are are defined within the exporters
+subpackage. They expect a populated hidebound directory and use the
+files and metadata therein to export hidebound data. Exporter
+configurations are stored in the hidebound conig, under the “exporters”
+key. Below we can see the results of an export to Girder in the Girder
+web app.</p>
+<div class="figure align-default">
+<img alt="" src="resources/screenshots/girder.png" />
+</div>
 </div>
 <div class="section" id="delete">
 <h2><em>Delete</em><a class="headerlink" href="#delete" title="Permalink to this headline">¶</a></h2>
-<p>Once this upload process is complete, we may click the delete button.
+<p>Once this export process is complete, we may click the delete button.
 Hidebound deletes the hidebound/data and hidebound/metdata directories
 and all their contents. If write_mode in the Hidebound configuration is
 set to “copy”, then this step will merely delete data created by

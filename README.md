@@ -36,12 +36,17 @@ Amazon Web Service's (AWS) S3, Postgres, etc. Hidebound enables developers to
 ingest arbitrary sets of files and output them as validated assets and metadata
 for consumption by databases like the aforementioned.
 
-Hidebound is framework for validating, and extracting metadata from files and directories according, to user defined specifications. Assets are placed into a
+Hidebound is framework for validating, and extracting metadata from files and
+directories according, to user defined specifications. Assets are placed into a
 root directory (typically one reserved for Hidebound projects) and then
 discovered, validated, extracted, and copied or moved by Hidebound.
 
 # Workflow
-### Create *Asset*
+The acronynm to remember for workflows is **CRUDES**: create, read, update,
+delete, export and search. Those operations constitue the main functionality
+that Hidebound supports.
+
+### *Create Asset*
 For example, an asset could be an image sequence, such as a directory full of
 PNG files, all of which have a frame number, have 3 (RGB) channels, and are 1024
 pixels wide by 1024 pixels tall. Let's call the specification for this type of
@@ -65,14 +70,14 @@ specification. All of this data is displayed as a table within the web app.
 Importantly, all of the errors in filenames, file traits and asset traits are
 included.
 
-### Review *Graph*
+### *Review Graph*
 ![](resources/screenshots/graph.png)
 If we click on the graph tab, we are greeted by a hierarchical graph of all our
 assets in our project directory. Our asset is red, meaning it's invalid. Valid
 asset's are green, and all other files and directories, including parent
 directories, are cyan.
 
-### Diagnose and *Repair*
+### *Diagnose and Repair*
 We flip back to the data tab. Using table within it, we search (via SQL) for our
 asset within Hidebound's freshly created database. We see an error in one of the
 filenames, conveniently displayed in red text. The descriptor in one orf our
@@ -86,7 +91,8 @@ column says it has three.
 Next we click the create button. For each valid asset, Hidebound generates file
 and asset metadata as JSON files within the hidebound/metadata directory.
 Hidebound also copies or moves, depending on the config write mode, valid files
-and directories into the hidebound/data directory. Thus we now have a hidebound directory that looks like this (unmentioned assets are collapsed behind the
+and directories into the hidebound/data directory. Thus we now have a hidebound
+directory that looks like this (unmentioned assets are collapsed behind the
 ellipses):
 ```
 /tmp/hidebound
@@ -116,15 +122,19 @@ ellipses):
         └── ea95bd79-cb8f-4262-8489-efe734c5f65c.json
 ```
 
-### *Upload*
+### *Export*
 This directory contains only valid assets and their associated metadata. We are
-now free to upload this data to various databases, such as AWS S3 and MongoDB.
-I recommend a service that continually parses this directory and uploads
-whatever it finds. Currently, such a process is considered to be beyond the
-scope of Hidebound's intent.
+now free to export this data to various databases, such as AWS S3, MongoDB, and
+Girder. Exporters are are defined within the exporters subpackage. They expect a
+populated hidebound directory and use the files and metadata therein to export
+hidebound data. Exporter configurations are stored in the hidebound conig, under
+the "exporters" key. Below we can see the results of an export to Girder in the
+Girder web app.
+
+![](resources/screenshots/girder.png)
 
 ### *Delete*
-Once this upload process is complete, we may click the delete button. Hidebound
+Once this export process is complete, we may click the delete button. Hidebound
 deletes the hidebound/data and hidebound/metdata directories and all their
 contents. If write_mode in the Hidebound configuration is set to "copy", then
 this step will merely delete data created by Hidebound. If it is set to "move",
@@ -321,7 +331,8 @@ project
 ```
 
 # Application
-The Hidebound web application has five sections: data, graph, config, api and docs.
+The Hidebound web application has five sections: data, graph, config, api and
+docs.
 
 ### Data
 The data tab is the workhorse of the Hidebound app.

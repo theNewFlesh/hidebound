@@ -63,7 +63,11 @@ by Hidebound.
 Workflow
 ========
 
-Create *Asset*
+The acronynm to remember for workflows is **CRUDES**: create, read,
+update, delete, export and search. Those operations constitue the main
+functionality that Hidebound supports.
+
+*Create Asset*
 ~~~~~~~~~~~~~~
 
 For example, an asset could be an image sequence, such as a directory
@@ -94,7 +98,7 @@ specification. All of this data is displayed as a table within the web
 app. Importantly, all of the errors in filenames, file traits and asset
 traits are included.
 
-Review *Graph*
+*Review Graph*
 ~~~~~~~~~~~~~~
 
 |image0| If we click on the graph tab, we are greeted by a hierarchical
@@ -102,7 +106,7 @@ graph of all our assets in our project directory. Our asset is red,
 meaning it's invalid. Valid asset's are green, and all other files and
 directories, including parent directories, are cyan.
 
-Diagnose and *Repair*
+*Diagnose and Repair*
 ~~~~~~~~~~~~~~~~~~~~~
 
 We flip back to the data tab. Using table within it, we search (via SQL)
@@ -153,19 +157,25 @@ looks like this (unmentioned assets are collapsed behind the ellipses):
             ├── e50160ae-8678-40b3-b766-ee8311b1f0c9.json
             └── ea95bd79-cb8f-4262-8489-efe734c5f65c.json
 
-*Upload*
+*Export*
 ~~~~~~~~
 
 This directory contains only valid assets and their associated metadata.
-We are now free to upload this data to various databases, such as AWS S3
-and MongoDB. I recommend a service that continually parses this
-directory and uploads whatever it finds. Currently, such a process is
-considered to be beyond the scope of Hidebound's intent.
+We are now free to export this data to various databases, such as AWS
+S3, MongoDB, and Girder. Exporters are are defined within the exporters
+subpackage. They expect a populated hidebound directory and use the
+files and metadata therein to export hidebound data. Exporter
+configurations are stored in the hidebound conig, under the "exporters"
+key. Below we can see the results of an export to Girder in the Girder
+web app.
+
+.. figure:: resources/screenshots/girder.png
+   :alt: 
 
 *Delete*
 ~~~~~~~~
 
-Once this upload process is complete, we may click the delete button.
+Once this export process is complete, we may click the delete button.
 Hidebound deletes the hidebound/data and hidebound/metdata directories
 and all their contents. If write\_mode in the Hidebound configuration is
 set to "copy", then this step will merely delete data created by
