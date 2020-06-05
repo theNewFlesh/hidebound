@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.6.11
+                0.7.0
               </div>
             
           
@@ -170,10 +170,11 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">ValidationError</span>
-<span class="kn">from</span> <span class="nn">schematics.types</span> <span class="kn">import</span> <span class="n">ListType</span><span class="p">,</span> <span class="n">StringType</span>
+<span class="kn">from</span> <span class="nn">schematics.types</span> <span class="kn">import</span> <span class="n">ListType</span><span class="p">,</span> <span class="n">ModelType</span><span class="p">,</span> <span class="n">StringType</span>
 <span class="kn">from</span> <span class="nn">schematics</span> <span class="kn">import</span> <span class="n">Model</span>
 
 <span class="kn">from</span> <span class="nn">hidebound.core.specification_base</span> <span class="kn">import</span> <span class="n">SpecificationBase</span>
+<span class="kn">from</span> <span class="nn">hidebound.exporters.girder_exporter</span> <span class="kn">import</span> <span class="n">GirderConfig</span>
 <span class="kn">import</span> <span class="nn">hidebound.core.validators</span> <span class="k">as</span> <span class="nn">vd</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
@@ -270,6 +271,8 @@
 <span class="sd">            Default: &#39;\.DS_Store&#39;.</span>
 <span class="sd">        write_mode (str, optional): How assets will be extracted to</span>
 <span class="sd">            hidebound/data directory. Default: copy.</span>
+<span class="sd">        exporters (dict, optional): Dictionary of exporter configs, where the</span>
+<span class="sd">            key is the exporter name and the value is its config. Default: {}.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">root_directory</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_directory</span><span class="p">])</span>
     <span class="n">hidebound_directory</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
@@ -286,7 +289,11 @@
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_in</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;copy&#39;</span><span class="p">,</span> <span class="s1">&#39;move&#39;</span><span class="p">])],</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;copy&quot;</span><span class="p">,</span>
-    <span class="p">)</span></div>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="Config.ExportersConfig"><a class="viewcode-back" href="../../../core.html#hidebound.core.config.Config.ExportersConfig">[docs]</a>    <span class="k">class</span> <span class="nc">ExportersConfig</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+        <span class="n">girder</span> <span class="o">=</span> <span class="n">ModelType</span><span class="p">(</span><span class="n">GirderConfig</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div>
+    <span class="n">exporters</span> <span class="o">=</span> <span class="n">ModelType</span><span class="p">(</span><span class="n">ExportersConfig</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">{})</span></div>
 </pre></div>
 
            </div>

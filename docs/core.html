@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.6.11
+                0.7.0
               </div>
             
           
@@ -259,6 +259,34 @@ hidebound/data directory. Default: copy.</p>
 </dd></dl>
 
 <dl class="py attribute">
+<dt id="hidebound.core.config.Config.exporters">
+<code class="sig-name descname">exporters</code><a class="headerlink" href="#hidebound.core.config.Config.exporters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary of exporter configs, where the
+key is the exporter name and the value is its config. Default: {}.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="hidebound.core.config.Config.ExportersConfig">
+<em class="property">class </em><code class="sig-name descname">ExportersConfig</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">raw_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">trusted_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">deserialize_mapping</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">init</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">partial</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">strict</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">validate</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">app_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">lazy</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/config.html#Config.ExportersConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.config.Config.ExportersConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">schematics.deprecated.patch_models.&lt;locals&gt;.Model</span></code></p>
+<dl class="py attribute">
+<dt id="hidebound.core.config.Config.ExportersConfig._schema">
+<code class="sig-name descname">_schema</code><em class="property"> = &lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema object&gt;</em><a class="headerlink" href="#hidebound.core.config.Config.ExportersConfig._schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="hidebound.core.config.Config.ExportersConfig.girder">
+<code class="sig-name descname">girder</code><em class="property"> = &lt;ModelType(GirderConfig) instance on ExportersConfig as 'girder'&gt;</em><a class="headerlink" href="#hidebound.core.config.Config.ExportersConfig.girder" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
 <dt id="hidebound.core.config.Config._schema">
 <code class="sig-name descname">_schema</code><em class="property"> = &lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema object&gt;</em><a class="headerlink" href="#hidebound.core.config.Config._schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -270,27 +298,32 @@ hidebound/data directory. Default: copy.</p>
 
 <dl class="py attribute">
 <dt id="id1">
-<code class="sig-name descname">hidebound_directory</code><em class="property"> = &lt;StringType() instance on Config as 'hidebound_directory'&gt;</em><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">exporters</code><em class="property"> = &lt;ModelType(ExportersConfig) instance on Config as 'exporters'&gt;</em><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id2">
-<code class="sig-name descname">include_regex</code><em class="property"> = &lt;StringType() instance on Config as 'include_regex'&gt;</em><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">hidebound_directory</code><em class="property"> = &lt;StringType() instance on Config as 'hidebound_directory'&gt;</em><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id3">
-<code class="sig-name descname">root_directory</code><em class="property"> = &lt;StringType() instance on Config as 'root_directory'&gt;</em><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">include_regex</code><em class="property"> = &lt;StringType() instance on Config as 'include_regex'&gt;</em><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id4">
-<code class="sig-name descname">specification_files</code><em class="property"> = &lt;ListType(StringType) instance on Config as 'specification_files'&gt;</em><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">root_directory</code><em class="property"> = &lt;StringType() instance on Config as 'root_directory'&gt;</em><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id5">
-<code class="sig-name descname">write_mode</code><em class="property"> = &lt;StringType() instance on Config as 'write_mode'&gt;</em><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">specification_files</code><em class="property"> = &lt;ListType(StringType) instance on Config as 'specification_files'&gt;</em><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id6">
+<code class="sig-name descname">write_mode</code><em class="property"> = &lt;StringType() instance on Config as 'write_mode'&gt;</em><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -336,7 +369,7 @@ hidebound/data directory. Default: copy.</p>
 <span id="database"></span><h2>database<a class="headerlink" href="#module-hidebound.core.database" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="hidebound.core.database.Database">
-<em class="property">class </em><code class="sig-prename descclassname">hidebound.core.database.</code><code class="sig-name descname">Database</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root_dir</span></em>, <em class="sig-param"><span class="n">hidebound_dir</span></em>, <em class="sig-param"><span class="n">specifications</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">include_regex</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">exclude_regex</span><span class="o">=</span><span class="default_value">'\\.DS_Store'</span></em>, <em class="sig-param"><span class="n">write_mode</span><span class="o">=</span><span class="default_value">'copy'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/database.html#Database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.database.Database" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">hidebound.core.database.</code><code class="sig-name descname">Database</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root_dir</span></em>, <em class="sig-param"><span class="n">hidebound_dir</span></em>, <em class="sig-param"><span class="n">specifications</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">include_regex</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">exclude_regex</span><span class="o">=</span><span class="default_value">'\\.DS_Store'</span></em>, <em class="sig-param"><span class="n">write_mode</span><span class="o">=</span><span class="default_value">'copy'</span></em>, <em class="sig-param"><span class="n">exporters</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/database.html#Database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.database.Database" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Generates a DataFrame using the files within a given directory as rows.</p>
 <dl class="py method">
@@ -370,6 +403,20 @@ directory.</p>
 <code class="sig-name descname">delete</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/database.html#Database.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.database.Database.delete" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes hidebound/data and hidebound/metadata directories and all their
 contents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>self.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#hidebound.core.database.Database" title="hidebound.core.database.Database">Database</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hidebound.core.database.Database.export">
+<code class="sig-name descname">export</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/database.html#Database.export"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.database.Database.export" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exports all the files found in in hidebound root directory.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>self.</p>
@@ -901,8 +948,8 @@ according to a dynimcally defined grammar.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id6">
-<code class="sig-name descname">asset_type</code><em class="property"> = 'complex'</em><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
+<dt id="id7">
+<code class="sig-name descname">asset_type</code><em class="property"> = 'complex'</em><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -954,8 +1001,8 @@ according to a dynimcally defined grammar.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id7">
-<code class="sig-name descname">asset_type</code><em class="property"> = 'file'</em><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
+<dt id="id8">
+<code class="sig-name descname">asset_type</code><em class="property"> = 'file'</em><a class="headerlink" href="#id8" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1025,8 +1072,8 @@ directory.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id8">
-<code class="sig-name descname">asset_type</code><em class="property"> = 'sequence'</em><a class="headerlink" href="#id8" title="Permalink to this definition">¶</a></dt>
+<dt id="id9">
+<code class="sig-name descname">asset_type</code><em class="property"> = 'sequence'</em><a class="headerlink" href="#id9" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1161,23 +1208,23 @@ directory.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id9">
-<code class="sig-name descname">asset_name_fields</code><em class="property"> = ['project', 'specification', 'descriptor', 'version']</em><a class="headerlink" href="#id9" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt id="id10">
-<code class="sig-name descname">asset_type</code><em class="property"> = 'specification'</em><a class="headerlink" href="#id10" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">asset_name_fields</code><em class="property"> = ['project', 'specification', 'descriptor', 'version']</em><a class="headerlink" href="#id10" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id11">
-<code class="sig-name descname">descriptor</code><em class="property"> = &lt;ListType(StringType) instance on SpecificationBase as 'descriptor'&gt;</em><a class="headerlink" href="#id11" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">asset_type</code><em class="property"> = 'specification'</em><a class="headerlink" href="#id11" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id12">
-<code class="sig-name descname">extension</code><em class="property"> = &lt;ListType(StringType) instance on SpecificationBase as 'extension'&gt;</em><a class="headerlink" href="#id12" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">descriptor</code><em class="property"> = &lt;ListType(StringType) instance on SpecificationBase as 'descriptor'&gt;</em><a class="headerlink" href="#id12" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id13">
+<code class="sig-name descname">extension</code><em class="property"> = &lt;ListType(StringType) instance on SpecificationBase as 'extension'&gt;</em><a class="headerlink" href="#id13" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1186,8 +1233,8 @@ directory.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id13">
-<code class="sig-name descname">filename_fields</code><em class="property"> = ['project', 'specification', 'descriptor', 'version', 'extension']</em><a class="headerlink" href="#id13" title="Permalink to this definition">¶</a></dt>
+<dt id="id14">
+<code class="sig-name descname">filename_fields</code><em class="property"> = ['project', 'specification', 'descriptor', 'version', 'extension']</em><a class="headerlink" href="#id14" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1300,8 +1347,8 @@ Errors are captured in their respective keys.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="id14">
-<code class="sig-name descname">project</code><em class="property"> = &lt;ListType(StringType) instance on SpecificationBase as 'project'&gt;</em><a class="headerlink" href="#id14" title="Permalink to this definition">¶</a></dt>
+<dt id="id15">
+<code class="sig-name descname">project</code><em class="property"> = &lt;ListType(StringType) instance on SpecificationBase as 'project'&gt;</em><a class="headerlink" href="#id15" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1327,8 +1374,8 @@ Errors are captured in their respective keys.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="id15">
-<code class="sig-name descname">version</code><em class="property"> = &lt;ListType(IntType) instance on SpecificationBase as 'version'&gt;</em><a class="headerlink" href="#id15" title="Permalink to this definition">¶</a></dt>
+<dt id="id16">
+<code class="sig-name descname">version</code><em class="property"> = &lt;ListType(IntType) instance on SpecificationBase as 'version'&gt;</em><a class="headerlink" href="#id16" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1404,8 +1451,8 @@ version,</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id16">
-<code class="sig-name descname">asset_name_fields</code><em class="property"> = ['project', 'specification', 'descriptor', 'version']</em><a class="headerlink" href="#id16" title="Permalink to this definition">¶</a></dt>
+<dt id="id17">
+<code class="sig-name descname">asset_name_fields</code><em class="property"> = ['project', 'specification', 'descriptor', 'version']</em><a class="headerlink" href="#id17" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1414,8 +1461,8 @@ version,</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id17">
-<code class="sig-name descname">extension</code><em class="property"> = &lt;ListType(StringType) instance on Raw001 as 'extension'&gt;</em><a class="headerlink" href="#id17" title="Permalink to this definition">¶</a></dt>
+<dt id="id18">
+<code class="sig-name descname">extension</code><em class="property"> = &lt;ListType(StringType) instance on Raw001 as 'extension'&gt;</em><a class="headerlink" href="#id18" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1424,8 +1471,8 @@ version,</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id18">
-<code class="sig-name descname">filename_fields</code><em class="property"> = ['project', 'specification', 'descriptor', 'version', 'frame', 'extension']</em><a class="headerlink" href="#id18" title="Permalink to this definition">¶</a></dt>
+<dt id="id19">
+<code class="sig-name descname">filename_fields</code><em class="property"> = ['project', 'specification', 'descriptor', 'version', 'frame', 'extension']</em><a class="headerlink" href="#id19" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1434,8 +1481,8 @@ version,</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id19">
-<code class="sig-name descname">height</code><em class="property"> = &lt;ListType(IntType) instance on Raw001 as 'height'&gt;</em><a class="headerlink" href="#id19" title="Permalink to this definition">¶</a></dt>
+<dt id="id20">
+<code class="sig-name descname">height</code><em class="property"> = &lt;ListType(IntType) instance on Raw001 as 'height'&gt;</em><a class="headerlink" href="#id20" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1454,8 +1501,8 @@ version,</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id20">
-<code class="sig-name descname">width</code><em class="property"> = &lt;ListType(IntType) instance on Raw001 as 'width'&gt;</em><a class="headerlink" href="#id20" title="Permalink to this definition">¶</a></dt>
+<dt id="id21">
+<code class="sig-name descname">width</code><em class="property"> = &lt;ListType(IntType) instance on Raw001 as 'width'&gt;</em><a class="headerlink" href="#id21" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
