@@ -308,6 +308,42 @@ def delete():
     )
 
 
+@API.route('/api/export', methods=['POST'])
+@swg.swag_from(dict(
+    parameters=[],
+    responses={
+        200: dict(
+            description='Hidebound data successfully exported.',
+            content='application/json',
+        ),
+        500: dict(
+            description='Internal server error.',
+        )
+    }
+))
+def export():
+    '''
+    Export hidebound data.
+
+    Returns:
+        Response: Flask Response instance.
+    '''
+    global DATABASE
+    global CONFIG
+
+    if DATABASE is None:
+        return server_tools.get_initialization_error()
+
+    DATABASE.export()
+    return flask.Response(
+        response=json.dumps(dict(
+            message='Hidebound data exported.',
+            config=CONFIG,
+        )),
+        mimetype='application/json'
+    )
+
+
 @API.route('/api/search', methods=['POST'])
 @swg.swag_from(dict(
     parameters=[

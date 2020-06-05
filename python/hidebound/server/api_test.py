@@ -8,6 +8,7 @@ import flask
 import numpy as np
 
 from hidebound.core.database_test_base import DatabaseTestBase
+from hidebound.exporters.mock_girder import MockGirderExporter
 import hidebound.core.tools as tools
 import hidebound.server.api as api
 # ------------------------------------------------------------------------------
@@ -37,6 +38,7 @@ class ApiTests(DatabaseTestBase):
         api.DATABASE = None
         api.CONFIG = None
 
+        self.api = api
         self.client = self.app.test_client()
         self.app.config['TESTING'] = True
 
@@ -266,6 +268,37 @@ class ApiTests(DatabaseTestBase):
 
     def test_delete_no_init(self):
         result = self.client.post('/api/delete').json['message']
+        expected = 'Database not initialized. Please call initialize.'
+        self.assertRegex(result, expected)
+
+    # EXPORT--------------------------------------------------------------------
+    def test_export(self):
+        config = dict(
+            root_directory=self.root,
+            hidebound_directory=self.hb_root,
+            specification_files=[self.specs],
+            exporters=dict(girder=dict(api_key='api_key', root_id='root_id'))
+        )
+        config = json.dumps(config)
+        self.client.post('/api/initialize', json=config)
+        self.api.DATABASE._Database__exporter_lut = dict(
+            girder=MockGirderExporter
+        )
+        self.client.post('/api/update')
+        self.client.post('/api/create')
+        self.client.post('/api/export')
+
+        client = self.api.DATABASE._Database__exporter_lut['girder']._client
+        result = list(client.folders.keys())
+        asset_paths = [
+            'p-proj001_s-spec001_d-pizza_v001',
+            'p-proj001_s-spec001_d-pizza_v002',
+        ]
+        for expected in asset_paths:
+            self.assertIn(expected, result)
+
+    def test_export_no_init(self):
+        result = self.client.post('/api/export').json['message']
         expected = 'Database not initialized. Please call initialize.'
         self.assertRegex(result, expected)
 
