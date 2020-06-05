@@ -49,7 +49,7 @@ COLORS = [
     'blue2',
     'green2',
 ]
-FONT_FAMILY = 'sans serif'
+FONT_FAMILY = 'sans-serif, "sans serif"'
 
 
 # APP---------------------------------------------------------------------------
