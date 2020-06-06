@@ -348,6 +348,7 @@ class Database:
         Returns:
             Database: self.
         '''
+        # TODO: Find a nicer pattern for injecting exporters.
         lut = dict(girder=GirderExporter)
 
         # reassign lut for testing
@@ -359,7 +360,8 @@ class Database:
             exporter.export(self._hb_root)
 
             # assign instance tp exporter_lut for testing
-            self.__exporter_lut[key] = exporter
+            if self.__exporter_lut is not None:
+                self.__exporter_lut[key] = exporter
 
     def search(self, query, group_by_asset=False):
         '''

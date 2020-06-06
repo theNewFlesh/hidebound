@@ -2,6 +2,7 @@ from pathlib import Path
 import base64
 import json
 import os
+import traceback
 
 import flask
 import jinja2
@@ -80,6 +81,7 @@ def error_to_response(error):
             args=list(map(str, error.args)),
             message=msg,
             code=500,
+            traceback=traceback.format_exc(),
         )),
         mimetype='application/json',
         status=500,
