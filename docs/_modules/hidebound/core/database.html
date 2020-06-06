@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.7.2
+                0.7.3
               </div>
             
           
@@ -512,6 +512,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Database: self.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># TODO: Find a nicer pattern for injecting exporters.</span>
         <span class="n">lut</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">girder</span><span class="o">=</span><span class="n">GirderExporter</span><span class="p">)</span>
 
         <span class="c1"># reassign lut for testing</span>
@@ -523,7 +524,8 @@
             <span class="n">exporter</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hb_root</span><span class="p">)</span>
 
             <span class="c1"># assign instance tp exporter_lut for testing</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__exporter_lut</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">exporter</span></div>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__exporter_lut</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__exporter_lut</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">exporter</span></div>
 
 <div class="viewcode-block" id="Database.search"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">group_by_asset</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
