@@ -45,6 +45,7 @@ def get_info():
     image        - Display the Docker image id for {repo} service
     lab          - Start a Jupyter lab server
     lint         - Run linting on {repo} service code
+    package      - Build {repo} pip package
     publish      - Publish repository to python package index.
     python       - Run python interpreter session inside {repo} container
     remove       - Remove {repo} service Docker image
@@ -378,6 +379,26 @@ def get_publish_command(info):
     Returns:
         str: Command.
     '''
+    cmd = '{exec} twine upload dist/*; '
+    cmd += '{exec2} rm -rf /tmp/{repo}; '
+    cmd = cmd.format(
+        repo=REPO,
+        exec=get_docker_exec_command(info, '/tmp/' + REPO, env_vars=[]),
+        exec2=get_docker_exec_command(info, env_vars=[]),
+    )
+    return cmd
+
+
+def get_package_command(info):
+    '''
+    Build pip package.
+
+    Args:
+        info (dict): Info dictionary.
+
+    Returns:
+        str: Command.
+    '''
     cmd = '{exec} bash -c "'
     cmd += 'rm -rf /tmp/{repo}; '
     cmd += 'cp -R /root/{repo}/python /tmp/{repo}; '
@@ -398,8 +419,6 @@ def get_publish_command(info):
     cmd += "rm /tmp/delete_me'"
     cmd += '"; '
     cmd += '{exec2} python3.7 setup.py sdist; '
-    cmd += '{exec2} twine upload dist/*; '
-    cmd += '{exec} rm -rf /tmp/{repo}; '
     cmd = cmd.format(
         x='{}',
         repo=REPO,
@@ -668,6 +687,9 @@ def main():
     elif mode == 'lint':
         cmd = get_lint_command(info)
 
+    elif mode == 'package':
+        cmd = get_package_command(info)
+
     elif mode == 'prod':
         if info['args'] == ['']:
             cmd = 'echo "Please provide a directory to map into the container '
@@ -679,6 +701,7 @@ def main():
 
     elif mode == 'publish':
         cmd = get_tox_command(info)
+        cmd += ' && ' + get_package_command(info)
         cmd += ' && ' + get_publish_command(info)
 
     elif mode == 'python':
