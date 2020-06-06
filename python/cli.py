@@ -380,7 +380,7 @@ def get_publish_command(info):
         str: Command.
     '''
     cmd = '{exec} twine upload dist/*; '
-    cmd += '{exec2} rm -rf /tmp/{repo}; '
+    cmd += '{exec2} rm -rf /tmp/{repo} '
     cmd = cmd.format(
         repo=REPO,
         exec=get_docker_exec_command(info, '/tmp/' + REPO, env_vars=[]),
@@ -418,7 +418,7 @@ def get_package_command(info):
     cmd += "| grep -v mock > {x}; "
     cmd += "rm /tmp/delete_me'"
     cmd += '"; '
-    cmd += '{exec2} python3.7 setup.py sdist; '
+    cmd += '{exec2} python3.7 setup.py sdist '
     cmd = cmd.format(
         x='{}',
         repo=REPO,
