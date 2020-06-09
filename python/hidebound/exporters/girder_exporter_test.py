@@ -1,3 +1,7 @@
+import json
+import os
+from pathlib import Path
+from tempfile import TemporaryDirectory
 import unittest
 
 from girder_client import HttpError
@@ -64,6 +68,65 @@ class GirderExporterTests(unittest.TestCase):
         )
         self.exporter = GirderExporter(**self.config, client=self.client)
 
+    def create_data(self, root):
+        data = Path(root, 'data')
+        metadata = Path(root, 'metadata')
+        asset = Path(root, 'metadata', 'asset')
+        file_ = Path(root, 'metadata', 'file')
+
+        os.makedirs(data)
+        os.makedirs(metadata)
+        os.makedirs(asset)
+        os.makedirs(file_)
+
+        # create asset data
+        asset_data = [
+            dict(asset_type='file', file_ids=['1-1', '1-2', '1-3']),
+            dict(asset_type='sequence', file_ids=['2-1', '2-2', '2-3']),
+            dict(asset_type='sequence', file_ids=['3-1']),
+            dict(asset_type='complex', file_ids=['4-1', '4-2', '4-3']),
+        ]
+        assets = []
+        for i, data in enumerate(asset_data):
+            id_ = i + 1
+            meta_path = Path(asset, f'{id_}.json')
+            data['asset_path'] = f'{root}/data/{id_}'
+            data['asset_path_relative'] = f'{id_}'
+            data['asset_name'] = f'{id_}'
+            assets.append([meta_path, data])
+
+        # create file data
+        ids = [
+            '1-1', '1-2', '1-3', '2-1', '2-2', '2-3', '3-1', '4-1', '4-2', '4-3'
+        ]
+        files = []
+        for id_ in ids:
+            metapath = Path(file_, f'{id_}.json')
+
+            pid = id_.split('-')[0]
+            data = dict(
+                filepath=f'{root}/data/{pid}/{id_}.txt',
+                filepath_relative=f'{pid}/{id_}.txt',
+                filename=f'{id_}.txt',
+                foo=f'bar-{id_}'
+            )
+            files.append([metapath, data])
+
+        for filepath, data in assets:
+            with open(filepath, 'w') as f:
+                json.dump(data, f)
+
+        for filepath, data in files:
+            with open(filepath, 'w') as f:
+                json.dump(data, f)
+
+            temp = data['filepath']
+            os.makedirs(Path(temp).parent, exist_ok=True)
+            with open(temp, 'w') as f:
+                f.write('')
+
+        return assets, files
+
     def test_from_config(self):
         GirderExporter.from_config(self.config, client=self.client)
         self.config['root_type'] = 'taco'
@@ -81,6 +144,33 @@ class GirderExporterTests(unittest.TestCase):
         )
         expected = 'http://1.2.3.4:5678/api/v1'
         self.assertEqual(result._url, expected)
+
+    def test_export(self):
+        with TemporaryDirectory() as root:
+            self.client = MockGirderClient(add_suffix=False)
+
+            e_assets, e_files = self.create_data(root)
+            e_assets = [x[1]['asset_name'] for x in e_assets]
+            e_files = [x[1]['filename'] for x in e_files]
+
+            # import subprocess
+            # x = subprocess.Popen(
+            #     f'tree {root}', stdout=subprocess.PIPE, shell=True
+            # )
+            # x.wait()
+            # print(x.stdout.read().decode('utf-8'))
+
+            exporter = GirderExporter\
+                .from_config(self.config, client=self.client)
+            exporter.export(root)
+
+            result = self.client.folders.keys()
+            result = sorted(list(result))
+            self.assertEqual(result, e_assets)
+
+            result = self.client.items.keys()
+            result = sorted(list(result))
+            self.assertEqual(result, e_files)
 
     def test_export_dirs(self):
         dirpath = '/foo/bar/baz'
