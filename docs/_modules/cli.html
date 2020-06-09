@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.7.3
+                0.7.4
               </div>
             
           
@@ -209,6 +209,7 @@
 <span class="s1">    image        - Display the Docker image id for </span><span class="si">{repo}</span><span class="s1"> service</span>
 <span class="s1">    lab          - Start a Jupyter lab server</span>
 <span class="s1">    lint         - Run linting on </span><span class="si">{repo}</span><span class="s1"> service code</span>
+<span class="s1">    package      - Build </span><span class="si">{repo}</span><span class="s1"> pip package</span>
 <span class="s1">    publish      - Publish repository to python package index.</span>
 <span class="s1">    python       - Run python interpreter session inside </span><span class="si">{repo}</span><span class="s1"> container</span>
 <span class="s1">    remove       - Remove </span><span class="si">{repo}</span><span class="s1"> service Docker image</span>
@@ -542,6 +543,26 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        str: Command.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{exec}</span><span class="s1"> twine upload dist/*; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{exec2}</span><span class="s1"> rm -rf /tmp/</span><span class="si">{repo}</span><span class="s1"> &#39;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">,</span>
+        <span class="n">exec</span><span class="o">=</span><span class="n">get_docker_exec_command</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="s1">&#39;/tmp/&#39;</span> <span class="o">+</span> <span class="n">REPO</span><span class="p">,</span> <span class="n">env_vars</span><span class="o">=</span><span class="p">[]),</span>
+        <span class="n">exec2</span><span class="o">=</span><span class="n">get_docker_exec_command</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">env_vars</span><span class="o">=</span><span class="p">[]),</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">cmd</span></div>
+
+
+<div class="viewcode-block" id="get_package_command"><a class="viewcode-back" href="../cli.html#cli.get_package_command">[docs]</a><span class="k">def</span> <span class="nf">get_package_command</span><span class="p">(</span><span class="n">info</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Build pip package.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        info (dict): Info dictionary.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Command.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{exec}</span><span class="s1"> bash -c &quot;&#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;rm -rf /tmp/</span><span class="si">{repo}</span><span class="s1">; &#39;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;cp -R /root/</span><span class="si">{repo}</span><span class="s1">/python /tmp/</span><span class="si">{repo}</span><span class="s1">; &#39;</span>
@@ -561,9 +582,7 @@
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot;| grep -v mock &gt; </span><span class="si">{x}</span><span class="s2">; &quot;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot;rm /tmp/delete_me&#39;&quot;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;&quot;; &#39;</span>
-    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{exec2}</span><span class="s1"> python3.7 setup.py sdist; &#39;</span>
-    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{exec2}</span><span class="s1"> twine upload dist/*; &#39;</span>
-    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{exec}</span><span class="s1"> rm -rf /tmp/</span><span class="si">{repo}</span><span class="s1">; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{exec2}</span><span class="s1"> python3.7 setup.py sdist &#39;</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="n">x</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="p">,</span>
         <span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">,</span>
@@ -832,6 +851,9 @@
     <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;lint&#39;</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_lint_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
 
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;package&#39;</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_package_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+
     <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;prod&#39;</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]:</span>
             <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;echo &quot;Please provide a directory to map into the container &#39;</span>
@@ -843,6 +865,7 @@
 
     <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;publish&#39;</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_tox_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+        <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39; &amp;&amp; &#39;</span> <span class="o">+</span> <span class="n">get_package_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
         <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39; &amp;&amp; &#39;</span> <span class="o">+</span> <span class="n">get_publish_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;python&#39;</span><span class="p">:</span>
