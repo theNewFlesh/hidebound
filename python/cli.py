@@ -715,7 +715,7 @@ def main():
 
     elif mode == 'publish':
         cmd = get_tox_command(info)
-        cmd += '&& ' + get_remove_pycache_command
+        cmd += ' && ' + get_remove_pycache_command()
         cmd += ' && ' + get_package_command(info)
         cmd += ' && ' + get_publish_command(info)
 
