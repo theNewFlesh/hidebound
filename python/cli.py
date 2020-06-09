@@ -147,6 +147,19 @@ def get_radon_metrics_command(info):
     return cmd
 
 
+def get_remove_pycache_command():
+    '''
+    Removes all pycache files and directories under the repo's main directory.
+
+    Returns:
+        str: Command.
+    '''
+    cmd = r"find {repo_path} | grep -E '__pycache__|\.pyc$ | "
+    cmd += "parallel 'rm -rf {x}'"
+    cmd = cmd.format(repo_path=REPO_PATH, x='{}')
+    return cmd
+
+
 # COMMANDS----------------------------------------------------------------------
 def get_app_command(info):
     '''
@@ -701,6 +714,7 @@ def main():
 
     elif mode == 'publish':
         cmd = get_tox_command(info)
+        cmd += '&& ' + get_remove_pycache_command
         cmd += ' && ' + get_package_command(info)
         cmd += ' && ' + get_publish_command(info)
 
