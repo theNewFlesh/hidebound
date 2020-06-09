@@ -22,7 +22,7 @@ RUN echo "\n${CYAN}SETUP PYTHON3.7${NO_COLOR}"; \
     python3.7 get-pip.py && \
     rm -rf /root/get-pip.py
 
-# # install python dependencies
+# install python dependencies
 # COPY ./ /root/hidebound
 # RUN echo "\n${CYAN}INSTALL PYTHON DEPENDECIES${NO_COLOR}"; \
 #     apt update && \
@@ -50,7 +50,7 @@ RUN echo "\n${CYAN}INSTALL HIDEBOUND${NO_COLOR}"; \
     apt install -y \
         graphviz \
         python3-pydot && \
-    pip3.7 install hidebound>=0.7.3;
+    pip3.7 install hidebound>=0.7.4;
 
 ENTRYPOINT [\
     "python3.7",\
