@@ -84,7 +84,8 @@ class Vdb001(FileSpecificationBase):
     filename_fields = [
         'project', 'specification', 'descriptor', 'version', 'extension'
     ]
-    extension = StringType(
+    extension = ListType(
+        StringType(),
         required=True,
         validators=[vd.is_extension, lambda x: vd.is_eq(x, 'vdb')]
     )
