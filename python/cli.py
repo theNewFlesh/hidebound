@@ -708,7 +708,8 @@ def main():
             cmd = 'echo "Please provide a directory to map into the container '
             cmd += 'after the -a flag."'
         else:
-            cmd = get_destroy_production_container_command(info)
+            cmd = get_remove_pycache_command()
+            cmd += ' && ' + get_destroy_production_container_command(info)
             cmd += ' && ' + get_production_image_command(info)
             cmd += ' && ' + get_production_container_command(info)
 
