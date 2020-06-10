@@ -18,7 +18,7 @@ validators related to the value of that trait (especially if required).
 
 class Raw001(SequenceSpecificationBase):
     '''
-    Raw 1K x 1K pngs.
+    Raw JPEG sequences with 1 or 3 channels.
 
     Attributes:
         filename_fields (list[str]): project, specification, descriptor,
@@ -34,17 +34,55 @@ class Raw001(SequenceSpecificationBase):
         'project', 'specification', 'descriptor', 'version', 'frame',
         'extension'
     ]
-    height = ListType(
-        IntType(), required=True, validators=[lambda x: vd.is_eq(x, 1024)]
-    )
-    width = ListType(
-        IntType(), required=True, validators=[lambda x: vd.is_eq(x, 1024)]
-    )
+    height = ListType(IntType(), required=True)
+    width = ListType(IntType(), required=True)
     frame = ListType(IntType(), required=True, validators=[vd.is_frame])
+    channels = ListType(
+        IntType(), required=True, validators=[lambda x: vd.is_in(x, [1, 3])]
+    )
     extension = ListType(
         StringType(),
         required=True,
-        validators=[vd.is_extension, lambda x: vd.is_eq(x, 'png')]
+        validators=[vd.is_extension, lambda x: vd.is_eq(x, 'jpg')]
+    )
+    file_traits = dict(
+        width=tr.get_image_width,
+        height=tr.get_image_height,
+        channels=tr.get_image_channels,
+    )
+
+
+class Raw002(SequenceSpecificationBase):
+    '''
+    Raw JPEG sequences with 1 or 3 channels and coordinates.
+
+    Attributes:
+        filename_fields (list[str]): project, specification, descriptor,
+            version, frame, extension
+        asset_name_fields (list[str]): project, specification, descriptor,
+            version,
+        height (int): Image height. Must be 1024.
+        width (int): Image width. Must be 1024.
+        extension (str): File extension. Must be "png".
+    '''
+    asset_name_fields = ['project', 'specification', 'descriptor', 'version']
+    filename_fields = [
+        'project', 'specification', 'descriptor', 'version', 'coordinate',
+        'frame', 'extension'
+    ]
+    height = ListType(IntType(), required=True)
+    width = ListType(IntType(), required=True)
+    frame = ListType(IntType(), required=True, validators=[vd.is_frame])
+    coordinate = ListType(
+        ListType(IntType(), validators=[vd.is_coordinate]), required=True,
+    )
+    channels = ListType(
+        IntType(), required=True, validators=[lambda x: vd.is_in(x, [1, 3])]
+    )
+    extension = ListType(
+        StringType(),
+        required=True,
+        validators=[vd.is_extension, lambda x: vd.is_eq(x, 'jpg')]
     )
     file_traits = dict(
         width=tr.get_image_width,
@@ -55,4 +93,5 @@ class Raw001(SequenceSpecificationBase):
 
 SPECIFICATIONS = [
     Raw001,
+    Raw002,
 ]
