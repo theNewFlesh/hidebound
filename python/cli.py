@@ -115,8 +115,19 @@ def get_architecture_diagram_command(info):
     Returns:
         str: Command.
     '''
-    cmd = '{exec} python3.7 -c "from rolling_pin.repo_etl import RepoETL; '
-    cmd += "RepoETL('/root/{repo}/python').write('/root/{repo}/docs/architecture.svg', orient='lr')"
+    cmd = '{exec} python3.7 -c "'
+    cmd += "import re; from rolling_pin.repo_etl import RepoETL; "
+    cmd += "etl = RepoETL('/root/{repo}/python'); "
+    cmd += "regex = 'test|mock'; "
+    cmd += "data = etl._data.copy(); "
+    cmd += "func = lambda x: not bool(re.search(regex, x)); "
+    cmd += "mask = data.node_name.apply(func); "
+    cmd += "data = data[mask]; "
+    cmd += "data.reset_index(inplace=True, drop=True); "
+    cmd += "data.dependencies = data.dependencies"
+    cmd += ".apply(lambda x: list(filter(func, x))); "
+    cmd += "etl._data = data; "
+    cmd += "etl.write('/root/{repo}/docs/architecture.svg', orient='lr')"
     cmd += '"'
     cmd = cmd.format(
         repo=REPO,
