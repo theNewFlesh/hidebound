@@ -24,5 +24,6 @@ services:
     volumes:
       - ${REPO_PATH}:/root/hidebound
       - ${REPO_PATH}/docker/jupyter:/root/.jupyter
+      - /mnt/storage:/mnt/storage
     working_dir: "/root/hidebound/python"
     command: "tail -f /dev/null"
