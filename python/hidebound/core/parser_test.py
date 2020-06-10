@@ -393,6 +393,9 @@ class ParserTests(unittest.TestCase):
             'pizza_s-spec001',
             's-spec001banana',
             's-spec0012',
+            'p-proj001_s-spec001_d-desc_v001',
+            'p-proj001_s-spec001_d-descs-123_v001',
+            'p-proj001_s-spec001_d-desc-s-123_v001',
         ]
         for name in names:
             result = parser.parseString(name)[0].asDict()

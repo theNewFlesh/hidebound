@@ -225,7 +225,7 @@ class AssetNameParser:
             Group: Parser.
         '''
         grammar = AssetNameParser._get_grammar()
-        indicator = Suppress(Regex('.*' + AssetNameParser.SPECIFICATION_INDICATOR))
+        indicator = Suppress(Regex('.*?' + AssetNameParser.SPECIFICATION_INDICATOR))
         parser = indicator + grammar['specification_token']
         parser = Group(parser)
         return parser
