@@ -312,6 +312,21 @@ def get_lint_command(info):
     return cmd
 
 
+def get_type_checking_command(info):
+    '''
+    Runs mypy type checking on python code.
+
+    Args:
+        info (dict): Info dictionary.
+
+    Returns:
+        str: Command.
+    '''
+    cmd = '{exec} mypy /root/{repo}/python --config-file /root/{repo}/docker/mypy.ini'
+    cmd = cmd.format(repo=REPO, exec=get_docker_exec_command(info))
+    return cmd
+
+
 def get_production_image_command(info):
     '''
     Create production docker image.
@@ -709,7 +724,11 @@ def main():
         cmd = get_lab_command(info)
 
     elif mode == 'lint':
-        cmd = get_lint_command(info)
+        cmd = 'echo LINTING'
+        cmd += '; ' + get_lint_command(info)
+        cmd += '; ' + 'echo'
+        cmd += '; ' + 'echo "TYPE CHECKING"'
+        cmd += '; ' + get_type_checking_command(info)
 
     elif mode == 'package':
         cmd = get_package_command(info)

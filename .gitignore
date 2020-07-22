@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# mypy
+.mypy_cache/
+
 # packaging
 .Python
 env/
