@@ -44,7 +44,7 @@ def get_info():
     full-docs    - Generates documentation, coverage report and metrics
     image        - Display the Docker image id for {repo} service
     lab          - Start a Jupyter lab server
-    lint         - Run linting on {repo} service code
+    lint         - Run linting and type checking on {repo} service code
     package      - Build {repo} pip package
     publish      - Publish repository to python package index.
     python       - Run python interpreter session inside {repo} container
