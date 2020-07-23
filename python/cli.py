@@ -165,7 +165,7 @@ def get_remove_pycache_command():
     Returns:
         str: Command.
     '''
-    cmd = r"find {repo_path} | grep -E '__pycache__|\.pyc$ | "
+    cmd = r"find {repo_path} | grep -E '__pycache__|\.pyc$' | "
     cmd += "parallel 'rm -rf {x}'"
     cmd = cmd.format(repo_path=REPO_PATH, x='{}')
     return cmd
