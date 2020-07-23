@@ -1,3 +1,5 @@
+from typing import Union  # noqa F401
+
 from copy import copy
 from importlib import import_module
 import inspect
@@ -17,6 +19,7 @@ import hidebound.core.validators as vd
 
 # must be in here to avoid circular import
 def is_specification_file(filepath):
+    # type: (Union[str, Path]) -> None
     '''
     Validator for specification files given to Database.
 
@@ -45,7 +48,7 @@ def is_specification_file(filepath):
     # import module
     mod = None
     try:
-        mod = import_module(filename, filepath)
+        mod = import_module(filename, filepath)  # type: ignore
     except Exception:
         sys.path = temp
         msg = f'{filepath.as_posix()} could not be imported.'
@@ -58,14 +61,15 @@ def is_specification_file(filepath):
         raise ValidationError(msg)
 
     # ensure SPECIFICATIONS is a list
-    if not isinstance(mod.SPECIFICATIONS, list):
+    if not isinstance(mod.SPECIFICATIONS, list):  # type: ignore
         sys.path = temp
         msg = f'{filepath.as_posix()} SPECIFICATIONS attribute is not a list.'
         raise ValidationError(msg)
 
     # ensure all SPECIFICATIONS are subclasses of SpecificationBase
     errors = list(filter(
-        lambda x: not inspect.isclass(x) or not issubclass(x, SpecificationBase), mod.SPECIFICATIONS
+        lambda x: not inspect.isclass(x) or not issubclass(x, SpecificationBase),
+        mod.SPECIFICATIONS   # type: ignore
     ))
     if len(errors) > 0:
         sys.path = temp
@@ -76,6 +80,7 @@ def is_specification_file(filepath):
 
 
 def is_hidebound_directory(directory):
+    # type: (Union[str, Path]) -> None
     '''
     Ensures directory name is "hidebound".
 
@@ -110,23 +115,25 @@ class Config(Model):
         exporters (dict, optional): Dictionary of exporter configs, where the
             key is the exporter name and the value is its config. Default: {}.
     '''
-    root_directory = StringType(required=True, validators=[vd.is_directory])
+    root_directory = StringType(
+        required=True, validators=[vd.is_directory]
+    )  # type: StringType
     hidebound_directory = StringType(
         required=True, validators=[vd.is_directory, is_hidebound_directory]
-    )
+    )  # type: StringType
     specification_files = ListType(
         StringType(validators=[is_specification_file, vd.is_file]),
         default=[],
         required=True
-    )
-    include_regex = StringType(default='', required=True)
-    exclude_regex = StringType(default=r'\.DS_Store', required=True)
+    )  # type: ListType
+    include_regex = StringType(default='', required=True)  # type: StringType
+    exclude_regex = StringType(default=r'\.DS_Store', required=True)  # type: StringType
     write_mode = StringType(
         required=True,
         validators=[lambda x: vd.is_in(x, ['copy', 'move'])],
         default="copy",
-    )
+    )  # type: StringType
 
     class ExportersConfig(Model):
-        girder = ModelType(GirderConfig, required=False, default=None)
-    exporters = ModelType(ExportersConfig, required=False, default={})
+        girder = ModelType(GirderConfig, required=False, default=None)  # type: ModelType
+    exporters = ModelType(ExportersConfig, required=False, default={})  # type: ModelType

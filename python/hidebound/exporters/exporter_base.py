@@ -1,3 +1,5 @@
+from typing import Dict, Union
+
 from pathlib import Path
 import json
 import os
@@ -9,6 +11,7 @@ class ExporterBase:
     Abstract base class for hidebound exporters.
     '''
     def _enforce_directory_structure(self, hidebound_dir):
+        # type: (Union[str, Path]) -> None
         '''
         Ensure the following directory exist under given hidebound directory.
             * data
@@ -32,6 +35,7 @@ class ExporterBase:
                 raise FileNotFoundError(msg)
 
     def export(self, hidebound_dir):
+        # type: (Union[str, Path]) -> None
         '''
         Exports data within given hidebound directory.
 
@@ -42,7 +46,7 @@ class ExporterBase:
 
         asset_dir = Path(hidebound_dir, 'metadata', 'asset')
         file_dir = Path(hidebound_dir, 'metadata', 'file')
-        for asset in os.listdir(asset_dir):
+        for asset in os.listdir(asset_dir):  # type: Union[str, Path]
 
             # export asset
             asset = Path(asset_dir, asset)
@@ -60,6 +64,7 @@ class ExporterBase:
                 self._export_file(file_meta)
 
     def _export_asset(self, metadata):
+        # type: (Dict) -> None
         '''
         Exports metadata from single JSON file in hidebound/metadata/asset.
 
@@ -73,6 +78,7 @@ class ExporterBase:
         raise NotImplementedError(msg)
 
     def _export_file(self, metadata):
+        # type: (Dict) -> None
         '''
         Exports metadata from single JSON file in hidebound/metadata/file.
 

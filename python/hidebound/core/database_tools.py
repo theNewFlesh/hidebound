@@ -1,3 +1,5 @@
+from typing import Dict, Optional, Tuple, Union
+
 from collections import defaultdict
 from pathlib import Path
 import re
@@ -8,6 +10,7 @@ from pandas import DataFrame
 from schematics.exceptions import ValidationError
 
 from hidebound.core.parser import AssetNameParser
+from hidebound.core.specification_base import SpecificationBase
 import hidebound.core.tools as tools
 # ------------------------------------------------------------------------------
 
@@ -18,6 +21,7 @@ A library of tools for Database to use in construction of its central DataFrame.
 
 
 def _add_specification(data, specifications):
+    # type: (DataFrame, Dict[str, SpecificationBase]) -> None
     '''
     Adds specification data to given DataFrame.
 
@@ -32,6 +36,7 @@ def _add_specification(data, specifications):
         specifications (dict): Dictionary of specifications.
     '''
     def get_spec(filename):
+        # type: (str) -> Dict
         output = tools.try_(
             AssetNameParser.parse_specification, filename, 'error'
         )
@@ -67,6 +72,7 @@ def _add_specification(data, specifications):
 
 
 def _validate_filepath(data):
+    # type: (DataFrame) -> None
     '''
     Validates filepath column of given DataFrame.
     Adds error to error column if invalid.
@@ -87,6 +93,7 @@ def _validate_filepath(data):
 
 
 def _add_file_traits(data):
+    # type: (DataFrame) -> None
     '''
     Adds traits derived from file in filepath.
     Add file_traits column and one column per traits key.
@@ -105,6 +112,7 @@ def _add_file_traits(data):
 
 
 def _add_asset_traits(data):
+    # type: (DataFrame) -> None
     '''
     Adds traits derived from aggregation of file traits.
     Add asset_traits column and one column per traits key.
@@ -123,6 +131,7 @@ def _add_asset_traits(data):
 
 
 def _validate_assets(data):
+    # type: (DataFrame) -> None
     '''
     Validates assets according to their specification.
     Add asset_error and asset_valid columns.
@@ -159,6 +168,7 @@ def _validate_assets(data):
 
 
 def _add_asset_id(data):
+    # type: (DataFrame) -> None
     '''
     Adds asset_id column derived UUID hash of asset filepath.
 
@@ -175,6 +185,7 @@ def _add_asset_id(data):
 
 
 def _add_asset_name(data):
+    # type: (DataFrame) -> None
     '''
     Adds asset_name column derived from filepath.
 
@@ -191,6 +202,7 @@ def _add_asset_name(data):
 
 
 def _add_asset_path(data):
+    # type: (DataFrame) -> None
     '''
     Adds asset_path column derived from filepath.
 
@@ -212,6 +224,7 @@ def _add_asset_path(data):
 
 
 def _add_relative_path(data, column, root_dir):
+    # type: (DataFrame, str, Union[str, Path]) -> None
     '''
     Adds relative path column derived from given column.
 
@@ -231,6 +244,7 @@ def _add_relative_path(data, column, root_dir):
 
 
 def _add_asset_type(data):
+    # type: (DataFrame) -> None
     '''
     Adds asset_type column derived from specification.
 
@@ -244,6 +258,7 @@ def _add_asset_type(data):
 
 
 def _cleanup(data):
+    # type: (DataFrame) -> DataFrame
     '''
     Ensures only specific columns are present and in correct order and Paths
     are converted to strings.
@@ -290,6 +305,7 @@ def _cleanup(data):
 
 
 def _get_data_for_write(data, source_dir, target_dir):
+    # type: (DataFrame, Union[str, Path], Union[str, Path]) -> Optional[Tuple[DataFrame, DataFrame, DataFrame]]  # noqa: E501
     '''
     Split given data into three DataFrame creating files.
 
@@ -305,7 +321,7 @@ def _get_data_for_write(data, source_dir, target_dir):
         * Asset metadata - For writing asset metadata to a target json file.
 
     Returns:
-        list[DataFrame]: file_data, file_metadata, asset_metadata.
+        tuple[DataFrame]: file_data, file_metadata, asset_metadata.
     '''
     # TODO: flatten file_traits and flatten asset_traits
     # get valid asset data
@@ -314,7 +330,7 @@ def _get_data_for_write(data, source_dir, target_dir):
 
     # return if there is no valid asset data
     if len(data) == 0:
-        return
+        return None
 
     source_dir = Path(source_dir).absolute().as_posix()
     data_dir = Path(target_dir, 'data').absolute().as_posix()

@@ -1,3 +1,7 @@
+from typing import Any, Dict, List, Tuple, Union
+from pathlib import Path
+import dash_table
+
 import json
 import os
 
@@ -21,15 +25,16 @@ Hidebound service used for displaying and interacting with Hidebound database.
 '''
 
 
-APP = flask.Flask(__name__)
+APP = flask.Flask(__name__)  # type: Union[flask.Flask, dash.Dash]
 swg.Swagger(APP)
 APP.register_blueprint(api.API)
 APP = components.get_dash_app(APP)
-CONFIG_PATH = None
+CONFIG_PATH = None  # type: Union[str, Path, None]
 
 
 @APP.server.route('/static/<stylesheet>')
 def serve_stylesheet(stylesheet):
+    # type: (str) -> flask.Response
     '''
     Serve stylesheet to app.
 
@@ -66,6 +71,7 @@ def serve_stylesheet(stylesheet):
     [State('store', 'data')]
 )
 def on_event(*inputs):
+    # type: (Tuple[Any, ...]) -> Dict[str, Any]
     '''
     Update Hidebound database instance, and updates store with input data.
 
@@ -77,24 +83,24 @@ def on_event(*inputs):
     '''
     APP.logger.debug(f'on_event called with inputs: {str(inputs)[:50]}')
 
-    store = inputs[-1] or {}
-    config = store.get('config', api.CONFIG)
+    store = inputs[-1] or {}  # type: Any
+    config = store.get('config', api.CONFIG)  # type: Dict
     conf = json.dumps(config)
 
     context = dash.callback_context
-    inputs = {}
+    inputs_ = {}
     for item in context.inputs_list:
         key = item['id']
         val = None
         if 'value' in item.keys():
             val = item['value']
-        inputs[key] = val
+        inputs_[key] = val
 
     # convert search dropdown to boolean
     grp = False
-    if inputs['dropdown'] == 'asset':
+    if inputs_['dropdown'] == 'asset':
         grp = True
-    inputs['dropdown'] = grp
+    inputs_['dropdown'] = grp
 
     input_id = context.triggered[0]['prop_id'].split('.')[0]
 
@@ -125,17 +131,18 @@ def on_event(*inputs):
 
     elif input_id == 'search-button':
         query = json.dumps({
-            'query': inputs['query'],
-            'group_by_asset': inputs['dropdown']
+            'query': inputs_['query'],
+            'group_by_asset': inputs_['dropdown']
         })
         response = APP.server.test_client().post('/api/search', json=query).json
         store['/api/read'] = response
-        store['query'] = inputs['query']
+        store['query'] = inputs_['query']
 
     elif input_id == 'upload':
-        temp = 'invalid'
+        temp = 'invalid'  # type: Any
         try:
-            temp = server_tools.parse_json_file_content(inputs['upload'])
+            upload = inputs_['upload']  # type: Any
+            temp = server_tools.parse_json_file_content(upload)
             Config(temp).validate()
             store['config'] = temp
             store['config_error'] = None
@@ -148,7 +155,7 @@ def on_event(*inputs):
         try:
             config = store['config']
             Config(config).validate()
-            with open(CONFIG_PATH, 'w') as f:
+            with open(CONFIG_PATH, 'w') as f:  # type: ignore
                 json.dump(config, f, indent=4, sort_keys=True)
             store['config_error'] = None
         except Exception as error:
@@ -162,6 +169,7 @@ def on_event(*inputs):
     [Input('store', 'data')]
 )
 def on_datatable_update(store):
+    # type: (Dict) -> dash_table.DataTable
     '''
     Updates datatable with read information from store.
 
@@ -192,6 +200,7 @@ def on_datatable_update(store):
     [State('store', 'data')]
 )
 def on_get_tab(tab, store):
+    # type: (str, Dict) -> Union[flask.Response, List, None]
     '''
     Serve content for app tabs.
 
@@ -214,7 +223,7 @@ def on_get_tab(tab, store):
     elif tab == 'graph':
         data = store.get('/api/read', None)
         if data is None:
-            return
+            return None
 
         if 'error' in data.keys():
             return components.get_key_value_card(
@@ -242,6 +251,7 @@ def on_get_tab(tab, store):
     [State('store', 'data')]
 )
 def on_config_card_update(timestamp, store):
+    # type: (int, Dict[str, Any]) -> flask.Response
     '''
     Updates config card with config information from store.
 

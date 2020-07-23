@@ -1,3 +1,5 @@
+from typing import Union
+
 from pathlib import Path
 
 import skimage.io
@@ -11,6 +13,7 @@ These traits are used for validation of specifications.
 
 
 def get_image_width(filepath):
+    # type: (Union[str, Path]) -> int
     '''
     Gets the width of the given image.
 
@@ -25,6 +28,7 @@ def get_image_width(filepath):
 
 
 def get_image_height(filepath):
+    # type: (Union[str, Path]) -> int
     '''
     Gets the height of the given image.
 
@@ -39,6 +43,7 @@ def get_image_height(filepath):
 
 
 def get_image_channels(filepath):
+    # type: (Union[str, Path]) -> int
     '''
     Gets the number of channels of the given image.
 

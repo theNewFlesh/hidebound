@@ -1,3 +1,5 @@
+from typing import Any, Dict, List, Optional
+
 from girder_client import HttpError
 
 from hidebound.exporters.girder_exporter import GirderExporter
@@ -12,11 +14,12 @@ clients.
 
 class MockGirderExporter:
     '''
-    A mmock version of the GirderExporter class.
+    A mock version of the GirderExporter class.
     '''
 
     @staticmethod
     def from_config(config):
+        # type: (Dict[str, Any]) -> GirderExporter
         '''
         Construct a GirderExporter from a given config.
 
@@ -36,6 +39,7 @@ class MockGirderClient:
     A mock client for Girder.
     '''
     def __init__(self, apiUrl=None, add_suffix=True):
+        # type: (Optional[str], bool) -> None
         '''
         Constructs mock client.
 
@@ -44,15 +48,16 @@ class MockGirderClient:
             add_suffix (bool, optional): Whether to add suffices to prexisting
                 folder names. Default: False.
         '''
-        self.apiUrl = apiUrl
-        self._folders = {}
-        self._items = {}
-        self._files = {}
-        self._id = -1
-        self._add_suffix = add_suffix
+        self.apiUrl = apiUrl  # type: Optional[str]
+        self._folders = {}  # type: Dict
+        self._items = {}  # type: Dict
+        self._files = {}  # type: Dict[str, Any]
+        self._id = -1  # type: int
+        self._add_suffix = add_suffix  # type: bool
 
     @property
     def folders(self):
+        # type: () -> Dict[str, Any]
         '''
         Convenience property that returns a name, folder dictionary of folders.
         '''
@@ -60,6 +65,7 @@ class MockGirderClient:
 
     @property
     def items(self):
+        # type: () -> Dict[str, Any]
         '''
         Convenience property that returns a name, item dictionary of items.
         '''
@@ -67,12 +73,14 @@ class MockGirderClient:
 
     @property
     def files(self):
+        # type: () -> Dict[str, Any]
         '''
         Convenience property that returns a name, file dictionary of files.
         '''
         return {x['name']: x for x in self._files.values()}
 
     def _get_id(self):
+        # type: () -> int
         '''
         Convenience property that returns a number that increments with each
         call.
@@ -90,6 +98,7 @@ class MockGirderClient:
         reuseExisting=False,
         metadata=None
     ):
+        # type: (str, str, str, str, Optional[str], bool, Optional[Dict]) -> Dict[str, Any]
         '''
         Creates and returns a folder.
 
@@ -103,9 +112,9 @@ class MockGirderClient:
                 Default: 'folder'.
             public (str, optional): Whether the folder should be marked as
                 public. Default: None.
-            reuseExisting (str, optional): Whether to return an existing folder
+            reuseExisting (bool, optional): Whether to return an existing folder
                 if one with the same name exists. Default: False.
-            metadata (str, optional): JSON metadata to set on the folder.
+            metadata (dict, optional): JSON metadata to set on the folder.
                 Default: None
 
         Raises:
@@ -146,6 +155,7 @@ class MockGirderClient:
         limit=None,
         offset=None
     ):
+        # type: (str, Any, Any, Any, Any) -> List
         '''
         Returns all items under a given folder.
 
@@ -163,7 +173,7 @@ class MockGirderClient:
         Returns:
             list[dict]: List if item dicts.
         '''
-        folder = self._folders.get(folderId, None)
+        folder = self._folders.get(folderId, None)  # type: Any
         if folder is None:
             return []
         return [self._items[x] for x in folder['items']]
@@ -176,6 +186,7 @@ class MockGirderClient:
         reuseExisting=False,
         metadata=None
     ):
+        # type: (str, str, str, bool, bool) -> Dict[str, Any]
         '''
         Creates and returns an item.
 
@@ -210,6 +221,7 @@ class MockGirderClient:
         filename=None,
         progressCallback=None
     ):
+        # type: (str, str, Any, Any, Any, Any) -> Dict
         '''
         Uploads a file to an item, in chunks.
         If the file already exists in the item with the same name and size.

@@ -1,3 +1,5 @@
+from typing import Any, Dict, List, Union
+
 from copy import deepcopy
 from importlib import import_module
 from pathlib import Path
@@ -24,6 +26,7 @@ class Database:
     '''
     @staticmethod
     def from_config(config):
+        # type: (Dict[str, Any]) -> "Database"
         '''
         Constructs a Database instance given a valid config.
 
@@ -49,9 +52,9 @@ class Database:
             filepath = Path(path)
             filename = filepath.name
             filename, _ = os.path.splitext(filename)
-            module = import_module(filename, filepath)
+            module = import_module(filename, filepath)  # type: ignore
 
-            specs.extend(module.SPECIFICATIONS)
+            specs.extend(module.SPECIFICATIONS)  # type: ignore
 
         specs = list(set(specs))
         config['specifications'] = specs
@@ -68,6 +71,7 @@ class Database:
 
     @staticmethod
     def from_json(filepath):
+        # (Union[str, Path]) -> "Database"
         '''
         Constructs a Database instance from a given json file.
 
@@ -91,6 +95,7 @@ class Database:
         write_mode='copy',
         exporters={},
     ):
+        # type: (Union[str, Path], Union[str, Path], List[type], str, str, str, Dict[str, Any]) -> None  # noqa E501
         r'''
         Creates an instance of Database but does not populate it with data.
 
@@ -165,6 +170,7 @@ class Database:
         self.__exporter_lut = None
 
     def create(self):
+        # type: () -> "Database"
         '''
         Extract valid assets as data and metadata within the hidebound
         directory.
@@ -216,6 +222,7 @@ class Database:
         return self
 
     def read(self, group_by_asset=False):
+        # type: (bool) -> "DataFrame"
         '''
         Return a DataFrame which can be easily be queried and has only cells
         with scalar values.
@@ -295,6 +302,7 @@ class Database:
         return data
 
     def update(self):
+        # () -> "Database"
         '''
         Recurse root directory, populate self.data with its files, locate and
         validate assets.
@@ -324,6 +332,7 @@ class Database:
         return self
 
     def delete(self):
+        # type: () -> "Database"
         '''
         Deletes hidebound/data and hidebound/metadata directories and all their
         contents.
@@ -342,11 +351,9 @@ class Database:
         return self
 
     def export(self):
+        # type: () -> None
         '''
         Exports all the files found in in hidebound root directory.
-
-        Returns:
-            Database: self.
         '''
         # TODO: Find a nicer pattern for injecting exporters.
         lut = dict(girder=GirderExporter)
@@ -364,6 +371,7 @@ class Database:
                 self.__exporter_lut[key] = exporter
 
     def search(self, query, group_by_asset=False):
+        # type: (str, bool) -> "DataFrame"
         '''
         Search data according to given SQL query.
 

@@ -1,3 +1,5 @@
+from typing import Any, Dict, Union
+
 from pathlib import Path
 
 from girder_client import HttpError
@@ -23,14 +25,14 @@ class GirderConfig(Model):
         host (str, optional): Docker host IP address. Default: 0.0.0.0.
         port (int, optional): Docker host port. Default: 8080.
     '''
-    api_key = StringType(required=True)
-    root_id = StringType(required=True)
+    api_key = StringType(required=True)  # type: StringType
+    root_id = StringType(required=True)  # type: StringType
     root_type = StringType(
         required=True,
         default='collection',
         validators=[lambda x: vd.is_in([x], ['collection', 'folder'])]
-    )
-    host = IPv4Type(required=True, default='0.0.0.0')
+    )  # type: StringType
+    host = IPv4Type(required=True, default='0.0.0.0')  # type: IPv4Type
     port = IntType(
         required=True,
         default=8080,
@@ -38,7 +40,7 @@ class GirderConfig(Model):
             lambda x: vd.is_lt(x, 65536),
             lambda x: vd.is_gt(x, 1023),
         ]
-    )
+    )  # type: IntType
 
 
 class GirderExporter(ExporterBase):
@@ -47,6 +49,7 @@ class GirderExporter(ExporterBase):
     '''
     @staticmethod
     def from_config(config, client=None):
+        # type: (Dict, Any) -> GirderExporter
         '''
         Construct a GirderExporter from a given config.
 
@@ -61,7 +64,7 @@ class GirderExporter(ExporterBase):
         Returns:
             GirderExporter: GirderExporter instance.
         '''
-        return GirderExporter(**config, client=client)
+        return GirderExporter(client=client, **config)
 
     def __init__(
         self,
@@ -72,6 +75,7 @@ class GirderExporter(ExporterBase):
         port=8080,
         client=None,
     ):
+        # type: (str, str, str, str, int, Any) -> None
         '''
         Constructs a GirderExporter instances and creates a Girder client.
 
@@ -101,17 +105,18 @@ class GirderExporter(ExporterBase):
         )
         GirderConfig(config).validate()
 
-        self._url = f'http://{host}:{port}/api/v1'
+        self._url = f'http://{host}:{port}/api/v1'  # type: str
 
         if client is None:
             client = girder_client.GirderClient(apiUrl=self._url)  # pragma: no cover
             client.authenticate(apiKey=api_key)  # pragma: no cover
-        self._client = client
+        self._client = client  # type: Any
 
-        self._root_id = root_id
-        self._root_type = root_type
+        self._root_id = root_id  # type: str
+        self._root_type = root_type  # type: str
 
     def _export_dirs(self, dirpath, metadata={}, exists_ok=False):
+        # type: (Union[str, Path], Dict, bool) -> Dict
         '''
         Recursively export all the dirtectories found in given path.
 
@@ -123,7 +128,7 @@ class GirderExporter(ExporterBase):
         Returns:
             dict: Response (contains _id key).
         '''
-        dirs = Path(dirpath).parts
+        dirs = Path(dirpath).parts  # type: Any
         dirs = list(filter(lambda x: x != '/', dirs))
 
         # if dirpath has no parents then export to root with metadata
@@ -158,6 +163,7 @@ class GirderExporter(ExporterBase):
         )
 
     def _export_asset(self, metadata):
+        # type: (Dict) -> None
         '''
         Export asset metadata to Girder.
         Metadata must contain these fields:
@@ -184,6 +190,7 @@ class GirderExporter(ExporterBase):
                 raise e
 
     def _export_file(self, metadata):
+        # type: (Dict) -> Any
         '''
         Export file metadata to Girder.
         Metadata must contain these fields:
@@ -193,6 +200,9 @@ class GirderExporter(ExporterBase):
 
         Args:
             metadata (dict): File metadata.
+
+        Returns:
+            object: Response.
         '''
         filepath = metadata['filepath_relative']
         filename = metadata['filename']

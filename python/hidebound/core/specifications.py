@@ -1,3 +1,5 @@
+from typing import Any, Dict, List
+
 from schematics.types import IntType, ListType, StringType
 
 import hidebound.core.validators as vd
@@ -29,27 +31,27 @@ class Raw001(SequenceSpecificationBase):
         width (int): Image width. Must be 1024.
         extension (str): File extension. Must be "png".
     '''
-    asset_name_fields = ['project', 'specification', 'descriptor', 'version']
+    asset_name_fields = ['project', 'specification', 'descriptor', 'version']  # type: List[str]
     filename_fields = [
         'project', 'specification', 'descriptor', 'version', 'frame',
         'extension'
-    ]
-    height = ListType(IntType(), required=True)
-    width = ListType(IntType(), required=True)
-    frame = ListType(IntType(), required=True, validators=[vd.is_frame])
+    ]  # type: List[str]
+    height = ListType(IntType(), required=True)  # type: ListType
+    width = ListType(IntType(), required=True)  # type: ListType
+    frame = ListType(IntType(), required=True, validators=[vd.is_frame])  # type: ListType
     channels = ListType(
         IntType(), required=True, validators=[lambda x: vd.is_in(x, [1, 3])]
-    )
+    )  # type: ListType
     extension = ListType(
         StringType(),
         required=True,
         validators=[vd.is_extension, lambda x: vd.is_eq(x, 'jpg')]
-    )
+    )  # type: ListType
     file_traits = dict(
         width=tr.get_image_width,
         height=tr.get_image_height,
         channels=tr.get_image_channels,
-    )
+    )  # type: Dict[str, Any]
 
 
 class Raw002(SequenceSpecificationBase):
@@ -65,33 +67,33 @@ class Raw002(SequenceSpecificationBase):
         width (int): Image width. Must be 1024.
         extension (str): File extension. Must be "png".
     '''
-    asset_name_fields = ['project', 'specification', 'descriptor', 'version']
+    asset_name_fields = ['project', 'specification', 'descriptor', 'version']  # type: List[str]
     filename_fields = [
         'project', 'specification', 'descriptor', 'version', 'coordinate',
         'frame', 'extension'
-    ]
-    height = ListType(IntType(), required=True)
-    width = ListType(IntType(), required=True)
-    frame = ListType(IntType(), required=True, validators=[vd.is_frame])
+    ]  # type: List[str]
+    height = ListType(IntType(), required=True)  # type: ListType
+    width = ListType(IntType(), required=True)  # type: ListType
+    frame = ListType(IntType(), required=True, validators=[vd.is_frame])  # type: ListType
     coordinate = ListType(
         ListType(IntType(), validators=[vd.is_coordinate]), required=True,
-    )
+    )  # type: ListType
     channels = ListType(
         IntType(), required=True, validators=[lambda x: vd.is_in(x, [1, 3])]
-    )
+    )  # type: ListType
     extension = ListType(
         StringType(),
         required=True,
         validators=[vd.is_extension, lambda x: vd.is_eq(x, 'jpg')]
-    )
+    )  # type: ListType
     file_traits = dict(
         width=tr.get_image_width,
         height=tr.get_image_height,
         channels=tr.get_image_channels,
-    )
+    )  # type: Dict[str, Any]
 
 
 SPECIFICATIONS = [
     Raw001,
     Raw002,
-]
+]  # type: List[type]

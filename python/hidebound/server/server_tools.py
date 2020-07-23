@@ -1,3 +1,5 @@
+from typing import Any, Dict, Tuple, Union
+
 from pathlib import Path
 import base64
 import json
@@ -12,6 +14,7 @@ import hidebound.core.tools as tools
 
 
 def render_template(filename, parameters):
+    # type: (str, Dict[str, Any]) -> bytes
     '''
     Renders a jinja2 template given by filename with given parameters.
 
@@ -20,7 +23,7 @@ def render_template(filename, parameters):
         parameters (dict): Dictionary of template parameters.
 
     Returns:
-        str: HTML string.
+        bytes: HTML.
     '''
     # path to templates inside pip package
     tempdir = tools.relative_path(__file__, '../templates').as_posix()
@@ -38,6 +41,7 @@ def render_template(filename, parameters):
 
 
 def parse_json_file_content(raw_content):
+    # type: (bytes) -> Dict
     '''
     Parses JSON file content as supplied by HTML request.
 
@@ -51,10 +55,10 @@ def parse_json_file_content(raw_content):
     Returns:
         dict: JSON content or reponse dict with error.
     '''
-    header, content = raw_content.split(',')
-    temp = header.split('/')[-1].split(';')[0]
+    header, content = raw_content.split(',')  # type: ignore
+    temp = header.split('/')[-1].split(';')[0]  # type: ignore
     if temp != 'json':
-        msg = f'File header is not JSON. Header: {header}.'
+        msg = f'File header is not JSON. Header: {header}.'  # type: ignore
         raise ValueError(msg)
 
     output = base64.b64decode(content).decode('utf-8')
@@ -62,6 +66,7 @@ def parse_json_file_content(raw_content):
 
 
 def error_to_response(error):
+    # type: (Exception) -> flask.Response
     '''
     Convenience function for formatting a given exception as a Flask Response.
 
@@ -71,7 +76,7 @@ def error_to_response(error):
     Returns:
         flask.Response: Flask response.
     '''
-    args = ['    ' + str(x) for x in error.args]
+    args = ['    ' + str(x) for x in error.args]  # type: Any
     args = '\n'.join(args)
     klass = error.__class__.__name__
     msg = f'{klass}(\n{args}\n)'
@@ -90,6 +95,7 @@ def error_to_response(error):
 
 # SETUP-------------------------------------------------------------------------
 def setup_hidebound_directory(root, config_path=None):
+    # type: (Union[str, Path], Union[str, Path, None]) -> Tuple[Dict, str]
     '''
     Creates [root]/hidebound and [root]/hidebound/specifications
     directories. Writes a default hidebound config to
@@ -130,6 +136,7 @@ def setup_hidebound_directory(root, config_path=None):
 
 # ERRORS------------------------------------------------------------------------
 def get_config_error():
+    # type: () -> flask.Response
     '''
     Convenience function for returning a config error response.
 
@@ -142,6 +149,7 @@ def get_config_error():
 
 
 def get_initialization_error():
+    # type: () -> flask.Response
     '''
     Convenience function for returning a initialization error response.
 
@@ -154,6 +162,7 @@ def get_initialization_error():
 
 
 def get_update_error():
+    # type: () -> flask.Response
     '''
     Convenience function for returning a update error response.
 
@@ -179,6 +188,7 @@ def get_read_error():
 
 
 def get_search_error():
+    # type: () -> flask.Response
     '''
     Convenience function for returning a search error response.
 

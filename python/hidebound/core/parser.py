@@ -1,3 +1,5 @@
+from typing import Any, Callable, Dict, List
+
 from copy import copy
 from pyparsing import Group, Optional, ParseException, Regex, Suppress
 # ------------------------------------------------------------------------------
@@ -8,15 +10,15 @@ class AssetNameParser:
     A class for converting asset names to metadata and metadata to asset names,
     according to a dynimcally defined grammar.
     '''
-    FIELD_SEPARATOR = '_'
-    TOKEN_SEPARATOR = '-'
-    PROJECT_INDICATOR = 'p' + TOKEN_SEPARATOR
-    SPECIFICATION_INDICATOR = 's' + TOKEN_SEPARATOR
-    DESCRIPTOR_INDICATOR = 'd' + TOKEN_SEPARATOR
-    VERSION_INDICATOR = 'v'
-    COORDINATE_INDICATOR = 'c'
-    FRAME_INDICATOR = 'f'
-    EXTENSION_INDICATOR = '.'
+    FIELD_SEPARATOR = '_'  # type: str
+    TOKEN_SEPARATOR = '-'  # type: str
+    PROJECT_INDICATOR = 'p' + TOKEN_SEPARATOR  # type: str
+    SPECIFICATION_INDICATOR = 's' + TOKEN_SEPARATOR  # type: str
+    DESCRIPTOR_INDICATOR = 'd' + TOKEN_SEPARATOR  # type: str
+    VERSION_INDICATOR = 'v'  # type: str
+    COORDINATE_INDICATOR = 'c'  # type: str
+    FRAME_INDICATOR = 'f'  # type: str
+    EXTENSION_INDICATOR = '.'  # type: str
     LEGAL_FIELDS = [
         'project',
         'specification',
@@ -25,13 +27,14 @@ class AssetNameParser:
         'coordinate',
         'frame',
         'extension'
-    ]
+    ]  # type: List[str]
 
-    VERSION_PADDING = 3
-    COORDINATE_PADDING = 3
-    FRAME_PADDING = 4
+    VERSION_PADDING = 3  # type: int
+    COORDINATE_PADDING = 3  # type: int
+    FRAME_PADDING = 4  # type: int
 
     def __init__(self, fields):
+        # type: (List[str]) -> None
         '''
         Create a AssetNameParser instance with given fields.
 
@@ -78,6 +81,7 @@ class AssetNameParser:
     # GRAMMAR-------------------------------------------------------------------
     @staticmethod
     def _raise_field_error(field, part):
+        # type: (str, str) -> Callable[[str, Any, Any, Any], None]
         '''
         A convenience function used for raising custom ParseExceptions.
 
@@ -89,6 +93,7 @@ class AssetNameParser:
             function: lambda s, l, i, e: raise_error(field, s, i)
         '''
         def raise_error(field, text, instance):
+            # type: (str, str, Any) -> None
             expr = None
             if hasattr(instance, 'expr'):
                 expr = instance.expr
@@ -102,6 +107,7 @@ class AssetNameParser:
 
     @staticmethod
     def _get_grammar():
+        # type: () -> Dict[str, Any]
         '''
         Create parser grammar dictionary.
 
@@ -181,6 +187,7 @@ class AssetNameParser:
     # PARSERS-------------------------------------------------------------------
     @staticmethod
     def _get_extension_parser(grammar):
+        # type: (Dict[str, Any]) -> Group
         '''
         Creates a parser for file extensions.
 
@@ -196,6 +203,7 @@ class AssetNameParser:
 
     @staticmethod
     def _get_parser(grammar, fields):
+        # type: (Dict[str, Any], List[str]) -> Group
         '''
         Creates a parser for asset names.
 
@@ -218,6 +226,7 @@ class AssetNameParser:
 
     @staticmethod
     def _get_specification_parser():
+        # type: () -> Group
         '''
         Returns a parser for finding a specification within an arbitrary string.
 
@@ -233,6 +242,7 @@ class AssetNameParser:
     # PUBLIC--------------------------------------------------------------------
     @staticmethod
     def parse_specification(text):
+        # type: (str) -> Dict
         '''
         Parse a string for a specification.
 
@@ -254,6 +264,7 @@ class AssetNameParser:
             raise ParseException(msg)
 
     def parse(self, text):
+        # type: (str) -> Group
         '''
         Parse a given string.
 
@@ -271,6 +282,7 @@ class AssetNameParser:
         return self._parser.parseString(text)[0].asDict()
 
     def to_string(self, dict_):
+        # type: (Dict) -> Any
         '''
         Converts a given dictionary to a string.
 
@@ -286,7 +298,7 @@ class AssetNameParser:
             has_extension = True
             fields.pop()
 
-        output = []
+        output = []  # type: Any
         for field in fields:
             if field in dict_.keys():
                 indicator = getattr(self, field.upper() + '_INDICATOR')

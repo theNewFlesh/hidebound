@@ -1,3 +1,5 @@
+from typing import Any, List, Tuple, Union
+
 from pathlib import Path
 import os
 import unittest
@@ -27,9 +29,10 @@ class DatabaseTestBase(unittest.TestCase):
         'asset_traits',
         'asset_error',
         'asset_valid',
-    ]
+    ]  # type: List[str]
 
     def get_data(self, root, nans=False):
+        # type: (str, bool) -> DataFrame
         data = [
             [0, True,  'sequence', 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v001', 'p-proj001_s-spec001_d-pizza_v001_c000-001_f0001.png',  None                                ],  # noqa E501 E241
             [0, True,  'sequence', 'spec001', 'proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v001', 'p-proj001_s-spec001_d-pizza_v001_c000-001_f0002.png',  None                                ],  # noqa E501 E241
@@ -58,7 +61,7 @@ class DatabaseTestBase(unittest.TestCase):
             [6, False, 'sequence', 'vdb001',  'proj002/vdb001',                                         'p-proj002_s-vdb001_d-bagel_v001.vdb',                  'Specification not found'           ],  # noqa E501 E241
             [6, False, 'sequence', 'vdb001',  'proj002/vdb001',                                         'p-proj002_s-vdb001_d-bagel_v002.vdb',                  'Specification not found'           ],  # noqa E501 E241
             [6, False, 'sequence', 'vdb001',  'proj002/vdb001',                                         'p-proj002_s-vdb001_d-bagel_v003.vdb',                  'Specification not found'           ],  # noqa E501 E241
-        ]
+        ]  # type: Any
 
         data = DataFrame(data)
         data.columns = [
@@ -87,6 +90,7 @@ class DatabaseTestBase(unittest.TestCase):
         return data
 
     def create_files(self, root):
+        # type: (Union[str, Path]) -> "DataFrame"
         root = Path(root).as_posix()
         data = self.get_data(root)
         for filepath in data.filepath.tolist():
@@ -103,6 +107,7 @@ class DatabaseTestBase(unittest.TestCase):
         return data
 
     def get_directory_to_dataframe_data(self, root):
+        # type: (str) -> "DataFrame"
         files = self.get_data(root)
         data = DataFrame()
         data['filename'] = files.filename
@@ -114,6 +119,7 @@ class DatabaseTestBase(unittest.TestCase):
         return data
 
     def get_specifications(self):
+        # type: () -> Tuple[Any, Any, Any]
         class Spec001(SpecificationBase):
             name = 'spec001'
             filename_fields = [

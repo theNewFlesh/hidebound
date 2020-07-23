@@ -1,3 +1,5 @@
+from typing import Any
+
 from json import JSONDecodeError
 import json
 
@@ -24,6 +26,7 @@ CONFIG = None
 
 @API.route('/api')
 def api():
+    # type: () -> Any
     '''
     Route to Hidebound API documentation.
 
@@ -99,6 +102,7 @@ DataError(
     }
 ))
 def initialize():
+    # type: () -> flask.Response
     '''
     Initialize database with given config.
 
@@ -150,6 +154,7 @@ def initialize():
     }
 ))
 def create():
+    # type: () -> flask.Response
     '''
     Create hidebound data.
 
@@ -198,6 +203,7 @@ def create():
     }
 ))
 def read():
+    # type: () -> flask.Response
     '''
     Read database.
 
@@ -220,7 +226,7 @@ def read():
         except (JSONDecodeError, TypeError, KeyError, AssertionError):
             return server_tools.get_read_error()
 
-    response = {}
+    response = {}  # type: Any
     try:
         response = DATABASE.read(group_by_asset=grp)
     except Exception as error:
@@ -250,6 +256,7 @@ def read():
     }
 ))
 def update():
+    # type: () -> flask.Response
     '''
     Update database.
 
@@ -286,6 +293,7 @@ def update():
     }
 ))
 def delete():
+    # type: () -> flask.Response
     '''
     Delete hidebound data.
 
@@ -322,6 +330,7 @@ def delete():
     }
 ))
 def export():
+    # type: () -> flask.Response
     '''
     Export hidebound data.
 
@@ -376,6 +385,7 @@ def export():
     }
 ))
 def search():
+    # type: () -> flask.Response
     '''
     Search database with a given SQL query.
 
@@ -419,6 +429,7 @@ def search():
 
 @API.errorhandler(DataError)
 def handle_data_error(error):
+    # type: (DataError) -> flask.Response
     '''
     Handles errors raise by config validation.
 

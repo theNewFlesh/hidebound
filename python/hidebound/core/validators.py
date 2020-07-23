@@ -1,12 +1,5 @@
-'''
-The validators module is function library for validating singular traits given
-to a specification.
-
-Validators are linked with traits via the validators kwarg of a
-specification class attribute. They succeed silently and raise DataError when
-the trait they validate fails. Schematics captures these error messages and
-pipes them to an error call.
-'''
+from typing import Any, Callable, List, Union
+from pathlib import Path
 
 import os
 import re
@@ -19,7 +12,19 @@ from hidebound.core.parser import AssetNameParser
 # ------------------------------------------------------------------------------
 
 
+'''
+The validators module is function library for validating singular traits given
+to a specification.
+
+Validators are linked with traits via the validators kwarg of a
+specification class attribute. They succeed silently and raise DataError when
+the trait they validate fails. Schematics captures these error messages and
+pipes them to an error call.
+'''
+
+
 def validate(message):
+    # type: (str) -> Callable
     '''
     A decorator for predicate functions that raises a ValidationError
     if it returns False.
@@ -44,6 +49,7 @@ def validate(message):
 
 
 def validate_each(message, list_first_arg=False):
+    # type: (str, bool) -> Callable
     '''
     A decorator for predicate functions that raises a ValidationError
     if it returns False when applied to each argument individually.
@@ -79,6 +85,7 @@ def validate_each(message, list_first_arg=False):
 # VALIDATORS--------------------------------------------------------------------
 @validate_each('"{}" is not a valid project name.')
 def is_project(item):
+    # type: (str) -> bool
     '''
     Validates a project name.
 
@@ -105,6 +112,7 @@ def is_project(item):
 
 @validate_each('"{}" is not a valid descriptor.')
 def is_descriptor(item):
+    # type: (str) -> bool
     '''
     Validates a descriptor.
 
@@ -139,11 +147,12 @@ def is_descriptor(item):
 
 @validate_each('{} is not a valid version. 0 < version < 1000.')
 def is_version(item):
+    # type: (int) -> bool
     '''
     Validates a version.
 
     Args:
-        item (str): Version.
+        item (int): Version.
 
     Raises:
         ValidationError: If version is invalid.
@@ -156,11 +165,12 @@ def is_version(item):
 
 @validate_each('{} is not a valid frame. -1 < frame < 10000.')
 def is_frame(item):
+    # type: (int) -> bool
     '''
     Validates a frame.
 
     Args:
-        item (str): Frame.
+        item (int): Frame.
 
     Raises:
         ValidationError: If frame is invalid.
@@ -176,11 +186,12 @@ def is_frame(item):
     list_first_arg=True
 )
 def is_coordinate(item):
+    # type: (List[int]) -> bool
     '''
     Validates a coordinate.
 
     Args:
-        item (str): Coordinate.
+        item (list[int]): Coordinate.
 
     Raises:
         ValidationError: If coordinate is invalid.
@@ -205,6 +216,7 @@ def is_coordinate(item):
 
 @validate_each('"{}" is not a valid extension.')
 def is_extension(item):
+    # type: (str) -> bool
     '''
     Validates a file extension.
 
@@ -224,6 +236,7 @@ def is_extension(item):
 
 @validate_each('{} != {}.')
 def is_eq(a, b):
+    # type: (Any, Any) -> bool
     '''
     Validates that a and b are equal.
 
@@ -242,6 +255,7 @@ def is_eq(a, b):
 
 @validate_each('{} !< {}.')
 def is_lt(a, b):
+    # type: (Any, Any) -> bool
     '''
     Validates that a is less than b.
 
@@ -260,6 +274,7 @@ def is_lt(a, b):
 
 @validate_each('{} !> {}.')
 def is_gt(a, b):
+    # type: (Any, Any) -> bool
     '''
     Validates that a is greater than b.
 
@@ -278,6 +293,7 @@ def is_gt(a, b):
 
 @validate('{} is not homogenous.')
 def is_homogenous(items):
+    # type: (List[Any]) -> bool
     '''
     Validates thats all items are equal.
 
@@ -302,6 +318,7 @@ def is_homogenous(items):
 
 @validate_each('{} is not in {}.')
 def is_in(a, b):
+    # type: (Any, Any) -> bool
     '''
     Validates that each a is in b.
     Args:
@@ -317,6 +334,7 @@ def is_in(a, b):
 
 @validate_each('{} is not an attribute of {}.')
 def is_attribute_of(name, object):
+    # type: (str, Any) -> bool
     '''
     Validates that each name is an attribute of given object.
     Args:
@@ -332,6 +350,7 @@ def is_attribute_of(name, object):
 
 @validate('{} is not a directory or does not exist.')
 def is_directory(item):
+    # type: (Union[str, Path]) -> bool
     '''
     Validates thats item is a directory.
     Args:
@@ -348,6 +367,7 @@ def is_directory(item):
 
 @validate('{} is not a file or does not exist.')
 def is_file(item):
+    # type: (Union[str, Path]) -> bool
     '''
     Validates thats item is a file.
     Args:

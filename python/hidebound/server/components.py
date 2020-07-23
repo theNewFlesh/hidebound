@@ -1,3 +1,6 @@
+from typing import Any, Dict, List, Optional
+import flask
+
 import re
 
 from pandas import DataFrame
@@ -34,7 +37,7 @@ COLOR_SCHEME = dict(
     blue2='#93B6E6',
     purple1='#C98FDE',
     purple2='#AC92DE',
-)
+)  # type: Dict[str, str]
 COLORS = [
     'cyan1',
     'red1',
@@ -48,12 +51,13 @@ COLORS = [
     'red2',
     'blue2',
     'green2',
-]
-FONT_FAMILY = 'sans-serif, "sans serif"'
+]  # type: List[str]
+FONT_FAMILY = 'sans-serif, "sans serif"'  # type: str
 
 
 # APP---------------------------------------------------------------------------
 def get_dash_app(server, storage_type='memory'):
+    # type: (flask.Flask, str) -> dash.Dash
     '''
     Generate Dash Flask app instance.
 
@@ -144,6 +148,7 @@ def get_dash_app(server, storage_type='memory'):
 
 # TABS--------------------------------------------------------------------------
 def get_data_tab(query=None):
+    # type: (Optional[str]) -> List
     '''
     Get tab element for Hidebound data.
 
@@ -158,6 +163,7 @@ def get_data_tab(query=None):
 
 
 def get_config_tab(config):
+    # type: (Dict) -> List
     '''
     Get tab element for Hidebound config.
 
@@ -173,6 +179,7 @@ def get_config_tab(config):
 
 # MENUBARS----------------------------------------------------------------------
 def get_searchbar(query=None):
+    # type: (Optional[str]) -> html.Div
     '''
     Get a row of elements used for querying Hidebound data.
 
@@ -231,6 +238,7 @@ def get_searchbar(query=None):
 
 
 def get_dummy_elements():
+    # type: () -> List
     '''
     Returns a list of all elements with callbacks so that the client will not
     throw errors in each tab.
@@ -253,6 +261,7 @@ def get_dummy_elements():
 
 
 def get_configbar(config):
+    # type: (Dict) -> html.Div
     '''
     Get a row of elements used for configuring hidebound.core.
 
@@ -287,6 +296,7 @@ def get_configbar(config):
 
 # ELEMENTS----------------------------------------------------------------------
 def get_dropdown(options):
+    # type: (List[str]) -> dcc.Dropdown
     '''
     Gets html dropdown element with given options.
 
@@ -326,6 +336,7 @@ def get_dropdown(options):
 
 
 def get_button(title):
+    # type: (str) -> html.Button
     '''
     Get a html button with a given title.
 
@@ -345,6 +356,7 @@ def get_button(title):
 
 
 def get_key_value_card(data, header=None, id_='key-value-card'):
+    # type: (Dict, Optional[str], str) -> html.Div
     '''
     Creates a key-value card using the keys and values from the given data.
     One key-value pair per row.
@@ -363,7 +375,7 @@ def get_key_value_card(data, header=None, id_='key-value-card'):
             key_setter=lambda k, v: re.sub('<list_|>', '', k))\
         .to_flat_dict()
 
-    children = []
+    children = []  # type: List[Any]
     if header is not None:
         header = html.Div(
             id=f'{id_}-header',
@@ -403,6 +415,7 @@ def get_key_value_card(data, header=None, id_='key-value-card'):
 
 
 def get_datatable(data):
+    # type: (List[Dict]) -> dash_table.DataTable
     '''
     Gets a Dash DataTable element using given data.
     Assumes dict element has all columns of table as keys.
@@ -413,7 +426,7 @@ def get_datatable(data):
     Returns:
         DataTable: Table of data.
     '''
-    cols = []
+    cols = []  # type: Any
     if len(data) > 0:
         cols = data[0].keys()
     cols = [{'name': x, 'id': x} for x in cols]
@@ -490,6 +503,7 @@ def get_datatable(data):
 
 
 def get_asset_graph(data):
+    # type: (List[Dict]) -> cyto.Cytoscape
     '''
     Creates asset graph data for cytoscape component.
 
@@ -502,19 +516,19 @@ def get_asset_graph(data):
     Returns:
         Cytoscape: Cytoscape graph.
     '''
-    data = DataFrame(data)
+    data_ = DataFrame(data)  # type: DataFrame
     cols = ['asset_path', 'asset_valid']
 
-    temp = data.columns.tolist()
+    temp = data_.columns.tolist()
     if cols[0] not in temp or cols[1] not in temp:
         msg = f'Rows must contain {cols} keys. Keys found: {temp}.'
         raise KeyError(msg)
 
-    data = data[cols]
-    keys = data.asset_path.tolist()
-    vals = data.asset_valid.apply(lambda x: f'asset_valid: {x}').tolist()
-    data = dict(zip(keys, vals))
-    graph = blob_etl.BlobETL(data).to_networkx_graph()
+    data_ = data_[cols]
+    keys = data_.asset_path.tolist()
+    vals = data_.asset_valid.apply(lambda x: f'asset_valid: {x}').tolist()
+    data_ = dict(zip(keys, vals))
+    graph = blob_etl.BlobETL(data_).to_networkx_graph()
 
     edges = []
     for i, e in enumerate(list(graph.edges)):
@@ -538,12 +552,12 @@ def get_asset_graph(data):
             nodes.append(node)
 
     nodes.extend(edges)
-    data = [{'data': x} for x in nodes]
+    data_ = [{'data': x} for x in nodes]
 
-    root = data[0]['data']['id']
+    root = data_[0]['data']['id']
     return cyto.Cytoscape(
         id='asset-graph',
-        elements=data,
+        elements=data_,
         layout={'name': 'breadthfirst', 'roots': [root]},
         style=dict(
             width='98% !important',

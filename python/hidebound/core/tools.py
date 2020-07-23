@@ -1,3 +1,5 @@
+from typing import Any, Callable, Dict, Generator, List, Optional, Union
+
 from collections import defaultdict
 from itertools import dropwhile, takewhile
 from pathlib import Path
@@ -19,6 +21,7 @@ The tools module contains general functions useful to other hidebound modules.
 
 
 def list_all_files(directory, include_regex='', exclude_regex=''):
+    # type: (Union[str, Path], str, str) -> Generator[Path, None, None]
     '''
     Recusively list all files within a given directory.
 
@@ -59,6 +62,7 @@ def list_all_files(directory, include_regex='', exclude_regex=''):
 
 
 def directory_to_dataframe(directory, include_regex='', exclude_regex=r'\.DS_Store'):
+    # type: (Union[str, Path], str, str) -> DataFrame
     r'''
     Recursively list files with in a given directory as rows in a DataFrame.
 
@@ -76,7 +80,7 @@ def directory_to_dataframe(directory, include_regex='', exclude_regex=r'\.DS_Sto
         directory,
         include_regex=include_regex,
         exclude_regex=exclude_regex
-    )
+    )  # type: Any
     files = sorted(list(files))
 
     data = DataFrame()
@@ -88,6 +92,7 @@ def directory_to_dataframe(directory, include_regex='', exclude_regex=r'\.DS_Sto
 
 
 def try_(function, item, return_item='item'):
+    # type: (Callable[[Any], Any], Any, Any) -> Any
     '''
     Call given function on given item, catch any exceptions and return given
     return item.
@@ -114,6 +119,7 @@ def try_(function, item, return_item='item'):
 
 
 def relative_path(module, path):
+    # type: (Union[str, Path], Union[str, Path]) -> Path
     '''
     Resolve path given current module's file path and given suffix.
 
@@ -125,12 +131,12 @@ def relative_path(module, path):
         Path: Resolved Path object.
     '''
     module_root = Path(module).parent
-    path = Path(path).parts
-    path = list(dropwhile(lambda x: x == ".", path))
-    up = len(list(takewhile(lambda x: x == "..", path)))
-    path = Path(*path[up:])
+    path_ = Path(path).parts  # type: Any
+    path_ = list(dropwhile(lambda x: x == ".", path_))
+    up = len(list(takewhile(lambda x: x == "..", path_)))
+    path_ = Path(*path_[up:])
     root = list(module_root.parents)[up - 1]
-    output = Path(root, path).absolute()
+    output = Path(root, path_).absolute()
 
     # LOGGER.debug(
     #     f'Relative_path called with: {module} and {path}. Returned: {output}'
@@ -139,6 +145,7 @@ def relative_path(module, path):
 
 
 def error_to_string(error):
+    # type: (Exception) -> str
     '''
     Formats error as string.
 
@@ -164,6 +171,7 @@ def error_to_string(error):
 
 
 def to_prototype(dicts):
+    # type: (List[Dict]) -> Dict
     '''
     Converts a list of dicts into a dict of lists.
     .. example::
@@ -179,7 +187,7 @@ def to_prototype(dicts):
     Returns:
         dict: Prototype dictionary.
     '''
-    output = defaultdict(lambda: [])
+    output = defaultdict(lambda: [])  # type: Any
     for dict_ in dicts:
         for key, val in dict_.items():
             output[key].append(val)
@@ -192,11 +200,13 @@ class StopWatch():
     StopWatch is used for timing blocks of code.
     '''
     def __init__(self):
-        self._delta = None
-        self._start_time = None
-        self._stop_time = None
+        # type: () -> None
+        self._delta = None  # type: Optional[datetime.timedelta]
+        self._start_time = None  # type: Optional[datetime.datetime]
+        self._stop_time = None  # type: Optional[datetime.datetime]
 
     def start(self):
+        # type: () -> None
         '''
         Call this method directly before the code you wish to time.
         '''
@@ -204,6 +214,7 @@ class StopWatch():
         self._start_time = datetime.datetime.now()
 
     def stop(self):
+        # type: () -> None
         '''
         Call this method directly after the code you wish to time.
         '''
@@ -212,13 +223,15 @@ class StopWatch():
 
     @property
     def delta(self):
+        # type: () -> datetime.timedelta
         '''
         Time delta of stop - start.
         '''
-        return self._stop_time - self._start_time
+        return self._stop_time - self._start_time  # type: ignore
 
     @property
     def human_readable_delta(self):
+        # type: () -> str
         '''
         Time delta in human readable format.
         '''

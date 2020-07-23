@@ -1,3 +1,5 @@
+from typing import Any, Dict, List, Union
+
 from pathlib import Path
 import uuid
 
@@ -30,27 +32,28 @@ class SpecificationBase(Model):
         version (int): Asset version.
         extension (str): File extension.
     '''
-    asset_type = 'specification'
+    asset_type = 'specification'  # type: str
     filename_fields = [
         'project', 'specification', 'descriptor', 'version', 'extension'
-    ]
-    asset_name_fields = ['project', 'specification', 'descriptor', 'version']
+    ]  # type: List[str]
+    asset_name_fields = ['project', 'specification', 'descriptor', 'version']  # type: List[str]
     project = ListType(
         StringType(), required=True, validators=[vd.is_project]
-    )
-    specification = ListType(StringType())
+    )  # type: ListType
+    specification = ListType(StringType())  # type: ListType
     descriptor = ListType(
         StringType(), required=True, validators=[vd.is_descriptor]
-    )
+    )  # type: ListType
     version = ListType(
         IntType(), required=True, validators=[vd.is_version]
-    )
+    )  # type: ListType
     extension = ListType(
         StringType(), required=True, validators=[vd.is_extension]
-    )
-    file_traits = {}
+    )  # type: ListType
+    file_traits = {}  # type: Dict[str, Any]
 
     def __init__(self, data={}):
+        # (Optional[Dict[str, Any]]) -> None
         '''
         Returns a new specification instance.
 
@@ -60,6 +63,7 @@ class SpecificationBase(Model):
         super().__init__(raw_data=data)
 
     def get_asset_name(self, filepath):
+        # type: (Union[str, Path]) -> str
         '''
         Returns the expected asset name give a filepath.
 
@@ -74,6 +78,7 @@ class SpecificationBase(Model):
         return AssetNameParser(self.asset_name_fields).to_string(data)
 
     def get_asset_path(self, filepath):
+        # (Union[str, Path]) -> Path
         '''
         Returns the expected asset path given a filepath.
 
@@ -90,6 +95,7 @@ class SpecificationBase(Model):
         raise NotImplementedError(msg)
 
     def get_asset_id(self, filepath):
+        # (Union[str, Path]) -> str
         '''
         Returns a hash UUID of the asset directory or file, depending of asset
         type.
@@ -105,6 +111,7 @@ class SpecificationBase(Model):
         ))
 
     def validate_filepath(self, filepath):
+        # (Union[str, Path]) -> none
         '''
         Attempts to parse the given filepath.
 
@@ -139,6 +146,7 @@ class SpecificationBase(Model):
             raise ValidationError(msg)
 
     def get_filename_traits(self, filepath):
+        # (Union[str, Path]) -> Dict[str, Any]
         '''
         Returns a dictionary of filename traits from given filepath.
         Returns error in filename_error key if one is encountered.
@@ -156,6 +164,7 @@ class SpecificationBase(Model):
             return dict(filename_error=tools.error_to_string(e))
 
     def get_file_traits(self, filepath):
+        # (Union[str, Path]) -> Dict
         '''
         Returns a dictionary of file traits from given filepath.
         Returns error in respective key if one is encountered.
@@ -175,6 +184,7 @@ class SpecificationBase(Model):
         return output
 
     def get_traits(self, filepath):
+        # (Union[str, Path]) -> Dict[str, Any]
         '''
         Returns a dictionary of file and filename traits from given filepath.
         Errors are captured in their respective keys.
@@ -197,9 +207,10 @@ class FileSpecificationBase(SpecificationBase):
     Attributes:
         asset_type (str): File.
     '''
-    asset_type = 'file'
+    asset_type = 'file'  # type: str
 
     def get_asset_path(self, filepath):
+        # (Union[str, Path]) -> Path
         '''
         Returns the filepath.
 
@@ -220,9 +231,10 @@ class SequenceSpecificationBase(SpecificationBase):
     Attributes:
         asset_type (str): Sequence.
     '''
-    asset_type = 'sequence'
+    asset_type = 'sequence'  # type: str
 
     def get_asset_path(self, filepath):
+        # (Union[str, Path]) -> Path
         '''
         Returns the directory containing the asset files.
 
@@ -242,4 +254,4 @@ class ComplexSpecificationBase(SpecificationBase):
     Attributes:
         asset_type (str): Complex.
     '''
-    asset_type = 'complex'
+    asset_type = 'complex'  # type: str
