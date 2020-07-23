@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.7.4
+                0.8.0
               </div>
             
           
@@ -162,7 +162,9 @@
            <div itemprop="articleBody">
             
   <h1>Source code for hidebound.core.tools</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">dropwhile</span><span class="p">,</span> <span class="n">takewhile</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pformat</span>
@@ -183,6 +185,7 @@
 
 
 <div class="viewcode-block" id="list_all_files"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.list_all_files">[docs]</a><span class="k">def</span> <span class="nf">list_all_files</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">include_regex</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">exclude_regex</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="c1"># type: (Union[str, Path], str, str) -&gt; Generator[Path, None, None]</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Recusively list all files within a given directory.</span>
 
@@ -223,6 +226,7 @@
 
 
 <div class="viewcode-block" id="directory_to_dataframe"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.directory_to_dataframe">[docs]</a><span class="k">def</span> <span class="nf">directory_to_dataframe</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">include_regex</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">exclude_regex</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;\.DS_Store&#39;</span><span class="p">):</span>
+    <span class="c1"># type: (Union[str, Path], str, str) -&gt; DataFrame</span>
     <span class="sa">r</span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Recursively list files with in a given directory as rows in a DataFrame.</span>
 
@@ -240,7 +244,7 @@
         <span class="n">directory</span><span class="p">,</span>
         <span class="n">include_regex</span><span class="o">=</span><span class="n">include_regex</span><span class="p">,</span>
         <span class="n">exclude_regex</span><span class="o">=</span><span class="n">exclude_regex</span>
-    <span class="p">)</span>
+    <span class="p">)</span>  <span class="c1"># type: Any</span>
     <span class="n">files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">files</span><span class="p">))</span>
 
     <span class="n">data</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">()</span>
@@ -252,6 +256,7 @@
 
 
 <div class="viewcode-block" id="try_"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.try_">[docs]</a><span class="k">def</span> <span class="nf">try_</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">return_item</span><span class="o">=</span><span class="s1">&#39;item&#39;</span><span class="p">):</span>
+    <span class="c1"># type: (Callable[[Any], Any], Any, Any) -&gt; Any</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Call given function on given item, catch any exceptions and return given</span>
 <span class="sd">    return item.</span>
@@ -278,6 +283,7 @@
 
 
 <div class="viewcode-block" id="relative_path"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.relative_path">[docs]</a><span class="k">def</span> <span class="nf">relative_path</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+    <span class="c1"># type: (Union[str, Path], Union[str, Path]) -&gt; Path</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Resolve path given current module&#39;s file path and given suffix.</span>
 
@@ -289,12 +295,12 @@
 <span class="sd">        Path: Resolved Path object.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">module_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">module</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span>
-    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">parts</span>
-    <span class="n">path</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dropwhile</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">))</span>
-    <span class="n">up</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">takewhile</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">)))</span>
-    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="o">*</span><span class="n">path</span><span class="p">[</span><span class="n">up</span><span class="p">:])</span>
+    <span class="n">path_</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">parts</span>  <span class="c1"># type: Any</span>
+    <span class="n">path_</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dropwhile</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">path_</span><span class="p">))</span>
+    <span class="n">up</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">takewhile</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="n">path_</span><span class="p">)))</span>
+    <span class="n">path_</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="o">*</span><span class="n">path_</span><span class="p">[</span><span class="n">up</span><span class="p">:])</span>
     <span class="n">root</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">module_root</span><span class="o">.</span><span class="n">parents</span><span class="p">)[</span><span class="n">up</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">path_</span><span class="p">)</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span>
 
     <span class="c1"># LOGGER.debug(</span>
     <span class="c1">#     f&#39;Relative_path called with: {module} and {path}. Returned: {output}&#39;</span>
@@ -303,6 +309,7 @@
 
 
 <div class="viewcode-block" id="error_to_string"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.error_to_string">[docs]</a><span class="k">def</span> <span class="nf">error_to_string</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
+    <span class="c1"># type: (Exception) -&gt; str</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Formats error as string.</span>
 
@@ -328,6 +335,7 @@
 
 
 <div class="viewcode-block" id="to_prototype"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.to_prototype">[docs]</a><span class="k">def</span> <span class="nf">to_prototype</span><span class="p">(</span><span class="n">dicts</span><span class="p">):</span>
+    <span class="c1"># type: (List[Dict]) -&gt; Dict</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Converts a list of dicts into a dict of lists.</span>
 <span class="sd">    .. example::</span>
@@ -343,7 +351,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        dict: Prototype dictionary.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">[])</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">[])</span>  <span class="c1"># type: Any</span>
     <span class="k">for</span> <span class="n">dict_</span> <span class="ow">in</span> <span class="n">dicts</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">dict_</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">output</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
@@ -356,11 +364,13 @@
 <span class="sd">    StopWatch is used for timing blocks of code.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_delta</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_stop_time</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># type: () -&gt; None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_delta</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: Optional[datetime.timedelta]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: Optional[datetime.datetime]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stop_time</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: Optional[datetime.datetime]</span>
 
 <div class="viewcode-block" id="StopWatch.start"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.StopWatch.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; None</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Call this method directly before the code you wish to time.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -368,6 +378,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="StopWatch.stop"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.StopWatch.stop">[docs]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; None</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Call this method directly after the code you wish to time.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -376,13 +387,15 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">delta</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; datetime.timedelta</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Time delta of stop - start.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stop_time</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stop_time</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span>  <span class="c1"># type: ignore</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">human_readable_delta</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; str</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Time delta in human readable format.</span>
 <span class="sd">        &#39;&#39;&#39;</span>

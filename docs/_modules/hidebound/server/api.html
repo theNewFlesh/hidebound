@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.7.4
+                0.8.0
               </div>
             
           
@@ -162,7 +162,9 @@
            <div itemprop="articleBody">
             
   <h1>Source code for hidebound.server.api</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">JSONDecodeError</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">JSONDecodeError</span>
 <span class="kn">import</span> <span class="nn">json</span>
 
 <span class="kn">import</span> <span class="nn">flasgger</span> <span class="k">as</span> <span class="nn">swg</span>
@@ -188,6 +190,7 @@
 
 <div class="viewcode-block" id="api"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.api">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">api</span><span class="p">():</span>
+    <span class="c1"># type: () -&gt; Any</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Route to Hidebound API documentation.</span>
 
@@ -263,6 +266,7 @@
     <span class="p">}</span>
 <span class="p">))</span>
 <span class="k">def</span> <span class="nf">initialize</span><span class="p">():</span>
+    <span class="c1"># type: () -&gt; flask.Response</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Initialize database with given config.</span>
 
@@ -314,6 +318,7 @@
     <span class="p">}</span>
 <span class="p">))</span>
 <span class="k">def</span> <span class="nf">create</span><span class="p">():</span>
+    <span class="c1"># type: () -&gt; flask.Response</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Create hidebound data.</span>
 
@@ -362,6 +367,7 @@
     <span class="p">}</span>
 <span class="p">))</span>
 <span class="k">def</span> <span class="nf">read</span><span class="p">():</span>
+    <span class="c1"># type: () -&gt; flask.Response</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Read database.</span>
 
@@ -384,7 +390,7 @@
         <span class="k">except</span> <span class="p">(</span><span class="n">JSONDecodeError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">,</span> <span class="ne">AssertionError</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">get_read_error</span><span class="p">()</span>
 
-    <span class="n">response</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: Any</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">DATABASE</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">group_by_asset</span><span class="o">=</span><span class="n">grp</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
@@ -414,6 +420,7 @@
     <span class="p">}</span>
 <span class="p">))</span>
 <span class="k">def</span> <span class="nf">update</span><span class="p">():</span>
+    <span class="c1"># type: () -&gt; flask.Response</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Update database.</span>
 
@@ -450,6 +457,7 @@
     <span class="p">}</span>
 <span class="p">))</span>
 <span class="k">def</span> <span class="nf">delete</span><span class="p">():</span>
+    <span class="c1"># type: () -&gt; flask.Response</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Delete hidebound data.</span>
 
@@ -486,6 +494,7 @@
     <span class="p">}</span>
 <span class="p">))</span>
 <span class="k">def</span> <span class="nf">export</span><span class="p">():</span>
+    <span class="c1"># type: () -&gt; flask.Response</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Export hidebound data.</span>
 
@@ -540,6 +549,7 @@
     <span class="p">}</span>
 <span class="p">))</span>
 <span class="k">def</span> <span class="nf">search</span><span class="p">():</span>
+    <span class="c1"># type: () -&gt; flask.Response</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Search database with a given SQL query.</span>
 
@@ -583,6 +593,7 @@
 
 <div class="viewcode-block" id="handle_data_error"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.handle_data_error">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">errorhandler</span><span class="p">(</span><span class="n">DataError</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">handle_data_error</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
+    <span class="c1"># type: (DataError) -&gt; flask.Response</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Handles errors raise by config validation.</span>
 

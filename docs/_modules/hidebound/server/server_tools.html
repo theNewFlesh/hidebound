@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.7.4
+                0.8.0
               </div>
             
           
@@ -162,7 +162,9 @@
            <div itemprop="articleBody">
             
   <h1>Source code for hidebound.server.server_tools</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">base64</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -176,6 +178,7 @@
 
 
 <div class="viewcode-block" id="render_template"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.render_template">[docs]</a><span class="k">def</span> <span class="nf">render_template</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
+    <span class="c1"># type: (str, Dict[str, Any]) -&gt; bytes</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Renders a jinja2 template given by filename with given parameters.</span>
 
@@ -184,7 +187,7 @@
 <span class="sd">        parameters (dict): Dictionary of template parameters.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        str: HTML string.</span>
+<span class="sd">        bytes: HTML.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># path to templates inside pip package</span>
     <span class="n">tempdir</span> <span class="o">=</span> <span class="n">tools</span><span class="o">.</span><span class="n">relative_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s1">&#39;../templates&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
@@ -202,6 +205,7 @@
 
 
 <div class="viewcode-block" id="parse_json_file_content"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.parse_json_file_content">[docs]</a><span class="k">def</span> <span class="nf">parse_json_file_content</span><span class="p">(</span><span class="n">raw_content</span><span class="p">):</span>
+    <span class="c1"># type: (bytes) -&gt; Dict</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Parses JSON file content as supplied by HTML request.</span>
 
@@ -215,10 +219,10 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        dict: JSON content or reponse dict with error.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">header</span><span class="p">,</span> <span class="n">content</span> <span class="o">=</span> <span class="n">raw_content</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
-    <span class="n">temp</span> <span class="o">=</span> <span class="n">header</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">header</span><span class="p">,</span> <span class="n">content</span> <span class="o">=</span> <span class="n">raw_content</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="n">header</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># type: ignore</span>
     <span class="k">if</span> <span class="n">temp</span> <span class="o">!=</span> <span class="s1">&#39;json&#39;</span><span class="p">:</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;File header is not JSON. Header: </span><span class="si">{</span><span class="n">header</span><span class="si">}</span><span class="s1">.&#39;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;File header is not JSON. Header: </span><span class="si">{</span><span class="n">header</span><span class="si">}</span><span class="s1">.&#39;</span>  <span class="c1"># type: ignore</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="n">output</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">content</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
@@ -226,6 +230,7 @@
 
 
 <div class="viewcode-block" id="error_to_response"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.error_to_response">[docs]</a><span class="k">def</span> <span class="nf">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
+    <span class="c1"># type: (Exception) -&gt; flask.Response</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Convenience function for formatting a given exception as a Flask Response.</span>
 
@@ -235,7 +240,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        flask.Response: Flask response.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;    &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">error</span><span class="o">.</span><span class="n">args</span><span class="p">]</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;    &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">error</span><span class="o">.</span><span class="n">args</span><span class="p">]</span>  <span class="c1"># type: Any</span>
     <span class="n">args</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="n">klass</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
     <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">klass</span><span class="si">}</span><span class="s1">(</span><span class="se">\n</span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="se">\n</span><span class="s1">)&#39;</span>
@@ -254,6 +259,7 @@
 
 <span class="c1"># SETUP-------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="setup_hidebound_directory"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.setup_hidebound_directory">[docs]</a><span class="k">def</span> <span class="nf">setup_hidebound_directory</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">config_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># type: (Union[str, Path], Union[str, Path, None]) -&gt; Tuple[Dict, str]</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Creates [root]/hidebound and [root]/hidebound/specifications</span>
 <span class="sd">    directories. Writes a default hidebound config to</span>
@@ -294,6 +300,7 @@
 
 <span class="c1"># ERRORS------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="get_config_error"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.get_config_error">[docs]</a><span class="k">def</span> <span class="nf">get_config_error</span><span class="p">():</span>
+    <span class="c1"># type: () -&gt; flask.Response</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Convenience function for returning a config error response.</span>
 
@@ -306,6 +313,7 @@
 
 
 <div class="viewcode-block" id="get_initialization_error"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.get_initialization_error">[docs]</a><span class="k">def</span> <span class="nf">get_initialization_error</span><span class="p">():</span>
+    <span class="c1"># type: () -&gt; flask.Response</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Convenience function for returning a initialization error response.</span>
 
@@ -318,6 +326,7 @@
 
 
 <div class="viewcode-block" id="get_update_error"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.get_update_error">[docs]</a><span class="k">def</span> <span class="nf">get_update_error</span><span class="p">():</span>
+    <span class="c1"># type: () -&gt; flask.Response</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Convenience function for returning a update error response.</span>
 
@@ -343,6 +352,7 @@
 
 
 <div class="viewcode-block" id="get_search_error"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.get_search_error">[docs]</a><span class="k">def</span> <span class="nf">get_search_error</span><span class="p">():</span>
+    <span class="c1"># type: () -&gt; flask.Response</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Convenience function for returning a search error response.</span>
 

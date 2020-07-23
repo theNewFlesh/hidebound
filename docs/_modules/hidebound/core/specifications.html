@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.7.4
+                0.8.0
               </div>
             
           
@@ -162,7 +162,9 @@
            <div itemprop="articleBody">
             
   <h1>Source code for hidebound.core.specifications</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">schematics.types</span> <span class="kn">import</span> <span class="n">IntType</span><span class="p">,</span> <span class="n">ListType</span><span class="p">,</span> <span class="n">StringType</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+
+<span class="kn">from</span> <span class="nn">schematics.types</span> <span class="kn">import</span> <span class="n">IntType</span><span class="p">,</span> <span class="n">ListType</span><span class="p">,</span> <span class="n">StringType</span>
 
 <span class="kn">import</span> <span class="nn">hidebound.core.validators</span> <span class="k">as</span> <span class="nn">vd</span>
 <span class="kn">import</span> <span class="nn">hidebound.core.traits</span> <span class="k">as</span> <span class="nn">tr</span>
@@ -182,7 +184,7 @@
 
 <div class="viewcode-block" id="Raw001"><a class="viewcode-back" href="../../../core.html#hidebound.core.specifications.Raw001">[docs]</a><span class="k">class</span> <span class="nc">Raw001</span><span class="p">(</span><span class="n">SequenceSpecificationBase</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Raw 1K x 1K pngs.</span>
+<span class="sd">    Raw JPEG sequences with 1 or 3 channels.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        filename_fields (list[str]): project, specification, descriptor,</span>
@@ -193,33 +195,72 @@
 <span class="sd">        width (int): Image width. Must be 1024.</span>
 <span class="sd">        extension (str): File extension. Must be &quot;png&quot;.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">asset_name_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="s1">&#39;specification&#39;</span><span class="p">,</span> <span class="s1">&#39;descriptor&#39;</span><span class="p">,</span> <span class="s1">&#39;version&#39;</span><span class="p">]</span>
+    <span class="n">asset_name_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="s1">&#39;specification&#39;</span><span class="p">,</span> <span class="s1">&#39;descriptor&#39;</span><span class="p">,</span> <span class="s1">&#39;version&#39;</span><span class="p">]</span>  <span class="c1"># type: List[str]</span>
     <span class="n">filename_fields</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="s1">&#39;specification&#39;</span><span class="p">,</span> <span class="s1">&#39;descriptor&#39;</span><span class="p">,</span> <span class="s1">&#39;version&#39;</span><span class="p">,</span> <span class="s1">&#39;frame&#39;</span><span class="p">,</span>
         <span class="s1">&#39;extension&#39;</span>
-    <span class="p">]</span>
-    <span class="n">height</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
-        <span class="n">IntType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_eq</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)]</span>
-    <span class="p">)</span>
-    <span class="n">width</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
-        <span class="n">IntType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_eq</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)]</span>
-    <span class="p">)</span>
-    <span class="n">frame</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span><span class="n">IntType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_frame</span><span class="p">])</span>
+    <span class="p">]</span>  <span class="c1"># type: List[str]</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span><span class="n">IntType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: ListType</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span><span class="n">IntType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: ListType</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span><span class="n">IntType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_frame</span><span class="p">])</span>  <span class="c1"># type: ListType</span>
+    <span class="n">channels</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
+        <span class="n">IntType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_in</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])]</span>
+    <span class="p">)</span>  <span class="c1"># type: ListType</span>
     <span class="n">extension</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
         <span class="n">StringType</span><span class="p">(),</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_extension</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_eq</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;png&#39;</span><span class="p">)]</span>
-    <span class="p">)</span>
+        <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_extension</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_eq</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;jpg&#39;</span><span class="p">)]</span>
+    <span class="p">)</span>  <span class="c1"># type: ListType</span>
     <span class="n">file_traits</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
         <span class="n">width</span><span class="o">=</span><span class="n">tr</span><span class="o">.</span><span class="n">get_image_width</span><span class="p">,</span>
         <span class="n">height</span><span class="o">=</span><span class="n">tr</span><span class="o">.</span><span class="n">get_image_height</span><span class="p">,</span>
         <span class="n">channels</span><span class="o">=</span><span class="n">tr</span><span class="o">.</span><span class="n">get_image_channels</span><span class="p">,</span>
-    <span class="p">)</span></div>
+    <span class="p">)</span>  <span class="c1"># type: Dict[str, Any]</span></div>
+
+
+<div class="viewcode-block" id="Raw002"><a class="viewcode-back" href="../../../core.html#hidebound.core.specifications.Raw002">[docs]</a><span class="k">class</span> <span class="nc">Raw002</span><span class="p">(</span><span class="n">SequenceSpecificationBase</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Raw JPEG sequences with 1 or 3 channels and coordinates.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        filename_fields (list[str]): project, specification, descriptor,</span>
+<span class="sd">            version, frame, extension</span>
+<span class="sd">        asset_name_fields (list[str]): project, specification, descriptor,</span>
+<span class="sd">            version,</span>
+<span class="sd">        height (int): Image height. Must be 1024.</span>
+<span class="sd">        width (int): Image width. Must be 1024.</span>
+<span class="sd">        extension (str): File extension. Must be &quot;png&quot;.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">asset_name_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="s1">&#39;specification&#39;</span><span class="p">,</span> <span class="s1">&#39;descriptor&#39;</span><span class="p">,</span> <span class="s1">&#39;version&#39;</span><span class="p">]</span>  <span class="c1"># type: List[str]</span>
+    <span class="n">filename_fields</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="s1">&#39;specification&#39;</span><span class="p">,</span> <span class="s1">&#39;descriptor&#39;</span><span class="p">,</span> <span class="s1">&#39;version&#39;</span><span class="p">,</span> <span class="s1">&#39;coordinate&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;frame&#39;</span><span class="p">,</span> <span class="s1">&#39;extension&#39;</span>
+    <span class="p">]</span>  <span class="c1"># type: List[str]</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span><span class="n">IntType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: ListType</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span><span class="n">IntType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: ListType</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span><span class="n">IntType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_frame</span><span class="p">])</span>  <span class="c1"># type: ListType</span>
+    <span class="n">coordinate</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
+        <span class="n">ListType</span><span class="p">(</span><span class="n">IntType</span><span class="p">(),</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_coordinate</span><span class="p">]),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>  <span class="c1"># type: ListType</span>
+    <span class="n">channels</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
+        <span class="n">IntType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_in</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])]</span>
+    <span class="p">)</span>  <span class="c1"># type: ListType</span>
+    <span class="n">extension</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
+        <span class="n">StringType</span><span class="p">(),</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_extension</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_eq</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;jpg&#39;</span><span class="p">)]</span>
+    <span class="p">)</span>  <span class="c1"># type: ListType</span>
+    <span class="n">file_traits</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">width</span><span class="o">=</span><span class="n">tr</span><span class="o">.</span><span class="n">get_image_width</span><span class="p">,</span>
+        <span class="n">height</span><span class="o">=</span><span class="n">tr</span><span class="o">.</span><span class="n">get_image_height</span><span class="p">,</span>
+        <span class="n">channels</span><span class="o">=</span><span class="n">tr</span><span class="o">.</span><span class="n">get_image_channels</span><span class="p">,</span>
+    <span class="p">)</span>  <span class="c1"># type: Dict[str, Any]</span></div>
 
 
 <span class="n">SPECIFICATIONS</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">Raw001</span><span class="p">,</span>
-<span class="p">]</span>
+    <span class="n">Raw002</span><span class="p">,</span>
+<span class="p">]</span>  <span class="c1"># type: List[type]</span>
 </pre></div>
 
            </div>

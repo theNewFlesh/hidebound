@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.7.4
+                0.8.0
               </div>
             
           
@@ -162,7 +162,9 @@
            <div itemprop="articleBody">
             
   <h1>Source code for hidebound.core.specification_base</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
 
 <span class="kn">from</span> <span class="nn">pyparsing</span> <span class="kn">import</span> <span class="n">ParseException</span>
@@ -194,27 +196,28 @@
 <span class="sd">        version (int): Asset version.</span>
 <span class="sd">        extension (str): File extension.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">asset_type</span> <span class="o">=</span> <span class="s1">&#39;specification&#39;</span>
+    <span class="n">asset_type</span> <span class="o">=</span> <span class="s1">&#39;specification&#39;</span>  <span class="c1"># type: str</span>
     <span class="n">filename_fields</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="s1">&#39;specification&#39;</span><span class="p">,</span> <span class="s1">&#39;descriptor&#39;</span><span class="p">,</span> <span class="s1">&#39;version&#39;</span><span class="p">,</span> <span class="s1">&#39;extension&#39;</span>
-    <span class="p">]</span>
-    <span class="n">asset_name_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="s1">&#39;specification&#39;</span><span class="p">,</span> <span class="s1">&#39;descriptor&#39;</span><span class="p">,</span> <span class="s1">&#39;version&#39;</span><span class="p">]</span>
+    <span class="p">]</span>  <span class="c1"># type: List[str]</span>
+    <span class="n">asset_name_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="s1">&#39;specification&#39;</span><span class="p">,</span> <span class="s1">&#39;descriptor&#39;</span><span class="p">,</span> <span class="s1">&#39;version&#39;</span><span class="p">]</span>  <span class="c1"># type: List[str]</span>
     <span class="n">project</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
         <span class="n">StringType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_project</span><span class="p">]</span>
-    <span class="p">)</span>
-    <span class="n">specification</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span><span class="n">StringType</span><span class="p">())</span>
+    <span class="p">)</span>  <span class="c1"># type: ListType</span>
+    <span class="n">specification</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span><span class="n">StringType</span><span class="p">())</span>  <span class="c1"># type: ListType</span>
     <span class="n">descriptor</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
         <span class="n">StringType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_descriptor</span><span class="p">]</span>
-    <span class="p">)</span>
+    <span class="p">)</span>  <span class="c1"># type: ListType</span>
     <span class="n">version</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
         <span class="n">IntType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_version</span><span class="p">]</span>
-    <span class="p">)</span>
+    <span class="p">)</span>  <span class="c1"># type: ListType</span>
     <span class="n">extension</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
         <span class="n">StringType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_extension</span><span class="p">]</span>
-    <span class="p">)</span>
-    <span class="n">file_traits</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="p">)</span>  <span class="c1"># type: ListType</span>
+    <span class="n">file_traits</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: Dict[str, Any]</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="c1"># (Optional[Dict[str, Any]]) -&gt; None</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns a new specification instance.</span>
 
@@ -224,6 +227,7 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">raw_data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SpecificationBase.get_asset_name"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.get_asset_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_asset_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="c1"># type: (Union[str, Path]) -&gt; str</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns the expected asset name give a filepath.</span>
 
@@ -238,6 +242,7 @@
         <span class="k">return</span> <span class="n">AssetNameParser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">asset_name_fields</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SpecificationBase.get_asset_path"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.get_asset_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_asset_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="c1"># (Union[str, Path]) -&gt; Path</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns the expected asset path given a filepath.</span>
 
@@ -254,6 +259,7 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SpecificationBase.get_asset_id"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.get_asset_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_asset_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="c1"># (Union[str, Path]) -&gt; str</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns a hash UUID of the asset directory or file, depending of asset</span>
 <span class="sd">        type.</span>
@@ -269,6 +275,7 @@
         <span class="p">))</span></div>
 
 <div class="viewcode-block" id="SpecificationBase.validate_filepath"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.validate_filepath">[docs]</a>    <span class="k">def</span> <span class="nf">validate_filepath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="c1"># (Union[str, Path]) -&gt; none</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Attempts to parse the given filepath.</span>
 
@@ -303,6 +310,7 @@
             <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SpecificationBase.get_filename_traits"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.get_filename_traits">[docs]</a>    <span class="k">def</span> <span class="nf">get_filename_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="c1"># (Union[str, Path]) -&gt; Dict[str, Any]</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns a dictionary of filename traits from given filepath.</span>
 <span class="sd">        Returns error in filename_error key if one is encountered.</span>
@@ -320,6 +328,7 @@
             <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">filename_error</span><span class="o">=</span><span class="n">tools</span><span class="o">.</span><span class="n">error_to_string</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="SpecificationBase.get_file_traits"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.get_file_traits">[docs]</a>    <span class="k">def</span> <span class="nf">get_file_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="c1"># (Union[str, Path]) -&gt; Dict</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns a dictionary of file traits from given filepath.</span>
 <span class="sd">        Returns error in respective key if one is encountered.</span>
@@ -339,6 +348,7 @@
         <span class="k">return</span> <span class="n">output</span></div>
 
 <div class="viewcode-block" id="SpecificationBase.get_traits"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.get_traits">[docs]</a>    <span class="k">def</span> <span class="nf">get_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="c1"># (Union[str, Path]) -&gt; Dict[str, Any]</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns a dictionary of file and filename traits from given filepath.</span>
 <span class="sd">        Errors are captured in their respective keys.</span>
@@ -361,9 +371,10 @@
 <span class="sd">    Attributes:</span>
 <span class="sd">        asset_type (str): File.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">asset_type</span> <span class="o">=</span> <span class="s1">&#39;file&#39;</span>
+    <span class="n">asset_type</span> <span class="o">=</span> <span class="s1">&#39;file&#39;</span>  <span class="c1"># type: str</span>
 
 <div class="viewcode-block" id="FileSpecificationBase.get_asset_path"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.FileSpecificationBase.get_asset_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_asset_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="c1"># (Union[str, Path]) -&gt; Path</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns the filepath.</span>
 
@@ -384,9 +395,10 @@
 <span class="sd">    Attributes:</span>
 <span class="sd">        asset_type (str): Sequence.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">asset_type</span> <span class="o">=</span> <span class="s1">&#39;sequence&#39;</span>
+    <span class="n">asset_type</span> <span class="o">=</span> <span class="s1">&#39;sequence&#39;</span>  <span class="c1"># type: str</span>
 
 <div class="viewcode-block" id="SequenceSpecificationBase.get_asset_path"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SequenceSpecificationBase.get_asset_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_asset_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="c1"># (Union[str, Path]) -&gt; Path</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns the directory containing the asset files.</span>
 
@@ -406,7 +418,7 @@
 <span class="sd">    Attributes:</span>
 <span class="sd">        asset_type (str): Complex.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">asset_type</span> <span class="o">=</span> <span class="s1">&#39;complex&#39;</span></div>
+    <span class="n">asset_type</span> <span class="o">=</span> <span class="s1">&#39;complex&#39;</span>  <span class="c1"># type: str</span></div>
 </pre></div>
 
            </div>

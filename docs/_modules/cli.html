@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.7.4
+                0.8.0
               </div>
             
           
@@ -208,7 +208,7 @@
 <span class="s1">    full-docs    - Generates documentation, coverage report and metrics</span>
 <span class="s1">    image        - Display the Docker image id for </span><span class="si">{repo}</span><span class="s1"> service</span>
 <span class="s1">    lab          - Start a Jupyter lab server</span>
-<span class="s1">    lint         - Run linting on </span><span class="si">{repo}</span><span class="s1"> service code</span>
+<span class="s1">    lint         - Run linting and type checking on </span><span class="si">{repo}</span><span class="s1"> service code</span>
 <span class="s1">    package      - Build </span><span class="si">{repo}</span><span class="s1"> pip package</span>
 <span class="s1">    publish      - Publish repository to python package index.</span>
 <span class="s1">    python       - Run python interpreter session inside </span><span class="si">{repo}</span><span class="s1"> container</span>
@@ -279,8 +279,19 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        str: Command.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{exec}</span><span class="s1"> python3.7 -c &quot;from rolling_pin.repo_etl import RepoETL; &#39;</span>
-    <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot;RepoETL(&#39;/root/</span><span class="si">{repo}</span><span class="s2">/python&#39;).write(&#39;/root/</span><span class="si">{repo}</span><span class="s2">/docs/architecture.svg&#39;, orient=&#39;lr&#39;)&quot;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{exec}</span><span class="s1"> python3.7 -c &quot;&#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot;import re; from rolling_pin.repo_etl import RepoETL; &quot;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot;etl = RepoETL(&#39;/root/</span><span class="si">{repo}</span><span class="s2">/python&#39;); &quot;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot;regex = &#39;test|mock&#39;; &quot;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot;data = etl._data.copy(); &quot;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot;func = lambda x: not bool(re.search(regex, x)); &quot;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot;mask = data.node_name.apply(func); &quot;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot;data = data[mask]; &quot;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot;data.reset_index(inplace=True, drop=True); &quot;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot;data.dependencies = data.dependencies&quot;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot;.apply(lambda x: list(filter(func, x))); &quot;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot;etl._data = data; &quot;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot;etl.write(&#39;/root/</span><span class="si">{repo}</span><span class="s2">/docs/architecture.svg&#39;, orient=&#39;lr&#39;)&quot;</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;&quot;&#39;</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">,</span>
@@ -308,6 +319,19 @@
         <span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">,</span>
         <span class="n">exec</span><span class="o">=</span><span class="n">get_docker_exec_command</span><span class="p">(</span><span class="n">info</span><span class="p">),</span>
     <span class="p">)</span>
+    <span class="k">return</span> <span class="n">cmd</span></div>
+
+
+<div class="viewcode-block" id="get_remove_pycache_command"><a class="viewcode-back" href="../cli.html#cli.get_remove_pycache_command">[docs]</a><span class="k">def</span> <span class="nf">get_remove_pycache_command</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Removes all pycache files and directories under the repo&#39;s main directory.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Command.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;find </span><span class="si">{repo_path}</span><span class="s2"> | grep -E &#39;__pycache__|\.pyc$ | &quot;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot;parallel &#39;rm -rf </span><span class="si">{x}</span><span class="s2">&#39;&quot;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">repo_path</span><span class="o">=</span><span class="n">REPO_PATH</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">cmd</span></div>
 
 
@@ -448,6 +472,21 @@
 <span class="sd">        str: Command.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{exec}</span><span class="s1"> flake8 /root/</span><span class="si">{repo}</span><span class="s1">/python --config /root/</span><span class="si">{repo}</span><span class="s1">/docker/flake8.ini&#39;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">,</span> <span class="n">exec</span><span class="o">=</span><span class="n">get_docker_exec_command</span><span class="p">(</span><span class="n">info</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">cmd</span></div>
+
+
+<div class="viewcode-block" id="get_type_checking_command"><a class="viewcode-back" href="../cli.html#cli.get_type_checking_command">[docs]</a><span class="k">def</span> <span class="nf">get_type_checking_command</span><span class="p">(</span><span class="n">info</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Runs mypy type checking on python code.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        info (dict): Info dictionary.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Command.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{exec}</span><span class="s1"> mypy /root/</span><span class="si">{repo}</span><span class="s1">/python --config-file /root/</span><span class="si">{repo}</span><span class="s1">/docker/mypy.ini&#39;</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">,</span> <span class="n">exec</span><span class="o">=</span><span class="n">get_docker_exec_command</span><span class="p">(</span><span class="n">info</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">cmd</span></div>
 
@@ -849,7 +888,11 @@
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_lab_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;lint&#39;</span><span class="p">:</span>
-        <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_lint_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;echo LINTING&#39;</span>
+        <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;; &#39;</span> <span class="o">+</span> <span class="n">get_lint_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+        <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;; &#39;</span> <span class="o">+</span> <span class="s1">&#39;echo&#39;</span>
+        <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;; &#39;</span> <span class="o">+</span> <span class="s1">&#39;echo &quot;TYPE CHECKING&quot;&#39;</span>
+        <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;; &#39;</span> <span class="o">+</span> <span class="n">get_type_checking_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;package&#39;</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_package_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
@@ -859,12 +902,14 @@
             <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;echo &quot;Please provide a directory to map into the container &#39;</span>
             <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;after the -a flag.&quot;&#39;</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_destroy_production_container_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_remove_pycache_command</span><span class="p">()</span>
+            <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39; &amp;&amp; &#39;</span> <span class="o">+</span> <span class="n">get_destroy_production_container_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
             <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39; &amp;&amp; &#39;</span> <span class="o">+</span> <span class="n">get_production_image_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
             <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39; &amp;&amp; &#39;</span> <span class="o">+</span> <span class="n">get_production_container_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;publish&#39;</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_tox_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+        <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39; &amp;&amp; &#39;</span> <span class="o">+</span> <span class="n">get_remove_pycache_command</span><span class="p">()</span>
         <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39; &amp;&amp; &#39;</span> <span class="o">+</span> <span class="n">get_package_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
         <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39; &amp;&amp; &#39;</span> <span class="o">+</span> <span class="n">get_publish_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
 

@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.7.4
+                0.8.0
               </div>
             
           
@@ -162,7 +162,9 @@
            <div itemprop="articleBody">
             
   <h1>Source code for hidebound.core.config</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>  <span class="c1"># noqa F401</span>
+
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
 <span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">import_module</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -181,6 +183,7 @@
 
 <span class="c1"># must be in here to avoid circular import</span>
 <div class="viewcode-block" id="is_specification_file"><a class="viewcode-back" href="../../../core.html#hidebound.core.config.is_specification_file">[docs]</a><span class="k">def</span> <span class="nf">is_specification_file</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+    <span class="c1"># type: (Union[str, Path]) -&gt; None</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validator for specification files given to Database.</span>
 
@@ -209,7 +212,7 @@
     <span class="c1"># import module</span>
     <span class="n">mod</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">mod</span> <span class="o">=</span> <span class="n">import_module</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">filepath</span><span class="p">)</span>
+        <span class="n">mod</span> <span class="o">=</span> <span class="n">import_module</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">filepath</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">temp</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filepath</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span><span class="si">}</span><span class="s1"> could not be imported.&#39;</span>
@@ -222,14 +225,15 @@
         <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="c1"># ensure SPECIFICATIONS is a list</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mod</span><span class="o">.</span><span class="n">SPECIFICATIONS</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mod</span><span class="o">.</span><span class="n">SPECIFICATIONS</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>  <span class="c1"># type: ignore</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">temp</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filepath</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span><span class="si">}</span><span class="s1"> SPECIFICATIONS attribute is not a list.&#39;</span>
         <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="c1"># ensure all SPECIFICATIONS are subclasses of SpecificationBase</span>
     <span class="n">errors</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span>
-        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="ow">not</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">SpecificationBase</span><span class="p">),</span> <span class="n">mod</span><span class="o">.</span><span class="n">SPECIFICATIONS</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="ow">not</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">SpecificationBase</span><span class="p">),</span>
+        <span class="n">mod</span><span class="o">.</span><span class="n">SPECIFICATIONS</span>   <span class="c1"># type: ignore</span>
     <span class="p">))</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">temp</span>
@@ -240,6 +244,7 @@
 
 
 <div class="viewcode-block" id="is_hidebound_directory"><a class="viewcode-back" href="../../../core.html#hidebound.core.config.is_hidebound_directory">[docs]</a><span class="k">def</span> <span class="nf">is_hidebound_directory</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+    <span class="c1"># type: (Union[str, Path]) -&gt; None</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Ensures directory name is &quot;hidebound&quot;.</span>
 
@@ -274,26 +279,28 @@
 <span class="sd">        exporters (dict, optional): Dictionary of exporter configs, where the</span>
 <span class="sd">            key is the exporter name and the value is its config. Default: {}.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">root_directory</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_directory</span><span class="p">])</span>
+    <span class="n">root_directory</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_directory</span><span class="p">]</span>
+    <span class="p">)</span>  <span class="c1"># type: StringType</span>
     <span class="n">hidebound_directory</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_directory</span><span class="p">,</span> <span class="n">is_hidebound_directory</span><span class="p">]</span>
-    <span class="p">)</span>
+    <span class="p">)</span>  <span class="c1"># type: StringType</span>
     <span class="n">specification_files</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
         <span class="n">StringType</span><span class="p">(</span><span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">is_specification_file</span><span class="p">,</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_file</span><span class="p">]),</span>
         <span class="n">default</span><span class="o">=</span><span class="p">[],</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span>
-    <span class="p">)</span>
-    <span class="n">include_regex</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">exclude_regex</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;\.DS_Store&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="p">)</span>  <span class="c1"># type: ListType</span>
+    <span class="n">include_regex</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: StringType</span>
+    <span class="n">exclude_regex</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;\.DS_Store&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: StringType</span>
     <span class="n">write_mode</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_in</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;copy&#39;</span><span class="p">,</span> <span class="s1">&#39;move&#39;</span><span class="p">])],</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;copy&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="p">)</span>  <span class="c1"># type: StringType</span>
 
 <div class="viewcode-block" id="Config.ExportersConfig"><a class="viewcode-back" href="../../../core.html#hidebound.core.config.Config.ExportersConfig">[docs]</a>    <span class="k">class</span> <span class="nc">ExportersConfig</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-        <span class="n">girder</span> <span class="o">=</span> <span class="n">ModelType</span><span class="p">(</span><span class="n">GirderConfig</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div>
-    <span class="n">exporters</span> <span class="o">=</span> <span class="n">ModelType</span><span class="p">(</span><span class="n">ExportersConfig</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">{})</span></div>
+        <span class="n">girder</span> <span class="o">=</span> <span class="n">ModelType</span><span class="p">(</span><span class="n">GirderConfig</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>  <span class="c1"># type: ModelType</span></div>
+    <span class="n">exporters</span> <span class="o">=</span> <span class="n">ModelType</span><span class="p">(</span><span class="n">ExportersConfig</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">{})</span>  <span class="c1"># type: ModelType</span></div>
 </pre></div>
 
            </div>

@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.7.4
+                0.8.0
               </div>
             
           
@@ -162,7 +162,9 @@
            <div itemprop="articleBody">
             
   <h1>Source code for hidebound.core.parser</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
 <span class="kn">from</span> <span class="nn">pyparsing</span> <span class="kn">import</span> <span class="n">Group</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">ParseException</span><span class="p">,</span> <span class="n">Regex</span><span class="p">,</span> <span class="n">Suppress</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
@@ -172,15 +174,15 @@
 <span class="sd">    A class for converting asset names to metadata and metadata to asset names,</span>
 <span class="sd">    according to a dynimcally defined grammar.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">FIELD_SEPARATOR</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span>
-    <span class="n">TOKEN_SEPARATOR</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
-    <span class="n">PROJECT_INDICATOR</span> <span class="o">=</span> <span class="s1">&#39;p&#39;</span> <span class="o">+</span> <span class="n">TOKEN_SEPARATOR</span>
-    <span class="n">SPECIFICATION_INDICATOR</span> <span class="o">=</span> <span class="s1">&#39;s&#39;</span> <span class="o">+</span> <span class="n">TOKEN_SEPARATOR</span>
-    <span class="n">DESCRIPTOR_INDICATOR</span> <span class="o">=</span> <span class="s1">&#39;d&#39;</span> <span class="o">+</span> <span class="n">TOKEN_SEPARATOR</span>
-    <span class="n">VERSION_INDICATOR</span> <span class="o">=</span> <span class="s1">&#39;v&#39;</span>
-    <span class="n">COORDINATE_INDICATOR</span> <span class="o">=</span> <span class="s1">&#39;c&#39;</span>
-    <span class="n">FRAME_INDICATOR</span> <span class="o">=</span> <span class="s1">&#39;f&#39;</span>
-    <span class="n">EXTENSION_INDICATOR</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span>
+    <span class="n">FIELD_SEPARATOR</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span>  <span class="c1"># type: str</span>
+    <span class="n">TOKEN_SEPARATOR</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span>  <span class="c1"># type: str</span>
+    <span class="n">PROJECT_INDICATOR</span> <span class="o">=</span> <span class="s1">&#39;p&#39;</span> <span class="o">+</span> <span class="n">TOKEN_SEPARATOR</span>  <span class="c1"># type: str</span>
+    <span class="n">SPECIFICATION_INDICATOR</span> <span class="o">=</span> <span class="s1">&#39;s&#39;</span> <span class="o">+</span> <span class="n">TOKEN_SEPARATOR</span>  <span class="c1"># type: str</span>
+    <span class="n">DESCRIPTOR_INDICATOR</span> <span class="o">=</span> <span class="s1">&#39;d&#39;</span> <span class="o">+</span> <span class="n">TOKEN_SEPARATOR</span>  <span class="c1"># type: str</span>
+    <span class="n">VERSION_INDICATOR</span> <span class="o">=</span> <span class="s1">&#39;v&#39;</span>  <span class="c1"># type: str</span>
+    <span class="n">COORDINATE_INDICATOR</span> <span class="o">=</span> <span class="s1">&#39;c&#39;</span>  <span class="c1"># type: str</span>
+    <span class="n">FRAME_INDICATOR</span> <span class="o">=</span> <span class="s1">&#39;f&#39;</span>  <span class="c1"># type: str</span>
+    <span class="n">EXTENSION_INDICATOR</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span>  <span class="c1"># type: str</span>
     <span class="n">LEGAL_FIELDS</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s1">&#39;project&#39;</span><span class="p">,</span>
         <span class="s1">&#39;specification&#39;</span><span class="p">,</span>
@@ -189,13 +191,14 @@
         <span class="s1">&#39;coordinate&#39;</span><span class="p">,</span>
         <span class="s1">&#39;frame&#39;</span><span class="p">,</span>
         <span class="s1">&#39;extension&#39;</span>
-    <span class="p">]</span>
+    <span class="p">]</span>  <span class="c1"># type: List[str]</span>
 
-    <span class="n">VERSION_PADDING</span> <span class="o">=</span> <span class="mi">3</span>
-    <span class="n">COORDINATE_PADDING</span> <span class="o">=</span> <span class="mi">3</span>
-    <span class="n">FRAME_PADDING</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">VERSION_PADDING</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># type: int</span>
+    <span class="n">COORDINATE_PADDING</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># type: int</span>
+    <span class="n">FRAME_PADDING</span> <span class="o">=</span> <span class="mi">4</span>  <span class="c1"># type: int</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
+        <span class="c1"># type: (List[str]) -&gt; None</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Create a AssetNameParser instance with given fields.</span>
 
@@ -242,6 +245,7 @@
     <span class="c1"># GRAMMAR-------------------------------------------------------------------</span>
 <div class="viewcode-block" id="AssetNameParser._raise_field_error"><a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser._raise_field_error">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_raise_field_error</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">part</span><span class="p">):</span>
+        <span class="c1"># type: (str, str) -&gt; Callable[[str, Any, Any, Any], None]</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        A convenience function used for raising custom ParseExceptions.</span>
 
@@ -253,6 +257,7 @@
 <span class="sd">            function: lambda s, l, i, e: raise_error(field, s, i)</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">def</span> <span class="nf">raise_error</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
+            <span class="c1"># type: (str, str, Any) -&gt; None</span>
             <span class="n">expr</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s1">&#39;expr&#39;</span><span class="p">):</span>
                 <span class="n">expr</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">expr</span>
@@ -266,6 +271,7 @@
 
 <div class="viewcode-block" id="AssetNameParser._get_grammar"><a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser._get_grammar">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_grammar</span><span class="p">():</span>
+        <span class="c1"># type: () -&gt; Dict[str, Any]</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Create parser grammar dictionary.</span>
 
@@ -345,6 +351,7 @@
     <span class="c1"># PARSERS-------------------------------------------------------------------</span>
 <div class="viewcode-block" id="AssetNameParser._get_extension_parser"><a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser._get_extension_parser">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_extension_parser</span><span class="p">(</span><span class="n">grammar</span><span class="p">):</span>
+        <span class="c1"># type: (Dict[str, Any]) -&gt; Group</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Creates a parser for file extensions.</span>
 
@@ -360,6 +367,7 @@
 
 <div class="viewcode-block" id="AssetNameParser._get_parser"><a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser._get_parser">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_parser</span><span class="p">(</span><span class="n">grammar</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
+        <span class="c1"># type: (Dict[str, Any], List[str]) -&gt; Group</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Creates a parser for asset names.</span>
 
@@ -382,6 +390,7 @@
 
 <div class="viewcode-block" id="AssetNameParser._get_specification_parser"><a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser._get_specification_parser">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_specification_parser</span><span class="p">():</span>
+        <span class="c1"># type: () -&gt; Group</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns a parser for finding a specification within an arbitrary string.</span>
 
@@ -389,7 +398,7 @@
 <span class="sd">            Group: Parser.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">grammar</span> <span class="o">=</span> <span class="n">AssetNameParser</span><span class="o">.</span><span class="n">_get_grammar</span><span class="p">()</span>
-        <span class="n">indicator</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;.*&#39;</span> <span class="o">+</span> <span class="n">AssetNameParser</span><span class="o">.</span><span class="n">SPECIFICATION_INDICATOR</span><span class="p">))</span>
+        <span class="n">indicator</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;.*?&#39;</span> <span class="o">+</span> <span class="n">AssetNameParser</span><span class="o">.</span><span class="n">SPECIFICATION_INDICATOR</span><span class="p">))</span>
         <span class="n">parser</span> <span class="o">=</span> <span class="n">indicator</span> <span class="o">+</span> <span class="n">grammar</span><span class="p">[</span><span class="s1">&#39;specification_token&#39;</span><span class="p">]</span>
         <span class="n">parser</span> <span class="o">=</span> <span class="n">Group</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">parser</span></div>
@@ -397,6 +406,7 @@
     <span class="c1"># PUBLIC--------------------------------------------------------------------</span>
 <div class="viewcode-block" id="AssetNameParser.parse_specification"><a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser.parse_specification">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">parse_specification</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+        <span class="c1"># type: (str) -&gt; Dict</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Parse a string for a specification.</span>
 
@@ -418,6 +428,7 @@
             <span class="k">raise</span> <span class="n">ParseException</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AssetNameParser.parse"><a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+        <span class="c1"># type: (str) -&gt; Group</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Parse a given string.</span>
 
@@ -435,6 +446,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">text</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">asDict</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="AssetNameParser.to_string"><a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser.to_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dict_</span><span class="p">):</span>
+        <span class="c1"># type: (Dict) -&gt; Any</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Converts a given dictionary to a string.</span>
 
@@ -450,7 +462,7 @@
             <span class="n">has_extension</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">fields</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
 
-        <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: Any</span>
         <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">dict_</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                 <span class="n">indicator</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;_INDICATOR&#39;</span><span class="p">)</span>

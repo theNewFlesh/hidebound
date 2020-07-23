@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.7.4
+                0.8.0
               </div>
             
           
@@ -549,6 +549,20 @@ Default: [‘REPO_ENV=True’].</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt id="cli.get_remove_pycache_command">
+<code class="sig-prename descclassname">cli.</code><code class="sig-name descname">get_remove_pycache_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#get_remove_pycache_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cli.get_remove_pycache_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes all pycache files and directories under the repo’s main directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Command.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="cli.get_requirements_command">
 <code class="sig-prename descclassname">cli.</code><code class="sig-name descname">get_requirements_command</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">info</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#get_requirements_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cli.get_requirements_command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes a pip frozen requirements command to docker directory.</p>
@@ -620,6 +634,23 @@ Default: [‘REPO_ENV=True’].</p></li>
 <dt id="cli.get_tox_command">
 <code class="sig-prename descclassname">cli.</code><code class="sig-name descname">get_tox_command</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">info</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#get_tox_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cli.get_tox_command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run tox tests.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<em>dict</em>) – Info dictionary.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Command.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cli.get_type_checking_command">
+<code class="sig-prename descclassname">cli.</code><code class="sig-name descname">get_type_checking_command</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">info</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#get_type_checking_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cli.get_type_checking_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs mypy type checking on python code.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>info</strong> (<em>dict</em>) – Info dictionary.</p>

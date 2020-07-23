@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.7.4
+                0.8.0
               </div>
             
           
@@ -162,7 +162,9 @@
            <div itemprop="articleBody">
             
   <h1>Source code for hidebound.core.database</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 <span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">import_module</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">json</span>
@@ -188,6 +190,7 @@
 <span class="sd">    &#39;&#39;&#39;</span>
 <div class="viewcode-block" id="Database.from_config"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.from_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_config</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+        <span class="c1"># type: (Dict[str, Any]) -&gt; &quot;Database&quot;</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Constructs a Database instance given a valid config.</span>
 
@@ -213,9 +216,9 @@
             <span class="n">filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
             <span class="n">filename</span> <span class="o">=</span> <span class="n">filepath</span><span class="o">.</span><span class="n">name</span>
             <span class="n">filename</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-            <span class="n">module</span> <span class="o">=</span> <span class="n">import_module</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">filepath</span><span class="p">)</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="n">import_module</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">filepath</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
 
-            <span class="n">specs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">SPECIFICATIONS</span><span class="p">)</span>
+            <span class="n">specs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">SPECIFICATIONS</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
 
         <span class="n">specs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">specs</span><span class="p">))</span>
         <span class="n">config</span><span class="p">[</span><span class="s1">&#39;specifications&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">specs</span>
@@ -232,6 +235,7 @@
 
 <div class="viewcode-block" id="Database.from_json"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.from_json">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_json</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+        <span class="c1"># (Union[str, Path]) -&gt; &quot;Database&quot;</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Constructs a Database instance from a given json file.</span>
 
@@ -255,6 +259,7 @@
         <span class="n">write_mode</span><span class="o">=</span><span class="s1">&#39;copy&#39;</span><span class="p">,</span>
         <span class="n">exporters</span><span class="o">=</span><span class="p">{},</span>
     <span class="p">):</span>
+        <span class="c1"># type: (Union[str, Path], Union[str, Path], List[type], str, str, str, Dict[str, Any]) -&gt; None  # noqa E501</span>
         <span class="sa">r</span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Creates an instance of Database but does not populate it with data.</span>
 
@@ -329,6 +334,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">__exporter_lut</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="Database.create"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; &quot;Database&quot;</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Extract valid assets as data and metadata within the hidebound</span>
 <span class="sd">        directory.</span>
@@ -380,6 +386,7 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="Database.read"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group_by_asset</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="c1"># type: (bool) -&gt; &quot;DataFrame&quot;</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Return a DataFrame which can be easily be queried and has only cells</span>
 <span class="sd">        with scalar values.</span>
@@ -459,6 +466,7 @@
         <span class="k">return</span> <span class="n">data</span></div>
 
 <div class="viewcode-block" id="Database.update"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># () -&gt; &quot;Database&quot;</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Recurse root directory, populate self.data with its files, locate and</span>
 <span class="sd">        validate assets.</span>
@@ -488,6 +496,7 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="Database.delete"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; &quot;Database&quot;</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Deletes hidebound/data and hidebound/metadata directories and all their</span>
 <span class="sd">        contents.</span>
@@ -506,11 +515,9 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="Database.export"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.export">[docs]</a>    <span class="k">def</span> <span class="nf">export</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; None</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Exports all the files found in in hidebound root directory.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            Database: self.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># TODO: Find a nicer pattern for injecting exporters.</span>
         <span class="n">lut</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">girder</span><span class="o">=</span><span class="n">GirderExporter</span><span class="p">)</span>
@@ -528,6 +535,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">__exporter_lut</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">exporter</span></div>
 
 <div class="viewcode-block" id="Database.search"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">group_by_asset</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="c1"># type: (str, bool) -&gt; &quot;DataFrame&quot;</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Search data according to given SQL query.</span>
 

@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.7.4
+                0.8.0
               </div>
             
           
@@ -162,7 +162,9 @@
            <div itemprop="articleBody">
             
   <h1>Source code for hidebound.core.database_tools</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
@@ -172,6 +174,7 @@
 <span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">ValidationError</span>
 
 <span class="kn">from</span> <span class="nn">hidebound.core.parser</span> <span class="kn">import</span> <span class="n">AssetNameParser</span>
+<span class="kn">from</span> <span class="nn">hidebound.core.specification_base</span> <span class="kn">import</span> <span class="n">SpecificationBase</span>
 <span class="kn">import</span> <span class="nn">hidebound.core.tools</span> <span class="k">as</span> <span class="nn">tools</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
@@ -182,6 +185,7 @@
 
 
 <div class="viewcode-block" id="_add_specification"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools._add_specification">[docs]</a><span class="k">def</span> <span class="nf">_add_specification</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">specifications</span><span class="p">):</span>
+    <span class="c1"># type: (DataFrame, Dict[str, SpecificationBase]) -&gt; None</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Adds specification data to given DataFrame.</span>
 
@@ -196,6 +200,7 @@
 <span class="sd">        specifications (dict): Dictionary of specifications.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">def</span> <span class="nf">get_spec</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+        <span class="c1"># type: (str) -&gt; Dict</span>
         <span class="n">output</span> <span class="o">=</span> <span class="n">tools</span><span class="o">.</span><span class="n">try_</span><span class="p">(</span>
             <span class="n">AssetNameParser</span><span class="o">.</span><span class="n">parse_specification</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span>
         <span class="p">)</span>
@@ -231,6 +236,7 @@
 
 
 <div class="viewcode-block" id="_validate_filepath"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools._validate_filepath">[docs]</a><span class="k">def</span> <span class="nf">_validate_filepath</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1"># type: (DataFrame) -&gt; None</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates filepath column of given DataFrame.</span>
 <span class="sd">    Adds error to error column if invalid.</span>
@@ -251,6 +257,7 @@
 
 
 <div class="viewcode-block" id="_add_file_traits"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools._add_file_traits">[docs]</a><span class="k">def</span> <span class="nf">_add_file_traits</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1"># type: (DataFrame) -&gt; None</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Adds traits derived from file in filepath.</span>
 <span class="sd">    Add file_traits column and one column per traits key.</span>
@@ -269,6 +276,7 @@
 
 
 <div class="viewcode-block" id="_add_asset_traits"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools._add_asset_traits">[docs]</a><span class="k">def</span> <span class="nf">_add_asset_traits</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1"># type: (DataFrame) -&gt; None</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Adds traits derived from aggregation of file traits.</span>
 <span class="sd">    Add asset_traits column and one column per traits key.</span>
@@ -287,6 +295,7 @@
 
 
 <div class="viewcode-block" id="_validate_assets"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools._validate_assets">[docs]</a><span class="k">def</span> <span class="nf">_validate_assets</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1"># type: (DataFrame) -&gt; None</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates assets according to their specification.</span>
 <span class="sd">    Add asset_error and asset_valid columns.</span>
@@ -323,6 +332,7 @@
 
 
 <div class="viewcode-block" id="_add_asset_id"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools._add_asset_id">[docs]</a><span class="k">def</span> <span class="nf">_add_asset_id</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1"># type: (DataFrame) -&gt; None</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Adds asset_id column derived UUID hash of asset filepath.</span>
 
@@ -339,6 +349,7 @@
 
 
 <div class="viewcode-block" id="_add_asset_name"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools._add_asset_name">[docs]</a><span class="k">def</span> <span class="nf">_add_asset_name</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1"># type: (DataFrame) -&gt; None</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Adds asset_name column derived from filepath.</span>
 
@@ -355,6 +366,7 @@
 
 
 <div class="viewcode-block" id="_add_asset_path"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools._add_asset_path">[docs]</a><span class="k">def</span> <span class="nf">_add_asset_path</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1"># type: (DataFrame) -&gt; None</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Adds asset_path column derived from filepath.</span>
 
@@ -376,6 +388,7 @@
 
 
 <div class="viewcode-block" id="_add_relative_path"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools._add_relative_path">[docs]</a><span class="k">def</span> <span class="nf">_add_relative_path</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">root_dir</span><span class="p">):</span>
+    <span class="c1"># type: (DataFrame, str, Union[str, Path]) -&gt; None</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Adds relative path column derived from given column.</span>
 
@@ -395,6 +408,7 @@
 
 
 <div class="viewcode-block" id="_add_asset_type"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools._add_asset_type">[docs]</a><span class="k">def</span> <span class="nf">_add_asset_type</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1"># type: (DataFrame) -&gt; None</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Adds asset_type column derived from specification.</span>
 
@@ -408,6 +422,7 @@
 
 
 <div class="viewcode-block" id="_cleanup"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools._cleanup">[docs]</a><span class="k">def</span> <span class="nf">_cleanup</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1"># type: (DataFrame) -&gt; DataFrame</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Ensures only specific columns are present and in correct order and Paths</span>
 <span class="sd">    are converted to strings.</span>
@@ -454,6 +469,7 @@
 
 
 <div class="viewcode-block" id="_get_data_for_write"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools._get_data_for_write">[docs]</a><span class="k">def</span> <span class="nf">_get_data_for_write</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">source_dir</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">):</span>
+    <span class="c1"># type: (DataFrame, Union[str, Path], Union[str, Path]) -&gt; Optional[Tuple[DataFrame, DataFrame, DataFrame]]  # noqa: E501</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Split given data into three DataFrame creating files.</span>
 
@@ -469,7 +485,7 @@
 <span class="sd">        * Asset metadata - For writing asset metadata to a target json file.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        list[DataFrame]: file_data, file_metadata, asset_metadata.</span>
+<span class="sd">        tuple[DataFrame]: file_data, file_metadata, asset_metadata.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># TODO: flatten file_traits and flatten asset_traits</span>
     <span class="c1"># get valid asset data</span>
@@ -478,7 +494,7 @@
 
     <span class="c1"># return if there is no valid asset data</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span>
+        <span class="k">return</span> <span class="kc">None</span>
 
     <span class="n">source_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">source_dir</span><span class="p">)</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
     <span class="n">data_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>

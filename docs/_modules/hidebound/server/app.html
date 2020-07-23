@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.7.4
+                0.8.0
               </div>
             
           
@@ -162,7 +162,11 @@
            <div itemprop="articleBody">
             
   <h1>Source code for hidebound.server.app</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">json</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">dash_table</span>
+
+<span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">from</span> <span class="nn">dash.dependencies</span> <span class="kn">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">State</span>
@@ -185,15 +189,16 @@
 <span class="sd">&#39;&#39;&#39;</span>
 
 
-<span class="n">APP</span> <span class="o">=</span> <span class="n">flask</span><span class="o">.</span><span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">APP</span> <span class="o">=</span> <span class="n">flask</span><span class="o">.</span><span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>  <span class="c1"># type: Union[flask.Flask, dash.Dash]</span>
 <span class="n">swg</span><span class="o">.</span><span class="n">Swagger</span><span class="p">(</span><span class="n">APP</span><span class="p">)</span>
 <span class="n">APP</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">api</span><span class="o">.</span><span class="n">API</span><span class="p">)</span>
 <span class="n">APP</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">get_dash_app</span><span class="p">(</span><span class="n">APP</span><span class="p">)</span>
-<span class="n">CONFIG_PATH</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">CONFIG_PATH</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: Union[str, Path, None]</span>
 
 
 <div class="viewcode-block" id="serve_stylesheet"><a class="viewcode-back" href="../../../server.html#hidebound.server.app.serve_stylesheet">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/static/&lt;stylesheet&gt;&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">serve_stylesheet</span><span class="p">(</span><span class="n">stylesheet</span><span class="p">):</span>
+    <span class="c1"># type: (str) -&gt; flask.Response</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Serve stylesheet to app.</span>
 
@@ -230,6 +235,7 @@
     <span class="p">[</span><span class="n">State</span><span class="p">(</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)]</span>
 <span class="p">)</span>
 <span class="k">def</span> <span class="nf">on_event</span><span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="p">):</span>
+    <span class="c1"># type: (Tuple[Any, ...]) -&gt; Dict[str, Any]</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Update Hidebound database instance, and updates store with input data.</span>
 
@@ -241,24 +247,24 @@
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">APP</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;on_event called with inputs: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">inputs</span><span class="p">)[:</span><span class="mi">50</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-    <span class="n">store</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="p">{}</span>
-    <span class="n">config</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="n">api</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">)</span>
+    <span class="n">store</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="p">{}</span>  <span class="c1"># type: Any</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="n">api</span><span class="o">.</span><span class="n">CONFIG</span><span class="p">)</span>  <span class="c1"># type: Dict</span>
     <span class="n">conf</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="n">dash</span><span class="o">.</span><span class="n">callback_context</span>
-    <span class="n">inputs</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">inputs_</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">context</span><span class="o">.</span><span class="n">inputs_list</span><span class="p">:</span>
         <span class="n">key</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
         <span class="n">val</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="s1">&#39;value&#39;</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="n">val</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
-        <span class="n">inputs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+        <span class="n">inputs_</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
 
     <span class="c1"># convert search dropdown to boolean</span>
     <span class="n">grp</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="k">if</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;dropdown&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;asset&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">inputs_</span><span class="p">[</span><span class="s1">&#39;dropdown&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;asset&#39;</span><span class="p">:</span>
         <span class="n">grp</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;dropdown&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grp</span>
+    <span class="n">inputs_</span><span class="p">[</span><span class="s1">&#39;dropdown&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grp</span>
 
     <span class="n">input_id</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">triggered</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;prop_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -289,17 +295,18 @@
 
     <span class="k">elif</span> <span class="n">input_id</span> <span class="o">==</span> <span class="s1">&#39;search-button&#39;</span><span class="p">:</span>
         <span class="n">query</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
-            <span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;query&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;group_by_asset&#39;</span><span class="p">:</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;dropdown&#39;</span><span class="p">]</span>
+            <span class="s1">&#39;query&#39;</span><span class="p">:</span> <span class="n">inputs_</span><span class="p">[</span><span class="s1">&#39;query&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;group_by_asset&#39;</span><span class="p">:</span> <span class="n">inputs_</span><span class="p">[</span><span class="s1">&#39;dropdown&#39;</span><span class="p">]</span>
         <span class="p">})</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">test_client</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/api/search&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
         <span class="n">store</span><span class="p">[</span><span class="s1">&#39;/api/read&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span>
-        <span class="n">store</span><span class="p">[</span><span class="s1">&#39;query&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;query&#39;</span><span class="p">]</span>
+        <span class="n">store</span><span class="p">[</span><span class="s1">&#39;query&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">inputs_</span><span class="p">[</span><span class="s1">&#39;query&#39;</span><span class="p">]</span>
 
     <span class="k">elif</span> <span class="n">input_id</span> <span class="o">==</span> <span class="s1">&#39;upload&#39;</span><span class="p">:</span>
-        <span class="n">temp</span> <span class="o">=</span> <span class="s1">&#39;invalid&#39;</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="s1">&#39;invalid&#39;</span>  <span class="c1"># type: Any</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">temp</span> <span class="o">=</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">parse_json_file_content</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;upload&#39;</span><span class="p">])</span>
+            <span class="n">upload</span> <span class="o">=</span> <span class="n">inputs_</span><span class="p">[</span><span class="s1">&#39;upload&#39;</span><span class="p">]</span>  <span class="c1"># type: Any</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">parse_json_file_content</span><span class="p">(</span><span class="n">upload</span><span class="p">)</span>
             <span class="n">Config</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
             <span class="n">store</span><span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span>
             <span class="n">store</span><span class="p">[</span><span class="s1">&#39;config_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -312,7 +319,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">config</span> <span class="o">=</span> <span class="n">store</span><span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">]</span>
             <span class="n">Config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">CONFIG_PATH</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">CONFIG_PATH</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
                 <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">store</span><span class="p">[</span><span class="s1">&#39;config_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
@@ -326,6 +333,7 @@
     <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)]</span>
 <span class="p">)</span>
 <span class="k">def</span> <span class="nf">on_datatable_update</span><span class="p">(</span><span class="n">store</span><span class="p">):</span>
+    <span class="c1"># type: (Dict) -&gt; dash_table.DataTable</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Updates datatable with read information from store.</span>
 
@@ -356,6 +364,7 @@
     <span class="p">[</span><span class="n">State</span><span class="p">(</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)]</span>
 <span class="p">)</span>
 <span class="k">def</span> <span class="nf">on_get_tab</span><span class="p">(</span><span class="n">tab</span><span class="p">,</span> <span class="n">store</span><span class="p">):</span>
+    <span class="c1"># type: (str, Dict) -&gt; Union[flask.Response, List, None]</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Serve content for app tabs.</span>
 
@@ -378,7 +387,7 @@
     <span class="k">elif</span> <span class="n">tab</span> <span class="o">==</span> <span class="s1">&#39;graph&#39;</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/api/read&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span>
+            <span class="k">return</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="s1">&#39;error&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="k">return</span> <span class="n">components</span><span class="o">.</span><span class="n">get_key_value_card</span><span class="p">(</span>
@@ -406,6 +415,7 @@
     <span class="p">[</span><span class="n">State</span><span class="p">(</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)]</span>
 <span class="p">)</span>
 <span class="k">def</span> <span class="nf">on_config_card_update</span><span class="p">(</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">store</span><span class="p">):</span>
+    <span class="c1"># type: (int, Dict[str, Any]) -&gt; flask.Response</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Updates config card with config information from store.</span>
 
