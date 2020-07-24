@@ -1,7 +1,7 @@
 apispec
 dash
 dash-core-components
-dash-cytoscape
+dash-cytoscape==0.1.1
 dash-html-components
 dash-table
 flasgger

@@ -531,8 +531,8 @@ def get_asset_graph(data):
     graph = blob_etl.BlobETL(data_).to_networkx_graph()
 
     edges = []
-    for i, e in enumerate(list(graph.edges)):
-        edge = dict(group='edges', source=e[0], target=e[1])
+    for s, t in list(graph.edges):
+        edge = dict(group='edges', source=s, target=t)
         edges.append(edge)
 
     nodes = []
