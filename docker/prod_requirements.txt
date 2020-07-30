@@ -9,6 +9,7 @@ flask
 girder-client
 humanfriendly
 jinja2
+lunchbox
 marshmallow
 numpy
 pandas

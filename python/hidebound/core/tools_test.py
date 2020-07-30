@@ -1,7 +1,6 @@
 from pathlib import Path
 import os
 from tempfile import TemporaryDirectory
-import time
 import unittest
 
 from pandas import DataFrame
@@ -28,23 +27,6 @@ class ToolsTests(unittest.TestCase):
             with open(filepath, 'w') as f:
                 f.write('')
         return filepaths
-
-    def test_try_(self):
-        result = tools.try_(lambda x: int(x), 1.0, return_item='item')
-        self.assertEqual(result, 1)
-
-        result = tools.try_(lambda x: int(x), 'foo', return_item='bar')
-        self.assertEqual(result, 'bar')
-
-        result = tools.try_(lambda x: int(x), 'foo')
-        self.assertEqual(result, 'foo')
-
-        result = tools.try_(lambda x: int(x), 'foo', return_item='error')
-        self.assertIsInstance(result, ValueError)
-
-    def test_relative_path(self):
-        result = tools.relative_path(__file__, '../../../resources/foo.txt')
-        self.assertTrue(os.path.exists(result))
 
     def test_error_to_string(self):
         error = KeyError('Foo')
@@ -77,22 +59,6 @@ class ToolsTests(unittest.TestCase):
         expected = dict(a=[1, 1, 1], b=[2, 2, 2], c=[3], d=[3], e=[3])
         result = tools.to_prototype(dicts)
         self.assertEqual(result, expected)
-
-    def test_stopwatch(self):
-        stopwatch = tools.StopWatch()
-        stopwatch.start()
-        time.sleep(0.01)
-        stopwatch.stop()
-
-        self.assertAlmostEqual(stopwatch.delta.microseconds, 10000, delta=10000)
-        self.assertEqual(stopwatch.human_readable_delta, '0.01 seconds')
-
-        stopwatch.start()
-        time.sleep(0.02)
-        stopwatch.stop()
-
-        self.assertAlmostEqual(stopwatch.delta.microseconds, 20000, delta=10000)
-        self.assertEqual(stopwatch.human_readable_delta, '0.02 seconds')
 
     def test_list_all_files(self):
         expected = '/foo/bar is not a directory or does not exist.'

@@ -2,8 +2,9 @@ import os
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
+import lunchbox.tools as lbt
+
 from hidebound.core.database_test_base import DatabaseTestBase
-import hidebound.core.tools as tools
 import hidebound.server.app as application
 import hidebound.server.components as components
 import hidebound.server.server_tools as server_tools
@@ -32,7 +33,7 @@ class AppTests(DatabaseTestBase):
         self.client = self.app.test_client()
         self.app.config['TESTING'] = True
 
-        self.specs = tools.relative_path(
+        self.specs = lbt.relative_path(
             __file__,
             '../core/test_specifications.py'
         ).absolute().as_posix()

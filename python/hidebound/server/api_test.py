@@ -5,11 +5,11 @@ from tempfile import TemporaryDirectory
 
 import flasgger as swg
 import flask
+import lunchbox.tools as lbt
 import numpy as np
 
 from hidebound.core.database_test_base import DatabaseTestBase
 from hidebound.exporters.mock_girder import MockGirderExporter
-import hidebound.core.tools as tools
 import hidebound.server.api as api
 # ------------------------------------------------------------------------------
 
@@ -42,7 +42,7 @@ class ApiTests(DatabaseTestBase):
         self.client = self.app.test_client()
         self.app.config['TESTING'] = True
 
-        self.specs = tools.relative_path(
+        self.specs = lbt.relative_path(
             __file__,
             '../core/test_specifications.py'
         ).absolute().as_posix()

@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
+import lunchbox.tools as lbt
 import pandas as pd
 from pandas import DataFrame
 import numpy as np
@@ -11,7 +12,6 @@ from hidebound.core.specification_base import ComplexSpecificationBase
 from hidebound.core.specification_base import FileSpecificationBase
 from hidebound.core.specification_base import SequenceSpecificationBase
 import hidebound.core.database_tools as db_tools
-import hidebound.core.tools as tools
 # ------------------------------------------------------------------------------
 
 
@@ -369,7 +369,7 @@ class DatabaseTests(DatabaseTestBase):
                 self.assertFalse(row.asset_valid)
 
     def test_get_data_for_write(self):
-        data = tools.relative_path(__file__, '../../../resources/fake_data.csv')
+        data = lbt.relative_path(__file__, '../../../resources/fake_data.csv')
         data = pd.read_csv(data)
 
         file_data, file_meta, asset_meta = db_tools._get_data_for_write(
@@ -426,7 +426,7 @@ class DatabaseTests(DatabaseTestBase):
             self.assertTrue(result.startswith('/tmp/hidebound/data'))
 
     def test_get_data_for_write_dirs(self):
-        data = tools.relative_path(__file__, '../../../resources/fake_data.csv')
+        data = lbt.relative_path(__file__, '../../../resources/fake_data.csv')
         data = pd.read_csv(data)
 
         file_data, file_meta, asset_meta = db_tools._get_data_for_write(
@@ -457,7 +457,7 @@ class DatabaseTests(DatabaseTestBase):
         self.assertIs(result, None)
 
     def test_get_data_for_write_asset_id_file_ids_pair(self):
-        data = tools.relative_path(__file__, '../../../resources/fake_data.csv')
+        data = lbt.relative_path(__file__, '../../../resources/fake_data.csv')
         data = pd.read_csv(data, index_col=0)
 
         file_data, file_meta, asset_meta = db_tools._get_data_for_write(

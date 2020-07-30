@@ -8,8 +8,7 @@ import traceback
 
 import flask
 import jinja2
-
-import hidebound.core.tools as tools
+import lunchbox.tools as lbt
 # ------------------------------------------------------------------------------
 
 
@@ -26,11 +25,11 @@ def render_template(filename, parameters):
         bytes: HTML.
     '''
     # path to templates inside pip package
-    tempdir = tools.relative_path(__file__, '../templates').as_posix()
+    tempdir = lbt.relative_path(__file__, '../templates').as_posix()
 
     # path to templates inside repo
     if 'REPO_ENV' in os.environ.keys():
-        tempdir = tools.relative_path(__file__, '../../../templates').as_posix()
+        tempdir = lbt.relative_path(__file__, '../../../templates').as_posix()
 
     env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(tempdir),

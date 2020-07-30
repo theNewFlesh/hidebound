@@ -5,6 +5,7 @@ from pathlib import Path
 import re
 import uuid
 
+import lunchbox.tools as lbt
 import numpy as np
 from pandas import DataFrame
 from schematics.exceptions import ValidationError
@@ -37,7 +38,7 @@ def _add_specification(data, specifications):
     '''
     def get_spec(filename):
         # type: (str) -> Dict
-        output = tools.try_(
+        output = lbt.try_(
             AssetNameParser.parse_specification, filename, 'error'
         )
         if not isinstance(output, dict):
@@ -143,7 +144,7 @@ def _validate_assets(data):
     error = data.groupby('asset_path')\
         .first()\
         .apply(
-            lambda y: tools.try_(
+            lambda y: lbt.try_(
                 lambda x: x.specification_class(x.asset_traits).validate(),
                 y,
                 'error'),
