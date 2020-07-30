@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,12 +11,19 @@
   
 
   
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -29,11 +35,6 @@
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
@@ -49,7 +50,7 @@
           
 
           
-            <a href="../../../index.html" class="icon icon-home"> hidebound
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> hidebound
           
 
           
@@ -59,7 +60,7 @@
             
             
               <div class="version">
-                0.8.0
+                0.8.1
               </div>
             
           
@@ -76,6 +77,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -104,6 +106,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -142,7 +145,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
@@ -162,14 +165,11 @@
            <div itemprop="articleBody">
             
   <h1>Source code for hidebound.core.tools</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">dropwhile</span><span class="p">,</span> <span class="n">takewhile</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pformat</span>
-<span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">humanfriendly</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
 
@@ -255,59 +255,6 @@
     <span class="k">return</span> <span class="n">data</span></div>
 
 
-<div class="viewcode-block" id="try_"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.try_">[docs]</a><span class="k">def</span> <span class="nf">try_</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">return_item</span><span class="o">=</span><span class="s1">&#39;item&#39;</span><span class="p">):</span>
-    <span class="c1"># type: (Callable[[Any], Any], Any, Any) -&gt; Any</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Call given function on given item, catch any exceptions and return given</span>
-<span class="sd">    return item.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        function (function): Function of signature lambda x: x.</span>
-<span class="sd">        item (object): Item used to call function.</span>
-<span class="sd">        return_item (object, optional): Item to be returned. Default: &quot;item&quot;.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        object: Original item if return_item is &quot;item&quot;.</span>
-<span class="sd">        Exception: If return_item is &quot;error&quot;.</span>
-<span class="sd">        object: Object return by function call if return_item is not &quot;item&quot; or</span>
-<span class="sd">            &quot;error&quot;.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">function</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">return_item</span> <span class="o">==</span> <span class="s1">&#39;item&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">item</span>
-        <span class="k">elif</span> <span class="n">return_item</span> <span class="o">==</span> <span class="s1">&#39;error&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">error</span>
-        <span class="k">return</span> <span class="n">return_item</span></div>
-
-
-<div class="viewcode-block" id="relative_path"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.relative_path">[docs]</a><span class="k">def</span> <span class="nf">relative_path</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-    <span class="c1"># type: (Union[str, Path], Union[str, Path]) -&gt; Path</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Resolve path given current module&#39;s file path and given suffix.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        module (str): Always __file__ of current module.</span>
-<span class="sd">        path (str): Path relative to __file__.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        Path: Resolved Path object.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">module_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">module</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span>
-    <span class="n">path_</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">parts</span>  <span class="c1"># type: Any</span>
-    <span class="n">path_</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dropwhile</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">path_</span><span class="p">))</span>
-    <span class="n">up</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">takewhile</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="n">path_</span><span class="p">)))</span>
-    <span class="n">path_</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="o">*</span><span class="n">path_</span><span class="p">[</span><span class="n">up</span><span class="p">:])</span>
-    <span class="n">root</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">module_root</span><span class="o">.</span><span class="n">parents</span><span class="p">)[</span><span class="n">up</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">path_</span><span class="p">)</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span>
-
-    <span class="c1"># LOGGER.debug(</span>
-    <span class="c1">#     f&#39;Relative_path called with: {module} and {path}. Returned: {output}&#39;</span>
-    <span class="c1"># )</span>
-    <span class="k">return</span> <span class="n">output</span></div>
-
-
 <div class="viewcode-block" id="error_to_string"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.error_to_string">[docs]</a><span class="k">def</span> <span class="nf">error_to_string</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
     <span class="c1"># type: (Exception) -&gt; str</span>
     <span class="sd">&#39;&#39;&#39;</span>
@@ -357,49 +304,6 @@
             <span class="n">output</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
     <span class="n">output</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">output</span></div>
-
-
-<div class="viewcode-block" id="StopWatch"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.StopWatch">[docs]</a><span class="k">class</span> <span class="nc">StopWatch</span><span class="p">():</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    StopWatch is used for timing blocks of code.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># type: () -&gt; None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_delta</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: Optional[datetime.timedelta]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: Optional[datetime.datetime]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_stop_time</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: Optional[datetime.datetime]</span>
-
-<div class="viewcode-block" id="StopWatch.start"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.StopWatch.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># type: () -&gt; None</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Call this method directly before the code you wish to time.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_stop_time</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span></div>
-
-<div class="viewcode-block" id="StopWatch.stop"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.StopWatch.stop">[docs]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># type: () -&gt; None</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Call this method directly after the code you wish to time.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_stop_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span></div>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">delta</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># type: () -&gt; datetime.timedelta</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Time delta of stop - start.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stop_time</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span>  <span class="c1"># type: ignore</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">human_readable_delta</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># type: () -&gt; str</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Time delta in human readable format.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="k">return</span> <span class="n">humanfriendly</span><span class="o">.</span><span class="n">format_timespan</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delta</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">())</span></div>
 </pre></div>
 
            </div>
@@ -412,11 +316,19 @@
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2020, Alex Braun &lt;TheNewFlesh@github.com&gt;
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -427,7 +339,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

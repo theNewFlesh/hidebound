@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,12 +11,19 @@
   
 
   
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/style.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -29,11 +35,6 @@
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/style.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="cli" href="cli.html" />
@@ -51,7 +52,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> hidebound
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> hidebound
           
 
           
@@ -61,7 +62,7 @@
             
             
               <div class="version">
-                0.8.0
+                0.8.1
               </div>
             
           
@@ -78,6 +79,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -112,6 +114,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -150,7 +153,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="modules.html">&lt;no title&gt;</a> &raquo;</li>
         
@@ -193,7 +196,7 @@
 
 <dl class="py function">
 <dt id="hidebound.server.api.create">
-<code class="sig-prename descclassname">hidebound.server.api.</code><code class="sig-name descname">create</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; flask.wrappers.Response<a class="reference internal" href="_modules/hidebound/server/api.html#create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.api.create" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">hidebound.server.api.</code><code class="sig-name descname">create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/api.html#create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.api.create" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create hidebound data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -207,7 +210,7 @@
 
 <dl class="py function">
 <dt id="hidebound.server.api.delete">
-<code class="sig-prename descclassname">hidebound.server.api.</code><code class="sig-name descname">delete</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; flask.wrappers.Response<a class="reference internal" href="_modules/hidebound/server/api.html#delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.api.delete" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">hidebound.server.api.</code><code class="sig-name descname">delete</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/api.html#delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.api.delete" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete hidebound data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -221,7 +224,7 @@
 
 <dl class="py function">
 <dt id="hidebound.server.api.export">
-<code class="sig-prename descclassname">hidebound.server.api.</code><code class="sig-name descname">export</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; flask.wrappers.Response<a class="reference internal" href="_modules/hidebound/server/api.html#export"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.api.export" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">hidebound.server.api.</code><code class="sig-name descname">export</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/api.html#export"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.api.export" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export hidebound data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -252,7 +255,7 @@
 
 <dl class="py function">
 <dt id="hidebound.server.api.initialize">
-<code class="sig-prename descclassname">hidebound.server.api.</code><code class="sig-name descname">initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; flask.wrappers.Response<a class="reference internal" href="_modules/hidebound/server/api.html#initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.api.initialize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">hidebound.server.api.</code><code class="sig-name descname">initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/api.html#initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.api.initialize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize database with given config.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -266,7 +269,7 @@
 
 <dl class="py function">
 <dt id="hidebound.server.api.read">
-<code class="sig-prename descclassname">hidebound.server.api.</code><code class="sig-name descname">read</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; flask.wrappers.Response<a class="reference internal" href="_modules/hidebound/server/api.html#read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.api.read" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">hidebound.server.api.</code><code class="sig-name descname">read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/api.html#read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.api.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -280,7 +283,7 @@
 
 <dl class="py function">
 <dt id="hidebound.server.api.search">
-<code class="sig-prename descclassname">hidebound.server.api.</code><code class="sig-name descname">search</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; flask.wrappers.Response<a class="reference internal" href="_modules/hidebound/server/api.html#search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.api.search" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">hidebound.server.api.</code><code class="sig-name descname">search</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/api.html#search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.api.search" title="Permalink to this definition">¶</a></dt>
 <dd><p>Search database with a given SQL query.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -294,7 +297,7 @@
 
 <dl class="py function">
 <dt id="hidebound.server.api.update">
-<code class="sig-prename descclassname">hidebound.server.api.</code><code class="sig-name descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; flask.wrappers.Response<a class="reference internal" href="_modules/hidebound/server/api.html#update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.api.update" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">hidebound.server.api.</code><code class="sig-name descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/api.html#update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.api.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -311,7 +314,7 @@
 <span id="app"></span><h2>app<a class="headerlink" href="#module-hidebound.server.app" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="hidebound.server.app.on_config_card_update">
-<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">on_config_card_update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timestamp</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">store</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; flask.wrappers.Response<a class="reference internal" href="_modules/hidebound/server/app.html#on_config_card_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.on_config_card_update" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">on_config_card_update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timestamp</span></em>, <em class="sig-param"><span class="n">store</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#on_config_card_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.on_config_card_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates config card with config information from store.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -331,7 +334,7 @@
 
 <dl class="py function">
 <dt id="hidebound.server.app.on_datatable_update">
-<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">on_datatable_update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">store</span><span class="p">:</span> <span class="n">Dict</span></em><span class="sig-paren">)</span> &#x2192; dash_table.DataTable.DataTable<a class="reference internal" href="_modules/hidebound/server/app.html#on_datatable_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.on_datatable_update" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">on_datatable_update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">store</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#on_datatable_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.on_datatable_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates datatable with read information from store.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -348,7 +351,7 @@
 
 <dl class="py function">
 <dt id="hidebound.server.app.on_event">
-<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">on_event</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">inputs</span><span class="p">:</span> <span class="n">Tuple[Any, …]</span></em><span class="sig-paren">)</span> &#x2192; Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span><a class="reference internal" href="_modules/hidebound/server/app.html#on_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.on_event" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">on_event</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">inputs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#on_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.on_event" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update Hidebound database instance, and updates store with input data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -365,7 +368,7 @@
 
 <dl class="py function">
 <dt id="hidebound.server.app.on_get_tab">
-<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">on_get_tab</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tab</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">store</span><span class="p">:</span> <span class="n">Dict</span></em><span class="sig-paren">)</span> &#x2192; Union[flask.wrappers.Response, List, None]<a class="reference internal" href="_modules/hidebound/server/app.html#on_get_tab"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.on_get_tab" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">hidebound.server.app.</code><code class="sig-name descname">on_get_tab</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tab</span></em>, <em class="sig-param"><span class="n">store</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/server/app.html#on_get_tab"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.app.on_get_tab" title="Permalink to this definition">¶</a></dt>
 <dd><p>Serve content for app tabs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -744,7 +747,7 @@ One key-value pair per row.</p>
 
 <dl class="py function">
 <dt id="hidebound.server.server_tools.setup_hidebound_directory">
-<code class="sig-prename descclassname">hidebound.server.server_tools.</code><code class="sig-name descname">setup_hidebound_directory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">config_path</span><span class="p">:</span> <span class="n">Union[str, pathlib.Path, None]</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>Dict<span class="p">, </span>str<span class="p">]</span><a class="reference internal" href="_modules/hidebound/server/server_tools.html#setup_hidebound_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.server_tools.setup_hidebound_directory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">hidebound.server.server_tools.</code><code class="sig-name descname">setup_hidebound_directory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">config_path</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>Dict<span class="p">, </span>str<span class="p">]</span><a class="reference internal" href="_modules/hidebound/server/server_tools.html#setup_hidebound_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.server.server_tools.setup_hidebound_directory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates [root]/hidebound and [root]/hidebound/specifications
 directories. Writes a default hidebound config to
 [root]/hidebound/hidebound_config.json if one does not exist.</p>
@@ -788,11 +791,19 @@ written to [root]/hidebound/hideebiund_config.json. Default: None.</p></li>
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2020, Alex Braun &lt;TheNewFlesh@github.com&gt;
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -803,7 +814,6 @@ written to [root]/hidebound/hideebiund_config.json. Default: None.</p></li>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

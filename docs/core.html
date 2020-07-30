@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,12 +11,19 @@
   
 
   
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/style.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -29,11 +35,6 @@
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/style.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="exporters" href="exporters.html" />
@@ -51,7 +52,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> hidebound
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> hidebound
           
 
           
@@ -61,7 +62,7 @@
             
             
               <div class="version">
-                0.8.0
+                0.8.1
               </div>
             
           
@@ -78,6 +79,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -117,6 +119,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -155,7 +158,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="modules.html">&lt;no title&gt;</a> &raquo;</li>
         
@@ -743,7 +746,7 @@ according to a dynimcally defined grammar.</p>
 
 <dl class="py attribute">
 <dt id="hidebound.core.parser.AssetNameParser.LEGAL_FIELDS">
-<code class="sig-name descname">LEGAL_FIELDS</code><em class="property">: List[str]</em><em class="property"> = ['project', 'specification', 'descriptor', 'version', 'coordinate', 'frame', 'extension']</em><a class="headerlink" href="#hidebound.core.parser.AssetNameParser.LEGAL_FIELDS" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">LEGAL_FIELDS</code><em class="property">: List<span class="p">[</span>str<span class="p">]</span></em><em class="property"> = ['project', 'specification', 'descriptor', 'version', 'coordinate', 'frame', 'extension']</em><a class="headerlink" href="#hidebound.core.parser.AssetNameParser.LEGAL_FIELDS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1201,7 +1204,7 @@ directory.</p>
 
 <dl class="py attribute">
 <dt id="id10">
-<code class="sig-name descname">asset_name_fields</code><em class="property">: List[str]</em><em class="property"> = ['project', 'specification', 'descriptor', 'version']</em><a class="headerlink" href="#id10" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">asset_name_fields</code><em class="property">: List<span class="p">[</span>str<span class="p">]</span></em><em class="property"> = ['project', 'specification', 'descriptor', 'version']</em><a class="headerlink" href="#id10" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1221,12 +1224,12 @@ directory.</p>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specification_base.SpecificationBase.file_traits">
-<code class="sig-name descname">file_traits</code><em class="property">: Dict[str, Any]</em><em class="property"> = {}</em><a class="headerlink" href="#hidebound.core.specification_base.SpecificationBase.file_traits" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">file_traits</code><em class="property">: Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></em><em class="property"> = {}</em><a class="headerlink" href="#hidebound.core.specification_base.SpecificationBase.file_traits" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id14">
-<code class="sig-name descname">filename_fields</code><em class="property">: List[str]</em><em class="property"> = ['project', 'specification', 'descriptor', 'version', 'extension']</em><a class="headerlink" href="#id14" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">filename_fields</code><em class="property">: List<span class="p">[</span>str<span class="p">]</span></em><em class="property"> = ['project', 'specification', 'descriptor', 'version', 'extension']</em><a class="headerlink" href="#id14" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1444,7 +1447,7 @@ version,</p>
 
 <dl class="py attribute">
 <dt id="id17">
-<code class="sig-name descname">asset_name_fields</code><em class="property">: List[str]</em><em class="property"> = ['project', 'specification', 'descriptor', 'version']</em><a class="headerlink" href="#id17" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">asset_name_fields</code><em class="property">: List<span class="p">[</span>str<span class="p">]</span></em><em class="property"> = ['project', 'specification', 'descriptor', 'version']</em><a class="headerlink" href="#id17" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1464,12 +1467,12 @@ version,</p>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specifications.Raw001.file_traits">
-<code class="sig-name descname">file_traits</code><em class="property">: Dict[str, Any]</em><em class="property"> = {'channels': &lt;function get_image_channels&gt;, 'height': &lt;function get_image_height&gt;, 'width': &lt;function get_image_width&gt;}</em><a class="headerlink" href="#hidebound.core.specifications.Raw001.file_traits" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">file_traits</code><em class="property">: Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></em><em class="property"> = {'channels': &lt;function get_image_channels&gt;, 'height': &lt;function get_image_height&gt;, 'width': &lt;function get_image_width&gt;}</em><a class="headerlink" href="#hidebound.core.specifications.Raw001.file_traits" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id19">
-<code class="sig-name descname">filename_fields</code><em class="property">: List[str]</em><em class="property"> = ['project', 'specification', 'descriptor', 'version', 'frame', 'extension']</em><a class="headerlink" href="#id19" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">filename_fields</code><em class="property">: List<span class="p">[</span>str<span class="p">]</span></em><em class="property"> = ['project', 'specification', 'descriptor', 'version', 'frame', 'extension']</em><a class="headerlink" href="#id19" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1573,7 +1576,7 @@ version,</p>
 
 <dl class="py attribute">
 <dt id="id22">
-<code class="sig-name descname">asset_name_fields</code><em class="property">: List[str]</em><em class="property"> = ['project', 'specification', 'descriptor', 'version']</em><a class="headerlink" href="#id22" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">asset_name_fields</code><em class="property">: List<span class="p">[</span>str<span class="p">]</span></em><em class="property"> = ['project', 'specification', 'descriptor', 'version']</em><a class="headerlink" href="#id22" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1598,12 +1601,12 @@ version,</p>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specifications.Raw002.file_traits">
-<code class="sig-name descname">file_traits</code><em class="property">: Dict[str, Any]</em><em class="property"> = {'channels': &lt;function get_image_channels&gt;, 'height': &lt;function get_image_height&gt;, 'width': &lt;function get_image_width&gt;}</em><a class="headerlink" href="#hidebound.core.specifications.Raw002.file_traits" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">file_traits</code><em class="property">: Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></em><em class="property"> = {'channels': &lt;function get_image_channels&gt;, 'height': &lt;function get_image_height&gt;, 'width': &lt;function get_image_width&gt;}</em><a class="headerlink" href="#hidebound.core.specifications.Raw002.file_traits" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id24">
-<code class="sig-name descname">filename_fields</code><em class="property">: List[str]</em><em class="property"> = ['project', 'specification', 'descriptor', 'version', 'coordinate', 'frame', 'extension']</em><a class="headerlink" href="#id24" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">filename_fields</code><em class="property">: List<span class="p">[</span>str<span class="p">]</span></em><em class="property"> = ['project', 'specification', 'descriptor', 'version', 'coordinate', 'frame', 'extension']</em><a class="headerlink" href="#id24" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1641,37 +1644,6 @@ version,</p>
 </div>
 <div class="section" id="module-hidebound.core.tools">
 <span id="tools"></span><h2>tools<a class="headerlink" href="#module-hidebound.core.tools" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt id="hidebound.core.tools.StopWatch">
-<em class="property">class </em><code class="sig-prename descclassname">hidebound.core.tools.</code><code class="sig-name descname">StopWatch</code><a class="reference internal" href="_modules/hidebound/core/tools.html#StopWatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.tools.StopWatch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>StopWatch is used for timing blocks of code.</p>
-<dl class="py method">
-<dt id="hidebound.core.tools.StopWatch.delta">
-<em class="property">property </em><code class="sig-name descname">delta</code><a class="headerlink" href="#hidebound.core.tools.StopWatch.delta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Time delta of stop - start.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="hidebound.core.tools.StopWatch.human_readable_delta">
-<em class="property">property </em><code class="sig-name descname">human_readable_delta</code><a class="headerlink" href="#hidebound.core.tools.StopWatch.human_readable_delta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Time delta in human readable format.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="hidebound.core.tools.StopWatch.start">
-<code class="sig-name descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/hidebound/core/tools.html#StopWatch.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.tools.StopWatch.start" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call this method directly before the code you wish to time.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="hidebound.core.tools.StopWatch.stop">
-<code class="sig-name descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/hidebound/core/tools.html#StopWatch.stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.tools.StopWatch.stop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call this method directly after the code you wish to time.</p>
-</dd></dl>
-
-</dd></dl>
-
 <dl class="py function">
 <dt id="hidebound.core.tools.directory_to_dataframe">
 <code class="sig-prename descclassname">hidebound.core.tools.</code><code class="sig-name descname">directory_to_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">directory</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">include_regex</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">''</span></em>, <em class="sig-param"><span class="n">exclude_regex</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'\\.DS_Store'</span></em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="reference internal" href="_modules/hidebound/core/tools.html#directory_to_dataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.tools.directory_to_dataframe" title="Permalink to this definition">¶</a></dt>
@@ -1736,26 +1708,6 @@ Default: ‘’.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="hidebound.core.tools.relative_path">
-<code class="sig-prename descclassname">hidebound.core.tools.</code><code class="sig-name descname">relative_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">path</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; pathlib.Path<a class="reference internal" href="_modules/hidebound/core/tools.html#relative_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.tools.relative_path" title="Permalink to this definition">¶</a></dt>
-<dd><p>Resolve path given current module’s file path and given suffix.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>module</strong> (<em>str</em>) – Always __file__ of current module.</p></li>
-<li><p><strong>path</strong> (<em>str</em>) – Path relative to __file__.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Resolved Path object.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Path</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt id="hidebound.core.tools.to_prototype">
 <code class="sig-prename descclassname">hidebound.core.tools.</code><code class="sig-name descname">to_prototype</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dicts</span><span class="p">:</span> <span class="n">List<span class="p">[</span>Dict<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; Dict<a class="reference internal" href="_modules/hidebound/core/tools.html#to_prototype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.tools.to_prototype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a list of dicts into a dict of lists.
@@ -1776,34 +1728,6 @@ Default: ‘’.</p></li>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="hidebound.core.tools.try_">
-<code class="sig-prename descclassname">hidebound.core.tools.</code><code class="sig-name descname">try_</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">function</span><span class="p">:</span> <span class="n">Callable<span class="p">[</span><span class="p">[</span>Any<span class="p">]</span><span class="p">, </span>Any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">item</span><span class="p">:</span> <span class="n">Any</span></em>, <em class="sig-param"><span class="n">return_item</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="default_value">'item'</span></em><span class="sig-paren">)</span> &#x2192; Any<a class="reference internal" href="_modules/hidebound/core/tools.html#try_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.tools.try_" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call given function on given item, catch any exceptions and return given
-return item.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>function</strong> (<em>function</em>) – Function of signature lambda x: x.</p></li>
-<li><p><strong>item</strong> (<em>object</em>) – Item used to call function.</p></li>
-<li><p><strong>return_item</strong> (<em>object</em><em>, </em><em>optional</em>) – Item to be returned. Default: “item”.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><p>Original item if return_item is “item”.
-Exception: If return_item is “error”.
-object: Object return by function call if return_item is not “item” or</p>
-<blockquote>
-<div><p>”error”.</p>
-</div></blockquote>
-</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>object</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2223,11 +2147,19 @@ Default: False.</p></li>
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2020, Alex Braun &lt;TheNewFlesh@github.com&gt;
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -2238,7 +2170,6 @@ Default: False.</p></li>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {
