@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.8.4
+                0.8.5
               </div>
             
           
@@ -1995,6 +1995,29 @@ Default: ‘’.</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt id="hidebound.core.validators.is_gte">
+<code class="sig-prename descclassname">hidebound.core.validators.</code><code class="sig-name descname">is_gte</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span><span class="p">:</span> <span class="n">Any</span></em>, <em class="sig-param"><span class="n">b</span><span class="p">:</span> <span class="n">Any</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/hidebound/core/validators.html#is_gte"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.validators.is_gte" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that a is greater than or equal to b.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>object</em>) – Object.</p></li>
+<li><p><strong>b</strong> (<em>object</em>) – Object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValidationError</strong> – If a is not greater than or equal to b.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A is greater than or equal to b.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="hidebound.core.validators.is_homogenous">
 <code class="sig-prename descclassname">hidebound.core.validators.</code><code class="sig-name descname">is_homogenous</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">items</span><span class="p">:</span> <span class="n">List<span class="p">[</span>Any<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/hidebound/core/validators.html#is_homogenous"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.validators.is_homogenous" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates thats all items are equal.</p>
@@ -2051,6 +2074,29 @@ Default: ‘’.</p></li>
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>A is less than b.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.core.validators.is_lte">
+<code class="sig-prename descclassname">hidebound.core.validators.</code><code class="sig-name descname">is_lte</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span><span class="p">:</span> <span class="n">Any</span></em>, <em class="sig-param"><span class="n">b</span><span class="p">:</span> <span class="n">Any</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/hidebound/core/validators.html#is_lte"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.validators.is_lte" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that a is less than or equal to b.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>object</em>) – Object.</p></li>
+<li><p><strong>b</strong> (<em>object</em>) – Object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValidationError</strong> – If a is not less than or equal to b.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A is less than or equal to b.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>bool</p>

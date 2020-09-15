@@ -21,8 +21,8 @@
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
-            92 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">92 run</button>
+            96 statements &nbsp;
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">96 run</button>
             <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">0 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">11 excluded</button>
         </h2>
@@ -344,121 +344,159 @@
     <p id="t291" class="run"><span class="n"><a href="#t291">291</a></span><span class="t">    <span class="key">return</span> <span class="nam">a</span> <span class="op">></span> <span class="nam">b</span>&nbsp;</span><span class="r"></span></p>
     <p id="t292" class="pln"><span class="n"><a href="#t292">292</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t293" class="pln"><span class="n"><a href="#t293">293</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t294" class="run"><span class="n"><a href="#t294">294</a></span><span class="t"><span class="op">@</span><span class="nam">validate</span><span class="op">(</span><span class="str">'{} is not homogenous.'</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t295" class="pln"><span class="n"><a href="#t295">295</a></span><span class="t"><span class="key">def</span> <span class="nam">is_homogenous</span><span class="op">(</span><span class="nam">items</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t296" class="pln"><span class="n"><a href="#t296">296</a></span><span class="t">    <span class="com"># type: (List[Any]) -> bool</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t294" class="run"><span class="n"><a href="#t294">294</a></span><span class="t"><span class="op">@</span><span class="nam">validate_each</span><span class="op">(</span><span class="str">'{} !&lt;= {}.'</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t295" class="pln"><span class="n"><a href="#t295">295</a></span><span class="t"><span class="key">def</span> <span class="nam">is_lte</span><span class="op">(</span><span class="nam">a</span><span class="op">,</span> <span class="nam">b</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t296" class="pln"><span class="n"><a href="#t296">296</a></span><span class="t">    <span class="com"># type: (Any, Any) -> bool</span>&nbsp;</span><span class="r"></span></p>
     <p id="t297" class="pln"><span class="n"><a href="#t297">297</a></span><span class="t">    <span class="str">'''</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t298" class="pln"><span class="n"><a href="#t298">298</a></span><span class="t"><span class="str">    Validates thats all items are equal.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t298" class="pln"><span class="n"><a href="#t298">298</a></span><span class="t"><span class="str">    Validates that a is less than or equal to b.</span>&nbsp;</span><span class="r"></span></p>
     <p id="t299" class="pln"><span class="n"><a href="#t299">299</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t300" class="pln"><span class="n"><a href="#t300">300</a></span><span class="t"><span class="str">    Args:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t301" class="pln"><span class="n"><a href="#t301">301</a></span><span class="t"><span class="str">        items (list): List of items.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t302" class="pln"><span class="n"><a href="#t302">302</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t303" class="pln"><span class="n"><a href="#t303">303</a></span><span class="t"><span class="str">    Raises:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t304" class="pln"><span class="n"><a href="#t304">304</a></span><span class="t"><span class="str">        ValidationError: If items are not all the same.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t305" class="pln"><span class="n"><a href="#t305">305</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t306" class="pln"><span class="n"><a href="#t306">306</a></span><span class="t"><span class="str">    Returns:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t307" class="pln"><span class="n"><a href="#t307">307</a></span><span class="t"><span class="str">        bool: Homogeneity of items.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t308" class="pln"><span class="n"><a href="#t308">308</a></span><span class="t"><span class="str">    '''</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t309" class="run"><span class="n"><a href="#t309">309</a></span><span class="t">    <span class="key">if</span> <span class="nam">len</span><span class="op">(</span><span class="nam">items</span><span class="op">)</span> <span class="op">&lt;</span> <span class="num">2</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t310" class="run"><span class="n"><a href="#t310">310</a></span><span class="t">        <span class="key">return</span> <span class="key">True</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t301" class="pln"><span class="n"><a href="#t301">301</a></span><span class="t"><span class="str">        a (object): Object.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t302" class="pln"><span class="n"><a href="#t302">302</a></span><span class="t"><span class="str">        b (object): Object.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t303" class="pln"><span class="n"><a href="#t303">303</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t304" class="pln"><span class="n"><a href="#t304">304</a></span><span class="t"><span class="str">    Raises:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t305" class="pln"><span class="n"><a href="#t305">305</a></span><span class="t"><span class="str">        ValidationError: If a is not less than or equal to b.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t306" class="pln"><span class="n"><a href="#t306">306</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t307" class="pln"><span class="n"><a href="#t307">307</a></span><span class="t"><span class="str">    Returns:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t308" class="pln"><span class="n"><a href="#t308">308</a></span><span class="t"><span class="str">        bool: A is less than or equal to b.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t309" class="pln"><span class="n"><a href="#t309">309</a></span><span class="t"><span class="str">    '''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t310" class="run"><span class="n"><a href="#t310">310</a></span><span class="t">    <span class="key">return</span> <span class="nam">a</span> <span class="op">&lt;=</span> <span class="nam">b</span>&nbsp;</span><span class="r"></span></p>
     <p id="t311" class="pln"><span class="n"><a href="#t311">311</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t312" class="run"><span class="n"><a href="#t312">312</a></span><span class="t">    <span class="nam">first</span> <span class="op">=</span> <span class="nam">items</span><span class="op">[</span><span class="num">0</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t313" class="run"><span class="n"><a href="#t313">313</a></span><span class="t">    <span class="key">for</span> <span class="nam">item</span> <span class="key">in</span> <span class="nam">items</span><span class="op">[</span><span class="num">1</span><span class="op">:</span><span class="op">]</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t314" class="run"><span class="n"><a href="#t314">314</a></span><span class="t">        <span class="key">if</span> <span class="nam">item</span> <span class="op">!=</span> <span class="nam">first</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t315" class="run"><span class="n"><a href="#t315">315</a></span><span class="t">            <span class="key">return</span> <span class="key">False</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t316" class="run"><span class="n"><a href="#t316">316</a></span><span class="t">    <span class="key">return</span> <span class="key">True</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t317" class="pln"><span class="n"><a href="#t317">317</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t312" class="pln"><span class="n"><a href="#t312">312</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t313" class="run"><span class="n"><a href="#t313">313</a></span><span class="t"><span class="op">@</span><span class="nam">validate_each</span><span class="op">(</span><span class="str">'{} !>= {}.'</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t314" class="pln"><span class="n"><a href="#t314">314</a></span><span class="t"><span class="key">def</span> <span class="nam">is_gte</span><span class="op">(</span><span class="nam">a</span><span class="op">,</span> <span class="nam">b</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t315" class="pln"><span class="n"><a href="#t315">315</a></span><span class="t">    <span class="com"># type: (Any, Any) -> bool</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t316" class="pln"><span class="n"><a href="#t316">316</a></span><span class="t">    <span class="str">'''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t317" class="pln"><span class="n"><a href="#t317">317</a></span><span class="t"><span class="str">    Validates that a is greater than or equal to b.</span>&nbsp;</span><span class="r"></span></p>
     <p id="t318" class="pln"><span class="n"><a href="#t318">318</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t319" class="run"><span class="n"><a href="#t319">319</a></span><span class="t"><span class="op">@</span><span class="nam">validate_each</span><span class="op">(</span><span class="str">'{} is not in {}.'</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t320" class="pln"><span class="n"><a href="#t320">320</a></span><span class="t"><span class="key">def</span> <span class="nam">is_in</span><span class="op">(</span><span class="nam">a</span><span class="op">,</span> <span class="nam">b</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t321" class="pln"><span class="n"><a href="#t321">321</a></span><span class="t">    <span class="com"># type: (Any, Any) -> bool</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t322" class="pln"><span class="n"><a href="#t322">322</a></span><span class="t">    <span class="str">'''</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t323" class="pln"><span class="n"><a href="#t323">323</a></span><span class="t"><span class="str">    Validates that each a is in b.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t324" class="pln"><span class="n"><a href="#t324">324</a></span><span class="t"><span class="str">    Args:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t325" class="pln"><span class="n"><a href="#t325">325</a></span><span class="t"><span class="str">        a (object): Object.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t326" class="pln"><span class="n"><a href="#t326">326</a></span><span class="t"><span class="str">        b (object): Object.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t327" class="pln"><span class="n"><a href="#t327">327</a></span><span class="t"><span class="str">    Raises:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t328" class="pln"><span class="n"><a href="#t328">328</a></span><span class="t"><span class="str">        ValidationError: If a is not in b.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t329" class="pln"><span class="n"><a href="#t329">329</a></span><span class="t"><span class="str">    Returns:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t330" class="pln"><span class="n"><a href="#t330">330</a></span><span class="t"><span class="str">        bool: Alls a's in b.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t331" class="pln"><span class="n"><a href="#t331">331</a></span><span class="t"><span class="str">    '''</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t332" class="run"><span class="n"><a href="#t332">332</a></span><span class="t">    <span class="key">return</span> <span class="nam">a</span> <span class="key">in</span> <span class="nam">b</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t333" class="pln"><span class="n"><a href="#t333">333</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t334" class="pln"><span class="n"><a href="#t334">334</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t335" class="run"><span class="n"><a href="#t335">335</a></span><span class="t"><span class="op">@</span><span class="nam">validate_each</span><span class="op">(</span><span class="str">'{} is not an attribute of {}.'</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t336" class="pln"><span class="n"><a href="#t336">336</a></span><span class="t"><span class="key">def</span> <span class="nam">is_attribute_of</span><span class="op">(</span><span class="nam">name</span><span class="op">,</span> <span class="nam">object</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t337" class="pln"><span class="n"><a href="#t337">337</a></span><span class="t">    <span class="com"># type: (str, Any) -> bool</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t338" class="pln"><span class="n"><a href="#t338">338</a></span><span class="t">    <span class="str">'''</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t339" class="pln"><span class="n"><a href="#t339">339</a></span><span class="t"><span class="str">    Validates that each name is an attribute of given object.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t340" class="pln"><span class="n"><a href="#t340">340</a></span><span class="t"><span class="str">    Args:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t341" class="pln"><span class="n"><a href="#t341">341</a></span><span class="t"><span class="str">        a (str): Attribute name.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t342" class="pln"><span class="n"><a href="#t342">342</a></span><span class="t"><span class="str">        b (object): Object.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t343" class="pln"><span class="n"><a href="#t343">343</a></span><span class="t"><span class="str">    Raises:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t344" class="pln"><span class="n"><a href="#t344">344</a></span><span class="t"><span class="str">        ValidationError: If an name is not an attribute of given object.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t345" class="pln"><span class="n"><a href="#t345">345</a></span><span class="t"><span class="str">    Returns:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t346" class="pln"><span class="n"><a href="#t346">346</a></span><span class="t"><span class="str">        bool: Alls names are attributes of object.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t347" class="pln"><span class="n"><a href="#t347">347</a></span><span class="t"><span class="str">    '''</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t348" class="run"><span class="n"><a href="#t348">348</a></span><span class="t">    <span class="key">return</span> <span class="nam">hasattr</span><span class="op">(</span><span class="nam">object</span><span class="op">,</span> <span class="nam">name</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t319" class="pln"><span class="n"><a href="#t319">319</a></span><span class="t"><span class="str">    Args:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t320" class="pln"><span class="n"><a href="#t320">320</a></span><span class="t"><span class="str">        a (object): Object.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t321" class="pln"><span class="n"><a href="#t321">321</a></span><span class="t"><span class="str">        b (object): Object.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t322" class="pln"><span class="n"><a href="#t322">322</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t323" class="pln"><span class="n"><a href="#t323">323</a></span><span class="t"><span class="str">    Raises:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t324" class="pln"><span class="n"><a href="#t324">324</a></span><span class="t"><span class="str">        ValidationError: If a is not greater than or equal to b.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t325" class="pln"><span class="n"><a href="#t325">325</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t326" class="pln"><span class="n"><a href="#t326">326</a></span><span class="t"><span class="str">    Returns:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t327" class="pln"><span class="n"><a href="#t327">327</a></span><span class="t"><span class="str">        bool: A is greater than or equal to b.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t328" class="pln"><span class="n"><a href="#t328">328</a></span><span class="t"><span class="str">    '''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t329" class="run"><span class="n"><a href="#t329">329</a></span><span class="t">    <span class="key">return</span> <span class="nam">a</span> <span class="op">>=</span> <span class="nam">b</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t330" class="pln"><span class="n"><a href="#t330">330</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t331" class="pln"><span class="n"><a href="#t331">331</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t332" class="run"><span class="n"><a href="#t332">332</a></span><span class="t"><span class="op">@</span><span class="nam">validate</span><span class="op">(</span><span class="str">'{} is not homogenous.'</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t333" class="pln"><span class="n"><a href="#t333">333</a></span><span class="t"><span class="key">def</span> <span class="nam">is_homogenous</span><span class="op">(</span><span class="nam">items</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t334" class="pln"><span class="n"><a href="#t334">334</a></span><span class="t">    <span class="com"># type: (List[Any]) -> bool</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t335" class="pln"><span class="n"><a href="#t335">335</a></span><span class="t">    <span class="str">'''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t336" class="pln"><span class="n"><a href="#t336">336</a></span><span class="t"><span class="str">    Validates thats all items are equal.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t337" class="pln"><span class="n"><a href="#t337">337</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t338" class="pln"><span class="n"><a href="#t338">338</a></span><span class="t"><span class="str">    Args:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t339" class="pln"><span class="n"><a href="#t339">339</a></span><span class="t"><span class="str">        items (list): List of items.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t340" class="pln"><span class="n"><a href="#t340">340</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t341" class="pln"><span class="n"><a href="#t341">341</a></span><span class="t"><span class="str">    Raises:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t342" class="pln"><span class="n"><a href="#t342">342</a></span><span class="t"><span class="str">        ValidationError: If items are not all the same.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t343" class="pln"><span class="n"><a href="#t343">343</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t344" class="pln"><span class="n"><a href="#t344">344</a></span><span class="t"><span class="str">    Returns:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t345" class="pln"><span class="n"><a href="#t345">345</a></span><span class="t"><span class="str">        bool: Homogeneity of items.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t346" class="pln"><span class="n"><a href="#t346">346</a></span><span class="t"><span class="str">    '''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t347" class="run"><span class="n"><a href="#t347">347</a></span><span class="t">    <span class="key">if</span> <span class="nam">len</span><span class="op">(</span><span class="nam">items</span><span class="op">)</span> <span class="op">&lt;</span> <span class="num">2</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t348" class="run"><span class="n"><a href="#t348">348</a></span><span class="t">        <span class="key">return</span> <span class="key">True</span>&nbsp;</span><span class="r"></span></p>
     <p id="t349" class="pln"><span class="n"><a href="#t349">349</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t350" class="pln"><span class="n"><a href="#t350">350</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t351" class="run"><span class="n"><a href="#t351">351</a></span><span class="t"><span class="op">@</span><span class="nam">validate</span><span class="op">(</span><span class="str">'{} is not a directory or does not exist.'</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t352" class="pln"><span class="n"><a href="#t352">352</a></span><span class="t"><span class="key">def</span> <span class="nam">is_directory</span><span class="op">(</span><span class="nam">item</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t353" class="pln"><span class="n"><a href="#t353">353</a></span><span class="t">    <span class="com"># type: (Union[str, Path]) -> bool</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t354" class="pln"><span class="n"><a href="#t354">354</a></span><span class="t">    <span class="str">'''</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t355" class="pln"><span class="n"><a href="#t355">355</a></span><span class="t"><span class="str">    Validates thats item is a directory.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t356" class="pln"><span class="n"><a href="#t356">356</a></span><span class="t"><span class="str">    Args:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t357" class="pln"><span class="n"><a href="#t357">357</a></span><span class="t"><span class="str">        item (str): Directory path.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t358" class="pln"><span class="n"><a href="#t358">358</a></span><span class="t"><span class="str">    Raises:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t359" class="pln"><span class="n"><a href="#t359">359</a></span><span class="t"><span class="str">        ValidationError: If item is not a directory or does not exist.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t360" class="pln"><span class="n"><a href="#t360">360</a></span><span class="t"><span class="str">    Returns:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t361" class="pln"><span class="n"><a href="#t361">361</a></span><span class="t"><span class="str">        bool: State of item.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t362" class="pln"><span class="n"><a href="#t362">362</a></span><span class="t"><span class="str">    '''</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t363" class="run"><span class="n"><a href="#t363">363</a></span><span class="t">    <span class="key">if</span> <span class="key">not</span> <span class="nam">os</span><span class="op">.</span><span class="nam">path</span><span class="op">.</span><span class="nam">isdir</span><span class="op">(</span><span class="nam">item</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t364" class="run"><span class="n"><a href="#t364">364</a></span><span class="t">        <span class="key">return</span> <span class="key">False</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t365" class="run"><span class="n"><a href="#t365">365</a></span><span class="t">    <span class="key">return</span> <span class="key">True</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t366" class="pln"><span class="n"><a href="#t366">366</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t367" class="pln"><span class="n"><a href="#t367">367</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t368" class="run"><span class="n"><a href="#t368">368</a></span><span class="t"><span class="op">@</span><span class="nam">validate</span><span class="op">(</span><span class="str">'{} is not a file or does not exist.'</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t369" class="pln"><span class="n"><a href="#t369">369</a></span><span class="t"><span class="key">def</span> <span class="nam">is_file</span><span class="op">(</span><span class="nam">item</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t370" class="pln"><span class="n"><a href="#t370">370</a></span><span class="t">    <span class="com"># type: (Union[str, Path]) -> bool</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t371" class="pln"><span class="n"><a href="#t371">371</a></span><span class="t">    <span class="str">'''</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t372" class="pln"><span class="n"><a href="#t372">372</a></span><span class="t"><span class="str">    Validates thats item is a file.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t373" class="pln"><span class="n"><a href="#t373">373</a></span><span class="t"><span class="str">    Args:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t374" class="pln"><span class="n"><a href="#t374">374</a></span><span class="t"><span class="str">        item (str): Filepath.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t375" class="pln"><span class="n"><a href="#t375">375</a></span><span class="t"><span class="str">    Raises:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t376" class="pln"><span class="n"><a href="#t376">376</a></span><span class="t"><span class="str">        ValidationError: If item is not a file or does not exist.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t377" class="pln"><span class="n"><a href="#t377">377</a></span><span class="t"><span class="str">    Returns:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t378" class="pln"><span class="n"><a href="#t378">378</a></span><span class="t"><span class="str">        bool: State of item.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t379" class="pln"><span class="n"><a href="#t379">379</a></span><span class="t"><span class="str">    '''</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t380" class="run"><span class="n"><a href="#t380">380</a></span><span class="t">    <span class="key">if</span> <span class="key">not</span> <span class="nam">os</span><span class="op">.</span><span class="nam">path</span><span class="op">.</span><span class="nam">isfile</span><span class="op">(</span><span class="nam">item</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t381" class="run"><span class="n"><a href="#t381">381</a></span><span class="t">        <span class="key">return</span> <span class="key">False</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t382" class="run"><span class="n"><a href="#t382">382</a></span><span class="t">    <span class="key">return</span> <span class="key">True</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t383" class="pln"><span class="n"><a href="#t383">383</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t384" class="pln"><span class="n"><a href="#t384">384</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t385" class="run"><span class="n"><a href="#t385">385</a></span><span class="t"><span class="key">def</span> <span class="nam">is_not_missing_values</span><span class="op">(</span><span class="nam">item</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t386" class="pln"><span class="n"><a href="#t386">386</a></span><span class="t">    <span class="com"># type: (List[int]) -> bool</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t387" class="pln"><span class="n"><a href="#t387">387</a></span><span class="t">    <span class="str">'''</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t388" class="pln"><span class="n"><a href="#t388">388</a></span><span class="t"><span class="str">    Validates that sequence of integers is not missing any values.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t389" class="pln"><span class="n"><a href="#t389">389</a></span><span class="t"><span class="str">    Args:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t390" class="pln"><span class="n"><a href="#t390">390</a></span><span class="t"><span class="str">        item (list[int]): Integers.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t391" class="pln"><span class="n"><a href="#t391">391</a></span><span class="t"><span class="str">    Raises:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t392" class="pln"><span class="n"><a href="#t392">392</a></span><span class="t"><span class="str">        ValidationError: If item is missing values.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t393" class="pln"><span class="n"><a href="#t393">393</a></span><span class="t"><span class="str">    Returns:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t394" class="pln"><span class="n"><a href="#t394">394</a></span><span class="t"><span class="str">        bool: State of item.</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t395" class="pln"><span class="n"><a href="#t395">395</a></span><span class="t"><span class="str">    '''</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t396" class="run"><span class="n"><a href="#t396">396</a></span><span class="t">    <span class="nam">expected</span> <span class="op">=</span> <span class="nam">list</span><span class="op">(</span><span class="nam">range</span><span class="op">(</span><span class="nam">min</span><span class="op">(</span><span class="nam">item</span><span class="op">)</span><span class="op">,</span> <span class="nam">max</span><span class="op">(</span><span class="nam">item</span><span class="op">)</span> <span class="op">+</span> <span class="num">1</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t397" class="run"><span class="n"><a href="#t397">397</a></span><span class="t">    <span class="key">if</span> <span class="nam">item</span> <span class="op">==</span> <span class="nam">expected</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t398" class="run"><span class="n"><a href="#t398">398</a></span><span class="t">        <span class="key">return</span> <span class="key">False</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t399" class="pln"><span class="n"><a href="#t399">399</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t400" class="run"><span class="n"><a href="#t400">400</a></span><span class="t">    <span class="nam">diff</span> <span class="op">=</span> <span class="nam">sorted</span><span class="op">(</span><span class="nam">list</span><span class="op">(</span><span class="nam">set</span><span class="op">(</span><span class="nam">expected</span><span class="op">)</span><span class="op">.</span><span class="nam">difference</span><span class="op">(</span><span class="nam">item</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t401" class="run"><span class="n"><a href="#t401">401</a></span><span class="t">    <span class="nam">msg</span> <span class="op">=</span> <span class="str">f'Missing frames: {diff}.'</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t402" class="run"><span class="n"><a href="#t402">402</a></span><span class="t">    <span class="key">raise</span> <span class="nam">ValidationError</span><span class="op">(</span><span class="nam">msg</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t350" class="run"><span class="n"><a href="#t350">350</a></span><span class="t">    <span class="nam">first</span> <span class="op">=</span> <span class="nam">items</span><span class="op">[</span><span class="num">0</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t351" class="run"><span class="n"><a href="#t351">351</a></span><span class="t">    <span class="key">for</span> <span class="nam">item</span> <span class="key">in</span> <span class="nam">items</span><span class="op">[</span><span class="num">1</span><span class="op">:</span><span class="op">]</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t352" class="run"><span class="n"><a href="#t352">352</a></span><span class="t">        <span class="key">if</span> <span class="nam">item</span> <span class="op">!=</span> <span class="nam">first</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t353" class="run"><span class="n"><a href="#t353">353</a></span><span class="t">            <span class="key">return</span> <span class="key">False</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t354" class="run"><span class="n"><a href="#t354">354</a></span><span class="t">    <span class="key">return</span> <span class="key">True</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t355" class="pln"><span class="n"><a href="#t355">355</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t356" class="pln"><span class="n"><a href="#t356">356</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t357" class="run"><span class="n"><a href="#t357">357</a></span><span class="t"><span class="op">@</span><span class="nam">validate_each</span><span class="op">(</span><span class="str">'{} is not in {}.'</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t358" class="pln"><span class="n"><a href="#t358">358</a></span><span class="t"><span class="key">def</span> <span class="nam">is_in</span><span class="op">(</span><span class="nam">a</span><span class="op">,</span> <span class="nam">b</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t359" class="pln"><span class="n"><a href="#t359">359</a></span><span class="t">    <span class="com"># type: (Any, Any) -> bool</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t360" class="pln"><span class="n"><a href="#t360">360</a></span><span class="t">    <span class="str">'''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t361" class="pln"><span class="n"><a href="#t361">361</a></span><span class="t"><span class="str">    Validates that each a is in b.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t362" class="pln"><span class="n"><a href="#t362">362</a></span><span class="t"><span class="str">    Args:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t363" class="pln"><span class="n"><a href="#t363">363</a></span><span class="t"><span class="str">        a (object): Object.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t364" class="pln"><span class="n"><a href="#t364">364</a></span><span class="t"><span class="str">        b (object): Object.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t365" class="pln"><span class="n"><a href="#t365">365</a></span><span class="t"><span class="str">    Raises:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t366" class="pln"><span class="n"><a href="#t366">366</a></span><span class="t"><span class="str">        ValidationError: If a is not in b.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t367" class="pln"><span class="n"><a href="#t367">367</a></span><span class="t"><span class="str">    Returns:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t368" class="pln"><span class="n"><a href="#t368">368</a></span><span class="t"><span class="str">        bool: Alls a's in b.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t369" class="pln"><span class="n"><a href="#t369">369</a></span><span class="t"><span class="str">    '''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t370" class="run"><span class="n"><a href="#t370">370</a></span><span class="t">    <span class="key">return</span> <span class="nam">a</span> <span class="key">in</span> <span class="nam">b</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t371" class="pln"><span class="n"><a href="#t371">371</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t372" class="pln"><span class="n"><a href="#t372">372</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t373" class="run"><span class="n"><a href="#t373">373</a></span><span class="t"><span class="op">@</span><span class="nam">validate_each</span><span class="op">(</span><span class="str">'{} is not an attribute of {}.'</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t374" class="pln"><span class="n"><a href="#t374">374</a></span><span class="t"><span class="key">def</span> <span class="nam">is_attribute_of</span><span class="op">(</span><span class="nam">name</span><span class="op">,</span> <span class="nam">object</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t375" class="pln"><span class="n"><a href="#t375">375</a></span><span class="t">    <span class="com"># type: (str, Any) -> bool</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t376" class="pln"><span class="n"><a href="#t376">376</a></span><span class="t">    <span class="str">'''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t377" class="pln"><span class="n"><a href="#t377">377</a></span><span class="t"><span class="str">    Validates that each name is an attribute of given object.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t378" class="pln"><span class="n"><a href="#t378">378</a></span><span class="t"><span class="str">    Args:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t379" class="pln"><span class="n"><a href="#t379">379</a></span><span class="t"><span class="str">        a (str): Attribute name.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t380" class="pln"><span class="n"><a href="#t380">380</a></span><span class="t"><span class="str">        b (object): Object.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t381" class="pln"><span class="n"><a href="#t381">381</a></span><span class="t"><span class="str">    Raises:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t382" class="pln"><span class="n"><a href="#t382">382</a></span><span class="t"><span class="str">        ValidationError: If an name is not an attribute of given object.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t383" class="pln"><span class="n"><a href="#t383">383</a></span><span class="t"><span class="str">    Returns:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t384" class="pln"><span class="n"><a href="#t384">384</a></span><span class="t"><span class="str">        bool: Alls names are attributes of object.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t385" class="pln"><span class="n"><a href="#t385">385</a></span><span class="t"><span class="str">    '''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t386" class="run"><span class="n"><a href="#t386">386</a></span><span class="t">    <span class="key">return</span> <span class="nam">hasattr</span><span class="op">(</span><span class="nam">object</span><span class="op">,</span> <span class="nam">name</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t387" class="pln"><span class="n"><a href="#t387">387</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t388" class="pln"><span class="n"><a href="#t388">388</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t389" class="run"><span class="n"><a href="#t389">389</a></span><span class="t"><span class="op">@</span><span class="nam">validate</span><span class="op">(</span><span class="str">'{} is not a directory or does not exist.'</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t390" class="pln"><span class="n"><a href="#t390">390</a></span><span class="t"><span class="key">def</span> <span class="nam">is_directory</span><span class="op">(</span><span class="nam">item</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t391" class="pln"><span class="n"><a href="#t391">391</a></span><span class="t">    <span class="com"># type: (Union[str, Path]) -> bool</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t392" class="pln"><span class="n"><a href="#t392">392</a></span><span class="t">    <span class="str">'''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t393" class="pln"><span class="n"><a href="#t393">393</a></span><span class="t"><span class="str">    Validates thats item is a directory.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t394" class="pln"><span class="n"><a href="#t394">394</a></span><span class="t"><span class="str">    Args:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t395" class="pln"><span class="n"><a href="#t395">395</a></span><span class="t"><span class="str">        item (str): Directory path.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t396" class="pln"><span class="n"><a href="#t396">396</a></span><span class="t"><span class="str">    Raises:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t397" class="pln"><span class="n"><a href="#t397">397</a></span><span class="t"><span class="str">        ValidationError: If item is not a directory or does not exist.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t398" class="pln"><span class="n"><a href="#t398">398</a></span><span class="t"><span class="str">    Returns:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t399" class="pln"><span class="n"><a href="#t399">399</a></span><span class="t"><span class="str">        bool: State of item.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t400" class="pln"><span class="n"><a href="#t400">400</a></span><span class="t"><span class="str">    '''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t401" class="run"><span class="n"><a href="#t401">401</a></span><span class="t">    <span class="key">if</span> <span class="key">not</span> <span class="nam">os</span><span class="op">.</span><span class="nam">path</span><span class="op">.</span><span class="nam">isdir</span><span class="op">(</span><span class="nam">item</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t402" class="run"><span class="n"><a href="#t402">402</a></span><span class="t">        <span class="key">return</span> <span class="key">False</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t403" class="run"><span class="n"><a href="#t403">403</a></span><span class="t">    <span class="key">return</span> <span class="key">True</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t404" class="pln"><span class="n"><a href="#t404">404</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t405" class="pln"><span class="n"><a href="#t405">405</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t406" class="run"><span class="n"><a href="#t406">406</a></span><span class="t"><span class="op">@</span><span class="nam">validate</span><span class="op">(</span><span class="str">'{} is not a file or does not exist.'</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t407" class="pln"><span class="n"><a href="#t407">407</a></span><span class="t"><span class="key">def</span> <span class="nam">is_file</span><span class="op">(</span><span class="nam">item</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t408" class="pln"><span class="n"><a href="#t408">408</a></span><span class="t">    <span class="com"># type: (Union[str, Path]) -> bool</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t409" class="pln"><span class="n"><a href="#t409">409</a></span><span class="t">    <span class="str">'''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t410" class="pln"><span class="n"><a href="#t410">410</a></span><span class="t"><span class="str">    Validates thats item is a file.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t411" class="pln"><span class="n"><a href="#t411">411</a></span><span class="t"><span class="str">    Args:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t412" class="pln"><span class="n"><a href="#t412">412</a></span><span class="t"><span class="str">        item (str): Filepath.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t413" class="pln"><span class="n"><a href="#t413">413</a></span><span class="t"><span class="str">    Raises:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t414" class="pln"><span class="n"><a href="#t414">414</a></span><span class="t"><span class="str">        ValidationError: If item is not a file or does not exist.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t415" class="pln"><span class="n"><a href="#t415">415</a></span><span class="t"><span class="str">    Returns:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t416" class="pln"><span class="n"><a href="#t416">416</a></span><span class="t"><span class="str">        bool: State of item.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t417" class="pln"><span class="n"><a href="#t417">417</a></span><span class="t"><span class="str">    '''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t418" class="run"><span class="n"><a href="#t418">418</a></span><span class="t">    <span class="key">if</span> <span class="key">not</span> <span class="nam">os</span><span class="op">.</span><span class="nam">path</span><span class="op">.</span><span class="nam">isfile</span><span class="op">(</span><span class="nam">item</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t419" class="run"><span class="n"><a href="#t419">419</a></span><span class="t">        <span class="key">return</span> <span class="key">False</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t420" class="run"><span class="n"><a href="#t420">420</a></span><span class="t">    <span class="key">return</span> <span class="key">True</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t421" class="pln"><span class="n"><a href="#t421">421</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t422" class="pln"><span class="n"><a href="#t422">422</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t423" class="run"><span class="n"><a href="#t423">423</a></span><span class="t"><span class="key">def</span> <span class="nam">is_not_missing_values</span><span class="op">(</span><span class="nam">item</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t424" class="pln"><span class="n"><a href="#t424">424</a></span><span class="t">    <span class="com"># type: (List[int]) -> bool</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t425" class="pln"><span class="n"><a href="#t425">425</a></span><span class="t">    <span class="str">'''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t426" class="pln"><span class="n"><a href="#t426">426</a></span><span class="t"><span class="str">    Validates that sequence of integers is not missing any values.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t427" class="pln"><span class="n"><a href="#t427">427</a></span><span class="t"><span class="str">    Args:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t428" class="pln"><span class="n"><a href="#t428">428</a></span><span class="t"><span class="str">        item (list[int]): Integers.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t429" class="pln"><span class="n"><a href="#t429">429</a></span><span class="t"><span class="str">    Raises:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t430" class="pln"><span class="n"><a href="#t430">430</a></span><span class="t"><span class="str">        ValidationError: If item is missing values.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t431" class="pln"><span class="n"><a href="#t431">431</a></span><span class="t"><span class="str">    Returns:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t432" class="pln"><span class="n"><a href="#t432">432</a></span><span class="t"><span class="str">        bool: State of item.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t433" class="pln"><span class="n"><a href="#t433">433</a></span><span class="t"><span class="str">    '''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t434" class="run"><span class="n"><a href="#t434">434</a></span><span class="t">    <span class="nam">expected</span> <span class="op">=</span> <span class="nam">list</span><span class="op">(</span><span class="nam">range</span><span class="op">(</span><span class="nam">min</span><span class="op">(</span><span class="nam">item</span><span class="op">)</span><span class="op">,</span> <span class="nam">max</span><span class="op">(</span><span class="nam">item</span><span class="op">)</span> <span class="op">+</span> <span class="num">1</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t435" class="run"><span class="n"><a href="#t435">435</a></span><span class="t">    <span class="key">if</span> <span class="nam">item</span> <span class="op">==</span> <span class="nam">expected</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t436" class="run"><span class="n"><a href="#t436">436</a></span><span class="t">        <span class="key">return</span> <span class="key">False</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t437" class="pln"><span class="n"><a href="#t437">437</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t438" class="run"><span class="n"><a href="#t438">438</a></span><span class="t">    <span class="nam">diff</span> <span class="op">=</span> <span class="nam">sorted</span><span class="op">(</span><span class="nam">list</span><span class="op">(</span><span class="nam">set</span><span class="op">(</span><span class="nam">expected</span><span class="op">)</span><span class="op">.</span><span class="nam">difference</span><span class="op">(</span><span class="nam">item</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t439" class="run"><span class="n"><a href="#t439">439</a></span><span class="t">    <span class="nam">msg</span> <span class="op">=</span> <span class="str">f'Missing frames: {diff}.'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t440" class="run"><span class="n"><a href="#t440">440</a></span><span class="t">    <span class="key">raise</span> <span class="nam">ValidationError</span><span class="op">(</span><span class="nam">msg</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
 </div>
 <div id="footer">
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.3</a>,
-            created at 2020-09-15 02:51 +0000
+            created at 2020-09-15 19:43 +0000
         </p>
     </div>
 </div>

@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.8.4
+                0.8.5
               </div>
             
           
@@ -456,6 +456,44 @@
 <span class="sd">        bool: A is greater than b.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span></div>
+
+
+<div class="viewcode-block" id="is_lte"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_lte">[docs]</a><span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> !&lt;= </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">is_lte</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="c1"># type: (Any, Any) -&gt; bool</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Validates that a is less than or equal to b.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        a (object): Object.</span>
+<span class="sd">        b (object): Object.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValidationError: If a is not less than or equal to b.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: A is less than or equal to b.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">&lt;=</span> <span class="n">b</span></div>
+
+
+<div class="viewcode-block" id="is_gte"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_gte">[docs]</a><span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> !&gt;= </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">is_gte</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="c1"># type: (Any, Any) -&gt; bool</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Validates that a is greater than or equal to b.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        a (object): Object.</span>
+<span class="sd">        b (object): Object.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValidationError: If a is not greater than or equal to b.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: A is greater than or equal to b.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">&gt;=</span> <span class="n">b</span></div>
 
 
 <div class="viewcode-block" id="is_homogenous"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_homogenous">[docs]</a><span class="nd">@validate</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not homogenous.&#39;</span><span class="p">)</span>
