@@ -12,6 +12,7 @@ jinja2
 lunchbox
 marshmallow
 numpy
+OpenEXR
 pandas
 pandasql
 pyparsing

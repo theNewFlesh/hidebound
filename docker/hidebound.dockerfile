@@ -14,7 +14,7 @@ RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${NO_COLOR}"; \
         git \
         parallel \
         pandoc \
-        python3-dev \
+        python3.7-dev \
         software-properties-common \
         tree \
         vim \
@@ -28,6 +28,20 @@ RUN echo "\n${CYAN}SETUP PYTHON3.7${NO_COLOR}"; \
     apt install -y python3.7 && \
     python3.7 get-pip.py && \
     rm -rf /root/get-pip.py
+
+# install OpenEXR
+ENV CC=gcc
+ENV CXX=g++
+ENV LD_LIBRARY_PATH='/usr/include/python3.7m/dist-packages'
+RUN echo "\n${CYAN}INSTALL OPENEXR${NO_COLOR}"; \
+    apt update && \
+    apt install -y \
+        build-essential \
+        g++ \
+        gcc \
+        libopenexr-dev \
+        openexr \
+        zlib1g-dev
 
 # DEBIAN_FRONTEND needed by texlive to install non-interactively
 ARG DEBIAN_FRONTEND=noninteractive

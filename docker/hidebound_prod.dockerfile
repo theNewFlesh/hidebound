@@ -22,6 +22,20 @@ RUN echo "\n${CYAN}SETUP PYTHON3.7${NO_COLOR}"; \
     python3.7 get-pip.py && \
     rm -rf /root/get-pip.py
 
+# install OpenEXR
+ENV CC gcc
+ENV CXX g++
+ENV LD_LIBRARY_PATH='/usr/include/python3.7m'
+RUN echo "\n${CYAN}INSTALL OPENEXR${NO_COLOR}"; \
+    apt update && \
+    apt install -y \
+        build-essential \
+        g++ \
+        gcc \
+        libopenexr-dev \
+        openexr \
+        zlib1g-dev
+
 # install python dependencies
 # COPY ./ /root/hidebound
 # RUN echo "\n${CYAN}INSTALL PYTHON DEPENDECIES${NO_COLOR}"; \

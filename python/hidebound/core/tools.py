@@ -6,6 +6,7 @@ from pprint import pformat
 import os
 import re
 
+import OpenEXR as openexr
 from schematics.exceptions import DataError, ValidationError
 
 from pandas import DataFrame
@@ -137,3 +138,26 @@ def to_prototype(dicts):
             output[key].append(val)
     output = dict(output)
     return output
+
+
+def read_exr_header(fullpath):
+    # type: (Union[str, Path]) -> dict
+    '''
+    Reads an OpenEXR image file header.
+
+    Args:
+        fullpath (str or Path): Image file path.
+
+    Raises:
+        IOError: If given filepath is not an EXR file.
+
+    Returns:
+        dict: EXR header.
+    '''
+    fullpath = Path(fullpath).absolute().as_posix()
+    if not openexr.isOpenExrFile(fullpath):
+        msg = f'{fullpath} is not an EXR file.'
+        raise IOError(msg)
+
+    img = openexr.InputFile(fullpath)
+    return img.header()
