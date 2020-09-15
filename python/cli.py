@@ -453,9 +453,7 @@ def get_package_command(info):
     cmd += r"find /tmp/{repo} | grep -E '.*test.*\.py$|mock.*\.py$|__pycache__'"
     cmd += " | parallel 'rm -rf {x}'; "
     cmd += "find /tmp/{repo} -type f | grep __init__.py | parallel '"
-    cmd += "mv {x} /tmp/delete_me; cat /tmp/delete_me | grep -v test "
-    cmd += "| grep -v mock > {x}; "
-    cmd += "rm /tmp/delete_me'"
+    cmd += "rm -rf {x}; touch {x}'"
     cmd += '"; '
     cmd += '{exec2} python3.7 setup.py sdist '
     cmd = cmd.format(
