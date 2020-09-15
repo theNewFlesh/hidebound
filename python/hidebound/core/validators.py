@@ -291,6 +291,44 @@ def is_gt(a, b):
     return a > b
 
 
+@validate_each('{} !<= {}.')
+def is_lte(a, b):
+    # type: (Any, Any) -> bool
+    '''
+    Validates that a is less than or equal to b.
+
+    Args:
+        a (object): Object.
+        b (object): Object.
+
+    Raises:
+        ValidationError: If a is not less than or equal to b.
+
+    Returns:
+        bool: A is less than or equal to b.
+    '''
+    return a <= b
+
+
+@validate_each('{} !>= {}.')
+def is_gte(a, b):
+    # type: (Any, Any) -> bool
+    '''
+    Validates that a is greater than or equal to b.
+
+    Args:
+        a (object): Object.
+        b (object): Object.
+
+    Raises:
+        ValidationError: If a is not greater than or equal to b.
+
+    Returns:
+        bool: A is greater than or equal to b.
+    '''
+    return a >= b
+
+
 @validate('{} is not homogenous.')
 def is_homogenous(items):
     # type: (List[Any]) -> bool

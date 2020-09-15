@@ -239,6 +239,20 @@ class DatabaseTests(unittest.TestCase):
         with self.assertRaisesRegexp(ValidationError, expected):
             vd.is_gt(0, 1)
 
+    def test_is_lte(self):
+        vd.is_lte(1, 1)
+
+        expected = '1 !<= 0.'
+        with self.assertRaisesRegexp(ValidationError, expected):
+            vd.is_lte(1, 0)
+
+    def test_is_gte(self):
+        vd.is_gte(1, 1)
+
+        expected = '0 !>= 1.'
+        with self.assertRaisesRegexp(ValidationError, expected):
+            vd.is_gte(0, 1)
+
     def test_is_homogenous(self):
         vd.is_homogenous([])
         vd.is_homogenous(['a'])
