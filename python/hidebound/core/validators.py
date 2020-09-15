@@ -380,3 +380,23 @@ def is_file(item):
     if not os.path.isfile(item):
         return False
     return True
+
+
+def is_not_missing_values(item):
+    # type: (List[int]) -> bool
+    '''
+    Validates that sequence of integers is not missing any values.
+    Args:
+        item (list[int]): Integers.
+    Raises:
+        ValidationError: If item is missing values.
+    Returns:
+        bool: State of item.
+    '''
+    expected = list(range(min(item), max(item) + 1))
+    if item == expected:
+        return False
+
+    diff = sorted(list(set(expected).difference(item)))
+    msg = f'Missing frames: {diff}.'
+    raise ValidationError(msg)
