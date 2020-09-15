@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.8.1
+                0.8.2
               </div>
             
           
@@ -377,7 +377,7 @@ key is the exporter name and the value is its config. Default: {}.</p>
 <p>Generates a DataFrame using the files within a given directory as rows.</p>
 <dl class="py method">
 <dt id="hidebound.core.database.Database.create">
-<code class="sig-name descname">create</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Database<a class="reference internal" href="_modules/hidebound/core/database.html#Database.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.database.Database.create" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">create</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#hidebound.core.database.Database" title="hidebound.core.database.Database">Database</a><a class="reference internal" href="_modules/hidebound/core/database.html#Database.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.database.Database.create" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract valid assets as data and metadata within the hidebound
 directory.</p>
 <p>Writes:</p>
@@ -403,7 +403,7 @@ directory.</p>
 
 <dl class="py method">
 <dt id="hidebound.core.database.Database.delete">
-<code class="sig-name descname">delete</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Database<a class="reference internal" href="_modules/hidebound/core/database.html#Database.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.database.Database.delete" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">delete</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#hidebound.core.database.Database" title="hidebound.core.database.Database">Database</a><a class="reference internal" href="_modules/hidebound/core/database.html#Database.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.database.Database.delete" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes hidebound/data and hidebound/metadata directories and all their
 contents.</p>
 <dl class="field-list simple">
@@ -424,7 +424,7 @@ contents.</p>
 
 <dl class="py method">
 <dt id="hidebound.core.database.Database.from_config">
-<em class="property">static </em><code class="sig-name descname">from_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; Database<a class="reference internal" href="_modules/hidebound/core/database.html#Database.from_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.database.Database.from_config" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">from_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#hidebound.core.database.Database" title="hidebound.core.database.Database">Database</a><a class="reference internal" href="_modules/hidebound/core/database.html#Database.from_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.database.Database.from_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs a Database instance given a valid config.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -841,7 +841,7 @@ according to a dynimcally defined grammar.</p>
 
 <dl class="py method">
 <dt id="hidebound.core.parser.AssetNameParser._raise_field_error">
-<em class="property">static </em><code class="sig-name descname">_raise_field_error</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">field</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">part</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; Callable[[str, Any, Any, Any], None]<a class="reference internal" href="_modules/hidebound/core/parser.html#AssetNameParser._raise_field_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.parser.AssetNameParser._raise_field_error" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">_raise_field_error</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">field</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">part</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; Callable<span class="p">[</span><span class="p">[</span>str<span class="p">, </span>Any<span class="p">, </span>Any<span class="p">, </span>Any<span class="p">]</span><span class="p">, </span>None<span class="p">]</span><a class="reference internal" href="_modules/hidebound/core/parser.html#AssetNameParser._raise_field_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.parser.AssetNameParser._raise_field_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>A convenience function used for raising custom ParseExceptions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1686,7 +1686,7 @@ Default: ‘.DS_Store’.</p></li>
 
 <dl class="py function">
 <dt id="hidebound.core.tools.list_all_files">
-<code class="sig-prename descclassname">hidebound.core.tools.</code><code class="sig-name descname">list_all_files</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">directory</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">include_regex</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">''</span></em>, <em class="sig-param"><span class="n">exclude_regex</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">''</span></em><span class="sig-paren">)</span> &#x2192; Generator[pathlib.Path, None, None]<a class="reference internal" href="_modules/hidebound/core/tools.html#list_all_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.tools.list_all_files" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">hidebound.core.tools.</code><code class="sig-name descname">list_all_files</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">directory</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">include_regex</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">''</span></em>, <em class="sig-param"><span class="n">exclude_regex</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">''</span></em><span class="sig-paren">)</span> &#x2192; Generator<span class="p">[</span>pathlib.Path<span class="p">, </span>None<span class="p">, </span>None<span class="p">]</span><a class="reference internal" href="_modules/hidebound/core/tools.html#list_all_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.tools.list_all_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Recusively list all files within a given directory.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1703,6 +1703,26 @@ Default: ‘’.</p></li>
 </dd>
 <dt class="field-odd">Yields</dt>
 <dd class="field-odd"><p><em>Path</em> – File.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.core.tools.read_exr_header">
+<code class="sig-prename descclassname">hidebound.core.tools.</code><code class="sig-name descname">read_exr_header</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fullpath</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/hidebound/core/tools.html#read_exr_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.tools.read_exr_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads an OpenEXR image file header.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fullpath</strong> (<em>str</em><em> or </em><em>Path</em>) – Image file path.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>IOError</strong> – If given filepath is not an EXR file.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>EXR header.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
