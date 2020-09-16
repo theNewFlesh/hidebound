@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.8.5
+                0.8.6
               </div>
             
           
@@ -166,11 +166,14 @@
             
   <h1>Source code for hidebound.core.validators</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
 
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
 <span class="kn">from</span> <span class="nn">pyparsing</span> <span class="kn">import</span> <span class="n">ParseException</span>
 <span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">ValidationError</span>
 <span class="kn">import</span> <span class="nn">wrapt</span>
@@ -526,11 +529,14 @@
     <span class="c1"># type: (Any, Any) -&gt; bool</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates that each a is in b.</span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        a (object): Object.</span>
 <span class="sd">        b (object): Object.</span>
+
 <span class="sd">    Raises:</span>
 <span class="sd">        ValidationError: If a is not in b.</span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        bool: Alls a&#39;s in b.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
@@ -542,11 +548,14 @@
     <span class="c1"># type: (str, Any) -&gt; bool</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates that each name is an attribute of given object.</span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        a (str): Attribute name.</span>
 <span class="sd">        b (object): Object.</span>
+
 <span class="sd">    Raises:</span>
 <span class="sd">        ValidationError: If an name is not an attribute of given object.</span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        bool: Alls names are attributes of object.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
@@ -558,10 +567,13 @@
     <span class="c1"># type: (Union[str, Path]) -&gt; bool</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates thats item is a directory.</span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        item (str): Directory path.</span>
+
 <span class="sd">    Raises:</span>
 <span class="sd">        ValidationError: If item is not a directory or does not exist.</span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        bool: State of item.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
@@ -575,10 +587,13 @@
     <span class="c1"># type: (Union[str, Path]) -&gt; bool</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates thats item is a file.</span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        item (str): Filepath.</span>
+
 <span class="sd">    Raises:</span>
 <span class="sd">        ValidationError: If item is not a file or does not exist.</span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        bool: State of item.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
@@ -587,23 +602,105 @@
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
-<div class="viewcode-block" id="is_not_missing_values"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_not_missing_values">[docs]</a><span class="k">def</span> <span class="nf">is_not_missing_values</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+<div class="viewcode-block" id="is_not_missing_values"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_not_missing_values">[docs]</a><span class="k">def</span> <span class="nf">is_not_missing_values</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
     <span class="c1"># type: (List[int]) -&gt; bool</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates that sequence of integers is not missing any values.</span>
+
 <span class="sd">    Args:</span>
-<span class="sd">        item (list[int]): Integers.</span>
+<span class="sd">        items (list[int]): Integers.</span>
+
 <span class="sd">    Raises:</span>
-<span class="sd">        ValidationError: If item is missing values.</span>
+<span class="sd">        ValidationError: If items is missing values.</span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        bool: State of item.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">expected</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">item</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">item</span> <span class="o">==</span> <span class="n">expected</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">items</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">items</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">items</span> <span class="o">==</span> <span class="n">expected</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
 
-    <span class="n">diff</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">expected</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">item</span><span class="p">)))</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">expected</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">items</span><span class="p">)))</span>
     <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Missing frames: </span><span class="si">{</span><span class="n">diff</span><span class="si">}</span><span class="s1">.&#39;</span>
+    <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="has_uniform_coordinate_count"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.has_uniform_coordinate_count">[docs]</a><span class="k">def</span> <span class="nf">has_uniform_coordinate_count</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+    <span class="c1"># type: (List[List[int]]) -&gt; bool</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Validates that non-unique list of coordinates has a uniform count per</span>
+<span class="sd">    coordinate.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        items (list[list[int]]): List of coordinates.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValidationError: If coordinate count is non-uniform.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: Uniformity of coordinates.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">items</span><span class="p">)))</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">count</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">max_</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">count</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">max_</span><span class="p">,</span> <span class="n">count</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>  <span class="c1"># type: Any</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="p">[</span><span class="nb">eval</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">msg</span><span class="p">]</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Non-uniform coordinate count. Missing coordinates: </span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s1">.&#39;</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="has_dense_coordinates"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.has_dense_coordinates">[docs]</a><span class="k">def</span> <span class="nf">has_dense_coordinates</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+    <span class="c1"># type: (List[List[int]]) -&gt; bool</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Validates that list of coordinates is dense (every point is filled).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        items (list[list[int]]): List of coordinates.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValidationError: If coordinates are not dense.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: Density of coordinates.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># build dense cartesian coordinates</span>
+    <span class="n">dense</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">items</span><span class="p">)</span> \
+        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))))</span> \
+        <span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">dense</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">eval</span><span class="p">,</span> <span class="n">dense</span><span class="p">)</span>
+    <span class="n">dense</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">dense</span><span class="p">))</span>
+    <span class="n">dense</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">dense</span><span class="p">))</span>
+
+    <span class="c1"># find difference between given coords and dense</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">items</span><span class="p">))</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">dense</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span>  <span class="c1"># type: Any</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">eval</span><span class="p">,</span> <span class="n">diff</span><span class="p">)))</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Non-dense coordinates. Missing coordinates: </span><span class="si">{</span><span class="n">diff</span><span class="si">}</span><span class="s1">.&#39;</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="coordinates_begin_at"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.coordinates_begin_at">[docs]</a><span class="k">def</span> <span class="nf">coordinates_begin_at</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">origin</span><span class="p">):</span>
+    <span class="c1"># type: (List[List[int]], List[int]) -&gt; bool</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Validates that the minimum coordinate of a given list equals a given origin.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        items (list[list[int]]): List of coordinates.</span>
+<span class="sd">        origin (list[int]): Origin coordinate.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValidationError: If coordinates do not begin at origin.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: State of items.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="nb">min</span><span class="p">(</span><span class="n">items</span><span class="p">)</span> <span class="o">==</span> <span class="n">origin</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Coordinates do not begin at </span><span class="si">{</span><span class="n">origin</span><span class="si">}</span><span class="s1">.&#39;</span>
     <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 </pre></div>
 

@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.8.5
+                0.8.6
               </div>
             
           
@@ -1810,22 +1810,88 @@ Default: ‘’.</p></li>
 <div class="section" id="module-hidebound.core.validators">
 <span id="validators"></span><h2>validators<a class="headerlink" href="#module-hidebound.core.validators" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
+<dt id="hidebound.core.validators.coordinates_begin_at">
+<code class="sig-prename descclassname">hidebound.core.validators.</code><code class="sig-name descname">coordinates_begin_at</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">items</span><span class="p">:</span> <span class="n">List<span class="p">[</span>List<span class="p">[</span>int<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">origin</span><span class="p">:</span> <span class="n">List<span class="p">[</span>int<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/hidebound/core/validators.html#coordinates_begin_at"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.validators.coordinates_begin_at" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the minimum coordinate of a given list equals a given origin.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>items</strong> (<em>list</em><em>[</em><em>list</em><em>[</em><em>int</em><em>]</em><em>]</em>) – List of coordinates.</p></li>
+<li><p><strong>origin</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – Origin coordinate.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValidationError</strong> – If coordinates do not begin at origin.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>State of items.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.core.validators.has_dense_coordinates">
+<code class="sig-prename descclassname">hidebound.core.validators.</code><code class="sig-name descname">has_dense_coordinates</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">items</span><span class="p">:</span> <span class="n">List<span class="p">[</span>List<span class="p">[</span>int<span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/hidebound/core/validators.html#has_dense_coordinates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.validators.has_dense_coordinates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that list of coordinates is dense (every point is filled).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>items</strong> (<em>list</em><em>[</em><em>list</em><em>[</em><em>int</em><em>]</em><em>]</em>) – List of coordinates.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValidationError</strong> – If coordinates are not dense.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Density of coordinates.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.core.validators.has_uniform_coordinate_count">
+<code class="sig-prename descclassname">hidebound.core.validators.</code><code class="sig-name descname">has_uniform_coordinate_count</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">items</span><span class="p">:</span> <span class="n">List<span class="p">[</span>List<span class="p">[</span>int<span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/hidebound/core/validators.html#has_uniform_coordinate_count"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.validators.has_uniform_coordinate_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that non-unique list of coordinates has a uniform count per
+coordinate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>items</strong> (<em>list</em><em>[</em><em>list</em><em>[</em><em>int</em><em>]</em><em>]</em>) – List of coordinates.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValidationError</strong> – If coordinate count is non-uniform.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Uniformity of coordinates.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="hidebound.core.validators.is_attribute_of">
 <code class="sig-prename descclassname">hidebound.core.validators.</code><code class="sig-name descname">is_attribute_of</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">object</span><span class="p">:</span> <span class="n">Any</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/hidebound/core/validators.html#is_attribute_of"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.validators.is_attribute_of" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validates that each name is an attribute of given object.
-:param a: Attribute name.
-:type a: str
-:param b: Object.
-:type b: object</p>
+<dd><p>Validates that each name is an attribute of given object.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Raises</dt>
-<dd class="field-odd"><p><strong>ValidationError</strong> – If an name is not an attribute of given object.</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>str</em>) – Attribute name.</p></li>
+<li><p><strong>b</strong> (<em>object</em>) – Object.</p></li>
+</ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Alls names are attributes of object.</p>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValidationError</strong> – If an name is not an attribute of given object.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Alls names are attributes of object.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1873,18 +1939,19 @@ Default: ‘’.</p></li>
 <dl class="py function">
 <dt id="hidebound.core.validators.is_directory">
 <code class="sig-prename descclassname">hidebound.core.validators.</code><code class="sig-name descname">is_directory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">item</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/hidebound/core/validators.html#is_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.validators.is_directory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validates thats item is a directory.
-:param item: Directory path.
-:type item: str</p>
+<dd><p>Validates thats item is a directory.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Raises</dt>
-<dd class="field-odd"><p><strong>ValidationError</strong> – If item is not a directory or does not exist.</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>item</strong> (<em>str</em>) – Directory path.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>State of item.</p>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValidationError</strong> – If item is not a directory or does not exist.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>State of item.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1935,18 +2002,19 @@ Default: ‘’.</p></li>
 <dl class="py function">
 <dt id="hidebound.core.validators.is_file">
 <code class="sig-prename descclassname">hidebound.core.validators.</code><code class="sig-name descname">is_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">item</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/hidebound/core/validators.html#is_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.validators.is_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validates thats item is a file.
-:param item: Filepath.
-:type item: str</p>
+<dd><p>Validates thats item is a file.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Raises</dt>
-<dd class="field-odd"><p><strong>ValidationError</strong> – If item is not a file or does not exist.</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>item</strong> (<em>str</em>) – Filepath.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>State of item.</p>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValidationError</strong> – If item is not a file or does not exist.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>State of item.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2040,20 +2108,22 @@ Default: ‘’.</p></li>
 <dl class="py function">
 <dt id="hidebound.core.validators.is_in">
 <code class="sig-prename descclassname">hidebound.core.validators.</code><code class="sig-name descname">is_in</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">a</span><span class="p">:</span> <span class="n">Any</span></em>, <em class="sig-param"><span class="n">b</span><span class="p">:</span> <span class="n">Any</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/hidebound/core/validators.html#is_in"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.validators.is_in" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validates that each a is in b.
-:param a: Object.
-:type a: object
-:param b: Object.
-:type b: object</p>
+<dd><p>Validates that each a is in b.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Raises</dt>
-<dd class="field-odd"><p><strong>ValidationError</strong> – If a is not in b.</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>object</em>) – Object.</p></li>
+<li><p><strong>b</strong> (<em>object</em>) – Object.</p></li>
+</ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Alls a’s in b.</p>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValidationError</strong> – If a is not in b.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Alls a’s in b.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2106,19 +2176,20 @@ Default: ‘’.</p></li>
 
 <dl class="py function">
 <dt id="hidebound.core.validators.is_not_missing_values">
-<code class="sig-prename descclassname">hidebound.core.validators.</code><code class="sig-name descname">is_not_missing_values</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">item</span><span class="p">:</span> <span class="n">List<span class="p">[</span>int<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/hidebound/core/validators.html#is_not_missing_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.validators.is_not_missing_values" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validates that sequence of integers is not missing any values.
-:param item: Integers.
-:type item: list[int]</p>
+<code class="sig-prename descclassname">hidebound.core.validators.</code><code class="sig-name descname">is_not_missing_values</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">items</span><span class="p">:</span> <span class="n">List<span class="p">[</span>int<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/hidebound/core/validators.html#is_not_missing_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.validators.is_not_missing_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that sequence of integers is not missing any values.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Raises</dt>
-<dd class="field-odd"><p><strong>ValidationError</strong> – If item is missing values.</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>items</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – Integers.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>State of item.</p>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValidationError</strong> – If items is missing values.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>State of item.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
