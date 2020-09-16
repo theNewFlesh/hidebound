@@ -1,9 +1,12 @@
 from typing import Any, Callable, List, Union
-from pathlib import Path
 
+from collections import Counter
+from itertools import product
+from pathlib import Path
 import os
 import re
 
+from pandas import DataFrame
 from pyparsing import ParseException
 from schematics.exceptions import ValidationError
 import wrapt
@@ -359,11 +362,14 @@ def is_in(a, b):
     # type: (Any, Any) -> bool
     '''
     Validates that each a is in b.
+
     Args:
         a (object): Object.
         b (object): Object.
+
     Raises:
         ValidationError: If a is not in b.
+
     Returns:
         bool: Alls a's in b.
     '''
@@ -375,11 +381,14 @@ def is_attribute_of(name, object):
     # type: (str, Any) -> bool
     '''
     Validates that each name is an attribute of given object.
+
     Args:
         a (str): Attribute name.
         b (object): Object.
+
     Raises:
         ValidationError: If an name is not an attribute of given object.
+
     Returns:
         bool: Alls names are attributes of object.
     '''
@@ -391,10 +400,13 @@ def is_directory(item):
     # type: (Union[str, Path]) -> bool
     '''
     Validates thats item is a directory.
+
     Args:
         item (str): Directory path.
+
     Raises:
         ValidationError: If item is not a directory or does not exist.
+
     Returns:
         bool: State of item.
     '''
@@ -408,10 +420,13 @@ def is_file(item):
     # type: (Union[str, Path]) -> bool
     '''
     Validates thats item is a file.
+
     Args:
         item (str): Filepath.
+
     Raises:
         ValidationError: If item is not a file or does not exist.
+
     Returns:
         bool: State of item.
     '''
@@ -420,21 +435,103 @@ def is_file(item):
     return True
 
 
-def is_not_missing_values(item):
+def is_not_missing_values(items):
     # type: (List[int]) -> bool
     '''
     Validates that sequence of integers is not missing any values.
+
     Args:
-        item (list[int]): Integers.
+        items (list[int]): Integers.
+
     Raises:
-        ValidationError: If item is missing values.
+        ValidationError: If items is missing values.
+
     Returns:
         bool: State of item.
     '''
-    expected = list(range(min(item), max(item) + 1))
-    if item == expected:
-        return False
+    expected = list(range(min(items), max(items) + 1))
+    if items == expected:
+        return True
 
-    diff = sorted(list(set(expected).difference(item)))
+    diff = sorted(list(set(expected).difference(items)))
     msg = f'Missing frames: {diff}.'
+    raise ValidationError(msg)
+
+
+def has_uniform_coordinate_count(items):
+    # type: (List[List[int]]) -> bool
+    '''
+    Validates that non-unique list of coordinates has a uniform count per
+    coordinate.
+
+    Args:
+        items (list[list[int]]): List of coordinates.
+
+    Raises:
+        ValidationError: If coordinate count is non-uniform.
+
+    Returns:
+        bool: Uniformity of coordinates.
+    '''
+    count = Counter(list(map(str, items)))
+    if len(set(count.values())) > 1:
+        max_ = max(count.values())
+        msg = filter(lambda x: x[1] < max_, count.items())  # type: Any
+        msg = [eval(x[0]) for x in msg]
+        msg = sorted(msg)
+        msg = f'Non-uniform coordinate count. Missing coordinates: {msg}.'
+        raise ValidationError(msg)
+    return True
+
+
+def has_dense_coordinates(items):
+    # type: (List[List[int]]) -> bool
+    '''
+    Validates that list of coordinates is dense (every point is filled).
+
+    Args:
+        items (list[list[int]]): List of coordinates.
+
+    Raises:
+        ValidationError: If coordinates are not dense.
+
+    Returns:
+        bool: Density of coordinates.
+    '''
+    # build dense cartesian coordinates
+    dense = DataFrame(items) \
+        .apply(lambda x: str(list(range(x.min(), x.max() + 1)))) \
+        .tolist()
+    dense = map(eval, dense)
+    dense = map(list, product(*dense))
+    dense = list(map(str, dense))
+
+    # find difference between given coords and dense
+    coords = list(map(str, items))
+    diff = set(dense).difference(coords)  # type: Any
+    if len(diff) > 0:
+        diff = sorted(list(map(eval, diff)))
+        msg = f'Non-dense coordinates. Missing coordinates: {diff}.'
+        raise ValidationError(msg)
+    return True
+
+
+def coordinates_begin_at(items, origin):
+    # type: (List[List[int]], List[int]) -> bool
+    '''
+    Validates that the minimum coordinate of a given list equals a given origin.
+
+    Args:
+        items (list[list[int]]): List of coordinates.
+        origin (list[int]): Origin coordinate.
+
+    Raises:
+        ValidationError: If coordinates do not begin at origin.
+
+    Returns:
+        bool: State of items.
+    '''
+    if min(items) == origin:
+        return True
+    msg = f'Coordinates do not begin at {origin}.'
     raise ValidationError(msg)

@@ -1,3 +1,4 @@
+from itertools import product
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import unittest
@@ -343,3 +344,50 @@ class DatabaseTests(unittest.TestCase):
         expected = r'Missing frames: \[2, 3\]\.'
         with self.assertRaisesRegexp(ValidationError, expected):
             vd.is_not_missing_values([0, 1, 4])
+
+    def test_has_uniform_coordinate_count(self):
+        coords = product(range(0, 3), range(8, 11))
+        coords = list(map(list, coords))
+        vd.has_uniform_coordinate_count(coords)
+        coords *= 3
+        vd.has_uniform_coordinate_count(coords)
+
+        del coords[-1]
+        expected = r'Non-uniform coordinate count. Missing coordinates: \[\[2, 10\]\]'
+        with self.assertRaisesRegexp(ValidationError, expected):
+            vd.has_uniform_coordinate_count(coords)
+
+    def test_has_dense_coordinates(self):
+        coords = product(range(0, 3), range(1, 4))
+        coords = list(map(list, coords))
+        vd.has_dense_coordinates(coords)
+
+        coords = product(range(0, 3), range(0, 3))
+        coords = list(map(list, coords))
+        vd.has_dense_coordinates(coords)
+
+        del coords[-3]
+        expected = r'Non-dense coordinates. Missing coordinates: .*\[2, 0\]'
+        with self.assertRaisesRegexp(ValidationError, expected):
+            vd.has_dense_coordinates(coords)
+
+    def test_coordinates_begin_at(self):
+        coords = product(range(0, 3), range(0, 3))
+        coords = list(map(list, coords))
+        vd.coordinates_begin_at(coords, [0, 0])
+
+        coords = product(range(1, 4), range(2, 4))
+        coords = list(map(list, coords))
+        vd.coordinates_begin_at(coords, [1, 2])
+
+        coords = product(range(1, 4), range(0, 3))
+        coords = list(map(list, coords))
+        expected = r'Coordinates do not begin at \[0, 0\]\.'
+        with self.assertRaisesRegexp(ValidationError, expected):
+            vd.coordinates_begin_at(coords, [0, 0])
+
+        coords = product(range(1, 4), range(0, 3))
+        coords = list(map(list, coords))
+        expected = r'Coordinates do not begin at \[1, 1\]\.'
+        with self.assertRaisesRegexp(ValidationError, expected):
+            vd.coordinates_begin_at(coords, [1, 1])
