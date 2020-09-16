@@ -450,11 +450,11 @@ def is_not_missing_values(items):
         bool: State of item.
     '''
     expected = list(range(min(items), max(items) + 1))
-    if items == expected:
+    if sorted(items) == expected:
         return True
 
     diff = sorted(list(set(expected).difference(items)))
-    msg = f'Missing frames: {diff}.'
+    msg = f'Missing values: {diff}.'
     raise ValidationError(msg)
 
 

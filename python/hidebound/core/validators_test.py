@@ -340,8 +340,8 @@ class DatabaseTests(unittest.TestCase):
             vd.is_file(filepath)
 
     def test_is_not_missing_values(self):
-        vd.is_not_missing_values([0, 1, 2, 3, 4])
-        expected = r'Missing frames: \[2, 3\]\.'
+        vd.is_not_missing_values([1, 0, 2, 3, 4])
+        expected = r'Missing values: \[2, 3\]\.'
         with self.assertRaisesRegexp(ValidationError, expected):
             vd.is_not_missing_values([0, 1, 4])
 
