@@ -503,11 +503,11 @@
     <p id="t450" class="pln"><span class="n"><a href="#t450">450</a></span><span class="t"><span class="str">        bool: State of item.</span>&nbsp;</span><span class="r"></span></p>
     <p id="t451" class="pln"><span class="n"><a href="#t451">451</a></span><span class="t"><span class="str">    '''</span>&nbsp;</span><span class="r"></span></p>
     <p id="t452" class="run"><span class="n"><a href="#t452">452</a></span><span class="t">    <span class="nam">expected</span> <span class="op">=</span> <span class="nam">list</span><span class="op">(</span><span class="nam">range</span><span class="op">(</span><span class="nam">min</span><span class="op">(</span><span class="nam">items</span><span class="op">)</span><span class="op">,</span> <span class="nam">max</span><span class="op">(</span><span class="nam">items</span><span class="op">)</span> <span class="op">+</span> <span class="num">1</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t453" class="run"><span class="n"><a href="#t453">453</a></span><span class="t">    <span class="key">if</span> <span class="nam">items</span> <span class="op">==</span> <span class="nam">expected</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t453" class="run"><span class="n"><a href="#t453">453</a></span><span class="t">    <span class="key">if</span> <span class="nam">sorted</span><span class="op">(</span><span class="nam">items</span><span class="op">)</span> <span class="op">==</span> <span class="nam">expected</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t454" class="run"><span class="n"><a href="#t454">454</a></span><span class="t">        <span class="key">return</span> <span class="key">True</span>&nbsp;</span><span class="r"></span></p>
     <p id="t455" class="pln"><span class="n"><a href="#t455">455</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t456" class="run"><span class="n"><a href="#t456">456</a></span><span class="t">    <span class="nam">diff</span> <span class="op">=</span> <span class="nam">sorted</span><span class="op">(</span><span class="nam">list</span><span class="op">(</span><span class="nam">set</span><span class="op">(</span><span class="nam">expected</span><span class="op">)</span><span class="op">.</span><span class="nam">difference</span><span class="op">(</span><span class="nam">items</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t457" class="run"><span class="n"><a href="#t457">457</a></span><span class="t">    <span class="nam">msg</span> <span class="op">=</span> <span class="str">f'Missing frames: {diff}.'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t457" class="run"><span class="n"><a href="#t457">457</a></span><span class="t">    <span class="nam">msg</span> <span class="op">=</span> <span class="str">f'Missing values: {diff}.'</span>&nbsp;</span><span class="r"></span></p>
     <p id="t458" class="run"><span class="n"><a href="#t458">458</a></span><span class="t">    <span class="key">raise</span> <span class="nam">ValidationError</span><span class="op">(</span><span class="nam">msg</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t459" class="pln"><span class="n"><a href="#t459">459</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t460" class="pln"><span class="n"><a href="#t460">460</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
@@ -593,7 +593,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.3</a>,
-            created at 2020-09-16 22:30 +0000
+            created at 2020-09-16 23:33 +0000
         </p>
     </div>
 </div>
