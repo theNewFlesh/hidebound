@@ -113,7 +113,7 @@ class DatabaseTests(DatabaseTestBase):
 
             temp = Path(root, 'Hidebound')
             os.makedirs(temp)
-            expected = 'Hidebound directory is not named hidebound'
+            expected = f'Hidebound directory is not named hidebound\.$'
             with self.assertRaisesRegexp(NameError, expected):
                 Database(root, temp)
 
