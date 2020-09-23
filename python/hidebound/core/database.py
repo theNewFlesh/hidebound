@@ -154,7 +154,7 @@ class Database:
             msg = f'{hb_root} is not a directory or does not exist.'
             raise FileNotFoundError(msg)
         if Path(hb_root).name != 'hidebound':
-            msg = f'{hb_root} directory is not named hidebound.core.'
+            msg = f'{hb_root} directory is not named hidebound.'
             raise NameError(msg)
 
         self._root = root
