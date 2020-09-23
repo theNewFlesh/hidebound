@@ -290,8 +290,8 @@ filename:
    hyphens
 -  Descriptors may not begin with the words master, final or last
 -  Versions are triple-padded with zeros and must be greater than 0
--  Coordinates may contain up to 3 triple-padded numbers, separated by
-   hyphens
+-  Coordinates may contain up to 3 quadruple-padded numbers, separated
+   by hyphens
 -  Coordinates are always evaluated in XYZ order. For example:
    ``c0001-0002-0003`` produces ``{x: 1, y: 2, z: 3}``.
 -  Each element of a coordinate may be equal to or greater than zero

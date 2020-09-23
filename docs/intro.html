@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.8.7
+                0.8.8
               </div>
             
           
@@ -327,9 +327,9 @@ looks like this (unmentioned assets are collapsed behind the ellipses):</p>
 │   └── p-cat001
 │       └── spec001
 │           └── p-cat001_s-spec001_d-running-cat_v001
-│               ├── p-cat001_s-spec001_d-running-cat_v001_c000-005_f0001.png
-│               ├── p-cat001_s-spec001_d-running-cat_v001_c000-005_f0002.png
-│               └── p-cat001_s-spec001_d-running-cat_v001_c000-005_f0003.png
+│               ├── p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0001.png
+│               ├── p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0002.png
+│               └── p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png
 │
 ├── metadata
     ├── asset
@@ -456,7 +456,7 @@ extension.</p></li>
 <div class="section" id="example-diagrams">
 <h2><strong>Example Diagrams</strong><a class="headerlink" href="#example-diagrams" title="Permalink to this headline">¶</a></h2>
 <p>In our example filename:
-<code class="docutils literal notranslate"><span class="pre">p-cat001_s-spec001_d-running-cat_v001_c000-005_f0003.png</span></code> the
+<code class="docutils literal notranslate"><span class="pre">p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png</span></code> the
 metadata will be:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s1">&#39;project&#39;</span><span class="p">:</span> <span class="s1">&#39;cat001&#39;</span><span class="p">,</span>
@@ -475,7 +475,7 @@ filename:</p>
   <span class="n">indicator</span>   <span class="n">token</span>
           <span class="o">|</span> <span class="n">__</span><span class="o">|</span><span class="n">__</span>
          <span class="o">|</span> <span class="o">|</span>     <span class="o">|</span>
-<span class="n">p</span><span class="o">-</span><span class="n">cat001_s</span><span class="o">-</span><span class="n">spec001_d</span><span class="o">-</span><span class="n">running</span><span class="o">-</span><span class="n">cat_v001_c000</span><span class="o">-</span><span class="mi">005</span><span class="n">_f0003</span><span class="o">.</span><span class="n">png</span>
+<span class="n">p</span><span class="o">-</span><span class="n">cat001_s</span><span class="o">-</span><span class="n">spec001_d</span><span class="o">-</span><span class="n">running</span><span class="o">-</span><span class="n">cat_v001_c0000</span><span class="o">-</span><span class="mi">0005</span><span class="n">_f0003</span><span class="o">.</span><span class="n">png</span>
          <span class="o">|</span><span class="n">_______</span><span class="o">|</span>
              <span class="o">|</span>
            <span class="n">field</span>
@@ -516,10 +516,10 @@ filename:</p>
 hyphens</p></li>
 <li><p>Descriptors may not begin with the words master, final or last</p></li>
 <li><p>Versions are triple-padded with zeros and must be greater than 0</p></li>
-<li><p>Coordinates may contain up to 3 triple-padded numbers, separated by
-hyphens</p></li>
+<li><p>Coordinates may contain up to 3 quadruple-padded numbers, separated
+by hyphens</p></li>
 <li><p>Coordinates are always evaluated in XYZ order. For example:
-<code class="docutils literal notranslate"><span class="pre">c001-002-003</span></code> produces <code class="docutils literal notranslate"><span class="pre">{x:</span> <span class="pre">1,</span> <span class="pre">y:</span> <span class="pre">2,</span> <span class="pre">z:</span> <span class="pre">3}</span></code>.</p></li>
+<code class="docutils literal notranslate"><span class="pre">c0001-0002-0003</span></code> produces <code class="docutils literal notranslate"><span class="pre">{x:</span> <span class="pre">1,</span> <span class="pre">y:</span> <span class="pre">2,</span> <span class="pre">z:</span> <span class="pre">3}</span></code>.</p></li>
 <li><p>Each element of a coordinate may be equal to or greater than zero</p></li>
 <li><p>Frames are quadruple-padded and are greater than or equal to 0</p></li>
 <li><p>Extensions may only contain upper and lower case letters a to z and
@@ -655,9 +655,9 @@ layout of directories and files.</p>
     │
     └── spec001
         └── p-cat001_s-spec001_d-running-cat_v001
-            ├── p-cat001_s-spec001_d-Running-Cat_v001_c000-0005_f0002.png
-            ├── p-cat001_s-spec001_d-running-cat_v001_c000-0005_f0001.png
-            └── p-cat001_s-spec001_d-running-cat_v001_c000-0005_f0003.png
+            ├── p-cat001_s-spec001_d-Running-Cat_v001_c0000-0005_f0002.png
+            ├── p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0001.png
+            └── p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png
 </pre></div>
 </div>
 </div>
