@@ -30,7 +30,7 @@ class AssetNameParser:
     ]  # type: List[str]
 
     VERSION_PADDING = 3  # type: int
-    COORDINATE_PADDING = 3  # type: int
+    COORDINATE_PADDING = 4  # type: int
     FRAME_PADDING = 4  # type: int
 
     def __init__(self, fields):

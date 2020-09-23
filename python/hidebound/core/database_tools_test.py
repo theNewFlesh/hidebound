@@ -48,13 +48,13 @@ class DatabaseTests(DatabaseTestBase):
         data = [
             [
                 Spec001,
-                '/tmp/p-proj001_s-spec001_d-desc_v001_c000-000_f0001.png',
+                '/tmp/p-proj001_s-spec001_d-desc_v001_c0000-0000_f0001.png',
                 np.nan,
                 'proj001', 'spec001', 'desc', 1, [0, 0], 1, 'png'
             ],
             [
                 Spec001,
-                '/tmp/p-proj001_s-spec001_d-desc_v001_c000-000_f0002.png',
+                '/tmp/p-proj001_s-spec001_d-desc_v001_c0000-0000_f0002.png',
                 np.nan,
                 'proj001', 'spec001', 'desc', 1, [0, 0], 2, 'png'
             ],
@@ -118,12 +118,12 @@ class DatabaseTests(DatabaseTestBase):
         data = [
             [
                 Spec001,
-                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0001.png',  # noqa E501
+                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c0000-0000_f0001.png',  # noqa E501
                 np.nan,
             ],
             [
                 Spec001,
-                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0002.png',  # noqa E501
+                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c0000-0000_f0002.png',  # noqa E501
                 np.nan,
             ],
             [
@@ -155,12 +155,12 @@ class DatabaseTests(DatabaseTestBase):
         data = [
             [
                 Spec001,
-                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0001.png',  # noqa E501
+                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c0000-0000_f0001.png',  # noqa E501
                 np.nan,
             ],
             [
                 Spec001,
-                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0002.png',  # noqa E501
+                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c0000-0000_f0002.png',  # noqa E501
                 np.nan,
             ],
             [
@@ -192,12 +192,12 @@ class DatabaseTests(DatabaseTestBase):
         data = [
             [
                 Spec001,
-                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0001.png',  # noqa E501
+                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c0000-0000_f0001.png',  # noqa E501
                 np.nan,
             ],
             [
                 Spec001,
-                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c000-000_f0002.png',  # noqa E501
+                '/tmp/p-proj001_s-spec001_d-desc_v001/p-proj001_s-spec001_d-desc_v001_c0000-0000_f0002.png',  # noqa E501
                 np.nan,
             ],
             [

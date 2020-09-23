@@ -10,7 +10,7 @@ import hidebound.core.validators as vd
 # ------------------------------------------------------------------------------
 
 
-class DatabaseTests(unittest.TestCase):
+class ValidatorsTests(unittest.TestCase):
     # VALIDATE------------------------------------------------------------------
     def test_validate(self):
         message = '{} is not foo.'
@@ -208,9 +208,9 @@ class DatabaseTests(unittest.TestCase):
         with self.assertRaisesRegexp(ValidationError, expected):
             vd.is_coordinate([0, 2, -1])
 
-        expected = r'\[0, 0, 1000\] is not a valid coordinate\.'
+        expected = r'\[0, 0, 10000\] is not a valid coordinate\.'
         with self.assertRaisesRegexp(ValidationError, expected):
-            vd.is_coordinate([0, 0, 1000])
+            vd.is_coordinate([0, 0, 10000])
 
     def test_is_extension(self):
         vd.is_extension('png')

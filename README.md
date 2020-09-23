@@ -106,9 +106,9 @@ ellipses):
 │   └── p-cat001
 │       └── spec001
 │           └── p-cat001_s-spec001_d-running-cat_v001
-│               ├── p-cat001_s-spec001_d-running-cat_v001_c000-005_f0001.png
-│               ├── p-cat001_s-spec001_d-running-cat_v001_c000-005_f0002.png
-│               └── p-cat001_s-spec001_d-running-cat_v001_c000-005_f0003.png
+│               ├── p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0001.png
+│               ├── p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0002.png
+│               └── p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png
 │
 ├── metadata
     ├── asset
@@ -180,7 +180,7 @@ Fields are comprised of two main parts:
 ---
 ### **Example Diagrams**
 In our example filename:
-`p-cat001_s-spec001_d-running-cat_v001_c000-005_f0003.png` the metadata will be:
+`p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png` the metadata will be:
 ```
 {
     'project': 'cat001',
@@ -199,7 +199,7 @@ The spec001 specification is derived from the second field of this filename:
   indicator   token
           | __|__
          | |     |
-p-cat001_s-spec001_d-running-cat_v001_c000-005_f0003.png
+p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png
          |_______|
              |
            field
@@ -219,8 +219,8 @@ p-cat001_s-spec001_d-running-cat_v001_c000-005_f0003.png
 - Descriptors begin with a letter or number and may also contain hyphens
 - Descriptors may not begin with the words master, final or last
 - Versions are triple-padded with zeros and must be greater than 0
-- Coordinates may contain up to 3 triple-padded numbers, separated by hyphens
-- Coordinates are always evaluated in XYZ order. For example: `c001-002-003`
+- Coordinates may contain up to 3 quadruple-padded numbers, separated by hyphens
+- Coordinates are always evaluated in XYZ order. For example: `c0001-0002-0003`
   produces `{x: 1, y: 2, z: 3}`.
 - Each element of a coordinate may be equal to or greater than zero
 - Frames are quadruple-padded and are greater than or equal to 0
@@ -325,9 +325,9 @@ project
     │
     └── spec001
         └── p-cat001_s-spec001_d-running-cat_v001
-            ├── p-cat001_s-spec001_d-Running-Cat_v001_c000-0005_f0002.png
-            ├── p-cat001_s-spec001_d-running-cat_v001_c000-0005_f0001.png
-            └── p-cat001_s-spec001_d-running-cat_v001_c000-0005_f0003.png
+            ├── p-cat001_s-spec001_d-Running-Cat_v001_c0000-0005_f0002.png
+            ├── p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0001.png
+            └── p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png
 ```
 
 # Application
