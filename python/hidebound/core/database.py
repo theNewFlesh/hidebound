@@ -71,7 +71,7 @@ class Database:
 
     @staticmethod
     def from_json(filepath):
-        # (Union[str, Path]) -> "Database"
+        # type: (Union[str, Path]) -> "Database"
         '''
         Constructs a Database instance from a given json file.
 
@@ -95,7 +95,7 @@ class Database:
         write_mode='copy',
         exporters={},
     ):
-        # type: (Union[str, Path], Union[str, Path], List[type], str, str, str, Dict[str, Any]) -> None  # noqa E501
+        # type: (Union[str, Path], Union[str, Path], List[SpecificationBase], str, str, str, Dict[str, Any]) -> None  # noqa E501
         r'''
         Creates an instance of Database but does not populate it with data.
 
@@ -162,7 +162,8 @@ class Database:
         self._include_regex = include_regex
         self._exclude_regex = exclude_regex
         self._write_mode = write_mode
-        self._specifications = {x.__name__.lower(): x for x in specifications}
+        self._specifications = {x.__name__.lower(): x for x in specifications} \
+            # type: Dict[str, SpecificationBase]
         self._exporters = exporters
         self.data = None
 
@@ -302,7 +303,7 @@ class Database:
         return data
 
     def update(self):
-        # () -> "Database"
+        # type: () -> "Database"
         '''
         Recurse root directory, populate self.data with its files, locate and
         validate assets.
