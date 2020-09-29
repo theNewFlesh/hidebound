@@ -210,8 +210,7 @@ class SpecificationBase(Model):
         traits.update(self.get_file_traits(filepath))
         return traits
 
-    @classmethod
-    def get_name_patterns(cls):
+    def get_name_patterns(self):
         # type: () -> Tuple[str, str]
         '''
         Generates asset name and filename patterns from class fields.
@@ -219,13 +218,35 @@ class SpecificationBase(Model):
         Returns:
             tuple(str): Asset name pattern, filename pattern.
         '''
-        lut = _INDICATOR_LUT
-        asset = [lut[x] + f'{{{x}}}' for x in cls.asset_name_fields]  # type: Any
+        def get_patterns(fields):
+            output = []
+            c_pad = AssetNameParser.COORDINATE_PADDING
+            f_pad = AssetNameParser.FRAME_PADDING
+            v_pad = AssetNameParser.VERSION_PADDING
+            sep = AssetNameParser.TOKEN_SEPARATOR
+            for field in fields:
+                item = _INDICATOR_LUT[field]
+                if field == 'version':
+                    item += '{' + field + f':0{v_pad}d' + '}'
+                elif field == 'frame':
+                    item += '{' + field + f':0{f_pad}d' + '}'
+                elif field == 'coordinate':
+                    temp = []
+                    for i, _ in enumerate(self.coordinate[0]):
+                        temp.append('{' + f'{field}[{i}]:0{c_pad}d' + '}')
+                    temp = sep.join(temp)
+                    item += temp
+                else:
+                    item += '{' + field + '}'
+                output.append(item)
+            return output
+
+        asset = get_patterns(self.asset_name_fields)  # type: Any
         asset = AssetNameParser.FIELD_SEPARATOR.join(asset)
 
-        patterns = [lut[x] + f'{{{x}}}' for x in cls.filename_fields]
+        patterns = get_patterns(self.filename_fields)
         filename = ''
-        if cls.filename_fields[-1] == 'extension':
+        if self.filename_fields[-1] == 'extension':
             filename = AssetNameParser.FIELD_SEPARATOR.join(patterns[:-1])
             filename += patterns[-1]
         else:

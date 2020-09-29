@@ -3,8 +3,9 @@ from tempfile import TemporaryDirectory
 import unittest
 import uuid
 
-import numpy as np
 from schematics.exceptions import ValidationError
+from schematics.types import IntType, ListType
+import numpy as np
 import skimage.io
 
 import hidebound.core.specification_base as sb
@@ -29,6 +30,17 @@ class SpecificationBaseTests(unittest.TestCase):
     class Bar(sb.FileSpecificationBase):
         def get_asset_path(self, filepath):
             return Path(filepath)
+
+    class Taco(sb.SpecificationBase):
+        asset_name_fields = [
+            'project', 'specification', 'descriptor', 'version',
+        ]
+        filename_fields = [
+            'project', 'specification', 'descriptor', 'version', 'coordinate',
+            'frame', 'extension',
+        ]
+        frame = ListType(IntType(), required=True)
+        coordinate = ListType(ListType(IntType()), required=True)
 
     def test_init(self):
         sb.SpecificationBase()
@@ -187,19 +199,21 @@ class SpecificationBaseTests(unittest.TestCase):
                 self.assertRegex(result[k], 'ValueError')
 
     def test_get_name_patterns(self):
-        class Pizza(sb.SpecificationBase):
-            asset_name_fields = [
-                'project', 'specification', 'descriptor', 'version',
-            ]
-            filename_fields = [
-                'project', 'specification', 'descriptor', 'version', 'frame',
-                'extension',
-            ]
-        a, f = Pizza.get_name_patterns()
-        expected = 'p-{project}_s-{specification}_d-{descriptor}_v{version}'
+        data = dict(
+            project=['proj001', 'proj001'],
+            specification=['taco', 'taco'],
+            descriptor=['desc', 'desc'],
+            version=[1, 1],
+            frame=[1, 2],
+            coordinate=[[0, 1, 2], [3, 4, 5]],
+            extension=['png', 'png'],
+        )
+        a, f = self.Taco(data).get_name_patterns()
+        expected = 'p-{project}_s-{specification}_d-{descriptor}_v{version:03d}'
         self.assertEqual(a, expected)
 
-        expected += '_f{frame}.{extension}'
+        expected += '_c{coordinate[0]:04d}-{coordinate[1]:04d}-{coordinate[2]:04d}'
+        expected += '_f{frame:04d}.{extension}'
         self.assertEqual(f, expected)
 
     def test_get_name_patterns_no_extension(self):
@@ -210,11 +224,20 @@ class SpecificationBaseTests(unittest.TestCase):
             filename_fields = [
                 'project', 'specification', 'descriptor', 'version', 'frame'
             ]
-        a, f = Pizza.get_name_patterns()
-        expected = 'p-{project}_s-{specification}_d-{descriptor}_v{version}'
+            frame = ListType(IntType(), required=True)
+
+        data = dict(
+            project=['proj001', 'proj001'],
+            specification=['taco', 'taco'],
+            descriptor=['desc', 'desc'],
+            version=[1, 1],
+            frame=[1, 2],
+        )
+        a, f = Pizza(data).get_name_patterns()
+        expected = 'p-{project}_s-{specification}_d-{descriptor}_v{version:03d}'
         self.assertEqual(a, expected)
 
-        expected += '_f{frame}'
+        expected += '_f{frame:04d}'
         self.assertEqual(f, expected)
 
 
