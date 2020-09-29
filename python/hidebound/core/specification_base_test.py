@@ -240,6 +240,26 @@ class SpecificationBaseTests(unittest.TestCase):
         expected += '_f{frame:04d}'
         self.assertEqual(f, expected)
 
+    def test_to_filepaths(self):
+        data = dict(
+            project=['proj001', 'proj001'],
+            specification=['taco', 'taco'],
+            descriptor=['desc', 'desc'],
+            version=[1, 1],
+            frame=[1, 2],
+            coordinate=[[1, 2], [3, 4]],
+            extension=['png', 'png'],
+        )
+        a, b = self.Taco(data).get_name_patterns()
+        pattern = Path(a, 'f{frame:04d}', b).as_posix()
+        result = self.Taco(data).to_filepaths('/root', pattern)
+        root = '/root/p-proj001_s-taco_d-desc_v001/'
+        expected = [
+            root + 'f0001/p-proj001_s-taco_d-desc_v001_c0001-0002_f0001.png',
+            root + 'f0002/p-proj001_s-taco_d-desc_v001_c0003-0004_f0002.png',
+        ]
+        self.assertEqual(result, expected)
+
 
 class OtherSpecificationBaseTests(unittest.TestCase):
     filepath = '/tmp/proj001/p-proj001_s-spec001_d-desc_v001/'

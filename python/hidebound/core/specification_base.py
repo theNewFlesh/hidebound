@@ -253,6 +253,28 @@ class SpecificationBase(Model):
             filename = AssetNameParser.FIELD_SEPARATOR.join(patterns)
         return asset, filename
 
+    def to_filepaths(self, root, pattern):
+        # type: (Union[str, Path], str) -> List[str]
+        '''
+        Generates a complete filepath given a root directory and filepath
+        pattern.
+
+        Args:
+            root (str or Path): Directory containing asset.
+            pattern (str): Filepath pattern.
+
+        Returns:
+            list[str]: List of filepaths.
+        '''
+        filepaths = []
+        for i, _ in enumerate(self.specification):
+            fields = set(self.asset_name_fields).union(self.filename_fields)  # type: Any
+            fields = {k: getattr(self, k)[i] for k in fields}
+            filepath = pattern.format(**fields)
+            filepath = Path(root, filepath).as_posix()
+            filepaths.append(filepath)
+        return filepaths
+
 
 class FileSpecificationBase(SpecificationBase):
     '''
