@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.8.8
+                0.8.9
               </div>
             
           
@@ -238,7 +238,7 @@
 
 <div class="viewcode-block" id="Database.from_json"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.from_json">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_json</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
-        <span class="c1"># (Union[str, Path]) -&gt; &quot;Database&quot;</span>
+        <span class="c1"># type: (Union[str, Path]) -&gt; &quot;Database&quot;</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Constructs a Database instance from a given json file.</span>
 
@@ -262,7 +262,7 @@
         <span class="n">write_mode</span><span class="o">=</span><span class="s1">&#39;copy&#39;</span><span class="p">,</span>
         <span class="n">exporters</span><span class="o">=</span><span class="p">{},</span>
     <span class="p">):</span>
-        <span class="c1"># type: (Union[str, Path], Union[str, Path], List[type], str, str, str, Dict[str, Any]) -&gt; None  # noqa E501</span>
+        <span class="c1"># type: (Union[str, Path], Union[str, Path], List[SpecificationBase], str, str, str, Dict[str, Any]) -&gt; None  # noqa E501</span>
         <span class="sa">r</span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Creates an instance of Database but does not populate it with data.</span>
 
@@ -321,7 +321,7 @@
             <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hb_root</span><span class="si">}</span><span class="s1"> is not a directory or does not exist.&#39;</span>
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">hb_root</span><span class="p">)</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s1">&#39;hidebound&#39;</span><span class="p">:</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hb_root</span><span class="si">}</span><span class="s1"> directory is not named hidebound.core.&#39;</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hb_root</span><span class="si">}</span><span class="s1"> directory is not named hidebound.&#39;</span>
             <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span>
@@ -329,7 +329,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_include_regex</span> <span class="o">=</span> <span class="n">include_regex</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_exclude_regex</span> <span class="o">=</span> <span class="n">exclude_regex</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_write_mode</span> <span class="o">=</span> <span class="n">write_mode</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_specifications</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">specifications</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_specifications</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">specifications</span><span class="p">}</span> \
+            <span class="c1"># type: Dict[str, SpecificationBase]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_exporters</span> <span class="o">=</span> <span class="n">exporters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -469,7 +470,7 @@
         <span class="k">return</span> <span class="n">data</span></div>
 
 <div class="viewcode-block" id="Database.update"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># () -&gt; &quot;Database&quot;</span>
+        <span class="c1"># type: () -&gt; &quot;Database&quot;</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Recurse root directory, populate self.data with its files, locate and</span>
 <span class="sd">        validate assets.</span>

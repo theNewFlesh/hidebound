@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.8.8
+                0.8.9
               </div>
             
           
@@ -372,7 +372,7 @@ key is the exporter name and the value is its config. Default: {}.</p>
 <span id="database"></span><h2>database<a class="headerlink" href="#module-hidebound.core.database" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="hidebound.core.database.Database">
-<em class="property">class </em><code class="sig-prename descclassname">hidebound.core.database.</code><code class="sig-name descname">Database</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root_dir</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">hidebound_dir</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">specifications</span><span class="p">:</span> <span class="n">List<span class="p">[</span>type<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">include_regex</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">''</span></em>, <em class="sig-param"><span class="n">exclude_regex</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'\\.DS_Store'</span></em>, <em class="sig-param"><span class="n">write_mode</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'copy'</span></em>, <em class="sig-param"><span class="n">exporters</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/database.html#Database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.database.Database" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">hidebound.core.database.</code><code class="sig-name descname">Database</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root_dir</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">hidebound_dir</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">specifications</span><span class="p">:</span> <span class="n">List<span class="p">[</span><a class="reference internal" href="#hidebound.core.specification_base.SpecificationBase" title="hidebound.core.specification_base.SpecificationBase">hidebound.core.specification_base.SpecificationBase</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">include_regex</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">''</span></em>, <em class="sig-param"><span class="n">exclude_regex</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'\\.DS_Store'</span></em>, <em class="sig-param"><span class="n">write_mode</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'copy'</span></em>, <em class="sig-param"><span class="n">exporters</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/database.html#Database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.database.Database" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Generates a DataFrame using the files within a given directory as rows.</p>
 <dl class="py method">
@@ -444,7 +444,7 @@ contents.</p>
 
 <dl class="py method">
 <dt id="hidebound.core.database.Database.from_json">
-<em class="property">static </em><code class="sig-name descname">from_json</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/database.html#Database.from_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.database.Database.from_json" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">from_json</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#hidebound.core.database.Database" title="hidebound.core.database.Database">Database</a><a class="reference internal" href="_modules/hidebound/core/database.html#Database.from_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.database.Database.from_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs a Database instance from a given json file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -504,7 +504,7 @@ Default: False.</p></li>
 
 <dl class="py method">
 <dt id="hidebound.core.database.Database.update">
-<code class="sig-name descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/database.html#Database.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.database.Database.update" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#hidebound.core.database.Database" title="hidebound.core.database.Database">Database</a><a class="reference internal" href="_modules/hidebound/core/database.html#Database.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.database.Database.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Recurse root directory, populate self.data with its files, locate and
 validate assets.</p>
 <dl class="field-list simple">
@@ -923,7 +923,7 @@ according to a dynimcally defined grammar.</p>
 <span id="specification-base"></span><h2>specification_base<a class="headerlink" href="#module-hidebound.core.specification_base" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="hidebound.core.specification_base.ComplexSpecificationBase">
-<em class="property">class </em><code class="sig-prename descclassname">hidebound.core.specification_base.</code><code class="sig-name descname">ComplexSpecificationBase</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/specification_base.html#ComplexSpecificationBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.ComplexSpecificationBase" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">hidebound.core.specification_base.</code><code class="sig-name descname">ComplexSpecificationBase</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/specification_base.html#ComplexSpecificationBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.ComplexSpecificationBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#hidebound.core.specification_base.SpecificationBase" title="hidebound.core.specification_base.SpecificationBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">hidebound.core.specification_base.SpecificationBase</span></code></a></p>
 <p>The base class for assets that consist of multiple directories of files.</p>
 <dl class="py attribute">
@@ -976,7 +976,7 @@ according to a dynimcally defined grammar.</p>
 
 <dl class="py class">
 <dt id="hidebound.core.specification_base.FileSpecificationBase">
-<em class="property">class </em><code class="sig-prename descclassname">hidebound.core.specification_base.</code><code class="sig-name descname">FileSpecificationBase</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/specification_base.html#FileSpecificationBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.FileSpecificationBase" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">hidebound.core.specification_base.</code><code class="sig-name descname">FileSpecificationBase</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/specification_base.html#FileSpecificationBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.FileSpecificationBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#hidebound.core.specification_base.SpecificationBase" title="hidebound.core.specification_base.SpecificationBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">hidebound.core.specification_base.SpecificationBase</span></code></a></p>
 <p>The base class for asset that consist of a single file.</p>
 <dl class="py attribute">
@@ -1012,7 +1012,7 @@ according to a dynimcally defined grammar.</p>
 
 <dl class="py method">
 <dt id="hidebound.core.specification_base.FileSpecificationBase.get_asset_path">
-<code class="sig-name descname">get_asset_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/specification_base.html#FileSpecificationBase.get_asset_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.FileSpecificationBase.get_asset_path" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_asset_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; pathlib.Path<a class="reference internal" href="_modules/hidebound/core/specification_base.html#FileSpecificationBase.get_asset_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.FileSpecificationBase.get_asset_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the filepath.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1037,6 +1037,27 @@ according to a dynimcally defined grammar.</p>
 <code class="sig-name descname">specification</code><em class="property"> = &lt;ListType(StringType) instance on FileSpecificationBase as 'specification'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.FileSpecificationBase.specification" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt id="hidebound.core.specification_base.FileSpecificationBase.to_filepaths">
+<code class="sig-name descname">to_filepaths</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>str<span class="p">]</span><a class="reference internal" href="_modules/hidebound/core/specification_base.html#FileSpecificationBase.to_filepaths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.FileSpecificationBase.to_filepaths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a complete list of filepaths given a root directory and
+filepath pattern.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root</strong> (<em>str</em><em> or </em><em>Path</em>) – Directory containing asset.</p></li>
+<li><p><strong>pattern</strong> (<em>str</em>) – Filepath pattern.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of filepaths.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py attribute">
 <dt id="hidebound.core.specification_base.FileSpecificationBase.version">
 <code class="sig-name descname">version</code><em class="property"> = &lt;ListType(IntType) instance on FileSpecificationBase as 'version'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.FileSpecificationBase.version" title="Permalink to this definition">¶</a></dt>
@@ -1046,7 +1067,7 @@ according to a dynimcally defined grammar.</p>
 
 <dl class="py class">
 <dt id="hidebound.core.specification_base.SequenceSpecificationBase">
-<em class="property">class </em><code class="sig-prename descclassname">hidebound.core.specification_base.</code><code class="sig-name descname">SequenceSpecificationBase</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/specification_base.html#SequenceSpecificationBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.SequenceSpecificationBase" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">hidebound.core.specification_base.</code><code class="sig-name descname">SequenceSpecificationBase</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/specification_base.html#SequenceSpecificationBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.SequenceSpecificationBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#hidebound.core.specification_base.SpecificationBase" title="hidebound.core.specification_base.SpecificationBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">hidebound.core.specification_base.SpecificationBase</span></code></a></p>
 <p>The base class for assets that consist of a sequence of files under a single
 directory.</p>
@@ -1083,7 +1104,7 @@ directory.</p>
 
 <dl class="py method">
 <dt id="hidebound.core.specification_base.SequenceSpecificationBase.get_asset_path">
-<code class="sig-name descname">get_asset_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/specification_base.html#SequenceSpecificationBase.get_asset_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.SequenceSpecificationBase.get_asset_path" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_asset_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; pathlib.Path<a class="reference internal" href="_modules/hidebound/core/specification_base.html#SequenceSpecificationBase.get_asset_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.SequenceSpecificationBase.get_asset_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the directory containing the asset files.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1108,6 +1129,27 @@ directory.</p>
 <code class="sig-name descname">specification</code><em class="property"> = &lt;ListType(StringType) instance on SequenceSpecificationBase as 'specification'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.SequenceSpecificationBase.specification" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt id="hidebound.core.specification_base.SequenceSpecificationBase.to_filepaths">
+<code class="sig-name descname">to_filepaths</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>str<span class="p">]</span><a class="reference internal" href="_modules/hidebound/core/specification_base.html#SequenceSpecificationBase.to_filepaths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.SequenceSpecificationBase.to_filepaths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a complete list of filepaths given a root directory and
+filepath pattern.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root</strong> (<em>str</em><em> or </em><em>Path</em>) – Directory containing asset.</p></li>
+<li><p><strong>pattern</strong> (<em>str</em>) – Filepath pattern.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of filepaths.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py attribute">
 <dt id="hidebound.core.specification_base.SequenceSpecificationBase.version">
 <code class="sig-name descname">version</code><em class="property"> = &lt;ListType(IntType) instance on SequenceSpecificationBase as 'version'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.SequenceSpecificationBase.version" title="Permalink to this definition">¶</a></dt>
@@ -1117,7 +1159,7 @@ directory.</p>
 
 <dl class="py class">
 <dt id="hidebound.core.specification_base.SpecificationBase">
-<em class="property">class </em><code class="sig-prename descclassname">hidebound.core.specification_base.</code><code class="sig-name descname">SpecificationBase</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/specification_base.html#SpecificationBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.SpecificationBase" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">hidebound.core.specification_base.</code><code class="sig-name descname">SpecificationBase</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/specification_base.html#SpecificationBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.SpecificationBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">schematics.deprecated.patch_models.&lt;locals&gt;.Model</span></code></p>
 <p>The base class for all Hidebound specifications.</p>
 <dl class="py attribute">
@@ -1202,6 +1244,27 @@ directory.</p>
 <code class="sig-name descname">_schema</code><em class="property"> = &lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema object&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.SpecificationBase._schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt id="hidebound.core.specification_base.SpecificationBase._to_filepaths">
+<code class="sig-name descname">_to_filepaths</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">root</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">pattern</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>str<span class="p">]</span><a class="reference internal" href="_modules/hidebound/core/specification_base.html#SpecificationBase._to_filepaths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.SpecificationBase._to_filepaths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a complete list of filepaths given a root directory and
+filepath pattern.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root</strong> (<em>str</em><em> or </em><em>Path</em>) – Directory containing asset.</p></li>
+<li><p><strong>pattern</strong> (<em>str</em>) – Filepath pattern.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of filepaths.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py attribute">
 <dt id="id10">
 <code class="sig-name descname">asset_name_fields</code><em class="property">: List<span class="p">[</span>str<span class="p">]</span></em><em class="property"> = ['project', 'specification', 'descriptor', 'version']</em><a class="headerlink" href="#id10" title="Permalink to this definition">¶</a></dt>
@@ -1234,7 +1297,7 @@ directory.</p>
 
 <dl class="py method">
 <dt id="hidebound.core.specification_base.SpecificationBase.get_asset_id">
-<code class="sig-name descname">get_asset_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/specification_base.html#SpecificationBase.get_asset_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.SpecificationBase.get_asset_id" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_asset_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/hidebound/core/specification_base.html#SpecificationBase.get_asset_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.SpecificationBase.get_asset_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a hash UUID of the asset directory or file, depending of asset
 type.</p>
 <dl class="field-list simple">
@@ -1269,7 +1332,7 @@ type.</p>
 
 <dl class="py method">
 <dt id="hidebound.core.specification_base.SpecificationBase.get_asset_path">
-<code class="sig-name descname">get_asset_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/specification_base.html#SpecificationBase.get_asset_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.SpecificationBase.get_asset_path" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_asset_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; pathlib.Path<a class="reference internal" href="_modules/hidebound/core/specification_base.html#SpecificationBase.get_asset_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.SpecificationBase.get_asset_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the expected asset path given a filepath.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1289,7 +1352,7 @@ type.</p>
 
 <dl class="py method">
 <dt id="hidebound.core.specification_base.SpecificationBase.get_file_traits">
-<code class="sig-name descname">get_file_traits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/specification_base.html#SpecificationBase.get_file_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.SpecificationBase.get_file_traits" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_file_traits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; Dict<a class="reference internal" href="_modules/hidebound/core/specification_base.html#SpecificationBase.get_file_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.SpecificationBase.get_file_traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a dictionary of file traits from given filepath.
 Returns error in respective key if one is encountered.</p>
 <dl class="field-list simple">
@@ -1307,7 +1370,7 @@ Returns error in respective key if one is encountered.</p>
 
 <dl class="py method">
 <dt id="hidebound.core.specification_base.SpecificationBase.get_filename_traits">
-<code class="sig-name descname">get_filename_traits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/specification_base.html#SpecificationBase.get_filename_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.SpecificationBase.get_filename_traits" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_filename_traits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span><a class="reference internal" href="_modules/hidebound/core/specification_base.html#SpecificationBase.get_filename_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.SpecificationBase.get_filename_traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a dictionary of filename traits from given filepath.
 Returns error in filename_error key if one is encountered.</p>
 <dl class="field-list simple">
@@ -1324,8 +1387,22 @@ Returns error in filename_error key if one is encountered.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="hidebound.core.specification_base.SpecificationBase.get_name_patterns">
+<code class="sig-name descname">get_name_patterns</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>str<span class="p">, </span>str<span class="p">]</span><a class="reference internal" href="_modules/hidebound/core/specification_base.html#SpecificationBase.get_name_patterns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.SpecificationBase.get_name_patterns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates asset name and filename patterns from class fields.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Asset name pattern, filename pattern.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple(str)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="hidebound.core.specification_base.SpecificationBase.get_traits">
-<code class="sig-name descname">get_traits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/specification_base.html#SpecificationBase.get_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.SpecificationBase.get_traits" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_traits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span><a class="reference internal" href="_modules/hidebound/core/specification_base.html#SpecificationBase.get_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.SpecificationBase.get_traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a dictionary of file and filename traits from given filepath.
 Errors are captured in their respective keys.</p>
 <dl class="field-list simple">
@@ -1353,7 +1430,7 @@ Errors are captured in their respective keys.</p>
 
 <dl class="py method">
 <dt id="hidebound.core.specification_base.SpecificationBase.validate_filepath">
-<code class="sig-name descname">validate_filepath</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/specification_base.html#SpecificationBase.validate_filepath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.SpecificationBase.validate_filepath" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">validate_filepath</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/hidebound/core/specification_base.html#SpecificationBase.validate_filepath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specification_base.SpecificationBase.validate_filepath" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attempts to parse the given filepath.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1380,7 +1457,7 @@ Errors are captured in their respective keys.</p>
 <span id="specifications"></span><h2>specifications<a class="headerlink" href="#module-hidebound.core.specifications" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="hidebound.core.specifications.Raw001">
-<em class="property">class </em><code class="sig-prename descclassname">hidebound.core.specifications.</code><code class="sig-name descname">Raw001</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/specifications.html#Raw001"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specifications.Raw001" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">hidebound.core.specifications.</code><code class="sig-name descname">Raw001</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/specifications.html#Raw001"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specifications.Raw001" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#hidebound.core.specification_base.SequenceSpecificationBase" title="hidebound.core.specification_base.SequenceSpecificationBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">hidebound.core.specification_base.SequenceSpecificationBase</span></code></a></p>
 <p>Raw JPEG sequences with 1 or 3 channels.</p>
 <dl class="py attribute">
@@ -1509,7 +1586,7 @@ version,</p>
 
 <dl class="py class">
 <dt id="hidebound.core.specifications.Raw002">
-<em class="property">class </em><code class="sig-prename descclassname">hidebound.core.specifications.</code><code class="sig-name descname">Raw002</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/specifications.html#Raw002"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specifications.Raw002" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">hidebound.core.specifications.</code><code class="sig-name descname">Raw002</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/specifications.html#Raw002"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.specifications.Raw002" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#hidebound.core.specification_base.SequenceSpecificationBase" title="hidebound.core.specification_base.SequenceSpecificationBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">hidebound.core.specification_base.SequenceSpecificationBase</span></code></a></p>
 <p>Raw JPEG sequences with 1 or 3 channels and coordinates.</p>
 <dl class="py attribute">

@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.8.8
+                0.8.9
               </div>
             
           
@@ -165,7 +165,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for hidebound.core.specification_base</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
@@ -184,6 +184,17 @@
 <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">Contains the abstract base classes for all Hidebound specifications.</span>
 <span class="sd">&#39;&#39;&#39;</span>
+
+
+<span class="n">_INDICATOR_LUT</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">project</span><span class="o">=</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">PROJECT_INDICATOR</span><span class="p">,</span>
+    <span class="n">specification</span><span class="o">=</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">SPECIFICATION_INDICATOR</span><span class="p">,</span>
+    <span class="n">descriptor</span><span class="o">=</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">DESCRIPTOR_INDICATOR</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">VERSION_INDICATOR</span><span class="p">,</span>
+    <span class="n">coordinate</span><span class="o">=</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">COORDINATE_INDICATOR</span><span class="p">,</span>
+    <span class="n">frame</span><span class="o">=</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">FRAME_INDICATOR</span><span class="p">,</span>
+    <span class="n">extension</span><span class="o">=</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">EXTENSION_INDICATOR</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="SpecificationBase"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase">[docs]</a><span class="k">class</span> <span class="nc">SpecificationBase</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
@@ -220,7 +231,7 @@
     <span class="n">file_traits</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: Dict[str, Any]</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{}):</span>
-        <span class="c1"># (Optional[Dict[str, Any]]) -&gt; None</span>
+        <span class="c1"># type: (Optional[Dict[str, Any]]) -&gt; None</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns a new specification instance.</span>
 
@@ -245,7 +256,7 @@
         <span class="k">return</span> <span class="n">AssetNameParser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">asset_name_fields</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SpecificationBase.get_asset_path"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.get_asset_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_asset_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
-        <span class="c1"># (Union[str, Path]) -&gt; Path</span>
+        <span class="c1"># type: (Union[str, Path]) -&gt; Path</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns the expected asset path given a filepath.</span>
 
@@ -262,7 +273,7 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SpecificationBase.get_asset_id"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.get_asset_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_asset_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
-        <span class="c1"># (Union[str, Path]) -&gt; str</span>
+        <span class="c1"># type: (Union[str, Path]) -&gt; str</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns a hash UUID of the asset directory or file, depending of asset</span>
 <span class="sd">        type.</span>
@@ -278,7 +289,7 @@
         <span class="p">))</span></div>
 
 <div class="viewcode-block" id="SpecificationBase.validate_filepath"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.validate_filepath">[docs]</a>    <span class="k">def</span> <span class="nf">validate_filepath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
-        <span class="c1"># (Union[str, Path]) -&gt; none</span>
+        <span class="c1"># type: (Union[str, Path]) -&gt; None</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Attempts to parse the given filepath.</span>
 
@@ -313,7 +324,7 @@
             <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SpecificationBase.get_filename_traits"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.get_filename_traits">[docs]</a>    <span class="k">def</span> <span class="nf">get_filename_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
-        <span class="c1"># (Union[str, Path]) -&gt; Dict[str, Any]</span>
+        <span class="c1"># type: (Union[str, Path]) -&gt; Dict[str, Any]</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns a dictionary of filename traits from given filepath.</span>
 <span class="sd">        Returns error in filename_error key if one is encountered.</span>
@@ -331,7 +342,7 @@
             <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">filename_error</span><span class="o">=</span><span class="n">tools</span><span class="o">.</span><span class="n">error_to_string</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="SpecificationBase.get_file_traits"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.get_file_traits">[docs]</a>    <span class="k">def</span> <span class="nf">get_file_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
-        <span class="c1"># (Union[str, Path]) -&gt; Dict</span>
+        <span class="c1"># type: (Union[str, Path]) -&gt; Dict</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns a dictionary of file traits from given filepath.</span>
 <span class="sd">        Returns error in respective key if one is encountered.</span>
@@ -351,7 +362,7 @@
         <span class="k">return</span> <span class="n">output</span></div>
 
 <div class="viewcode-block" id="SpecificationBase.get_traits"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.get_traits">[docs]</a>    <span class="k">def</span> <span class="nf">get_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
-        <span class="c1"># (Union[str, Path]) -&gt; Dict[str, Any]</span>
+        <span class="c1"># type: (Union[str, Path]) -&gt; Dict[str, Any]</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns a dictionary of file and filename traits from given filepath.</span>
 <span class="sd">        Errors are captured in their respective keys.</span>
@@ -364,7 +375,72 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">traits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_filename_traits</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
         <span class="n">traits</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_file_traits</span><span class="p">(</span><span class="n">filepath</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">traits</span></div></div>
+        <span class="k">return</span> <span class="n">traits</span></div>
+
+<div class="viewcode-block" id="SpecificationBase.get_name_patterns"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.get_name_patterns">[docs]</a>    <span class="k">def</span> <span class="nf">get_name_patterns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; Tuple[str, str]</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Generates asset name and filename patterns from class fields.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple(str): Asset name pattern, filename pattern.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">def</span> <span class="nf">get_patterns</span><span class="p">(</span><span class="n">fields</span><span class="p">):</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">c_pad</span> <span class="o">=</span> <span class="n">AssetNameParser</span><span class="o">.</span><span class="n">COORDINATE_PADDING</span>
+            <span class="n">f_pad</span> <span class="o">=</span> <span class="n">AssetNameParser</span><span class="o">.</span><span class="n">FRAME_PADDING</span>
+            <span class="n">v_pad</span> <span class="o">=</span> <span class="n">AssetNameParser</span><span class="o">.</span><span class="n">VERSION_PADDING</span>
+            <span class="n">sep</span> <span class="o">=</span> <span class="n">AssetNameParser</span><span class="o">.</span><span class="n">TOKEN_SEPARATOR</span>
+            <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+                <span class="n">item</span> <span class="o">=</span> <span class="n">_INDICATOR_LUT</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">field</span> <span class="o">==</span> <span class="s1">&#39;version&#39;</span><span class="p">:</span>
+                    <span class="n">item</span> <span class="o">+=</span> <span class="s1">&#39;{&#39;</span> <span class="o">+</span> <span class="n">field</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;:0</span><span class="si">{</span><span class="n">v_pad</span><span class="si">}</span><span class="s1">d&#39;</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span>
+                <span class="k">elif</span> <span class="n">field</span> <span class="o">==</span> <span class="s1">&#39;frame&#39;</span><span class="p">:</span>
+                    <span class="n">item</span> <span class="o">+=</span> <span class="s1">&#39;{&#39;</span> <span class="o">+</span> <span class="n">field</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;:0</span><span class="si">{</span><span class="n">f_pad</span><span class="si">}</span><span class="s1">d&#39;</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span>
+                <span class="k">elif</span> <span class="n">field</span> <span class="o">==</span> <span class="s1">&#39;coordinate&#39;</span><span class="p">:</span>
+                    <span class="n">temp</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coordinate</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                        <span class="n">temp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;{&#39;</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s1">[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">]:0</span><span class="si">{</span><span class="n">c_pad</span><span class="si">}</span><span class="s1">d&#39;</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span><span class="p">)</span>
+                    <span class="n">temp</span> <span class="o">=</span> <span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+                    <span class="n">item</span> <span class="o">+=</span> <span class="n">temp</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">item</span> <span class="o">+=</span> <span class="s1">&#39;{&#39;</span> <span class="o">+</span> <span class="n">field</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span>
+                <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">output</span>
+
+        <span class="n">asset</span> <span class="o">=</span> <span class="n">get_patterns</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">asset_name_fields</span><span class="p">)</span>  <span class="c1"># type: Any</span>
+        <span class="n">asset</span> <span class="o">=</span> <span class="n">AssetNameParser</span><span class="o">.</span><span class="n">FIELD_SEPARATOR</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">asset</span><span class="p">)</span>
+
+        <span class="n">patterns</span> <span class="o">=</span> <span class="n">get_patterns</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename_fields</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename_fields</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;extension&#39;</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">AssetNameParser</span><span class="o">.</span><span class="n">FIELD_SEPARATOR</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">patterns</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">filename</span> <span class="o">+=</span> <span class="n">patterns</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">AssetNameParser</span><span class="o">.</span><span class="n">FIELD_SEPARATOR</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">patterns</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">asset</span><span class="p">,</span> <span class="n">filename</span></div>
+
+<div class="viewcode-block" id="SpecificationBase._to_filepaths"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase._to_filepaths">[docs]</a>    <span class="k">def</span> <span class="nf">_to_filepaths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">pattern</span><span class="p">):</span>
+        <span class="c1"># type: (Union[str, Path], str) -&gt; List[str]</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Generates a complete list of filepaths given a root directory and</span>
+<span class="sd">        filepath pattern.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            root (str or Path): Directory containing asset.</span>
+<span class="sd">            pattern (str): Filepath pattern.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[str]: List of filepaths.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">filepaths</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">specification</span><span class="p">):</span>
+            <span class="n">fields</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">asset_name_fields</span><span class="p">)</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename_fields</span><span class="p">)</span>  <span class="c1"># type: Any</span>
+            <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">)[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">}</span>
+            <span class="n">filepath</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">fields</span><span class="p">)</span>
+            <span class="n">filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">filepath</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+            <span class="n">filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">filepaths</span></div></div>
 
 
 <div class="viewcode-block" id="FileSpecificationBase"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.FileSpecificationBase">[docs]</a><span class="k">class</span> <span class="nc">FileSpecificationBase</span><span class="p">(</span><span class="n">SpecificationBase</span><span class="p">):</span>
@@ -377,7 +453,7 @@
     <span class="n">asset_type</span> <span class="o">=</span> <span class="s1">&#39;file&#39;</span>  <span class="c1"># type: str</span>
 
 <div class="viewcode-block" id="FileSpecificationBase.get_asset_path"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.FileSpecificationBase.get_asset_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_asset_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
-        <span class="c1"># (Union[str, Path]) -&gt; Path</span>
+        <span class="c1"># type: (Union[str, Path]) -&gt; Path</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns the filepath.</span>
 
@@ -387,7 +463,23 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Path: Asset path.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FileSpecificationBase.to_filepaths"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.FileSpecificationBase.to_filepaths">[docs]</a>    <span class="k">def</span> <span class="nf">to_filepaths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
+        <span class="c1"># type: (Union[str, Path]) -&gt; List[str]</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Generates a complete list of filepaths given a root directory and</span>
+<span class="sd">        filepath pattern.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            root (str or Path): Directory containing asset.</span>
+<span class="sd">            pattern (str): Filepath pattern.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[str]: List of filepaths.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_name_patterns</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_filepaths</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="SequenceSpecificationBase"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SequenceSpecificationBase">[docs]</a><span class="k">class</span> <span class="nc">SequenceSpecificationBase</span><span class="p">(</span><span class="n">SpecificationBase</span><span class="p">):</span>
@@ -401,7 +493,7 @@
     <span class="n">asset_type</span> <span class="o">=</span> <span class="s1">&#39;sequence&#39;</span>  <span class="c1"># type: str</span>
 
 <div class="viewcode-block" id="SequenceSpecificationBase.get_asset_path"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SequenceSpecificationBase.get_asset_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_asset_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
-        <span class="c1"># (Union[str, Path]) -&gt; Path</span>
+        <span class="c1"># type: (Union[str, Path]) -&gt; Path</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns the directory containing the asset files.</span>
 
@@ -411,7 +503,24 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Path: Asset path.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div></div>
+        <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="SequenceSpecificationBase.to_filepaths"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SequenceSpecificationBase.to_filepaths">[docs]</a>    <span class="k">def</span> <span class="nf">to_filepaths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
+        <span class="c1"># type: (Union[str, Path]) -&gt; List[str]</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Generates a complete list of filepaths given a root directory and</span>
+<span class="sd">        filepath pattern.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            root (str or Path): Directory containing asset.</span>
+<span class="sd">            pattern (str): Filepath pattern.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[str]: List of filepaths.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">asset</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_name_patterns</span><span class="p">()</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">asset</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_filepaths</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="ComplexSpecificationBase"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.ComplexSpecificationBase">[docs]</a><span class="k">class</span> <span class="nc">ComplexSpecificationBase</span><span class="p">(</span><span class="n">SpecificationBase</span><span class="p">):</span>
