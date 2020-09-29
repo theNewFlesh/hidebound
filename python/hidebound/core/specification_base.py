@@ -19,6 +19,17 @@ Contains the abstract base classes for all Hidebound specifications.
 '''
 
 
+_INDICATOR_LUT = dict(
+    project=AssetNameParser.PROJECT_INDICATOR,
+    specification=AssetNameParser.SPECIFICATION_INDICATOR,
+    descriptor=AssetNameParser.DESCRIPTOR_INDICATOR,
+    version=AssetNameParser.VERSION_INDICATOR,
+    coordinate=AssetNameParser.COORDINATE_INDICATOR,
+    frame=AssetNameParser.FRAME_INDICATOR,
+    extension=AssetNameParser.EXTENSION_INDICATOR,
+)
+
+
 class SpecificationBase(Model):
     '''
     The base class for all Hidebound specifications.
@@ -198,6 +209,28 @@ class SpecificationBase(Model):
         traits = self.get_filename_traits(filepath)
         traits.update(self.get_file_traits(filepath))
         return traits
+
+    @classmethod
+    def get_name_patterns(cls):
+        # type: () -> Tuple[str, str]
+        '''
+        Generates asset name and filename patterns from class fields.
+
+        Returns:
+            tuple(str): Asset name pattern, filename pattern.
+        '''
+        lut = _INDICATOR_LUT
+        asset = [lut[x] + f'{{{x}}}' for x in cls.asset_name_fields]  # type: Any
+        asset = AssetNameParser.FIELD_SEPARATOR.join(asset)
+
+        patterns = [lut[x] + f'{{{x}}}' for x in cls.filename_fields]
+        filename = ''
+        if cls.filename_fields[-1] == 'extension':
+            filename = AssetNameParser.FIELD_SEPARATOR.join(patterns[:-1])
+            filename += patterns[-1]
+        else:
+            filename = AssetNameParser.FIELD_SEPARATOR.join(patterns)
+        return asset, filename
 
 
 class FileSpecificationBase(SpecificationBase):

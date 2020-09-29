@@ -186,6 +186,37 @@ class SpecificationBaseTests(unittest.TestCase):
             for k in bad:
                 self.assertRegex(result[k], 'ValueError')
 
+    def test_get_name_patterns(self):
+        class Pizza(sb.SpecificationBase):
+            asset_name_fields = [
+                'project', 'specification', 'descriptor', 'version',
+            ]
+            filename_fields = [
+                'project', 'specification', 'descriptor', 'version', 'frame',
+                'extension',
+            ]
+        a, f = Pizza.get_name_patterns()
+        expected = 'p-{project}_s-{specification}_d-{descriptor}_v{version}'
+        self.assertEqual(a, expected)
+
+        expected += '_f{frame}.{extension}'
+        self.assertEqual(f, expected)
+
+    def test_get_name_patterns_no_extension(self):
+        class Pizza(sb.SpecificationBase):
+            asset_name_fields = [
+                'project', 'specification', 'descriptor', 'version',
+            ]
+            filename_fields = [
+                'project', 'specification', 'descriptor', 'version', 'frame'
+            ]
+        a, f = Pizza.get_name_patterns()
+        expected = 'p-{project}_s-{specification}_d-{descriptor}_v{version}'
+        self.assertEqual(a, expected)
+
+        expected += '_f{frame}'
+        self.assertEqual(f, expected)
+
 
 class OtherSpecificationBaseTests(unittest.TestCase):
     filepath = '/tmp/proj001/p-proj001_s-spec001_d-desc_v001/'
