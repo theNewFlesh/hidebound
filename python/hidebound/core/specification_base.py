@@ -253,11 +253,11 @@ class SpecificationBase(Model):
             filename = AssetNameParser.FIELD_SEPARATOR.join(patterns)
         return asset, filename
 
-    def to_filepaths(self, root, pattern):
+    def _to_filepaths(self, root, pattern):
         # type: (Union[str, Path], str) -> List[str]
         '''
-        Generates a complete filepath given a root directory and filepath
-        pattern.
+        Generates a complete list of filepaths given a root directory and
+        filepath pattern.
 
         Args:
             root (str or Path): Directory containing asset.
@@ -298,6 +298,22 @@ class FileSpecificationBase(SpecificationBase):
         '''
         return Path(filepath)
 
+    def to_filepaths(self, root):
+        # type: (Union[str, Path]) -> List[str]
+        '''
+        Generates a complete list of filepaths given a root directory and
+        filepath pattern.
+
+        Args:
+            root (str or Path): Directory containing asset.
+            pattern (str): Filepath pattern.
+
+        Returns:
+            list[str]: List of filepaths.
+        '''
+        _, filename = self.get_name_patterns()
+        return self._to_filepaths(root, filename)
+
 
 class SequenceSpecificationBase(SpecificationBase):
     '''
@@ -321,6 +337,23 @@ class SequenceSpecificationBase(SpecificationBase):
             Path: Asset path.
         '''
         return Path(filepath).parents[0]
+
+    def to_filepaths(self, root):
+        # type: (Union[str, Path]) -> List[str]
+        '''
+        Generates a complete list of filepaths given a root directory and
+        filepath pattern.
+
+        Args:
+            root (str or Path): Directory containing asset.
+            pattern (str): Filepath pattern.
+
+        Returns:
+            list[str]: List of filepaths.
+        '''
+        asset, filename = self.get_name_patterns()
+        pattern = Path(asset, filename).as_posix()
+        return self._to_filepaths(root, pattern)
 
 
 class ComplexSpecificationBase(SpecificationBase):

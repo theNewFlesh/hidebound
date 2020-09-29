@@ -252,7 +252,7 @@ class SpecificationBaseTests(unittest.TestCase):
         )
         a, b = self.Taco(data).get_name_patterns()
         pattern = Path(a, 'f{frame:04d}', b).as_posix()
-        result = self.Taco(data).to_filepaths('/root', pattern)
+        result = self.Taco(data)._to_filepaths('/root', pattern)
         root = '/root/p-proj001_s-taco_d-desc_v001/'
         expected = [
             root + 'f0001/p-proj001_s-taco_d-desc_v001_c0001-0002_f0001.png',
@@ -275,11 +275,56 @@ class OtherSpecificationBaseTests(unittest.TestCase):
         )
         self.assertEqual(result, expected)
 
+    def test_file_specification_base_to_filepaths(self):
+        class Filey(sb.FileSpecificationBase):
+            asset_name_fields = [
+                'project', 'specification', 'descriptor', 'version',
+            ]
+            filename_fields = [
+                'project', 'specification', 'descriptor', 'version', 'extension',
+            ]
+        data = dict(
+            project=['proj001'],
+            specification=['filey'],
+            descriptor=['desc'],
+            version=[1],
+            extension=['png'],
+        )
+        result = Filey(data).to_filepaths('/root')[0]
+        expected = '/root/p-proj001_s-filey_d-desc_v001.png'
+        self.assertEqual(result, expected)
+
     def test_sequence_specification_base(self):
         result = sb.SequenceSpecificationBase()
         self.assertEqual(result.asset_type, 'sequence')
         result = result.get_asset_path(self.filepath)
         expected = Path('/tmp/proj001/p-proj001_s-spec001_d-desc_v001')
+        self.assertEqual(result, expected)
+
+    def test_sequence_specification_base_to_filepaths(self):
+        class Seq(sb.SequenceSpecificationBase):
+            asset_name_fields = [
+                'project', 'specification', 'descriptor', 'version',
+            ]
+            filename_fields = [
+                'project', 'specification', 'descriptor', 'version', 'frame',
+                'extension',
+            ]
+            frame = ListType(IntType(), required=True)
+
+        data = dict(
+            project=['proj001', 'proj001'],
+            specification=['seq', 'seq'],
+            descriptor=['desc', 'desc'],
+            version=[1, 1],
+            frame=[1, 2],
+            extension=['png', 'png'],
+        )
+        result = Seq(data).to_filepaths('/root')
+        expected = [
+            '/root/p-proj001_s-seq_d-desc_v001/p-proj001_s-seq_d-desc_v001_f0001.png',
+            '/root/p-proj001_s-seq_d-desc_v001/p-proj001_s-seq_d-desc_v001_f0002.png',
+        ]
         self.assertEqual(result, expected)
 
     def test_complex_specification_base(self):
