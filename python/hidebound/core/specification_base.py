@@ -49,14 +49,14 @@ class SpecificationBase(Model):
     ]  # type: List[str]
     asset_name_fields = ['project', 'specification', 'descriptor', 'version']  # type: List[str]
     project = ListType(
-        StringType(), required=True, validators=[vd.is_project]
+        StringType(), required=False, validators=[vd.is_project]
     )  # type: ListType
     specification = ListType(StringType())  # type: ListType
     descriptor = ListType(
-        StringType(), required=True, validators=[vd.is_descriptor]
+        StringType(), required=False, validators=[vd.is_descriptor]
     )  # type: ListType
     version = ListType(
-        IntType(), required=True, validators=[vd.is_version]
+        IntType(), required=False, validators=[vd.is_version]
     )  # type: ListType
     extension = ListType(
         StringType(), required=True, validators=[vd.is_extension]
