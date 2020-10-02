@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.8.9
+                0.9.0
               </div>
             
           
@@ -216,14 +216,14 @@
     <span class="p">]</span>  <span class="c1"># type: List[str]</span>
     <span class="n">asset_name_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="s1">&#39;specification&#39;</span><span class="p">,</span> <span class="s1">&#39;descriptor&#39;</span><span class="p">,</span> <span class="s1">&#39;version&#39;</span><span class="p">]</span>  <span class="c1"># type: List[str]</span>
     <span class="n">project</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
-        <span class="n">StringType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_project</span><span class="p">]</span>
+        <span class="n">StringType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_project</span><span class="p">]</span>
     <span class="p">)</span>  <span class="c1"># type: ListType</span>
     <span class="n">specification</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span><span class="n">StringType</span><span class="p">())</span>  <span class="c1"># type: ListType</span>
     <span class="n">descriptor</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
-        <span class="n">StringType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_descriptor</span><span class="p">]</span>
+        <span class="n">StringType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_descriptor</span><span class="p">]</span>
     <span class="p">)</span>  <span class="c1"># type: ListType</span>
     <span class="n">version</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
-        <span class="n">IntType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_version</span><span class="p">]</span>
+        <span class="n">IntType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_version</span><span class="p">]</span>
     <span class="p">)</span>  <span class="c1"># type: ListType</span>
     <span class="n">extension</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
         <span class="n">StringType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_extension</span><span class="p">]</span>
