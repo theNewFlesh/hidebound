@@ -267,7 +267,7 @@ class SpecificationBase(Model):
             list[str]: List of filepaths.
         '''
         filepaths = []
-        for i, _ in enumerate(self.specification):
+        for i, _ in enumerate(self.extension):
             fields = set(self.asset_name_fields).union(self.filename_fields)  # type: Any
             fields = {k: getattr(self, k)[i] for k in fields}
             filepath = pattern.format(**fields)
