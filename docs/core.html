@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.9.0
+                0.9.1
               </div>
             
           
@@ -1544,7 +1544,7 @@ version,</p>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specifications.Raw001.file_traits">
-<code class="sig-name descname">file_traits</code><em class="property">: Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></em><em class="property"> = {'channels': &lt;function get_image_channels&gt;, 'height': &lt;function get_image_height&gt;, 'width': &lt;function get_image_width&gt;}</em><a class="headerlink" href="#hidebound.core.specifications.Raw001.file_traits" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">file_traits</code><em class="property">: Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></em><em class="property"> = {'channels': &lt;function get_num_image_channels&gt;, 'height': &lt;function get_image_height&gt;, 'width': &lt;function get_image_width&gt;}</em><a class="headerlink" href="#hidebound.core.specifications.Raw001.file_traits" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1678,7 +1678,7 @@ version,</p>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specifications.Raw002.file_traits">
-<code class="sig-name descname">file_traits</code><em class="property">: Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></em><em class="property"> = {'channels': &lt;function get_image_channels&gt;, 'height': &lt;function get_image_height&gt;, 'width': &lt;function get_image_width&gt;}</em><a class="headerlink" href="#hidebound.core.specifications.Raw002.file_traits" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">file_traits</code><em class="property">: Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></em><em class="property"> = {'channels': &lt;function get_num_image_channels&gt;, 'height': &lt;function get_image_height&gt;, 'width': &lt;function get_image_width&gt;}</em><a class="headerlink" href="#hidebound.core.specifications.Raw002.file_traits" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1833,23 +1833,6 @@ Default: ‘’.</p></li>
 <div class="section" id="module-hidebound.core.traits">
 <span id="traits"></span><h2>traits<a class="headerlink" href="#module-hidebound.core.traits" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
-<dt id="hidebound.core.traits.get_image_channels">
-<code class="sig-prename descclassname">hidebound.core.traits.</code><code class="sig-name descname">get_image_channels</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/hidebound/core/traits.html#get_image_channels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.traits.get_image_channels" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the number of channels of the given image.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filepath</strong> (<em>str</em><em> or </em><em>Path</em>) – filepath to image file.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Number of channels.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt id="hidebound.core.traits.get_image_height">
 <code class="sig-prename descclassname">hidebound.core.traits.</code><code class="sig-name descname">get_image_height</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/hidebound/core/traits.html#get_image_height"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.traits.get_image_height" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the height of the given image.</p>
@@ -1876,6 +1859,23 @@ Default: ‘’.</p></li>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Image width.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.core.traits.get_num_image_channels">
+<code class="sig-prename descclassname">hidebound.core.traits.</code><code class="sig-name descname">get_num_image_channels</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>pathlib.Path<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="_modules/hidebound/core/traits.html#get_num_image_channels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hidebound.core.traits.get_num_image_channels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the number of channels of the given image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filepath</strong> (<em>str</em><em> or </em><em>Path</em>) – filepath to image file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Number of channels.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>int</p>
