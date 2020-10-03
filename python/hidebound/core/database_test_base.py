@@ -155,7 +155,7 @@ class DatabaseTestBase(unittest.TestCase):
             file_traits = dict(
                 width=tr.get_image_width,
                 height=tr.get_image_height,
-                channels=tr.get_image_channels,
+                channels=tr.get_num_image_channels,
             )
 
             def get_asset_path(self, filepath):
@@ -195,7 +195,7 @@ class DatabaseTestBase(unittest.TestCase):
             file_traits = dict(
                 width=tr.get_image_width,
                 height=tr.get_image_height,
-                channels=tr.get_image_channels,
+                channels=tr.get_num_image_channels,
             )
 
             def get_asset_path(self, filepath):

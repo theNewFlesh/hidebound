@@ -40,7 +40,7 @@ class Spec001(SequenceSpecificationBase):
     file_traits = dict(
         width=tr.get_image_width,
         height=tr.get_image_height,
-        channels=tr.get_image_channels
+        channels=tr.get_num_image_channels
     )  # type: Dict[str, Any]
 
 
@@ -78,7 +78,7 @@ class Spec002(SequenceSpecificationBase):
     file_traits = dict(
         width=tr.get_image_width,
         height=tr.get_image_height,
-        channels=tr.get_image_channels
+        channels=tr.get_num_image_channels
     )  # type: Dict[str, Any]
 
 

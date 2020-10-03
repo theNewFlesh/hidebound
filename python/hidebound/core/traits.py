@@ -56,7 +56,7 @@ def get_image_height(filepath):
     return img.shape[0]
 
 
-def get_image_channels(filepath):
+def get_num_image_channels(filepath):
     # type: (Union[str, Path]) -> int
     '''
     Gets the number of channels of the given image.

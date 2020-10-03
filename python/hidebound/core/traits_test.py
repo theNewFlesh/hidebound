@@ -49,20 +49,20 @@ class TraitsTests(unittest.TestCase):
             result = traits.get_image_height(filepath)
             self.assertEqual(result, 2)
 
-    def test_get_image_channels(self):
+    def test_get_num_image_channels(self):
         with TemporaryDirectory() as root:
             img = np.zeros((2, 4, 3))
             filepath = Path(root, 'foo.png')
             skimage.io.imsave(filepath.as_posix(), img)
-            result = traits.get_image_channels(filepath)
+            result = traits.get_num_image_channels(filepath)
             self.assertEqual(result, 3)
 
             img = np.zeros((2, 4))
             filepath = Path(root, 'bar.jpg')
             skimage.io.imsave(filepath.as_posix(), img)
-            result = traits.get_image_channels(filepath)
+            result = traits.get_num_image_channels(filepath)
             self.assertEqual(result, 1)
 
             filepath = self.write_exr(root, (4, 2))
-            result = traits.get_image_channels(filepath)
+            result = traits.get_num_image_channels(filepath)
             self.assertEqual(result, 3)

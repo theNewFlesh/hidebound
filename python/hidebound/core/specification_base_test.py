@@ -21,7 +21,7 @@ class SpecificationBaseTests(unittest.TestCase):
         file_traits = {
             'width': traits.get_image_width,
             'height': traits.get_image_height,
-            'channels': traits.get_image_channels,
+            'channels': traits.get_num_image_channels,
         }
 
         def get_asset_path(self, filepath):
