@@ -5,7 +5,6 @@
     "dockerComposeFile": "docker/docker-compose.yml",
     "service": "hidebound",
     "workspaceFolder": "/root/hidebound",
-    "forwardPorts": [9000, 9012, 5000],
     "settings": {
         "terminal.integrated.shell.linux": "/bin/bash",
         "python.languageServer": "Pylance",
