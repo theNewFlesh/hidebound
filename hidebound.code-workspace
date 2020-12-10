@@ -1,0 +1,139 @@
+{
+    "folders": [{"path": "./"}],
+    "settings": {
+        "python.languageServer": "Pylance",
+        "python.linting.enabled": true,
+        "python.linting.flake8Args": ["--config=docker/flake8.ini"],
+        "python.linting.flake8Enabled": true,
+        "python.linting.flake8Path": "/usr/local/bin/flake8",
+        "python.linting.mypyArgs": ["--config=docker/mypy.ini"],
+        "python.linting.mypyEnabled": true,
+        "python.linting.mypyPath": "/usr/local/bin/mypy",
+        "python.linting.pycodestylePath": "/usr/local/bin/pycodestyle",
+        "python.linting.pylintEnabled": false,
+        "python.pythonPath": "/usr/bin/python3.7",
+        "python.testing.pytestEnabled": true,
+        "python.testing.unittestEnabled": true,
+        "terminal.integrated.shell.linux": "/bin/bash",
+        "files.exclude": {
+            "**/.classpath": true,
+            "**/.coverage": true,
+            "**/.DS_Store": true,
+            "**/.factorypath": true,
+            "**/.git": true,
+            "**/.hg": true,
+            "**/.ipynb_checkpoints": true,
+            "**/.mypy_cache": true,
+            "**/.project": true,
+            "**/.pytest_cache": true,
+            "**/.settings": true,
+            "**/.svn": true,
+            "**/CVS": true,
+            "*/*/**/node_modules": true
+        }
+    },
+    "tasks": {
+        "version": "2.0.0",
+        "options": {
+            "cwd": "/root/${workspaceFolderBasename}",
+            "env": {
+                "USER": "501:20",
+                "REPO": "${workspaceFolderBasename}",
+                "PYTHONPATH": "${PYTHONPATH}:/root/${workspaceFolderBasename}/python",
+                "REPO_ENV": "True"
+            }
+        },
+        "tasks": [
+            {
+                "label": "app",
+                "command": "export DEBUG_MODE=True && python3.7 python/$REPO/server/app.py",
+                "type": "shell"
+            },{
+                "label": "architecture",
+                "command": "python3.7 -c \"from rolling_pin.repo_etl import RepoETL; RepoETL('python').write('docs/architecture.svg')\" && chown -R $USER docs",
+                "type": "shell"
+            },
+            {
+                "label": "coverage",
+                "command": "mkdir -p docs && pytest python -c docker/pytest.ini --cov=python --cov-config=docker/pytest.ini --cov-report=html:docs/htmlcov && chown -R $USER docs",
+                "type": "shell"
+            },
+            {
+                "label": "docs",
+                "command": "mkdir -p docs && sphinx-build sphinx docs && cp sphinx/style.css docs/_static/style.css && touch docs/.nojekyll && chown -R $USER docs",
+                "type": "shell"
+            },
+            {
+                "label": "full-docs",
+                "dependsOrder": "sequence",
+                "dependsOn": [
+                    "docs",
+                    "coverage",
+                    "metrics",
+                    "architecture"
+                ],
+                "type": "shell",
+            },
+            {
+                "label": "lab",
+                "command": "jupyter lab --allow-root --ip=0.0.0.0 --no-browser",
+                "type": "shell",
+            },
+            {
+                "label": "lint",
+                "command": "flake8 python --config docker/flake8.ini && mypy python --config-file docker/mypy.ini",
+                "type": "shell"
+            },
+            {
+                "label": "metrics",
+                "command": "python3.7 -c \"from rolling_pin.radon_etl import RadonETL; etl = RadonETL('python'); etl.write_plots('docs/plots.html'); etl.write_tables('docs')\" && chown -R $USER docs",
+                "type": "shell"
+            },
+            {
+                "label": "package",
+                "command": "unset REPO_ENV && rm -rf /tmp/$REPO && cp -r python /tmp/$REPO && cp README.md /tmp/$REPO/README.md && cp LICENSE /tmp/$REPO/LICENSE && cp pip/MANIFEST.in /tmp/$REPO/MANIFEST.in && cp pip/setup.cfg /tmp/$REPO/ && cp pip/setup.py /tmp/$REPO/ && cp pip/version.txt /tmp/$REPO/ && cp docker/dev_requirements.txt /tmp/$REPO/ && cp docker/prod_requirements.txt /tmp/$REPO/ && find /tmp/$REPO | grep -E '_test\\.py$' | parallel 'rm -rf' && python3.7 setup.py sdist",
+                "type": "shell"
+            },
+            {
+                "label": "publish",
+                "command": "unset REPO_ENV && cd /tmp/$REPO && twine upload dist/* && rm -rf /tmp/$REPO",
+                "dependsOrder": "sequence",
+                "dependsOn": [
+                    "tox",
+                    "lint",
+                    "package"
+                ],
+                "type": "shell"
+            },
+            {
+                "label": "python",
+                "command": "python3.7",
+                "type": "shell"
+            },
+            {
+                "label": "requirements",
+                "command": "python3.7 -m pip list --format freeze > docker/frozen_requirements.txt && chown -R ${USER} docker/frozen_requirements.txt",
+                "type": "shell"
+            },
+            {
+                "label": "test",
+                "command": "pytest python -c docker/pytest.ini",
+                "type": "shell"
+            },
+            {
+                "label": "tox-repo",
+                "command": "rm -rf /tmp/$REPO && cp -R python /tmp/$REPO && cp README.md /tmp/$REPO/ && cp LICENSE /tmp/$REPO/ && cp -R docker/* /tmp/$REPO/ && cp -R pip/* /tmp/$REPO/ && cp -R resources /tmp && rm -rf /tmp/$REPO/$REPO/__init__.py && find /tmp/$REPO | grep -E '__pycache__|\\.pyc$' | parallel 'rm -rf'",
+                "type": "shell"
+            },
+            {
+                "label": "tox",
+                "command": "unset REPO_ENV && cd /tmp/$REPO && tox",
+                "dependsOrder": "sequence",
+                "dependsOn": [
+                    "tox-repo"
+                ],
+                "type": "shell",
+            },
+        ]
+    }
+}
