@@ -1,10 +1,3 @@
-# Run the hidebound service stack
-
-# Required variables
-#  - CURRENT_USER: The uid:gid value to ensure the bind mounted volume's
-#                  permissions match the host
-#  - REPO_PATH: The abs path to the user's repository on the host
-
 version: '3.4'
 volumes:
   cache:
