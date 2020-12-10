@@ -46,6 +46,7 @@ def get_info():
     lab          - Start a Jupyter lab server
     lint         - Run linting and type checking on {repo} service code
     package      - Build {repo} pip package
+    prod         - Start {repo} production service
     publish      - Publish repository to python package index.
     python       - Run python interpreter session inside {repo} container
     remove       - Remove {repo} service Docker image
