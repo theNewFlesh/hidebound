@@ -1,10 +1,10 @@
 {
-    "name": "hidebound",
+    "name": "${localWorkspaceFolderBasename}",
     "context": "./",
     "folders": [{"path": "./"}],
     "dockerComposeFile": "docker/docker-compose.yml",
-    "service": "hidebound",
-    "workspaceFolder": "/root/hidebound",
+    "service": "${localWorkspaceFolderBasename}",
+    "workspaceFolder": "/root/${localWorkspaceFolderBasename}",
     "settings": {
         "terminal.integrated.shell.linux": "/bin/bash",
         "python.languageServer": "Pylance",
