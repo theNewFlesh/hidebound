@@ -21,8 +21,8 @@ services:
     userns_mode: "host"
     user: root
     volumes:
-      - ~/Documents/projects/hidebound:/root/hidebound
-      - ~/Documents/projects/hidebound/docker/jupyter:/root/.jupyter
+      - ../:/root/hidebound
+      - ./jupyter:/root/.jupyter
       # - /mnt/storage:/mnt/storage
     working_dir: "/root/hidebound/python"
     command: "tail -f /dev/null"
