@@ -270,9 +270,10 @@ class Database:
         # find columns by legal type
         cols = self.data.columns.tolist()
         if len(self.data) > 0:
-            cols = data.applymap(type).apply(lambda x: set(x.unique()))
+            cols = data.applymap(type).apply(lambda x: [x.unique().tolist()])
+            cols = cols.loc[0]
             legal_cols = set([int, float, str, bool, None])
-            mask = cols.apply(lambda x: x.difference(legal_cols) == set())
+            mask = cols.apply(lambda x: set(x).difference(legal_cols) == set())
             cols = cols[mask].index.tolist()
 
         # nicely order columns
