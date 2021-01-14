@@ -303,9 +303,8 @@ class DatabaseTests(DatabaseTestBase):
             # test types by asset
             data = db.read(group_by_asset=True)
             result = data.applymap(type)\
-                .apply(lambda x: x.unique().tolist())\
-                .tolist()
-            result = list(chain(*result))
+                .apply(lambda x: x.unique().tolist()) \
+                .loc[0].tolist()
             result = set(result)
 
             expected = set([int, float, str, bool, None])
