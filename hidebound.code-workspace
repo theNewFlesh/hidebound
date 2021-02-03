@@ -15,6 +15,14 @@
         "python.testing.pytestEnabled": true,
         "python.testing.unittestEnabled": true,
         "terminal.integrated.shell.linux": "/bin/bash",
+        "terminal.integrated.cwd": "/root/hidebound",
+        "python.testing.cwd": "/root/hidebound",
+        "debug.allowBreakpointsEverywhere": true,
+        "python.testing.pytestArgs": [
+            "--cov=/root/hidebound/python",
+            "--cov-config=/root/hidebound/docker/pytest.ini",
+            "--cov-report=html:/root/hidebound/docs/htmlcov"
+        ],
         "files.exclude": {
             "**/.classpath": true,
             "**/.coverage": true,
