@@ -14,11 +14,11 @@ RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${NO_COLOR}"; \
         software-properties-common
 
 # install python3.7 and pip
-ADD https://bootstrap.pypa.io/get-pip.py get-pip.py
 RUN echo "\n${CYAN}SETUP PYTHON3.7${NO_COLOR}"; \
     add-apt-repository -y ppa:deadsnakes/ppa && \
     apt update && \
     apt install -y python3.7 && \
+    wget https://bootstrap.pypa.io/get-pip.py && \
     python3.7 get-pip.py && \
     rm -rf /root/get-pip.py
 

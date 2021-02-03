@@ -21,11 +21,11 @@ RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${NO_COLOR}"; \
         wget
 
 # install python3.7 and pip
-ADD https://bootstrap.pypa.io/get-pip.py get-pip.py
 RUN echo "\n${CYAN}SETUP PYTHON3.7${NO_COLOR}"; \
     add-apt-repository -y ppa:deadsnakes/ppa && \
     apt update && \
     apt install -y python3.7 && \
+    wget https://bootstrap.pypa.io/get-pip.py && \
     python3.7 get-pip.py && \
     rm -rf /root/get-pip.py
 
@@ -76,7 +76,6 @@ RUN echo "\n${CYAN}INSTALL JUPYTER LAB EXTENSIONS${NO_COLOR}"; \
     jupyter labextension install \
     --dev-build=False \
     nbdime-jupyterlab \
-    @jupyterlab/toc \
     @oriolmirosa/jupyterlab_materialdarker \
     @ryantam626/jupyterlab_sublime \
     @jupyterlab/plotly-extension
