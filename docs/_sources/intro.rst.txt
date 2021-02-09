@@ -68,14 +68,14 @@ Dataflow
 
 Data begins as files on disk. Hidebound creates a JSON-compatible dict
 from their name traits and file traits and then constructs an internal
-database table from them, one dict oer row. All the rows are then
+database table from them, one dict per row. All the rows are then
 aggregated by asset, and converted into a JSON blobs. Those blobs are
 then validated according to their respective specifications. Files from
 valid assets are then copied or moved into Hidebound's data directory,
-in their same directory structure and naming. Metadata is written to
-JSON files inside Hidebound's metadata directory. Each file's metadata
-is written as a JSON file in /hidebound/metadata/file, and each asset's
-metadata (the aggregate of its file metadata) is written to
+according to their same directory structure and naming. Metadata is
+written to JSON files inside Hidebound's metadata directory. Each file's
+metadata is written as a JSON file in /hidebound/metadata/file, and each
+asset's metadata (the aggregate of its file metadata) is written to
 /hidebound/metadata/asset. From their exporters, can export the valid
 asset data and its accompanying metadata to various locations, like an
 AWS S3 bucket.
