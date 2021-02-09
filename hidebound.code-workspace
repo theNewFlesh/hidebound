@@ -71,7 +71,7 @@
             },
             {
                 "label": "docs",
-                "command": "mkdir -p docs && sphinx-build sphinx docs && cp sphinx/style.css docs/_static/style.css && touch docs/.nojekyll && chown -R $USER docs",
+                "command": "mkdir -p docs && sphinx-build sphinx docs && cp sphinx/style.css docs/_static/style.css && touch docs/.nojekyll && mkdir -p /root/$REPO/docs/resources && cp -R /root/$REPO/resources/screenshots /root/$REPO/docs/resources/ && chown -R $USER docs",
                 "type": "shell"
             },
             {
