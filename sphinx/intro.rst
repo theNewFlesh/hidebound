@@ -60,6 +60,25 @@ are placed into a root directory (typically one reserved for Hidebound
 projects) and then discovered, validated, extracted, and copied or moved
 by Hidebound.
 
+Dataflow
+========
+
+.. figure:: resources/screenshots/data_flow.png
+   :alt:
+
+Data begins as files on disk. Hidebound creates a JSON-compatible dict from
+their name traits and file traits and then constructs an internal database table
+from them, one dict oer row. All the rows are then aggregated by asset, and
+converted into a JSON blobs. Those blobs are then validated according to their
+respective specifications. Files from valid assets are then copied or moved into
+Hidebound's data directory, in their same directory structure and naming.
+Metadata is written to JSON files inside Hidebound's metadata directory. Each
+file's metadata is written as a JSON file in /hidebound/metadata/file, and each
+asset's metadata (the aggregate of its file metadata) is written to
+/hidebound/metadata/asset. From their exporters, can export the valid
+asset data and its accompanying metadata to various locations, like an AWS S3
+bucket.
+
 Workflow
 ========
 
@@ -73,7 +92,7 @@ functionality that Hidebound supports.
 For example, an asset could be an image sequence, such as a directory
 full of PNG files, all of which have a frame number, have 3 (RGB)
 channels, and are 1024 pixels wide by 1024 pixels tall. Let's call the
-specification for this type of asset "spec001". We create an image
+specification for this type of asset "spec001". We create an imageful
 sequence of a cat running, and we move it into the Hidebound projects
 directory.
 
@@ -81,7 +100,7 @@ directory.
 ~~~~~~~~
 
 .. figure:: resources/screenshots/update.png
-   :alt: 
+   :alt:
 
 We call the update function via Hidebound's web app. Hidebound creates a
 new database based upon the recursive listing of all the files within
@@ -170,7 +189,7 @@ key. Below we can see the results of an export to Girder in the Girder
 web app.
 
 .. figure:: resources/screenshots/girder.png
-   :alt: 
+   :alt:
 
 *Delete*
 ~~~~~~~~
@@ -438,7 +457,7 @@ Data
 The data tab is the workhorse of the Hidebound app.
 
 .. figure:: resources/screenshots/update.png
-   :alt: 
+   :alt:
 
 Its functions are as follows:
 
@@ -453,7 +472,7 @@ Its functions are as follows:
 Prior to calling update, the application will look like this:
 
 .. figure:: resources/screenshots/pre_update.png
-   :alt: 
+   :alt:
 
 Graph
 ~~~~~
@@ -462,7 +481,7 @@ The graph tab is used for visualizing the state of all the assets within
 a root directory.
 
 .. figure:: resources/screenshots/graph.png
-   :alt: 
+   :alt:
 
 It's color code is as follows:
 
@@ -483,7 +502,7 @@ The config tab is used for uploading and writing Hidebound's
 configuration file.
 
 .. figure:: resources/screenshots/config.png
-   :alt: 
+   :alt:
 
 Its functions are as follows:
 
@@ -501,7 +520,7 @@ API
 The API tab is really a link to Hidebound's REST API documentation.
 
 .. figure:: resources/screenshots/api.png
-   :alt: 
+   :alt:
 
 Docs
 ~~~~
@@ -509,7 +528,7 @@ Docs
 The API tab is really a link to Hidebound's github documentation.
 
 .. figure:: resources/screenshots/docs.png
-   :alt: 
+   :alt:
 
 Errors
 ~~~~~~
@@ -518,7 +537,7 @@ Hidebound is oriented towards developers and technically proficient
 users. It displays errors in their entirety within the application.
 
 .. figure:: resources/screenshots/error.png
-   :alt: 
+   :alt:
 
 .. |image0| image:: resources/screenshots/graph.png
 

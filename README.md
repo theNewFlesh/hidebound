@@ -42,7 +42,7 @@ root directory (typically one reserved for Hidebound projects) and then
 discovered, validated, extracted, and copied or moved by Hidebound.
 
 # Dataflow
-![](resources/data-flow.png)
+![](resources/screenshots/data_flow.png)
 
 Data begins as files on disk. Hidebound creates a JSON-compatible dict from
 their name traits and file traits and then constructs an internal database table
