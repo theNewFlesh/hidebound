@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>core &mdash; hidebound  documentation</title>
   
@@ -17,7 +17,10 @@
 
   
   
+
   
+  
+
   
 
   
@@ -30,7 +33,6 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -52,7 +54,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home" alt="Documentation Home"> hidebound
+            <a href="index.html" class="icon icon-home"> hidebound
           
 
           
@@ -62,7 +64,7 @@
             
             
               <div class="version">
-                0.9.1
+                0.9.2
               </div>
             
           
@@ -92,6 +94,7 @@
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="intro.html#installation">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="intro.html#overview">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intro.html#dataflow">Dataflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="intro.html#workflow">Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="intro.html#naming-convention">Naming Convention</a></li>
 <li class="toctree-l1"><a class="reference internal" href="intro.html#project-structure">Project Structure</a></li>
@@ -154,6 +157,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -167,7 +172,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="_sources/core.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -284,7 +289,7 @@ key is the exporter name and the value is its config. Default: {}.</p>
 
 <dl class="py attribute">
 <dt id="hidebound.core.config.Config.ExportersConfig.girder">
-<code class="sig-name descname">girder</code><em class="property">: ModelType</em><em class="property"> = &lt;ModelType(GirderConfig) instance on ExportersConfig as 'girder'&gt;</em><a class="headerlink" href="#hidebound.core.config.Config.ExportersConfig.girder" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">girder</code><em class="property">: schematics.types.compound.ModelType</em><em class="property"> = &lt;ModelType(GirderConfig) instance on ExportersConfig as 'girder'&gt;</em><a class="headerlink" href="#hidebound.core.config.Config.ExportersConfig.girder" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -296,37 +301,37 @@ key is the exporter name and the value is its config. Default: {}.</p>
 
 <dl class="py attribute">
 <dt id="id0">
-<code class="sig-name descname">exclude_regex</code><em class="property">: StringType</em><em class="property"> = &lt;StringType() instance on Config as 'exclude_regex'&gt;</em><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">exclude_regex</code><em class="property">: schematics.types.base.StringType</em><em class="property"> = &lt;StringType() instance on Config as 'exclude_regex'&gt;</em><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id1">
-<code class="sig-name descname">exporters</code><em class="property">: ModelType</em><em class="property"> = &lt;ModelType(ExportersConfig) instance on Config as 'exporters'&gt;</em><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">exporters</code><em class="property">: schematics.types.compound.ModelType</em><em class="property"> = &lt;ModelType(ExportersConfig) instance on Config as 'exporters'&gt;</em><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id2">
-<code class="sig-name descname">hidebound_directory</code><em class="property">: StringType</em><em class="property"> = &lt;StringType() instance on Config as 'hidebound_directory'&gt;</em><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">hidebound_directory</code><em class="property">: schematics.types.base.StringType</em><em class="property"> = &lt;StringType() instance on Config as 'hidebound_directory'&gt;</em><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id3">
-<code class="sig-name descname">include_regex</code><em class="property">: StringType</em><em class="property"> = &lt;StringType() instance on Config as 'include_regex'&gt;</em><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">include_regex</code><em class="property">: schematics.types.base.StringType</em><em class="property"> = &lt;StringType() instance on Config as 'include_regex'&gt;</em><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id4">
-<code class="sig-name descname">root_directory</code><em class="property">: StringType</em><em class="property"> = &lt;StringType() instance on Config as 'root_directory'&gt;</em><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">root_directory</code><em class="property">: schematics.types.base.StringType</em><em class="property"> = &lt;StringType() instance on Config as 'root_directory'&gt;</em><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id5">
-<code class="sig-name descname">specification_files</code><em class="property">: ListType</em><em class="property"> = &lt;ListType(StringType) instance on Config as 'specification_files'&gt;</em><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">specification_files</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(StringType) instance on Config as 'specification_files'&gt;</em><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id6">
-<code class="sig-name descname">write_mode</code><em class="property">: StringType</em><em class="property"> = &lt;StringType() instance on Config as 'write_mode'&gt;</em><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">write_mode</code><em class="property">: schematics.types.base.StringType</em><em class="property"> = &lt;StringType() instance on Config as 'write_mode'&gt;</em><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -949,27 +954,27 @@ according to a dynimcally defined grammar.</p>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specification_base.ComplexSpecificationBase.descriptor">
-<code class="sig-name descname">descriptor</code><em class="property"> = &lt;ListType(StringType) instance on ComplexSpecificationBase as 'descriptor'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.ComplexSpecificationBase.descriptor" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">descriptor</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(StringType) instance on ComplexSpecificationBase as 'descriptor'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.ComplexSpecificationBase.descriptor" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specification_base.ComplexSpecificationBase.extension">
-<code class="sig-name descname">extension</code><em class="property"> = &lt;ListType(StringType) instance on ComplexSpecificationBase as 'extension'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.ComplexSpecificationBase.extension" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">extension</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(StringType) instance on ComplexSpecificationBase as 'extension'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.ComplexSpecificationBase.extension" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specification_base.ComplexSpecificationBase.project">
-<code class="sig-name descname">project</code><em class="property"> = &lt;ListType(StringType) instance on ComplexSpecificationBase as 'project'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.ComplexSpecificationBase.project" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">project</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(StringType) instance on ComplexSpecificationBase as 'project'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.ComplexSpecificationBase.project" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specification_base.ComplexSpecificationBase.specification">
-<code class="sig-name descname">specification</code><em class="property"> = &lt;ListType(StringType) instance on ComplexSpecificationBase as 'specification'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.ComplexSpecificationBase.specification" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">specification</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(StringType) instance on ComplexSpecificationBase as 'specification'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.ComplexSpecificationBase.specification" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specification_base.ComplexSpecificationBase.version">
-<code class="sig-name descname">version</code><em class="property"> = &lt;ListType(IntType) instance on ComplexSpecificationBase as 'version'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.ComplexSpecificationBase.version" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">version</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(IntType) instance on ComplexSpecificationBase as 'version'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.ComplexSpecificationBase.version" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1002,12 +1007,12 @@ according to a dynimcally defined grammar.</p>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specification_base.FileSpecificationBase.descriptor">
-<code class="sig-name descname">descriptor</code><em class="property"> = &lt;ListType(StringType) instance on FileSpecificationBase as 'descriptor'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.FileSpecificationBase.descriptor" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">descriptor</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(StringType) instance on FileSpecificationBase as 'descriptor'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.FileSpecificationBase.descriptor" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specification_base.FileSpecificationBase.extension">
-<code class="sig-name descname">extension</code><em class="property"> = &lt;ListType(StringType) instance on FileSpecificationBase as 'extension'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.FileSpecificationBase.extension" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">extension</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(StringType) instance on FileSpecificationBase as 'extension'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.FileSpecificationBase.extension" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1029,12 +1034,12 @@ according to a dynimcally defined grammar.</p>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specification_base.FileSpecificationBase.project">
-<code class="sig-name descname">project</code><em class="property"> = &lt;ListType(StringType) instance on FileSpecificationBase as 'project'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.FileSpecificationBase.project" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">project</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(StringType) instance on FileSpecificationBase as 'project'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.FileSpecificationBase.project" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specification_base.FileSpecificationBase.specification">
-<code class="sig-name descname">specification</code><em class="property"> = &lt;ListType(StringType) instance on FileSpecificationBase as 'specification'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.FileSpecificationBase.specification" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">specification</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(StringType) instance on FileSpecificationBase as 'specification'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.FileSpecificationBase.specification" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1060,7 +1065,7 @@ filepath pattern.</p>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specification_base.FileSpecificationBase.version">
-<code class="sig-name descname">version</code><em class="property"> = &lt;ListType(IntType) instance on FileSpecificationBase as 'version'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.FileSpecificationBase.version" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">version</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(IntType) instance on FileSpecificationBase as 'version'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.FileSpecificationBase.version" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1094,12 +1099,12 @@ directory.</p>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specification_base.SequenceSpecificationBase.descriptor">
-<code class="sig-name descname">descriptor</code><em class="property"> = &lt;ListType(StringType) instance on SequenceSpecificationBase as 'descriptor'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.SequenceSpecificationBase.descriptor" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">descriptor</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(StringType) instance on SequenceSpecificationBase as 'descriptor'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.SequenceSpecificationBase.descriptor" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specification_base.SequenceSpecificationBase.extension">
-<code class="sig-name descname">extension</code><em class="property"> = &lt;ListType(StringType) instance on SequenceSpecificationBase as 'extension'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.SequenceSpecificationBase.extension" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">extension</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(StringType) instance on SequenceSpecificationBase as 'extension'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.SequenceSpecificationBase.extension" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1121,12 +1126,12 @@ directory.</p>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specification_base.SequenceSpecificationBase.project">
-<code class="sig-name descname">project</code><em class="property"> = &lt;ListType(StringType) instance on SequenceSpecificationBase as 'project'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.SequenceSpecificationBase.project" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">project</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(StringType) instance on SequenceSpecificationBase as 'project'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.SequenceSpecificationBase.project" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specification_base.SequenceSpecificationBase.specification">
-<code class="sig-name descname">specification</code><em class="property"> = &lt;ListType(StringType) instance on SequenceSpecificationBase as 'specification'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.SequenceSpecificationBase.specification" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">specification</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(StringType) instance on SequenceSpecificationBase as 'specification'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.SequenceSpecificationBase.specification" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1152,7 +1157,7 @@ filepath pattern.</p>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specification_base.SequenceSpecificationBase.version">
-<code class="sig-name descname">version</code><em class="property"> = &lt;ListType(IntType) instance on SequenceSpecificationBase as 'version'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.SequenceSpecificationBase.version" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">version</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(IntType) instance on SequenceSpecificationBase as 'version'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.SequenceSpecificationBase.version" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1277,12 +1282,12 @@ filepath pattern.</p>
 
 <dl class="py attribute">
 <dt id="id12">
-<code class="sig-name descname">descriptor</code><em class="property">: ListType</em><em class="property"> = &lt;ListType(StringType) instance on SpecificationBase as 'descriptor'&gt;</em><a class="headerlink" href="#id12" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">descriptor</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(StringType) instance on SpecificationBase as 'descriptor'&gt;</em><a class="headerlink" href="#id12" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id13">
-<code class="sig-name descname">extension</code><em class="property">: ListType</em><em class="property"> = &lt;ListType(StringType) instance on SpecificationBase as 'extension'&gt;</em><a class="headerlink" href="#id13" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">extension</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(StringType) instance on SpecificationBase as 'extension'&gt;</em><a class="headerlink" href="#id13" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1420,12 +1425,12 @@ Errors are captured in their respective keys.</p>
 
 <dl class="py attribute">
 <dt id="id15">
-<code class="sig-name descname">project</code><em class="property">: ListType</em><em class="property"> = &lt;ListType(StringType) instance on SpecificationBase as 'project'&gt;</em><a class="headerlink" href="#id15" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">project</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(StringType) instance on SpecificationBase as 'project'&gt;</em><a class="headerlink" href="#id15" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specification_base.SpecificationBase.specification">
-<code class="sig-name descname">specification</code><em class="property">: ListType</em><em class="property"> = &lt;ListType(StringType) instance on SpecificationBase as 'specification'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.SpecificationBase.specification" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">specification</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(StringType) instance on SpecificationBase as 'specification'&gt;</em><a class="headerlink" href="#hidebound.core.specification_base.SpecificationBase.specification" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1447,7 +1452,7 @@ Errors are captured in their respective keys.</p>
 
 <dl class="py attribute">
 <dt id="id16">
-<code class="sig-name descname">version</code><em class="property">: ListType</em><em class="property"> = &lt;ListType(IntType) instance on SpecificationBase as 'version'&gt;</em><a class="headerlink" href="#id16" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">version</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(IntType) instance on SpecificationBase as 'version'&gt;</em><a class="headerlink" href="#id16" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1529,17 +1534,17 @@ version,</p>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specifications.Raw001.channels">
-<code class="sig-name descname">channels</code><em class="property">: ListType</em><em class="property"> = &lt;ListType(IntType) instance on Raw001 as 'channels'&gt;</em><a class="headerlink" href="#hidebound.core.specifications.Raw001.channels" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">channels</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(IntType) instance on Raw001 as 'channels'&gt;</em><a class="headerlink" href="#hidebound.core.specifications.Raw001.channels" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specifications.Raw001.descriptor">
-<code class="sig-name descname">descriptor</code><em class="property"> = &lt;ListType(StringType) instance on Raw001 as 'descriptor'&gt;</em><a class="headerlink" href="#hidebound.core.specifications.Raw001.descriptor" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">descriptor</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(StringType) instance on Raw001 as 'descriptor'&gt;</em><a class="headerlink" href="#hidebound.core.specifications.Raw001.descriptor" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id18">
-<code class="sig-name descname">extension</code><em class="property">: ListType</em><em class="property"> = &lt;ListType(StringType) instance on Raw001 as 'extension'&gt;</em><a class="headerlink" href="#id18" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">extension</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(StringType) instance on Raw001 as 'extension'&gt;</em><a class="headerlink" href="#id18" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1554,32 +1559,32 @@ version,</p>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specifications.Raw001.frame">
-<code class="sig-name descname">frame</code><em class="property">: ListType</em><em class="property"> = &lt;ListType(IntType) instance on Raw001 as 'frame'&gt;</em><a class="headerlink" href="#hidebound.core.specifications.Raw001.frame" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">frame</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(IntType) instance on Raw001 as 'frame'&gt;</em><a class="headerlink" href="#hidebound.core.specifications.Raw001.frame" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id20">
-<code class="sig-name descname">height</code><em class="property">: ListType</em><em class="property"> = &lt;ListType(IntType) instance on Raw001 as 'height'&gt;</em><a class="headerlink" href="#id20" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">height</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(IntType) instance on Raw001 as 'height'&gt;</em><a class="headerlink" href="#id20" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specifications.Raw001.project">
-<code class="sig-name descname">project</code><em class="property"> = &lt;ListType(StringType) instance on Raw001 as 'project'&gt;</em><a class="headerlink" href="#hidebound.core.specifications.Raw001.project" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">project</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(StringType) instance on Raw001 as 'project'&gt;</em><a class="headerlink" href="#hidebound.core.specifications.Raw001.project" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specifications.Raw001.specification">
-<code class="sig-name descname">specification</code><em class="property"> = &lt;ListType(StringType) instance on Raw001 as 'specification'&gt;</em><a class="headerlink" href="#hidebound.core.specifications.Raw001.specification" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">specification</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(StringType) instance on Raw001 as 'specification'&gt;</em><a class="headerlink" href="#hidebound.core.specifications.Raw001.specification" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specifications.Raw001.version">
-<code class="sig-name descname">version</code><em class="property"> = &lt;ListType(IntType) instance on Raw001 as 'version'&gt;</em><a class="headerlink" href="#hidebound.core.specifications.Raw001.version" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">version</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(IntType) instance on Raw001 as 'version'&gt;</em><a class="headerlink" href="#hidebound.core.specifications.Raw001.version" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id21">
-<code class="sig-name descname">width</code><em class="property">: ListType</em><em class="property"> = &lt;ListType(IntType) instance on Raw001 as 'width'&gt;</em><a class="headerlink" href="#id21" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">width</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(IntType) instance on Raw001 as 'width'&gt;</em><a class="headerlink" href="#id21" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1658,22 +1663,22 @@ version,</p>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specifications.Raw002.channels">
-<code class="sig-name descname">channels</code><em class="property">: ListType</em><em class="property"> = &lt;ListType(IntType) instance on Raw002 as 'channels'&gt;</em><a class="headerlink" href="#hidebound.core.specifications.Raw002.channels" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">channels</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(IntType) instance on Raw002 as 'channels'&gt;</em><a class="headerlink" href="#hidebound.core.specifications.Raw002.channels" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specifications.Raw002.coordinate">
-<code class="sig-name descname">coordinate</code><em class="property">: ListType</em><em class="property"> = &lt;ListType(ListType) instance on Raw002 as 'coordinate'&gt;</em><a class="headerlink" href="#hidebound.core.specifications.Raw002.coordinate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">coordinate</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(ListType) instance on Raw002 as 'coordinate'&gt;</em><a class="headerlink" href="#hidebound.core.specifications.Raw002.coordinate" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specifications.Raw002.descriptor">
-<code class="sig-name descname">descriptor</code><em class="property"> = &lt;ListType(StringType) instance on Raw002 as 'descriptor'&gt;</em><a class="headerlink" href="#hidebound.core.specifications.Raw002.descriptor" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">descriptor</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(StringType) instance on Raw002 as 'descriptor'&gt;</em><a class="headerlink" href="#hidebound.core.specifications.Raw002.descriptor" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id23">
-<code class="sig-name descname">extension</code><em class="property">: ListType</em><em class="property"> = &lt;ListType(StringType) instance on Raw002 as 'extension'&gt;</em><a class="headerlink" href="#id23" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">extension</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(StringType) instance on Raw002 as 'extension'&gt;</em><a class="headerlink" href="#id23" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1688,32 +1693,32 @@ version,</p>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specifications.Raw002.frame">
-<code class="sig-name descname">frame</code><em class="property">: ListType</em><em class="property"> = &lt;ListType(IntType) instance on Raw002 as 'frame'&gt;</em><a class="headerlink" href="#hidebound.core.specifications.Raw002.frame" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">frame</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(IntType) instance on Raw002 as 'frame'&gt;</em><a class="headerlink" href="#hidebound.core.specifications.Raw002.frame" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id25">
-<code class="sig-name descname">height</code><em class="property">: ListType</em><em class="property"> = &lt;ListType(IntType) instance on Raw002 as 'height'&gt;</em><a class="headerlink" href="#id25" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">height</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(IntType) instance on Raw002 as 'height'&gt;</em><a class="headerlink" href="#id25" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specifications.Raw002.project">
-<code class="sig-name descname">project</code><em class="property"> = &lt;ListType(StringType) instance on Raw002 as 'project'&gt;</em><a class="headerlink" href="#hidebound.core.specifications.Raw002.project" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">project</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(StringType) instance on Raw002 as 'project'&gt;</em><a class="headerlink" href="#hidebound.core.specifications.Raw002.project" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specifications.Raw002.specification">
-<code class="sig-name descname">specification</code><em class="property"> = &lt;ListType(StringType) instance on Raw002 as 'specification'&gt;</em><a class="headerlink" href="#hidebound.core.specifications.Raw002.specification" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">specification</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(StringType) instance on Raw002 as 'specification'&gt;</em><a class="headerlink" href="#hidebound.core.specifications.Raw002.specification" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hidebound.core.specifications.Raw002.version">
-<code class="sig-name descname">version</code><em class="property"> = &lt;ListType(IntType) instance on Raw002 as 'version'&gt;</em><a class="headerlink" href="#hidebound.core.specifications.Raw002.version" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">version</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(IntType) instance on Raw002 as 'version'&gt;</em><a class="headerlink" href="#hidebound.core.specifications.Raw002.version" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="id26">
-<code class="sig-name descname">width</code><em class="property">: ListType</em><em class="property"> = &lt;ListType(IntType) instance on Raw002 as 'width'&gt;</em><a class="headerlink" href="#id26" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">width</code><em class="property">: schematics.types.compound.ListType</em><em class="property"> = &lt;ListType(IntType) instance on Raw002 as 'width'&gt;</em><a class="headerlink" href="#id26" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2365,37 +2370,29 @@ Default: False.</p></li>
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="exporters.html" class="btn btn-neutral float-right" title="exporters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="modules.html" class="btn btn-neutral float-left" title="&lt;no title&gt;" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="exporters.html" class="btn btn-neutral float-right" title="exporters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="modules.html" class="btn btn-neutral float-left" title="&lt;no title&gt;" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2020, Alex Braun &lt;TheNewFlesh@github.com&gt;
+        &#169; Copyright 2020, Alex Braun &lt;TheNewFlesh@github.com&gt;.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

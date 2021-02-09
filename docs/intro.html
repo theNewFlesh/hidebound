@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Introduction &mdash; hidebound  documentation</title>
   
@@ -17,7 +17,10 @@
 
   
   
+
   
+  
+
   
 
   
@@ -30,7 +33,6 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -52,7 +54,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home" alt="Documentation Home"> hidebound
+            <a href="index.html" class="icon icon-home"> hidebound
           
 
           
@@ -62,7 +64,7 @@
             
             
               <div class="version">
-                0.9.1
+                0.9.2
               </div>
             
           
@@ -97,6 +99,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#dataflow">Dataflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#workflow">Workflow</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#create-asset"><em>Create Asset</em></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#update"><em>Update</em></a></li>
@@ -173,6 +176,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -184,7 +189,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="_sources/intro.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -254,6 +259,25 @@ files and directories according, to user defined specifications. Assets
 are placed into a root directory (typically one reserved for Hidebound
 projects) and then discovered, validated, extracted, and copied or moved
 by Hidebound.</p>
+</div>
+<div class="section" id="dataflow">
+<h1>Dataflow<a class="headerlink" href="#dataflow" title="Permalink to this headline">¶</a></h1>
+<div class="figure align-default">
+<img alt="" src="resources/screenshots/data_flow.png" />
+</div>
+<p>Data begins as files on disk. Hidebound creates a JSON-compatible dict
+from their name traits and file traits and then constructs an internal
+database table from them, one dict oer row. All the rows are then
+aggregated by asset, and converted into a JSON blobs. Those blobs are
+then validated according to their respective specifications. Files from
+valid assets are then copied or moved into Hidebound’s data directory,
+in their same directory structure and naming. Metadata is written to
+JSON files inside Hidebound’s metadata directory. Each file’s metadata
+is written as a JSON file in /hidebound/metadata/file, and each asset’s
+metadata (the aggregate of its file metadata) is written to
+/hidebound/metadata/asset. From their exporters, can export the valid
+asset data and its accompanying metadata to various locations, like an
+AWS S3 bucket.</p>
 </div>
 <div class="section" id="workflow">
 <h1>Workflow<a class="headerlink" href="#workflow" title="Permalink to this headline">¶</a></h1>
@@ -774,37 +798,29 @@ users. It displays errors in their entirety within the application.</p>
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="modules.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to hidebound’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="modules.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to hidebound’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2020, Alex Braun &lt;TheNewFlesh@github.com&gt;
+        &#169; Copyright 2020, Alex Braun &lt;TheNewFlesh@github.com&gt;.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

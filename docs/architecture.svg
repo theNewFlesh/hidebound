@@ -345,53 +345,53 @@
 <path fill="none" stroke="#a0d17b" d="M1376.132,-1159.9177C1400.3378,-1149.8155 1426.3167,-1134.7552 1443,-1113 1490.2621,-1051.3697 1432.6852,-1004.3453 1479,-942 1494.8008,-920.7302 1519.0627,-905.1546 1542.2318,-894.1713"/>
 <polygon fill="#a0d17b" stroke="#a0d17b" points="1543.7072,-897.3454 1551.3783,-890.0376 1540.8243,-890.9666 1543.7072,-897.3454"/>
 </g>
-<!-- dash_html_components -->
-<g id="node21" class="node">
-<title>dash_html_components</title>
-<polygon fill="#343434" stroke="#343434" points="1698,-1074 1516,-1074 1516,-1038 1698,-1038 1698,-1074"/>
-<text text-anchor="middle" x="1607" y="-1052.3" font-family="Courier,monospace" font-size="14.00" fill="#de958e">dash_html_components</text>
-</g>
-<!-- dash_html_components&#45;&gt;hidebound.server.app -->
-<g id="edge37" class="edge">
-<title>dash_html_components&#45;&gt;hidebound.server.app</title>
-<path fill="none" stroke="#de958e" d="M1698.2246,-1041.3566C1780.6944,-1026.9853 1904.9185,-1002.5036 2010,-970 2036.5066,-961.801 2065.1783,-950.3008 2088.5601,-940.1995"/>
-<polygon fill="#de958e" stroke="#de958e" points="2090.1421,-943.3279 2097.9038,-936.1163 2087.339,-936.9136 2090.1421,-943.3279"/>
-</g>
-<!-- dash_html_components&#45;&gt;hidebound.server.components -->
-<g id="edge38" class="edge">
-<title>dash_html_components&#45;&gt;hidebound.server.components</title>
-<path fill="none" stroke="#de958e" d="M1688.5768,-1074.0115C1704.1412,-1078.1165 1720.1901,-1082.8169 1735,-1088 1773.7129,-1101.5484 1815.9466,-1121.161 1846.617,-1136.3416"/>
-<polygon fill="#de958e" stroke="#de958e" points="1845.237,-1139.5645 1855.7475,-1140.8989 1848.3632,-1133.3014 1845.237,-1139.5645"/>
-</g>
-<!-- dash_table -->
-<g id="node22" class="node">
-<title>dash_table</title>
-<polygon fill="#343434" stroke="#343434" points="1656.5,-1020 1557.5,-1020 1557.5,-984 1656.5,-984 1656.5,-1020"/>
-<text text-anchor="middle" x="1607" y="-998.3" font-family="Courier,monospace" font-size="14.00" fill="#de958e">dash_table</text>
-</g>
-<!-- dash_table&#45;&gt;hidebound.server.app -->
-<g id="edge39" class="edge">
-<title>dash_table&#45;&gt;hidebound.server.app</title>
-<path fill="none" stroke="#de958e" d="M1656.8611,-994.0975C1743.2839,-980.4003 1922.5004,-951.9962 2035.8629,-934.0293"/>
-<polygon fill="#de958e" stroke="#de958e" points="2036.6139,-937.454 2045.9427,-932.4317 2035.5181,-930.5403 2036.6139,-937.454"/>
-</g>
-<!-- dash_table&#45;&gt;hidebound.server.components -->
-<g id="edge40" class="edge">
-<title>dash_table&#45;&gt;hidebound.server.components</title>
-<path fill="none" stroke="#de958e" d="M1656.5432,-1006.7303C1681.0745,-1010.4731 1710.5868,-1017.1437 1735,-1029 1788.4633,-1054.9646 1839.0702,-1103.2588 1867.3161,-1133.1139"/>
-<polygon fill="#de958e" stroke="#de958e" points="1864.9597,-1135.719 1874.3389,-1140.6468 1870.0798,-1130.9457 1864.9597,-1135.719"/>
-</g>
 <!-- dash.dependencies -->
-<g id="node23" class="node">
+<g id="node21" class="node">
 <title>dash.dependencies</title>
 <polygon fill="#343434" stroke="#343434" points="1969,-668 1812,-668 1812,-632 1969,-632 1969,-668"/>
 <text text-anchor="middle" x="1890.5" y="-646.3" font-family="Courier,monospace" font-size="14.00" fill="#de958e">dash.dependencies</text>
 </g>
 <!-- dash.dependencies&#45;&gt;hidebound.server.app -->
-<g id="edge41" class="edge">
+<g id="edge37" class="edge">
 <title>dash.dependencies&#45;&gt;hidebound.server.app</title>
 <path fill="none" stroke="#de958e" d="M1969.0991,-661.2567C1983.7288,-665.9572 1998.1258,-672.6047 2010,-682 2079.3218,-736.8501 2115.6983,-840.268 2129.8494,-889.9567"/>
 <polygon fill="#de958e" stroke="#de958e" points="2126.5052,-890.9961 2132.5355,-899.7074 2133.2538,-889.1369 2126.5052,-890.9961"/>
+</g>
+<!-- dash_html_components -->
+<g id="node22" class="node">
+<title>dash_html_components</title>
+<polygon fill="#343434" stroke="#343434" points="1698,-1074 1516,-1074 1516,-1038 1698,-1038 1698,-1074"/>
+<text text-anchor="middle" x="1607" y="-1052.3" font-family="Courier,monospace" font-size="14.00" fill="#de958e">dash_html_components</text>
+</g>
+<!-- dash_html_components&#45;&gt;hidebound.server.app -->
+<g id="edge38" class="edge">
+<title>dash_html_components&#45;&gt;hidebound.server.app</title>
+<path fill="none" stroke="#de958e" d="M1698.2246,-1041.3566C1780.6944,-1026.9853 1904.9185,-1002.5036 2010,-970 2036.5066,-961.801 2065.1783,-950.3008 2088.5601,-940.1995"/>
+<polygon fill="#de958e" stroke="#de958e" points="2090.1421,-943.3279 2097.9038,-936.1163 2087.339,-936.9136 2090.1421,-943.3279"/>
+</g>
+<!-- dash_html_components&#45;&gt;hidebound.server.components -->
+<g id="edge39" class="edge">
+<title>dash_html_components&#45;&gt;hidebound.server.components</title>
+<path fill="none" stroke="#de958e" d="M1688.5768,-1074.0115C1704.1412,-1078.1165 1720.1901,-1082.8169 1735,-1088 1773.7129,-1101.5484 1815.9466,-1121.161 1846.617,-1136.3416"/>
+<polygon fill="#de958e" stroke="#de958e" points="1845.237,-1139.5645 1855.7475,-1140.8989 1848.3632,-1133.3014 1845.237,-1139.5645"/>
+</g>
+<!-- dash_table -->
+<g id="node23" class="node">
+<title>dash_table</title>
+<polygon fill="#343434" stroke="#343434" points="1656.5,-1020 1557.5,-1020 1557.5,-984 1656.5,-984 1656.5,-1020"/>
+<text text-anchor="middle" x="1607" y="-998.3" font-family="Courier,monospace" font-size="14.00" fill="#de958e">dash_table</text>
+</g>
+<!-- dash_table&#45;&gt;hidebound.server.app -->
+<g id="edge40" class="edge">
+<title>dash_table&#45;&gt;hidebound.server.app</title>
+<path fill="none" stroke="#de958e" d="M1656.8611,-994.0975C1743.2839,-980.4003 1922.5004,-951.9962 2035.8629,-934.0293"/>
+<polygon fill="#de958e" stroke="#de958e" points="2036.6139,-937.454 2045.9427,-932.4317 2035.5181,-930.5403 2036.6139,-937.454"/>
+</g>
+<!-- dash_table&#45;&gt;hidebound.server.components -->
+<g id="edge41" class="edge">
+<title>dash_table&#45;&gt;hidebound.server.components</title>
+<path fill="none" stroke="#de958e" d="M1656.5432,-1006.7303C1681.0745,-1010.4731 1710.5868,-1017.1437 1735,-1029 1788.4633,-1054.9646 1839.0702,-1103.2588 1867.3161,-1133.1139"/>
+<polygon fill="#de958e" stroke="#de958e" points="1864.9597,-1135.719 1874.3389,-1140.6468 1870.0798,-1130.9457 1864.9597,-1135.719"/>
 </g>
 <!-- flask -->
 <g id="node24" class="node">
@@ -556,7 +556,7 @@
 <polygon fill="#a0d17b" stroke="#a0d17b" points="357.5183,-220.704 363.5952,-212.0252 353.4325,-215.0201 357.5183,-220.704"/>
 </g>
 <!-- hidebound.core -->
-<g id="node36" class="node">
+<g id="node37" class="node">
 <title>hidebound.core</title>
 <polygon fill="#343434" stroke="#343434" points="259,-694 127,-694 127,-658 259,-658 259,-694"/>
 <text text-anchor="middle" x="193" y="-672.3" font-family="Courier,monospace" font-size="14.00" fill="#a0d17b">hidebound.core</text>
@@ -627,83 +627,83 @@
 <path fill="none" stroke="#de958e" d="M423.0699,-900.2265C498.0579,-923.3197 686.8645,-980.9249 846,-1025 996.8422,-1066.7781 1032.4516,-1088.2296 1187,-1113 1385.5708,-1144.8261 1619.0444,-1154.7479 1760.8194,-1157.7723"/>
 <polygon fill="#de958e" stroke="#de958e" points="1760.7973,-1161.2725 1770.867,-1157.9784 1760.9409,-1154.274 1760.7973,-1161.2725"/>
 </g>
-<!-- hidebound.core&#45;&gt;hidebound.core.config -->
-<g id="edge68" class="edge">
-<title>hidebound.core&#45;&gt;hidebound.core.config</title>
-<path fill="none" stroke="#a0d17b" d="M202.2628,-657.9878C216.9578,-628.5237 245.3439,-567.8055 259,-513 277.6907,-437.9896 247.0502,-227.636 295,-167 361,-83.5382 416.0962,-105.8067 521,-88 797.5017,-41.0658 908.4842,16.8619 1151,-124 1231.4694,-170.7395 1283.1064,-274.5095 1304.1768,-324.2985"/>
-<polygon fill="#a0d17b" stroke="#a0d17b" points="1301.0424,-325.8782 1308.0958,-333.784 1307.512,-323.2052 1301.0424,-325.8782"/>
-</g>
-<!-- hidebound.core&#45;&gt;hidebound.core.database -->
-<g id="edge69" class="edge">
-<title>hidebound.core&#45;&gt;hidebound.core.database</title>
-<path fill="none" stroke="#a0d17b" d="M193.7188,-694.329C196.751,-744.3809 212.5651,-884.0365 295,-950 487.9717,-1104.4138 599.4181,-1008.2951 846,-1025 981.2456,-1034.1623 1019.7784,-1059.0029 1151,-1025 1168.7182,-1020.4088 1170.6906,-1013.3075 1187,-1005 1298.8013,-948.052 1354.6151,-975.0546 1443,-886 1470.1804,-858.6136 1452.2995,-834.8545 1479,-807 1496.7353,-788.4983 1520.8756,-774.3724 1543.4138,-764.0923"/>
-<polygon fill="#a0d17b" stroke="#a0d17b" points="1544.8619,-767.2791 1552.6173,-760.0608 1542.0532,-760.8672 1544.8619,-767.2791"/>
-</g>
-<!-- hidebound.core&#45;&gt;hidebound.core.database_tools -->
-<g id="edge70" class="edge">
-<title>hidebound.core&#45;&gt;hidebound.core.database_tools</title>
-<path fill="none" stroke="#a0d17b" d="M194.2245,-694.0727C198.4767,-740.7526 216.9814,-865.3017 295,-917 398.8651,-985.8252 543.1011,-965.6615 1151,-838 1185.8288,-830.6858 1223.8968,-819.2975 1254.5817,-809.236"/>
-<polygon fill="#a0d17b" stroke="#a0d17b" points="1255.8813,-812.4926 1264.2714,-806.0228 1253.678,-805.8484 1255.8813,-812.4926"/>
-</g>
-<!-- hidebound.core&#45;&gt;hidebound.core.parser -->
-<g id="edge71" class="edge">
-<title>hidebound.core&#45;&gt;hidebound.core.parser</title>
-<path fill="none" stroke="#a0d17b" d="M217.9502,-657.7623C253.1796,-632.0108 317.5723,-584.942 356.8059,-556.2637"/>
-<polygon fill="#a0d17b" stroke="#a0d17b" points="359.2447,-558.8165 365.2524,-550.0896 355.1138,-553.1652 359.2447,-558.8165"/>
-</g>
-<!-- hidebound.core&#45;&gt;hidebound.core.specification_base -->
-<g id="edge72" class="edge">
-<title>hidebound.core&#45;&gt;hidebound.core.specification_base</title>
-<path fill="none" stroke="#a0d17b" d="M259.2597,-662.5095C400.8082,-633.6902 733.3306,-565.9886 899.8519,-532.0848"/>
-<polygon fill="#a0d17b" stroke="#a0d17b" points="900.9891,-535.4251 910.0897,-530.0004 899.5925,-528.5659 900.9891,-535.4251"/>
-</g>
-<!-- hidebound.core&#45;&gt;hidebound.core.specifications -->
-<g id="edge73" class="edge">
-<title>hidebound.core&#45;&gt;hidebound.core.specifications</title>
-<path fill="none" stroke="#a0d17b" d="M259.2574,-671.5418C318.5421,-667.21 407.7556,-659.846 485,-650 747.4884,-616.5416 1054.0877,-561.3362 1210.941,-531.9134"/>
-<polygon fill="#a0d17b" stroke="#a0d17b" points="1211.8724,-535.2998 1221.054,-530.0132 1210.5797,-528.4201 1211.8724,-535.2998"/>
-</g>
-<!-- hidebound.core&#45;&gt;hidebound.core.tools -->
-<g id="edge74" class="edge">
-<title>hidebound.core&#45;&gt;hidebound.core.tools</title>
-<path fill="none" stroke="#a0d17b" d="M207.4212,-694.0308C225.4558,-715.1676 258.4391,-749.4131 295,-766 341.589,-787.1364 471.4482,-800.4503 564.2613,-807.5565"/>
-<polygon fill="#a0d17b" stroke="#a0d17b" points="564.019,-811.048 574.2535,-808.3086 564.5444,-804.0678 564.019,-811.048"/>
-</g>
-<!-- hidebound.core&#45;&gt;hidebound.core.traits -->
-<g id="edge75" class="edge">
-<title>hidebound.core&#45;&gt;hidebound.core.traits</title>
-<path fill="none" stroke="#a0d17b" d="M241.9133,-694.1267C347.4857,-730.5874 603.8285,-804.7383 810,-749 827.8813,-744.1658 828.7133,-734.6543 846,-728 860.9486,-722.2457 877.1404,-717.4414 893.2006,-713.4554"/>
-<polygon fill="#a0d17b" stroke="#a0d17b" points="894.2555,-716.8021 903.1711,-711.0782 892.632,-709.993 894.2555,-716.8021"/>
-</g>
-<!-- hidebound.core&#45;&gt;hidebound.core.validators -->
-<g id="edge76" class="edge">
-<title>hidebound.core&#45;&gt;hidebound.core.validators</title>
-<path fill="none" stroke="#a0d17b" d="M200.76,-657.5152C213.3455,-627.3878 238.8315,-565.7576 259,-513 275.8674,-468.8775 258.8548,-443.4111 295,-413 304.7273,-404.8159 439.719,-382.5362 543.9773,-366.3383"/>
-<polygon fill="#a0d17b" stroke="#a0d17b" points="544.6196,-369.7807 553.9656,-364.7904 543.5476,-362.8632 544.6196,-369.7807"/>
-</g>
 <!-- pyparsing -->
-<g id="node37" class="node">
+<g id="node36" class="node">
 <title>pyparsing</title>
 <polygon fill="#343434" stroke="#343434" points="238.5,-504 147.5,-504 147.5,-468 238.5,-468 238.5,-504"/>
 <text text-anchor="middle" x="193" y="-482.3" font-family="Courier,monospace" font-size="14.00" fill="#de958e">pyparsing</text>
 </g>
 <!-- pyparsing&#45;&gt;hidebound.core.parser -->
-<g id="edge77" class="edge">
+<g id="edge68" class="edge">
 <title>pyparsing&#45;&gt;hidebound.core.parser</title>
 <path fill="none" stroke="#de958e" d="M238.6909,-496.6689C257.8002,-501.131 280.6743,-506.4722 302.7804,-511.634"/>
 <polygon fill="#de958e" stroke="#de958e" points="301.9952,-515.0447 312.5292,-513.9104 303.587,-508.2281 301.9952,-515.0447"/>
 </g>
 <!-- pyparsing&#45;&gt;hidebound.core.specification_base -->
-<g id="edge78" class="edge">
+<g id="edge69" class="edge">
 <title>pyparsing&#45;&gt;hidebound.core.specification_base</title>
 <path fill="none" stroke="#de958e" d="M238.6151,-487.4724C353.0757,-491.1669 656.6338,-500.9652 843.6011,-507.0002"/>
 <polygon fill="#de958e" stroke="#de958e" points="843.6929,-510.5049 853.8007,-507.3294 843.9188,-503.5085 843.6929,-510.5049"/>
 </g>
 <!-- pyparsing&#45;&gt;hidebound.core.validators -->
-<g id="edge79" class="edge">
+<g id="edge70" class="edge">
 <title>pyparsing&#45;&gt;hidebound.core.validators</title>
 <path fill="none" stroke="#de958e" d="M197.8437,-467.8062C208.4823,-431.9743 237.6398,-352.9764 295,-321 339.5001,-296.1927 470.1916,-312.2895 563.737,-328.2505"/>
 <polygon fill="#de958e" stroke="#de958e" points="563.3584,-331.7369 573.8087,-329.9926 564.5516,-324.8393 563.3584,-331.7369"/>
+</g>
+<!-- hidebound.core&#45;&gt;hidebound.core.config -->
+<g id="edge71" class="edge">
+<title>hidebound.core&#45;&gt;hidebound.core.config</title>
+<path fill="none" stroke="#a0d17b" d="M202.2628,-657.9878C216.9578,-628.5237 245.3439,-567.8055 259,-513 277.6907,-437.9896 247.0502,-227.636 295,-167 361,-83.5382 416.0962,-105.8067 521,-88 797.5017,-41.0658 908.4842,16.8619 1151,-124 1231.4694,-170.7395 1283.1064,-274.5095 1304.1768,-324.2985"/>
+<polygon fill="#a0d17b" stroke="#a0d17b" points="1301.0424,-325.8782 1308.0958,-333.784 1307.512,-323.2052 1301.0424,-325.8782"/>
+</g>
+<!-- hidebound.core&#45;&gt;hidebound.core.database -->
+<g id="edge72" class="edge">
+<title>hidebound.core&#45;&gt;hidebound.core.database</title>
+<path fill="none" stroke="#a0d17b" d="M193.7188,-694.329C196.751,-744.3809 212.5651,-884.0365 295,-950 487.9717,-1104.4138 599.4181,-1008.2951 846,-1025 981.2456,-1034.1623 1019.7784,-1059.0029 1151,-1025 1168.7182,-1020.4088 1170.6906,-1013.3075 1187,-1005 1298.8013,-948.052 1354.6151,-975.0546 1443,-886 1470.1804,-858.6136 1452.2995,-834.8545 1479,-807 1496.7353,-788.4983 1520.8756,-774.3724 1543.4138,-764.0923"/>
+<polygon fill="#a0d17b" stroke="#a0d17b" points="1544.8619,-767.2791 1552.6173,-760.0608 1542.0532,-760.8672 1544.8619,-767.2791"/>
+</g>
+<!-- hidebound.core&#45;&gt;hidebound.core.database_tools -->
+<g id="edge73" class="edge">
+<title>hidebound.core&#45;&gt;hidebound.core.database_tools</title>
+<path fill="none" stroke="#a0d17b" d="M194.2245,-694.0727C198.4767,-740.7526 216.9814,-865.3017 295,-917 398.8651,-985.8252 543.1011,-965.6615 1151,-838 1185.8288,-830.6858 1223.8968,-819.2975 1254.5817,-809.236"/>
+<polygon fill="#a0d17b" stroke="#a0d17b" points="1255.8813,-812.4926 1264.2714,-806.0228 1253.678,-805.8484 1255.8813,-812.4926"/>
+</g>
+<!-- hidebound.core&#45;&gt;hidebound.core.parser -->
+<g id="edge74" class="edge">
+<title>hidebound.core&#45;&gt;hidebound.core.parser</title>
+<path fill="none" stroke="#a0d17b" d="M217.9502,-657.7623C253.1796,-632.0108 317.5723,-584.942 356.8059,-556.2637"/>
+<polygon fill="#a0d17b" stroke="#a0d17b" points="359.2447,-558.8165 365.2524,-550.0896 355.1138,-553.1652 359.2447,-558.8165"/>
+</g>
+<!-- hidebound.core&#45;&gt;hidebound.core.specification_base -->
+<g id="edge75" class="edge">
+<title>hidebound.core&#45;&gt;hidebound.core.specification_base</title>
+<path fill="none" stroke="#a0d17b" d="M259.2597,-662.5095C400.8082,-633.6902 733.3306,-565.9886 899.8519,-532.0848"/>
+<polygon fill="#a0d17b" stroke="#a0d17b" points="900.9891,-535.4251 910.0897,-530.0004 899.5925,-528.5659 900.9891,-535.4251"/>
+</g>
+<!-- hidebound.core&#45;&gt;hidebound.core.specifications -->
+<g id="edge76" class="edge">
+<title>hidebound.core&#45;&gt;hidebound.core.specifications</title>
+<path fill="none" stroke="#a0d17b" d="M259.2574,-671.5418C318.5421,-667.21 407.7556,-659.846 485,-650 747.4884,-616.5416 1054.0877,-561.3362 1210.941,-531.9134"/>
+<polygon fill="#a0d17b" stroke="#a0d17b" points="1211.8724,-535.2998 1221.054,-530.0132 1210.5797,-528.4201 1211.8724,-535.2998"/>
+</g>
+<!-- hidebound.core&#45;&gt;hidebound.core.tools -->
+<g id="edge77" class="edge">
+<title>hidebound.core&#45;&gt;hidebound.core.tools</title>
+<path fill="none" stroke="#a0d17b" d="M207.4212,-694.0308C225.4558,-715.1676 258.4391,-749.4131 295,-766 341.589,-787.1364 471.4482,-800.4503 564.2613,-807.5565"/>
+<polygon fill="#a0d17b" stroke="#a0d17b" points="564.019,-811.048 574.2535,-808.3086 564.5444,-804.0678 564.019,-811.048"/>
+</g>
+<!-- hidebound.core&#45;&gt;hidebound.core.traits -->
+<g id="edge78" class="edge">
+<title>hidebound.core&#45;&gt;hidebound.core.traits</title>
+<path fill="none" stroke="#a0d17b" d="M241.9133,-694.1267C347.4857,-730.5874 603.8285,-804.7383 810,-749 827.8813,-744.1658 828.7133,-734.6543 846,-728 860.9486,-722.2457 877.1404,-717.4414 893.2006,-713.4554"/>
+<polygon fill="#a0d17b" stroke="#a0d17b" points="894.2555,-716.8021 903.1711,-711.0782 892.632,-709.993 894.2555,-716.8021"/>
+</g>
+<!-- hidebound.core&#45;&gt;hidebound.core.validators -->
+<g id="edge79" class="edge">
+<title>hidebound.core&#45;&gt;hidebound.core.validators</title>
+<path fill="none" stroke="#a0d17b" d="M200.76,-657.5152C213.3455,-627.3878 238.8315,-565.7576 259,-513 275.8674,-468.8775 258.8548,-443.4111 295,-413 304.7273,-404.8159 439.719,-382.5362 543.9773,-366.3383"/>
+<polygon fill="#a0d17b" stroke="#a0d17b" points="544.6196,-369.7807 553.9656,-364.7904 543.5476,-362.8632 544.6196,-369.7807"/>
 </g>
 <!-- schematics -->
 <g id="node38" class="node">
