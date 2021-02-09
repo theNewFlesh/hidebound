@@ -43,6 +43,7 @@ discovered, validated, extracted, and copied or moved by Hidebound.
 
 # Dataflow
 ![](resources/data-flow.png)
+
 Data begins as files on disk. Hidebound creates a JSON-compatible dict from
 their name traits and file traits and then constructs an internal database table
 from them, one dict oer row. All the rows are then aggregated by asset, and
