@@ -41,6 +41,21 @@ directories according, to user defined specifications. Assets are placed into a
 root directory (typically one reserved for Hidebound projects) and then
 discovered, validated, extracted, and copied or moved by Hidebound.
 
+# Dataflow
+![](resources/data-flow.png)
+Data begins as files on disk. Hidebound creates a JSON-compatible dict from
+their name traits and file traits and then constructs an internal database table
+from them, one dict oer row. All the rows are then aggregated by asset, and
+converted into a JSON blobs. Those blobs are then validated according to their
+respective specifications. Files from valid assets are then copied or moved into
+Hidebound's data directory, in their same directory structure and naming.
+Metadata is written to JSON files inside Hidebound's metadata directory. Each
+file's metadata is written as a JSON file in /hidebound/metadata/file, and each
+asset's metadata (the aggregate of its file metadata) is written to
+/hidebound/metadata/asset. From their exporters, can export the valid
+asset data and its accompanying metadata to various locations, like an AWS S3
+bucket.
+
 # Workflow
 The acronynm to remember for workflows is **CRUDES**: create, read, update,
 delete, export and search. Those operations constitue the main functionality
