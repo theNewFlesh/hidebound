@@ -158,7 +158,7 @@ then Hidebound will presumably delete, the only existing copy of out asset data
 on the host machine.
 
 # Naming Convention
-Hidebound is a highly opionated framework that relies upon a strict but
+Hidebound is a highly opinionated framework that relies upon a strict but
 composable naming convention in order to extract metadata from filenames. All
 files and directories that are part of assets must conform to a naming
 convention defined within that asset's specification.
