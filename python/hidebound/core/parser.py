@@ -114,7 +114,7 @@ class AssetNameParser:
         Returns:
             dict: Grammar.
         '''
-        project = Regex(r'[a-z]{3,4}\d{1,3}')\
+        project = Regex(r'[a-z]{3,4}\d\d?\d?\d?')\
             .setResultsName('project')\
             .setFailAction(AssetNameParser._raise_field_error('project', 'token'))
 

@@ -81,6 +81,30 @@ class ParserTests(unittest.TestCase):
         )
         self.assertEqual(result, expected)
 
+    def test_parse_3(self):
+        fields = ['project', 'specification', 'coordinate', 'version']
+        name = 'p-proj1_s-spec062_c0000-0000-0000_v099'
+        result = AssetNameParser(fields).parse(name)
+        expected = dict(
+            project='proj1',
+            specification='spec062',
+            version=99,
+            coordinate=[0, 0, 0]
+        )
+        self.assertEqual(result, expected)
+
+    def test_parse_4(self):
+        fields = ['project', 'specification', 'coordinate', 'version']
+        name = 'p-proj0004_s-spec062_c0000-0000-0000_v099'
+        result = AssetNameParser(fields).parse(name)
+        expected = dict(
+            project='proj0004',
+            specification='spec062',
+            version=99,
+            coordinate=[0, 0, 0]
+        )
+        self.assertEqual(result, expected)
+
     def test_parse_bad_order(self):
         fields = [
             'project', 'specification', 'descriptor', 'version', 'frame',
@@ -162,6 +186,20 @@ class ParserTests(unittest.TestCase):
         name = 'p-proj-001_s-spec002_d-desc_v003_c0004-0005-0006_f0007.exr'
         msg = f'Illegal project field token in "{name}". Expecting: .*'
         with self.assertRaisesRegexp(ParseException, msg):
+            AssetNameParser(self.fields).parse(name)
+
+        name = 'p-proj_s-spec002_d-desc_v003_c0004-0005-0006_f0007.exr'
+        msg = f'Illegal project field token in "{name}". Expecting: .*'
+        with self.assertRaisesRegexp(ParseException, msg):
+            AssetNameParser(self.fields).parse(name)
+
+        name = 'p-proj12345_s-spec002_d-desc_v003_c0004-0005-0006_f0007.exr'
+        msg = 'Expected "_" .*'
+        with self.assertRaisesRegexp(ParseException, msg):
+            AssetNameParser(self.fields).parse(name)
+
+        for i in [1, 12, 123, 1234]:
+            name = f'p-proj{i}_s-spec002_d-desc_v003_c0004-0005-0006_f0007.exr'
             AssetNameParser(self.fields).parse(name)
 
     # SPECIFICATION-------------------------------------------------------------
