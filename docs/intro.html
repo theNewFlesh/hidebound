@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.9.2
+                0.9.3
               </div>
             
           
@@ -338,7 +338,7 @@ has three.</p>
 generates file and asset metadata as JSON files within the
 hidebound/metadata directory. Hidebound also copies or moves, depending
 on the config write mode, valid files and directories into the
-hidebound/data directory. Thus we now have a hidebound directory that
+hidebound/content directory. Thus we now have a hidebound directory that
 looks like this (unmentioned assets are collapsed behind the ellipses):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>/tmp/hidebound
 ├── hidebound_config.json
@@ -385,11 +385,12 @@ web app.</p>
 <div class="section" id="delete">
 <h2><em>Delete</em><a class="headerlink" href="#delete" title="Permalink to this headline">¶</a></h2>
 <p>Once this export process is complete, we may click the delete button.
-Hidebound deletes the hidebound/data and hidebound/metdata directories
-and all their contents. If write_mode in the Hidebound configuration is
-set to “copy”, then this step will merely delete data created by
-Hidebound. If it is set to “move”, then Hidebound will presumably
-delete, the only existing copy of out asset data on the host machine.</p>
+Hidebound deletes the hidebound/content and hidebound/metdata
+directories and all their contents. If write_mode in the Hidebound
+configuration is set to “copy”, then this step will merely delete data
+created by Hidebound. If it is set to “move”, then Hidebound will
+presumably delete, the only existing copy of out asset data on the host
+machine.</p>
 </div>
 </div>
 <div class="section" id="naming-convention">
@@ -701,9 +702,9 @@ api and docs.</p>
 <li><p>Dropdown - Groups search results by file or asset</p></li>
 <li><p>Init - Initialized the database with the current config</p></li>
 <li><p>Update - Initializes and updates the database with the current config</p></li>
-<li><p>Create - Copies or moves valid assets to hidebound/data directory and
-creates JSON files in hidebound/metadata directory</p></li>
-<li><p>Delete - Deletes hidebound/data and hidebound/metadata directories</p></li>
+<li><p>Create - Copies or moves valid assets to hidebound/content directory
+and creates JSON files in hidebound/metadata directory</p></li>
+<li><p>Delete - Deletes hidebound/content and hidebound/metadata directories</p></li>
 </ul>
 <p>Prior to calling update, the application will look like this:</p>
 <div class="figure align-default">
