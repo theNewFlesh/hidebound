@@ -231,7 +231,7 @@ p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png
 
 ### *Special Field Syntax*
 
-- Projects begin with 3 or 4 letters followed by 1 or 3 numbers
+- Projects begin with 3 or 4 letters followed by 1 to 4 numbers
 - Specifications begin with 3 or 4 letters followed by 3 numbers
 - Descriptors begin with a letter or number and may also contain hyphens
 - Descriptors may not begin with the words master, final or last

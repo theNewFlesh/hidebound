@@ -305,7 +305,7 @@ filename:
 *Special Field Syntax*
 ~~~~~~~~~~~~~~~~~~~~~~
 
--  Projects begin with 3 or 4 letters followed by 1 or 3 numbers
+-  Projects begin with 3 or 4 letters followed by 1 to 4 numbers
 -  Specifications begin with 3 or 4 letters followed by 3 numbers
 -  Descriptors begin with a letter or number and may also contain
    hyphens
