@@ -25,7 +25,7 @@ class ExporterBase:
         Raises:
             FileNotFoundError: If any of the directories have not been found.
         '''
-        data = Path(hidebound_dir, 'data')
+        data = Path(hidebound_dir, 'content')
         meta = Path(hidebound_dir, 'metadata')
         asset_dir = Path(meta, 'asset')
         file_dir = Path(meta, 'file')

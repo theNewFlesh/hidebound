@@ -418,12 +418,12 @@ class DatabaseTests(DatabaseTestBase):
         # check asset_path root conversions
         temp = asset_meta['metadata'].apply(lambda x: x['asset_path']).tolist()
         for result in temp:
-            self.assertTrue(result.startswith('/tmp/hidebound/data'))
+            self.assertTrue(result.startswith('/tmp/hidebound/content'))
 
         # check filepath root conversions
         temp = file_meta['metadata'].apply(lambda x: x['filepath']).tolist()
         for result in temp:
-            self.assertTrue(result.startswith('/tmp/hidebound/data'))
+            self.assertTrue(result.startswith('/tmp/hidebound/content'))
 
     def test_get_data_for_write_dirs(self):
         data = lbt.relative_path(__file__, '../../../resources/fake_data.csv')
@@ -436,7 +436,7 @@ class DatabaseTests(DatabaseTestBase):
         )
 
         result = file_data.target\
-            .apply(lambda x: '/tmp/hidebound/data' in x).unique().tolist()
+            .apply(lambda x: '/tmp/hidebound/content' in x).unique().tolist()
         self.assertEqual(result, [True])
 
         result = file_meta.target\

@@ -146,7 +146,7 @@ Next we click the create button. For each valid asset, Hidebound
 generates file and asset metadata as JSON files within the
 hidebound/metadata directory. Hidebound also copies or moves, depending
 on the config write mode, valid files and directories into the
-hidebound/data directory. Thus we now have a hidebound directory that
+hidebound/content directory. Thus we now have a hidebound directory that
 looks like this (unmentioned assets are collapsed behind the ellipses):
 
 ::
@@ -196,11 +196,12 @@ web app.
 ~~~~~~~~
 
 Once this export process is complete, we may click the delete button.
-Hidebound deletes the hidebound/data and hidebound/metdata directories
-and all their contents. If write\_mode in the Hidebound configuration is
-set to "copy", then this step will merely delete data created by
-Hidebound. If it is set to "move", then Hidebound will presumably
-delete, the only existing copy of out asset data on the host machine.
+Hidebound deletes the hidebound/content and hidebound/metdata
+directories and all their contents. If write\_mode in the Hidebound
+configuration is set to "copy", then this step will merely delete data
+created by Hidebound. If it is set to "move", then Hidebound will
+presumably delete, the only existing copy of out asset data on the host
+machine.
 
 Naming Convention
 =================
@@ -466,9 +467,9 @@ Its functions are as follows:
 -  Dropdown - Groups search results by file or asset
 -  Init - Initialized the database with the current config
 -  Update - Initializes and updates the database with the current config
--  Create - Copies or moves valid assets to hidebound/data directory and
-   creates JSON files in hidebound/metadata directory
--  Delete - Deletes hidebound/data and hidebound/metadata directories
+-  Create - Copies or moves valid assets to hidebound/content directory
+   and creates JSON files in hidebound/metadata directory
+-  Delete - Deletes hidebound/content and hidebound/metadata directories
 
 Prior to calling update, the application will look like this:
 

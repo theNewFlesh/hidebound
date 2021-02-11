@@ -78,7 +78,7 @@ def api():
         dict(
             name='write_mode',
             type='string',
-            description='How assets will be extracted to hidebound/data directory.',
+            description='How assets will be extracted to hidebound/content directory.',
             required=False,
             default='copy',
             enum=['copy', 'move'],

@@ -99,7 +99,7 @@ class ApiTests(DatabaseTestBase):
         self.client.post('/api/initialize', json=config)
         self.client.post('/api/update')
 
-        data = Path(self.hb_root, 'data')
+        data = Path(self.hb_root, 'content')
         meta = Path(self.hb_root, 'metadata')
         self.assertFalse(os.path.exists(data))
         self.assertFalse(os.path.exists(meta))
@@ -237,7 +237,7 @@ class ApiTests(DatabaseTestBase):
         self.client.post('/api/update')
         self.client.post('/api/create')
 
-        data = Path(self.hb_root, 'data')
+        data = Path(self.hb_root, 'content')
         meta = Path(self.hb_root, 'metadata')
         self.assertTrue(os.path.exists(data))
         self.assertTrue(os.path.exists(meta))
@@ -261,7 +261,7 @@ class ApiTests(DatabaseTestBase):
         expected = 'Hidebound data deleted.'
         self.assertEqual(result, expected)
 
-        data = Path(self.hb_root, 'data')
+        data = Path(self.hb_root, 'content')
         meta = Path(self.hb_root, 'metadata')
         self.assertFalse(os.path.exists(data))
         self.assertFalse(os.path.exists(meta))
@@ -316,7 +316,7 @@ class ApiTests(DatabaseTestBase):
         )
         self.client.post('/api/update')
         result = self.client.post('/api/export').json['message']
-        expected = 'hidebound/data directory does not exist'
+        expected = 'hidebound/content directory does not exist'
         self.assertRegex(result, expected)
 
     # SEARCH--------------------------------------------------------------------

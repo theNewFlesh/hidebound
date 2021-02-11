@@ -111,7 +111,7 @@ class Config(Model):
         exclude_regex (str, optional): Exclude filenames that match this regex.
             Default: '\.DS_Store'.
         write_mode (str, optional): How assets will be extracted to
-            hidebound/data directory. Default: copy.
+            hidebound/content directory. Default: copy.
         exporters (dict, optional): Dictionary of exporter configs, where the
             key is the exporter name and the value is its config. Default: {}.
     '''

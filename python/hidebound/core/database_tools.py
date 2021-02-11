@@ -334,7 +334,7 @@ def _get_data_for_write(data, source_dir, target_dir):
         return None
 
     source_dir = Path(source_dir).absolute().as_posix()
-    data_dir = Path(target_dir, 'data').absolute().as_posix()
+    data_dir = Path(target_dir, 'content').absolute().as_posix()
     meta_dir = Path(target_dir, 'metadata').absolute().as_posix()
 
     # add asset id

@@ -165,7 +165,7 @@ class DatabaseTests(DatabaseTestBase):
             data = data[data.asset_valid]
 
             # ensure files are written
-            result = Path(hb_root, 'data')
+            result = Path(hb_root, 'content')
             result = tools.directory_to_dataframe(result)
             result = sorted(result.filename.tolist())
             self.assertGreater(len(result), 0)
@@ -197,7 +197,7 @@ class DatabaseTests(DatabaseTestBase):
             data['asset_valid'] = False
             db.create()
 
-            result = Path(hb_root, 'data')
+            result = Path(hb_root, 'content')
             self.assertFalse(result.exists())
 
             result = Path(hb_root, 'metadata', 'file')
@@ -249,7 +249,7 @@ class DatabaseTests(DatabaseTestBase):
             self.assertEqual(result, [False])
 
             # ensure files are written
-            result = Path(hb_root, 'data')
+            result = Path(hb_root, 'content')
             result = tools.directory_to_dataframe(result)
             result = sorted(result.filename.tolist())
             self.assertGreater(len(result), 0)
@@ -547,7 +547,7 @@ class DatabaseTests(DatabaseTestBase):
             hb_root = Path(root, 'hidebound')
             os.makedirs(hb_root)
 
-            data_dir = Path(hb_root, 'data')
+            data_dir = Path(hb_root, 'content')
             os.makedirs(data_dir)
 
             meta_dir = Path(hb_root, 'metadata')

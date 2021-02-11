@@ -110,7 +110,7 @@ class Database:
             exclude_regex (str, optional): Exclude filenames that match this
                 regex. Default: '\.DS_Store'.
             write_mode (str, optional): How assets will be extracted to
-                hidebound/data directory. Default: copy.
+                hidebound/content directory. Default: copy.
             exporters (dict, optional): Dictionary of exporter configs, where
                 the key is the exporter name and the value is its config.
                 Default: {}.
@@ -178,7 +178,8 @@ class Database:
 
         Writes:
 
-            * file data to hb_parent/hidebound/data - under same directory structure
+            * file content to hb_parent/hidebound/content - under same directory
+                                                            structure
             * file metadata as json to hb_parent/hidebound/metadata/file
             * asset metadata as json to hb_parent/hidebound/metadata/asset
 
@@ -338,13 +339,13 @@ class Database:
     def delete(self):
         # type: () -> "Database"
         '''
-        Deletes hidebound/data and hidebound/metadata directories and all their
+        Deletes hidebound/content and hidebound/metadata directories and all their
         contents.
 
         Returns:
             Database: self.
         '''
-        data_dir = Path(self._hb_root, 'data')
+        data_dir = Path(self._hb_root, 'content')
         if data_dir.exists():
             shutil.rmtree(data_dir)
 

@@ -11,7 +11,7 @@ from hidebound.exporters.exporter_base import ExporterBase
 
 class ExporterBaseTests(unittest.TestCase):
     def create_data(self, root):
-        data = Path(root, 'data')
+        data = Path(root, 'content')
         metadata = Path(root, 'metadata')
         asset = Path(root, 'metadata', 'asset')
         file_ = Path(root, 'metadata', 'file')
@@ -53,7 +53,7 @@ class ExporterBaseTests(unittest.TestCase):
 
     def test_enforce_directory_structure(self):
         with TemporaryDirectory() as root:
-            data = Path(root, 'data')
+            data = Path(root, 'content')
             metadata = Path(root, 'metadata')
             asset = Path(root, 'metadata', 'asset')
             file_ = Path(root, 'metadata', 'file')

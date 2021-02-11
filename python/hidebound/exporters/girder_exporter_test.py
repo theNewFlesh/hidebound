@@ -69,7 +69,7 @@ class GirderExporterTests(unittest.TestCase):
         self.exporter = GirderExporter(**self.config, client=self.client)
 
     def create_data(self, root):
-        data = Path(root, 'data')
+        data = Path(root, 'content')
         metadata = Path(root, 'metadata')
         asset = Path(root, 'metadata', 'asset')
         file_ = Path(root, 'metadata', 'file')
@@ -90,7 +90,7 @@ class GirderExporterTests(unittest.TestCase):
         for i, data in enumerate(asset_data):
             id_ = i + 1
             meta_path = Path(asset, f'{id_}.json')
-            data['asset_path'] = f'{root}/data/{id_}'
+            data['asset_path'] = f'{root}/content/{id_}'
             data['asset_path_relative'] = f'{id_}'
             data['asset_name'] = f'{id_}'
             assets.append([meta_path, data])
@@ -105,7 +105,7 @@ class GirderExporterTests(unittest.TestCase):
 
             pid = id_.split('-')[0]
             data = dict(
-                filepath=f'{root}/data/{pid}/{id_}.txt',
+                filepath=f'{root}/content/{pid}/{id_}.txt',
                 filepath_relative=f'{pid}/{id_}.txt',
                 filename=f'{id_}.txt',
                 foo=f'bar-{id_}'
