@@ -81,3 +81,6 @@ RUN echo "\n${CYAN}INSTALL JUPYTER LAB EXTENSIONS${NO_COLOR}"; \
     @jupyterlab/plotly-extension
 
 ENV PYTHONPATH "${PYTHONPATH}:/root/hidebound/python"
+ENV LANGUAGE "C"
+ENV LC_ALL "C"
+ENV LANG "C"
