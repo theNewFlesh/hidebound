@@ -213,7 +213,7 @@ def get_container_id_command():
     Returns:
         str: Command.
     '''
-    cmd = 'docker ps | grep "{repo} " '.format(repo=REPO)
+    cmd = "docker ps | grep '{repo} ' ".format(repo=REPO)
     cmd += "| head -n 1 | awk '{print $1}'"
     return cmd
 
@@ -517,6 +517,18 @@ def get_requirements_command(info):
     return cmd
 
 
+def get_container_state_command():
+    '''
+    Checks the state of the container. Either "running" or "stopped".
+
+    Returns:
+        str: Docker state command.
+    '''
+    cmd = "if [ \"{cid}\" ]; then echo 'running'; else echo 'stopped'; fi"
+    cmd = cmd.format(cid=get_container_id_command())
+    return cmd
+
+
 def get_start_command(info):
     '''
     Starts up container.
@@ -527,8 +539,12 @@ def get_start_command(info):
     Returns:
         str: Fully resolved docker-compose up command.
     '''
-    cmd = '{compose} up --detach; cd $CWD'
-    cmd = cmd.format(compose=get_docker_compose_command(info))
+    cmd = 'export STATE=`{state}`; '
+    cmd += 'if [ $STATE == "stopped" ]; then {compose} up --detach; cd $CWD; fi'
+    cmd = cmd.format(
+        state=get_container_state_command(),
+        compose=get_docker_compose_command(info)
+    )
     return cmd
 
 
