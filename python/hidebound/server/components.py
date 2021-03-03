@@ -136,7 +136,8 @@ def get_dash_app(server, storage_type='memory'):
     content = html.Div(id='content', className='content')
 
     app = dash.Dash(
-        __name__,
+        name='hidebound',
+        title='Hidebound',
         server=server,
         external_stylesheets=['/static/style.css'],
     )
