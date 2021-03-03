@@ -25,7 +25,7 @@ Hidebound service used for displaying and interacting with Hidebound database.
 '''
 
 
-APP = flask.Flask(__name__)  # type: Union[flask.Flask, dash.Dash]
+APP = flask.Flask('hidebound')  # type: Union[flask.Flask, dash.Dash]
 swg.Swagger(APP)
 APP.register_blueprint(api.API)
 APP = components.get_dash_app(APP)
