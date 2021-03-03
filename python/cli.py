@@ -53,6 +53,7 @@ def get_info():
     restart      - Restart {repo} service
     requirements - Write frozen requirements to disk
     start        - Start {repo} service
+    state        - State of {repo} service
     stop         - Stop {repo} service
     test         - Run testing on {repo} service
     tox          - Run tox tests on {repo}
@@ -517,6 +518,43 @@ def get_requirements_command(info):
     return cmd
 
 
+def get_state_command():
+    '''
+    Gets the state of the service.
+    Container states include: absent, running, stopped.
+    Image states include: present, absent.
+
+    Returns:
+        str: Command
+    '''
+    cmd = 'export IMAGE_EXISTS=`docker images {repo} | grep -v REPOSITORY`; '
+    cmd += 'export CONTAINER_EXISTS=`docker ps -a -f name={repo}'
+    cmd += ' | grep -v CONTAINER`; '
+    cmd += 'export RUNNING=`docker ps -a -f name={repo} -f status=running '
+    cmd += '| grep -v CONTAINER`; '
+    cmd += 'export CONTAINER_STATE; export IMAGE_STATE; '
+    cmd += 'if [ -z "$IMAGE_EXISTS" ]; then'
+    cmd += '    export IMAGE_STATE="{red}absent{clear}"; '
+    cmd += 'else export IMAGE_STATE="{green}present{clear}"; fi; '
+    cmd += 'if [ -z "$CONTAINER_EXISTS" ]; then'
+    cmd += '    export CONTAINER_STATE="{red}absent{clear}"; '
+    cmd += 'elif [ -z "$RUNNING" ]; then '
+    cmd += '    export CONTAINER_STATE="{red}stopped{clear}"; '
+    cmd += 'else'
+    cmd += '    export CONTAINER_STATE="{green}running{clear}"; '
+    cmd += 'fi; '
+    cmd += 'echo "service: {cyan}{repo}{clear}  -  '
+    cmd += 'image: $IMAGE_STATE  -  container: $CONTAINER_STATE"'
+    cmd = cmd.format(
+        repo=REPO,
+        cyan='\033[0;36m',
+        red='\033[0;31m',
+        green='\033[0;32m',
+        clear='\033[0m',
+    )
+    return cmd
+
+
 def get_container_state_command():
     '''
     Checks the state of the container. Either "running" or "stopped".
@@ -779,6 +817,9 @@ def main():
 
     elif mode == 'start':
         cmd = get_start_command(info)
+    
+    elif mode == 'state':
+        cmd = get_state_command()
 
     elif mode == 'stop':
         cmd = get_stop_command(info)
