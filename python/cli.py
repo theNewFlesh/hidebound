@@ -806,7 +806,7 @@ def main():
 
     elif mode == 'start':
         cmd = get_start_command(info)
-    
+
     elif mode == 'state':
         cmd = get_state_command()
 
