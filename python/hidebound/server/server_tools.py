@@ -8,6 +8,7 @@ import traceback
 
 import flask
 import jinja2
+import jsoncomment as jsonc
 import lunchbox.tools as lbt
 # ------------------------------------------------------------------------------
 
@@ -123,7 +124,7 @@ def setup_hidebound_directory(root, config_path=None):
     }
     if config_path is not None:
         with open(config_path) as f:
-            config = json.load(f)
+            config = jsonc.JsonComment().load(f)
 
     config_path = Path(root, 'hidebound', 'hidebound_config.json')
     if not config_path.is_file():

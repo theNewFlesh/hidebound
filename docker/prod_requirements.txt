@@ -9,6 +9,7 @@ flask
 girder-client
 humanfriendly
 jinja2
+jsoncomment
 lunchbox
 marshmallow
 numpy

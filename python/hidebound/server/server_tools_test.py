@@ -1,7 +1,9 @@
-import json
 from pathlib import Path
-import re
 from tempfile import TemporaryDirectory
+import json
+import re
+
+import jsoncomment as jsonc
 
 from hidebound.core.database_test_base import DatabaseTestBase
 import hidebound.server.server_tools as server_tools
@@ -33,7 +35,7 @@ class ServerToolsTests(DatabaseTestBase):
             self.assertTrue(expected_config_path.is_file())
 
             with open(config_path) as f:
-                result = json.load(f)
+                result = jsonc.JsonComment().load(f)
             self.assertEqual(result, expected_config)
 
     def test_setup_hidebound_directory_config_path(self):
@@ -50,7 +52,7 @@ class ServerToolsTests(DatabaseTestBase):
             config_path = Path(root, 'hidebound', 'hidebound_config.json')
 
             with open(config_path) as f:
-                result = json.load(f)
+                result = jsonc.JsonComment().load(f)
             self.assertEqual(result, expected_config)
 
     # ERRORS--------------------------------------------------------------------

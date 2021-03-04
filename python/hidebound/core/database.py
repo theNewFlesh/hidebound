@@ -9,8 +9,9 @@ import shutil
 import sys
 
 from pandas import DataFrame
-import pandasql
+import jsoncomment as jsonc
 import numpy as np
+import pandasql
 
 from hidebound.core.config import Config
 from hidebound.core.specification_base import SpecificationBase
@@ -82,7 +83,7 @@ class Database:
             Database: Database instance.
         '''
         with open(filepath) as f:
-            config = json.load(f)
+            config = jsonc.JsonComment().load(f)
         return Database.from_config(config)
 
     def __init__(

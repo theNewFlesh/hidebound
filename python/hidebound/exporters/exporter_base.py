@@ -1,8 +1,9 @@
 from typing import Dict, Union
 
 from pathlib import Path
-import json
 import os
+
+import jsoncomment as jsonc
 # ------------------------------------------------------------------------------
 
 
@@ -51,7 +52,7 @@ class ExporterBase:
             # export asset
             asset = Path(asset_dir, asset)
             with open(asset) as f:
-                asset_meta = json.load(f)
+                asset_meta = jsonc.JsonComment().load(f)
             self._export_asset(asset_meta)
 
             # export files
@@ -60,7 +61,7 @@ class ExporterBase:
             for filepath in filepaths:
                 filepath = Path(file_dir, filepath)
                 with open(filepath) as f:
-                    file_meta = json.load(f)
+                    file_meta = jsonc.JsonComment().load(f)
                 self._export_file(file_meta)
 
     def _export_asset(self, metadata):
