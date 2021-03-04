@@ -105,11 +105,15 @@ def on_event(*inputs):
     input_id = context.triggered[0]['prop_id'].split('.')[0]
 
     if input_id == 'init-button':
-        APP.server.test_client().post('/api/initialize', json=conf)
+        response = APP.server.test_client().post('/api/initialize', json=conf).json
+        if 'error' in response.keys():
+            store['/api/read'] = response
 
     elif input_id == 'update-button':
         if api.DATABASE is None:
-            APP.server.test_client().post('/api/initialize', json=conf)
+            response = APP.server.test_client().post('/api/initialize', json=conf).json
+            if 'error' in response.keys():
+                store['/api/read'] = response
 
         APP.server.test_client().post('/api/update')
 
