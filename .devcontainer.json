@@ -7,6 +7,7 @@
     "workspaceFolder": "/root/${localWorkspaceFolderBasename}",
     "settings": {
         "terminal.integrated.shell.linux": "/bin/bash",
+        "terminal.integrated.env.linux": {"REPO_ENV": "True"},
         "python.languageServer": "Pylance",
         "python.linting.enabled": true,
         "python.linting.flake8Args": ["--config=docker/flake8.ini"],
