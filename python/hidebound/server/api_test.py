@@ -85,7 +85,7 @@ class ApiTests(DatabaseTestBase):
         config = json.dumps(config)
         result = self.client.post('/api/initialize', json=config)
         result = result.json['message']
-        expected = '/foo/bar is not a directory or does not exist.'
+        expected = '/foo/bar is not a directory(.|\n)*or does not exist.'
         self.assertRegex(result, expected)
 
     # CREATE--------------------------------------------------------------------

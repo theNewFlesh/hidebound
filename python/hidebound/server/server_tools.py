@@ -1,6 +1,7 @@
 from typing import Any, Dict, Tuple, Union
 
 from pathlib import Path
+from pprint import pformat
 import base64
 import json
 import os
@@ -76,7 +77,14 @@ def error_to_response(error):
     Returns:
         flask.Response: Flask response.
     '''
-    args = ['    ' + str(x) for x in error.args]  # type: Any
+    args = []  # type: Any
+    for arg in error.args:
+        if hasattr(arg, 'items'):
+            for key, val in arg.items():
+                args.append(pformat({key: pformat(val)}))
+        else:
+            args.append(str(arg))
+    args = ['    ' + x for x in args]
     args = '\n'.join(args)
     klass = error.__class__.__name__
     msg = f'{klass}(\n{args}\n)'
