@@ -75,7 +75,6 @@ def get_dash_app(server, storage_type='memory'):
         'background': COLOR_SCHEME['bg'],
         'color': COLOR_SCHEME['light1'],
         'border': '0px',
-        'min-width': '200px',
     }
     tab_selected_style = {
         'padding': '4px',
