@@ -175,7 +175,7 @@
             },
             {
                 "label": "test",
-                "command": "REPO_ENV=True pytest python -c docker/pytest.ini",
+                "command": "pytest python -c docker/pytest.ini",
                 "type": "shell"
             },
             {
