@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.9.4
+                0.9.5
               </div>
             
           
@@ -225,6 +225,7 @@
 <span class="s1">    restart      - Restart </span><span class="si">{repo}</span><span class="s1"> service</span>
 <span class="s1">    requirements - Write frozen requirements to disk</span>
 <span class="s1">    start        - Start </span><span class="si">{repo}</span><span class="s1"> service</span>
+<span class="s1">    state        - State of </span><span class="si">{repo}</span><span class="s1"> service</span>
 <span class="s1">    stop         - Stop </span><span class="si">{repo}</span><span class="s1"> service</span>
 <span class="s1">    test         - Run testing on </span><span class="si">{repo}</span><span class="s1"> service</span>
 <span class="s1">    tox          - Run tox tests on </span><span class="si">{repo}</span><span class="s1"></span>
@@ -385,7 +386,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        str: Command.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;docker ps | grep &quot;</span><span class="si">{repo}</span><span class="s1"> &quot; &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">)</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;docker ps | grep &#39;</span><span class="si">{repo}</span><span class="s2"> &#39; &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">)</span>
     <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot;| head -n 1 | awk &#39;{print $1}&#39;&quot;</span>
     <span class="k">return</span> <span class="n">cmd</span></div>
 
@@ -689,6 +690,44 @@
     <span class="k">return</span> <span class="n">cmd</span></div>
 
 
+<div class="viewcode-block" id="get_state_command"><a class="viewcode-back" href="../cli.html#cli.get_state_command">[docs]</a><span class="k">def</span> <span class="nf">get_state_command</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Gets the state of the service.</span>
+
+<span class="sd">    * Container states include: absent, running, stopped.</span>
+<span class="sd">    * Image states include: present, absent.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Command</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;export IMAGE_EXISTS=`docker images </span><span class="si">{repo}</span><span class="s1"> | grep -v REPOSITORY`; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;export CONTAINER_EXISTS=`docker ps -a -f name=</span><span class="si">{repo}</span><span class="s1">&#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39; | grep -v CONTAINER`; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;export RUNNING=`docker ps -a -f name=</span><span class="si">{repo}</span><span class="s1"> -f status=running &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;| grep -v CONTAINER`; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;export CONTAINER_STATE; export IMAGE_STATE; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;if [ -z &quot;$IMAGE_EXISTS&quot; ]; then&#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;    export IMAGE_STATE=&quot;</span><span class="si">{red}</span><span class="s1">absent</span><span class="si">{clear}</span><span class="s1">&quot;; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;else export IMAGE_STATE=&quot;</span><span class="si">{green}</span><span class="s1">present</span><span class="si">{clear}</span><span class="s1">&quot;; fi; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;if [ -z &quot;$CONTAINER_EXISTS&quot; ]; then&#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;    export CONTAINER_STATE=&quot;</span><span class="si">{red}</span><span class="s1">absent</span><span class="si">{clear}</span><span class="s1">&quot;; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;elif [ -z &quot;$RUNNING&quot; ]; then &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;    export CONTAINER_STATE=&quot;</span><span class="si">{red}</span><span class="s1">stopped</span><span class="si">{clear}</span><span class="s1">&quot;; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;else&#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;    export CONTAINER_STATE=&quot;</span><span class="si">{green}</span><span class="s1">running</span><span class="si">{clear}</span><span class="s1">&quot;; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;fi; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;echo &quot;service: </span><span class="si">{cyan}{repo}{clear}</span><span class="s1">  -  &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;image: $IMAGE_STATE  -  container: $CONTAINER_STATE&quot;&#39;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">,</span>
+        <span class="n">cyan</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[0;36m&#39;</span><span class="p">,</span>
+        <span class="n">red</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[0;31m&#39;</span><span class="p">,</span>
+        <span class="n">green</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[0;32m&#39;</span><span class="p">,</span>
+        <span class="n">clear</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[0m&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">cmd</span></div>
+
+
 <div class="viewcode-block" id="get_start_command"><a class="viewcode-back" href="../cli.html#cli.get_start_command">[docs]</a><span class="k">def</span> <span class="nf">get_start_command</span><span class="p">(</span><span class="n">info</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Starts up container.</span>
@@ -699,8 +738,13 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        str: Fully resolved docker-compose up command.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{compose}</span><span class="s1"> up --detach; cd $CWD&#39;</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">compose</span><span class="o">=</span><span class="n">get_docker_compose_command</span><span class="p">(</span><span class="n">info</span><span class="p">))</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;export STATE=`docker ps -a -f name=</span><span class="si">{repo}</span><span class="s1"> -f status=running &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;| grep -v CONTAINER`; &#39;</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;if [ -z &quot;$STATE&quot; ]; then </span><span class="si">{compose}</span><span class="s1"> up --detach; cd $CWD; fi&#39;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">,</span>
+        <span class="n">compose</span><span class="o">=</span><span class="n">get_docker_compose_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+    <span class="p">)</span>
     <span class="k">return</span> <span class="n">cmd</span></div>
 
 
@@ -935,6 +979,9 @@
 
     <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;start&#39;</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_start_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;state&#39;</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_state_command</span><span class="p">()</span>
 
     <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;stop&#39;</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">get_stop_command</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
