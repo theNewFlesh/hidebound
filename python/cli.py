@@ -521,8 +521,9 @@ def get_requirements_command(info):
 def get_state_command():
     '''
     Gets the state of the service.
-    Container states include: absent, running, stopped.
-    Image states include: present, absent.
+
+    * Container states include: absent, running, stopped.
+    * Image states include: present, absent.
 
     Returns:
         str: Command
