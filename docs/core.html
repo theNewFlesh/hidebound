@@ -381,6 +381,49 @@ key is the exporter name and the value is its config. Default: {}.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Generates a DataFrame using the files within a given directory as rows.</p>
 <dl class="py method">
+<dt id="hidebound.core.database.Database.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidebound_dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">specifications</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#hidebound.core.specification_base.SpecificationBase" title="hidebound.core.specification_base.SpecificationBase"><span class="pre">hidebound.core.specification_base.SpecificationBase</span></a><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_regex</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_regex</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'\\.DS_Store'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_mode</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'copy'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exporters</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/core/database.html#Database.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.core.database.Database.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an instance of Database but does not populate it with data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root_dir</strong> (<em>str</em><em> or </em><em>Path</em>) – Root directory to recurse.</p></li>
+<li><p><strong>hidebound_dir</strong> (<em>str</em><em> or </em><em>Path</em>) – Directory where hidebound data will be
+saved.</p></li>
+<li><p><strong>specifications</strong> (<em>list</em><em>[</em><a class="reference internal" href="#hidebound.core.specification_base.SpecificationBase" title="hidebound.core.specification_base.SpecificationBase"><em>SpecificationBase</em></a><em>]</em><em>, </em><em>optional</em>) – List of asset
+specifications. Default: [].</p></li>
+<li><p><strong>include_regex</strong> (<em>str</em><em>, </em><em>optional</em>) – Include filenames that match this
+regex. Default: None.</p></li>
+<li><p><strong>exclude_regex</strong> (<em>str</em><em>, </em><em>optional</em>) – Exclude filenames that match this
+regex. Default: ‘.DS_Store’.</p></li>
+<li><p><strong>write_mode</strong> (<em>str</em><em>, </em><em>optional</em>) – How assets will be extracted to
+hidebound/content directory. Default: copy.</p></li>
+<li><p><strong>exporters</strong> (<em>dict</em><em>, </em><em>optional</em>) – Dictionary of exporter configs, where
+the key is the exporter name and the value is its config.
+Default: {}.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – If specifications contains a non-SpecificationBase
+    object.</p></li>
+<li><p><strong>ValueError</strong> – If write_mode not is not “copy” or “move”.</p></li>
+<li><p><strong>FileNotFoundError</strong> – If root is not a directory or does not exist.</p></li>
+<li><p><strong>FileNotFoundError</strong> – If hidebound_dir is not directory or does not
+    exist.</p></li>
+<li><p><strong>NameError</strong> – If hidebound_dir is not named “hidebound”.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Database instance.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#hidebound.core.database.Database" title="hidebound.core.database.Database">Database</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="hidebound.core.database.Database.create">
 <code class="sig-name descname"><span class="pre">create</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#hidebound.core.database.Database" title="hidebound.core.database.Database"><span class="pre">Database</span></a><a class="reference internal" href="_modules/hidebound/core/database.html#Database.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.core.database.Database.create" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract valid assets as data and metadata within the hidebound
@@ -782,6 +825,31 @@ according to a dynimcally defined grammar.</p>
 <dt id="hidebound.core.parser.AssetNameParser.VERSION_PADDING">
 <code class="sig-name descname"><span class="pre">VERSION_PADDING</span></code><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><em class="property"> <span class="pre">=</span> <span class="pre">3</span></em><a class="headerlink" href="#hidebound.core.parser.AssetNameParser.VERSION_PADDING" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt id="hidebound.core.parser.AssetNameParser.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fields</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/core/parser.html#AssetNameParser.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.core.parser.AssetNameParser.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a AssetNameParser instance with given fields.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fields</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – An ordered list of asset fields.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If fields is empty.</p></li>
+<li><p><strong>ValueError</strong> – If fields are duplicated.</p></li>
+<li><p><strong>ValueError</strong> – If illegal fields are given.</p></li>
+<li><p><strong>ValueError</strong> – If illegal field order given.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>instance.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#hidebound.core.parser.AssetNameParser" title="hidebound.core.parser.AssetNameParser">AssetNameParser</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="hidebound.core.parser.AssetNameParser._get_extension_parser">
@@ -1244,6 +1312,17 @@ filepath pattern.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hidebound.core.specification_base.SpecificationBase.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/core/specification_base.html#SpecificationBase.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.core.specification_base.SpecificationBase.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a new specification instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>dict</em><em>, </em><em>optional</em>) – Dictionary of asset data.</p>
 </dd>
 </dl>
 </dd></dl>
