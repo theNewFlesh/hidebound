@@ -18,7 +18,7 @@ class GirderConfigTests(unittest.TestCase):
             api_key='api_key',
             root_id='root_id',
             root_type='collection',
-            host='0.0.0.0',
+            host='http://0.0.0.0',
             port=8080,
         )
 
@@ -37,10 +37,19 @@ class GirderConfigTests(unittest.TestCase):
 
     def test_host(self):
         config = self.config
-        expected = 'Invalid IPv4 address'
+        expected = 'Not a well-formed URL'
         config['host'] = '0.1.2'
         with self.assertRaisesRegexp(DataError, expected):
             GirderConfig(config).validate()
+
+        config['host'] = 'foo.bar.com'
+        with self.assertRaisesRegexp(DataError, expected):
+            GirderConfig(config).validate()
+
+        config = self.config
+        del config['host']
+        result = GirderConfig(config).to_primitive()['host']
+        self.assertEqual(result, 'http://0.0.0.0')
 
     def test_port(self):
         config = self.config
@@ -63,7 +72,7 @@ class GirderExporterTests(unittest.TestCase):
             api_key='api_key',
             root_id='root_id',
             root_type='collection',
-            host='2.2.2.2',
+            host='http://2.2.2.2',
             port=5555,
         )
         self.exporter = GirderExporter(**self.config, client=self.client)
@@ -138,7 +147,7 @@ class GirderExporterTests(unittest.TestCase):
             'api_key',
             'root_id',
             root_type='collection',
-            host='1.2.3.4',
+            host='http://1.2.3.4',
             port=5678,
             client=self.client
         )

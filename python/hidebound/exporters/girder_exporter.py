@@ -4,7 +4,7 @@ from pathlib import Path
 
 from girder_client import HttpError
 from schematics import Model
-from schematics.types import IntType, StringType, IPv4Type
+from schematics.types import IntType, StringType, URLType
 import girder_client
 
 from hidebound.exporters.exporter_base import ExporterBase
@@ -22,7 +22,7 @@ class GirderConfig(Model):
             be exported.
         root_type (str, optional): Root entity type. Default: collection.
             Options: folder, collection
-        host (str, optional): Docker host IP address. Default: 0.0.0.0.
+        host (str, optional): Docker host URL address. Default: http://0.0.0.0
         port (int, optional): Docker host port. Default: 8080.
     '''
     api_key = StringType(required=True)  # type: StringType
@@ -32,7 +32,7 @@ class GirderConfig(Model):
         default='collection',
         validators=[lambda x: vd.is_in([x], ['collection', 'folder'])]
     )  # type: StringType
-    host = IPv4Type(required=True, default='0.0.0.0')  # type: IPv4Type
+    host = URLType(required=True, default='http://0.0.0.0')  # type: URLType
     port = IntType(
         required=True,
         default=8080,
@@ -71,7 +71,7 @@ class GirderExporter(ExporterBase):
         api_key,
         root_id,
         root_type='collection',
-        host='0.0.0.0',
+        host='http://0.0.0.0',
         port=8080,
         client=None,
     ):
@@ -85,7 +85,8 @@ class GirderExporter(ExporterBase):
                 be exported.
             root_type (str, optional): Root entity type. Default: collection.
                 Options: folder, collection
-            host (str, optional): Docker host IP address. Default: 0.0.0.0.
+            host (str, optional): Docker host URL address.
+                Default: http://0.0.0.0.
             port (int, optional): Docker host port. Default: 8080.
             client (object, optional): Client instance, for testing.
                 Default: None.
@@ -103,9 +104,11 @@ class GirderExporter(ExporterBase):
             host=host,
             port=port,
         )
-        GirderConfig(config).validate()
+        config = GirderConfig(config)
+        config.validate()
+        config = config.to_primitive()
 
-        self._url = f'http://{host}:{port}/api/v1'  # type: str
+        self._url = f'{host}:{port}/api/v1'  # type: str
 
         if client is None:
             client = girder_client.GirderClient(apiUrl=self._url)  # pragma: no cover

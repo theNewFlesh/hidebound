@@ -256,7 +256,7 @@ class ConfigTests(unittest.TestCase):
                     api_key='api_key',
                     root_id='root_id',
                     root_type='collection',
-                    host='1.0.1.0',
+                    host='http://1.0.1.0',
                     port=2020,
                 )
             )
