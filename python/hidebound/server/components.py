@@ -263,7 +263,7 @@ def get_dummy_elements():
 def get_configbar(config):
     # type: (Dict) -> html.Div
     '''
-    Get a row of elements used for configuring hidebound.core.
+    Get a row of elements used for configuring Hidebound.
 
     Args:
         config (dict): Configuration to be displayed.
