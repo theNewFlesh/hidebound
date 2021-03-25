@@ -14,14 +14,11 @@
         "python.pythonPath": "/usr/bin/python3.7",
         "python.testing.pytestEnabled": true,
         "python.testing.unittestEnabled": false,
-        "terminal.integrated.shell.linux": "/bin/bash",
-        "terminal.integrated.cwd": "/root/hidebound",
-        "python.testing.cwd": "/root/hidebound",
+        "terminal.integrated.shell.linux": "/bin/zsh",
         "debug.allowBreakpointsEverywhere": true,
         "python.testing.pytestArgs": [
             "--cov=/root/hidebound/python",
-            "--cov-config=/root/hidebound/docker/pytest.ini",
-            "--cov-report=html:/root/hidebound/docs/htmlcov"
+            "--cov-config=/root/hidebound/docker/pytest.ini"
         ],
         "files.exclude": {
             "**/.classpath": true,
@@ -39,9 +36,7 @@
             "**/CVS": true,
             "*/*/**/node_modules": true
         },
-        "todo-tree.filtering.excludeGlobs": [
-            "**/docs/**/*.*"
-        ]
+    "todo-tree.filtering.excludeGlobs": ["**/docs/**/*.*"]
     },
     "tasks": {
         "version": "2.0.0",
@@ -65,7 +60,7 @@
             },{
                 "label": "architecture",
                 "command": [
-                    "python3.7 -c \"import re; from rolling_pin.repo_etl import RepoETL; etl = RepoETL('/root/hidebound/python'); regex = 'test|mock'; data = etl._data.copy(); func = lambda x: not bool(re.search(regex, x)); mask = data.node_name.apply(func); data = data[mask]; data.reset_index(inplace=True, drop=True); data.dependencies = data.dependencies.apply(lambda x: list(filter(func, x))); etl._data = data; etl.write('/root/hidebound/docs/architecture.svg', orient='lr')\" && ",
+                    "python3.7 -c \"import re; from rolling_pin.repo_etl import RepoETL; etl = RepoETL('/root/$REPO/python'); regex = 'test|mock'; data = etl._data.copy(); func = lambda x: not bool(re.search(regex, x)); mask = data.node_name.apply(func); data = data[mask]; data.reset_index(inplace=True, drop=True); data.dependencies = data.dependencies.apply(lambda x: list(filter(func, x))); etl._data = data; etl.write('/root/$REPO/docs/architecture.svg', orient='lr')\" && ",
                     "chown -R $USER docs"
                 ],
                 "type": "shell"
@@ -102,12 +97,12 @@
                     "architecture",
                     "metrics"
                 ],
-                "type": "shell",
+                "type": "shell"
             },
             {
                 "label": "lab",
                 "command": "jupyter lab --allow-root --ip=0.0.0.0 --no-browser",
-                "type": "shell",
+                "type": "shell"
             },
             {
                 "label": "lint",

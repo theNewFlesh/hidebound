@@ -20,6 +20,12 @@ RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${NO_COLOR}"; \
         vim \
         wget
 
+# install zsh
+RUN echo "\n${CYAN}SETUP ZSH${NO_COLOR}"; \
+    apt install -y zsh && \
+    curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -o install-oh-my-zsh.sh && \
+    echo y | sh install-oh-my-zsh.sh
+
 # install python3.7 and pip
 RUN echo "\n${CYAN}SETUP PYTHON3.7${NO_COLOR}"; \
     add-apt-repository -y ppa:deadsnakes/ppa && \
@@ -65,10 +71,12 @@ RUN echo "\n${CYAN}INSTALL PYTHON DEPENDECIES${NO_COLOR}"; \
     pip3.7 install -r prod_requirements.txt;
 RUN rm -rf /root/dev_requirements;
 
-# added aliases to bashrc
+# configure zsh
 WORKDIR /root
-RUN echo "\n${CYAN}CONFIGURE BASHRC${NO_COLOR}"; \
-    echo 'export PYTHONPATH="/root/hidebound/python"' >> /root/.bashrc;
+RUN echo "\n${CYAN}CONFIGURE ZSH${NO_COLOR}"; \
+    echo 'export PYTHONPATH="/root/hidebound/python"' >> /root/.zshrc
+COPY ./henanigans.zsh-theme /root/.oh-my-zsh/custom/themes/henanigans.zsh-theme
+COPY ./zshrc /root/.zshrc
 
 # install jupyter lab extensions
 ENV NODE_OPTIONS="--max-old-space-size=8192"

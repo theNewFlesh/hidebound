@@ -35,7 +35,6 @@ def get_info():
                         help='''Command to run in {repo} service.
 
     app          - Run Flask app inside {repo} container
-    bash         - Run BASH session inside {repo} container
     container    - Display the Docker container id for {repo} service
     coverage     - Generate coverage report for {repo} service
     destroy      - Shutdown {repo} service and destroy its Docker image
@@ -57,6 +56,7 @@ def get_info():
     stop         - Stop {repo} service
     test         - Run testing on {repo} service
     tox          - Run tox tests on {repo}
+    zsh          - Run ZSH session inside {repo} container
 '''.format(repo=REPO))
 
     parser.add_argument(
@@ -193,20 +193,6 @@ def get_app_command(info):
     return cmd
 
 
-def get_bash_command(info):
-    '''
-    Opens a bash session inside a running container.
-
-    Args:
-        info (dict): Info dictionary.
-
-    Returns:
-        str: Command.
-    '''
-    cmd = "{exec} bash".format(exec=get_docker_exec_command(info))
-    return cmd
-
-
 def get_container_id_command():
     '''
     Gets current container id.
@@ -257,7 +243,7 @@ def get_docs_command(info):
         str: Fully resolved build docs command.
     '''
     cmd = '{exec} mkdir -p /root/{repo}/docs; '
-    cmd += '{exec} bash -c "'
+    cmd += '{exec} zsh -c "'
     cmd += 'pandoc /root/{repo}/README.md -o /root/{repo}/sphinx/intro.rst; '
     cmd += 'sphinx-build /root/{repo}/sphinx /root/{repo}/docs; '
     cmd += 'cp /root/{repo}/sphinx/style.css /root/{repo}/docs/_static/style.css; '
@@ -440,7 +426,7 @@ def get_package_command(info):
     Returns:
         str: Command.
     '''
-    cmd = '{exec} bash -c "'
+    cmd = '{exec} zsh -c "'
     cmd += 'rm -rf /tmp/{repo}; '
     cmd += 'cp -R /root/{repo}/python /tmp/{repo}; '
     cmd += 'cp /root/{repo}/README.md /tmp/{repo}/README.md; '
@@ -507,7 +493,7 @@ def get_requirements_command(info):
     Returns:
         str: Command.
     '''
-    cmd = '{exec} bash -c "python3.7 -m pip list --format freeze > '
+    cmd = '{exec} zsh -c "python3.7 -m pip list --format freeze > '
     cmd += '/root/{repo}/docker/frozen_requirements.txt && '
     cmd += 'chown -R {user} /root/{repo}/docker/frozen_requirements.txt"'
     cmd = cmd.format(
@@ -621,7 +607,7 @@ def get_tox_command(info):
     Returns:
         str: Command.
     '''
-    cmd = '{exec} bash -c "'
+    cmd = '{exec} zsh -c "'
     cmd += 'rm -rf /tmp/{repo}; '
     cmd += 'cp -R /root/{repo}/python /tmp/{repo}; '
     cmd += 'cp /root/{repo}/README.md /tmp/{repo}/; '
@@ -637,6 +623,20 @@ def get_tox_command(info):
         repo=REPO,
         exec=get_docker_exec_command(info, env_vars=[]),
     )
+    return cmd
+
+
+def get_zsh_command(info):
+    '''
+    Opens a zsh session inside a running container.
+
+    Args:
+        info (dict): Info dictionary.
+
+    Returns:
+        str: Command.
+    '''
+    cmd = "{exec} zsh".format(exec=get_docker_exec_command(info))
     return cmd
 
 
@@ -732,9 +732,6 @@ def main():
     if mode == 'app':
         cmd = get_app_command(info)
 
-    elif mode == 'bash':
-        cmd = get_bash_command(info)
-
     elif mode == 'container':
         cmd = get_container_id_command()
 
@@ -819,6 +816,9 @@ def main():
 
     elif mode == 'tox':
         cmd = get_tox_command(info)
+
+    elif mode == 'zsh':
+        cmd = get_zsh_command(info)
 
     # print is used instead of execute because REPO_PATH and CURRENT_USER do not
     # resolve in a subprocess and subprocesses do not give real time stdout.

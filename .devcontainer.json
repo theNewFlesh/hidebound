@@ -6,7 +6,8 @@
     "service": "${localWorkspaceFolderBasename}",
     "workspaceFolder": "/root/${localWorkspaceFolderBasename}",
     "settings": {
-        "terminal.integrated.shell.linux": "/bin/bash",
+        "terminal.integrated.cwd": "/root/${localWorkspaceFolderBasename}",
+        "terminal.integrated.shell.linux": "/bin/zsh",
         "terminal.integrated.env.linux": {"REPO_ENV": "True"},
         "python.languageServer": "Pylance",
         "python.linting.enabled": true,

@@ -1,0 +1,5 @@
+ZSH_THEME="henanigans"
+export ZSH="/root/.oh-my-zsh"
+plugins=(git)
+source $ZSH/oh-my-zsh.sh
+echo 'will cite' | parallel --citation >/dev/null 2>&1
