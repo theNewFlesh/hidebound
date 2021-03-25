@@ -17,6 +17,7 @@ services:
       - ../:/root/hidebound
       - ./jupyter:/root/.jupyter
       - ./ipython:/root/.ipython
+      - ~/.ssh:/root/.ssh
       # - /mnt/storage:/mnt/storage
     working_dir: "/root/hidebound/python"
     command: "tail -f /dev/null"
