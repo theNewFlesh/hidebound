@@ -1,0 +1,20 @@
+apiVersion: v2
+name: hidebound
+version: 0.9.7
+home: https://github.com/theNewFlesh/hidebound
+description: |
+  A local database service for converting directories of arbitrary files into
+  validated assets and derived JSON metadata
+keywords:
+  - asset
+  - project
+  - data
+  - database
+  - datastore
+  - flask
+type: application
+appVersion : "0.1.0"
+maintainers:
+  - name: Alex Braun
+    email: alexander.g.braun@gmail.com
+    url: http://alexgbraun.com

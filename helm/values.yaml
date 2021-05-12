@@ -1,0 +1,28 @@
+namespace: hidebound
+
+container:
+  tag: latest
+  repo: /Users/alex/Documents/projects/hidebound
+  storage_volume: /Users/alex/Documents/projects/hidebound/resources
+  port: 80
+  image_pull_policy: Never
+  command: "python3.7 /root/hidebound/python/hidebound/server/app.py"
+  env:
+    - name: REPO_ENV
+      value: "True"
+
+service:
+  port: 80
+
+config:
+  root_directory: /mnt/storage/projects
+  hidebound_directory: /mnt/storage/hidebound
+  specification_files: 
+    - /mnt/storage/hidebound/specifications/test_specifications.py
+  include_regex:
+  exclude_regex: \\.DS_Store
+  write_mode: copy
+
+ingress:
+  url: hidebound.com
+  path: /

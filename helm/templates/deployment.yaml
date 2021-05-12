@@ -1,0 +1,82 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: {{ .Values.namespace }}
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: hidebound
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hidebound
+  template:
+    metadata:
+      labels:
+        app: hidebound
+    spec:
+      containers:
+        - name: hidebound
+          image: hidebound:{{ .Values.container.tag }}
+          imagePullPolicy: {{ .Values.container.image_pull_policy }}
+          command: "{{ .Values.container.command }}"
+          env: {{- range .Values.container.env }}
+            - name: {{ .name }}
+              value: {{ .value }}
+          {{- end }}
+          ports:
+            - containerPort: {{ .Values.container.port }}
+          volumeMounts:
+            - name: storage
+              mountPath: /mnt/storage
+            - name: repo
+              mountPath: /root/hidebound
+            - name: config
+              mountPath: /mnt/storage/hidebound/hidebound_config.json
+              subPath: hidebound_config.json
+      volumes:
+        - name: storage
+          hostPath:
+            path: {{ .Values.container.storage_volume }}
+            type: Directory
+        - name: repo
+          hostPath:
+            path: 
+            type: Directory
+        - name: config
+          configMap:
+            name: hidebound
+
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: hidebound
+  namespace: {{ .Values.namespace }}
+data:
+  hidebound_config.json: |
+    {
+        "root_directory": "{{ .Values.config.root_directory }}",
+        "hidebound_directory": "{{ .Values.config.hidebound_directory }}",
+        "specification_files": {{- toJson .Values.config.specification_files }},
+        "include_regex": "{{ .Values.config.include_regex }}",
+        "exclude_regex": "{{ .Values.config.exclude_regex }}",
+        "write_mode": "{{ .Values.config.write_mode }}"
+    }
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: hidebound
+  namespace: {{ .Values.namespace }}
+spec:
+  type: ClusterIP
+  selector:
+    app: hidebound
+  ports:
+    - port: {{ .Values.service.port }}
