@@ -23,7 +23,7 @@ spec:
         - name: hidebound
           image: hidebound:{{ .Values.container.tag }}
           imagePullPolicy: {{ .Values.container.image_pull_policy }}
-          command: "{{ .Values.container.command }}"
+          command: ["{{ .Values.container.command }}"]
           env: {{- range .Values.container.env }}
             - name: {{ .name }}
               value: {{ .value }}
