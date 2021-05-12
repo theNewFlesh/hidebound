@@ -26,7 +26,7 @@ spec:
           command: ["{{ .Values.container.command }}"]
           env: {{- range .Values.container.env }}
             - name: {{ .name }}
-              value: {{ .value }}
+              value: "{{ .value }}"
           {{- end }}
           ports:
             - containerPort: {{ .Values.container.port }}
