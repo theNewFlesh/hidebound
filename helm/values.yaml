@@ -1,12 +1,13 @@
 namespace: hidebound
 
 container:
+  image: k3d-dev-registry:5000/hidebound
   tag: latest
-  repo: /Users/alex/Documents/projects/hidebound
-  storage_volume: /Users/alex/Documents/projects/hidebound/resources
+  repo: /mnt/storage/repos/hidebound
+  storage_volume: /mnt/storage
   port: 80
-  image_pull_policy: Never
-  command: "python3.7 /root/hidebound/python/hidebound/server/app.py"
+  image_pull_policy: IfNotPresent
+  command: "/root/hidebound/python/hidebound/server/app.py"
   env:
     - name: REPO_ENV
       value: "True"
