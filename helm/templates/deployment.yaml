@@ -27,10 +27,7 @@ spec:
         - name: hidebound
           image: {{ .Values.container.image }}:{{ .Values.container.tag }}
           imagePullPolicy: {{ .Values.container.image_pull_policy }}
-          command: [
-              "python3.7",
-              "{{ .Values.container.command }}"
-            ]
+          command: [{{ join ", " .Values.container.command }}]
           env: {{- range .Values.container.env }}
             - name: {{ .name }}
               value: "{{ .value }}"

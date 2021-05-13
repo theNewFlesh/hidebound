@@ -7,7 +7,10 @@ container:
   storage_volume: /mnt/storage
   port: 80
   image_pull_policy: IfNotPresent
-  command: "/root/hidebound/python/hidebound/server/app.py"
+  command: [
+      "python3.7",
+      "/root/hidebound/python/hidebound/server/app.py"
+    ]
   env:
     - name: REPO_ENV
       value: "True"
