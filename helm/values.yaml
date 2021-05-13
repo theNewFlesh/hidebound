@@ -1,5 +1,7 @@
 namespace: hidebound
 
+organization: k8s
+
 container:
   image: k3d-dev-registry:5000/hidebound
   tag: latest
@@ -28,5 +30,4 @@ config:
   write_mode: copy
 
 ingress:
-  url: hidebound.com
-  path: /
+  path: /hidebound
