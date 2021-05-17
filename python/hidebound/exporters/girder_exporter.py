@@ -121,7 +121,7 @@ class GirderExporter(ExporterBase):
     def _export_dirs(self, dirpath, metadata={}, exists_ok=False):
         # type: (Union[str, Path], Dict, bool) -> Dict
         '''
-        Recursively export all the dirtectories found in given path.
+        Recursively export all the directories found in given path.
 
         Args:
             dirpath (Path or str): Directory paht to be exported.
