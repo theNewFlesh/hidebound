@@ -15,7 +15,7 @@ class ExporterBase:
         # type: (Union[str, Path]) -> None
         '''
         Ensure the following directory exist under given hidebound directory.
-            * data
+            * content
             * metadata
             * metadata/asset
             * metadata/file
