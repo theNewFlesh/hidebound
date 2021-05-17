@@ -22,8 +22,8 @@
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
-            126 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">126 run</button>
+            134 statements &nbsp;
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">134 run</button>
             <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">0 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">11 excluded</button>
         </h2>
@@ -589,12 +589,39 @@
     <p id="t535" class="run"><span class="n"><a href="#t535">535</a></span><span class="t">        <span class="key">return</span> <span class="key">True</span>&nbsp;</span><span class="r"></span></p>
     <p id="t536" class="run"><span class="n"><a href="#t536">536</a></span><span class="t">    <span class="nam">msg</span> <span class="op">=</span> <span class="str">f'Coordinates do not begin at {origin}.'</span>&nbsp;</span><span class="r"></span></p>
     <p id="t537" class="run"><span class="n"><a href="#t537">537</a></span><span class="t">    <span class="key">raise</span> <span class="nam">ValidationError</span><span class="op">(</span><span class="nam">msg</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t538" class="pln"><span class="n"><a href="#t538">538</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t539" class="pln"><span class="n"><a href="#t539">539</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t540" class="run"><span class="n"><a href="#t540">540</a></span><span class="t"><span class="op">@</span><span class="nam">validate</span><span class="op">(</span><span class="str">'''{} is not a valid bucket name. Bucket names must:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t541" class="pln"><span class="n"><a href="#t541">541</a></span><span class="t"><span class="str">    - be between 3 and 63 characters</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t542" class="pln"><span class="n"><a href="#t542">542</a></span><span class="t"><span class="str">    - only consist of lowercase letters, numbers, periods and hyphens</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t543" class="pln"><span class="n"><a href="#t543">543</a></span><span class="t"><span class="str">    - begin and end with a letter or number'''</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t544" class="pln"><span class="n"><a href="#t544">544</a></span><span class="t"><span class="key">def</span> <span class="nam">is_bucket_name</span><span class="op">(</span><span class="nam">item</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t545" class="pln"><span class="n"><a href="#t545">545</a></span><span class="t">    <span class="com"># type: (str) -> bool</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t546" class="pln"><span class="n"><a href="#t546">546</a></span><span class="t">    <span class="str">'''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t547" class="pln"><span class="n"><a href="#t547">547</a></span><span class="t"><span class="str">    Validates a bucket name.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t548" class="pln"><span class="n"><a href="#t548">548</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t549" class="pln"><span class="n"><a href="#t549">549</a></span><span class="t"><span class="str">    Args:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t550" class="pln"><span class="n"><a href="#t550">550</a></span><span class="t"><span class="str">        item (str): bucket name.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t551" class="pln"><span class="n"><a href="#t551">551</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t552" class="pln"><span class="n"><a href="#t552">552</a></span><span class="t"><span class="str">    Raises:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t553" class="pln"><span class="n"><a href="#t553">553</a></span><span class="t"><span class="str">        ValidationError: If bucket name is invalid.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t554" class="pln"><span class="n"><a href="#t554">554</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t555" class="pln"><span class="n"><a href="#t555">555</a></span><span class="t"><span class="str">    Returns:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t556" class="pln"><span class="n"><a href="#t556">556</a></span><span class="t"><span class="str">        bool: Validity of bucket name.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t557" class="pln"><span class="n"><a href="#t557">557</a></span><span class="t"><span class="str">    '''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t558" class="run"><span class="n"><a href="#t558">558</a></span><span class="t">    <span class="key">if</span> <span class="key">not</span> <span class="num">3</span> <span class="op">&lt;=</span> <span class="nam">len</span><span class="op">(</span><span class="nam">item</span><span class="op">)</span> <span class="op">&lt;=</span> <span class="num">63</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t559" class="run"><span class="n"><a href="#t559">559</a></span><span class="t">        <span class="key">return</span> <span class="key">False</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t560" class="run"><span class="n"><a href="#t560">560</a></span><span class="t">    <span class="key">if</span> <span class="key">not</span> <span class="nam">item</span><span class="op">.</span><span class="nam">islower</span><span class="op">(</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t561" class="run"><span class="n"><a href="#t561">561</a></span><span class="t">        <span class="key">return</span> <span class="key">False</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t562" class="run"><span class="n"><a href="#t562">562</a></span><span class="t">    <span class="key">if</span> <span class="nam">re</span><span class="op">.</span><span class="nam">search</span><span class="op">(</span><span class="str">'^[a-z0-9][a-z0-9-.]*[a-z0-9]$'</span><span class="op">,</span> <span class="nam">item</span><span class="op">)</span> <span class="key">is</span> <span class="key">None</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t563" class="run"><span class="n"><a href="#t563">563</a></span><span class="t">        <span class="key">return</span> <span class="key">False</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t564" class="run"><span class="n"><a href="#t564">564</a></span><span class="t">    <span class="key">return</span> <span class="key">True</span>&nbsp;</span><span class="r"></span></p>
 </div>
 <div id="footer">
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2021-03-05 01:58 +0000
+            created at 2021-05-17 23:41 +0000
         </p>
     </div>
 </div>

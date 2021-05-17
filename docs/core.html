@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.9.7
+                0.10.0
               </div>
             
           
@@ -290,6 +290,11 @@ key is the exporter name and the value is its config. Default: {}.</p>
 <dl class="py attribute">
 <dt id="hidebound.core.config.Config.ExportersConfig.girder">
 <code class="sig-name descname"><span class="pre">girder</span></code><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.compound.ModelType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ModelType(GirderConfig)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">ExportersConfig</span> <span class="pre">as</span> <span class="pre">'girder'&gt;</span></em><a class="headerlink" href="#hidebound.core.config.Config.ExportersConfig.girder" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="hidebound.core.config.Config.ExportersConfig.s3">
+<code class="sig-name descname"><span class="pre">s3</span></code><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.compound.ModelType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ModelType(S3Config)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">ExportersConfig</span> <span class="pre">as</span> <span class="pre">'s3'&gt;</span></em><a class="headerlink" href="#hidebound.core.config.Config.ExportersConfig.s3" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2054,6 +2059,26 @@ coordinate.</p>
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Alls names are attributes of object.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hidebound.core.validators.is_bucket_name">
+<code class="sig-prename descclassname"><span class="pre">hidebound.core.validators.</span></code><code class="sig-name descname"><span class="pre">is_bucket_name</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">bool</span><a class="reference internal" href="_modules/hidebound/core/validators.html#is_bucket_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.core.validators.is_bucket_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates a bucket name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>item</strong> (<em>str</em>) – bucket name.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValidationError</strong> – If bucket name is invalid.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Validity of bucket name.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>bool</p>

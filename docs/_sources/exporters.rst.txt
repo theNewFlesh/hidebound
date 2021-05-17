@@ -16,3 +16,11 @@ girder_exporter
     :private-members:
     :undoc-members:
     :show-inheritance:
+
+s3_exporter
+-----------
+.. automodule:: hidebound.exporters.s3_exporter
+    :members:
+    :private-members:
+    :undoc-members:
+    :show-inheritance:
