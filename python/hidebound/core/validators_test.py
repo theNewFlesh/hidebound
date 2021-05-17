@@ -3,8 +3,9 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 import unittest
 
-import numpy as np
 from schematics.exceptions import ValidationError
+import numpy as np
+import pytest
 
 import hidebound.core.validators as vd
 # ------------------------------------------------------------------------------
@@ -391,3 +392,25 @@ class ValidatorsTests(unittest.TestCase):
         expected = r'Coordinates do not begin at \[1, 1\]\.'
         with self.assertRaisesRegexp(ValidationError, expected):
             vd.coordinates_begin_at(coords, [1, 1])
+
+    def test_is_bucket_name(self):
+        vd.is_bucket_name('foo')
+        vd.is_bucket_name('foo123')
+        vd.is_bucket_name('foo.123')
+        vd.is_bucket_name('foo-bar.123')
+
+        expected = [
+            '{} is not a valid bucket name. Bucket names must:',
+            '    - be between 3 and 63 characters',
+            '    - only consist of lowercase letters, numbers, periods and hyphens',
+            '    - begin and end with a letter or number'
+        ]
+        expected = '\n'.join(expected)
+
+        # less than 3
+        items = ['f', 'f' * 64, 'FooBar', '-foobar', 'foobar.']
+        for item in items:
+            # vd.is_bucket_name(item)
+            with pytest.raises(ValidationError) as e:
+                vd.is_bucket_name(item)
+            self.assertEqual(str(e.value[0]), expected.format(item))

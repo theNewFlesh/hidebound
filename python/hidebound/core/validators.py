@@ -535,3 +535,30 @@ def coordinates_begin_at(items, origin):
         return True
     msg = f'Coordinates do not begin at {origin}.'
     raise ValidationError(msg)
+
+
+@validate('''{} is not a valid bucket name. Bucket names must:
+    - be between 3 and 63 characters
+    - only consist of lowercase letters, numbers, periods and hyphens
+    - begin and end with a letter or number''')
+def is_bucket_name(item):
+    # type: (str) -> bool
+    '''
+    Validates a bucket name.
+
+    Args:
+        item (str): bucket name.
+
+    Raises:
+        ValidationError: If bucket name is invalid.
+
+    Returns:
+        bool: Validity of bucket name.
+    '''
+    if not 3 <= len(item) <= 63:
+        return False
+    if not item.islower():
+        return False
+    if re.search('^[a-z0-9][a-z0-9-.]*[a-z0-9]$', item) is None:
+        return False
+    return True
