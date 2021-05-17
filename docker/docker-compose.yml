@@ -10,7 +10,7 @@ services:
       dockerfile: hidebound.dockerfile
     ports:
       - '9012:9000'
-      - '5000:5000'
+      - '5080:80'
     userns_mode: "host"
     user: root
     volumes:
