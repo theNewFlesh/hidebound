@@ -13,6 +13,7 @@ from schematics import Model
 
 from hidebound.core.specification_base import SpecificationBase
 from hidebound.exporters.girder_exporter import GirderConfig
+from hidebound.exporters.s3_exporter import S3Config
 import hidebound.core.validators as vd
 # ------------------------------------------------------------------------------
 
@@ -136,4 +137,5 @@ class Config(Model):
 
     class ExportersConfig(Model):
         girder = ModelType(GirderConfig, required=False, default=None)  # type: ModelType
+        s3 = ModelType(S3Config, required=False, default=None)  # type: ModelType
     exporters = ModelType(ExportersConfig, required=False, default={})  # type: ModelType

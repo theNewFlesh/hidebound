@@ -258,17 +258,29 @@ class ConfigTests(unittest.TestCase):
                     root_type='collection',
                     host='http://1.0.1.0',
                     port=2020,
+                ),
+                s3=dict(
+                    access_key='foo',
+                    secret_key='bar',
+                    bucket='bucket'
                 )
             )
             cfg.Config(config).validate()
 
-            #  bad girder config
+            # bad girder config
             config['exporters']['girder']['root_type'] = 'pizza'
             expected = r"pizza is not in \[\'collection\', \'folder\'\]"
             with self.assertRaisesRegexp(DataError, expected):
                 cfg.Config(self.config).validate()
+            config['exporters']['girder']['root_type'] = 'collection'
 
-            #  bad exporter config
+            # bad s3 config
+            config['exporters']['s3']['bucket'] = 'BadBucket'
+            expected = 'is not a valid bucket name'
+            with self.assertRaisesRegexp(DataError, expected):
+                cfg.Config(self.config).validate()
+
+            # bad exporter config
             config['exporters'] = dict(bagel='lox')
             expected = 'Rogue field'
             with self.assertRaisesRegexp(DataError, expected):
