@@ -56,7 +56,7 @@ ipywidgets==7.6.3
 itsdangerous==1.1.0
 jedi==0.18.0
 jeepney==0.6.0
-Jinja2==2.10.3
+Jinja2==2.11.3
 jmespath==0.10.0
 json-spec==0.10.1
 json5==0.9.5
