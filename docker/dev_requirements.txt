@@ -9,6 +9,7 @@ ipywidgets
 jinja2==2.10.3
 jupyterlab==1.2.3
 nbconvert==5.6.1
+moto
 mypy
 nbformat==4.4.0
 notebook==6.0.2
