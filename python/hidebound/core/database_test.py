@@ -6,7 +6,9 @@ from tempfile import TemporaryDirectory
 import os
 import re
 
+from moto import mock_s3
 from schematics.exceptions import DataError
+import boto3 as boto
 
 from hidebound.core.database import Database
 from hidebound.core.database_test_base import DatabaseTestBase
@@ -571,7 +573,7 @@ class DatabaseTests(DatabaseTestBase):
             self.assertEqual(result, expected)
 
     # EXPORT--------------------------------------------------------------------
-    def test_export(self):
+    def test_export_girder(self):
         with TemporaryDirectory() as root:
             hb_root = Path(root, 'hidebound')
             os.makedirs(hb_root)
@@ -595,6 +597,55 @@ class DatabaseTests(DatabaseTestBase):
             ]
             for expected in asset_paths:
                 self.assertIn(expected, result)
+
+    @mock_s3
+    def test_export_s3(self):
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hidebound')
+            os.makedirs(hb_root)
+            Spec001, Spec002, BadSpec = self.get_specifications()
+            data = self.create_files(root)
+
+            exporters = dict(
+                s3=dict(access_key='foo', secret_key='bar', bucket='bucket')
+            )
+            db = Database(
+                root, hb_root, [Spec001, Spec002], exporters=exporters
+            )
+
+            db.update().create().export()
+
+            results = boto.session \
+                .Session(
+                    aws_access_key_id='foo',
+                    aws_secret_access_key='bar',
+                ) \
+                .resource('s3') \
+                .Bucket('bucket') \
+                .objects.all()
+            results = [x.key for x in results]
+
+            # content
+            data = data[data.asset_valid]
+            expected = data.filepath.apply(lambda x: Path(*x.parts[3:])).tolist()
+            expected = sorted([f'hidebound/content/{x}' for x in expected])
+            content = sorted(list(filter(
+                lambda x: re.search('content', x), results
+            )))
+            self.assertEqual(content, expected)
+
+            # asset metadata
+            expected = data.asset_path.nunique()
+            result = len(list(filter(
+                lambda x: re.search('metadata/asset', x), results
+            )))
+            self.assertEqual(result, expected)
+
+            # file metadata
+            result = len(list(filter(
+                lambda x: re.search('metadata/file', x), results
+            )))
+            self.assertEqual(result, len(content))
 
     # SEARCH--------------------------------------------------------------------
     def test_search(self):
