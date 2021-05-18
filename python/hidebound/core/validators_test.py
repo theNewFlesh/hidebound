@@ -414,3 +414,12 @@ class ValidatorsTests(unittest.TestCase):
             with pytest.raises(ValidationError) as e:
                 vd.is_bucket_name(item)
             self.assertEqual(str(e.value[0]), expected.format(item))
+
+    def test_is_aws_region(self):
+        vd.is_aws_region('us-west-2')
+        vd.is_aws_region('ap-east-1')
+        vd.is_aws_region('eu-north-1')
+
+        expected = 'us-west-3 is not a valid AWS region.'
+        with self.assertRaisesRegexp(ValidationError, expected):
+            vd.is_aws_region('us-west-3')

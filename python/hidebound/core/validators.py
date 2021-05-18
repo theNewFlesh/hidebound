@@ -562,3 +562,45 @@ def is_bucket_name(item):
     if re.search('^[a-z0-9][a-z0-9-.]*[a-z0-9]$', item) is None:
         return False
     return True
+
+
+@validate('{} is not a valid AWS region.')
+def is_aws_region(item):
+    # type: (str) -> bool
+    '''
+    Validates an AWS region name.
+
+    Args:
+        item (str): AWS region name.
+
+    Raises:
+        ValidationError: If region name is invalid.
+
+    Returns:
+        bool: Validity of region name.
+    '''
+    # list derived from boto.session.Session().get_available_regions('s3')
+    regions = [
+        'af-south-1',
+        'ap-east-1',
+        'ap-northeast-1',
+        'ap-northeast-2',
+        'ap-northeast-3',
+        'ap-south-1',
+        'ap-southeast-1',
+        'ap-southeast-2',
+        'ca-central-1',
+        'eu-central-1',
+        'eu-north-1',
+        'eu-south-1',
+        'eu-west-1',
+        'eu-west-2',
+        'eu-west-3',
+        'me-south-1',
+        'sa-east-1',
+        'us-east-1',
+        'us-east-2',
+        'us-west-1',
+        'us-west-2',
+    ]
+    return item in regions
