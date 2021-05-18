@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.10.1
+                0.10.2
               </div>
             
           
@@ -514,6 +514,17 @@ Default: None.</p></li>
 </dd></dl>
 
 <dl class="py attribute">
+<dt id="hidebound.exporters.s3_exporter.S3Config.region">
+<code class="sig-name descname"><span class="pre">region</span></code><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Config.region" title="Permalink to this definition">¶</a></dt>
+<dd><p>AWS region name. Default: us-east-1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
 <dt id="hidebound.exporters.s3_exporter.S3Config._schema">
 <code class="sig-name descname"><span class="pre">_schema</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Config._schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -530,18 +541,23 @@ Default: None.</p></li>
 
 <dl class="py attribute">
 <dt id="id7">
-<code class="sig-name descname"><span class="pre">secret_key</span></code><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.StringType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">S3Config</span> <span class="pre">as</span> <span class="pre">'secret_key'&gt;</span></em><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">region</span></code><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.StringType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">S3Config</span> <span class="pre">as</span> <span class="pre">'region'&gt;</span></em><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="id8">
+<code class="sig-name descname"><span class="pre">secret_key</span></code><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.StringType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">S3Config</span> <span class="pre">as</span> <span class="pre">'secret_key'&gt;</span></em><a class="headerlink" href="#id8" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt id="hidebound.exporters.s3_exporter.S3Exporter">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">hidebound.exporters.s3_exporter.</span></code><code class="sig-name descname"><span class="pre">S3Exporter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">access_key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret_key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bucket</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/exporters/s3_exporter.html#S3Exporter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Exporter" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">hidebound.exporters.s3_exporter.</span></code><code class="sig-name descname"><span class="pre">S3Exporter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">access_key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret_key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bucket</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/exporters/s3_exporter.html#S3Exporter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Exporter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#hidebound.exporters.exporter_base.ExporterBase" title="hidebound.exporters.exporter_base.ExporterBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">hidebound.exporters.exporter_base.ExporterBase</span></code></a></p>
 <dl class="py method">
 <dt id="hidebound.exporters.s3_exporter.S3Exporter.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">access_key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret_key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bucket</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/exporters/s3_exporter.html#S3Exporter.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Exporter.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">access_key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret_key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bucket</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/exporters/s3_exporter.html#S3Exporter.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Exporter.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs a S3Exporter instances and creates a bucket with given name
 if it does not exist.</p>
 <dl class="field-list simple">
@@ -550,6 +566,7 @@ if it does not exist.</p>
 <li><p><strong>access_key</strong> (<em>str</em>) – AWS access key.</p></li>
 <li><p><strong>secret_key</strong> (<em>str</em>) – AWS secret key.</p></li>
 <li><p><strong>bucket</strong> (<em>str</em>) – AWS bucket name.</p></li>
+<li><p><strong>region</strong> (<em>str</em>) – AWS region.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>

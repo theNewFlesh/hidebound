@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.10.0
+                0.10.2
               </div>
             
           
@@ -192,10 +192,16 @@
 <span class="sd">        access_key (str): AWS access key.</span>
 <span class="sd">        secret_key (str): AWS secret key.</span>
 <span class="sd">        bucket (str): AWS bucket name.</span>
+<span class="sd">        region (str): AWS region name. Default: us-east-1.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">access_key</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: StringType</span>
     <span class="n">secret_key</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: StringType</span>
-    <span class="n">bucket</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_bucket_name</span><span class="p">])</span>  <span class="c1"># type: StringType</span></div>
+    <span class="n">bucket</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_bucket_name</span><span class="p">]</span>
+    <span class="p">)</span>  <span class="c1"># type: StringType</span>
+    <span class="n">region</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_aws_region</span><span class="p">]</span>
+    <span class="p">)</span>  <span class="c1"># type: StringType</span></div>
 
 
 <div class="viewcode-block" id="S3Exporter"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.s3_exporter.S3Exporter">[docs]</a><span class="k">class</span> <span class="nc">S3Exporter</span><span class="p">(</span><span class="n">ExporterBase</span><span class="p">):</span>
@@ -221,8 +227,9 @@
         <span class="n">access_key</span><span class="p">,</span>
         <span class="n">secret_key</span><span class="p">,</span>
         <span class="n">bucket</span><span class="p">,</span>
+        <span class="n">region</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="c1"># type: (str, str, str) -&gt; None</span>
+        <span class="c1"># type: (str, str, str, str) -&gt; None</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Constructs a S3Exporter instances and creates a bucket with given name</span>
 <span class="sd">        if it does not exist.</span>
@@ -231,6 +238,7 @@
 <span class="sd">            access_key (str): AWS access key.</span>
 <span class="sd">            secret_key (str): AWS secret key.</span>
 <span class="sd">            bucket (str): AWS bucket name.</span>
+<span class="sd">            region (str): AWS region.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            DataError: If config is invalid.</span>
@@ -239,6 +247,7 @@
             <span class="n">access_key</span><span class="o">=</span><span class="n">access_key</span><span class="p">,</span>
             <span class="n">secret_key</span><span class="o">=</span><span class="n">secret_key</span><span class="p">,</span>
             <span class="n">bucket</span><span class="o">=</span><span class="n">bucket</span><span class="p">,</span>
+            <span class="n">region</span><span class="o">=</span><span class="n">region</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">S3Config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
         <span class="c1"># ----------------------------------------------------------------------</span>
@@ -246,9 +255,12 @@
         <span class="n">session</span> <span class="o">=</span> <span class="n">boto</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">Session</span><span class="p">(</span>
             <span class="n">aws_access_key_id</span><span class="o">=</span><span class="n">access_key</span><span class="p">,</span>
             <span class="n">aws_secret_access_key</span><span class="o">=</span><span class="n">secret_key</span><span class="p">,</span>
+            <span class="n">region_name</span><span class="o">=</span><span class="n">region</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_bucket</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Bucket</span><span class="p">(</span><span class="n">bucket</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_bucket</span><span class="o">.</span><span class="n">create</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bucket</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">CreateBucketConfiguration</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;LocationConstraint&#39;</span><span class="p">:</span> <span class="n">region</span><span class="p">}</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="S3Exporter._export_asset"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.s3_exporter.S3Exporter._export_asset">[docs]</a>    <span class="k">def</span> <span class="nf">_export_asset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
         <span class="c1"># type: (Dict) -&gt; None</span>

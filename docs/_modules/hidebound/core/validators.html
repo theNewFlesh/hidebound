@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.9.4
+                0.10.2
               </div>
             
           
@@ -707,6 +707,75 @@
         <span class="k">return</span> <span class="kc">True</span>
     <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Coordinates do not begin at </span><span class="si">{</span><span class="n">origin</span><span class="si">}</span><span class="s1">.&#39;</span>
     <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="is_bucket_name"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_bucket_name">[docs]</a><span class="nd">@validate</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{}</span><span class="s1"> is not a valid bucket name. Bucket names must:</span>
+<span class="s1">    - be between 3 and 63 characters</span>
+<span class="s1">    - only consist of lowercase letters, numbers, periods and hyphens</span>
+<span class="s1">    - begin and end with a letter or number&#39;&#39;&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">is_bucket_name</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="c1"># type: (str) -&gt; bool</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Validates a bucket name.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        item (str): bucket name.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValidationError: If bucket name is invalid.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: Validity of bucket name.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="mi">3</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">63</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">item</span><span class="o">.</span><span class="n">islower</span><span class="p">():</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;^[a-z0-9][a-z0-9-.]*[a-z0-9]$&#39;</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="is_aws_region"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_aws_region">[docs]</a><span class="nd">@validate</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a valid AWS region.&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">is_aws_region</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="c1"># type: (str) -&gt; bool</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Validates an AWS region name.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        item (str): AWS region name.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValidationError: If region name is invalid.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: Validity of region name.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># list derived from boto.session.Session().get_available_regions(&#39;s3&#39;)</span>
+    <span class="n">regions</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;af-south-1&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ap-east-1&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ap-northeast-1&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ap-northeast-2&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ap-northeast-3&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ap-south-1&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ap-southeast-1&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ap-southeast-2&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ca-central-1&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;eu-central-1&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;eu-north-1&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;eu-south-1&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;eu-west-1&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;eu-west-2&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;eu-west-3&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;me-south-1&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;sa-east-1&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;us-east-1&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;us-east-2&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;us-west-1&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;us-west-2&#39;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="k">return</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">regions</span></div>
 </pre></div>
 
            </div>
