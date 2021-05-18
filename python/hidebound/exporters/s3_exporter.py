@@ -20,10 +20,16 @@ class S3Config(Model):
         access_key (str): AWS access key.
         secret_key (str): AWS secret key.
         bucket (str): AWS bucket name.
+        region (str): AWS region name. Default: us-east-1.
     '''
     access_key = StringType(required=True)  # type: StringType
     secret_key = StringType(required=True)  # type: StringType
-    bucket = StringType(required=True, validators=[vd.is_bucket_name])  # type: StringType
+    bucket = StringType(
+        required=True, validators=[vd.is_bucket_name]
+    )  # type: StringType
+    region = StringType(
+        required=True, validators=[vd.is_aws_region]
+    )  # type: StringType
 
 
 class S3Exporter(ExporterBase):
@@ -49,8 +55,9 @@ class S3Exporter(ExporterBase):
         access_key,
         secret_key,
         bucket,
+        region,
     ):
-        # type: (str, str, str) -> None
+        # type: (str, str, str, str) -> None
         '''
         Constructs a S3Exporter instances and creates a bucket with given name
         if it does not exist.
@@ -59,6 +66,7 @@ class S3Exporter(ExporterBase):
             access_key (str): AWS access key.
             secret_key (str): AWS secret key.
             bucket (str): AWS bucket name.
+            region (str): AWS region.
 
         Raises:
             DataError: If config is invalid.
@@ -67,6 +75,7 @@ class S3Exporter(ExporterBase):
             access_key=access_key,
             secret_key=secret_key,
             bucket=bucket,
+            region=region,
         )
         S3Config(config).validate()
         # ----------------------------------------------------------------------
@@ -74,9 +83,12 @@ class S3Exporter(ExporterBase):
         session = boto.session.Session(
             aws_access_key_id=access_key,
             aws_secret_access_key=secret_key,
+            region_name=region,
         )
         self._bucket = session.resource('s3').Bucket(bucket)
-        self._bucket.create()
+        self._bucket.create(
+            CreateBucketConfiguration={'LocationConstraint': region}
+        )
 
     def _export_asset(self, metadata):
         # type: (Dict) -> None

@@ -607,7 +607,12 @@ class DatabaseTests(DatabaseTestBase):
             data = self.create_files(root)
 
             exporters = dict(
-                s3=dict(access_key='foo', secret_key='bar', bucket='bucket')
+                s3=dict(
+                    access_key='foo',
+                    secret_key='bar',
+                    bucket='bucket',
+                    region='us-west-2',
+                )
             )
             db = Database(
                 root, hb_root, [Spec001, Spec002], exporters=exporters
@@ -619,6 +624,7 @@ class DatabaseTests(DatabaseTestBase):
                 .Session(
                     aws_access_key_id='foo',
                     aws_secret_access_key='bar',
+                    region_name='us-west-2',
                 ) \
                 .resource('s3') \
                 .Bucket('bucket') \

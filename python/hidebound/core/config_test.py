@@ -262,7 +262,8 @@ class ConfigTests(unittest.TestCase):
                 s3=dict(
                     access_key='foo',
                     secret_key='bar',
-                    bucket='bucket'
+                    bucket='bucket',
+                    region='us-west-2',
                 )
             )
             cfg.Config(config).validate()

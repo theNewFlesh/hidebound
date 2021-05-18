@@ -18,6 +18,7 @@ class S3ConfigTests(unittest.TestCase):
             access_key='foo',
             secret_key='bar',
             bucket='bucket',
+            region='us-west-2',
         )
 
     def test_validate(self):
@@ -25,6 +26,11 @@ class S3ConfigTests(unittest.TestCase):
 
     def test_bucket(self):
         self.config['bucket'] = 'BadBucket'
+        with self.assertRaises(DataError):
+            S3Config(self.config).validate()
+
+    def test_region(self):
+        self.config['region'] = 'us-west-3'
         with self.assertRaises(DataError):
             S3Config(self.config).validate()
 # ------------------------------------------------------------------------------
@@ -37,10 +43,12 @@ class S3ExporterTests(unittest.TestCase):
             access_key='foo',
             secret_key='bar',
             bucket='bucket',
+            region='us-west-2',
         )
         self.s3 = boto.session.Session(
             aws_access_key_id=self.config['access_key'],
             aws_secret_access_key=self.config['secret_key'],
+            region_name=self.config['region'],
         ).resource('s3')
         self.bucket = self.s3.Bucket(self.config['bucket'])
 
