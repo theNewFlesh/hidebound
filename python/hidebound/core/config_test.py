@@ -54,7 +54,7 @@ class IsSpecificationFileTests(unittest.TestCase):
 
     def test_has_specifications_attribute(self):
         with TemporaryDirectory() as root:
-            filepath = Path(root, 'specifications3.py')
+            filepath = Path(root, 'specifications.py')
 
             text = '''
                 from schematics.types import IntType, ListType, StringType
