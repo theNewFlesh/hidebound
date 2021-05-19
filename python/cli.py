@@ -48,7 +48,7 @@ def get_info():
     prod         - Start {repo} production service
     publish      - Publish repository to python package index.
     python       - Run python interpreter session inside {repo} container
-    remove       - Remove {repo} service Docker image
+    remove       - Remove {repo} service Docker container
     restart      - Restart {repo} service
     requirements - Write frozen requirements to disk
     start        - Start {repo} service
@@ -200,8 +200,8 @@ def get_container_id_command():
     Returns:
         str: Command.
     '''
-    cmd = "docker ps | grep '{repo} ' ".format(repo=REPO)
-    cmd += "| head -n 1 | awk '{print $1}'"
+    cmd = "docker ps -a --filter name={repo} ".format(repo=REPO)
+    cmd += "--format '{{.ID}}'"
     return cmd
 
 
@@ -480,6 +480,26 @@ def get_remove_image_command(info):
     cmd = 'IMAGE_ID=$({image_command}); '
     cmd += 'docker image rm --force $IMAGE_ID'
     cmd = cmd.format(image_command=get_image_id_command())
+    return cmd
+
+
+def get_remove_container_command(info):
+    '''
+    Removes docker container.
+
+    Args:
+        info (dict): Info dictionary.
+
+    Returns:
+        str: Command.
+    '''
+    cmd = 'CONTAINER_ID=`{container}`; '
+    cmd = '{stop}; '
+    cmd += 'docker rm `{$CONTAINER_ID}`'
+    cmd = cmd.format(
+        stop=get_stop_command(info),
+        container=get_container_id_command(),
+    )
     return cmd
 
 
@@ -793,7 +813,7 @@ def main():
         cmd = get_python_command(info)
 
     elif mode == 'remove':
-        cmd = get_remove_image_command(info)
+        cmd = get_remove_container_command(info)
 
     elif mode == 'restart':
         cmd = get_stop_command(info)
