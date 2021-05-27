@@ -104,41 +104,42 @@ def on_event(*inputs):
 
     input_id = context.triggered[0]['prop_id'].split('.')[0]
 
+    server = APP.server  # type: ignore
     if input_id == 'init-button':
-        response = APP.server.test_client().post('/api/initialize', json=conf).json
+        response = server.test_client().post('/api/initialize', json=conf).json
         if 'error' in response.keys():
             store['/api/read'] = response
 
     elif input_id == 'update-button':
         if api.DATABASE is None:
-            response = APP.server.test_client().post('/api/initialize', json=conf).json
+            response = server.test_client().post('/api/initialize', json=conf).json
             if 'error' in response.keys():
                 store['/api/read'] = response
 
-        APP.server.test_client().post('/api/update')
+        server.test_client().post('/api/update')
 
         params = json.dumps({'group_by_asset': grp})
-        response = APP.server.test_client().post('/api/read', json=params).json
+        response = server.test_client().post('/api/read', json=params).json
         store['/api/read'] = response
 
     elif input_id == 'create-button':
-        APP.server.test_client().post('/api/create')
+        server.test_client().post('/api/create')
 
     elif input_id == 'export-button':
-        response = APP.server.test_client().post('/api/export')
+        response = server.test_client().post('/api/export')
         code = response.status_code
         if code < 200 or code >= 300:
             store['/api/read'] = response.json
 
     elif input_id == 'delete-button':
-        APP.server.test_client().post('/api/delete')
+        server.test_client().post('/api/delete')
 
     elif input_id == 'search-button':
         query = json.dumps({
             'query': inputs_['query'],
             'group_by_asset': inputs_['dropdown']
         })
-        response = APP.server.test_client().post('/api/search', json=query).json
+        response = server.test_client().post('/api/search', json=query).json
         store['/api/read'] = response
         store['query'] = inputs_['query']
 

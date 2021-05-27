@@ -119,7 +119,7 @@ def initialize():
         write_mode='copy',
     )
 
-    temp = flask.request.get_json()
+    temp = flask.request.get_json()  # type: Any
     try:
         temp = json.loads(temp)
     except (JSONDecodeError, TypeError):
@@ -395,7 +395,7 @@ def search():
     global DATABASE
     global CONFIG
 
-    params = flask.request.get_json()
+    params = flask.request.get_json()  # type: Any
     grp = False
     try:
         params = json.loads(params)
