@@ -275,8 +275,7 @@ class Database:
         if len(self.data) > 0:
             cols = data \
                 .applymap(type) \
-                .apply(lambda x: [x.unique().tolist()]) \
-                .loc[0]
+                .apply(lambda x: x.unique().tolist())
             legal_cols = set([int, float, str, bool, None])
             mask = cols.apply(lambda x: set(x).difference(legal_cols) == set())
             cols = cols[mask].index.tolist()
