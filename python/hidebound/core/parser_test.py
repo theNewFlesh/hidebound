@@ -194,7 +194,7 @@ class ParserTests(unittest.TestCase):
             AssetNameParser(self.fields).parse(name)
 
         name = 'p-proj12345_s-spec002_d-desc_v003_c0004-0005-0006_f0007.exr'
-        msg = 'Expected "_" .*'
+        msg = 'Expected "_".*'
         with self.assertRaisesRegexp(ParseException, msg):
             AssetNameParser(self.fields).parse(name)
 
