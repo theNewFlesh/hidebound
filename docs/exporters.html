@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/style.css" type="text/css" />
 
   
@@ -30,6 +32,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -64,7 +67,7 @@
             
             
               <div class="version">
-                0.10.2
+                0.10.3
               </div>
             
           
@@ -185,13 +188,13 @@
 <div class="section" id="module-hidebound.exporters.exporter_base">
 <span id="exporter-base"></span><h2>exporter_base<a class="headerlink" href="#module-hidebound.exporters.exporter_base" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="hidebound.exporters.exporter_base.ExporterBase">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">hidebound.exporters.exporter_base.</span></code><code class="sig-name descname"><span class="pre">ExporterBase</span></code><a class="reference internal" href="_modules/hidebound/exporters/exporter_base.html#ExporterBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.exporter_base.ExporterBase" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.exporter_base.ExporterBase">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hidebound.exporters.exporter_base.</span></span><span class="sig-name descname"><span class="pre">ExporterBase</span></span><a class="reference internal" href="_modules/hidebound/exporters/exporter_base.html#ExporterBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.exporter_base.ExporterBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Abstract base class for hidebound exporters.</p>
 <dl class="py method">
-<dt id="hidebound.exporters.exporter_base.ExporterBase._enforce_directory_structure">
-<code class="sig-name descname"><span class="pre">_enforce_directory_structure</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hidebound_dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/exporters/exporter_base.html#ExporterBase._enforce_directory_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.exporter_base.ExporterBase._enforce_directory_structure" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.exporter_base.ExporterBase._enforce_directory_structure">
+<span class="sig-name descname"><span class="pre">_enforce_directory_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hidebound_dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/exporters/exporter_base.html#ExporterBase._enforce_directory_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.exporter_base.ExporterBase._enforce_directory_structure" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Ensure the following directory exist under given hidebound directory.</dt><dd><ul class="simple">
 <li><p>content</p></li>
@@ -212,8 +215,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="hidebound.exporters.exporter_base.ExporterBase._export_asset">
-<code class="sig-name descname"><span class="pre">_export_asset</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/exporters/exporter_base.html#ExporterBase._export_asset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.exporter_base.ExporterBase._export_asset" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.exporter_base.ExporterBase._export_asset">
+<span class="sig-name descname"><span class="pre">_export_asset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/exporters/exporter_base.html#ExporterBase._export_asset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.exporter_base.ExporterBase._export_asset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exports metadata from single JSON file in hidebound/metadata/asset.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -226,8 +229,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="hidebound.exporters.exporter_base.ExporterBase._export_file">
-<code class="sig-name descname"><span class="pre">_export_file</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/exporters/exporter_base.html#ExporterBase._export_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.exporter_base.ExporterBase._export_file" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.exporter_base.ExporterBase._export_file">
+<span class="sig-name descname"><span class="pre">_export_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/exporters/exporter_base.html#ExporterBase._export_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.exporter_base.ExporterBase._export_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exports metadata from single JSON file in hidebound/metadata/file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -240,8 +243,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="hidebound.exporters.exporter_base.ExporterBase.export">
-<code class="sig-name descname"><span class="pre">export</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hidebound_dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/exporters/exporter_base.html#ExporterBase.export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.exporter_base.ExporterBase.export" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.exporter_base.ExporterBase.export">
+<span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hidebound_dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/exporters/exporter_base.html#ExporterBase.export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.exporter_base.ExporterBase.export" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exports data within given hidebound directory.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -256,13 +259,13 @@
 <div class="section" id="module-hidebound.exporters.girder_exporter">
 <span id="girder-exporter"></span><h2>girder_exporter<a class="headerlink" href="#module-hidebound.exporters.girder_exporter" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="hidebound.exporters.girder_exporter.GirderConfig">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">hidebound.exporters.girder_exporter.</span></code><code class="sig-name descname"><span class="pre">GirderConfig</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trusted_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deserialize_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lazy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/exporters/girder_exporter.html#GirderConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderConfig" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.girder_exporter.GirderConfig">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hidebound.exporters.girder_exporter.</span></span><span class="sig-name descname"><span class="pre">GirderConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trusted_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deserialize_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lazy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/exporters/girder_exporter.html#GirderConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderConfig" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">schematics.deprecated.patch_models.&lt;locals&gt;.Model</span></code></p>
 <p>A class for validating configurations supplied to GirderExporter.</p>
 <dl class="py attribute">
-<dt id="hidebound.exporters.girder_exporter.GirderConfig.api_key">
-<code class="sig-name descname"><span class="pre">api_key</span></code><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderConfig.api_key" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.girder_exporter.GirderConfig.api_key">
+<span class="sig-name descname"><span class="pre">api_key</span></span><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderConfig.api_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Girder API key.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -272,8 +275,8 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="hidebound.exporters.girder_exporter.GirderConfig.root_id">
-<code class="sig-name descname"><span class="pre">root_id</span></code><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderConfig.root_id" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.girder_exporter.GirderConfig.root_id">
+<span class="sig-name descname"><span class="pre">root_id</span></span><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderConfig.root_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>ID of folder or collection under which all data will
 be exported.</p>
 <dl class="field-list simple">
@@ -284,8 +287,8 @@ be exported.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="hidebound.exporters.girder_exporter.GirderConfig.root_type">
-<code class="sig-name descname"><span class="pre">root_type</span></code><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderConfig.root_type" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.girder_exporter.GirderConfig.root_type">
+<span class="sig-name descname"><span class="pre">root_type</span></span><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderConfig.root_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Root entity type. Default: collection.
 Options: folder, collection</p>
 <dl class="field-list simple">
@@ -296,8 +299,8 @@ Options: folder, collection</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="hidebound.exporters.girder_exporter.GirderConfig.host">
-<code class="sig-name descname"><span class="pre">host</span></code><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderConfig.host" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.girder_exporter.GirderConfig.host">
+<span class="sig-name descname"><span class="pre">host</span></span><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderConfig.host" title="Permalink to this definition">¶</a></dt>
 <dd><p>Docker host URL address. Default: <a class="reference external" href="http://0.0.0.0">http://0.0.0.0</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -307,8 +310,8 @@ Options: folder, collection</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="hidebound.exporters.girder_exporter.GirderConfig.port">
-<code class="sig-name descname"><span class="pre">port</span></code><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderConfig.port" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.girder_exporter.GirderConfig.port">
+<span class="sig-name descname"><span class="pre">port</span></span><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderConfig.port" title="Permalink to this definition">¶</a></dt>
 <dd><p>Docker host port. Default: 8080.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -318,45 +321,45 @@ Options: folder, collection</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="hidebound.exporters.girder_exporter.GirderConfig._schema">
-<code class="sig-name descname"><span class="pre">_schema</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderConfig._schema" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.girder_exporter.GirderConfig._schema">
+<span class="sig-name descname"><span class="pre">_schema</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderConfig._schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id0">
-<code class="sig-name descname"><span class="pre">api_key</span></code><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.StringType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">GirderConfig</span> <span class="pre">as</span> <span class="pre">'api_key'&gt;</span></em><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">api_key</span></span><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.StringType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">GirderConfig</span> <span class="pre">as</span> <span class="pre">'api_key'&gt;</span></em><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id1">
-<code class="sig-name descname"><span class="pre">host</span></code><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.net.URLType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;URLType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">GirderConfig</span> <span class="pre">as</span> <span class="pre">'host'&gt;</span></em><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">host</span></span><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.net.URLType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;URLType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">GirderConfig</span> <span class="pre">as</span> <span class="pre">'host'&gt;</span></em><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id2">
-<code class="sig-name descname"><span class="pre">port</span></code><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.IntType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;IntType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">GirderConfig</span> <span class="pre">as</span> <span class="pre">'port'&gt;</span></em><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">port</span></span><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.IntType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;IntType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">GirderConfig</span> <span class="pre">as</span> <span class="pre">'port'&gt;</span></em><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id3">
-<code class="sig-name descname"><span class="pre">root_id</span></code><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.StringType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">GirderConfig</span> <span class="pre">as</span> <span class="pre">'root_id'&gt;</span></em><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">root_id</span></span><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.StringType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">GirderConfig</span> <span class="pre">as</span> <span class="pre">'root_id'&gt;</span></em><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id4">
-<code class="sig-name descname"><span class="pre">root_type</span></code><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.StringType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">GirderConfig</span> <span class="pre">as</span> <span class="pre">'root_type'&gt;</span></em><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">root_type</span></span><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.StringType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">GirderConfig</span> <span class="pre">as</span> <span class="pre">'root_type'&gt;</span></em><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt id="hidebound.exporters.girder_exporter.GirderExporter">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">hidebound.exporters.girder_exporter.</span></code><code class="sig-name descname"><span class="pre">GirderExporter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_type</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'collection'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'http://0.0.0.0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">8080</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/exporters/girder_exporter.html#GirderExporter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderExporter" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.girder_exporter.GirderExporter">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hidebound.exporters.girder_exporter.</span></span><span class="sig-name descname"><span class="pre">GirderExporter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_type</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'collection'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'http://0.0.0.0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">8080</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/exporters/girder_exporter.html#GirderExporter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderExporter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#hidebound.exporters.exporter_base.ExporterBase" title="hidebound.exporters.exporter_base.ExporterBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">hidebound.exporters.exporter_base.ExporterBase</span></code></a></p>
 <p>Export for Girder asset framework.</p>
 <dl class="py method">
-<dt id="hidebound.exporters.girder_exporter.GirderExporter.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_type</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'collection'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'http://0.0.0.0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">8080</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/exporters/girder_exporter.html#GirderExporter.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderExporter.__init__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.girder_exporter.GirderExporter.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_type</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'collection'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'http://0.0.0.0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">8080</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/exporters/girder_exporter.html#GirderExporter.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderExporter.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs a GirderExporter instances and creates a Girder client.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -380,8 +383,8 @@ Default: None.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="hidebound.exporters.girder_exporter.GirderExporter._export_asset">
-<code class="sig-name descname"><span class="pre">_export_asset</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/exporters/girder_exporter.html#GirderExporter._export_asset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderExporter._export_asset" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.girder_exporter.GirderExporter._export_asset">
+<span class="sig-name descname"><span class="pre">_export_asset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/exporters/girder_exporter.html#GirderExporter._export_asset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderExporter._export_asset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export asset metadata to Girder.
 Metadata must contain these fields:</p>
 <blockquote>
@@ -401,8 +404,8 @@ Metadata must contain these fields:</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="hidebound.exporters.girder_exporter.GirderExporter._export_dirs">
-<code class="sig-name descname"><span class="pre">_export_dirs</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dirpath</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exists_ok</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="_modules/hidebound/exporters/girder_exporter.html#GirderExporter._export_dirs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderExporter._export_dirs" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.girder_exporter.GirderExporter._export_dirs">
+<span class="sig-name descname"><span class="pre">_export_dirs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dirpath</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exists_ok</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><a class="reference internal" href="_modules/hidebound/exporters/girder_exporter.html#GirderExporter._export_dirs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderExporter._export_dirs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Recursively export all the directories found in given path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -422,8 +425,8 @@ directory. Default: {}.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="hidebound.exporters.girder_exporter.GirderExporter._export_file">
-<code class="sig-name descname"><span class="pre">_export_file</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span><a class="reference internal" href="_modules/hidebound/exporters/girder_exporter.html#GirderExporter._export_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderExporter._export_file" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.girder_exporter.GirderExporter._export_file">
+<span class="sig-name descname"><span class="pre">_export_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span><a class="reference internal" href="_modules/hidebound/exporters/girder_exporter.html#GirderExporter._export_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderExporter._export_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export file metadata to Girder.
 Metadata must contain these fields:</p>
 <blockquote>
@@ -447,8 +450,8 @@ Metadata must contain these fields:</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="hidebound.exporters.girder_exporter.GirderExporter.from_config">
-<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">from_config</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#hidebound.exporters.girder_exporter.GirderExporter" title="hidebound.exporters.girder_exporter.GirderExporter"><span class="pre">hidebound.exporters.girder_exporter.GirderExporter</span></a><a class="reference internal" href="_modules/hidebound/exporters/girder_exporter.html#GirderExporter.from_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderExporter.from_config" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.girder_exporter.GirderExporter.from_config">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">from_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#hidebound.exporters.girder_exporter.GirderExporter" title="hidebound.exporters.girder_exporter.GirderExporter"><span class="pre">hidebound.exporters.girder_exporter.GirderExporter</span></a><a class="reference internal" href="_modules/hidebound/exporters/girder_exporter.html#GirderExporter.from_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderExporter.from_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct a GirderExporter from a given config.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -476,13 +479,13 @@ Default: None.</p></li>
 <div class="section" id="module-hidebound.exporters.s3_exporter">
 <span id="s3-exporter"></span><h2>s3_exporter<a class="headerlink" href="#module-hidebound.exporters.s3_exporter" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="hidebound.exporters.s3_exporter.S3Config">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">hidebound.exporters.s3_exporter.</span></code><code class="sig-name descname"><span class="pre">S3Config</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trusted_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deserialize_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lazy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/exporters/s3_exporter.html#S3Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Config" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.s3_exporter.S3Config">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hidebound.exporters.s3_exporter.</span></span><span class="sig-name descname"><span class="pre">S3Config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trusted_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deserialize_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lazy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/exporters/s3_exporter.html#S3Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">schematics.deprecated.patch_models.&lt;locals&gt;.Model</span></code></p>
 <p>A class for validating configurations supplied to S3Exporter.</p>
 <dl class="py attribute">
-<dt id="hidebound.exporters.s3_exporter.S3Config.access_key">
-<code class="sig-name descname"><span class="pre">access_key</span></code><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Config.access_key" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.s3_exporter.S3Config.access_key">
+<span class="sig-name descname"><span class="pre">access_key</span></span><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Config.access_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>AWS access key.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -492,8 +495,8 @@ Default: None.</p></li>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="hidebound.exporters.s3_exporter.S3Config.secret_key">
-<code class="sig-name descname"><span class="pre">secret_key</span></code><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Config.secret_key" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.s3_exporter.S3Config.secret_key">
+<span class="sig-name descname"><span class="pre">secret_key</span></span><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Config.secret_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>AWS secret key.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -503,8 +506,8 @@ Default: None.</p></li>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="hidebound.exporters.s3_exporter.S3Config.bucket">
-<code class="sig-name descname"><span class="pre">bucket</span></code><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Config.bucket" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.s3_exporter.S3Config.bucket">
+<span class="sig-name descname"><span class="pre">bucket</span></span><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Config.bucket" title="Permalink to this definition">¶</a></dt>
 <dd><p>AWS bucket name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -514,8 +517,8 @@ Default: None.</p></li>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="hidebound.exporters.s3_exporter.S3Config.region">
-<code class="sig-name descname"><span class="pre">region</span></code><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Config.region" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.s3_exporter.S3Config.region">
+<span class="sig-name descname"><span class="pre">region</span></span><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Config.region" title="Permalink to this definition">¶</a></dt>
 <dd><p>AWS region name. Default: us-east-1.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -525,39 +528,39 @@ Default: None.</p></li>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="hidebound.exporters.s3_exporter.S3Config._schema">
-<code class="sig-name descname"><span class="pre">_schema</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Config._schema" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.s3_exporter.S3Config._schema">
+<span class="sig-name descname"><span class="pre">_schema</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Config._schema" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id5">
-<code class="sig-name descname"><span class="pre">access_key</span></code><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.StringType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">S3Config</span> <span class="pre">as</span> <span class="pre">'access_key'&gt;</span></em><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">access_key</span></span><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.StringType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">S3Config</span> <span class="pre">as</span> <span class="pre">'access_key'&gt;</span></em><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id6">
-<code class="sig-name descname"><span class="pre">bucket</span></code><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.StringType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">S3Config</span> <span class="pre">as</span> <span class="pre">'bucket'&gt;</span></em><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">bucket</span></span><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.StringType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">S3Config</span> <span class="pre">as</span> <span class="pre">'bucket'&gt;</span></em><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id7">
-<code class="sig-name descname"><span class="pre">region</span></code><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.StringType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">S3Config</span> <span class="pre">as</span> <span class="pre">'region'&gt;</span></em><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">region</span></span><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.StringType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">S3Config</span> <span class="pre">as</span> <span class="pre">'region'&gt;</span></em><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="id8">
-<code class="sig-name descname"><span class="pre">secret_key</span></code><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.StringType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">S3Config</span> <span class="pre">as</span> <span class="pre">'secret_key'&gt;</span></em><a class="headerlink" href="#id8" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">secret_key</span></span><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.StringType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">S3Config</span> <span class="pre">as</span> <span class="pre">'secret_key'&gt;</span></em><a class="headerlink" href="#id8" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt id="hidebound.exporters.s3_exporter.S3Exporter">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">hidebound.exporters.s3_exporter.</span></code><code class="sig-name descname"><span class="pre">S3Exporter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">access_key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret_key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bucket</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/exporters/s3_exporter.html#S3Exporter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Exporter" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.s3_exporter.S3Exporter">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hidebound.exporters.s3_exporter.</span></span><span class="sig-name descname"><span class="pre">S3Exporter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">access_key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret_key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bucket</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/exporters/s3_exporter.html#S3Exporter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Exporter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#hidebound.exporters.exporter_base.ExporterBase" title="hidebound.exporters.exporter_base.ExporterBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">hidebound.exporters.exporter_base.ExporterBase</span></code></a></p>
 <dl class="py method">
-<dt id="hidebound.exporters.s3_exporter.S3Exporter.__init__">
-<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">access_key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret_key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bucket</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/exporters/s3_exporter.html#S3Exporter.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Exporter.__init__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.s3_exporter.S3Exporter.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">access_key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret_key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bucket</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/exporters/s3_exporter.html#S3Exporter.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Exporter.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs a S3Exporter instances and creates a bucket with given name
 if it does not exist.</p>
 <dl class="field-list simple">
@@ -576,8 +579,8 @@ if it does not exist.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="hidebound.exporters.s3_exporter.S3Exporter._export_asset">
-<code class="sig-name descname"><span class="pre">_export_asset</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/exporters/s3_exporter.html#S3Exporter._export_asset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Exporter._export_asset" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.s3_exporter.S3Exporter._export_asset">
+<span class="sig-name descname"><span class="pre">_export_asset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/exporters/s3_exporter.html#S3Exporter._export_asset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Exporter._export_asset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exports metadata from single JSON file in hidebound/metadata/asset.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -587,8 +590,8 @@ if it does not exist.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="hidebound.exporters.s3_exporter.S3Exporter._export_file">
-<code class="sig-name descname"><span class="pre">_export_file</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/exporters/s3_exporter.html#S3Exporter._export_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Exporter._export_file" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.s3_exporter.S3Exporter._export_file">
+<span class="sig-name descname"><span class="pre">_export_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/exporters/s3_exporter.html#S3Exporter._export_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Exporter._export_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exports metadata from single JSON file in hidebound/metadata/file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -598,8 +601,8 @@ if it does not exist.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="hidebound.exporters.s3_exporter.S3Exporter.from_config">
-<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">from_config</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#hidebound.exporters.s3_exporter.S3Exporter" title="hidebound.exporters.s3_exporter.S3Exporter"><span class="pre">hidebound.exporters.s3_exporter.S3Exporter</span></a><a class="reference internal" href="_modules/hidebound/exporters/s3_exporter.html#S3Exporter.from_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Exporter.from_config" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hidebound.exporters.s3_exporter.S3Exporter.from_config">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">from_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#hidebound.exporters.s3_exporter.S3Exporter" title="hidebound.exporters.s3_exporter.S3Exporter"><span class="pre">hidebound.exporters.s3_exporter.S3Exporter</span></a><a class="reference internal" href="_modules/hidebound/exporters/s3_exporter.html#S3Exporter.from_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Exporter.from_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct a S3Exporter from a given config.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

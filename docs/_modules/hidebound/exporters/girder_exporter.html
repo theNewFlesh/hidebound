@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
@@ -30,6 +32,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
@@ -62,7 +65,7 @@
             
             
               <div class="version">
-                0.9.5
+                0.10.3
               </div>
             
           
@@ -238,7 +241,7 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="n">GirderExporter</span><span class="p">(</span><span class="n">client</span><span class="o">=</span><span class="n">client</span><span class="p">,</span> <span class="o">**</span><span class="n">config</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<div class="viewcode-block" id="GirderExporter.__init__"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.girder_exporter.GirderExporter.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">api_key</span><span class="p">,</span>
         <span class="n">root_id</span><span class="p">,</span>
@@ -288,12 +291,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="o">=</span> <span class="n">client</span>  <span class="c1"># type: Any</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_root_id</span> <span class="o">=</span> <span class="n">root_id</span>  <span class="c1"># type: str</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_root_type</span> <span class="o">=</span> <span class="n">root_type</span>  <span class="c1"># type: str</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root_type</span> <span class="o">=</span> <span class="n">root_type</span>  <span class="c1"># type: str</span></div>
 
 <div class="viewcode-block" id="GirderExporter._export_dirs"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.girder_exporter.GirderExporter._export_dirs">[docs]</a>    <span class="k">def</span> <span class="nf">_export_dirs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dirpath</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="p">{},</span> <span class="n">exists_ok</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="c1"># type: (Union[str, Path], Dict, bool) -&gt; Dict</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Recursively export all the dirtectories found in given path.</span>
+<span class="sd">        Recursively export all the directories found in given path.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            dirpath (Path or str): Directory paht to be exported.</span>

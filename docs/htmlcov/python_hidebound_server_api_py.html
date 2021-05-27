@@ -173,7 +173,7 @@
     <p id="t119" class="pln"><span class="n"><a href="#t119">119</a></span><span class="t">        <span class="nam">write_mode</span><span class="op">=</span><span class="str">'copy'</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t120" class="pln"><span class="n"><a href="#t120">120</a></span><span class="t">    <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t121" class="pln"><span class="n"><a href="#t121">121</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t122" class="run"><span class="n"><a href="#t122">122</a></span><span class="t">    <span class="nam">temp</span> <span class="op">=</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">request</span><span class="op">.</span><span class="nam">get_json</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t122" class="run"><span class="n"><a href="#t122">122</a></span><span class="t">    <span class="nam">temp</span> <span class="op">=</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">request</span><span class="op">.</span><span class="nam">get_json</span><span class="op">(</span><span class="op">)</span>  <span class="com"># type: Any</span>&nbsp;</span><span class="r"></span></p>
     <p id="t123" class="run"><span class="n"><a href="#t123">123</a></span><span class="t">    <span class="key">try</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t124" class="run"><span class="n"><a href="#t124">124</a></span><span class="t">        <span class="nam">temp</span> <span class="op">=</span> <span class="nam">json</span><span class="op">.</span><span class="nam">loads</span><span class="op">(</span><span class="nam">temp</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t125" class="run"><span class="n"><a href="#t125">125</a></span><span class="t">    <span class="key">except</span> <span class="op">(</span><span class="nam">JSONDecodeError</span><span class="op">,</span> <span class="nam">TypeError</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -449,7 +449,7 @@
     <p id="t395" class="pln"><span class="n"><a href="#t395">395</a></span><span class="t">    <span class="key">global</span> <span class="nam">DATABASE</span>&nbsp;</span><span class="r"></span></p>
     <p id="t396" class="pln"><span class="n"><a href="#t396">396</a></span><span class="t">    <span class="key">global</span> <span class="nam">CONFIG</span>&nbsp;</span><span class="r"></span></p>
     <p id="t397" class="pln"><span class="n"><a href="#t397">397</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t398" class="run"><span class="n"><a href="#t398">398</a></span><span class="t">    <span class="nam">params</span> <span class="op">=</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">request</span><span class="op">.</span><span class="nam">get_json</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t398" class="run"><span class="n"><a href="#t398">398</a></span><span class="t">    <span class="nam">params</span> <span class="op">=</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">request</span><span class="op">.</span><span class="nam">get_json</span><span class="op">(</span><span class="op">)</span>  <span class="com"># type: Any</span>&nbsp;</span><span class="r"></span></p>
     <p id="t399" class="run"><span class="n"><a href="#t399">399</a></span><span class="t">    <span class="nam">grp</span> <span class="op">=</span> <span class="key">False</span>&nbsp;</span><span class="r"></span></p>
     <p id="t400" class="run"><span class="n"><a href="#t400">400</a></span><span class="t">    <span class="key">try</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t401" class="run"><span class="n"><a href="#t401">401</a></span><span class="t">        <span class="nam">params</span> <span class="op">=</span> <span class="nam">json</span><span class="op">.</span><span class="nam">loads</span><span class="op">(</span><span class="nam">params</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -503,7 +503,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2021-05-17 23:41 +0000
+            created at 2021-05-27 05:38 +0000
         </p>
     </div>
 </div>
