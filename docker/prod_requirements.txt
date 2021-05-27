@@ -1,6 +1,6 @@
 apispec
 boto3
-dash
+dash>=1.20.0
 dash-core-components
 dash-cytoscape==0.1.1
 dash-html-components
