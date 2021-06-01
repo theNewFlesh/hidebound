@@ -296,6 +296,7 @@ def on_config_card_update(timestamp, store):
 
 if __name__ == '__main__':
     debug = 'DEBUG_MODE' in os.environ.keys()
+    config_path = None  # type: Any
     if debug:
         config, config_path = server_tools\
             .setup_hidebound_directory(
@@ -303,7 +304,7 @@ if __name__ == '__main__':
                 config_path='/root/hidebound/resources/test_config.json'
             )
     else:
-        config_path = '/mnt/storage/hidebound/hidebound_config.json'  # type: Any
+        config_path = '/mnt/storage/hidebound/hidebound_config.json'
         if not Path(config_path).is_file():
             config_path = None
         config, config_path = server_tools \
