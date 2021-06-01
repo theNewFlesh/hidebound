@@ -304,7 +304,7 @@ if __name__ == '__main__':
                 config_path='/root/hidebound/resources/test_config.json'
             )
     else:
-        config_path = '/mnt/storage/hidebound/hidebound_config.json'
+        config_path = '/mnt/storage/hidebound/config/hidebound_config.json'
         if not Path(config_path).is_file():
             config_path = None
         config, config_path = server_tools \
