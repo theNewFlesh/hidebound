@@ -27,12 +27,12 @@ class ServerToolsTests(DatabaseTestBase):
             hb_dir = Path(root, 'hidebound')
             self.assertTrue(hb_dir.is_dir())
 
-            specs = Path(hb_dir, 'specifications')
-            self.assertTrue(specs.is_dir())
+            config_dir = Path(hb_dir, 'config')
+            self.assertTrue(config_dir.is_dir())
 
-            expected_config_path = Path(hb_dir, 'hidebound_config.json')
-            self.assertEqual(config_path, expected_config_path.as_posix())
-            self.assertTrue(expected_config_path.is_file())
+            expected_path = Path(config_dir, 'hidebound_config.json')
+            self.assertEqual(config_path, expected_path.as_posix())
+            self.assertTrue(expected_path.is_file())
 
             with open(config_path) as f:
                 result = jsonc.JsonComment().load(f)
@@ -49,7 +49,9 @@ class ServerToolsTests(DatabaseTestBase):
             expected_config = {}
             self.assertEqual(config, expected_config)
 
-            config_path = Path(root, 'hidebound', 'hidebound_config.json')
+            config_path = Path(
+                root, 'hidebound', 'config', 'hidebound_config.json'
+            )
 
             with open(config_path) as f:
                 result = jsonc.JsonComment().load(f)
