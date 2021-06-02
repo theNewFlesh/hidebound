@@ -1,6 +1,6 @@
 {
-    "root_directory": "/tmp/projects",
-    "hidebound_directory": "/tmp/hidebound",
+    "root_directory": "/mnt/storage/projects",
+    "hidebound_directory": "/mnt/storage/hidebound",
     "specification_files": [
         "/root/hidebound/python/hidebound/core/test_specifications.py"
     ],
