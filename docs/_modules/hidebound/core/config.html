@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.10.5
+                0.10.7
               </div>
             
           
@@ -311,8 +311,12 @@
     <span class="p">)</span>  <span class="c1"># type: StringType</span>
 
 <div class="viewcode-block" id="Config.ExportersConfig"><a class="viewcode-back" href="../../../core.html#hidebound.core.config.Config.ExportersConfig">[docs]</a>    <span class="k">class</span> <span class="nc">ExportersConfig</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-        <span class="n">girder</span> <span class="o">=</span> <span class="n">ModelType</span><span class="p">(</span><span class="n">GirderConfig</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>  <span class="c1"># type: ModelType</span>
-        <span class="n">s3</span> <span class="o">=</span> <span class="n">ModelType</span><span class="p">(</span><span class="n">S3Config</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>  <span class="c1"># type: ModelType</span></div>
+        <span class="n">girder</span> <span class="o">=</span> <span class="n">ModelType</span><span class="p">(</span>
+            <span class="n">GirderConfig</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">serialize_when_none</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>  <span class="c1"># type: ModelType</span>
+        <span class="n">s3</span> <span class="o">=</span> <span class="n">ModelType</span><span class="p">(</span>
+            <span class="n">S3Config</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">serialize_when_none</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>  <span class="c1"># type: ModelType</span></div>
     <span class="n">exporters</span> <span class="o">=</span> <span class="n">ModelType</span><span class="p">(</span><span class="n">ExportersConfig</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">{})</span>  <span class="c1"># type: ModelType</span></div>
 </pre></div>
 

@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.10.5
+                0.10.7
               </div>
             
           
@@ -384,7 +384,9 @@
         <span class="n">className</span><span class="o">=</span><span class="s1">&#39;col query&#39;</span><span class="p">,</span>
         <span class="n">value</span><span class="o">=</span><span class="n">query</span><span class="p">,</span>
         <span class="n">placeholder</span><span class="o">=</span><span class="s1">&#39;SQL query that uses &quot;FROM data&quot;&#39;</span><span class="p">,</span>
-        <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;text&#39;</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;text&#39;</span><span class="p">,</span>
+        <span class="n">autoFocus</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">debounce</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">)</span>
     <span class="n">dropdown</span> <span class="o">=</span> <span class="n">get_dropdown</span><span class="p">([</span><span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;asset&#39;</span><span class="p">])</span>
 
@@ -626,6 +628,8 @@
         <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
         <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span>
         <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;datatable&#39;</span><span class="p">,</span>
+        <span class="n">cell_selectable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">editable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">css</span><span class="o">=</span><span class="p">[</span>
             <span class="p">{</span>
                 <span class="s1">&#39;selector&#39;</span><span class="p">:</span> <span class="s1">&#39;.dash-cell div.dash-cell-value&#39;</span><span class="p">,</span>
