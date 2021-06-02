@@ -136,6 +136,10 @@ class Config(Model):
     )  # type: StringType
 
     class ExportersConfig(Model):
-        girder = ModelType(GirderConfig, required=False, default=None)  # type: ModelType
-        s3 = ModelType(S3Config, required=False, default=None)  # type: ModelType
+        girder = ModelType(
+            GirderConfig, required=False, serialize_when_none=False
+        )  # type: ModelType
+        s3 = ModelType(
+            S3Config, required=False, serialize_when_none=False
+        )  # type: ModelType
     exporters = ModelType(ExportersConfig, required=False, default={})  # type: ModelType

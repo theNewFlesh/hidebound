@@ -175,6 +175,7 @@ class ConfigTests(unittest.TestCase):
             exclude_regex='bar',
             write_mode='copy',
         )
+    # --------------------------------------------------------------------------
 
     def test_config(self):
         with TemporaryDirectory() as temp:
@@ -244,45 +245,82 @@ class ConfigTests(unittest.TestCase):
             with self.assertRaisesRegexp(DataError, expected):
                 cfg.Config(self.config).validate()
 
-    def test_exporters(self):
-        with TemporaryDirectory() as temp:
-            self.set_data(temp)
-            os.makedirs(self.root)
-            os.makedirs(self.hb_root)
-
-            config = self.config
-            config['exporters'] = dict(
-                girder=dict(
-                    api_key='api_key',
-                    root_id='root_id',
-                    root_type='collection',
-                    host='http://1.0.1.0',
-                    port=2020,
-                ),
-                s3=dict(
-                    access_key='foo',
-                    secret_key='bar',
-                    bucket='bucket',
-                    region='us-west-2',
-                )
+    # EXPORTERS-----------------------------------------------------------------
+    def add_exporters_to_config(self, root):
+        self.set_data(root)
+        os.makedirs(self.root)
+        os.makedirs(self.hb_root)
+        self.config['exporters'] = dict(
+            girder=dict(
+                api_key='api_key',
+                root_id='root_id',
+                root_type='collection',
+                host='http://1.0.1.0',
+                port=2020,
+            ),
+            s3=dict(
+                access_key='foo',
+                secret_key='bar',
+                bucket='bucket',
+                region='us-west-2',
             )
-            cfg.Config(config).validate()
+        )
 
-            # bad girder config
-            config['exporters']['girder']['root_type'] = 'pizza'
+    def test_exporters(self):
+        with TemporaryDirectory() as root:
+            self.add_exporters_to_config(root)
+            cfg.Config(self.config).validate()
+
+    def test_exporters_bad_girder(self):
+        with TemporaryDirectory() as root:
+            self.add_exporters_to_config(root)
+            self.config['exporters']['girder']['root_type'] = 'pizza'
             expected = r"pizza is not in \[\'collection\', \'folder\'\]"
             with self.assertRaisesRegexp(DataError, expected):
                 cfg.Config(self.config).validate()
-            config['exporters']['girder']['root_type'] = 'collection'
+            self.config['exporters']['girder']['root_type'] = 'collection'
 
-            # bad s3 config
-            config['exporters']['s3']['bucket'] = 'BadBucket'
+    def test_exporters_bad_s3(self):
+        with TemporaryDirectory() as root:
+            self.add_exporters_to_config(root)
+            self.config['exporters']['s3']['bucket'] = 'BadBucket'
             expected = 'is not a valid bucket name'
             with self.assertRaisesRegexp(DataError, expected):
                 cfg.Config(self.config).validate()
 
-            # bad exporter config
-            config['exporters'] = dict(bagel='lox')
+    def test_exporters_bad_config(self):
+        with TemporaryDirectory() as root:
+            self.add_exporters_to_config(root)
+            self.config['exporters'] = dict(bagel='lox')
             expected = 'Rogue field'
             with self.assertRaisesRegexp(DataError, expected):
                 cfg.Config(self.config).validate()
+
+    def test_exporters_no_girder(self):
+        with TemporaryDirectory() as root:
+            self.add_exporters_to_config(root)
+            del self.config['exporters']['girder']
+            expected = self.config['exporters']
+            result = cfg.Config(self.config)
+            result.validate()
+            result = result.to_primitive()['exporters']
+            self.assertEqual(result, expected)
+
+    def test_exporters_no_s3(self):
+        with TemporaryDirectory() as root:
+            self.add_exporters_to_config(root)
+            del self.config['exporters']['s3']
+            expected = self.config['exporters']
+            result = cfg.Config(self.config)
+            result.validate()
+            result = result.to_primitive()['exporters']
+            self.assertEqual(result, expected)
+
+    def test_exporters_exporters(self):
+        with TemporaryDirectory() as root:
+            self.add_exporters_to_config(root)
+            del self.config['exporters']
+            result = cfg.Config(self.config)
+            result.validate()
+            result = result.to_primitive()['exporters']
+            self.assertEqual(result, {})
