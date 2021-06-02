@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.10.4
+                0.10.6
               </div>
             
           
@@ -756,15 +756,16 @@ One key-value pair per row.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="hidebound.server.server_tools.setup_hidebound_directory">
 <span class="sig-prename descclassname"><span class="pre">hidebound.server.server_tools.</span></span><span class="sig-name descname"><span class="pre">setup_hidebound_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/hidebound/server/server_tools.html#setup_hidebound_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.server.server_tools.setup_hidebound_directory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates [root]/hidebound and [root]/hidebound/specifications
-directories. Writes a default hidebound config to
-[root]/hidebound/hidebound_config.json if one does not exist.</p>
+<dd><p>Creates [root]/hidebound and [root]/hidebound/config directories.
+Writes a default hidebound config to
+[root]/hidebound/config/hidebound_config.json if one does not exist.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>root</strong> (<em>str</em><em> or </em><em>Path</em>) – Root directory of hidebound data.</p></li>
 <li><p><strong>config_path</strong> (<em>str</em><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Filepath of config data to be
-written to [root]/hidebound/hideebiund_config.json. Default: None.</p></li>
+written to [root]/hidebound/config/hidebound_config.json.
+Default: None.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

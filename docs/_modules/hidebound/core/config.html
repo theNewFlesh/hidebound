@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
@@ -30,6 +32,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
@@ -62,7 +65,7 @@
             
             
               <div class="version">
-                0.9.4
+                0.10.5
               </div>
             
           
@@ -185,6 +188,7 @@
 
 <span class="kn">from</span> <span class="nn">hidebound.core.specification_base</span> <span class="kn">import</span> <span class="n">SpecificationBase</span>
 <span class="kn">from</span> <span class="nn">hidebound.exporters.girder_exporter</span> <span class="kn">import</span> <span class="n">GirderConfig</span>
+<span class="kn">from</span> <span class="nn">hidebound.exporters.s3_exporter</span> <span class="kn">import</span> <span class="n">S3Config</span>
 <span class="kn">import</span> <span class="nn">hidebound.core.validators</span> <span class="k">as</span> <span class="nn">vd</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
@@ -307,7 +311,8 @@
     <span class="p">)</span>  <span class="c1"># type: StringType</span>
 
 <div class="viewcode-block" id="Config.ExportersConfig"><a class="viewcode-back" href="../../../core.html#hidebound.core.config.Config.ExportersConfig">[docs]</a>    <span class="k">class</span> <span class="nc">ExportersConfig</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-        <span class="n">girder</span> <span class="o">=</span> <span class="n">ModelType</span><span class="p">(</span><span class="n">GirderConfig</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>  <span class="c1"># type: ModelType</span></div>
+        <span class="n">girder</span> <span class="o">=</span> <span class="n">ModelType</span><span class="p">(</span><span class="n">GirderConfig</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>  <span class="c1"># type: ModelType</span>
+        <span class="n">s3</span> <span class="o">=</span> <span class="n">ModelType</span><span class="p">(</span><span class="n">S3Config</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>  <span class="c1"># type: ModelType</span></div>
     <span class="n">exporters</span> <span class="o">=</span> <span class="n">ModelType</span><span class="p">(</span><span class="n">ExportersConfig</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">{})</span>  <span class="c1"># type: ModelType</span></div>
 </pre></div>
 

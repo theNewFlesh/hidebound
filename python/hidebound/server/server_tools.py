@@ -105,26 +105,28 @@ def error_to_response(error):
 def setup_hidebound_directory(root, config_path=None):
     # type: (Union[str, Path], Union[str, Path, None]) -> Tuple[Dict, str]
     '''
-    Creates [root]/hidebound and [root]/hidebound/specifications
-    directories. Writes a default hidebound config to
-    [root]/hidebound/hidebound_config.json if one does not exist.
+    Creates [root]/hidebound and [root]/hidebound/config directories.
+    Writes a default hidebound config to
+    [root]/hidebound/config/hidebound_config.json if one does not exist.
 
     Args:
         root (str or Path): Root directory of hidebound data.
         config_path (str or Path, optional): Filepath of config data to be
-            written to [root]/hidebound/hideebiund_config.json. Default: None.
+            written to [root]/hidebound/config/hidebound_config.json.
+            Default: None.
 
     Return:
         tuple[dict, str]: Config data and filepath.
     '''
     root = Path(root)
-    hb_root = Path(root, 'hidebound')
-    os.makedirs(hb_root, exist_ok=True)
-    os.makedirs(Path(hb_root, 'specifications'), exist_ok=True)
+    hb_root = Path(root, 'hidebound').as_posix()
+    config_dir = Path(hb_root, 'config')
+    os.makedirs(config_dir, exist_ok=True)
+    target = Path(config_dir, 'hidebound_config.json').as_posix()
 
     config = {
         'root_directory': Path(root, 'projects').as_posix(),
-        'hidebound_directory': hb_root.as_posix(),
+        'hidebound_directory': hb_root,
         'specification_files': [],
         'include_regex': '',
         'exclude_regex': r'\.DS_Store',
@@ -134,12 +136,10 @@ def setup_hidebound_directory(root, config_path=None):
         with open(config_path) as f:
             config = jsonc.JsonComment().load(f)
 
-    config_path = Path(root, 'hidebound', 'hidebound_config.json')
-    if not config_path.is_file():
-        with open(config_path, 'w') as f:
-            json.dump(config, f, indent=4, sort_keys=True)
+    with open(target, 'w') as f:
+        json.dump(config, f, indent=4, sort_keys=True)
 
-    return config, config_path.as_posix()
+    return config, target
 
 
 # ERRORS------------------------------------------------------------------------

@@ -12,7 +12,7 @@
             "api_key": "eyS0nj9qPC5E7yK5l7nhGVPqDOBKPdA3EC60Rs9h",
             "root_id": "5ed735c8d8dd6242642406e5",
             "root_type": "collection",
-            "host": "172.17.0.1",
+            "host": "http://172.17.0.1",
             "port": 8080
         }
     }

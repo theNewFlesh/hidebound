@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.10.3
+                0.10.6
               </div>
             
           
@@ -471,6 +471,7 @@
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">debug</span> <span class="o">=</span> <span class="s1">&#39;DEBUG_MODE&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    <span class="n">config_path</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: Any</span>
     <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
         <span class="n">config</span><span class="p">,</span> <span class="n">config_path</span> <span class="o">=</span> <span class="n">server_tools</span>\
             <span class="o">.</span><span class="n">setup_hidebound_directory</span><span class="p">(</span>
@@ -478,8 +479,11 @@
                 <span class="n">config_path</span><span class="o">=</span><span class="s1">&#39;/root/hidebound/resources/test_config.json&#39;</span>
             <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">config</span><span class="p">,</span> <span class="n">config_path</span> <span class="o">=</span> <span class="n">server_tools</span>\
-            <span class="o">.</span><span class="n">setup_hidebound_directory</span><span class="p">(</span><span class="s1">&#39;/mnt/storage&#39;</span><span class="p">)</span>
+        <span class="n">config_path</span> <span class="o">=</span> <span class="s1">&#39;/mnt/storage/hidebound/config/hidebound_config.json&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            <span class="n">config_path</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">config</span><span class="p">,</span> <span class="n">config_path</span> <span class="o">=</span> <span class="n">server_tools</span> \
+            <span class="o">.</span><span class="n">setup_hidebound_directory</span><span class="p">(</span><span class="s1">&#39;/mnt/storage&#39;</span><span class="p">,</span> <span class="n">config_path</span><span class="o">=</span><span class="n">config_path</span><span class="p">)</span>
     <span class="n">api</span><span class="o">.</span><span class="n">CONFIG</span> <span class="o">=</span> <span class="n">config</span>
     <span class="n">CONFIG_PATH</span> <span class="o">=</span> <span class="n">config_path</span>
     <span class="n">APP</span><span class="o">.</span><span class="n">run_server</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>

@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
@@ -30,6 +32,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
@@ -62,7 +65,7 @@
             
             
               <div class="version">
-                0.9.5
+                0.10.5
               </div>
             
           
@@ -205,7 +208,7 @@
     <span class="n">COORDINATE_PADDING</span> <span class="o">=</span> <span class="mi">4</span>  <span class="c1"># type: int</span>
     <span class="n">FRAME_PADDING</span> <span class="o">=</span> <span class="mi">4</span>  <span class="c1"># type: int</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
+<div class="viewcode-block" id="AssetNameParser.__init__"><a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
         <span class="c1"># type: (List[str]) -&gt; None</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Create a AssetNameParser instance with given fields.</span>
@@ -248,7 +251,7 @@
         <span class="n">grammar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_grammar</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_extension_parser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_extension_parser</span><span class="p">(</span><span class="n">grammar</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_parser</span><span class="p">(</span><span class="n">grammar</span><span class="p">,</span> <span class="n">fields</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="o">=</span> <span class="n">fields</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="o">=</span> <span class="n">fields</span></div>
 
     <span class="c1"># GRAMMAR-------------------------------------------------------------------</span>
 <div class="viewcode-block" id="AssetNameParser._raise_field_error"><a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser._raise_field_error">[docs]</a>    <span class="nd">@staticmethod</span>

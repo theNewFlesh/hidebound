@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
@@ -30,6 +32,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
@@ -62,7 +65,7 @@
             
             
               <div class="version">
-                0.9.5
+                0.10.5
               </div>
             
           
@@ -277,26 +280,28 @@
 <div class="viewcode-block" id="setup_hidebound_directory"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.setup_hidebound_directory">[docs]</a><span class="k">def</span> <span class="nf">setup_hidebound_directory</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">config_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="c1"># type: (Union[str, Path], Union[str, Path, None]) -&gt; Tuple[Dict, str]</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Creates [root]/hidebound and [root]/hidebound/specifications</span>
-<span class="sd">    directories. Writes a default hidebound config to</span>
-<span class="sd">    [root]/hidebound/hidebound_config.json if one does not exist.</span>
+<span class="sd">    Creates [root]/hidebound and [root]/hidebound/config directories.</span>
+<span class="sd">    Writes a default hidebound config to</span>
+<span class="sd">    [root]/hidebound/config/hidebound_config.json if one does not exist.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        root (str or Path): Root directory of hidebound data.</span>
 <span class="sd">        config_path (str or Path, optional): Filepath of config data to be</span>
-<span class="sd">            written to [root]/hidebound/hideebiund_config.json. Default: None.</span>
+<span class="sd">            written to [root]/hidebound/config/hidebound_config.json.</span>
+<span class="sd">            Default: None.</span>
 
 <span class="sd">    Return:</span>
 <span class="sd">        tuple[dict, str]: Config data and filepath.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-    <span class="n">hb_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s1">&#39;hidebound&#39;</span><span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">hb_root</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">hb_root</span><span class="p">,</span> <span class="s1">&#39;specifications&#39;</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">hb_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s1">&#39;hidebound&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+    <span class="n">config_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">hb_root</span><span class="p">,</span> <span class="s1">&#39;config&#39;</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">config_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">config_dir</span><span class="p">,</span> <span class="s1">&#39;hidebound_config.json&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
 
     <span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;root_directory&#39;</span><span class="p">:</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s1">&#39;projects&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">(),</span>
-        <span class="s1">&#39;hidebound_directory&#39;</span><span class="p">:</span> <span class="n">hb_root</span><span class="o">.</span><span class="n">as_posix</span><span class="p">(),</span>
+        <span class="s1">&#39;hidebound_directory&#39;</span><span class="p">:</span> <span class="n">hb_root</span><span class="p">,</span>
         <span class="s1">&#39;specification_files&#39;</span><span class="p">:</span> <span class="p">[],</span>
         <span class="s1">&#39;include_regex&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
         <span class="s1">&#39;exclude_regex&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;\.DS_Store&#39;</span><span class="p">,</span>
@@ -306,12 +311,10 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">config</span> <span class="o">=</span> <span class="n">jsonc</span><span class="o">.</span><span class="n">JsonComment</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
-    <span class="n">config_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s1">&#39;hidebound&#39;</span><span class="p">,</span> <span class="s1">&#39;hidebound_config.json&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">config_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">config</span><span class="p">,</span> <span class="n">config_path</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span></div>
+    <span class="k">return</span> <span class="n">config</span><span class="p">,</span> <span class="n">target</span></div>
 
 
 <span class="c1"># ERRORS------------------------------------------------------------------------</span>

@@ -36,7 +36,10 @@
             "**/CVS": true,
             "*/*/**/node_modules": true
         },
-    "todo-tree.filtering.excludeGlobs": ["**/docs/**/*.*"]
+        "search.exclude": {
+            "**/docs": true
+        },
+        "todo-tree.filtering.excludeGlobs": ["**/docs/**/*.*"]
     },
     "tasks": {
         "version": "2.0.0",
