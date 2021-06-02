@@ -442,6 +442,8 @@ def get_datatable(data):
         data=data,
         columns=cols,
         id='datatable',
+        cell_selectable=False,
+        editable=False,
         css=[
             {
                 'selector': '.dash-cell div.dash-cell-value',
