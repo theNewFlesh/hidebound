@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.10.5
+                0.10.8
               </div>
             
           
@@ -261,9 +261,10 @@
             <span class="n">region_name</span><span class="o">=</span><span class="n">region</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_bucket</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Bucket</span><span class="p">(</span><span class="n">bucket</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_bucket</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-            <span class="n">CreateBucketConfiguration</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;LocationConstraint&#39;</span><span class="p">:</span> <span class="n">region</span><span class="p">}</span>
-        <span class="p">)</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bucket</span><span class="o">.</span><span class="n">creation_date</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_bucket</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+                <span class="n">CreateBucketConfiguration</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;LocationConstraint&#39;</span><span class="p">:</span> <span class="n">region</span><span class="p">}</span>
+            <span class="p">)</span></div>
 
 <div class="viewcode-block" id="S3Exporter._export_asset"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.s3_exporter.S3Exporter._export_asset">[docs]</a>    <span class="k">def</span> <span class="nf">_export_asset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
         <span class="c1"># type: (Dict) -&gt; None</span>
