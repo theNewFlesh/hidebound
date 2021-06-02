@@ -86,9 +86,10 @@ class S3Exporter(ExporterBase):
             region_name=region,
         )
         self._bucket = session.resource('s3').Bucket(bucket)
-        self._bucket.create(
-            CreateBucketConfiguration={'LocationConstraint': region}
-        )
+        if self._bucket.creation_date is None:
+            self._bucket.create(
+                CreateBucketConfiguration={'LocationConstraint': region}
+            )
 
     def _export_asset(self, metadata):
         # type: (Dict) -> None

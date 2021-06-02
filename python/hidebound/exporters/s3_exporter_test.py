@@ -63,6 +63,24 @@ class S3ExporterTests(unittest.TestCase):
         buckets = self.s3.buckets.all()
         buckets = [x.name for x in buckets]
         self.assertIn(self.config['bucket'], buckets)
+        self.assertEqual(len(buckets), 1)
+
+    @mock_s3
+    def test_init_with_bucket(self):
+        result = list(self.s3.buckets.all())
+        self.assertEqual(result, [])
+
+        S3Exporter(**self.config)
+        buckets = self.s3.buckets.all()
+        buckets = [x.name for x in buckets]
+        self.assertIn(self.config['bucket'], buckets)
+        self.assertEqual(len(buckets), 1)
+
+        S3Exporter(**self.config)
+        buckets = self.s3.buckets.all()
+        buckets = [x.name for x in buckets]
+        self.assertIn(self.config['bucket'], buckets)
+        self.assertEqual(len(buckets), 1)
 
     @mock_s3
     def test_export_asset(self):
