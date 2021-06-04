@@ -331,3 +331,69 @@ class ConfigTests(unittest.TestCase):
             result.validate()
             result = result.to_primitive()['exporters']
             self.assertEqual(result, {})
+
+    # WEBHOOKS------------------------------------------------------------------
+    def add_webhooks_to_config(self, root):
+        self.set_data(root)
+        os.makedirs(self.root)
+        os.makedirs(self.hb_root)
+        self.config['webhooks'] = [
+            dict(
+                url='http://foobar.com/api/user?',
+                method='get',
+                headers={
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                params=dict(
+                    id='123',
+                )
+            ),
+            dict(
+                url='http://foobar.com/api/user?',
+                method='post',
+                headers={
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                params=dict(
+                    id='123',
+                    name='john',
+                )
+            )
+        ]
+
+    def test_webhooks(self):
+        with TemporaryDirectory() as temp:
+            self.add_webhooks_to_config(temp)
+            result = cfg.Config(self.config)
+            result.validate()
+            result = result.to_primitive()['webhooks']
+            self.assertEqual(result, self.config['webhooks'])
+
+    def test_webhooks_empty(self):
+        with TemporaryDirectory() as temp:
+            self.set_data(temp)
+            os.makedirs(self.root)
+            os.makedirs(self.hb_root)
+
+            result = cfg.Config(self.config)
+            result.validate()
+            result = result.to_primitive()['webhooks']
+            self.assertEqual(result, [])
+
+    def test_webhooks_url(self):
+        with TemporaryDirectory() as temp:
+            self.add_webhooks_to_config(temp)
+            self.config['webhooks'][0]['url'] = 'not-valid-url.com'
+            expected = 'Not a well-formed URL.'
+            with self.assertRaisesRegexp(DataError, expected):
+                cfg.Config(self.config).validate()
+
+    def test_webhooks_method(self):
+        with TemporaryDirectory() as temp:
+            self.add_webhooks_to_config(temp)
+            self.config['webhooks'][0]['method'] = 'trace'
+            expected = 'trace is not a legal HTTP method.'
+            with self.assertRaisesRegexp(DataError, expected):
+                cfg.Config(self.config).validate()

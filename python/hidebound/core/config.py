@@ -8,7 +8,7 @@ from pathlib import Path
 import sys
 
 from schematics.exceptions import ValidationError
-from schematics.types import ListType, ModelType, StringType
+from schematics.types import DictType, ListType, ModelType, StringType, URLType
 from schematics import Model
 
 from hidebound.core.specification_base import SpecificationBase
@@ -101,7 +101,7 @@ def is_http_method(method):
     '''
     Ensures given method is a legal HTTP method.
     Legal methods include:
-        
+
         * get
         * put
         * post
@@ -167,3 +167,10 @@ class Config(Model):
             S3Config, required=False, serialize_when_none=False
         )  # type: ModelType
     exporters = ModelType(ExportersConfig, required=False, default={})  # type: ModelType
+
+    class WebhookConfig(Model):
+        url = URLType(required=True)  # type: URLType
+        method = StringType(required=True, validators=[is_http_method])  # type: StringType
+        headers = DictType(StringType, required=False)  # type: DictType
+        params = DictType(StringType, required=False)  # type: DictType
+    webhooks = ListType(ModelType(WebhookConfig), required=False, default=[])  # type: ListType
