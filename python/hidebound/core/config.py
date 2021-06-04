@@ -94,6 +94,30 @@ def is_hidebound_directory(directory):
     if Path(directory).name != 'hidebound':
         msg = f'{directory} directory is not named hidebound.core.'
         raise ValidationError(msg)
+
+
+def is_http_method(method):
+    # type: (str) -> None
+    '''
+    Ensures given method is a legal HTTP method.
+    Legal methods include:
+        
+        * get
+        * put
+        * post
+        * delete
+        * patch
+
+    Args:
+        method (str): HTTP method.
+
+    Raises:
+        ValidationError: If method is not a legal HTTP method.
+    '''
+    methods = ['get', 'put', 'post', 'delete', 'patch']
+    if method not in methods:
+        msg = f'{method} is not a legal HTTP method. Legal methods: {methods}.'
+        raise ValidationError(msg)
 # ------------------------------------------------------------------------------
 
 

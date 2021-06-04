@@ -10,7 +10,7 @@ import hidebound.core.config as cfg
 # ------------------------------------------------------------------------------
 
 
-class IsSpecificationFileTests(unittest.TestCase):
+class ValidatorsTests(unittest.TestCase):
     def test_is_specification_file(self):
         with TemporaryDirectory() as root:
             filepath = Path(root, 'specifications1.py')
@@ -71,7 +71,7 @@ class IsSpecificationFileTests(unittest.TestCase):
             with self.assertRaisesRegexp(ValidationError, expected):
                 cfg.is_specification_file(filepath)
 
-    def test_specifications_is_list(self):
+    def test_is_specification_file_not_list(self):
         with TemporaryDirectory() as root:
             filepath = Path(root, 'specifications4.py')
 
@@ -93,7 +93,7 @@ class IsSpecificationFileTests(unittest.TestCase):
             with self.assertRaisesRegexp(ValidationError, expected):
                 cfg.is_specification_file(filepath)
 
-    def test_specificationbase_bad_subclasses(self):
+    def test_is_specification_file_bad_subclasses(self):
         with TemporaryDirectory() as root:
             filepath = Path(root, 'specifications5.py')
 
@@ -114,8 +114,6 @@ class IsSpecificationFileTests(unittest.TestCase):
             with self.assertRaisesRegexp(ValidationError, expected):
                 cfg.is_specification_file(filepath)
 
-
-class IsHideboundDirectory(unittest.TestCase):
     def test_is_hidebound_directory(self):
         cfg.is_hidebound_directory('/foo/bar/hidebound')
 
@@ -126,6 +124,15 @@ class IsHideboundDirectory(unittest.TestCase):
         expected = '/foo/bar/Hidebound directory is not named hidebound.core.'
         with self.assertRaisesRegexp(ValidationError, expected):
             cfg.is_hidebound_directory('/foo/bar/Hidebound')
+
+    def test_is_http_method(self):
+        methods = ['get', 'put', 'post', 'delete', 'patch']
+        for method in methods:
+            cfg.is_http_method(method)
+
+        expected = 'trace is not a legal HTTP method.'
+        with self.assertRaisesRegexp(ValidationError, expected):
+            cfg.is_http_method('trace')
 
 
 # CONFIG------------------------------------------------------------------------
