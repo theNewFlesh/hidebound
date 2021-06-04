@@ -604,3 +604,36 @@ def is_aws_region(item):
         'us-west-2',
     ]
     return item in regions
+
+
+@validate('''{} is not a legal directory path.
+Legal directory paths must:
+    - Begin with /
+    - Not end with /
+    * Contain only the characters: /, a-z, A-Z, 0-9, _, -''')
+def is_legal_directory(item):
+    # type: (str) -> bool
+    '''
+    Validates that directory path is legal.
+    Legal directory paths must:
+
+        * Begin with /
+        * Not end with /
+        * Contain only the characters: /, a-z, A-Z, 0-9, _, -
+
+    Args:
+        item (str): Directory path.
+
+    Raises:
+        ValidationError: If directory path is invalid.
+
+    Returns:
+        bool: Validity of directory path.
+    '''
+    if not item.startswith('/'):
+        return False
+    if item.endswith('/'):
+        return False
+    if not re.search(r'^[/a-z0-9_\-]+$', item, re.I):
+        return False
+    return True

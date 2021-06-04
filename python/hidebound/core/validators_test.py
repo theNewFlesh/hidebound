@@ -423,3 +423,28 @@ class ValidatorsTests(unittest.TestCase):
         expected = 'us-west-3 is not a valid AWS region.'
         with self.assertRaisesRegexp(ValidationError, expected):
             vd.is_aws_region('us-west-3')
+
+    def test_is_legal_directory(self):
+        vd.is_legal_directory('/foo/bar')
+        vd.is_legal_directory('/Foo/Bar')
+
+        expected = '{} is not a legal directory path.'
+
+        # starts with /
+        dir_ = 'foo/bar'
+        with self.assertRaisesRegexp(ValidationError, expected.format(dir_)):
+            vd.is_legal_directory(dir_)
+
+        # does not end with /
+        dir_ = '/foo/bar/'
+        with self.assertRaisesRegexp(ValidationError, expected.format(dir_)):
+            vd.is_legal_directory(dir_)
+
+        # bad chars
+        dir_ = '/foo/bar.com'
+        with self.assertRaisesRegexp(ValidationError, expected.format(dir_)):
+            vd.is_legal_directory(dir_)
+
+        dir_ = '/root/foo bar'
+        with self.assertRaisesRegexp(ValidationError, expected.format(dir_)):
+            vd.is_legal_directory(dir_)
