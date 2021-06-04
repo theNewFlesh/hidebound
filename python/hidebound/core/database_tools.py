@@ -341,7 +341,7 @@ def _get_data_for_write(data, source_dir, target_dir):
     keys = data.asset_path.unique().tolist()
     vals = [str(uuid.uuid4()) for x in keys]
     lut = dict(zip(keys, vals))
-    lut = defaultdict(lambda: np.nan, lut)  # type: ignore
+    lut = defaultdict(lambda: np.nan, lut)
     data['asset_id'] = data.asset_path.apply(lambda x: lut[x])
 
     # create file id and metadata
