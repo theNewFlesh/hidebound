@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.10.7
+                0.11.0
               </div>
             
           
@@ -183,7 +183,7 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">ValidationError</span>
-<span class="kn">from</span> <span class="nn">schematics.types</span> <span class="kn">import</span> <span class="n">ListType</span><span class="p">,</span> <span class="n">ModelType</span><span class="p">,</span> <span class="n">StringType</span>
+<span class="kn">from</span> <span class="nn">schematics.types</span> <span class="kn">import</span> <span class="n">DictType</span><span class="p">,</span> <span class="n">ListType</span><span class="p">,</span> <span class="n">ModelType</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">URLType</span>
 <span class="kn">from</span> <span class="nn">schematics</span> <span class="kn">import</span> <span class="n">Model</span>
 
 <span class="kn">from</span> <span class="nn">hidebound.core.specification_base</span> <span class="kn">import</span> <span class="n">SpecificationBase</span>
@@ -269,6 +269,30 @@
     <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s1">&#39;hidebound&#39;</span><span class="p">:</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">directory</span><span class="si">}</span><span class="s1"> directory is not named hidebound.core.&#39;</span>
         <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="is_http_method"><a class="viewcode-back" href="../../../core.html#hidebound.core.config.is_http_method">[docs]</a><span class="k">def</span> <span class="nf">is_http_method</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
+    <span class="c1"># type: (str) -&gt; None</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Ensures given method is a legal HTTP method.</span>
+<span class="sd">    Legal methods include:</span>
+
+<span class="sd">        * get</span>
+<span class="sd">        * put</span>
+<span class="sd">        * post</span>
+<span class="sd">        * delete</span>
+<span class="sd">        * patch</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        method (str): HTTP method.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValidationError: If method is not a legal HTTP method.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="s1">&#39;put&#39;</span><span class="p">,</span> <span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="s1">&#39;delete&#39;</span><span class="p">,</span> <span class="s1">&#39;patch&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">methods</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1"> is not a legal HTTP method. Legal methods: </span><span class="si">{</span><span class="n">methods</span><span class="si">}</span><span class="s1">.&#39;</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
@@ -317,7 +341,14 @@
         <span class="n">s3</span> <span class="o">=</span> <span class="n">ModelType</span><span class="p">(</span>
             <span class="n">S3Config</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">serialize_when_none</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>  <span class="c1"># type: ModelType</span></div>
-    <span class="n">exporters</span> <span class="o">=</span> <span class="n">ModelType</span><span class="p">(</span><span class="n">ExportersConfig</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">{})</span>  <span class="c1"># type: ModelType</span></div>
+    <span class="n">exporters</span> <span class="o">=</span> <span class="n">ModelType</span><span class="p">(</span><span class="n">ExportersConfig</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">{})</span>  <span class="c1"># type: ModelType</span>
+
+<div class="viewcode-block" id="Config.WebhookConfig"><a class="viewcode-back" href="../../../core.html#hidebound.core.config.Config.WebhookConfig">[docs]</a>    <span class="k">class</span> <span class="nc">WebhookConfig</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">URLType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: URLType</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">is_http_method</span><span class="p">])</span>  <span class="c1"># type: StringType</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="n">DictType</span><span class="p">(</span><span class="n">StringType</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: DictType</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">DictType</span><span class="p">(</span><span class="n">StringType</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: DictType</span></div>
+    <span class="n">webhooks</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span><span class="n">ModelType</span><span class="p">(</span><span class="n">WebhookConfig</span><span class="p">),</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[])</span>  <span class="c1"># type: ListType</span></div>
 </pre></div>
 
            </div>

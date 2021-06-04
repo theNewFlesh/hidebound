@@ -405,7 +405,7 @@ class Database:
                 self.__exporter_lut[key] = exporter
 
         for response in self.call_webhooks():
-            LOGGER.info(response.content)
+            LOGGER.info(response.content)  # pragma: no cover
 
     def search(self, query, group_by_asset=False):
         # type: (str, bool) -> "DataFrame"
