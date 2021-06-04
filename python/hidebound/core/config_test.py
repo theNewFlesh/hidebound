@@ -174,6 +174,7 @@ class ConfigTests(unittest.TestCase):
     def set_data(self, temp):
         self.root = Path(temp, 'root').as_posix()
         self.hb_root = Path(temp, 'hidebound').as_posix()
+        self.target_dir = Path(temp, 'target').as_posix()
         self.config = dict(
             root_directory=self.root,
             hidebound_directory=self.hb_root,
@@ -270,6 +271,9 @@ class ConfigTests(unittest.TestCase):
                 secret_key='bar',
                 bucket='bucket',
                 region='us-west-2',
+            ),
+            local_disk=dict(
+                target_directory=self.target_dir
             )
         )
 
@@ -292,6 +296,14 @@ class ConfigTests(unittest.TestCase):
             self.add_exporters_to_config(root)
             self.config['exporters']['s3']['bucket'] = 'BadBucket'
             expected = 'is not a valid bucket name'
+            with self.assertRaisesRegexp(DataError, expected):
+                cfg.Config(self.config).validate()
+
+    def test_exporters_bad_local_disk(self):
+        with TemporaryDirectory() as root:
+            self.add_exporters_to_config(root)
+            self.config['exporters']['local_disk']['target_directory'] = 'bad/dir'
+            expected = 'is not a legal directory path.'
             with self.assertRaisesRegexp(DataError, expected):
                 cfg.Config(self.config).validate()
 
@@ -323,7 +335,17 @@ class ConfigTests(unittest.TestCase):
             result = result.to_primitive()['exporters']
             self.assertEqual(result, expected)
 
-    def test_exporters_exporters(self):
+    def test_exporters_no_local_disk(self):
+        with TemporaryDirectory() as root:
+            self.add_exporters_to_config(root)
+            del self.config['exporters']['local_disk']
+            expected = self.config['exporters']
+            result = cfg.Config(self.config)
+            result.validate()
+            result = result.to_primitive()['exporters']
+            self.assertEqual(result, expected)
+
+    def test_exporters_empty(self):
         with TemporaryDirectory() as root:
             self.add_exporters_to_config(root)
             del self.config['exporters']
