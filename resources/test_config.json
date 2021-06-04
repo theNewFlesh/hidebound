@@ -1,6 +1,6 @@
 {
-    "root_directory": "/mnt/storage/projects",
-    "hidebound_directory": "/mnt/storage/hidebound",
+    "root_directory": "/tmp/projects",
+    "hidebound_directory": "/tmp/hidebound",
     "specification_files": [
         "/root/hidebound/python/hidebound/core/test_specifications.py"
     ],
@@ -15,5 +15,16 @@
             "host": "http://172.17.0.1",
             "port": 8080
         }
-    }
+    },
+    "webhooks": [
+         {
+            "url": "http://foobar.com/api/user?",
+            "method": "get",
+            "headers": {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            "params": {"id": "123"}
+         }
+    ]
 }

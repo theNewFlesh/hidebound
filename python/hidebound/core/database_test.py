@@ -667,3 +667,47 @@ class DatabaseTests(DatabaseTestBase):
             db = Database(root, hb_root, [Spec001, Spec002])
             db.update()
             db.search('SELECT * FROM data WHERE version == 3')
+
+    # WEBHOOKS
+    def test_call_webhooks(self):
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hidebound').as_posix()
+            os.makedirs(hb_root)
+            spec_file = self.write_spec_file(root)
+            self.create_files(root)
+
+            config = dict(
+                root_directory=root,
+                hidebound_directory=hb_root,
+                specification_files=[spec_file],
+                include_regex='foo',
+                exclude_regex='bar',
+                write_mode='copy',
+                webhooks=[
+                    dict(
+                        url='http://foobar.com/api/user?',
+                        method='get',
+                        headers={
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                        },
+                        params=dict(id='123')
+                    ),
+                    dict(
+                        url='http://foobar.com/api/user?',
+                        method='post',
+                        headers={
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                        },
+                        params=dict(
+                            id='123',
+                            name='john',
+                        )
+                    )
+                ]
+            )
+
+            db = Database.from_config(config)
+            for response in db.call_webhooks():
+                self.assertEqual(response.status_code, 403)

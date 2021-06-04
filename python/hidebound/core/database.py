@@ -4,14 +4,17 @@ from copy import deepcopy
 from importlib import import_module
 from pathlib import Path
 import json
+import logging
 import os
 import shutil
 import sys
+import urllib
 
 from pandas import DataFrame
 import jsoncomment as jsonc
 import numpy as np
 import pandasql
+import requests
 
 from hidebound.core.config import Config
 from hidebound.core.specification_base import SpecificationBase
@@ -19,6 +22,8 @@ from hidebound.exporters.girder_exporter import GirderExporter
 from hidebound.exporters.s3_exporter import S3Exporter
 import hidebound.core.database_tools as db_tools
 import hidebound.core.tools as tools
+
+LOGGER = logging.getLogger(__name__)
 # ------------------------------------------------------------------------------
 
 
@@ -69,6 +74,7 @@ class Database:
             exclude_regex=config['exclude_regex'],
             write_mode=config['write_mode'],
             exporters=config['exporters'],
+            webhooks=config['webhooks'],
         )
 
     @staticmethod
@@ -96,8 +102,9 @@ class Database:
         exclude_regex=r'\.DS_Store',
         write_mode='copy',
         exporters={},
+        webhooks=[],
     ):
-        # type: (Union[str, Path], Union[str, Path], List[SpecificationBase], str, str, str, Dict[str, Any]) -> None  # noqa E501
+        # type: (Union[str, Path], Union[str, Path], List[SpecificationBase], str, str, str, Dict[str, Any], List[Dict]) -> None  # noqa E501
         r'''
         Creates an instance of Database but does not populate it with data.
 
@@ -116,6 +123,8 @@ class Database:
             exporters (dict, optional): Dictionary of exporter configs, where
                 the key is the exporter name and the value is its config.
                 Default: {}.
+            webhooks (list[dict], optional): List of webhooks to call.
+                Default: [].
 
         Raises:
             TypeError: If specifications contains a non-SpecificationBase
@@ -167,6 +176,7 @@ class Database:
         self._specifications = {x.__name__.lower(): x for x in specifications} \
             # type: Dict[str, SpecificationBase]
         self._exporters = exporters
+        self._webhooks = webhooks
         self.data = None
 
         # needed for testing
@@ -356,10 +366,28 @@ class Database:
 
         return self
 
+    def call_webhooks(self):
+        # type () -> requests.Response
+        '''
+        Calls webhooks defined in config.
+
+        Yields:
+            requests.Response: Webhook response.
+        '''
+        for hook in self._webhooks:
+            url = hook['url']
+            headers = hook.get('headers', None)
+            if 'params' in hook:
+                url += urllib.parse.urlencode(hook['params'])
+
+            method = getattr(requests, hook['method'])
+            yield method(url, headers=headers)
+
     def export(self):
         # type: () -> None
         '''
         Exports all the files found in in hidebound root directory.
+        Calls webhooks afterwards.
         '''
         # TODO: Find a nicer pattern for injecting exporters.
         lut = dict(girder=GirderExporter, s3=S3Exporter)  # type: Dict[str, Any]
@@ -375,6 +403,9 @@ class Database:
             # assign instance tp exporter_lut for testing
             if self.__exporter_lut is not None:
                 self.__exporter_lut[key] = exporter
+
+        for response in self.call_webhooks():
+            LOGGER.info(response.content)
 
     def search(self, query, group_by_asset=False):
         # type: (str, bool) -> "DataFrame"
