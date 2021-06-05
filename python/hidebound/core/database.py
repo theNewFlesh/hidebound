@@ -19,6 +19,7 @@ import requests
 from hidebound.core.config import Config
 from hidebound.core.specification_base import SpecificationBase
 from hidebound.exporters.girder_exporter import GirderExporter
+from hidebound.exporters.local_disk_exporter import LocalDiskExporter
 from hidebound.exporters.s3_exporter import S3Exporter
 import hidebound.core.database_tools as db_tools
 import hidebound.core.tools as tools
@@ -390,17 +391,25 @@ class Database:
         Calls webhooks afterwards.
         '''
         # TODO: Find a nicer pattern for injecting exporters.
-        lut = dict(girder=GirderExporter, s3=S3Exporter)  # type: Dict[str, Any]
+        lut = dict(
+            girder=GirderExporter,
+            local_disk=LocalDiskExporter,
+            s3=S3Exporter,
+        )  # type: Dict[str, Any]
 
         # reassign lut for testing
         if self.__exporter_lut is not None:
             lut = self.__exporter_lut
 
-        for key, config in self._exporters.items():
+        # always run exporters in this order
+        order = ['local_disk', 's3', 'girder']
+        items = sorted(self._exporters.items(), key=lambda x: order.index(x[0]))
+
+        for key, config in items:
             exporter = lut[key].from_config(config)
             exporter.export(self._hb_root)
 
-            # assign instance tp exporter_lut for testing
+            # assign instance to exporter_lut for testing
             if self.__exporter_lut is not None:
                 self.__exporter_lut[key] = exporter
 

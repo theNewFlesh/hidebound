@@ -13,7 +13,7 @@ import boto3 as boto
 from hidebound.core.database import Database
 from hidebound.core.database_test_base import DatabaseTestBase
 from hidebound.exporters.mock_girder import MockGirderExporter
-import hidebound.core.tools as tools
+import hidebound.core.tools as hbt
 # ------------------------------------------------------------------------------
 
 
@@ -168,7 +168,7 @@ class DatabaseTests(DatabaseTestBase):
 
             # ensure files are written
             result = Path(hb_root, 'content')
-            result = tools.directory_to_dataframe(result)
+            result = hbt.directory_to_dataframe(result)
             result = sorted(result.filename.tolist())
             self.assertGreater(len(result), 0)
             expected = sorted(data.filename.tolist())
@@ -226,7 +226,7 @@ class DatabaseTests(DatabaseTestBase):
             db.update()
             db.create()
 
-            result = tools.directory_to_dataframe(root).filepath.tolist()
+            result = hbt.directory_to_dataframe(root).filepath.tolist()
             result = sorted(result)
             self.assertEqual(result, expected)
 
@@ -252,7 +252,7 @@ class DatabaseTests(DatabaseTestBase):
 
             # ensure files are written
             result = Path(hb_root, 'content')
-            result = tools.directory_to_dataframe(result)
+            result = hbt.directory_to_dataframe(result)
             result = sorted(result.filename.tolist())
             self.assertGreater(len(result), 0)
             expected = sorted(data.filename.tolist())
@@ -559,7 +559,7 @@ class DatabaseTests(DatabaseTestBase):
             os.makedirs(root)
 
             self.create_files(root)
-            expected = tools.directory_to_dataframe(root).filepath.tolist()
+            expected = hbt.directory_to_dataframe(root).filepath.tolist()
             expected = sorted(expected)
 
             db = Database(root, hb_root, [])
@@ -568,7 +568,7 @@ class DatabaseTests(DatabaseTestBase):
             self.assertFalse(data_dir.exists())
             self.assertFalse(meta_dir.exists())
 
-            result = tools.directory_to_dataframe(root).filepath.tolist()
+            result = hbt.directory_to_dataframe(root).filepath.tolist()
             result = sorted(result)
             self.assertEqual(result, expected)
 
@@ -652,6 +652,41 @@ class DatabaseTests(DatabaseTestBase):
                 lambda x: re.search('metadata/file', x), results
             )))
             self.assertEqual(result, len(content))
+
+    def test_export_local_disk(self):
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hidebound')
+            os.makedirs(hb_root)
+            Spec001, Spec002, BadSpec = self.get_specifications()
+            self.create_files(root)
+
+            target = Path(root, 'target').as_posix()
+            os.makedirs(target)
+            exporters = dict(
+                local_disk=dict(
+                    target_directory=target
+                )
+            )
+
+            db = Database(
+                root, hb_root, [Spec001, Spec002], exporters=exporters
+            )
+
+            db.update().create()
+            self.assertEqual(len(os.listdir(target)), 0)
+            db.export()
+
+            expected = hbt.directory_to_dataframe(hb_root).filepath \
+                .apply(lambda x: re.sub('.*/hidebound/', '', x)) \
+                .tolist()
+            expected = sorted(expected)
+
+            result = hbt.directory_to_dataframe(target).filepath \
+                .apply(lambda x: re.sub('.*/target/', '', x)) \
+                .tolist()
+            result = sorted(result)
+
+            self.assertEqual(result, expected)
 
     # SEARCH--------------------------------------------------------------------
     def test_search(self):
