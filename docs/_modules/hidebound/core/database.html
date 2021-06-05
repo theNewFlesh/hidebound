@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.11.0
+                0.12.0
               </div>
             
           
@@ -194,6 +194,7 @@
 <span class="kn">from</span> <span class="nn">hidebound.core.config</span> <span class="kn">import</span> <span class="n">Config</span>
 <span class="kn">from</span> <span class="nn">hidebound.core.specification_base</span> <span class="kn">import</span> <span class="n">SpecificationBase</span>
 <span class="kn">from</span> <span class="nn">hidebound.exporters.girder_exporter</span> <span class="kn">import</span> <span class="n">GirderExporter</span>
+<span class="kn">from</span> <span class="nn">hidebound.exporters.local_disk_exporter</span> <span class="kn">import</span> <span class="n">LocalDiskExporter</span>
 <span class="kn">from</span> <span class="nn">hidebound.exporters.s3_exporter</span> <span class="kn">import</span> <span class="n">S3Exporter</span>
 <span class="kn">import</span> <span class="nn">hidebound.core.database_tools</span> <span class="k">as</span> <span class="nn">db_tools</span>
 <span class="kn">import</span> <span class="nn">hidebound.core.tools</span> <span class="k">as</span> <span class="nn">tools</span>
@@ -565,17 +566,25 @@
 <span class="sd">        Calls webhooks afterwards.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># TODO: Find a nicer pattern for injecting exporters.</span>
-        <span class="n">lut</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">girder</span><span class="o">=</span><span class="n">GirderExporter</span><span class="p">,</span> <span class="n">s3</span><span class="o">=</span><span class="n">S3Exporter</span><span class="p">)</span>  <span class="c1"># type: Dict[str, Any]</span>
+        <span class="n">lut</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">girder</span><span class="o">=</span><span class="n">GirderExporter</span><span class="p">,</span>
+            <span class="n">local_disk</span><span class="o">=</span><span class="n">LocalDiskExporter</span><span class="p">,</span>
+            <span class="n">s3</span><span class="o">=</span><span class="n">S3Exporter</span><span class="p">,</span>
+        <span class="p">)</span>  <span class="c1"># type: Dict[str, Any]</span>
 
         <span class="c1"># reassign lut for testing</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__exporter_lut</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">lut</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__exporter_lut</span>
 
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">config</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exporters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># always run exporters in this order</span>
+        <span class="n">order</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;local_disk&#39;</span><span class="p">,</span> <span class="s1">&#39;s3&#39;</span><span class="p">,</span> <span class="s1">&#39;girder&#39;</span><span class="p">]</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_exporters</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">order</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
             <span class="n">exporter</span> <span class="o">=</span> <span class="n">lut</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">from_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
             <span class="n">exporter</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hb_root</span><span class="p">)</span>
 
-            <span class="c1"># assign instance tp exporter_lut for testing</span>
+            <span class="c1"># assign instance to exporter_lut for testing</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__exporter_lut</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">__exporter_lut</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">exporter</span>
 

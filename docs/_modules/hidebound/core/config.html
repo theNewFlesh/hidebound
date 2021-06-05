@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.11.0
+                0.12.0
               </div>
             
           
@@ -188,6 +188,7 @@
 
 <span class="kn">from</span> <span class="nn">hidebound.core.specification_base</span> <span class="kn">import</span> <span class="n">SpecificationBase</span>
 <span class="kn">from</span> <span class="nn">hidebound.exporters.girder_exporter</span> <span class="kn">import</span> <span class="n">GirderConfig</span>
+<span class="kn">from</span> <span class="nn">hidebound.exporters.local_disk_exporter</span> <span class="kn">import</span> <span class="n">LocalDiskConfig</span>
 <span class="kn">from</span> <span class="nn">hidebound.exporters.s3_exporter</span> <span class="kn">import</span> <span class="n">S3Config</span>
 <span class="kn">import</span> <span class="nn">hidebound.core.validators</span> <span class="k">as</span> <span class="nn">vd</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
@@ -340,6 +341,9 @@
         <span class="p">)</span>  <span class="c1"># type: ModelType</span>
         <span class="n">s3</span> <span class="o">=</span> <span class="n">ModelType</span><span class="p">(</span>
             <span class="n">S3Config</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">serialize_when_none</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>  <span class="c1"># type: ModelType</span>
+        <span class="n">local_disk</span> <span class="o">=</span> <span class="n">ModelType</span><span class="p">(</span>
+            <span class="n">LocalDiskConfig</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">serialize_when_none</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>  <span class="c1"># type: ModelType</span></div>
     <span class="n">exporters</span> <span class="o">=</span> <span class="n">ModelType</span><span class="p">(</span><span class="n">ExportersConfig</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">{})</span>  <span class="c1"># type: ModelType</span>
 

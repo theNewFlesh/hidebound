@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.11.0
+                0.12.0
               </div>
             
           
@@ -109,6 +109,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">exporters</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-hidebound.exporters.exporter_base">exporter_base</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-hidebound.exporters.girder_exporter">girder_exporter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-hidebound.exporters.local_disk_exporter">local_disk_exporter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-hidebound.exporters.s3_exporter">s3_exporter</a></li>
 </ul>
 </li>
@@ -476,6 +477,111 @@ Default: None.</p></li>
 </dd></dl>
 
 </div>
+<div class="section" id="module-hidebound.exporters.local_disk_exporter">
+<span id="local-disk-exporter"></span><h2>local_disk_exporter<a class="headerlink" href="#module-hidebound.exporters.local_disk_exporter" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="hidebound.exporters.local_disk_exporter.LocalDiskConfig">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hidebound.exporters.local_disk_exporter.</span></span><span class="sig-name descname"><span class="pre">LocalDiskConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trusted_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deserialize_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lazy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/exporters/local_disk_exporter.html#LocalDiskConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.local_disk_exporter.LocalDiskConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">schematics.deprecated.patch_models.&lt;locals&gt;.Model</span></code></p>
+<p>A class for validating configurations supplied to LocalDiskExporter.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidebound.exporters.local_disk_exporter.LocalDiskConfig.target_directory">
+<span class="sig-name descname"><span class="pre">target_directory</span></span><a class="headerlink" href="#hidebound.exporters.local_disk_exporter.LocalDiskConfig.target_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Target directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidebound.exporters.local_disk_exporter.LocalDiskConfig._schema">
+<span class="sig-name descname"><span class="pre">_schema</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;schematics.deprecated.patch_schema.&lt;locals&gt;.Schema</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#hidebound.exporters.local_disk_exporter.LocalDiskConfig._schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">target_directory</span></span><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.StringType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">LocalDiskConfig</span> <span class="pre">as</span> <span class="pre">'target_directory'&gt;</span></em><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hidebound.exporters.local_disk_exporter.LocalDiskExporter">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hidebound.exporters.local_disk_exporter.</span></span><span class="sig-name descname"><span class="pre">LocalDiskExporter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_directory</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/exporters/local_disk_exporter.html#LocalDiskExporter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.local_disk_exporter.LocalDiskExporter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hidebound.exporters.exporter_base.ExporterBase" title="hidebound.exporters.exporter_base.ExporterBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">hidebound.exporters.exporter_base.ExporterBase</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hidebound.exporters.local_disk_exporter.LocalDiskExporter.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_directory</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/exporters/local_disk_exporter.html#LocalDiskExporter.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.local_disk_exporter.LocalDiskExporter.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a LocalDiskExporter instance.
+Creates target directory if it does not exist.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>target_directory</strong> (<em>str</em>) – Target directory.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>DataError</strong> – If config is invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hidebound.exporters.local_disk_exporter.LocalDiskExporter._export_asset">
+<span class="sig-name descname"><span class="pre">_export_asset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/exporters/local_disk_exporter.html#LocalDiskExporter._export_asset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.local_disk_exporter.LocalDiskExporter._export_asset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exports metadata from single JSON file in hidebound/metadata/asset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>metadata</strong> (<em>dict</em>) – Asset metadata.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hidebound.exporters.local_disk_exporter.LocalDiskExporter._export_file">
+<span class="sig-name descname"><span class="pre">_export_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/exporters/local_disk_exporter.html#LocalDiskExporter._export_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.local_disk_exporter.LocalDiskExporter._export_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exports metadata from single JSON file in hidebound/metadata/file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>metadata</strong> (<em>dict</em>) – File metadata.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hidebound.exporters.local_disk_exporter.LocalDiskExporter.export">
+<span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hidebound_dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/exporters/local_disk_exporter.html#LocalDiskExporter.export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.local_disk_exporter.LocalDiskExporter.export" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exports data within given hidebound directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>hidebound_dir</strong> (<em>Path</em><em> or </em><em>str</em>) – Hidebound directory.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hidebound.exporters.local_disk_exporter.LocalDiskExporter.from_config">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">from_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#hidebound.exporters.local_disk_exporter.LocalDiskExporter" title="hidebound.exporters.local_disk_exporter.LocalDiskExporter"><span class="pre">hidebound.exporters.local_disk_exporter.LocalDiskExporter</span></a><a class="reference internal" href="_modules/hidebound/exporters/local_disk_exporter.html#LocalDiskExporter.from_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.local_disk_exporter.LocalDiskExporter.from_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a LocalDiskExporter from a given config.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>dict</em>) – Config dictionary.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>DataError</strong> – If config is invalid.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>LocalDiskExporter instance.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#hidebound.exporters.local_disk_exporter.LocalDiskExporter" title="hidebound.exporters.local_disk_exporter.LocalDiskExporter">LocalDiskExporter</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-hidebound.exporters.s3_exporter">
 <span id="s3-exporter"></span><h2>s3_exporter<a class="headerlink" href="#module-hidebound.exporters.s3_exporter" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
@@ -533,23 +639,23 @@ Default: None.</p></li>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id5">
-<span class="sig-name descname"><span class="pre">access_key</span></span><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.StringType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">S3Config</span> <span class="pre">as</span> <span class="pre">'access_key'&gt;</span></em><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="id6">
-<span class="sig-name descname"><span class="pre">bucket</span></span><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.StringType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">S3Config</span> <span class="pre">as</span> <span class="pre">'bucket'&gt;</span></em><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">access_key</span></span><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.StringType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">S3Config</span> <span class="pre">as</span> <span class="pre">'access_key'&gt;</span></em><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id7">
-<span class="sig-name descname"><span class="pre">region</span></span><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.StringType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">S3Config</span> <span class="pre">as</span> <span class="pre">'region'&gt;</span></em><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">bucket</span></span><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.StringType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">S3Config</span> <span class="pre">as</span> <span class="pre">'bucket'&gt;</span></em><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id8">
-<span class="sig-name descname"><span class="pre">secret_key</span></span><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.StringType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">S3Config</span> <span class="pre">as</span> <span class="pre">'secret_key'&gt;</span></em><a class="headerlink" href="#id8" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">region</span></span><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.StringType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">S3Config</span> <span class="pre">as</span> <span class="pre">'region'&gt;</span></em><a class="headerlink" href="#id8" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id9">
+<span class="sig-name descname"><span class="pre">secret_key</span></span><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.base.StringType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">S3Config</span> <span class="pre">as</span> <span class="pre">'secret_key'&gt;</span></em><a class="headerlink" href="#id9" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

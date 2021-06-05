@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.11.0
+                0.12.0
               </div>
             
           
@@ -293,6 +293,11 @@ key is the exporter name and the value is its config. Default: {}.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="hidebound.core.config.Config.ExportersConfig.girder">
 <span class="sig-name descname"><span class="pre">girder</span></span><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.compound.ModelType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ModelType(GirderConfig)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">ExportersConfig</span> <span class="pre">as</span> <span class="pre">'girder'&gt;</span></em><a class="headerlink" href="#hidebound.core.config.Config.ExportersConfig.girder" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidebound.core.config.Config.ExportersConfig.local_disk">
+<span class="sig-name descname"><span class="pre">local_disk</span></span><em class="property"><span class="pre">:</span> <span class="pre">schematics.types.compound.ModelType</span></em><em class="property"> <span class="pre">=</span> <span class="pre">&lt;ModelType(LocalDiskConfig)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">ExportersConfig</span> <span class="pre">as</span> <span class="pre">'local_disk'&gt;</span></em><a class="headerlink" href="#hidebound.core.config.Config.ExportersConfig.local_disk" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -2408,6 +2413,34 @@ coordinate.</p>
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Alls a’s in b.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hidebound.core.validators.is_legal_directory">
+<span class="sig-prename descclassname"><span class="pre">hidebound.core.validators.</span></span><span class="sig-name descname"><span class="pre">is_legal_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">bool</span><a class="reference internal" href="_modules/hidebound/core/validators.html#is_legal_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.core.validators.is_legal_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that directory path is legal.
+Legal directory paths must:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Begin with /</p></li>
+<li><p>Not end with /</p></li>
+<li><p>Contain only the characters: /, a-z, A-Z, 0-9, _, -</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>item</strong> (<em>str</em>) – Directory path.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValidationError</strong> – If directory path is invalid.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Validity of directory path.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>bool</p>
