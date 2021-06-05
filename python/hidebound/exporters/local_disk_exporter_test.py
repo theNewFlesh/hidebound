@@ -122,7 +122,7 @@ class LocalDiskExporterTests(unittest.TestCase):
 
             self.assertEqual(result, expected)
 
-            # idempotentcy
+            # idempotency
             LocalDiskExporter.from_config(config).export(hb_root)
             result = hbt.directory_to_dataframe(target).filepath \
                 .apply(lambda x: re.sub('.*/target/', '', x)) \
