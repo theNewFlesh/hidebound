@@ -1,4 +1,4 @@
-from typing import Dict, Optional, Tuple, Union
+from typing import Any, Dict, Optional, Tuple, Union
 
 from collections import defaultdict
 from pathlib import Path
@@ -340,7 +340,7 @@ def _get_data_for_write(data, source_dir, target_dir):
     # add asset id
     keys = data.asset_path.unique().tolist()
     vals = [str(uuid.uuid4()) for x in keys]
-    lut = dict(zip(keys, vals))
+    lut = dict(zip(keys, vals))  # type: Any
     lut = defaultdict(lambda: np.nan, lut)
     data['asset_id'] = data.asset_path.apply(lambda x: lut[x])
 
