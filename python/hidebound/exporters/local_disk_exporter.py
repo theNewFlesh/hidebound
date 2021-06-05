@@ -88,7 +88,7 @@ class LocalDiskExporter(ExporterBase):
         Args:
             metadata (dict): Asset metadata.
         '''
-        pass
+        pass  # pragme: no cover
 
     def _export_file(self, metadata):
         # type: (Dict) -> None
@@ -98,4 +98,4 @@ class LocalDiskExporter(ExporterBase):
         Args:
             metadata (dict): File metadata.
         '''
-        pass
+        pass  # pragme: no cover
