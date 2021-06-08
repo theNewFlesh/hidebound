@@ -10,15 +10,14 @@ ARG DEBIAN_FRONTEND=noninteractive
 # setup ubuntu user
 ARG UID_='1000'
 ARG GID_='1000'
-ARG USER_=ubuntu
 RUN echo "\n${CYAN}SETUP UBUNTU USER${NO_COLOR}"; \
-    addgroup --gid $GID_ $USER_ && \
+    addgroup --gid $GID_ ubuntu && \
     adduser \
         --disabled-password \
         --gecos '' \
         --uid $UID_ \
-        --gid $GID_ $USER_ && \
-    usermod -aG root $USER_
+        --gid $GID_ ubuntu && \
+    usermod -aG root ubuntu
 WORKDIR /home/ubuntu
 
 # update ubuntu and install basic dependencies
@@ -41,7 +40,7 @@ RUN echo "\n${CYAN}SETUP ZSH${NO_COLOR}"; \
     curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh \
         -o install-oh-my-zsh.sh
 USER ubuntu
-RUN echo y | sh /home/$USER_/install-oh-my-zsh.sh
+RUN echo y | sh /home/ubuntu/install-oh-my-zsh.sh
 USER root
 
 # install python3.7 and pip
@@ -74,8 +73,8 @@ RUN echo "\n${CYAN}INSTALL NODE.JS DEPENDENCIES${NO_COLOR}"; \
     rm -rf /var/lib/apt/lists/*
 
 # install python dependencies
-COPY ./dev_requirements.txt /home/$USER_/dev_requirements.txt
-COPY ./prod_requirements.txt /home/$USER_/prod_requirements.txt
+COPY ./dev_requirements.txt /home/ubuntu/dev_requirements.txt
+COPY ./prod_requirements.txt /home/ubuntu/prod_requirements.txt
 RUN echo "\n${CYAN}INSTALL PYTHON DEPENDECIES${NO_COLOR}"; \
     apt update && \
     apt install -y \
@@ -86,9 +85,9 @@ RUN echo "\n${CYAN}INSTALL PYTHON DEPENDECIES${NO_COLOR}"; \
 
 # configure zsh
 RUN echo "\n${CYAN}CONFIGURE ZSH${NO_COLOR}"; \
-    echo 'export PYTHONPATH="/home/ubuntu/hidebound/python"' >> /home/$USER_/.zshrc
-COPY ./henanigans.zsh-theme /home/$USER_/.oh-my-zsh/custom/themes/henanigans.zsh-theme
-COPY ./zshrc /home/$USER_/.zshrc
+    echo 'export PYTHONPATH="/home/ubuntu/hidebound/python"' >> /home/ubuntu/.zshrc
+COPY ./henanigans.zsh-theme /home/ubuntu/.oh-my-zsh/custom/themes/henanigans.zsh-theme
+COPY ./zshrc /home/ubuntu/.zshrc
 
 # install jupyter lab extensions
 ENV NODE_OPTIONS="--max-old-space-size=8192"
@@ -101,7 +100,7 @@ RUN echo "\n${CYAN}INSTALL JUPYTER LAB EXTENSIONS${NO_COLOR}"; \
         @jupyterlab/plotly-extension
 
 RUN echo "\n${CYAN}FIX /HOME/UBUNTU PERMISSIONS${NO_COLOR}"; \
-    chown -R $USER_:$USER_ /home/$USER_
+    chown -R ubuntu:ubuntu /home/ubuntu
 ENV PYTHONPATH "${PYTHONPATH}:/home/ubuntu/hidebound/python"
 ENV LANGUAGE "C"
 ENV LC_ALL "C"
