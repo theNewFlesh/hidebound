@@ -56,6 +56,7 @@ def get_info():
     stop         - Stop {repo} service
     test         - Run testing on {repo} service
     tox          - Run tox tests on {repo}
+    version      - Updates version and runs full-docs and requirements
     zsh          - Run ZSH session inside {repo} container
 '''.format(repo=REPO))
 
@@ -170,6 +171,20 @@ def get_remove_pycache_command():
     cmd = r"find {repo_path} | grep -E '__pycache__|\.pyc$' | "
     cmd += "parallel 'rm -rf {x}'"
     cmd = cmd.format(repo_path=REPO_PATH, x='{}')
+    return cmd
+
+
+def get_update_version_command(info):
+    '''
+    Updates version in version.txt file.
+
+    Args:
+        info (dict): Info dictionary.
+
+    Returns:
+        str: Command.
+    '''
+    cmd = 'echo {version} > pip/version.txt'.format(version=info['args'][0])
     return cmd
 
 
@@ -319,7 +334,7 @@ def get_production_image_command(info):
     '''
     Create production docker image.
 
-    Args:age
+    Args:
         info (dict): Info dictionary.
 
     Returns:
@@ -342,7 +357,7 @@ def get_production_container_command(info):
     '''
     Run production docker container.
 
-    Args:age
+    Args:
         info (dict): Info dictionary.
 
     Returns:
@@ -377,7 +392,7 @@ def get_destroy_production_container_command(info):
     '''
     Destroy production container and image.
 
-    Args:age
+    Args:
         info (dict): Info dictionary.
 
     Returns:
@@ -512,7 +527,7 @@ def get_requirements_command(info):
         str: Command.
     '''
     cmd = '{exec} zsh -c "python3.7 -m pip list --format freeze > '
-    cmd += '/home/ubuntu/{repo}/docker/frozen_requirements.txt'
+    cmd += '/home/ubuntu/{repo}/docker/frozen_requirements.txt"'
     cmd = cmd.format(
         repo=REPO,
         exec=get_docker_exec_command(info),
@@ -662,7 +677,7 @@ def get_docker_command(info):
     '''
     Get misc docker command.
 
-    Args:age
+    Args:
         info (dict): Info dictionary.
 
     Returns:
@@ -743,7 +758,6 @@ def main():
     '''
     info = get_info()
     mode = info['mode']
-    docs = os.path.join('/home/ubuntu', REPO, 'docs')
     cmd = get_docker_command(info)
 
     if mode == 'app':
@@ -830,6 +844,23 @@ def main():
 
     elif mode == 'tox':
         cmd = get_tox_command(info)
+
+    elif mode == 'version':
+        if info['args'] == ['']:
+            cmd = 'echo "Please provide a version after the -a flag."'
+        else:
+            cmd = get_update_version_command(info)
+            info['args'] = ['']
+            cmd += '; echo LINTING'
+            cmd += '; ' + get_lint_command(info)
+            cmd += '; ' + 'echo'
+            cmd += '; ' + 'echo "TYPE CHECKING"'
+            cmd += '; ' + get_type_checking_command(info)
+            cmd += ' && ' + get_docs_command(info)
+            cmd += '; ' + get_coverage_command(info)
+            cmd += '; ' + get_architecture_diagram_command(info)
+            cmd += '; ' + get_radon_metrics_command(info)
+            cmd += '; ' + get_requirements_command(info)
 
     elif mode == 'zsh':
         cmd = get_zsh_command(info)

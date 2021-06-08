@@ -183,6 +183,16 @@
                 "dependsOrder": "sequence",
                 "dependsOn": ["tox-repo"],
                 "type": "shell"
+            },
+            {
+                "label": "version",
+                "dependsOrder": "sequence",
+                "dependsOn": [
+                    "lint",
+                    "full-docs",
+                    "requirements"
+                ],
+                "type": "shell"
             }
         ]
     }
