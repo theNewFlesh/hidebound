@@ -12,20 +12,18 @@ ARG UID_='1000'
 ARG GID_='1000'
 ARG USER_=ubuntu
 RUN echo "\n${CYAN}SETUP UBUNTU USER${NO_COLOR}"; \
-    apt update && \
     addgroup --gid $GID_ $USER_ && \
     adduser \
         --disabled-password \
         --gecos '' \
         --uid $UID_ \
         --gid $GID_ $USER_ && \
-    usermod -aG root $USER_ && \
-    apt install -y sudo && \
-    echo "$USER_ ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
+    usermod -aG root $USER_
 WORKDIR /home/ubuntu
 
 # update ubuntu and install basic dependencies
 RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${NO_COLOR}"; \
+    apt update && \
     apt install -y \
         curl \
         git \
