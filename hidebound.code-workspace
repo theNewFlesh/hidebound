@@ -46,7 +46,6 @@
     "options": {
       "cwd": "/home/ubuntu/${workspaceFolderBasename}",
       "env": {
-        "USER": "501:20",
         "REPO": "${workspaceFolderBasename}",
         "PYTHONPATH": "${PYTHONPATH}:/home/ubuntu/${workspaceFolderBasename}/python",
         "REPO_ENV": "True"
@@ -64,8 +63,7 @@
       {
         "label": "architecture",
         "command": [
-          "python3.7 -c \"import re; from rolling_pin.repo_etl import RepoETL; etl = RepoETL('/home/ubuntu/$REPO/python'); regex = 'test|mock'; data = etl._data.copy(); func = lambda x: not bool(re.search(regex, x)); mask = data.node_name.apply(func); data = data[mask]; data.reset_index(inplace=True, drop=True); data.dependencies = data.dependencies.apply(lambda x: list(filter(func, x))); etl._data = data; etl.write('/home/ubuntu/$REPO/docs/architecture.svg', orient='lr')\" && ",
-          "chown -R $USER docs"
+          "python3.7 -c \"import re; from rolling_pin.repo_etl import RepoETL; etl = RepoETL('/home/ubuntu/$REPO/python'); regex = 'test|mock'; data = etl._data.copy(); func = lambda x: not bool(re.search(regex, x)); mask = data.node_name.apply(func); data = data[mask]; data.reset_index(inplace=True, drop=True); data.dependencies = data.dependencies.apply(lambda x: list(filter(func, x))); etl._data = data; etl.write('/home/ubuntu/$REPO/docs/architecture.svg', orient='lr')\" && "
         ],
         "type": "shell"
       },
@@ -73,8 +71,7 @@
         "label": "coverage",
         "command": [
           "mkdir -p docs && ",
-          "pytest python -c docker/pytest.ini --cov=python --cov-config=docker/pytest.ini --cov-report=html:docs/htmlcov && ",
-          "chown -R $USER docs"
+          "pytest python -c docker/pytest.ini --cov=python --cov-config=docker/pytest.ini --cov-report=html:docs/htmlcov && "
         ],
         "type": "shell"
       },
@@ -87,8 +84,7 @@
           "cp sphinx/style.css docs/_static/style.css && ",
           "touch docs/.nojekyll && ",
           "mkdir -p /home/ubuntu/$REPO/docs/resources && ",
-          "cp -R /home/ubuntu/$REPO/resources/screenshots /home/ubuntu/$REPO/docs/resources/ && ",
-          "chown -R $USER docs"
+          "cp -R /home/ubuntu/$REPO/resources/screenshots /home/ubuntu/$REPO/docs/resources/ && "
         ],
         "type": "shell"
       },
@@ -116,8 +112,7 @@
       {
         "label": "metrics",
         "command": [
-          "python3.7 -c \"from rolling_pin.radon_etl import RadonETL; etl = RadonETL('python'); etl.write_plots('docs/plots.html'); etl.write_tables('docs')\" && ",
-          "chown -R $USER docs"
+          "python3.7 -c \"from rolling_pin.radon_etl import RadonETL; etl = RadonETL('python'); etl.write_plots('docs/plots.html'); etl.write_tables('docs')\" && "
         ],
         "type": "shell"
       },
@@ -158,8 +153,7 @@
       {
         "label": "requirements",
         "command": [
-          "python3.7 -m pip list --format freeze > docker/frozen_requirements.txt && ",
-          "chown -R ${USER} docker/frozen_requirements.txt"
+          "python3.7 -m pip list --format freeze > docker/frozen_requirements.txt && "
         ],
         "type": "shell"
       },
