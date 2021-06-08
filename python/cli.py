@@ -493,9 +493,7 @@ def get_remove_container_command(info):
     Returns:
         str: Command.
     '''
-    cmd = 'CONTAINER_ID=`{container}`; '
-    cmd = '{stop}; '
-    cmd += 'docker rm `{$CONTAINER_ID}`'
+    cmd = '{stop}; docker rm `{container}`'
     cmd = cmd.format(
         stop=get_stop_command(info),
         container=get_container_id_command(),
