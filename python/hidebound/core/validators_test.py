@@ -445,6 +445,6 @@ class ValidatorsTests(unittest.TestCase):
         with self.assertRaisesRegexp(ValidationError, expected.format(dir_)):
             vd.is_legal_directory(dir_)
 
-        dir_ = '/root/foo bar'
+        dir_ = '/home/ubuntu/foo bar'
         with self.assertRaisesRegexp(ValidationError, expected.format(dir_)):
             vd.is_legal_directory(dir_)

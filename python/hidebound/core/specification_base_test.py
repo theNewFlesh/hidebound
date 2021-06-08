@@ -252,8 +252,8 @@ class SpecificationBaseTests(unittest.TestCase):
         )
         a, b = self.Taco(data).get_name_patterns()
         pattern = Path(a, 'f{frame:04d}', b).as_posix()
-        result = self.Taco(data)._to_filepaths('/root', pattern)
-        root = '/root/p-proj001_s-taco_d-desc_v001/'
+        result = self.Taco(data)._to_filepaths('/home/ubuntu', pattern)
+        root = '/home/ubuntu/p-proj001_s-taco_d-desc_v001/'
         expected = [
             root + 'f0001/p-proj001_s-taco_d-desc_v001_c0001-0002_f0001.png',
             root + 'f0002/p-proj001_s-taco_d-desc_v001_c0003-0004_f0002.png',
@@ -290,8 +290,8 @@ class OtherSpecificationBaseTests(unittest.TestCase):
             version=[1],
             extension=['png'],
         )
-        result = Filey(data).to_filepaths('/root')[0]
-        expected = '/root/p-proj001_s-filey_d-desc_v001.png'
+        result = Filey(data).to_filepaths('/home/ubuntu')[0]
+        expected = '/home/ubuntu/p-proj001_s-filey_d-desc_v001.png'
         self.assertEqual(result, expected)
 
     def test_sequence_specification_base(self):
@@ -320,10 +320,10 @@ class OtherSpecificationBaseTests(unittest.TestCase):
             frame=[1, 2],
             extension=['png', 'png'],
         )
-        result = Seq(data).to_filepaths('/root')
+        result = Seq(data).to_filepaths('/home/ubuntu')
         expected = [
-            '/root/p-proj001_s-seq_d-desc_v001/p-proj001_s-seq_d-desc_v001_f0001.png',
-            '/root/p-proj001_s-seq_d-desc_v001/p-proj001_s-seq_d-desc_v001_f0002.png',
+            '/home/ubuntu/p-proj001_s-seq_d-desc_v001/p-proj001_s-seq_d-desc_v001_f0001.png',
+            '/home/ubuntu/p-proj001_s-seq_d-desc_v001/p-proj001_s-seq_d-desc_v001_f0002.png',
         ]
         self.assertEqual(result, expected)
 

@@ -9,10 +9,8 @@ container:
   storage_volume: /mnt/storage
   port: 80
   image_pull_policy: IfNotPresent
-  command: [
-      "python3.7",
-      "/root/hidebound/python/hidebound/server/app.py"
-    ]
+  command:
+    ["python3.7", "/home/ubuntu/hidebound/python/hidebound/server/app.py"]
   env:
     - name: REPO_ENV
       value: "True"
@@ -23,7 +21,7 @@ service:
 config:
   root_directory: /mnt/storage/projects
   hidebound_directory: /mnt/storage/hidebound
-  specification_files: 
+  specification_files:
     - /mnt/storage/hidebound/specifications/test_specifications.py
   include_regex:
   exclude_regex: \\.DS_Store

@@ -1,5 +1,5 @@
 {
-    "folders": [{"path": "./"}],
+    "folders": [{ "path": "./" }],
     "settings": {
         "python.languageServer": "Pylance",
         "python.linting.enabled": true,
@@ -17,8 +17,8 @@
         "terminal.integrated.shell.linux": "/bin/zsh",
         "debug.allowBreakpointsEverywhere": true,
         "python.testing.pytestArgs": [
-            "--cov=/root/hidebound/python",
-            "--cov-config=/root/hidebound/docker/pytest.ini"
+            "--cov=/home/ubuntu/hidebound/python",
+            "--cov-config=/home/ubuntu/hidebound/docker/pytest.ini"
         ],
         "files.exclude": {
             "**/.classpath": true,
@@ -44,11 +44,10 @@
     "tasks": {
         "version": "2.0.0",
         "options": {
-            "cwd": "/root/${workspaceFolderBasename}",
+            "cwd": "/home/ubuntu/${workspaceFolderBasename}",
             "env": {
-                "USER": "501:20",
                 "REPO": "${workspaceFolderBasename}",
-                "PYTHONPATH": "${PYTHONPATH}:/root/${workspaceFolderBasename}/python",
+                "PYTHONPATH": "${PYTHONPATH}:/home/ubuntu/${workspaceFolderBasename}/python",
                 "REPO_ENV": "True"
             }
         },
@@ -60,11 +59,11 @@
                     "python3.7 python/$REPO/server/app.py"
                 ],
                 "type": "shell"
-            },{
+            },
+            {
                 "label": "architecture",
                 "command": [
-                    "python3.7 -c \"import re; from rolling_pin.repo_etl import RepoETL; etl = RepoETL('/root/$REPO/python'); regex = 'test|mock'; data = etl._data.copy(); func = lambda x: not bool(re.search(regex, x)); mask = data.node_name.apply(func); data = data[mask]; data.reset_index(inplace=True, drop=True); data.dependencies = data.dependencies.apply(lambda x: list(filter(func, x))); etl._data = data; etl.write('/root/$REPO/docs/architecture.svg', orient='lr')\" && ",
-                    "chown -R $USER docs"
+                    "python3.7 -c \"import re; from rolling_pin.repo_etl import RepoETL; etl = RepoETL('/home/ubuntu/$REPO/python'); regex = 'test|mock'; data = etl._data.copy(); func = lambda x: not bool(re.search(regex, x)); mask = data.node_name.apply(func); data = data[mask]; data.reset_index(inplace=True, drop=True); data.dependencies = data.dependencies.apply(lambda x: list(filter(func, x))); etl._data = data; etl.write('/home/ubuntu/$REPO/docs/architecture.svg', orient='lr')\" && "
                 ],
                 "type": "shell"
             },
@@ -72,8 +71,7 @@
                 "label": "coverage",
                 "command": [
                     "mkdir -p docs && ",
-                    "pytest python -c docker/pytest.ini --cov=python --cov-config=docker/pytest.ini --cov-report=html:docs/htmlcov && ",
-                    "chown -R $USER docs"
+                    "pytest python -c docker/pytest.ini --cov=python --cov-config=docker/pytest.ini --cov-report=html:docs/htmlcov && "
                 ],
                 "type": "shell"
             },
@@ -85,21 +83,15 @@
                     "sphinx-build sphinx docs && ",
                     "cp sphinx/style.css docs/_static/style.css && ",
                     "touch docs/.nojekyll && ",
-                    "mkdir -p /root/$REPO/docs/resources && ",
-                    "cp -R /root/$REPO/resources/screenshots /root/$REPO/docs/resources/ && ",
-                    "chown -R $USER docs"
+                    "mkdir -p /home/ubuntu/$REPO/docs/resources && ",
+                    "cp -R /home/ubuntu/$REPO/resources/screenshots /home/ubuntu/$REPO/docs/resources/ && "
                 ],
                 "type": "shell"
             },
             {
                 "label": "full-docs",
                 "dependsOrder": "sequence",
-                "dependsOn": [
-                    "docs",
-                    "coverage",
-                    "architecture",
-                    "metrics"
-                ],
+                "dependsOn": ["docs", "coverage", "architecture", "metrics"],
                 "type": "shell"
             },
             {
@@ -120,8 +112,7 @@
             {
                 "label": "metrics",
                 "command": [
-                    "python3.7 -c \"from rolling_pin.radon_etl import RadonETL; etl = RadonETL('python'); etl.write_plots('docs/plots.html'); etl.write_tables('docs')\" && ",
-                    "chown -R $USER docs"
+                    "python3.7 -c \"from rolling_pin.radon_etl import RadonETL; etl = RadonETL('python'); etl.write_plots('docs/plots.html'); etl.write_tables('docs')\" && "
                 ],
                 "type": "shell"
             },
@@ -151,11 +142,7 @@
                 "label": "publish",
                 "command": "unset REPO_ENV && cd /tmp/$REPO && twine upload dist/* && rm -rf /tmp/$REPO",
                 "dependsOrder": "sequence",
-                "dependsOn": [
-                    "tox",
-                    "lint",
-                    "package"
-                ],
+                "dependsOn": ["tox", "lint", "package"],
                 "type": "shell"
             },
             {
@@ -166,8 +153,7 @@
             {
                 "label": "requirements",
                 "command": [
-                    "python3.7 -m pip list --format freeze > docker/frozen_requirements.txt && ",
-                    "chown -R ${USER} docker/frozen_requirements.txt"
+                    "python3.7 -m pip list --format freeze > docker/frozen_requirements.txt && "
                 ],
                 "type": "shell"
             },
@@ -180,30 +166,34 @@
                 "label": "tox-repo",
                 "command": [
                     "rm -rf /tmp/$REPO && ",
-                    "cp -R /root/$REPO/python /tmp/$REPO && ",
-                    "cp /root/$REPO/README.md /tmp/$REPO/ && ",
-                    "cp /root/$REPO/LICENSE /tmp/$REPO/ && ",
-                    "cp -R /root/$REPO/docker/* /tmp/$REPO/ && ",
-                    "cp -R /root/$REPO/pip/* /tmp/$REPO/ && ",
-                    "cp -R /root/$REPO/resources /tmp && ",
-                    "cp -R /root/$REPO/templates /tmp/$REPO/$REPO && ",
+                    "cp -R /home/ubuntu/$REPO/python /tmp/$REPO && ",
+                    "cp /home/ubuntu/$REPO/README.md /tmp/$REPO/ && ",
+                    "cp /home/ubuntu/$REPO/LICENSE /tmp/$REPO/ && ",
+                    "cp -R /home/ubuntu/$REPO/docker/* /tmp/$REPO/ && ",
+                    "cp -R /home/ubuntu/$REPO/pip/* /tmp/$REPO/ && ",
+                    "cp -R /home/ubuntu/$REPO/resources /tmp && ",
+                    "cp -R /home/ubuntu/$REPO/templates /tmp/$REPO/$REPO && ",
                     "find /tmp/$REPO | grep -E '__pycache__|\\.pyc$' | parallel 'rm -rf'"
                 ],
                 "type": "shell"
             },
             {
                 "label": "tox",
-                "command": [
-                    "unset REPO_ENV && ",
-                    "cd /tmp/$REPO && ",
-                    "tox"
-                ],
+                "command": ["unset REPO_ENV && ", "cd /tmp/$REPO && ", "tox"],
+                "dependsOrder": "sequence",
+                "dependsOn": ["tox-repo"],
+                "type": "shell"
+            },
+            {
+                "label": "version",
                 "dependsOrder": "sequence",
                 "dependsOn": [
-                    "tox-repo"
+                    "lint",
+                    "full-docs",
+                    "requirements"
                 ],
-                "type": "shell",
-            },
+                "type": "shell"
+            }
         ]
     }
 }

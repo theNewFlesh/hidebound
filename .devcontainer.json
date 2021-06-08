@@ -1,16 +1,16 @@
 {
     "name": "${localWorkspaceFolderBasename}",
     "context": "./",
-    "folders": [{"path": "./"}],
+    "folders": [{ "path": "./" }],
     "dockerComposeFile": "docker/docker-compose.yml",
     "service": "${localWorkspaceFolderBasename}",
-    "workspaceFolder": "/root/${localWorkspaceFolderBasename}",
+    "workspaceFolder": "/home/ubuntu/${localWorkspaceFolderBasename}",
     "settings": {
-        "terminal.integrated.cwd": "/root/${localWorkspaceFolderBasename}",
+        "terminal.integrated.cwd": "/home/ubuntu/${localWorkspaceFolderBasename}",
         "terminal.integrated.shell.linux": "/bin/zsh",
-        "terminal.integrated.env.linux": {"REPO_ENV": "True"},
+        "terminal.integrated.env.linux": { "REPO_ENV": "True" },
         "python.languageServer": "Pylance",
-        "python.linting.enabled": true,
+        "python.linting.enabled": true,q
         "python.linting.flake8Args": ["--config=docker/flake8.ini"],
         "python.linting.flake8Enabled": true,
         "python.linting.flake8Path": "/usr/local/bin/flake8",

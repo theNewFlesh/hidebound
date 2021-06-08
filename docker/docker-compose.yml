@@ -12,12 +12,12 @@ services:
       - '9012:9000'
       - '5080:80'
     userns_mode: "host"
-    user: root
+    user: ubuntu
     volumes:
-      - ../:/root/hidebound
-      - ./jupyter:/root/.jupyter
-      - ./ipython:/root/.ipython
-      - ~/.ssh:/root/.ssh
+      - ../:/home/ubuntu/hidebound
+      - ./jupyter:/home/ubuntu/.jupyter
+      - ./ipython:/home/ubuntu/.ipython
+      - ~/.ssh:/home/ubuntu/.ssh
       # - /mnt/storage:/mnt/storage
-    working_dir: "/root/hidebound/python"
+    working_dir: "/home/ubuntu/hidebound/python"
     command: "tail -f /dev/null"
