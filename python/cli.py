@@ -563,7 +563,8 @@ def get_state_command():
     cmd += '    export CONTAINER_STATE="{green}running{clear}"; '
     cmd += 'fi; '
     cmd += 'echo "service: {cyan}{repo}{clear}  -  '
-    cmd += 'image: $IMAGE_STATE  -  container: $CONTAINER_STATE"'
+    cmd += 'image: $IMAGE_STATE  -  container: $CONTAINER_STATE  -  '
+    cmd += 'version: {cyan}`cat pip/version.txt`{clear}"'
     cmd = cmd.format(
         repo=REPO,
         cyan='\033[0;36m',
