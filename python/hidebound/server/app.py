@@ -301,7 +301,7 @@ if __name__ == '__main__':
         config, config_path = server_tools\
             .setup_hidebound_directory(
                 '/tmp',
-                config_path='/root/hidebound/resources/test_config.json'
+                config_path='/home/ubuntu/hidebound/resources/test_config.json'
             )
     else:
         config_path = '/mnt/storage/hidebound/config/hidebound_config.json'

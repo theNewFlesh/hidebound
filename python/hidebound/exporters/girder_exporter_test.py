@@ -250,7 +250,7 @@ class GirderExporterTests(unittest.TestCase):
 
     def test_export_file(self):
         expected = dict(
-            filepath='/root/foo/bar/taco.txt',
+            filepath='/home/ubuntu/foo/bar/taco.txt',
             filepath_relative='foo/bar/taco.txt',
             filename='taco.txt'
         )
@@ -267,7 +267,7 @@ class GirderExporterTests(unittest.TestCase):
 
     def test_export_file_error(self):
         meta = dict(
-            filepath='/root/foo/bar/taco.txt',
+            filepath='/home/ubuntu/foo/bar/taco.txt',
             filepath_relative='foo/bar/taco.txt',
             filename='taco.txt'
         )
