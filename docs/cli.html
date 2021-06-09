@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.12.0
+                0.12.1
               </div>
             
           
@@ -181,7 +181,7 @@
 <span id="cli"></span><h1>cli<a class="headerlink" href="#module-cli" title="Permalink to this headline">¶</a></h1>
 <dl class="py data">
 <dt class="sig sig-object py" id="cli.REPO_PATH">
-<span class="sig-prename descclassname"><span class="pre">cli.</span></span><span class="sig-name descname"><span class="pre">REPO_PATH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'/root/hidebound'</span></em><a class="headerlink" href="#cli.REPO_PATH" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cli.</span></span><span class="sig-name descname"><span class="pre">REPO_PATH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'/home/ubuntu/hidebound'</span></em><a class="headerlink" href="#cli.REPO_PATH" title="Permalink to this definition">¶</a></dt>
 <dd><p>A CLI for developing and deploying a service deeply integrated with this
 repository’s structure. Written to be python version agnostic.</p>
 </dd></dl>
@@ -255,16 +255,15 @@ repository’s structure. Written to be python version agnostic.</p>
 <dt class="sig sig-object py" id="cli.get_destroy_production_container_command">
 <span class="sig-prename descclassname"><span class="pre">cli.</span></span><span class="sig-name descname"><span class="pre">get_destroy_production_container_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#get_destroy_production_container_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cli.get_destroy_production_container_command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Destroy production container and image.</p>
-<dl class="simple">
-<dt>Args:age</dt><dd><p>info (dict): Info dictionary.</p>
-</dd>
-</dl>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Command.</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<em>dict</em>) – Info dictionary.</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>str</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Command.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -273,16 +272,15 @@ repository’s structure. Written to be python version agnostic.</p>
 <dt class="sig sig-object py" id="cli.get_docker_command">
 <span class="sig-prename descclassname"><span class="pre">cli.</span></span><span class="sig-name descname"><span class="pre">get_docker_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#get_docker_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cli.get_docker_command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get misc docker command.</p>
-<dl class="simple">
-<dt>Args:age</dt><dd><p>info (dict): Info dictionary.</p>
-</dd>
-</dl>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Command.</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<em>dict</em>) – Info dictionary.</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>str</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Command.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -442,16 +440,15 @@ Default: [‘REPO_ENV=True’].</p></li>
 <dt class="sig sig-object py" id="cli.get_production_container_command">
 <span class="sig-prename descclassname"><span class="pre">cli.</span></span><span class="sig-name descname"><span class="pre">get_production_container_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#get_production_container_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cli.get_production_container_command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run production docker container.</p>
-<dl class="simple">
-<dt>Args:age</dt><dd><p>info (dict): Info dictionary.</p>
-</dd>
-</dl>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Command.</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<em>dict</em>) – Info dictionary.</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>str</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Command.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -460,16 +457,15 @@ Default: [‘REPO_ENV=True’].</p></li>
 <dt class="sig sig-object py" id="cli.get_production_image_command">
 <span class="sig-prename descclassname"><span class="pre">cli.</span></span><span class="sig-name descname"><span class="pre">get_production_image_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#get_production_image_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cli.get_production_image_command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create production docker image.</p>
-<dl class="simple">
-<dt>Args:age</dt><dd><p>info (dict): Info dictionary.</p>
-</dd>
-</dl>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Command.</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<em>dict</em>) – Info dictionary.</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>str</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Command.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -680,6 +676,23 @@ Default: [‘REPO_ENV=True’].</p></li>
 <dt class="sig sig-object py" id="cli.get_type_checking_command">
 <span class="sig-prename descclassname"><span class="pre">cli.</span></span><span class="sig-name descname"><span class="pre">get_type_checking_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#get_type_checking_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cli.get_type_checking_command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs mypy type checking on python code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>info</strong> (<em>dict</em>) – Info dictionary.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Command.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cli.get_update_version_command">
+<span class="sig-prename descclassname"><span class="pre">cli.</span></span><span class="sig-name descname"><span class="pre">get_update_version_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#get_update_version_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cli.get_update_version_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates version in version.txt file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>info</strong> (<em>dict</em>) – Info dictionary.</p>
