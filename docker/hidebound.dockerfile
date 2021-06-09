@@ -102,7 +102,8 @@ RUN echo "\n${CYAN}INSTALL JUPYTER LAB EXTENSIONS${NO_COLOR}"; \
 # install python dependencies
 RUN echo "\n${CYAN}INSTALL PYTHON DEPENDECIES${NO_COLOR}"; \
     pip3.7 install -r dev_requirements.txt && \
-    pip3.7 install -r prod_requirements.txt;
+    pip3.7 install -r prod_requirements.txt && \
+    echo y | mypy --install-types
 
 # fix /home/ubuntu permissions
 USER root
