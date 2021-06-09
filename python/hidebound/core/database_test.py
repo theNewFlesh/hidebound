@@ -725,8 +725,7 @@ class DatabaseTests(DatabaseTestBase):
                         headers={
                             'Content-Type': 'application/json',
                             'Accept': 'application/json',
-                        },
-                        params=dict(id='123')
+                        }
                     ),
                     dict(
                         url='http://foobar.com/api/user?',
@@ -738,6 +737,7 @@ class DatabaseTests(DatabaseTestBase):
                         params=dict(
                             id='123',
                             name='john',
+                            other=dict(stuff='things')
                         )
                     )
                 ]

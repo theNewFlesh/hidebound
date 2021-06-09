@@ -369,6 +369,9 @@ class ConfigTests(unittest.TestCase):
                 },
                 params=dict(
                     id='123',
+                    other=dict(
+                        stuff='things'
+                    )
                 )
             ),
             dict(

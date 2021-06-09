@@ -8,7 +8,9 @@ from pathlib import Path
 import sys
 
 from schematics.exceptions import ValidationError
-from schematics.types import DictType, ListType, ModelType, StringType, URLType
+from schematics.types import (
+    BaseType, DictType, ListType, ModelType, StringType, URLType
+)
 from schematics import Model
 
 from hidebound.core.specification_base import SpecificationBase
@@ -176,5 +178,5 @@ class Config(Model):
         url = URLType(required=True)  # type: URLType
         method = StringType(required=True, validators=[is_http_method])  # type: StringType
         headers = DictType(StringType, required=False)  # type: DictType
-        params = DictType(StringType, required=False)  # type: DictType
+        params = DictType(BaseType, required=False, serialize_when_none=False)  # type: DictType
     webhooks = ListType(ModelType(WebhookConfig), required=False, default=[])  # type: ListType
