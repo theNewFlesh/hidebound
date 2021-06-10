@@ -2,6 +2,7 @@ from itertools import chain
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from uuid import uuid4
+import json
 import os
 import re
 import unittest
@@ -50,6 +51,13 @@ class LocalDiskExporterTests(unittest.TestCase):
         file_meta = Path(hb_root, 'metadata', 'file')
         asset_meta = Path(hb_root, 'metadata', 'asset')
         content = Path(hb_root, 'content')
+
+        # add dummy config
+        config = Path(hb_root, 'config')
+        os.makedirs(config)
+        with open(Path(config, 'hidbound_config.json'), 'w') as f:
+            json.dump({'foo': 'bar'}, f)
+
         data = []
 
         # add sequence assets
@@ -110,7 +118,12 @@ class LocalDiskExporterTests(unittest.TestCase):
 
             exp.export(hb_root)
 
-            expected = hbt.directory_to_dataframe(hb_root).filepath \
+            expected = hbt.directory_to_dataframe(hb_root)
+            mask = expected.filepath \
+                .apply(lambda x: re.search('/(content|metadata)', x)) \
+                .astype(bool)
+            expected = expected[mask]
+            expected = expected.filepath \
                 .apply(lambda x: re.sub('.*/hidebound/', '', x)) \
                 .tolist()
             expected = sorted(expected)

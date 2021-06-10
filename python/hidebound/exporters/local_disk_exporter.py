@@ -75,6 +75,12 @@ class LocalDiskExporter(ExporterBase):
 
         hidebound_dir = Path(hidebound_dir).as_posix()
         data = hbt.directory_to_dataframe(hidebound_dir)
+
+        # only include /content and /metadata directories
+        regex = f'{hidebound_dir}/(content|metadata)'
+        mask = data.filepath.apply(lambda x: re.search(regex, x)).astype(bool)
+        data = data[mask]
+
         data['target'] = data.filepath \
             .apply(lambda x: re.sub(hidebound_dir, self._target_directory, x))
         data.target.apply(lambda x: os.makedirs(Path(x).parent, exist_ok=True))
