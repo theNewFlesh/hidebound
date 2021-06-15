@@ -376,14 +376,29 @@ class ConfigTests(unittest.TestCase):
             ),
             dict(
                 url='http://foobar.com/api/user?',
+                method='put',
+                headers={
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                data=dict(
+                    id='123',
+                    name='john',
+                )
+            ),
+            dict(
+                url='http://foobar.com/api/user?',
                 method='post',
                 headers={
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
                 },
-                params=dict(
+                data=dict(
                     id='123',
                     name='john',
+                ),
+                json=dict(
+                    foo='bar'
                 )
             )
         ]

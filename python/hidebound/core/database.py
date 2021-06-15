@@ -8,7 +8,6 @@ import logging
 import os
 import shutil
 import sys
-import urllib
 
 from pandas import DataFrame
 import jsoncomment as jsonc
@@ -378,11 +377,20 @@ class Database:
         for hook in self._webhooks:
             url = hook['url']
             headers = hook.get('headers', None)
-            if 'params' in hook:
-                url += urllib.parse.urlencode(hook['params'])
+            method = hook['method']
 
-            method = getattr(requests, hook['method'])
-            yield method(url, headers=headers)
+            kwargs = {}
+            if 'data' in hook and method in ['post', 'put', 'patch']:
+                kwargs['data'] = json.dumps(hook['data']).encode()
+
+            if 'json' in hook and method == 'post':
+                kwargs['json'] = hook['json']
+
+            if 'params' in hook and method == 'get':
+                kwargs['params'] = hook['params']
+
+            method = getattr(requests, method)
+            yield method(url, headers=headers, **kwargs)
 
     def export(self):
         # type: () -> None

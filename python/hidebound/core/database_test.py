@@ -719,27 +719,30 @@ class DatabaseTests(DatabaseTestBase):
                 exclude_regex='bar',
                 write_mode='copy',
                 webhooks=[
-                    dict(
-                        url='http://foobar.com/api/user?',
-                        method='get',
-                        headers={
+                    {
+                        'url': 'http://foobar.com/api/user?',
+                        'method': 'get',
+                        'headers': {
                             'Content-Type': 'application/json',
                             'Accept': 'application/json',
                         }
-                    ),
-                    dict(
-                        url='http://foobar.com/api/user?',
-                        method='post',
-                        headers={
+                    },
+                    {
+                        'url': 'http://foobar.com/api/user?',
+                        'method': 'post',
+                        'headers': {
                             'Content-Type': 'application/json',
                             'Accept': 'application/json',
                         },
-                        params=dict(
-                            id='123',
-                            name='john',
-                            other=dict(stuff='things')
-                        )
-                    )
+                        'data': {
+                            'id': '123',
+                            'name': 'john',
+                            'other': {'stuff': 'things'}
+                        },
+                        'json': {
+                            'foo': 'bar'
+                        }
+                    }
                 ]
             )
 
