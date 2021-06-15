@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.12.1
+                0.12.3
               </div>
             
           
@@ -353,6 +353,8 @@
         <span class="n">url</span> <span class="o">=</span> <span class="n">URLType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: URLType</span>
         <span class="n">method</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">is_http_method</span><span class="p">])</span>  <span class="c1"># type: StringType</span>
         <span class="n">headers</span> <span class="o">=</span> <span class="n">DictType</span><span class="p">(</span><span class="n">StringType</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: DictType</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">DictType</span><span class="p">(</span><span class="n">BaseType</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">serialize_when_none</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: DictType</span>
+        <span class="n">json</span> <span class="o">=</span> <span class="n">DictType</span><span class="p">(</span><span class="n">BaseType</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">serialize_when_none</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: DictType</span>
         <span class="n">params</span> <span class="o">=</span> <span class="n">DictType</span><span class="p">(</span><span class="n">BaseType</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">serialize_when_none</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: DictType</span></div>
     <span class="n">webhooks</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span><span class="n">ModelType</span><span class="p">(</span><span class="n">WebhookConfig</span><span class="p">),</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[])</span>  <span class="c1"># type: ListType</span></div>
 </pre></div>

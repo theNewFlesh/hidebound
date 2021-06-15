@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.12.0
+                0.12.3
               </div>
             
           
@@ -183,7 +183,6 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">urllib</span>
 
 <span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
 <span class="kn">import</span> <span class="nn">jsoncomment</span> <span class="k">as</span> <span class="nn">jsonc</span>
@@ -553,11 +552,20 @@
         <span class="k">for</span> <span class="n">hook</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_webhooks</span><span class="p">:</span>
             <span class="n">url</span> <span class="o">=</span> <span class="n">hook</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]</span>
             <span class="n">headers</span> <span class="o">=</span> <span class="n">hook</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;headers&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="k">if</span> <span class="s1">&#39;params&#39;</span> <span class="ow">in</span> <span class="n">hook</span><span class="p">:</span>
-                <span class="n">url</span> <span class="o">+=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">hook</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">])</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="n">hook</span><span class="p">[</span><span class="s1">&#39;method&#39;</span><span class="p">]</span>
 
-            <span class="n">method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">requests</span><span class="p">,</span> <span class="n">hook</span><span class="p">[</span><span class="s1">&#39;method&#39;</span><span class="p">])</span>
-            <span class="k">yield</span> <span class="n">method</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span></div>
+            <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">if</span> <span class="s1">&#39;data&#39;</span> <span class="ow">in</span> <span class="n">hook</span> <span class="ow">and</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="s1">&#39;put&#39;</span><span class="p">,</span> <span class="s1">&#39;patch&#39;</span><span class="p">]:</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">hook</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="s1">&#39;json&#39;</span> <span class="ow">in</span> <span class="n">hook</span> <span class="ow">and</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;post&#39;</span><span class="p">:</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;json&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hook</span><span class="p">[</span><span class="s1">&#39;json&#39;</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="s1">&#39;params&#39;</span> <span class="ow">in</span> <span class="n">hook</span> <span class="ow">and</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;get&#39;</span><span class="p">:</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hook</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]</span>
+
+            <span class="n">method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">requests</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">method</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Database.export"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.export">[docs]</a>    <span class="k">def</span> <span class="nf">export</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; None</span>
