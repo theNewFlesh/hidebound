@@ -1,62 +1,77 @@
 #!/usr/bin/env python
 
+from typing import Any, List, Tuple
+
 from pathlib import Path
 import argparse
-import os
 import re
 
 # set's REPO to whatever the repository is named
 REPO = Path(__file__).parents[1].absolute().name
 REPO_PATH = Path(__file__).parents[1].absolute().as_posix()
+GITHUB_USER = 'thenewflesh'
+USER = 'ubuntu:ubuntu'
+PORT = 8080
 # ------------------------------------------------------------------------------
 
 '''
-A CLI for developing and deploying a service deeply integrated with this
+A CLI for developing and deploying an app deeply integrated with this
 repository's structure. Written to be python version agnostic.
 '''
 
 
 def get_info():
+    # type: () -> Tuple[str, list]
     '''
+    Parses command line call.
+
     Returns:
-        str: System args and environment as a dict.
+        tuple[str]: Mode and arguments.
     '''
+    desc = 'A CLI for developing and deploying the {repo} app.'.format(
+        repo=REPO
+    )
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawTextHelpFormatter,
-        description='A CLI for developing and deploying {repo} containers.'.format(repo=REPO),
+        description=desc,
         usage='\n\tpython cli.py COMMAND [-a --args]=ARGS [-h --help]'
     )
 
-    parser.add_argument('command',
-                        metavar='command',
-                        type=str,
-                        nargs=1,
-                        action='store',
-                        help='''Command to run in {repo} service.
+    parser.add_argument(
+        'command',
+        metavar='command',
+        type=str,
+        nargs=1,
+        action='store',
+        help='''Command to run in {repo} app.
 
     app          - Run Flask app inside {repo} container
-    container    - Display the Docker container id for {repo} service
-    coverage     - Generate coverage report for {repo} service
-    destroy      - Shutdown {repo} service and destroy its Docker image
-    destroy-prod - Shutdown {repo}-prod container and destroy its Docker image
-    docs         - Generate documentation for {repo} service
+    build        - Build image of {repo}
+    build-prod   - Build production image of {repo}
+    container    - Display the Docker container id for {repo} app
+    coverage     - Generate coverage report for {repo} app
+    destroy      - Shutdown {repo} app and destroy its Docker image
+    destroy-prod - Shutdown {repo} production app and destroy its Docker image
+    docs         - Generate documentation for {repo} app
+    fast-test    - Run testing on {repo} app skipping tests marked as slow
     full-docs    - Generates documentation, coverage report and metrics
-    image        - Display the Docker image id for {repo} service
+    image        - Display the Docker image id for {repo} app
     lab          - Start a Jupyter lab server
-    lint         - Run linting and type checking on {repo} service code
+    lint         - Run linting and type checking on {repo} app code
     package      - Build {repo} pip package
-    prod         - Start {repo} production service
+    prod         - Start {repo} production app
     publish      - Publish repository to python package index.
+    push         - Push production of {repo} image to Dockerhub
     python       - Run python interpreter session inside {repo} container
-    remove       - Remove {repo} service Docker container
-    restart      - Restart {repo} service
+    remove       - Remove {repo} app Docker image
+    restart      - Restart {repo} app
     requirements - Write frozen requirements to disk
-    start        - Start {repo} service
-    state        - State of {repo} service
-    stop         - Stop {repo} service
-    test         - Run testing on {repo} service
+    start        - Start {repo} app
+    state        - State of {repo} app
+    stop         - Stop {repo} app
+    test         - Run testing on {repo} app
     tox          - Run tox tests on {repo}
-    version      - Updates version and runs full-docs and requirements
+    version-up   - Updates version and runs full-docs and requirements
     zsh          - Run ZSH session inside {repo} container
 '''.format(repo=REPO))
 
@@ -76,797 +91,922 @@ def get_info():
     if temp.args is not None:
         args = re.split(' +', temp.args[0])
 
-    compose_path = Path(REPO_PATH, 'docker/docker-compose.yml')
-    compose_path = compose_path.as_posix()
-
-    user = '{}:{}'.format(os.geteuid(), os.getegid())
-
-    info = dict(
-        args=args,
-        mode=mode,
-        compose_path=compose_path,
-        user=user
-    )
-    return info
+    return mode, args
 
 
-def get_fix_permissions_command(info, directory):
+def resolve(commands):
+    # type: (List[str]) -> str
     '''
-    Recursively reverts permissions of given directory from root:root.
+    Convenience function for creating single commmand from given commands and
+    resolving '{...}' substrings.
 
     Args:
-        directory (str): Directory to be recursively chowned.
+        commands (list[str]): List of commands.
 
     Returns:
-        str: Command.
+        str: Resolved command.
     '''
-    cmd = "{exec} chown -R {user} {directory}".format(
-        exec=get_docker_exec_command(info),
-        user=info['user'],
-        directory=directory
-    )
-    return cmd
+    cmd = ' && '.join(commands)
 
-
-def get_architecture_diagram_command(info):
-    '''
-    Generates a svg file detailing this repository's module structure.
-
-    Args:
-        info (dict): Info dictionary.
-
-    Returns:
-        str: Command.
-    '''
-    cmd = '{exec} python3.7 -c "'
-    cmd += "import re; from rolling_pin.repo_etl import RepoETL; "
-    cmd += "etl = RepoETL('/home/ubuntu/{repo}/python'); "
-    cmd += "regex = 'test|mock'; "
-    cmd += "data = etl._data.copy(); "
-    cmd += "func = lambda x: not bool(re.search(regex, x)); "
-    cmd += "mask = data.node_name.apply(func); "
-    cmd += "data = data[mask]; "
-    cmd += "data.reset_index(inplace=True, drop=True); "
-    cmd += "data.dependencies = data.dependencies"
-    cmd += ".apply(lambda x: list(filter(func, x))); "
-    cmd += "etl._data = data; "
-    cmd += "etl.write('/home/ubuntu/{repo}/docs/architecture.svg', orient='lr')"
-    cmd += '"'
-    cmd = cmd.format(
+    all_ = dict(
+        black='\033[0;30m',
+        blue='\033[0;34m',
+        clear='\033[0m',
+        cyan='\033[0;36m',
+        green='\033[0;32m',
+        purple='\033[0;35m',
+        red='\033[0;31m',
+        white='\033[0;37m',
+        yellow='\033[0;33m',
+        github_user=GITHUB_USER,
+        port=str(PORT),
+        pythonpath='{PYTHONPATH}',
+        repo_path=REPO_PATH,
         repo=REPO,
-        exec=get_docker_exec_command(info),
+        user=USER,
+    )
+    args = {}
+    for k, v in all_.items():
+        if '{' + k + '}' in cmd:
+            args[k] = v
+
+    cmd = cmd.format(**args)
+    return cmd
+
+
+def line(text):
+    # type: (str) -> str
+    '''
+    Convenience function for formatting a given block of text as series of
+    commands.
+
+    Args:
+        text (text): Block of text.
+
+    Returns:
+        str: Formatted command.
+    '''
+    output = re.sub('^\n|\n$', '', text)  # type: Any
+    output = output.split('\n')
+    output = [re.sub('^ +| +$', '', x) for x in output]
+    output = ' '.join(output) + ' '
+    return output
+
+
+# SUBCOMMANDS-------------------------------------------------------------------
+def enter_repo():
+    # type: () -> str
+    '''
+    Returns:
+        str: Command to enter repo.
+    '''
+    return 'export CWD=`pwd` && cd {repo_path}'
+
+
+def exit_repo():
+    # type: () -> str
+    '''
+    Returns:
+        str: Command to return to original directory.
+    '''
+    return 'cd $CWD'
+
+
+def start():
+    # type: () -> str
+    '''
+    Returns:
+        str: Command to start container if it is not yet running.
+    '''
+    cmds = [
+        line('''
+            export STATE=`docker ps
+                -a
+                -f name={repo}
+                -f status=running
+                --format='{{{{{{{{.Status}}}}}}}}'`
+        '''),
+        line('''
+            if [ -z "$STATE" ];
+                then cd docker;
+                docker compose
+                    -p {repo}
+                    -f {repo_path}/docker/docker-compose.yml up
+                    --detach;
+                cd ..;
+            fi
+        '''),
+    ]
+    return resolve(cmds)
+
+
+def version_variable():
+    # type: () -> str
+    '''
+    Returns:
+        str: Command to set version variable from pip/version.txt.
+    '''
+    return 'export VERSION=`cat pip/version.txt`'
+
+
+def make_docs_dir():
+    # type: () -> str
+    '''
+    Returns:
+        str: Command to create docs directory in repo.
+    '''
+    cmd = line('''
+        docker exec
+            --interactive
+            --tty
+            --user {user}
+            -e PYTHONPATH="${pythonpath}:/home/ubuntu/{repo}/python"
+            -e REPO_ENV=True {repo}
+            mkdir -p /home/ubuntu/{repo}/docs
+    ''')
+    return cmd
+
+
+def docker_down():
+    # type: () -> str
+    '''
+    Returns:
+        str: Command to shutdown container.
+    '''
+    cmd = line('''
+        cd docker;
+        docker compose
+            -p {repo}
+            -f {repo_path}/docker/docker-compose.yml
+            down;
+        cd ..
+    ''')
+    return cmd
+
+
+def coverage():
+    # type: () -> str
+    '''
+    Returns:
+        str: Partial command to get generate coverage report.
+    '''
+    cmd = line(
+        docker_exec() + '''-e REPO_ENV=True {repo}
+            pytest
+                /home/ubuntu/{repo}/python
+                -c /home/ubuntu/{repo}/docker/pytest.ini
+                --cov /home/ubuntu/{repo}/python
+                --cov-config /home/ubuntu/{repo}/docker/pytest.ini
+                --cov-report html:/home/ubuntu/{repo}/docs/htmlcov
+                --headless'''
     )
     return cmd
 
 
-def get_radon_metrics_command(info):
+def remove_container():
+    # type: () -> str
     '''
-    Generates radon metrics of this repository as html files.
-
-    Args:
-        info (dict): Info dictionary.
-
     Returns:
-        str: Command.
+        str: Command to remove container.
     '''
-    cmd = '{exec} python3.7 -c "from rolling_pin.radon_etl import RadonETL; '
-    cmd += "etl = RadonETL('/home/ubuntu/{repo}/python'); "
-    cmd += "etl.write_plots('/home/ubuntu/{repo}/docs/plots.html'); "
-    cmd += "etl.write_tables('/home/ubuntu/{repo}/docs'); "
-    cmd += '"'
-    cmd = cmd.format(
-        repo=REPO,
-        exec=get_docker_exec_command(info),
-    )
+    return 'docker container rm --force {repo}'
+
+
+def docker_exec():
+    # type: () -> str
+    '''
+    Returns:
+        str: Partial command to call 'docker exec'.
+    '''
+    cmd = line('''
+        docker exec
+            --interactive
+            --tty
+            --user {user}
+            -e PYTHONPATH="${pythonpath}:/home/ubuntu/{repo}/python"
+    ''')
     return cmd
 
 
-def get_remove_pycache_command():
+def create_package_repo():
+    # type: () -> str
     '''
-    Removes all pycache files and directories under the repo's main directory.
-
     Returns:
-        str: Command.
+        str: Command to create a temporary repo in /tmp.
     '''
-    cmd = r"find {repo_path} | grep -E '__pycache__|\.pyc$' | "
-    cmd += "parallel 'rm -rf {x}'"
-    cmd = cmd.format(repo_path=REPO_PATH, x='{}')
-    return cmd
-
-
-def get_update_version_command(info):
-    '''
-    Updates version in version.txt file.
-
-    Args:
-        info (dict): Info dictionary.
-
-    Returns:
-        str: Command.
-    '''
-    cmd = 'echo {version} > pip/version.txt'.format(version=info['args'][0])
+    cmd = line(
+        docker_exec() + r'''{repo} zsh -c "
+            rm -rf /tmp/{repo} &&
+            cp -R /home/ubuntu/{repo}/python /tmp/{repo} &&
+            cp /home/ubuntu/{repo}/README.md /tmp/{repo}/README.md &&
+            cp /home/ubuntu/{repo}/LICENSE /tmp/{repo}/LICENSE &&
+            cp /home/ubuntu/{repo}/pip/MANIFEST.in /tmp/{repo}/MANIFEST.in &&
+            cp /home/ubuntu/{repo}/pip/setup.cfg /tmp/{repo}/ &&
+            cp /home/ubuntu/{repo}/pip/setup.py /tmp/{repo}/ &&
+            cp /home/ubuntu/{repo}/pip/version.txt /tmp/{repo}/ &&
+            cp /home/ubuntu/{repo}/docker/dev_requirements.txt /tmp/{repo}/ &&
+            cp /home/ubuntu/{repo}/docker/prod_requirements.txt /tmp/{repo}/ &&
+            cp -r /home/ubuntu/{repo}/templates /tmp/{repo}/{repo} &&
+            cp -r /home/ubuntu/{repo}/resources /tmp/{repo}/{repo} &&
+            find /tmp/{repo}/{repo}/resources -type f | grep -vE 'icon|test_'
+                | parallel 'rm -rf {{}}' &&
+            find /tmp/{repo} | grep -E '.*test.*\.py$|mock.*\.py$|__pycache__'
+                | parallel 'rm -rf {{}}' &&
+            find /tmp/{repo} -type f | grep __init__.py
+                | parallel 'rm -rf {{}};touch {{}}'
+        "
+    ''')
     return cmd
 
 
 # COMMANDS----------------------------------------------------------------------
-def get_app_command(info):
+def app_command():
+    # type: () -> str
     '''
-    Starts Flask app.
-
-    Args:
-        info (dict): Info dictionary.
-
     Returns:
-        str: Command.
+        str: Command to start app.
     '''
-    cmd = "{exec} python3.7 /home/ubuntu/{repo}/python/{repo}/server/app.py".format(
-        exec=get_docker_exec_command(
-            info, env_vars=['DEBUG_MODE=True', 'REPO_ENV=True']
+    cmds = [
+        enter_repo(),
+        start(),
+        line(
+            docker_exec() + '''
+                -e DEBUG_MODE=True
+                -e REPO_ENV=True {repo}
+                python3.7 /home/ubuntu/{repo}/python/{repo}/server/app.py'''
         ),
-        repo=REPO,
-    )
-    return cmd
-
-
-def get_container_id_command():
-    '''
-    Gets current container id.
-
-    Returns:
-        str: Command.
-    '''
-    cmd = "docker ps -a --filter name={repo} ".format(repo=REPO)
-    cmd += "--format '{{.ID}}'"
-    return cmd
-
-
-def get_coverage_command(info):
-    '''
-    Runs pytest coverage.
-
-    Args:
-        info (dict): Info dictionary.
-
-    Returns:
-        str: Command.
-    '''
-    cmd = '{exec} mkdir -p /home/ubuntu/{repo}/docs; {test}'
-    args = [
-        '--cov=/home/ubuntu/{repo}/python',
-        '--cov-config=/home/ubuntu/{repo}/docker/pytest.ini',
-        '--cov-report=html:/home/ubuntu/{repo}/docs/htmlcov',
+        exit_repo(),
     ]
-    args = ' '.join(args)
-    cmd += ' ' + args
-
-    cmd = cmd.format(
-        repo=REPO,
-        exec=get_docker_exec_command(info),
-        test=get_test_command(info),
-    )
-    return cmd
+    return resolve(cmds)
 
 
-def get_docs_command(info):
+def build_dev_command():
+    # type: () -> str
     '''
-    Build documentation.
-
-    Args:
-        info (dict): Info dictionary.
-
     Returns:
-        str: Fully resolved build docs command.
+        str: Command to build dev image.
     '''
-    cmd = '{exec} mkdir -p /home/ubuntu/{repo}/docs; '
-    cmd += '{exec} zsh -c "'
-    cmd += 'pandoc /home/ubuntu/{repo}/README.md -o /home/ubuntu/{repo}/sphinx/intro.rst; '
-    cmd += 'sphinx-build /home/ubuntu/{repo}/sphinx /home/ubuntu/{repo}/docs; '
-    cmd += 'cp /home/ubuntu/{repo}/sphinx/style.css /home/ubuntu/{repo}/docs/_static/style.css; '
-    cmd += 'touch /home/ubuntu/{repo}/docs/.nojekyll; '
-    cmd += 'mkdir -p /home/ubuntu/{repo}/docs/resources; '
-    cmd += 'cp -R /home/ubuntu/{repo}/resources/screenshots /home/ubuntu/{repo}/docs/resources/ '
-    cmd += '"'
-    cmd = cmd.format(
-        repo=REPO,
-        exec=get_docker_exec_command(info),
-    )
-    return cmd
+    cmds = [
+        enter_repo(),
+        line('''
+            cd docker;
+            docker build
+                --force-rm
+                --no-cache
+                --file dev.dockerfile
+                --tag {repo}:latest .;
+            cd ..
+        '''),
+        exit_repo(),
+    ]
+    return resolve(cmds)
 
 
-def get_image_id_command():
+def build_prod_command():
+    # type: () -> str
     '''
-    Gets currently built image id.
-
     Returns:
-        str: Command.
+        str: Command to build prod image.
     '''
-    cmd = 'docker image ls | grep "{repo} " '.format(repo=REPO)
-    cmd += "| head -n 1 | awk '{print $3}'"
-    return cmd
+    cmds = [
+        enter_repo(),
+        version_variable(),
+        line('''
+            cd docker;
+            docker build
+                --force-rm
+                --no-cache
+                --file prod.dockerfile
+                --tag {github_user}/{repo}:$VERSION .;
+            cd ..
+        '''),
+        exit_repo(),
+    ]
+    return resolve(cmds)
 
 
-def get_lab_command(info):
+def container_id_command():
+    # type: () -> str
     '''
-    Start a jupyter lab server.
-
-    Args:
-        info (dict): Info dictionary.
-
     Returns:
-        str: Command.
+        str: Command to get docker container id.
     '''
-    cmd = '{exec} jupyter lab --allow-root --ip=0.0.0.0 --no-browser'
-    cmd = cmd.format(exec=get_docker_exec_command(info))
-    return cmd
+    cmds = [
+        "docker ps -a --filter name={repo} --format '{{{{.ID}}}}'"
+    ]
+    return resolve(cmds)
 
 
-def get_lint_command(info):
+def coverage_command():
+    # type: () -> str
     '''
-    Runs flake8 linting on python code.
-
-    Args:
-        info (dict): Info dictionary.
-
     Returns:
-        str: Command.
+        str: Command to get generate coverage report.
     '''
-    cmd = '{exec} flake8 /home/ubuntu/{repo}/python --config /home/ubuntu/{repo}/docker/flake8.ini'
-    cmd = cmd.format(repo=REPO, exec=get_docker_exec_command(info))
-    return cmd
+    cmds = [
+        enter_repo(),
+        start(),
+        make_docs_dir(),
+        coverage(),
+        exit_repo(),
+    ]
+    return resolve(cmds)
 
 
-def get_type_checking_command(info):
+def destroy_dev_command():
+    # type: () -> str
     '''
-    Runs mypy type checking on python code.
-
-    Args:
-        info (dict): Info dictionary.
-
     Returns:
-        str: Command.
+        str: Command to destroy dev container and image.
     '''
-    cmd = '{exec} mypy /home/ubuntu/{repo}/python --config-file /home/ubuntu/{repo}/docker/mypy.ini'
-    cmd = cmd.format(repo=REPO, exec=get_docker_exec_command(info))
-    return cmd
+    cmds = [
+        enter_repo(),
+        docker_down(),
+        remove_container(),
+        'docker image rm --force {repo}',
+        exit_repo(),
+    ]
+    return resolve(cmds)
 
 
-def get_production_image_command(info):
+def destroy_prod_command():
+    # type: () -> str
     '''
-    Create production docker image.
-
-    Args:
-        info (dict): Info dictionary.
-
     Returns:
-        str: Command.
+        str: Command to destroy prod image.
     '''
-    cmd = 'CWD=$(pwd); '
-    cmd += 'cd {repo_path}; '
-    cmd += 'docker build --force-rm '
-    cmd += '--file docker/{repo}_prod.dockerfile '
-    cmd += '--tag {repo}-prod:latest ./; '
-    cmd += 'cd $CWD'
-    cmd = cmd.format(
-        repo=REPO,
-        repo_path=REPO_PATH
-    )
-    return cmd
+    cmds = [
+        "export PROD_CID=`docker ps --filter name={repo}-prod --format '{{{{.ID}}}}'`",
+        "export PROD_IID=`docker images {github_user}/{repo} --format '{{{{.ID}}}}'`",
+        'docker container stop $PROD_CID',
+        'docker image rm --force $PROD_IID',
+    ]
+    return resolve(cmds)
 
 
-def get_production_container_command(info):
+def docs_command():
+    # type: () -> str
     '''
-    Run production docker container.
-
-    Args:
-        info (dict): Info dictionary.
-
     Returns:
-        str: Command.
+        str: Command to generate documentation.
     '''
-    if info['args'] == ['']:
-        cmd = 'echo "Please provide a directory to map into the container '
-        cmd += 'after the -a flag."'
-        return cmd
-
-    cmd = 'CWD=$(pwd); '
-    cmd += 'cd {repo_path}; '
-    cmd += 'CURRENT_USER="{user}" '
-    cmd += 'docker run '
-    cmd += '--volume {volume}:/mnt/storage '
-    cmd += '--publish 5080:5080 '
-    cmd += '--name {repo}-prod '
-    cmd += '--workdir /home/ubuntu/{repo}/python '
-    cmd += '{repo}-prod; '
-    cmd += 'cd $CWD'
-
-    cmd = cmd.format(
-        volume=info['args'][0],
-        user=info['user'],
-        repo=REPO,
-        repo_path=REPO_PATH
-    )
-    return cmd
+    cmds = [
+        enter_repo(),
+        start(),
+        make_docs_dir(),
+        line(
+            docker_exec() + '''-e REPO_ENV=True {repo}
+                 zsh -c "
+                    pandoc /home/ubuntu/{repo}/README.md
+                        -o /home/ubuntu/{repo}/sphinx/intro.rst;
+                    sphinx-build
+                        /home/ubuntu/{repo}/sphinx
+                        /home/ubuntu/{repo}/docs;
+                    cp /home/ubuntu/{repo}/sphinx/style.css
+                    /home/ubuntu/{repo}/docs/_static/style.css;
+                    touch /home/ubuntu/{repo}/docs/.nojekyll;
+                    mkdir -p /home/ubuntu/{repo}/docs/resources;
+                "
+        '''),
+        exit_repo(),
+    ]
+    return resolve(cmds)
 
 
-def get_destroy_production_container_command(info):
+def fast_test_command():
+    # type: () -> str
     '''
-    Destroy production container and image.
-
-    Args:
-        info (dict): Info dictionary.
-
     Returns:
-        str: Command.
+        str: Command to run test not marked slow.
     '''
-    cmd = 'CWD=$(pwd); '
-    cmd += 'cd {repo_path}/docker; '
-    cmd += 'docker stop {repo}-prod; '
-    cmd += 'docker rm {repo}-prod; '
-    cmd += 'docker image remove {repo}-prod; '
-    cmd += 'cd $CWD'
-    cmd = cmd.format(
-        repo=REPO,
-        repo_path=REPO_PATH
-    )
-    return cmd
+    cmds = [
+        enter_repo(),
+        start(),
+        line(
+            docker_exec() + '''-e REPO_ENV=True -e SKIP_SLOW_TESTS=true {repo}
+                pytest
+                    /home/ubuntu/{repo}/python
+                    -c /home/ubuntu/{repo}/docker/pytest.ini
+                    --headless'''
+        ),
+        exit_repo(),
+    ]
+    return resolve(cmds)
 
 
-def get_publish_command(info):
+def full_docs_command():
+    # type: () -> str
     '''
-    Publish repository to python package index.
+    Generates:
 
-    Args:
-        info (dict): Info dictionary.
+      * documentation
+      * code coverage report
+      * dependency architecture diagram
+      * code metrics plots
 
     Returns:
         str: Command.
     '''
-    cmd = '{exec} twine upload dist/*; '
-    cmd += '{exec2} rm -rf /tmp/{repo} '
-    cmd = cmd.format(
-        repo=REPO,
-        exec=get_docker_exec_command(info, '/tmp/' + REPO, env_vars=[]),
-        exec2=get_docker_exec_command(info, env_vars=[]),
-    )
-    return cmd
+    cmds = [
+        enter_repo(),
+        start(),
+        make_docs_dir(),
+        line(
+            docker_exec() + '''-e REPO_ENV=True {repo}
+                 zsh -c "
+                    pandoc
+                        /home/ubuntu/{repo}/README.md
+                        -o /home/ubuntu/{repo}/sphinx/intro.rst;
+                    sphinx-build
+                        /home/ubuntu/{repo}/sphinx
+                        /home/ubuntu/{repo}/docs;
+                    cp
+                        /home/ubuntu/{repo}/sphinx/style.css
+                        /home/ubuntu/{repo}/docs/_static/style.css;
+                    touch /home/ubuntu/{repo}/docs/.nojekyll;
+                    mkdir -p /home/ubuntu/{repo}/docs/resources;
+                "
+        '''),
+        coverage(),
+        line(
+            docker_exec() + '''-e REPO_ENV=True {repo}
+                python3.7 -c "
+                    import re;
+                    from rolling_pin.repo_etl import RepoETL;
+                    etl = RepoETL('/home/ubuntu/{repo}/python');
+                    regex = 'test|mock';
+                    data = etl._data.copy();
+                    func = lambda x: not bool(re.search(regex, x));
+                    mask = data.node_name.apply(func);
+                    data = data[mask];
+                    data.reset_index(inplace=True, drop=True);
+                    data.dependencies = data.dependencies.apply(
+                        lambda x: list(filter(func, x))
+                    );
+                    etl._data = data;
+                    etl.write(
+                        '/home/ubuntu/{repo}/docs/architecture.svg',
+                        orient='lr'
+                    );
+                "
+        '''),
+        line(
+            docker_exec() + '''-e REPO_ENV=True {repo}
+                python3.7 -c "
+                    from rolling_pin.radon_etl import RadonETL;
+                    etl = RadonETL('/home/ubuntu/{repo}/python');
+                    etl.write_plots('/home/ubuntu/{repo}/docs/plots.html');
+                    etl.write_tables('/home/ubuntu/{repo}/docs');
+                "
+        '''),
+        exit_repo(),
+    ]
+    return resolve(cmds)
 
 
-def get_package_command(info):
+def image_id_command():
+    # type: () -> str
     '''
-    Build pip package.
+    Returns:
+        str: Command to get docker image id.
+    '''
+    cmds = [
+        enter_repo(),
+        start(),
+        "docker images {repo} --format '{{{{.ID}}}}'",
+        exit_repo(),
+    ]
+    return resolve(cmds)
 
-    Args:
-        info (dict): Info dictionary.
+
+def lab_command():
+    # type: () -> str
+    '''
+    Returns:
+        str: Command to start jupyter lab.
+    '''
+    cmds = [
+        enter_repo(),
+        start(),
+        line(
+            docker_exec() + '''-e REPO_ENV=True {repo}
+                jupyter lab --allow-root --ip=0.0.0.0 --no-browser'''
+        ),
+        exit_repo(),
+    ]
+    return resolve(cmds)
+
+
+def lint_command():
+    # type: () -> str
+    '''
+    Returns:
+        str: Command to run linting and type analysis.
+    '''
+    cmds = [
+        enter_repo(),
+        start(),
+        'echo LINTING',
+        line(
+            docker_exec() + '''-e REPO_ENV=True {repo}
+                flake8
+                    /home/ubuntu/{repo}/python
+                    --config /home/ubuntu/{repo}/docker/flake8.ini'''
+        ),
+        'echo TYPE CHECKING',
+        line(
+            docker_exec() + '''-e REPO_ENV=True {repo}
+                mypy
+                    /home/ubuntu/{repo}/python
+                    --config-file /home/ubuntu/{repo}/docker/mypy.ini'''
+        ),
+        exit_repo(),
+    ]
+    return resolve(cmds)
+
+
+def package_command():
+    # type: () -> str
+    '''
+    Returns:
+        str: Command to pip package repo.
+    '''
+    cmds = [
+        enter_repo(),
+        start(),
+        create_package_repo(),
+        docker_exec() + ' -w /tmp/{repo} {repo} python3.7 setup.py sdist',
+        exit_repo(),
+    ]
+    return resolve(cmds)
+
+
+def prod_command(args):
+    # type: (list) -> str
+    '''
+    Returns:
+        str: Command to start prod container.
+    '''
+    if args == ['']:
+        cmds = [
+            line('''
+                echo "Please provide a directory to map into the container
+                after the {cyan}-a{clear} flag."
+            ''')
+        ]
+        return resolve(cmds)
+
+    run = 'docker run --volume {}:/mnt/storage'.format(args[0])
+    cmds = [
+        enter_repo(),
+        version_variable(),
+        line(run + '''
+            --rm
+            --publish {port}:{port}
+            --name {repo}-prod
+            {github_user}/{repo}:$VERSION
+        '''),
+        exit_repo(),
+    ]
+    return resolve(cmds)
+
+
+def publish_command():
+    # type: () -> str
+    '''
+    Returns:
+        str: Command to publish repo as pip package.
+    '''
+    cmds = [
+        enter_repo(),
+        start(),
+        line(
+            docker_exec() + r'''{repo} zsh -c "
+                rm -rf /tmp/{repo} &&
+                cp -R /home/ubuntu/{repo}/python /tmp/{repo} &&
+                cp -R /home/ubuntu/{repo}/docker/* /tmp/{repo}/ &&
+                cp -R /home/ubuntu/{repo}/resources /tmp/{repo}/{repo} &&
+                cp /home/ubuntu/{repo}/pip/* /tmp/{repo}/ &&
+                cp /home/ubuntu/{repo}/LICENSE /tmp/{repo}/ &&
+                cp /home/ubuntu/{repo}/README.md /tmp/{repo}/ &&
+                find /tmp/{repo}/{repo}/resources -type f
+                    | grep -vE 'icon|test_' | parallel 'rm -rf {{}}' &&
+                cp -R /home/ubuntu/{repo}/templates /tmp/{repo}/{repo} &&
+                cp -R /home/ubuntu/{repo}/python/conftest.py /tmp/{repo}/ &&
+                find /tmp/{repo} | grep -E '__pycache__|\.pyc$'
+                    | parallel 'rm -rf' &&
+                cd /tmp/{repo} &&
+                tox &&
+                find {repo_path} | grep -E '__pycache__|\.pyc$'
+                    | parallel 'rm -rf {{}}'
+            "
+        '''),
+        create_package_repo(),
+        docker_exec() + ' -w /tmp/{repo} {repo} python3.7 setup.py sdist',
+        docker_exec() + ' -w /tmp/{repo} {repo} twine upload dist/*',
+        docker_exec() + ' {repo} rm -rf /tmp/{repo}',
+        exit_repo(),
+    ]
+    return resolve(cmds)
+
+
+def push_command():
+    # type: () -> str
+    '''
+    Returns:
+        str: Command to push prod docker image to dockerhub.
+    '''
+    cmds = [
+        enter_repo(),
+        version_variable(),
+        start(),
+        'docker push {github_user}/{repo}:$VERSION',
+        exit_repo(),
+    ]
+    return resolve(cmds)
+
+
+def python_command():
+    # type: () -> str
+    '''
+    Returns:
+        str: Command to start python interpreter.
+    '''
+    cmds = [
+        enter_repo(),
+        start(),
+        docker_exec() + ' -e REPO_ENV=True {repo} python3.7',
+        exit_repo(),
+    ]
+    return resolve(cmds)
+
+
+def remove_command():
+    # type: () -> str
+    '''
+    Returns:
+        str: Command to remove container.
+    '''
+    cmds = [
+        enter_repo(),
+        remove_container(),
+        exit_repo(),
+    ]
+    return resolve(cmds)
+
+
+def restart_command():
+    # type: () -> str
+    '''
+    Returns:
+        str: Command to restart container.
+    '''
+    cmds = [
+        enter_repo(),
+        line('''
+            cd docker;
+            docker compose
+                -p {repo}
+                -f {repo_path}/docker/docker-compose.yml
+                restart;
+            cd ..
+        '''),
+        exit_repo(),
+    ]
+    return resolve(cmds)
+
+
+def requirements_command():
+    # type: () -> str
+    '''
+    Returns:
+        str: Command to regenerate frozen_requirements.txt.
+    '''
+    cmds = [
+        enter_repo(),
+        start(),
+        line(
+            docker_exec() + '''-e REPO_ENV=True {repo} zsh -c "
+                python3.7 -m pip list --format freeze >
+                    /home/ubuntu/{repo}/docker/frozen_requirements.txt"
+        '''),
+        exit_repo(),
+    ]
+    return resolve(cmds)
+
+
+def start_command():
+    # type: () -> str
+    '''
+    Returns:
+        str: Command to start container.
+    '''
+    cmds = [
+        enter_repo(),
+        start(),
+    ]
+    return resolve(cmds)
+
+
+def state_command():
+    # type: () -> str
+    '''
+    Returns:
+        str: Command to get state of app.
+    '''
+    cmds = [
+        enter_repo(),
+        version_variable(),
+        'export IMAGE_EXISTS=`docker images {repo} | grep -v REPOSITORY`',
+        'export CONTAINER_EXISTS=`docker ps -a -f name={repo} | grep -v CONTAINER`',
+        'export RUNNING=`docker ps -a -f name={repo} -f status=running | grep -v CONTAINER`',
+        line('''
+            if [ -z "$IMAGE_EXISTS" ];
+                then export IMAGE_STATE="{red}absent{clear}";
+            else
+                export IMAGE_STATE="{green}present{clear}";
+            fi;
+            if [ -z "$CONTAINER_EXISTS" ];
+                then export CONTAINER_STATE="{red}absent{clear}";
+            elif [ -z "$RUNNING" ];
+                then export CONTAINER_STATE="{red}stopped{clear}";
+            else
+                export CONTAINER_STATE="{green}running{clear}";
+            fi
+        '''),
+        line('''echo
+            "app: {cyan}{repo}{clear}:{yellow}$VERSION{clear} -
+            image: $IMAGE_STATE -
+            container: $CONTAINER_STATE"
+        '''),
+        exit_repo(),
+    ]
+    return resolve(cmds)
+
+
+def stop_command():
+    # type: () -> str
+    '''
+    Returns:
+        str: Command to stop container.
+    '''
+    cmds = [
+        enter_repo(),
+        docker_down(),
+        exit_repo(),
+    ]
+    return resolve(cmds)
+
+
+def test_command():
+    # type: () -> str
+    '''
+    Returns:
+        str: Command to run tests.
+    '''
+    cmds = [
+        enter_repo(),
+        start(),
+        line(
+            docker_exec() + '''-e REPO_ENV=True {repo}
+                pytest
+                    /home/ubuntu/{repo}/python
+                    -c /home/ubuntu/{repo}/docker/pytest.ini
+                    --headless'''
+        ),
+        exit_repo(),
+    ]
+    return resolve(cmds)
+
+
+def tox_command():
+    # type: () -> str
+    '''
+    Returns:
+        str: Command to run tox.
+    '''
+    cmds = [
+        enter_repo(),
+        start(),
+        line(
+            docker_exec() + r'''{repo} zsh -c "
+                rm -rf /tmp/{repo} &&
+                cp -R /home/ubuntu/{repo}/python /tmp/{repo} &&
+                cp -R /home/ubuntu/{repo}/docker/* /tmp/{repo}/ &&
+                cp -R /home/ubuntu/{repo}/resources /tmp/{repo}/{repo} &&
+                cp /home/ubuntu/{repo}/pip/* /tmp/{repo}/ &&
+                cp /home/ubuntu/{repo}/LICENSE /tmp/{repo}/ &&
+                cp /home/ubuntu/{repo}/README.md /tmp/{repo}/ &&
+                find /tmp/{repo}/{repo}/resources -type f
+                    | grep -vE 'icon|test_' | parallel 'rm -rf {{}}' &&
+                cp -R /home/ubuntu/{repo}/templates /tmp/{repo}/{repo} &&
+                cp -R /home/ubuntu/{repo}/python/conftest.py /tmp/{repo}/ &&
+                find /tmp/{repo} | grep -E '__pycache__|\.pyc$'
+                    | parallel 'rm -rf' &&
+                cd /tmp/{repo} &&
+                tox
+            "
+        '''),
+        exit_repo(),
+    ]
+    return resolve(cmds)
+
+
+def version_up_command(args):
+    # type: (list) -> str
+    '''
+    Sets pip/version.txt to given value. Then calls full-docs.
 
     Returns:
         str: Command.
     '''
-    cmd = '{exec} zsh -c "'
-    cmd += 'rm -rf /tmp/{repo}; '
-    cmd += 'cp -R /home/ubuntu/{repo}/python /tmp/{repo}; '
-    cmd += 'cp /home/ubuntu/{repo}/README.md /tmp/{repo}/README.md; '
-    cmd += 'cp /home/ubuntu/{repo}/LICENSE /tmp/{repo}/LICENSE; '
-    cmd += 'cp /home/ubuntu/{repo}/pip/MANIFEST.in /tmp/{repo}/MANIFEST.in; '
-    cmd += 'cp /home/ubuntu/{repo}/pip/setup.cfg /tmp/{repo}/; '
-    cmd += 'cp /home/ubuntu/{repo}/pip/setup.py /tmp/{repo}/; '
-    cmd += 'cp /home/ubuntu/{repo}/pip/version.txt /tmp/{repo}/; '
-    cmd += 'cp /home/ubuntu/{repo}/docker/dev_requirements.txt /tmp/{repo}/; '
-    cmd += 'cp /home/ubuntu/{repo}/docker/prod_requirements.txt /tmp/{repo}/; '
-    cmd += 'cp -r /home/ubuntu/{repo}/templates /tmp/{repo}/{repo}; '
-    cmd += r"find /tmp/{repo} | grep -E '.*test.*\.py$|mock.*\.py$|__pycache__'"
-    cmd += " | parallel 'rm -rf {x}'; "
-    cmd += "find /tmp/{repo} -type f | grep __init__.py | parallel '"
-    cmd += "rm -rf {x}; touch {x}'"
-    cmd += '"; '
-    cmd += '{exec2} python3.7 setup.py sdist '
-    cmd = cmd.format(
-        x='{}',
-        repo=REPO,
-        exec=get_docker_exec_command(info, env_vars=[]),
-        exec2=get_docker_exec_command(info, '/tmp/' + REPO, env_vars=[]),
-    )
+    if args == ['']:
+        cmds = [
+            'echo "Please provide a version after the {cyan}-a{clear} flag."'
+        ]
+        return resolve(cmds)
+
+    cmds = [
+        enter_repo(),
+        'echo {} > pip/version.txt'.format(args[0]),
+        exit_repo(),
+    ]
+    cmd = resolve(cmds)
+    cmd = cmd + ' && ' + full_docs_command()
     return cmd
 
 
-def get_python_command(info):
+def zsh_command():
+    # type: () -> str
     '''
-    Opens a python interpreter inside a running container.
-
-    Args:
-        info (dict): Info dictionary.
-
     Returns:
-        str: Command.
+        str: Command to run a zsh session inside container.
     '''
-    cmd = "{exec} python3.7".format(exec=get_docker_exec_command(info))
-    return cmd
+    cmds = [
+        enter_repo(),
+        start(),
+        docker_exec() + ' -e REPO_ENV=True {repo} zsh',
+        exit_repo(),
+    ]
+    return resolve(cmds)
 
 
-def get_remove_image_command(info):
+def get_illegal_mode_command():
+    # type: () -> str
     '''
-    Removes docker image.
-
-    Args:
-        info (dict): Info dictionary.
-
     Returns:
-        str: Command.
+        str: Command to report that the mode given is illegal.
     '''
-    cmd = 'IMAGE_ID=$({image_command}); '
-    cmd += 'docker image rm --force $IMAGE_ID'
-    cmd = cmd.format(image_command=get_image_id_command())
-    return cmd
-
-
-def get_remove_container_command(info):
-    '''
-    Removes docker container.
-
-    Args:
-        info (dict): Info dictionary.
-
-    Returns:
-        str: Command.
-    '''
-    cmd = '{stop}; docker rm `{container}`'
-    cmd = cmd.format(
-        stop=get_stop_command(info),
-        container=get_container_id_command(),
-    )
-    return cmd
-
-
-def get_requirements_command(info):
-    '''
-    Writes a pip frozen requirements command to docker directory.
-
-    Args:
-        info (dict): Info dictionary.
-
-    Returns:
-        str: Command.
-    '''
-    cmd = '{exec} zsh -c "python3.7 -m pip list --format freeze > '
-    cmd += '/home/ubuntu/{repo}/docker/frozen_requirements.txt"'
-    cmd = cmd.format(
-        repo=REPO,
-        exec=get_docker_exec_command(info),
-        user=info['user'],
-    )
-    return cmd
-
-
-def get_state_command():
-    '''
-    Gets the state of the service.
-
-    * Container states include: absent, running, stopped.
-    * Image states include: present, absent.
-
-    Returns:
-        str: Command
-    '''
-    cmd = 'export IMAGE_EXISTS=`docker images {repo} | grep -v REPOSITORY`; '
-    cmd += 'export CONTAINER_EXISTS=`docker ps -a -f name={repo}'
-    cmd += ' | grep -v CONTAINER`; '
-    cmd += 'export RUNNING=`docker ps -a -f name={repo} -f status=running '
-    cmd += '| grep -v CONTAINER`; '
-    cmd += 'export CONTAINER_STATE; export IMAGE_STATE; '
-    cmd += 'if [ -z "$IMAGE_EXISTS" ]; then'
-    cmd += '    export IMAGE_STATE="{red}absent{clear}"; '
-    cmd += 'else export IMAGE_STATE="{green}present{clear}"; fi; '
-    cmd += 'if [ -z "$CONTAINER_EXISTS" ]; then'
-    cmd += '    export CONTAINER_STATE="{red}absent{clear}"; '
-    cmd += 'elif [ -z "$RUNNING" ]; then '
-    cmd += '    export CONTAINER_STATE="{red}stopped{clear}"; '
-    cmd += 'else'
-    cmd += '    export CONTAINER_STATE="{green}running{clear}"; '
-    cmd += 'fi; '
-    cmd += 'echo "service: {cyan}{repo}{clear}  -  '
-    cmd += 'image: $IMAGE_STATE  -  container: $CONTAINER_STATE  -  '
-    cmd += 'version: {cyan}`cat pip/version.txt`{clear}"'
-    cmd = cmd.format(
-        repo=REPO,
-        cyan='\033[0;36m',
-        red='\033[0;31m',
-        green='\033[0;32m',
-        clear='\033[0m',
-    )
-    return cmd
-
-
-def get_start_command(info):
-    '''
-    Starts up container.
-
-    Args:
-        info (dict): Info dictionary.
-
-    Returns:
-        str: Fully resolved docker-compose up command.
-    '''
-    cmd = 'export STATE=`docker ps -a -f name={repo} -f status=running '
-    cmd += '| grep -v CONTAINER`; '
-    cmd += 'if [ -z "$STATE" ]; then {compose} up --detach; cd $CWD; fi'
-    cmd = cmd.format(
-        repo=REPO,
-        compose=get_docker_compose_command(info)
-    )
-    return cmd
-
-
-def get_stop_command(info):
-    '''
-    Shuts down container.
-
-    Args:
-        info (dict): Info dictionary.
-
-    Returns:
-        str: Fully resolved docker-compose down command.
-    '''
-    cmd = '{compose} down; cd $CWD'
-    cmd = cmd.format(compose=get_docker_compose_command(info))
-    return cmd
-
-
-def get_test_command(info):
-    '''
-    Runs pytest.
-
-    Args:
-        info (dict): Info dictionary.
-
-    Returns:
-        str: Command.
-    '''
-    cmd = '{exec} '
-    cmd += 'pytest /home/ubuntu/{repo}/python -c /home/ubuntu/{repo}/docker/pytest.ini {args}'
-    cmd = cmd.format(
-        repo=REPO,
-        exec=get_docker_exec_command(info),
-        args=' '.join(info['args']),
-    )
-    return cmd
-
-
-def get_tox_command(info):
-    '''
-    Run tox tests.
-
-    Args:
-        info (dict): Info dictionary.
-
-    Returns:
-        str: Command.
-    '''
-    cmd = '{exec} zsh -c "'
-    cmd += 'rm -rf /tmp/{repo}; '
-    cmd += 'cp -R /home/ubuntu/{repo}/python /tmp/{repo}; '
-    cmd += 'cp /home/ubuntu/{repo}/README.md /tmp/{repo}/; '
-    cmd += 'cp /home/ubuntu/{repo}/LICENSE /tmp/{repo}/; '
-    cmd += 'cp /home/ubuntu/{repo}/docker/* /tmp/{repo}/; '
-    cmd += 'cp /home/ubuntu/{repo}/pip/* /tmp/{repo}/; '
-    cmd += 'cp -R /home/ubuntu/{repo}/resources /tmp; '
-    cmd += 'cp -R /home/ubuntu/{repo}/templates /tmp/{repo}/{repo}; '
-    cmd += r"find /tmp/{repo} | grep -E '__pycache__|\.pyc$' | parallel 'rm -rf'; "
-    cmd += 'cd /tmp/{repo}; tox'
-    cmd += '"'
-    cmd = cmd.format(
-        repo=REPO,
-        exec=get_docker_exec_command(info, env_vars=[]),
-    )
-    return cmd
-
-
-def get_zsh_command(info):
-    '''
-    Opens a zsh session inside a running container.
-
-    Args:
-        info (dict): Info dictionary.
-
-    Returns:
-        str: Command.
-    '''
-    cmd = "{exec} zsh".format(exec=get_docker_exec_command(info))
-    return cmd
-
-
-# DOCKER------------------------------------------------------------------------
-def get_docker_command(info):
-    '''
-    Get misc docker command.
-
-    Args:
-        info (dict): Info dictionary.
-
-    Returns:
-        str: Command.
-    '''
-    cmd = 'CWD=$(pwd); '
-    cmd += 'cd {repo_path}/docker; '
-    cmd += 'REPO_PATH="{repo_path}" CURRENT_USER="{user}" IMAGE="{repo}" '
-    cmd += 'docker {mode} {args}; cd $CWD'
-    args = ' '.join(info['args'])
-    cmd = cmd.format(
-        repo=REPO,
-        repo_path=REPO_PATH,
-        user=info['user'],
-        mode=info['mode'],
-        args=args
-    )
-    return cmd
-
-
-def get_docker_exec_command(
-    info, working_directory=None, env_vars=['REPO_ENV=True']
-):
-    '''
-    Gets docker exec command.
-
-    Args:
-        info (dict): Info dictionary.
-        working_directory (str, optional): Working directory.
-        env_vars (list[str], optional): Optional environment variables.
-            Default: ['REPO_ENV=True'].
-
-    Returns:
-        str: Command.
-    '''
-    cmd = '{up_command}; '
-    cmd += 'CONTAINER_ID=$({container_command}); '
-    cmd += 'docker exec --interactive --tty --user \"root:root\" -e {env} '
-    if env_vars is not None and len(env_vars) > 0:
-        cmd += '-e ' + ' -e '.join(env_vars) + ' '
-    if working_directory is not None:
-        cmd += '-w {} '.format(working_directory)
-    cmd += '$CONTAINER_ID '
-    cmd = cmd.format(
-        env='PYTHONPATH="${PYTHONPATH}:' + '/home/ubuntu/{}/python" '.format(REPO),
-        up_command=get_start_command(info),
-        container_command=get_container_id_command(),
-    )
-    return cmd
-
-
-def get_docker_compose_command(info):
-    '''
-    Gets docker-compose command.
-
-    Args:
-        info (dict): Info dictionary.
-
-    Returns:
-        str: Command.
-    '''
-    cmd = 'CWD=`pwd`; cd {repo_path}/docker; '
-    cmd += 'REPO_PATH="{repo_path}" CURRENT_USER="{user}" IMAGE="{repo}" '
-    cmd += 'docker-compose -p {repo} -f {compose_path} '
-    cmd = cmd.format(
-        repo=REPO,
-        repo_path=REPO_PATH,
-        user=info['user'],
-        compose_path=info['compose_path'],
-    )
-    return cmd
+    cmds = [
+        line('''
+            echo "That is not a legal command.
+            Please call {cyan}{repo} --help{clear} to see a list of legal
+            commands."
+        ''')
+    ]
+    return resolve(cmds)
 
 
 # MAIN--------------------------------------------------------------------------
 def main():
+    # type: () -> None
     '''
     Print different commands to stdout depending on mode provided to command.
     '''
-    info = get_info()
-    mode = info['mode']
-    cmd = get_docker_command(info)
+    mode, args = get_info()
+    lut = {
+        'app': app_command(),
+        'build': build_dev_command(),
+        'build-prod': build_prod_command(),
+        'container': container_id_command(),
+        'coverage': coverage_command(),
+        'destroy': destroy_dev_command(),
+        'destroy-prod': destroy_prod_command(),
+        'docs': docs_command(),
+        'fast-test': fast_test_command(),
+        'full-docs': full_docs_command(),
+        'image': image_id_command(),
+        'lab': lab_command(),
+        'lint': lint_command(),
+        'package': package_command(),
+        'prod': prod_command(args),
+        'publish': publish_command(),
+        'push': push_command(),
+        'python': python_command(),
+        'remove': remove_command(),
+        'requirements': requirements_command(),
+        'restart': restart_command(),
+        'start': start_command(),
+        'state': state_command(),
+        'stop': stop_command(),
+        'test': test_command(),
+        'tox': tox_command(),
+        'version-up': version_up_command(args),
+        'zsh': zsh_command(),
+    }
+    cmd = lut.get(mode, get_illegal_mode_command())
 
-    if mode == 'app':
-        cmd = get_app_command(info)
-
-    elif mode == 'container':
-        cmd = get_container_id_command()
-
-    elif mode == 'coverage':
-        cmd = get_coverage_command(info)
-
-    elif mode == 'destroy':
-        cmd = get_stop_command(info)
-        cmd += '; ' + get_remove_image_command(info)
-
-    elif mode == 'destroy-prod':
-        cmd = get_destroy_production_container_command(info)
-
-    elif mode == 'docs':
-        cmd = get_docs_command(info)
-
-    elif mode == 'full-docs':
-        cmd = get_docs_command(info)
-        cmd += '; ' + get_coverage_command(info)
-        cmd += '; ' + get_architecture_diagram_command(info)
-        cmd += '; ' + get_radon_metrics_command(info)
-
-    elif mode == 'image':
-        cmd = get_image_id_command()
-
-    elif mode == 'lab':
-        cmd = get_lab_command(info)
-
-    elif mode == 'lint':
-        cmd = 'echo LINTING'
-        cmd += '; ' + get_lint_command(info)
-        cmd += '; ' + 'echo'
-        cmd += '; ' + 'echo "TYPE CHECKING"'
-        cmd += '; ' + get_type_checking_command(info)
-
-    elif mode == 'package':
-        cmd = get_package_command(info)
-
-    elif mode == 'prod':
-        if info['args'] == ['']:
-            cmd = 'echo "Please provide a directory to map into the container '
-            cmd += 'after the -a flag."'
-        else:
-            cmd = get_remove_pycache_command()
-            cmd += ' && ' + get_destroy_production_container_command(info)
-            cmd += ' && ' + get_production_image_command(info)
-            cmd += ' && ' + get_production_container_command(info)
-
-    elif mode == 'publish':
-        cmd = get_tox_command(info)
-        cmd += ' && ' + get_remove_pycache_command()
-        cmd += ' && ' + get_package_command(info)
-        cmd += ' && ' + get_publish_command(info)
-
-    elif mode == 'python':
-        cmd = get_python_command(info)
-
-    elif mode == 'remove':
-        cmd = get_remove_container_command(info)
-
-    elif mode == 'restart':
-        cmd = get_stop_command(info)
-        cmd += '; ' + get_start_command(info)
-
-    elif mode == 'requirements':
-        cmd = get_requirements_command(info)
-
-    elif mode == 'start':
-        cmd = get_start_command(info)
-
-    elif mode == 'state':
-        cmd = get_state_command()
-
-    elif mode == 'stop':
-        cmd = get_stop_command(info)
-
-    elif mode == 'test':
-        cmd = get_test_command(info)
-
-    elif mode == 'tox':
-        cmd = get_tox_command(info)
-
-    elif mode == 'version':
-        if info['args'] == ['']:
-            cmd = 'echo "Please provide a version after the -a flag."'
-        else:
-            cmd = get_update_version_command(info)
-            info['args'] = ['']
-            cmd += '; echo LINTING'
-            cmd += '; ' + get_lint_command(info)
-            cmd += '; ' + 'echo'
-            cmd += '; ' + 'echo "TYPE CHECKING"'
-            cmd += '; ' + get_type_checking_command(info)
-            cmd += ' && ' + get_docs_command(info)
-            cmd += '; ' + get_coverage_command(info)
-            cmd += '; ' + get_architecture_diagram_command(info)
-            cmd += '; ' + get_radon_metrics_command(info)
-            cmd += '; ' + get_requirements_command(info)
-
-    elif mode == 'zsh':
-        cmd = get_zsh_command(info)
-
-    # print is used instead of execute because REPO_PATH and CURRENT_USER do not
+    # print is used instead of execute because REPO_PATH and USER do not
     # resolve in a subprocess and subprocesses do not give real time stdout.
     # So, running `command up` will give you nothing until the process ends.
     # `eval "[generated command] $@"` resolves all these issues.
