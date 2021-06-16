@@ -18,7 +18,7 @@
         "python.testing.unittestEnabled": false,
         "todo-tree.filtering.excludeGlobs": ["**/docs/**/*.*"],
         "terminal.integrated.profiles.linux": {
-                "zsh": {"path": "/bin/zsh"}
+            "zsh": {"path": "/bin/zsh"}
         },
         "search.exclude": {
             "**/docs": true
