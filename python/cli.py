@@ -11,7 +11,7 @@ REPO = Path(__file__).parents[1].absolute().name
 REPO_PATH = Path(__file__).parents[1].absolute().as_posix()
 GITHUB_USER = 'thenewflesh'
 USER = 'ubuntu:ubuntu'
-PORT = 8080
+PORT = 8180
 # ------------------------------------------------------------------------------
 
 '''

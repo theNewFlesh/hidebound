@@ -9,8 +9,8 @@ services:
       context: .
       dockerfile: hidebound.dockerfile
     ports:
-      - "9012:9000"
-      - "5080:5080"
+      - "2000:9000"
+      - "2080:8080"
     userns_mode: "host"
     user: ubuntu
     volumes:

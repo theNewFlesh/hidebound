@@ -19,7 +19,7 @@ class GirderConfigTests(unittest.TestCase):
             root_id='root_id',
             root_type='collection',
             host='http://0.0.0.0',
-            port=8080,
+            port=8180,
         )
 
     def test_validate(self):

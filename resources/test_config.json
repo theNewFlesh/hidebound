@@ -1,30 +1,30 @@
 {
-    "root_directory": "/tmp/projects",
-    "hidebound_directory": "/tmp/hidebound",
-    "specification_files": [
-        "/home/ubuntu/hidebound/python/hidebound/core/test_specifications.py"
-    ],
-    "include_regex": "",
-    "exclude_regex": "\\.DS_Store",
-    "write_mode": "copy",
-    "exporters": {
-        "girder": {
-            "api_key": "eyS0nj9qPC5E7yK5l7nhGVPqDOBKPdA3EC60Rs9h",
-            "root_id": "5ed735c8d8dd6242642406e5",
-            "root_type": "collection",
-            "host": "http://172.17.0.1",
-            "port": 8080
-        }
-    },
-    "webhooks": [
-         {
-            "url": "http://foobar.com/api/user?",
-            "method": "get",
-            "headers": {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            "params": {"id": "123"}
-         }
-    ]
+  "root_directory": "/tmp/projects",
+  "hidebound_directory": "/tmp/hidebound",
+  "specification_files": [
+    "/home/ubuntu/hidebound/python/hidebound/core/test_specifications.py"
+  ],
+  "include_regex": "",
+  "exclude_regex": "\\.DS_Store",
+  "write_mode": "copy",
+  "exporters": {
+    "girder": {
+      "api_key": "eyS0nj9qPC5E7yK5l7nhGVPqDOBKPdA3EC60Rs9h",
+      "root_id": "5ed735c8d8dd6242642406e5",
+      "root_type": "collection",
+      "host": "http://172.17.0.1",
+      "port": 8180
+    }
+  },
+  "webhooks": [
+    {
+      "url": "http://foobar.com/api/user?",
+      "method": "get",
+      "headers": {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      "params": { "id": "123" }
+    }
+  ]
 }

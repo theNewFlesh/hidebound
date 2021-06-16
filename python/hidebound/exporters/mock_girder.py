@@ -129,7 +129,7 @@ class MockGirderClient:
             id_ = self.folders[name]['_id']
             if not reuseExisting:
                 msg = 'A folder with that name already exists here.'
-                url = 'http://0.0.0.0:8080/api/v1/folder'
+                url = 'http://0.0.0.0:8180/api/v1/folder'
                 raise HttpError(400, msg, url, 'POST')
             elif self._add_suffix:
                 name += ' (1)'

@@ -23,7 +23,7 @@ class GirderConfig(Model):
         root_type (str, optional): Root entity type. Default: collection.
             Options: folder, collection
         host (str, optional): Docker host URL address. Default: http://0.0.0.0
-        port (int, optional): Docker host port. Default: 8080.
+        port (int, optional): Docker host port. Default: 8180.
     '''
     api_key = StringType(required=True)  # type: StringType
     root_id = StringType(required=True)  # type: StringType
@@ -35,7 +35,7 @@ class GirderConfig(Model):
     host = URLType(required=True, default='http://0.0.0.0')  # type: URLType
     port = IntType(
         required=True,
-        default=8080,
+        default=8180,
         validators=[
             lambda x: vd.is_lt(x, 65536),
             lambda x: vd.is_gt(x, 1023),
@@ -72,7 +72,7 @@ class GirderExporter(ExporterBase):
         root_id,
         root_type='collection',
         host='http://0.0.0.0',
-        port=8080,
+        port=8180,
         client=None,
     ):
         # type: (str, str, str, str, int, Any) -> None
@@ -87,7 +87,7 @@ class GirderExporter(ExporterBase):
                 Options: folder, collection
             host (str, optional): Docker host URL address.
                 Default: http://0.0.0.0.
-            port (int, optional): Docker host port. Default: 8080.
+            port (int, optional): Docker host port. Default: 8180.
             client (object, optional): Client instance, for testing.
                 Default: None.
 
