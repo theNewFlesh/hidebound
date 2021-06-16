@@ -298,22 +298,13 @@ def create_package_repo():
         docker_exec() + r'''{repo} zsh -c "
             rm -rf /tmp/{repo} &&
             cp -R /home/ubuntu/{repo}/python /tmp/{repo} &&
-            cp /home/ubuntu/{repo}/README.md /tmp/{repo}/README.md &&
-            cp /home/ubuntu/{repo}/LICENSE /tmp/{repo}/LICENSE &&
-            cp /home/ubuntu/{repo}/pip/MANIFEST.in /tmp/{repo}/MANIFEST.in &&
-            cp /home/ubuntu/{repo}/pip/setup.cfg /tmp/{repo}/ &&
-            cp /home/ubuntu/{repo}/pip/setup.py /tmp/{repo}/ &&
-            cp /home/ubuntu/{repo}/pip/version.txt /tmp/{repo}/ &&
-            cp /home/ubuntu/{repo}/docker/dev_requirements.txt /tmp/{repo}/ &&
-            cp /home/ubuntu/{repo}/docker/prod_requirements.txt /tmp/{repo}/ &&
-            cp -r /home/ubuntu/{repo}/templates /tmp/{repo}/{repo} &&
-            cp -r /home/ubuntu/{repo}/resources /tmp/{repo}/{repo} &&
-            find /tmp/{repo}/{repo}/resources -type f | grep -vE 'icon|test_'
-                | parallel 'rm -rf {{}}' &&
-            find /tmp/{repo} | grep -E '.*test.*\.py$|mock.*\.py$|__pycache__'
-                | parallel 'rm -rf {{}}' &&
-            find /tmp/{repo} -type f | grep __init__.py
-                | parallel 'rm -rf {{}};touch {{}}'
+            cp /home/ubuntu/{repo}/README.md /tmp/{repo}/ &&
+            cp /home/ubuntu/{repo}/LICENSE /tmp/{repo}/ &&
+            cp -R /home/ubuntu/{repo}/docker/* /tmp/{repo}/ &&
+            cp -R /home/ubuntu/{repo}/pip/* /tmp/{repo}/ &&
+            cp -R /home/ubuntu/{repo}/resources /tmp &&
+            cp -R /home/ubuntu/{repo}/templates /tmp/{repo}/{repo} &&
+            find /tmp/{repo} | grep -E '__pycache__|\\.pyc$' | parallel 'rm -rf'
         "
     ''')
     return cmd
@@ -681,6 +672,7 @@ def publish_command():
         enter_repo(),
         start(),
         line(
+            # cp -R /home/ubuntu/{repo}/python/conftest.py /tmp/{repo}/ &&
             docker_exec() + r'''{repo} zsh -c "
                 rm -rf /tmp/{repo} &&
                 cp -R /home/ubuntu/{repo}/python /tmp/{repo} &&
@@ -692,7 +684,6 @@ def publish_command():
                 find /tmp/{repo}/{repo}/resources -type f
                     | grep -vE 'icon|test_' | parallel 'rm -rf {{}}' &&
                 cp -R /home/ubuntu/{repo}/templates /tmp/{repo}/{repo} &&
-                cp -R /home/ubuntu/{repo}/python/conftest.py /tmp/{repo}/ &&
                 find /tmp/{repo} | grep -E '__pycache__|\.pyc$'
                     | parallel 'rm -rf' &&
                 cd /tmp/{repo} &&
@@ -889,18 +880,19 @@ def tox_command():
         enter_repo(),
         start(),
         line(
+            # cp -R /home/ubuntu/{repo}/python/conftest.py /tmp/{repo}/ &&
+            # cp -R /home/ubuntu/{repo}/resources /tmp/{repo}/{repo} &&
+            # find /tmp/{repo}/{repo}/resources -type f
+            #     | grep -vE 'icon|test_' | parallel 'rm -rf {{}}' &&
             docker_exec() + r'''{repo} zsh -c "
                 rm -rf /tmp/{repo} &&
                 cp -R /home/ubuntu/{repo}/python /tmp/{repo} &&
-                cp -R /home/ubuntu/{repo}/docker/* /tmp/{repo}/ &&
-                cp -R /home/ubuntu/{repo}/resources /tmp/{repo}/{repo} &&
-                cp /home/ubuntu/{repo}/pip/* /tmp/{repo}/ &&
-                cp /home/ubuntu/{repo}/LICENSE /tmp/{repo}/ &&
                 cp /home/ubuntu/{repo}/README.md /tmp/{repo}/ &&
-                find /tmp/{repo}/{repo}/resources -type f
-                    | grep -vE 'icon|test_' | parallel 'rm -rf {{}}' &&
+                cp /home/ubuntu/{repo}/LICENSE /tmp/{repo}/ &&
+                cp -R /home/ubuntu/{repo}/docker/* /tmp/{repo}/ &&
+                cp -R /home/ubuntu/{repo}/pip/* /tmp/{repo}/ &&
+                cp -R /home/ubuntu/{repo}/resources /tmp &&
                 cp -R /home/ubuntu/{repo}/templates /tmp/{repo}/{repo} &&
-                cp -R /home/ubuntu/{repo}/python/conftest.py /tmp/{repo}/ &&
                 find /tmp/{repo} | grep -E '__pycache__|\.pyc$'
                     | parallel 'rm -rf' &&
                 cd /tmp/{repo} &&

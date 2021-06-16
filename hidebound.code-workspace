@@ -1,25 +1,28 @@
 {
     "folders": [{ "path": "./" }],
     "settings": {
+        "debug.allowBreakpointsEverywhere": true,
         "python.languageServer": "Pylance",
         "python.linting.enabled": true,
         "python.linting.flake8Args": ["--config=docker/flake8.ini"],
         "python.linting.flake8Enabled": true,
-        "python.linting.flake8Path": "/usr/local/bin/flake8",
+        "python.linting.flake8Path": "/home/ubuntu/.local/bin/flake8",
         "python.linting.mypyArgs": ["--config=docker/mypy.ini"],
         "python.linting.mypyEnabled": true,
-        "python.linting.mypyPath": "/usr/local/bin/mypy",
-        "python.linting.pycodestylePath": "/usr/local/bin/pycodestyle",
+        "python.linting.mypyPath": "/home/ubuntu/.local/bin/mypy",
+        "python.linting.pycodestylePath": "/home/ubuntu/.local/bin/pycodestyle",
         "python.linting.pylintEnabled": false,
         "python.pythonPath": "/usr/bin/python3.7",
+        "python.testing.pytestArgs": ["--headless"],
         "python.testing.pytestEnabled": true,
         "python.testing.unittestEnabled": false,
-        "terminal.integrated.shell.linux": "/bin/zsh",
-        "debug.allowBreakpointsEverywhere": true,
-        "python.testing.pytestArgs": [
-            "--cov=/home/ubuntu/hidebound/python",
-            "--cov-config=/home/ubuntu/hidebound/docker/pytest.ini"
-        ],
+        "todo-tree.filtering.excludeGlobs": ["**/docs/**/*.*"],
+        "terminal.integrated.profiles.linux": {
+                "zsh": {"path": "/bin/zsh"}
+        },
+        "search.exclude": {
+            "**/docs": true
+        },
         "files.exclude": {
             "**/.classpath": true,
             "**/.coverage": true,
@@ -34,12 +37,10 @@
             "**/.settings": true,
             "**/.svn": true,
             "**/CVS": true,
-            "*/*/**/node_modules": true
-        },
-        "search.exclude": {
-            "**/docs": true
-        },
-        "todo-tree.filtering.excludeGlobs": ["**/docs/**/*.*"]
+            "*/*/**/node_modules": true,
+            "**/.vscode": true,
+            "**/flask_monitoringdashboard.db": true
+        }
     },
     "tasks": {
         "version": "2.0.0",
@@ -71,7 +72,7 @@
                 "label": "coverage",
                 "command": [
                     "mkdir -p docs && ",
-                    "pytest python -c docker/pytest.ini --cov=python --cov-config=docker/pytest.ini --cov-report=html:docs/htmlcov && "
+                    "pytest python -c docker/pytest.ini --headless --cov=python --cov-config=docker/pytest.ini --cov-report=html:docs/htmlcov && "
                 ],
                 "type": "shell"
             },
@@ -84,8 +85,13 @@
                     "cp sphinx/style.css docs/_static/style.css && ",
                     "touch docs/.nojekyll && ",
                     "mkdir -p /home/ubuntu/$REPO/docs/resources && ",
-                    "cp -R /home/ubuntu/$REPO/resources/screenshots /home/ubuntu/$REPO/docs/resources/ && "
+                    "cp -R /home/ubuntu/$REPO/resources/screenshots /home/ubuntu/$REPO/docs/resources/"
                 ],
+                "type": "shell"
+            },
+            {
+                "label": "fast-test",
+                "command": "SKIP_SLOW_TESTS=true pytest python -c docker/pytest.ini --headless",
                 "type": "shell"
             },
             {
@@ -131,6 +137,8 @@
                     "cp docker/dev_requirements.txt /tmp/$REPO/ && ",
                     "cp docker/prod_requirements.txt /tmp/$REPO/ && ",
                     "cp -R templates /tmp/$REPO/$REPO && ",
+                    // "cp -R resources /tmp/$REPO/$REPO && ",
+                    // "find /tmp/$REPO/$REPO/resources -type f | grep -vE 'icon|test_' | parallel 'rm -rf {}' && ",
                     "find /tmp/$REPO | grep -E '.*test.*\\.py$|mock.*\\.py$|__pycache__' | parallel 'rm -rf {}' && ",
                     "find /tmp/$REPO -type f | grep __init__.py | parallel 'rm -rf {} && touch {}' && ",
                     "cd /tmp/$REPO && ",
@@ -159,7 +167,7 @@
             },
             {
                 "label": "test",
-                "command": "pytest python -c docker/pytest.ini",
+                "command": "pytest python -c docker/pytest.ini --headless",
                 "type": "shell"
             },
             {
@@ -172,7 +180,9 @@
                     "cp -R /home/ubuntu/$REPO/docker/* /tmp/$REPO/ && ",
                     "cp -R /home/ubuntu/$REPO/pip/* /tmp/$REPO/ && ",
                     "cp -R /home/ubuntu/$REPO/resources /tmp && ",
+                    // "find /tmp/$REPO/$REPO/resources -type f | grep -vE 'icon|test_' | parallel 'rm -rf {}' && ",
                     "cp -R /home/ubuntu/$REPO/templates /tmp/$REPO/$REPO && ",
+                    // "cp /home/ubuntu/$REPO/python/conftest.py /tmp/$REPO/ && ",
                     "find /tmp/$REPO | grep -E '__pycache__|\\.pyc$' | parallel 'rm -rf'"
                 ],
                 "type": "shell"
@@ -188,9 +198,9 @@
                 "label": "version",
                 "dependsOrder": "sequence",
                 "dependsOn": [
-                    "lint",
-                    "full-docs",
-                    "requirements"
+                        "lint",
+                        "full-docs",
+                        "requirements"
                 ],
                 "type": "shell"
             }
