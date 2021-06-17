@@ -5,6 +5,7 @@ from pathlib import Path
 from pprint import pformat
 import os
 import re
+import shutil
 
 import OpenEXR as openexr
 from schematics.exceptions import DataError, ValidationError
@@ -44,7 +45,7 @@ def list_all_files(directory, include_regex='', exclude_regex=''):
     include_re = re.compile(include_regex)
     exclude_re = re.compile(exclude_regex)
 
-    for root, dirs, files in os.walk(directory):
+    for root, _, files in os.walk(directory):
         for file_ in files:
             filepath = Path(root, file_)
 
@@ -57,6 +58,38 @@ def list_all_files(directory, include_regex='', exclude_regex=''):
 
             if output:
                 yield Path(root, file_)
+
+
+def delete_empty_directories(directory):
+    # type: (Union[str, Path]) -> None
+    '''
+    Recurses given directory tree and deletes directories that do not contain
+    files or directories trees with files. .DS_Store files do not count as
+    files. Does not delete given directory.
+
+    Args:
+        directory (str or Path): Directory to recurse.
+
+    Raises:
+        EnforceError: If argument is not a directory or does not exist.
+    '''
+    dir_ = Path(directory).as_posix()
+    if not Path(dir_).is_dir():
+        msg = f'{dir_} is not a directory or does not exist.'
+        raise FileNotFoundError(msg)
+
+    empty = [[], ['.DS_Store']]
+    paths = []
+    for root, _, files in os.walk(directory):
+        if files in empty:
+            paths.append(root)
+
+    if dir_ in paths:
+        paths.remove(dir_)
+
+    for path in reversed(paths):
+        if os.listdir(path) in empty:
+            shutil.rmtree(path)
 
 
 def directory_to_dataframe(directory, include_regex='', exclude_regex=r'\.DS_Store'):

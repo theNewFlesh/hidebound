@@ -30,6 +30,16 @@ class ToolsTests(unittest.TestCase):
                 f.write('')
         return filepaths
 
+    def make_file_or_dir(self, filepath):
+        filepath = Path(filepath)
+        if '.' in filepath.as_posix():
+            os.makedirs(filepath.parent, exist_ok=True)
+            with open(filepath, 'w') as f:
+                f.write('test')
+        else:
+            os.makedirs(filepath, exist_ok=True)
+    # --------------------------------------------------------------------------
+
     def test_error_to_string(self):
         error = KeyError('Foo')
         expected = 'KeyError( Foo )'
@@ -123,6 +133,57 @@ class ToolsTests(unittest.TestCase):
             )
             result = sorted(list(result))
             self.assertEqual(result, expected)
+
+    def test_delete_empty_directories(self):
+        with TemporaryDirectory() as root:
+            paths = [
+                Path(root, 'a0/b0/c0/l0.txt'),
+                Path(root, 'a0/b0/c1'),
+                Path(root, 'a0/b0/c2/.DS_Store'),
+                Path(root, 'a0/b0/c3/.DS_Store'),
+                Path(root, 'a0/b0/c3/d0/e0/l1.txt'),
+                Path(root, 'a0/b0/c3/d1/e0'),
+                Path(root, 'a0/b0/c4/d1/e0/l2.txt'),
+                Path(root, 'a0/b0/c4/d2'),
+                Path(root, 'a0/b0/c4/d3/e0/l3.txt'),
+                Path(root, 'a0/b0/c5'),
+                Path(root, 'a1/b0/c0'),
+                Path(root, 'a1/b0/.DS_Store'),
+                Path(root, 'a1/b1/l4.txt'),
+            ]
+            list(map(self.make_file_or_dir, paths))
+            tools.delete_empty_directories(root)
+
+            result = sorted([x[0] for x in os.walk(root)])
+            expected = [
+                Path(root),
+                Path(root, 'a0'),
+                Path(root, 'a0/b0'),
+                Path(root, 'a0/b0/c0'),  # parent dir of file
+                Path(root, 'a0/b0/c3'),
+                Path(root, 'a0/b0/c3/d0'),
+                Path(root, 'a0/b0/c3/d0/e0'),  # parent dir of file
+                Path(root, 'a0/b0/c4'),
+                Path(root, 'a0/b0/c4/d1'),
+                Path(root, 'a0/b0/c4/d1/e0'),  # parent dir of file
+                Path(root, 'a0/b0/c4/d3'),
+                Path(root, 'a0/b0/c4/d3/e0'),  # parent dir of file
+                Path(root, 'a1'),
+                Path(root, 'a1/b1'),  # parent dir of file
+            ]
+            expected = sorted([x.as_posix() for x in expected])
+            self.assertEqual(result, expected)
+
+    def test_delete_empty_directories_empty(self):
+        with TemporaryDirectory() as root:
+            tools.delete_empty_directories(root)
+            result = [x[0] for x in os.walk(root)]
+            self.assertEqual(result, [root])
+
+    def test_delete_empty_directories_errors(self):
+        expected = '/foo/bar is not a directory or does not exist.'
+        with self.assertRaisesRegexp(FileNotFoundError, expected):
+            next(tools.delete_empty_directories('/foo/bar'))
 
     def test_directory_to_dataframe(self):
         with TemporaryDirectory() as root:
