@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.12.3
+                0.12.4
               </div>
             
           
@@ -399,6 +399,7 @@
         <span class="c1"># write file data</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_write_mode</span> <span class="o">==</span> <span class="s1">&#39;move&#39;</span><span class="p">:</span>
             <span class="n">file_data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">target</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">tools</span><span class="o">.</span><span class="n">delete_empty_directories</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">file_data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">target</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 

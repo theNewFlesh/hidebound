@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.12.3
+                0.12.4
               </div>
             
           
@@ -1906,6 +1906,22 @@ version,</p>
 </div>
 <div class="section" id="module-hidebound.core.tools">
 <span id="tools"></span><h2>tools<a class="headerlink" href="#module-hidebound.core.tools" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="hidebound.core.tools.delete_empty_directories">
+<span class="sig-prename descclassname"><span class="pre">hidebound.core.tools.</span></span><span class="sig-name descname"><span class="pre">delete_empty_directories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="_modules/hidebound/core/tools.html#delete_empty_directories"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.core.tools.delete_empty_directories" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recurses given directory tree and deletes directories that do not contain
+files or directories trees with files. .DS_Store files do not count as
+files. Does not delete given directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>directory</strong> (<em>str</em><em> or </em><em>Path</em>) – Directory to recurse.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>EnforceError</strong> – If argument is not a directory or does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="hidebound.core.tools.directory_to_dataframe">
 <span class="sig-prename descclassname"><span class="pre">hidebound.core.tools.</span></span><span class="sig-name descname"><span class="pre">directory_to_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_regex</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_regex</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'\\.DS_Store'</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="reference internal" href="_modules/hidebound/core/tools.html#directory_to_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.core.tools.directory_to_dataframe" title="Permalink to this definition">¶</a></dt>
