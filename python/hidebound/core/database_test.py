@@ -725,6 +725,9 @@ class DatabaseTests(DatabaseTestBase):
                         'headers': {
                             'Content-Type': 'application/json',
                             'Accept': 'application/json',
+                        },
+                        'params': {
+                            'foo': 'bar'
                         }
                     },
                     {

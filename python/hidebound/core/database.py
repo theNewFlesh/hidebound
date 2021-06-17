@@ -224,6 +224,7 @@ class Database:
         # write file data
         if self._write_mode == 'move':
             file_data.apply(lambda x: shutil.move(x.source, x.target), axis=1)
+            tools.delete_empty_directories(self._root)
         else:
             file_data.apply(lambda x: shutil.copy2(x.source, x.target), axis=1)
 
