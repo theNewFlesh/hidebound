@@ -288,8 +288,8 @@ class Database:
                 .applymap(type) \
                 .apply(lambda x: x.unique().tolist())
             legal_cols = set([int, float, str, bool, None])
-            mask = cols.apply(lambda x: set(x).difference(legal_cols) == set())
-            cols = cols[mask].index.tolist()
+            cols = cols.apply(lambda x: set(x).difference(legal_cols) == set())
+            cols = cols[cols].index.tolist()
 
         # nicely order columns
         head_cols = [
