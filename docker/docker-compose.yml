@@ -7,7 +7,7 @@ services:
     image: hidebound
     build:
       context: .
-      dockerfile: hidebound.dockerfile
+      dockerfile: dev.dockerfile
     ports:
       - "2000:9000"
       - "2080:8080"
