@@ -1,17 +1,21 @@
 #!/usr/bin/env python
 
-from typing import Any, List, Tuple
+try:
+    # python2.7 doesn't have typing module
+    from typing import Any, List, Tuple
+except ImportError:
+    pass
 
-from pathlib import Path
 import argparse
+import os
 import re
 
-# set's REPO to whatever the repository is named
-REPO = Path(__file__).parents[1].absolute().name
-REPO_PATH = Path(__file__).parents[1].absolute().as_posix()
+# python2.7 doesn't have pathlib module
+REPO_PATH = os.path.join(os.sep, *os.path.realpath(__file__).split(os.sep)[:-2])
+REPO = os.path.split(REPO_PATH)[-1]
 GITHUB_USER = 'thenewflesh'
 USER = 'ubuntu:ubuntu'
-PORT = 8180
+PORT = 8080
 # ------------------------------------------------------------------------------
 
 '''
