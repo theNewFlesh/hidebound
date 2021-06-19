@@ -36,37 +36,15 @@ RUN echo "\n${CYAN}INSTALL OPENEXR${NO_COLOR}"; \
     openexr \
     zlib1g-dev
 
-# install python dependencies
-# COPY ./ /home/ubuntu/hidebound
-# RUN echo "\n${CYAN}INSTALL PYTHON DEPENDECIES${NO_COLOR}"; \
-#     apt update && \
-#     apt install -y \
-#         graphviz \
-#         python3-pydot && \
-#     pip3.7 install -r /home/ubuntu/hidebound/docker/prod_requirements.txt;
-
-# # added aliases to bashrc
-# RUN echo "\n${CYAN}CONFIGURE BASHRC${NO_COLOR}"; \
-#     echo 'export PYTHONPATH="/home/ubuntu/hidebound/python"' >> /home/ubuntu/.bashrc; \
-#     echo 'export REPO_ENV=True' >> /home/ubuntu/.bashrc;
-
-# ENV PYTHONPATH "${PYTHONPATH}:/home/ubuntu/hidebound/python"
-# ENV REPO_ENV True
-
-# ENTRYPOINT [\
-#     "python3.7",\
-#     "/home/ubuntu/hidebound/python/hidebound/server/app.py"\
-# ]
-
 # install hidebound
 RUN echo "\n${CYAN}INSTALL HIDEBOUND${NO_COLOR}"; \
     apt update && \
     apt install -y \
     graphviz \
     python3-pydot && \
-    pip3.7 install hidebound>=0.7.4;
+    pip3.7 install hidebound
 
 ENTRYPOINT [\
     "python3.7",\
     "/usr/local/lib/python3.7/dist-packages/hidebound/server/app.py"\
-    ]
+]
