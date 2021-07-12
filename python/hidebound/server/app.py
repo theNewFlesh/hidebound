@@ -7,11 +7,13 @@ import os
 
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
+from flask_healthz import healthz
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import flasgger as swg
 import flask
+import flask_monitoringdashboard as fmdb
 
 import hidebound.server.api as api
 import hidebound.server.components as components
@@ -25,10 +27,50 @@ Hidebound service used for displaying and interacting with Hidebound database.
 '''
 
 
-APP = flask.Flask('hidebound')  # type: Union[flask.Flask, dash.Dash]
-swg.Swagger(APP)
-APP.register_blueprint(api.API)
-APP = components.get_dash_app(APP)
+def liveness():
+    # type: () -> None
+    '''Liveness probe for kubernetes.'''
+    pass
+
+
+def readiness():
+    # type: () -> None
+    '''
+    Readiness probe for kubernetes.
+    '''
+    pass
+
+
+def get_app():
+    # type: () -> dash.Dash
+    '''
+    Creates a Hidebound app.
+
+    Returns:
+        Dash: Dash app.
+    '''
+    app = flask.Flask('hidebound')  # type: Union[flask.Flask, dash.Dash]
+    swg.Swagger(app)
+    app.register_blueprint(api.API)
+
+    # healthz endpoints
+    app.register_blueprint(healthz, url_prefix="/healthz")
+    app.config.update(HEALTHZ={
+        "live": liveness,
+        "ready": readiness,
+    })
+
+    # flask monitoring
+    fmdb.config.link = 'monitor'
+    fmdb.config.monitor_level = 3
+    fmdb.config.git = 'https://theNewFlesh.github.io/hidebound/'
+    fmdb.bind(app)
+
+    app = components.get_dash_app(app)
+    return app
+
+
+APP = get_app()
 CONFIG_PATH = None  # type: Union[str, Path, None]
 
 
@@ -104,7 +146,7 @@ def on_event(*inputs):
 
     input_id = context.triggered[0]['prop_id'].split('.')[0]
 
-    server = APP.server  # type: ignore
+    server = APP.server
     if input_id == 'init-button':
         response = server.test_client().post('/api/initialize', json=conf).json
         if 'error' in response.keys():

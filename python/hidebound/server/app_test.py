@@ -2,7 +2,9 @@ import os
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
+import dash
 import lunchbox.tools as lbt
+import pytest
 
 from hidebound.core.database_test_base import DatabaseTestBase
 import hidebound.server.app as application
@@ -41,6 +43,19 @@ class AppTests(DatabaseTestBase):
     def tearDown(self):
         self.context.pop()
         self.tempdir.cleanup()
+
+    def test_liveness(self):
+        result = self.client.get('/healthz/live').status_code
+        self.assertEqual(result, 200)
+
+    def test_readiness(self):
+        result = self.client.get('/healthz/ready').status_code
+        self.assertEqual(result, 200)
+
+    @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
+    def test_get_app(self):
+        result = application.get_app()
+        assert isinstance(result, dash.Dash)
 
     def test_serve_stylesheet(self):
         params = dict(
