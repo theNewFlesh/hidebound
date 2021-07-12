@@ -34,6 +34,18 @@ spec:
           {{- end }}
           ports:
             - containerPort: {{ .Values.container.port }}
+          livenessProbe:
+            httpGet:
+              path: /healthz/live
+              port: {{ .Values.container.port }}
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+          readinessProbe:
+            httpGet:
+              path: /healthz/ready
+              port: {{ .Values.container.port }}
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
           volumeMounts:
             - name: storage
               mountPath: /mnt/storage
@@ -88,6 +100,7 @@ spec:
     app: hidebound
   ports:
     - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.container.port }}
 
 ---
 kind: Ingress
@@ -95,10 +108,12 @@ apiVersion: networking.k8s.io/v1
 metadata:
   name: ingress
   namespace: {{ .Values.namespace }}
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/rewrite-target: /hidebound
 spec:
   rules:
-    - host: "{{ .Values.organization }}.dev.com"
-      http:
+    - http:
         paths:
           - path: "{{ .Values.ingress.path }}"
             pathType: Prefix

@@ -330,7 +330,7 @@ def package_repo():
         str: Command to create a temporary repo in /tmp.
     '''
     pkg = line('''
-        find /tmp/$REPO | grep -E '.*test.*\\.py$|mock.*\\.py$||__pycache__'
+        find /tmp/$REPO | grep -E '.*test.*\\.py$|mock.*\\.py$|__pycache__'
             | parallel 'rm -rf {{}}'
     ''')
     cmd = docker_exec() + ' {repo} zsh -c "' + tmp_repo() + ' && ' + pkg + '"'

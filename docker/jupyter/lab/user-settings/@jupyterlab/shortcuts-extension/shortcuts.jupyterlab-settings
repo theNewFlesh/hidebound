@@ -2,58 +2,52 @@
     "shortcuts": [
         {
             "command": "application:activate-next-tab",
-            "keys": [
-                "Alt Tab"
-            ],
+            "keys": ["Alt Tab"],
             "selector": "body"
         },
         {
             "command": "application:activate-previous-tab",
-            "keys": [
-                "Alt Shift Tab"
-            ],
+            "keys": ["Alt Shift Tab"],
             "selector": "body"
         },
         {
             "command": "application:close",
-            "keys": [
-                "Alt W"
-            ],
+            "keys": ["Alt W"],
             "selector": ".jp-Activity"
         },
         {
             "command": "apputils:activate-command-palette",
-            "keys": [
-                "Accel Shift P"
-            ],
+            "keys": ["Alt P"],
             "selector": "body"
         },
         {
             "command": "notebook:toggle-all-cell-line-numbers",
-            "keys": [
-                "L"
-            ],
+            "keys": ["L"],
             "selector": ".jp-Notebook:focus"
         },
         {
             "command": "notebook:create-new",
-            "keys": [
-                "Alt N"
-            ],
+            "keys": ["Alt N"],
             "selector": "body"
         },
         {
             "command": "notebook:create-console",
-            "keys": [
-                "Alt K"
-            ],
+            "keys": ["Alt K"],
             "selector": "body"
         },
         {
             "command": "terminal:open",
-            "keys": [
-                "Alt T"
-            ],
+            "keys": ["Alt T"],
+            "selector": "body"
+        },
+        {
+            "command": "sublime:add-cursor-to-prev-line",
+            "keys": ["Alt ArrowUp"],
+            "selector": "body"
+        },
+        {
+            "command": "sublime:add-cursor-to-next-line",
+            "keys": ["Alt ArrowDown"],
             "selector": "body"
         }
     ]

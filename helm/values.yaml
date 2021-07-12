@@ -4,13 +4,16 @@ organization: k8s
 
 container:
   image: k3d-dev-registry:5000/hidebound
-  tag: latest
-  repo: /mnt/storage/repos/hidebound
+  tag: dev
+  repo: /mnt/repos/hidebound
   storage_volume: /mnt/storage
-  port: 80
+  port: 8080
   image_pull_policy: IfNotPresent
   command:
-    ["python3.7", "/home/ubuntu/hidebound/python/hidebound/server/app.py"]
+    [
+      "python3.7",
+      "/home/ubuntu/hidebound/python/hidebound/server/app.py",
+    ]
   env:
     - name: REPO_ENV
       value: "True"
