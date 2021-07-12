@@ -46,12 +46,12 @@ ENV LD_LIBRARY_PATH='/usr/include/python3.7m'
 RUN echo "\n${CYAN}INSTALL OPENEXR${NO_COLOR}"; \
     apt update && \
     apt install -y \
-    build-essential \
-    g++ \
-    gcc \
-    libopenexr-dev \
-    openexr \
-    zlib1g-dev
+        build-essential \
+        g++ \
+        gcc \
+        libopenexr-dev \
+        openexr \
+        zlib1g-dev
 
 # install hidebound
 USER ubuntu
