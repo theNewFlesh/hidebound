@@ -2,5 +2,5 @@ ZSH_THEME="henanigans"
 export ZSH="/home/ubuntu/.oh-my-zsh"
 plugins=(git)
 source $ZSH/oh-my-zsh.sh
-echo 'will cite' | parallel --citation >/dev/null 2>&1
+echo 'will cite' | parallel --citation >> /dev/null 2>&1
 alias ll='ls -hlA'

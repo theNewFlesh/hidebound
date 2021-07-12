@@ -20,8 +20,7 @@ with open('../pip/version.txt') as f:
 # -- Project information -----------------------------------------------------
 
 project = 'hidebound'
-copyright = '2020, Alex Braun <TheNewFlesh@github.com>'
-author = 'Alex Braun <TheNewFlesh@github.com>'
+author = 'Alex Braun <alexander.g.braun@gmail.com>'
 version = VERSION
 # release = ''
 

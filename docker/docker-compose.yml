@@ -17,7 +17,8 @@ services:
       - ../:/home/ubuntu/hidebound
       - ./jupyter:/home/ubuntu/.jupyter
       - ./ipython:/home/ubuntu/.ipython
+      - ../artifacts:/tmp/dash_artifacts
       - ~/.ssh:/home/ubuntu/.ssh
       # - /mnt/storage:/mnt/storage
-    working_dir: "/home/ubuntu/hidebound/python"
+    working_dir: "/home/ubuntu"
     command: "tail -f /dev/null"

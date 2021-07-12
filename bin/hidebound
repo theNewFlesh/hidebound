@@ -26,6 +26,6 @@ else
     if [ $dryrun == "False" ]; then
         eval `$pythonx ./python/cli.py $1 --args "$args"`
     else
-        echo `$pythonx ./python/cli.py $1 --args "$args"` | sed $'s/; /;\\\n/g'
+        echo `$pythonx ./python/cli.py $1 --args "$args"` | sed $'s/ && /&\\\n/g'
     fi
 fi
