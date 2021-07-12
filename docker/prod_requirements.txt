@@ -1,12 +1,15 @@
 apispec
 boto3
-dash>=1.20.0
 dash-core-components
 dash-cytoscape==0.1.1
 dash-html-components
 dash-table
+dash>=1.20.0
 flasgger
 flask
+flask_monitoringdashboard
+flask-caching
+flask-healthz
 girder-client
 humanfriendly
 jinja2
