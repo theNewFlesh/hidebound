@@ -8,7 +8,6 @@ dash>=1.20.0
 flasgger
 flask
 flask_monitoringdashboard
-flask-caching
 flask-healthz
 girder-client
 humanfriendly
