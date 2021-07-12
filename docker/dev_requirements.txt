@@ -3,15 +3,14 @@ cufflinks
 flake8
 ipykernel
 ipysheet
-ipython-genutils
 ipython
+ipython-genutils
 ipywidgets
 jinja2==2.10.3
 jupyterlab_henanigans>=0.2.1
 jupyterlab_sublime
 jupyterlab-git
 jupyterlab>=3.0.0
-lunchbox
 moto
 mypy
 nbconvert
@@ -25,8 +24,6 @@ pytest-xdist==1.20.1
 pytest==4.5.0
 pytz==2018.4
 radon==4.0.0
-requests==2.22.0
-rolling-pin
 selenium
 sphinx
 sphinx-rtd-theme

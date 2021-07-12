@@ -21,6 +21,7 @@ OpenEXR
 pandas
 pandasql
 pyparsing
+requests==2.22.0
 rolling-pin
 schematics
 scikit-image
