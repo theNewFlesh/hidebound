@@ -29,6 +29,3 @@ config:
   include_regex:
   exclude_regex: \\.DS_Store
   write_mode: copy
-
-ingress:
-  path: /hidebound
