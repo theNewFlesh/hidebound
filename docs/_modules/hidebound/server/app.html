@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.12.3
+                0.13.0
               </div>
             
           
@@ -90,7 +90,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Documentation</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#installation">Installation</a></li>
@@ -101,7 +101,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#project-structure">Project Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#application">Application</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Python API</span></p>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../core.html">core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../exporters.html">exporters</a></li>
@@ -182,11 +182,13 @@
 
 <span class="kn">from</span> <span class="nn">dash.dependencies</span> <span class="kn">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">State</span>
 <span class="kn">from</span> <span class="nn">dash.exceptions</span> <span class="kn">import</span> <span class="n">PreventUpdate</span>
+<span class="kn">from</span> <span class="nn">flask_healthz</span> <span class="kn">import</span> <span class="n">healthz</span>
 <span class="kn">import</span> <span class="nn">dash</span>
 <span class="kn">import</span> <span class="nn">dash_core_components</span> <span class="k">as</span> <span class="nn">dcc</span>
 <span class="kn">import</span> <span class="nn">dash_html_components</span> <span class="k">as</span> <span class="nn">html</span>
 <span class="kn">import</span> <span class="nn">flasgger</span> <span class="k">as</span> <span class="nn">swg</span>
 <span class="kn">import</span> <span class="nn">flask</span>
+<span class="kn">import</span> <span class="nn">flask_monitoringdashboard</span> <span class="k">as</span> <span class="nn">fmdb</span>
 
 <span class="kn">import</span> <span class="nn">hidebound.server.api</span> <span class="k">as</span> <span class="nn">api</span>
 <span class="kn">import</span> <span class="nn">hidebound.server.components</span> <span class="k">as</span> <span class="nn">components</span>
@@ -200,10 +202,50 @@
 <span class="sd">&#39;&#39;&#39;</span>
 
 
-<span class="n">APP</span> <span class="o">=</span> <span class="n">flask</span><span class="o">.</span><span class="n">Flask</span><span class="p">(</span><span class="s1">&#39;hidebound&#39;</span><span class="p">)</span>  <span class="c1"># type: Union[flask.Flask, dash.Dash]</span>
-<span class="n">swg</span><span class="o">.</span><span class="n">Swagger</span><span class="p">(</span><span class="n">APP</span><span class="p">)</span>
-<span class="n">APP</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">api</span><span class="o">.</span><span class="n">API</span><span class="p">)</span>
-<span class="n">APP</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">get_dash_app</span><span class="p">(</span><span class="n">APP</span><span class="p">)</span>
+<div class="viewcode-block" id="liveness"><a class="viewcode-back" href="../../../server.html#hidebound.server.app.liveness">[docs]</a><span class="k">def</span> <span class="nf">liveness</span><span class="p">():</span>
+    <span class="c1"># type: () -&gt; None</span>
+    <span class="sd">&#39;&#39;&#39;Liveness probe for kubernetes.&#39;&#39;&#39;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="readiness"><a class="viewcode-back" href="../../../server.html#hidebound.server.app.readiness">[docs]</a><span class="k">def</span> <span class="nf">readiness</span><span class="p">():</span>
+    <span class="c1"># type: () -&gt; None</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Readiness probe for kubernetes.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="get_app"><a class="viewcode-back" href="../../../server.html#hidebound.server.app.get_app">[docs]</a><span class="k">def</span> <span class="nf">get_app</span><span class="p">():</span>
+    <span class="c1"># type: () -&gt; dash.Dash</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Creates a Hidebound app.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dash: Dash app.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">flask</span><span class="o">.</span><span class="n">Flask</span><span class="p">(</span><span class="s1">&#39;hidebound&#39;</span><span class="p">)</span>  <span class="c1"># type: Union[flask.Flask, dash.Dash]</span>
+    <span class="n">swg</span><span class="o">.</span><span class="n">Swagger</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">api</span><span class="o">.</span><span class="n">API</span><span class="p">)</span>
+
+    <span class="c1"># healthz endpoints</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">healthz</span><span class="p">,</span> <span class="n">url_prefix</span><span class="o">=</span><span class="s2">&quot;/healthz&quot;</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">HEALTHZ</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;live&quot;</span><span class="p">:</span> <span class="n">liveness</span><span class="p">,</span>
+        <span class="s2">&quot;ready&quot;</span><span class="p">:</span> <span class="n">readiness</span><span class="p">,</span>
+    <span class="p">})</span>
+
+    <span class="c1"># flask monitoring</span>
+    <span class="n">fmdb</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">link</span> <span class="o">=</span> <span class="s1">&#39;monitor&#39;</span>
+    <span class="n">fmdb</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">monitor_level</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">fmdb</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">git</span> <span class="o">=</span> <span class="s1">&#39;https://theNewFlesh.github.io/hidebound/&#39;</span>
+    <span class="n">fmdb</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+
+    <span class="n">app</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">get_dash_app</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">app</span></div>
+
+
+<span class="n">APP</span> <span class="o">=</span> <span class="n">get_app</span><span class="p">()</span>
 <span class="n">CONFIG_PATH</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: Union[str, Path, None]</span>
 
 
@@ -279,7 +321,7 @@
 
     <span class="n">input_id</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">triggered</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;prop_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
-    <span class="n">server</span> <span class="o">=</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span>  <span class="c1"># type: ignore</span>
+    <span class="n">server</span> <span class="o">=</span> <span class="n">APP</span><span class="o">.</span><span class="n">server</span>
     <span class="k">if</span> <span class="n">input_id</span> <span class="o">==</span> <span class="s1">&#39;init-button&#39;</span><span class="p">:</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">test_client</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">conf</span><span class="p">)</span><span class="o">.</span><span class="n">json</span>
         <span class="k">if</span> <span class="s1">&#39;error&#39;</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -486,7 +528,7 @@
             <span class="o">.</span><span class="n">setup_hidebound_directory</span><span class="p">(</span><span class="s1">&#39;/mnt/storage&#39;</span><span class="p">,</span> <span class="n">config_path</span><span class="o">=</span><span class="n">config_path</span><span class="p">)</span>
     <span class="n">api</span><span class="o">.</span><span class="n">CONFIG</span> <span class="o">=</span> <span class="n">config</span>
     <span class="n">CONFIG_PATH</span> <span class="o">=</span> <span class="n">config_path</span>
-    <span class="n">APP</span><span class="o">.</span><span class="n">run_server</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5080</span><span class="p">)</span>
+    <span class="n">APP</span><span class="o">.</span><span class="n">run_server</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">)</span>
 </pre></div>
 
            </div>
@@ -498,7 +540,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2020, Alex Braun &lt;TheNewFlesh@github.com&gt;.
+        &#169; Copyright 2020, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.
 
     </p>
   </div>

@@ -1,10 +1,7 @@
-.. hidebound documentation master file, created by
-   sphinx-quickstart on Mon Oct 21 19:41:32 2019.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+.. hidebound documentation master file
 
-Welcome to hidebound's documentation!
-==========================================
+Welcome to hidebound' documentation!
+====================================
 .. toctree::
    :maxdepth: 2
    :caption: Documentation
