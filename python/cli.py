@@ -566,8 +566,8 @@ def full_docs_command():
         coverage(),
         line(
             docker_exec() + '''-e REPO_ENV=True {repo}
-                python3.7 -c "
-                    import re;
+                python3.7 -c
+                   "import re;
                     from rolling_pin.repo_etl import RepoETL;
                     etl = RepoETL('/home/ubuntu/{repo}/python');
                     regex = 'test|mock';
@@ -588,8 +588,8 @@ def full_docs_command():
         '''),
         line(
             docker_exec() + '''-e REPO_ENV=True {repo}
-                python3.7 -c "
-                    from rolling_pin.radon_etl import RadonETL;
+                python3.7 -c
+                   "from rolling_pin.radon_etl import RadonETL;
                     etl = RadonETL('/home/ubuntu/{repo}/python');
                     etl.write_plots('/home/ubuntu/{repo}/docs/plots.html');
                     etl.write_tables('/home/ubuntu/{repo}/docs');
