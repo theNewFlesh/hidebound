@@ -838,12 +838,15 @@ def state_command():
         'export CONTAINER_EXISTS=`docker ps -a -f name=^{repo}$ | grep -v CONTAINER`',
         'export RUNNING=`docker ps -a -f name=^{repo}$ -f status=running | grep -v CONTAINER`',
         line(r'''
-            export PORTS=`docker ps -a -f name=^{repo}$
-                --format '{{{{.Ports}}}}'
-            | sed -E 's/[0-9.]+:|:|\/[a-z]+//g'
-            | sed 's/, /\n/g' | uniq
-            | sed 's/->/{clear}->{blue}/'
-            | parallel "echo -n {{}} ' '"`
+            export PORTS=`
+                cat docker/docker-compose.yml |
+                grep -E ' - "\d\d\d\d:\d\d\d\d"' |
+                sed s'/.* - "//g' |
+                sed 's/"//g' |
+                sed 's/^/{blue}/g' |
+                sed 's/:/{clear}-->/g' |
+                awk 1 ORS=' '
+            `
         '''),
         line('''
             if [ -z "$IMAGE_EXISTS" ];
@@ -860,7 +863,8 @@ def state_command():
             fi
         '''),
         line('''echo
-            "app: {cyan}{repo}{clear}:{yellow}$VERSION{clear} -
+            "app: {cyan}{repo}{clear} -
+            version: {yellow}$VERSION{clear} -
             image: $IMAGE_STATE -
             container: $CONTAINER_STATE -
             ports: {blue}$PORTS{clear}"
