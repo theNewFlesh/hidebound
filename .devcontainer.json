@@ -1,16 +1,15 @@
 {
     "name": "${localWorkspaceFolderBasename}",
-    "context": "./",
-    "folders": [{ "path": "./" }],
     "dockerComposeFile": "docker/docker-compose.yml",
     "service": "${localWorkspaceFolderBasename}",
     "workspaceFolder": "/home/ubuntu/${localWorkspaceFolderBasename}",
     "settings": {
         "terminal.integrated.cwd": "/home/ubuntu/${localWorkspaceFolderBasename}",
-        "terminal.integrated.shell.linux": "/bin/zsh",
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.defaultProfile.osx": "zsh",
         "terminal.integrated.env.linux": { "REPO_ENV": "True" },
         "python.languageServer": "Pylance",
-        "python.linting.enabled": true,q
+        "python.linting.enabled": true,
         "python.linting.flake8Args": ["--config=docker/flake8.ini"],
         "python.linting.flake8Enabled": true,
         "python.linting.flake8Path": "/usr/local/bin/flake8",
@@ -22,6 +21,7 @@
         "python.pythonPath": "/usr/bin/python3.7",
         "python.testing.pytestEnabled": true,
         "python.testing.unittestEnabled": true,
+        "pythonTestExplorer.testFramework": "pytest",
         "files.exclude": {
             "**/.classpath": true,
             "**/.coverage": true,
@@ -37,9 +37,9 @@
             "**/.svn": true,
             "**/CVS": true,
             "*/*/**/node_modules": true
-    },
-    "search.exclude": {
-        "**/docs": true
+        },
+        "search.exclude": {
+            "**/docs": true
         }
     },
     "extensions": [
@@ -52,6 +52,7 @@
         "euskadi31.json-pretty-printer",
         "fabiospampinato.vscode-diff",
         "gruntfuggly.todo-tree",
+        "hbenl.vscode-test-explorer",
         "ibm.output-colorizer",
         "konstantin.wrapselection",
         "littlefoxteam.vscode-python-test-adapter",
@@ -61,6 +62,7 @@
         "ms-python.python",
         "ms-python.vscode-pylance",
         "ms-vscode.sublime-keybindings",
+        "ms-vscode.test-adapter-converter",
         "ohmnivore.twospacefourspace",
         "shd101wyy.markdown-preview-enhanced",
         "the-new-flesh.henanigans",
