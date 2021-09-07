@@ -57,6 +57,8 @@
         "konstantin.wrapselection",
         "littlefoxteam.vscode-python-test-adapter",
         "magicstack.magicpython",
+        "matangover.mypy",
+        "mhutchie.git-graph",
         "ms-azuretools.vscode-docker",
         "ms-python.anaconda-extension-pack",
         "ms-python.python",
