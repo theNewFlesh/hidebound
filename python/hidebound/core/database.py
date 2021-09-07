@@ -4,6 +4,7 @@ from copy import deepcopy
 from importlib import import_module
 from pathlib import Path
 import json
+import json
 import logging
 import os
 import shutil
@@ -192,8 +193,10 @@ class Database:
 
             * file content to hb_parent/hidebound/content - under same directory
                                                             structure
-            * file metadata as json to hb_parent/hidebound/metadata/file
             * asset metadata as json to hb_parent/hidebound/metadata/asset
+            * file metadata as json to hb_parent/hidebound/metadata/file
+            * asset log as json to hb_parent/hidebound/logs/asset
+            * file log as json to hb_parent/hidebound/logs/file
 
         Raises:
             RunTimeError: If data has not been initialized.
@@ -209,13 +212,17 @@ class Database:
             with open(filepath, 'w') as f:
                 json.dump(obj, f)
 
+        def write_log(log, filepath):
+            with open(filepath, 'w') as f:
+                f.write(log)
+
         temp = db_tools._get_data_for_write(
             self.data, self._root, self._hb_root
         )
         if temp is None:
             return self
 
-        file_data, file_meta, asset_meta = temp
+        file_data, asset_meta, file_meta, asset_log, file_log = temp
 
         # make directories
         for item in temp:
@@ -228,11 +235,17 @@ class Database:
         else:
             file_data.apply(lambda x: shutil.copy2(x.source, x.target), axis=1)
 
+        # write asset metadata
+        asset_meta.apply(lambda x: write_json(x.metadata, x.target), axis=1)
+
         # write file metadata
         file_meta.apply(lambda x: write_json(x.metadata, x.target), axis=1)
 
-        # write asset metadata
-        asset_meta.apply(lambda x: write_json(x.metadata, x.target), axis=1)
+        # write asset log
+        asset_log.apply(lambda x: write_log(x.metadata, x.target), axis=1)
+
+        # write file log
+        file_log.apply(lambda x: write_log(x.metadata, x.target), axis=1)
 
         return self
 

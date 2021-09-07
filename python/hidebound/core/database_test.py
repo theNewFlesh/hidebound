@@ -186,6 +186,14 @@ class DatabaseTests(DatabaseTestBase):
             expected = data.asset_path.nunique()
             self.assertEqual(result, expected)
 
+            # ensure asset log is written
+            result = len(os.listdir(Path(hb_root, 'logs', 'asset')))
+            self.assertEqual(result, 1)
+
+            # ensure file log is written
+            result = len(os.listdir(Path(hb_root, 'logs', 'file')))
+            self.assertEqual(result, 1)
+
     def test_create_all_invalid(self):
         with TemporaryDirectory() as root:
             hb_root = Path(root, 'hidebound')
