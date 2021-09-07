@@ -1,14 +1,16 @@
 from typing import Any, Dict, Optional, Tuple, Union
 
 from collections import defaultdict
+from datetime import datetime
 from pathlib import Path
+import json
 import re
 import uuid
 
-import lunchbox.tools as lbt
-import numpy as np
 from pandas import DataFrame
 from schematics.exceptions import ValidationError
+import lunchbox.tools as lbt
+import numpy as np
 
 from hidebound.core.parser import AssetNameParser
 from hidebound.core.specification_base import SpecificationBase
@@ -305,8 +307,11 @@ def _cleanup(data):
     return data
 
 
-def _get_data_for_write(data, source_dir, target_dir):
-    # type: (DataFrame, Union[str, Path], Union[str, Path]) -> Optional[Tuple[DataFrame, DataFrame, DataFrame]]  # noqa: E501
+def _get_data_for_write(
+    data,        # type: DataFrame
+    source_dir,  # type: Union[str, Path]
+    target_dir,  # type: Union[str, Path]
+):               # type: (...) -> Optional[Tuple[DataFrame, DataFrame, DataFrame, DataFrame, DataFrame]]  # noqa: E501
     '''
     Split given data into three DataFrame creating files.
 
@@ -318,11 +323,14 @@ def _get_data_for_write(data, source_dir, target_dir):
     DataFrames:
 
         * File data - For writing asset file data to a target filepath.
-        * File metadata - For writing file metadata to a target json file.
         * Asset metadata - For writing asset metadata to a target json file.
+        * File metadata - For writing file metadata to a target json file.
+        * Asset log - For writing asset log to a target json file.
+        * File log - For writing file log to a target json file.
 
     Returns:
-        tuple[DataFrame]: file_data, file_metadata, asset_metadata.
+        tuple[DataFrame]: file_data, asset_metadata, file_metadata, asset_log,
+            file_log.
     '''
     # TODO: flatten file_traits and flatten asset_traits
     # get valid asset data
@@ -336,6 +344,7 @@ def _get_data_for_write(data, source_dir, target_dir):
     source_dir = Path(source_dir).absolute().as_posix()
     data_dir = Path(target_dir, 'content').absolute().as_posix()
     meta_dir = Path(target_dir, 'metadata').absolute().as_posix()
+    log_dir = Path(target_dir, 'logs').absolute().as_posix()
 
     # add asset id
     keys = data.asset_path.unique().tolist()
@@ -424,4 +433,21 @@ def _get_data_for_write(data, source_dir, target_dir):
         .apply(lambda x: Path(meta_dir, 'file', x + '.json').as_posix())
     file_meta = file_meta[['metadata', 'target']]
 
-    return file_data, file_meta, asset_meta
+    # create asset log
+    now = datetime.now().strftime('%Y-%m-%dT-%H-%M-%S')
+    asset_log = DataFrame()
+    asset_log['target'] = [Path(
+        log_dir, 'asset', f'hidebound-asset-log_{now}.json'
+    ).as_posix()]
+    log = asset_meta.metadata.apply(json.dumps).tolist()
+    asset_log['metadata'] = ['[\n' + ',\n'.join(log) + '\n]']
+
+    # create file log
+    file_log = DataFrame()
+    file_log['target'] = [Path(
+        log_dir, 'file', f'hidebound-file-log_{now}.json'
+    ).as_posix()]
+    log = file_meta.metadata.apply(json.dumps).tolist()
+    file_log['metadata'] = ['[\n' + ',\n'.join(log) + '\n]']
+
+    return file_data, asset_meta, file_meta, asset_log, file_log

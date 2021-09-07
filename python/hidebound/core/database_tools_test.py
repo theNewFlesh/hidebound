@@ -372,11 +372,8 @@ class DatabaseTests(DatabaseTestBase):
         data = lbt.relative_path(__file__, '../../../resources/fake_data.csv')
         data = pd.read_csv(data)
 
-        file_data, file_meta, asset_meta = db_tools._get_data_for_write(
-            data,
-            '/tmp/projects',
-            '/tmp/hidebound'
-        )
+        file_data, asset_meta, file_meta, asset_log, file_log = db_tools \
+            ._get_data_for_write(data, '/tmp/projects', '/tmp/hidebound')
 
         data = data[data.asset_valid]
 
@@ -425,15 +422,28 @@ class DatabaseTests(DatabaseTestBase):
         for result in temp:
             self.assertTrue(result.startswith('/tmp/hidebound/content'))
 
+        # logging
+        logs = zip(['asset', 'file'], [asset_log, file_log], [asset_meta, file_meta])
+        for name, log, meta in logs:
+            self.assertEqual(len(log), 1)
+            result = log['target'].tolist()[0]
+            self.assertIn(f'hidebound-{name}-log', result)
+
+            expected = meta.metadata.apply(json.dumps).tolist()
+            expected = '[\n' + ',\n'.join(expected) + '\n]'
+            result = log.metadata.tolist()[0]
+            self.assertEqual(result, expected)
+
     def test_get_data_for_write_dirs(self):
         data = lbt.relative_path(__file__, '../../../resources/fake_data.csv')
         data = pd.read_csv(data)
 
-        file_data, file_meta, asset_meta = db_tools._get_data_for_write(
-            data,
-            '/tmp/projects',
-            '/tmp/hidebound'
-        )
+        file_data, asset_meta, file_meta, asset_log, file_log = db_tools \
+            ._get_data_for_write(
+                data,
+                '/tmp/projects',
+                '/tmp/hidebound'
+            )
 
         result = file_data.target\
             .apply(lambda x: '/tmp/hidebound/content' in x).unique().tolist()
@@ -460,11 +470,12 @@ class DatabaseTests(DatabaseTestBase):
         data = lbt.relative_path(__file__, '../../../resources/fake_data.csv')
         data = pd.read_csv(data, index_col=0)
 
-        file_data, file_meta, asset_meta = db_tools._get_data_for_write(
-            data,
-            '/tmp/projects',
-            '/tmp/hidebound'
-        )
+        file_data, asset_meta, file_meta, asset_log, file_log = db_tools \
+            ._get_data_for_write(
+                data,
+                '/tmp/projects',
+                '/tmp/hidebound'
+            )
 
         a = asset_meta
         a['asset_id'] = a.metadata.apply(lambda x: x['asset_id'])
