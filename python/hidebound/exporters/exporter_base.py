@@ -64,6 +64,18 @@ class ExporterBase:
                     file_meta = jsonc.JsonComment().load(f)
                 self._export_file(file_meta)
 
+        # export logs
+        for kind in ['asset', 'file']:
+            log_path = Path(hidebound_dir, 'logs', kind)
+            log_path = [Path(log_path, x) for x in os.listdir(log_path)][0]
+            with open(log_path) as f:
+                log = f.read()
+
+            if kind == 'asset':
+                self._export_asset_log(log)
+            else:
+                self._export_file_log(log)
+
     def _export_asset(self, metadata):
         # type: (Dict) -> None
         '''
@@ -90,4 +102,32 @@ class ExporterBase:
             NotImplementedError: If method is not implemented in subclass.
         '''
         msg = '_export_file method must be implemented in subclass.'
+        raise NotImplementedError(msg)
+
+    def _export_asset_log(self, text):
+        # type: (str) -> None
+        '''
+        Exports text from single asset log in hidebound/logs/asset.
+
+        Args:
+            text (str): File log.
+
+        Raises:
+            NotImplementedError: If method is not implemented in subclass.
+        '''
+        msg = '_export_asset_log method must be implemented in subclass.'
+        raise NotImplementedError(msg)
+
+    def _export_file_log(self, text):
+        # type: (str) -> None
+        '''
+        Exports text from single file log in hidebound/logs/file.
+
+        Args:
+            text (str): File log.
+
+        Raises:
+            NotImplementedError: If method is not implemented in subclass.
+        '''
+        msg = '_export_file_log method must be implemented in subclass.'
         raise NotImplementedError(msg)

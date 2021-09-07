@@ -105,3 +105,17 @@ class ExporterBaseTests(unittest.TestCase):
         expected = '_export_file method must be implemented in subclass.'
         with self.assertRaisesRegexp(NotImplementedError, expected):
             Foo()._export_file({})
+
+    def test_export_asset_log(self):
+        class Foo(ExporterBase):
+            pass
+        expected = '_export_asset_log method must be implemented in subclass.'
+        with self.assertRaisesRegexp(NotImplementedError, expected):
+            Foo()._export_asset_log({})
+
+    def test_export_file_log(self):
+        class Foo(ExporterBase):
+            pass
+        expected = '_export_file_log method must be implemented in subclass.'
+        with self.assertRaisesRegexp(NotImplementedError, expected):
+            Foo()._export_file_log({})
