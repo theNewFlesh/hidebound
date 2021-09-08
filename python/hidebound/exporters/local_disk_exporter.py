@@ -114,7 +114,7 @@ class LocalDiskExporter(ExporterBase):
         Args:
             metadata (dict): File log.
         '''
-        pass
+        pass  # pragma: no cover
 
     def _export_file_log(self, metadata):
         # type: (Dict[str, str]) -> None
@@ -124,4 +124,4 @@ class LocalDiskExporter(ExporterBase):
         Args:
             metadata (dict): File log.
         '''
-        pass
+        pass  # pragma: no cover
