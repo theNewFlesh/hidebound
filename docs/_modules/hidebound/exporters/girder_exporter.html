@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.10.3
+                0.13.0
               </div>
             
           
@@ -90,7 +90,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Documentation</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#installation">Installation</a></li>
@@ -101,7 +101,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#project-structure">Project Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#application">Application</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Python API</span></p>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../core.html">core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../exporters.html">exporters</a></li>
@@ -198,7 +198,7 @@
 <span class="sd">        root_type (str, optional): Root entity type. Default: collection.</span>
 <span class="sd">            Options: folder, collection</span>
 <span class="sd">        host (str, optional): Docker host URL address. Default: http://0.0.0.0</span>
-<span class="sd">        port (int, optional): Docker host port. Default: 8080.</span>
+<span class="sd">        port (int, optional): Docker host port. Default: 8180.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">api_key</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: StringType</span>
     <span class="n">root_id</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: StringType</span>
@@ -210,7 +210,7 @@
     <span class="n">host</span> <span class="o">=</span> <span class="n">URLType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;http://0.0.0.0&#39;</span><span class="p">)</span>  <span class="c1"># type: URLType</span>
     <span class="n">port</span> <span class="o">=</span> <span class="n">IntType</span><span class="p">(</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="mi">8080</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">8180</span><span class="p">,</span>
         <span class="n">validators</span><span class="o">=</span><span class="p">[</span>
             <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_lt</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">65536</span><span class="p">),</span>
             <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_gt</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1023</span><span class="p">),</span>
@@ -247,7 +247,7 @@
         <span class="n">root_id</span><span class="p">,</span>
         <span class="n">root_type</span><span class="o">=</span><span class="s1">&#39;collection&#39;</span><span class="p">,</span>
         <span class="n">host</span><span class="o">=</span><span class="s1">&#39;http://0.0.0.0&#39;</span><span class="p">,</span>
-        <span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">,</span>
+        <span class="n">port</span><span class="o">=</span><span class="mi">8180</span><span class="p">,</span>
         <span class="n">client</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="c1"># type: (str, str, str, str, int, Any) -&gt; None</span>
@@ -262,7 +262,7 @@
 <span class="sd">                Options: folder, collection</span>
 <span class="sd">            host (str, optional): Docker host URL address.</span>
 <span class="sd">                Default: http://0.0.0.0.</span>
-<span class="sd">            port (int, optional): Docker host port. Default: 8080.</span>
+<span class="sd">            port (int, optional): Docker host port. Default: 8180.</span>
 <span class="sd">            client (object, optional): Client instance, for testing.</span>
 <span class="sd">                Default: None.</span>
 
@@ -398,7 +398,27 @@
         <span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span>\
             <span class="o">.</span><span class="n">uploadFileToItem</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">],</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;filepath&#39;</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">response</span></div></div>
+        <span class="k">return</span> <span class="n">response</span></div>
+
+<div class="viewcode-block" id="GirderExporter._export_asset_log"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.girder_exporter.GirderExporter._export_asset_log">[docs]</a>    <span class="k">def</span> <span class="nf">_export_asset_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+        <span class="c1"># type: (Dict[str, str]) -&gt; None</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Exports content from asset log in hidebound/logs/asset.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            metadata (dict): Asset log.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="GirderExporter._export_file_log"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.girder_exporter.GirderExporter._export_file_log">[docs]</a>    <span class="k">def</span> <span class="nf">_export_file_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+        <span class="c1"># type: (Dict[str, str]) -&gt; None</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Exports content from file log in hidebound/logs/file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            metadata (dict): File log.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">pass</span></div></div>
 </pre></div>
 
            </div>
@@ -410,7 +430,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2020, Alex Braun &lt;TheNewFlesh@github.com&gt;.
+        &#169; Copyright 2020, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.
 
     </p>
   </div>

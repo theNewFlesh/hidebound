@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.12.5
+                0.13.0
               </div>
             
           
@@ -90,7 +90,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Documentation</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#installation">Installation</a></li>
@@ -101,7 +101,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#project-structure">Project Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#application">Application</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Python API</span></p>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../core.html">core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../exporters.html">exporters</a></li>
@@ -367,8 +367,10 @@
 
 <span class="sd">            * file content to hb_parent/hidebound/content - under same directory</span>
 <span class="sd">                                                            structure</span>
-<span class="sd">            * file metadata as json to hb_parent/hidebound/metadata/file</span>
 <span class="sd">            * asset metadata as json to hb_parent/hidebound/metadata/asset</span>
+<span class="sd">            * file metadata as json to hb_parent/hidebound/metadata/file</span>
+<span class="sd">            * asset log as json to hb_parent/hidebound/logs/asset</span>
+<span class="sd">            * file log as json to hb_parent/hidebound/logs/file</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            RunTimeError: If data has not been initialized.</span>
@@ -384,13 +386,17 @@
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
 
+        <span class="k">def</span> <span class="nf">write_log</span><span class="p">(</span><span class="n">log</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
+
         <span class="n">temp</span> <span class="o">=</span> <span class="n">db_tools</span><span class="o">.</span><span class="n">_get_data_for_write</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hb_root</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">temp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span>
 
-        <span class="n">file_data</span><span class="p">,</span> <span class="n">file_meta</span><span class="p">,</span> <span class="n">asset_meta</span> <span class="o">=</span> <span class="n">temp</span>
+        <span class="n">file_data</span><span class="p">,</span> <span class="n">asset_meta</span><span class="p">,</span> <span class="n">file_meta</span><span class="p">,</span> <span class="n">asset_log</span><span class="p">,</span> <span class="n">file_log</span> <span class="o">=</span> <span class="n">temp</span>
 
         <span class="c1"># make directories</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">temp</span><span class="p">:</span>
@@ -403,11 +409,17 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">file_data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">target</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
+        <span class="c1"># write asset metadata</span>
+        <span class="n">asset_meta</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">write_json</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">target</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
         <span class="c1"># write file metadata</span>
         <span class="n">file_meta</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">write_json</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">target</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="c1"># write asset metadata</span>
-        <span class="n">asset_meta</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">write_json</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">target</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># write asset log</span>
+        <span class="n">asset_log</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">write_log</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">target</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># write file log</span>
+        <span class="n">file_log</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">write_log</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">target</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
@@ -569,10 +581,13 @@
             <span class="k">yield</span> <span class="n">method</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Database.export"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.export">[docs]</a>    <span class="k">def</span> <span class="nf">export</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># type: () -&gt; None</span>
+        <span class="c1"># type: () -&gt; &quot;Database&quot;</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Exports all the files found in in hidebound root directory.</span>
 <span class="sd">        Calls webhooks afterwards.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Database: Self.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># TODO: Find a nicer pattern for injecting exporters.</span>
         <span class="n">lut</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
@@ -598,7 +613,9 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">__exporter_lut</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">exporter</span>
 
         <span class="k">for</span> <span class="n">response</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_webhooks</span><span class="p">():</span>
-            <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span></div>
+            <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="Database.search"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">group_by_asset</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="c1"># type: (str, bool) -&gt; &quot;DataFrame&quot;</span>
@@ -628,7 +645,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2020, Alex Braun &lt;TheNewFlesh@github.com&gt;.
+        &#169; Copyright 2020, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.
 
     </p>
   </div>

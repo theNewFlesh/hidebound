@@ -1013,12 +1013,15 @@
         <span class="s1">&#39;export CONTAINER_EXISTS=`docker ps -a -f name=^</span><span class="si">{repo}</span><span class="s1">$ | grep -v CONTAINER`&#39;</span><span class="p">,</span>
         <span class="s1">&#39;export RUNNING=`docker ps -a -f name=^</span><span class="si">{repo}</span><span class="s1">$ -f status=running | grep -v CONTAINER`&#39;</span><span class="p">,</span>
         <span class="n">line</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">            export PORTS=`docker ps -a -f name=^</span><span class="si">{repo}</span><span class="s1">$</span>
-<span class="s1">                --format &#39;{{{{.Ports}}}}&#39;</span>
-<span class="s1">            | sed -E &#39;s/[0-9.]+:|:|\/[a-z]+//g&#39;</span>
-<span class="s1">            | sed &#39;s/, /\n/g&#39; | uniq</span>
-<span class="s1">            | sed &#39;s/-&gt;/</span><span class="si">{clear}</span><span class="s1">-&gt;</span><span class="si">{blue}</span><span class="s1">/&#39;</span>
-<span class="s1">            | parallel &quot;echo -n {{}} &#39; &#39;&quot;`</span>
+<span class="s1">            export PORTS=`</span>
+<span class="s1">                cat docker/docker-compose.yml |</span>
+<span class="s1">                grep -E &#39; - &quot;....:....&quot;&#39; |</span>
+<span class="s1">                sed s&#39;/.* - &quot;//g&#39; |</span>
+<span class="s1">                sed &#39;s/&quot;//g&#39; |</span>
+<span class="s1">                sed &#39;s/^/</span><span class="si">{blue}</span><span class="s1">/g&#39; |</span>
+<span class="s1">                sed &#39;s/:/</span><span class="si">{clear}</span><span class="s1">--&gt;/g&#39; |</span>
+<span class="s1">                awk 1 ORS=&#39; &#39;</span>
+<span class="s1">            `</span>
 <span class="s1">        &#39;&#39;&#39;</span><span class="p">),</span>
         <span class="n">line</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
 <span class="s1">            if [ -z &quot;$IMAGE_EXISTS&quot; ];</span>
@@ -1035,7 +1038,8 @@
 <span class="s1">            fi</span>
 <span class="s1">        &#39;&#39;&#39;</span><span class="p">),</span>
         <span class="n">line</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;echo</span>
-<span class="s1">            &quot;app: </span><span class="si">{cyan}{repo}{clear}</span><span class="s1">:</span><span class="si">{yellow}</span><span class="s1">$VERSION</span><span class="si">{clear}</span><span class="s1"> -</span>
+<span class="s1">            &quot;app: </span><span class="si">{cyan}{repo}{clear}</span><span class="s1"> -</span>
+<span class="s1">            version: </span><span class="si">{yellow}</span><span class="s1">$VERSION</span><span class="si">{clear}</span><span class="s1"> -</span>
 <span class="s1">            image: $IMAGE_STATE -</span>
 <span class="s1">            container: $CONTAINER_STATE -</span>
 <span class="s1">            ports: </span><span class="si">{blue}</span><span class="s1">$PORTS</span><span class="si">{clear}</span><span class="s1">&quot;</span>

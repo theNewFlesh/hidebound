@@ -22,10 +22,10 @@
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
-            32 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">32 run</button>
+            34 statements &nbsp;
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">34 run</button>
             <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">0 missing</button>
-            <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">2 excluded</button>
+            <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">4 excluded</button>
         </h2>
     </div>
 </div>
@@ -130,8 +130,8 @@
     <p id="t76" class="run"><span class="n"><a href="#t76">76</a></span><span class="t">        <span class="nam">hidebound_dir</span> <span class="op">=</span> <span class="nam">Path</span><span class="op">(</span><span class="nam">hidebound_dir</span><span class="op">)</span><span class="op">.</span><span class="nam">as_posix</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t77" class="run"><span class="n"><a href="#t77">77</a></span><span class="t">        <span class="nam">data</span> <span class="op">=</span> <span class="nam">hbt</span><span class="op">.</span><span class="nam">directory_to_dataframe</span><span class="op">(</span><span class="nam">hidebound_dir</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t78" class="pln"><span class="n"><a href="#t78">78</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t79" class="pln"><span class="n"><a href="#t79">79</a></span><span class="t">        <span class="com"># only include /content and /metadata directories</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t80" class="run"><span class="n"><a href="#t80">80</a></span><span class="t">        <span class="nam">regex</span> <span class="op">=</span> <span class="str">f'{hidebound_dir}/(content|metadata)'</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t79" class="pln"><span class="n"><a href="#t79">79</a></span><span class="t">        <span class="com"># only include /content, /metadata and /logs directories</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t80" class="run"><span class="n"><a href="#t80">80</a></span><span class="t">        <span class="nam">regex</span> <span class="op">=</span> <span class="str">f'{hidebound_dir}/(content|metadata|logs)'</span>&nbsp;</span><span class="r"></span></p>
     <p id="t81" class="run"><span class="n"><a href="#t81">81</a></span><span class="t">        <span class="nam">mask</span> <span class="op">=</span> <span class="nam">data</span><span class="op">.</span><span class="nam">filepath</span><span class="op">.</span><span class="nam">apply</span><span class="op">(</span><span class="key">lambda</span> <span class="nam">x</span><span class="op">:</span> <span class="nam">re</span><span class="op">.</span><span class="nam">search</span><span class="op">(</span><span class="nam">regex</span><span class="op">,</span> <span class="nam">x</span><span class="op">)</span><span class="op">)</span><span class="op">.</span><span class="nam">astype</span><span class="op">(</span><span class="nam">bool</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t82" class="run"><span class="n"><a href="#t82">82</a></span><span class="t">        <span class="nam">data</span> <span class="op">=</span> <span class="nam">data</span><span class="op">[</span><span class="nam">mask</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
     <p id="t83" class="pln"><span class="n"><a href="#t83">83</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
@@ -159,12 +159,32 @@
     <p id="t105" class="pln"><span class="n"><a href="#t105">105</a></span><span class="t"><span class="str">            metadata (dict): File metadata.</span>&nbsp;</span><span class="r"></span></p>
     <p id="t106" class="pln"><span class="n"><a href="#t106">106</a></span><span class="t"><span class="str">        '''</span>&nbsp;</span><span class="r"></span></p>
     <p id="t107" class="exc show_exc"><span class="n"><a href="#t107">107</a></span><span class="t">        <span class="key">pass</span>  <span class="com"># pragma: no cover</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t108" class="pln"><span class="n"><a href="#t108">108</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t109" class="run"><span class="n"><a href="#t109">109</a></span><span class="t">    <span class="key">def</span> <span class="nam">_export_asset_log</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">metadata</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t110" class="pln"><span class="n"><a href="#t110">110</a></span><span class="t">        <span class="com"># type: (Dict[str, str]) -> None</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t111" class="pln"><span class="n"><a href="#t111">111</a></span><span class="t">        <span class="str">'''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t112" class="pln"><span class="n"><a href="#t112">112</a></span><span class="t"><span class="str">        Exports content from single asset log in hidebound/logs/asset.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t113" class="pln"><span class="n"><a href="#t113">113</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t114" class="pln"><span class="n"><a href="#t114">114</a></span><span class="t"><span class="str">        Args:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t115" class="pln"><span class="n"><a href="#t115">115</a></span><span class="t"><span class="str">            metadata (dict): File log.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t116" class="pln"><span class="n"><a href="#t116">116</a></span><span class="t"><span class="str">        '''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t117" class="exc show_exc"><span class="n"><a href="#t117">117</a></span><span class="t">        <span class="key">pass</span>  <span class="com"># pragma: no cover</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t118" class="pln"><span class="n"><a href="#t118">118</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t119" class="run"><span class="n"><a href="#t119">119</a></span><span class="t">    <span class="key">def</span> <span class="nam">_export_file_log</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">metadata</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t120" class="pln"><span class="n"><a href="#t120">120</a></span><span class="t">        <span class="com"># type: (Dict[str, str]) -> None</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t121" class="pln"><span class="n"><a href="#t121">121</a></span><span class="t">        <span class="str">'''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t122" class="pln"><span class="n"><a href="#t122">122</a></span><span class="t"><span class="str">        Exports content from single file log in hidebound/logs/file.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t123" class="pln"><span class="n"><a href="#t123">123</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t124" class="pln"><span class="n"><a href="#t124">124</a></span><span class="t"><span class="str">        Args:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t125" class="pln"><span class="n"><a href="#t125">125</a></span><span class="t"><span class="str">            metadata (dict): File log.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t126" class="pln"><span class="n"><a href="#t126">126</a></span><span class="t"><span class="str">        '''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t127" class="exc show_exc"><span class="n"><a href="#t127">127</a></span><span class="t">        <span class="key">pass</span>  <span class="com"># pragma: no cover</span>&nbsp;</span><span class="r"></span></p>
 </div>
 <div id="footer">
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2021-07-13 00:54 +0000
+            created at 2021-09-08 06:10 +0000
         </p>
     </div>
 </div>

@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.13.0
+                0.14.0
               </div>
             
           
@@ -532,8 +532,10 @@ directory.</p>
 </dd>
 </dl>
 </li>
-<li><p>file metadata as json to hb_parent/hidebound/metadata/file</p></li>
 <li><p>asset metadata as json to hb_parent/hidebound/metadata/asset</p></li>
+<li><p>file metadata as json to hb_parent/hidebound/metadata/file</p></li>
+<li><p>asset log as json to hb_parent/hidebound/logs/asset</p></li>
+<li><p>file log as json to hb_parent/hidebound/logs/file</p></li>
 </ul>
 </div></blockquote>
 <dl class="field-list simple">
@@ -566,9 +568,17 @@ contents.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hidebound.core.database.Database.export">
-<span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hidebound/core/database.html#Database.export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.core.database.Database.export" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#hidebound.core.database.Database" title="hidebound.core.database.Database"><span class="pre">Database</span></a></span></span><a class="reference internal" href="_modules/hidebound/core/database.html#Database.export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.core.database.Database.export" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exports all the files found in in hidebound root directory.
 Calls webhooks afterwards.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Self.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#hidebound.core.database.Database" title="hidebound.core.database.Database">Database</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -796,7 +806,7 @@ are converted to strings.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="hidebound.core.database_tools._get_data_for_write">
-<span class="sig-prename descclassname"><span class="pre">hidebound.core.database_tools.</span></span><span class="sig-name descname"><span class="pre">_get_data_for_write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/hidebound/core/database_tools.html#_get_data_for_write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.core.database_tools._get_data_for_write" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">hidebound.core.database_tools.</span></span><span class="sig-name descname"><span class="pre">_get_data_for_write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/hidebound/core/database_tools.html#_get_data_for_write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.core.database_tools._get_data_for_write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Split given data into three DataFrame creating files.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -811,13 +821,19 @@ are converted to strings.</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>File data - For writing asset file data to a target filepath.</p></li>
-<li><p>File metadata - For writing file metadata to a target json file.</p></li>
 <li><p>Asset metadata - For writing asset metadata to a target json file.</p></li>
+<li><p>File metadata - For writing file metadata to a target json file.</p></li>
+<li><p>Asset log - For writing asset log to a target json file.</p></li>
+<li><p>File log - For writing file log to a target json file.</p></li>
 </ul>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>file_data, file_metadata, asset_metadata.</p>
+<dd class="field-odd"><p><dl class="simple">
+<dt>file_data, asset_metadata, file_metadata, asset_log,</dt><dd><p>file_log.</p>
+</dd>
+</dl>
+</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>tuple[DataFrame]</p>

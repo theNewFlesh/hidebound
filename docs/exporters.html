@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.13.0
+                0.14.0
               </div>
             
           
@@ -202,6 +202,9 @@
 <li><p>metadata</p></li>
 <li><p>metadata/asset</p></li>
 <li><p>metadata/file</p></li>
+<li><p>logs</p></li>
+<li><p>logs/asset</p></li>
+<li><p>logs/file</p></li>
 </ul>
 </dd>
 </dl>
@@ -230,12 +233,40 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="hidebound.exporters.exporter_base.ExporterBase._export_asset_log">
+<span class="sig-name descname"><span class="pre">_export_asset_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hidebound/exporters/exporter_base.html#ExporterBase._export_asset_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.exporter_base.ExporterBase._export_asset_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exports content from asset log in hidebound/logs/asset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>metadata</strong> (<em>dict</em>) – Asset log.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – If method is not implemented in subclass.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="hidebound.exporters.exporter_base.ExporterBase._export_file">
 <span class="sig-name descname"><span class="pre">_export_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hidebound/exporters/exporter_base.html#ExporterBase._export_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.exporter_base.ExporterBase._export_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exports metadata from single JSON file in hidebound/metadata/file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>metadata</strong> (<em>dict</em>) – File metadata.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – If method is not implemented in subclass.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hidebound.exporters.exporter_base.ExporterBase._export_file_log">
+<span class="sig-name descname"><span class="pre">_export_file_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hidebound/exporters/exporter_base.html#ExporterBase._export_file_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.exporter_base.ExporterBase._export_file_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exports content from file log in hidebound/logs/file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>metadata</strong> (<em>dict</em>) – File log.</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p><strong>NotImplementedError</strong> – If method is not implemented in subclass.</p>
@@ -405,6 +436,17 @@ Metadata must contain these fields:</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="hidebound.exporters.girder_exporter.GirderExporter._export_asset_log">
+<span class="sig-name descname"><span class="pre">_export_asset_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hidebound/exporters/girder_exporter.html#GirderExporter._export_asset_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderExporter._export_asset_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exports content from asset log in hidebound/logs/asset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>metadata</strong> (<em>dict</em>) – Asset log.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="hidebound.exporters.girder_exporter.GirderExporter._export_dirs">
 <span class="sig-name descname"><span class="pre">_export_dirs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dirpath</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exists_ok</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="_modules/hidebound/exporters/girder_exporter.html#GirderExporter._export_dirs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderExporter._export_dirs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Recursively export all the directories found in given path.</p>
@@ -446,6 +488,17 @@ Metadata must contain these fields:</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hidebound.exporters.girder_exporter.GirderExporter._export_file_log">
+<span class="sig-name descname"><span class="pre">_export_file_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hidebound/exporters/girder_exporter.html#GirderExporter._export_file_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.girder_exporter.GirderExporter._export_file_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exports content from file log in hidebound/logs/file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>metadata</strong> (<em>dict</em>) – File log.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -538,12 +591,34 @@ Creates target directory if it does not exist.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="hidebound.exporters.local_disk_exporter.LocalDiskExporter._export_asset_log">
+<span class="sig-name descname"><span class="pre">_export_asset_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hidebound/exporters/local_disk_exporter.html#LocalDiskExporter._export_asset_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.local_disk_exporter.LocalDiskExporter._export_asset_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exports content from single asset log in hidebound/logs/asset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>metadata</strong> (<em>dict</em>) – File log.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="hidebound.exporters.local_disk_exporter.LocalDiskExporter._export_file">
 <span class="sig-name descname"><span class="pre">_export_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hidebound/exporters/local_disk_exporter.html#LocalDiskExporter._export_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.local_disk_exporter.LocalDiskExporter._export_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exports metadata from single JSON file in hidebound/metadata/file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>metadata</strong> (<em>dict</em>) – File metadata.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hidebound.exporters.local_disk_exporter.LocalDiskExporter._export_file_log">
+<span class="sig-name descname"><span class="pre">_export_file_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hidebound/exporters/local_disk_exporter.html#LocalDiskExporter._export_file_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.local_disk_exporter.LocalDiskExporter._export_file_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exports content from single file log in hidebound/logs/file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>metadata</strong> (<em>dict</em>) – File log.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -696,12 +771,34 @@ if it does not exist.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="hidebound.exporters.s3_exporter.S3Exporter._export_asset_log">
+<span class="sig-name descname"><span class="pre">_export_asset_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hidebound/exporters/s3_exporter.html#S3Exporter._export_asset_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Exporter._export_asset_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exports content from single asset log in hidebound/logs/asset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>metadata</strong> (<em>dict</em>) – Asset log.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="hidebound.exporters.s3_exporter.S3Exporter._export_file">
 <span class="sig-name descname"><span class="pre">_export_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hidebound/exporters/s3_exporter.html#S3Exporter._export_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Exporter._export_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exports metadata from single JSON file in hidebound/metadata/file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>metadata</strong> (<em>dict</em>) – File metadata.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hidebound.exporters.s3_exporter.S3Exporter._export_file_log">
+<span class="sig-name descname"><span class="pre">_export_file_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hidebound/exporters/s3_exporter.html#S3Exporter._export_file_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.s3_exporter.S3Exporter._export_file_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exports content from single file log in hidebound/logs/file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>metadata</strong> (<em>dict</em>) – Asset log.</p>
 </dd>
 </dl>
 </dd></dl>
