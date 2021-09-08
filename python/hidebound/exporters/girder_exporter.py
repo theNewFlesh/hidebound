@@ -224,3 +224,23 @@ class GirderExporter(ExporterBase):
         response = self._client\
             .uploadFileToItem(response['_id'], metadata['filepath'])
         return response
+
+    def _export_asset_log(self, metadata):
+        # type: (Dict[str, str]) -> None
+        '''
+        Exports content from asset log in hidebound/logs/asset.
+
+        Args:
+            metadata (dict): Asset log.
+        '''
+        pass
+
+    def _export_file_log(self, metadata):
+        # type: (Dict[str, str]) -> None
+        '''
+        Exports content from file log in hidebound/logs/file.
+
+        Args:
+            metadata (dict): File log.
+        '''
+        pass

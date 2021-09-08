@@ -104,13 +104,13 @@ class ExporterBase:
         msg = '_export_file method must be implemented in subclass.'
         raise NotImplementedError(msg)
 
-    def _export_asset_log(self, text):
-        # type: (str) -> None
+    def _export_asset_log(self, metadata):
+        # type: (Dict[str, str]) -> None
         '''
-        Exports text from single asset log in hidebound/logs/asset.
+        Exports content from asset log in hidebound/logs/asset.
 
         Args:
-            text (str): File log.
+            metadata (dict): Asset log.
 
         Raises:
             NotImplementedError: If method is not implemented in subclass.
@@ -118,13 +118,13 @@ class ExporterBase:
         msg = '_export_asset_log method must be implemented in subclass.'
         raise NotImplementedError(msg)
 
-    def _export_file_log(self, text):
-        # type: (str) -> None
+    def _export_file_log(self, metadata):
+        # type: (Dict[str, str]) -> None
         '''
-        Exports text from single file log in hidebound/logs/file.
+        Exports content from file log in hidebound/logs/file.
 
         Args:
-            text (str): File log.
+            metadata (dict): File log.
 
         Raises:
             NotImplementedError: If method is not implemented in subclass.

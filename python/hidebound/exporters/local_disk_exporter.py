@@ -105,3 +105,23 @@ class LocalDiskExporter(ExporterBase):
             metadata (dict): File metadata.
         '''
         pass  # pragma: no cover
+
+    def _export_asset_log(self, metadata):
+        # type: (Dict[str, str]) -> None
+        '''
+        Exports content from single asset log in hidebound/logs/asset.
+
+        Args:
+            metadata (dict): File log.
+        '''
+        pass
+
+    def _export_file_log(self, metadata):
+        # type: (Dict[str, str]) -> None
+        '''
+        Exports content from single file log in hidebound/logs/file.
+
+        Args:
+            metadata (dict): File log.
+        '''
+        pass
