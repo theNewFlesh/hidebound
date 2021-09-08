@@ -100,6 +100,20 @@ class LocalDiskExporterTests(unittest.TestCase):
         f_paths = data.f_path.dropna().unique().tolist()
         c_paths = data.c_path.dropna().unique().tolist()
         filepaths = list(chain(a_paths, f_paths, c_paths))
+        filepaths.extend([
+            Path(
+                hb_root,
+                'logs',
+                'asset',
+                'hidebound-asset-log_01-01-01T01-01-01.json'
+            ).as_posix(),
+            Path(
+                hb_root,
+                'logs',
+                'file',
+                'hidebound-file-log_01-01-01T01-01-01.json'
+            ).as_posix(),
+        ])
         for filepath in filepaths:
             os.makedirs(Path(filepath).parent, exist_ok=True)
             with open(filepath, 'w') as f:
@@ -120,7 +134,7 @@ class LocalDiskExporterTests(unittest.TestCase):
 
             expected = hbt.directory_to_dataframe(hb_root)
             mask = expected.filepath \
-                .apply(lambda x: re.search('/(content|metadata)', x)) \
+                .apply(lambda x: re.search('/(content|metadata|logs)', x)) \
                 .astype(bool)
             expected = expected[mask]
             expected = expected.filepath \
