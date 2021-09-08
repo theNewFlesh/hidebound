@@ -82,11 +82,17 @@ class GirderExporterTests(unittest.TestCase):
         metadata = Path(root, 'metadata')
         asset = Path(root, 'metadata', 'asset')
         file_ = Path(root, 'metadata', 'file')
+        logs = Path(root, 'logs')
+        asset_log_path = Path(logs, 'asset')
+        file_log_path = Path(logs, 'file')
 
         os.makedirs(data)
         os.makedirs(metadata)
         os.makedirs(asset)
         os.makedirs(file_)
+        os.makedirs(logs)
+        os.makedirs(asset_log_path)
+        os.makedirs(file_log_path)
 
         # create asset data
         asset_data = [
@@ -134,7 +140,26 @@ class GirderExporterTests(unittest.TestCase):
             with open(temp, 'w') as f:
                 f.write('')
 
-        return assets, files
+        # write asset log
+        asset_log = [json.dumps(x[1]) for x in assets]
+        asset_log = '[\n' + ',\n'.join(asset_log) + ']'
+        asset_log_name = 'hidebound-asset-log_01-01-01T01-01-01.json'
+        asset_log_path = Path(asset_log_path, asset_log_name)
+        with open(asset_log_path, 'w') as f:
+            f.write(asset_log)
+
+        # write file log
+        file_log = [json.dumps(x[1]) for x in files]
+        file_log = '[\n' + ',\n'.join(file_log) + ']'
+        file_log_name = 'hidebound-file-log_01-01-01T01-01-01.json'
+        file_log_path = Path(file_log_path, file_log_name)
+        with open(file_log_path, 'w') as f:
+            f.write(file_log)
+
+        asset_log = dict(filename=asset_log_name, content=asset_log)
+        file_log = dict(filename=file_log_name, content=file_log)
+
+        return assets, files, asset_log, file_log
 
     def test_from_config(self):
         GirderExporter.from_config(self.config, client=self.client)
@@ -158,20 +183,13 @@ class GirderExporterTests(unittest.TestCase):
         with TemporaryDirectory() as root:
             self.client = MockGirderClient(add_suffix=False)
 
-            e_assets, e_files = self.create_data(root)
+            e_assets, e_files, _, _ = self.create_data(root)
             e_assets = [x[1]['asset_name'] for x in e_assets]
             e_files = [x[1]['filename'] for x in e_files]
 
-            # import subprocess
-            # x = subprocess.Popen(
-            #     f'tree {root}', stdout=subprocess.PIPE, shell=True
-            # )
-            # x.wait()
-            # print(x.stdout.read().decode('utf-8'))
-
-            exporter = GirderExporter\
-                .from_config(self.config, client=self.client)
-            exporter.export(root)
+            GirderExporter\
+                .from_config(self.config, client=self.client) \
+                .export(root)
 
             result = self.client.folders.keys()
             result = sorted(list(result))
