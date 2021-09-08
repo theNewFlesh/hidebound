@@ -406,10 +406,13 @@ class Database:
             yield method(url, headers=headers, **kwargs)
 
     def export(self):
-        # type: () -> None
+        # type: () -> "Database"
         '''
         Exports all the files found in in hidebound root directory.
         Calls webhooks afterwards.
+
+        Returns:
+            Database: Self.
         '''
         # TODO: Find a nicer pattern for injecting exporters.
         lut = dict(
@@ -436,6 +439,8 @@ class Database:
 
         for response in self.call_webhooks():
             LOGGER.info(response.content)  # pragma: no cover
+
+        return self
 
     def search(self, query, group_by_asset=False):
         # type: (str, bool) -> "DataFrame"
