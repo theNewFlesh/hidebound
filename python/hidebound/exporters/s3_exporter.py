@@ -120,3 +120,29 @@ class S3Exporter(ExporterBase):
             metadata['filepath'],
             'hidebound/content/' + metadata['filepath_relative'],
         )
+
+    def _export_asset_log(self, metadata):
+        # type: (Dict[str, str]) -> None
+        '''
+        Exports content from single asset log in hidebound/logs/asset.
+
+        Args:
+            metadata (dict): Asset log.
+        '''
+        self._bucket.upload_fileobj(
+            BytesIO(metadata['content'].encode('utf-8')),
+            'hidebound/logs/asset/' + metadata['filename'],
+        )
+
+    def _export_file_log(self, metadata):
+        # type: (Dict[str, str]) -> None
+        '''
+        Exports content from single file log in hidebound/logs/file.
+
+        Args:
+            metadata (dict): Asset log.
+        '''
+        self._bucket.upload_fileobj(
+            BytesIO(metadata['content'].encode('utf-8')),
+            'hidebound/logs/file/' + metadata['filename'],
+        )
