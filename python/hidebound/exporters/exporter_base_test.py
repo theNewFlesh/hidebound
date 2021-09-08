@@ -15,11 +15,21 @@ class ExporterBaseTests(unittest.TestCase):
         metadata = Path(root, 'metadata')
         asset = Path(root, 'metadata', 'asset')
         file_ = Path(root, 'metadata', 'file')
+        asset_log_path = Path(root, 'logs', 'asset')
+        file_log_path = Path(root, 'logs', 'file')
 
         os.makedirs(data)
         os.makedirs(metadata)
         os.makedirs(asset)
         os.makedirs(file_)
+        os.makedirs(asset_log_path)
+        os.makedirs(file_log_path)
+        asset_log_path = Path(
+            asset_log_path, 'hidebound-asset-log_01-01-01T01-01-01.json'
+        )
+        file_log_path = Path(
+            file_log_path, 'hidebound-file-log_01-01-01T01-01-01.json'
+        )
 
         # create asset data
         assets = [
@@ -41,15 +51,31 @@ class ExporterBaseTests(unittest.TestCase):
             [Path(file_, '3-3.json'), dict(foo='bar-3-3')],
         ]
 
+        # write asset metadata
+        asset_log = []
         for filepath, data in assets:
+            asset_log.append(json.dumps(data))
             with open(filepath, 'w') as f:
                 json.dump(data, f)
 
+        # write asset log
+        asset_log = '[\n' + '\n'.join(asset_log) + ']'
+        with open(asset_log_path, 'w') as f:
+            f.write(asset_log)
+
+        # write file metadata
+        file_log = []
         for filepath, data in files:
+            file_log.append(json.dumps(data))
             with open(filepath, 'w') as f:
                 json.dump(data, f)
 
-        return assets, files
+        # write file log
+        file_log = '[\n' + '\n'.join(file_log) + ']'
+        with open(file_log_path, 'w') as f:
+            f.write(file_log)
+
+        return assets, files, asset_log, file_log
 
     def test_enforce_directory_structure(self):
         with TemporaryDirectory() as root:
@@ -75,6 +101,8 @@ class ExporterBaseTests(unittest.TestCase):
     def test_export(self):
         r_assets = []
         r_files = []
+        r_asset_log = []
+        r_file_log = []
 
         class Foo(ExporterBase):
             def _export_asset(self, metadata):
@@ -83,14 +111,22 @@ class ExporterBaseTests(unittest.TestCase):
             def _export_file(self, metadata):
                 r_files.append(metadata)
 
+            def _export_asset_log(self, text):
+                r_asset_log.append(text)
+
+            def _export_file_log(self, text):
+                r_file_log.append(text)
+
         with TemporaryDirectory() as root:
-            e_assets, e_files = self.create_data(root)
+            e_assets, e_files, e_asset_log, e_file_log = self.create_data(root)
             e_assets = [x[1] for x in e_assets]
             e_files = [x[1] for x in e_files]
 
             Foo().export(root)
             self.assertEqual(r_assets, e_assets)
             self.assertEqual(r_files, e_files)
+            self.assertEqual(r_asset_log[0], e_asset_log)
+            self.assertEqual(r_file_log[0], e_file_log)
 
     def test_export_asset(self):
         class Foo(ExporterBase):
