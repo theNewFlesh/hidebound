@@ -19,6 +19,9 @@ class ExporterBase:
             * metadata
             * metadata/asset
             * metadata/file
+            * logs
+            * logs/asset
+            * logs/file
 
         Args:
             hidebound_dir (Path or str): Hidebound directory.
@@ -30,7 +33,10 @@ class ExporterBase:
         meta = Path(hidebound_dir, 'metadata')
         asset_dir = Path(meta, 'asset')
         file_dir = Path(meta, 'file')
-        for path in [data, meta, asset_dir, file_dir]:
+        logs = Path(hidebound_dir, 'logs')
+        asset_log = Path(logs, 'asset')
+        file_log = Path(logs, 'file')
+        for path in [data, meta, asset_dir, file_dir, logs, asset_log, file_log]:
             if not path.is_dir():
                 msg = f'{path.as_posix()} directory does not exist.'
                 raise FileNotFoundError(msg)
@@ -67,14 +73,15 @@ class ExporterBase:
         # export logs
         for kind in ['asset', 'file']:
             log_path = Path(hidebound_dir, 'logs', kind)
-            log_path = [Path(log_path, x) for x in os.listdir(log_path)][0]
-            with open(log_path) as f:
-                log = f.read()
+            for filename in os.listdir(log_path):
+                filepath = Path(log_path, filename)
+                with open(filepath) as f:
+                    log = dict(filename=filepath.name, content=f.read())
 
-            if kind == 'asset':
-                self._export_asset_log(log)
-            else:
-                self._export_file_log(log)
+                if kind == 'asset':
+                    self._export_asset_log(log)
+                else:
+                    self._export_file_log(log)
 
     def _export_asset(self, metadata):
         # type: (Dict) -> None

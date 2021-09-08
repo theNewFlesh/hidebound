@@ -24,12 +24,10 @@ class ExporterBaseTests(unittest.TestCase):
         os.makedirs(file_)
         os.makedirs(asset_log_path)
         os.makedirs(file_log_path)
-        asset_log_path = Path(
-            asset_log_path, 'hidebound-asset-log_01-01-01T01-01-01.json'
-        )
-        file_log_path = Path(
-            file_log_path, 'hidebound-file-log_01-01-01T01-01-01.json'
-        )
+        asset_log_name = 'hidebound-asset-log_01-01-01T01-01-01.json'
+        asset_log_path = Path(asset_log_path, asset_log_name)
+        file_log_name = 'hidebound-file-log_01-01-01T01-01-01.json'
+        file_log_path = Path(file_log_path, file_log_name)
 
         # create asset data
         assets = [
@@ -75,23 +73,29 @@ class ExporterBaseTests(unittest.TestCase):
         with open(file_log_path, 'w') as f:
             f.write(file_log)
 
+        asset_log = dict(filename=asset_log_name, content=asset_log)
+        file_log = dict(filename=file_log_name, content=file_log)
+
         return assets, files, asset_log, file_log
 
     def test_enforce_directory_structure(self):
         with TemporaryDirectory() as root:
-            data = Path(root, 'content')
+            content = Path(root, 'content')
             metadata = Path(root, 'metadata')
             asset = Path(root, 'metadata', 'asset')
             file_ = Path(root, 'metadata', 'file')
+            logs = Path(root, 'logs')
+            asset_log = Path(logs, 'asset')
+            file_log = Path(logs, 'file')
 
-            os.makedirs(data)
-            os.makedirs(metadata)
-            os.makedirs(asset)
-            os.makedirs(file_)
+            dirs = [content, metadata, asset, file_, logs, asset_log, file_log]
+            for dir_ in dirs:
+                os.makedirs(dir_)
             ExporterBase()._enforce_directory_structure(root)
 
-            dirs = [data, asset, file_, metadata]
             for dir_ in dirs:
+                for dir_ in dirs:
+                    os.makedirs(dir_, exist_ok=True)
                 shutil.rmtree(dir_)
                 expected = f'{dir_.as_posix()} directory does not exist.'
                 with self.assertRaisesRegexp(FileNotFoundError, expected):
@@ -111,11 +115,11 @@ class ExporterBaseTests(unittest.TestCase):
             def _export_file(self, metadata):
                 r_files.append(metadata)
 
-            def _export_asset_log(self, text):
-                r_asset_log.append(text)
+            def _export_asset_log(self, metadata):
+                r_asset_log.append(metadata)
 
-            def _export_file_log(self, text):
-                r_file_log.append(text)
+            def _export_file_log(self, metadata):
+                r_file_log.append(metadata)
 
         with TemporaryDirectory() as root:
             e_assets, e_files, e_asset_log, e_file_log = self.create_data(root)
