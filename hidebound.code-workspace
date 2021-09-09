@@ -64,7 +64,7 @@
             {
                 "label": "architecture",
                 "command": [
-                    "python3.7 -c \"import re; from rolling_pin.repo_etl import RepoETL; etl = RepoETL('/home/ubuntu/$REPO/python'); regex = 'test|mock'; data = etl._data.copy(); func = lambda x: not bool(re.search(regex, x)); mask = data.node_name.apply(func); data = data[mask]; data.reset_index(inplace=True, drop=True); data.dependencies = data.dependencies.apply(lambda x: list(filter(func, x))); etl._data = data; etl.write('docs/architecture.svg', orient='lr')\""
+                    "python3.7 -c \"import rolling_pin.repo_etl as rpo; rpo.write_repo_architecture('/home/ubuntu/$REPO/python', '/home/ubuntu/$REPO/docs/architecture.svg', exclude_regex='test|mock', orient='lr')\""
                 ],
                 "type": "shell"
             },
@@ -124,7 +124,7 @@
             {
                 "label": "metrics",
                 "command": [
-                    "python3.7 -c \"from rolling_pin.radon_etl import RadonETL; etl = RadonETL('python'); etl.write_plots('docs/plots.html'); etl.write_tables('docs')\""
+                    "python3.7 -c \"import rolling_pin.repo_etl as rpo; rpo.write_repo_plots_and_tables('/home/ubuntu/$REPO/python', '/home/ubuntu/$REPO/docs/plots.html', '/home/ubuntu/$REPO/docs')\""
                 ],
                 "type": "shell"
             },

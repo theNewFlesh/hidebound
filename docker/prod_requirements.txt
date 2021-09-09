@@ -21,7 +21,7 @@ pandas
 pandasql
 pyparsing
 requests==2.22.0
-rolling-pin
+rolling-pin>=0.4.2
 schematics
 scikit-image
 wrapt

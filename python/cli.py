@@ -567,32 +567,24 @@ def full_docs_command():
         line(
             docker_exec() + '''-e REPO_ENV=True {repo}
                 python3.7 -c
-                   "import re;
-                    from rolling_pin.repo_etl import RepoETL;
-                    etl = RepoETL('/home/ubuntu/{repo}/python');
-                    regex = 'test|mock';
-                    data = etl._data.copy();
-                    func = lambda x: not bool(re.search(regex, x));
-                    mask = data.node_name.apply(func);
-                    data = data[mask];
-                    data.reset_index(inplace=True, drop=True);
-                    data.dependencies = data.dependencies.apply(
-                        lambda x: list(filter(func, x))
-                    );
-                    etl._data = data;
-                    etl.write(
+                    "import rolling_pin.repo_etl as rpo;
+                    rpo.write_repo_architecture(
+                        '/home/ubuntu/{repo}/python',
                         '/home/ubuntu/{repo}/docs/architecture.svg',
-                        orient='lr'
+                        exclude_regex='test|mock',
+                        orient='lr',
                     );
                 "
         '''),
         line(
             docker_exec() + '''-e REPO_ENV=True {repo}
                 python3.7 -c
-                   "from rolling_pin.radon_etl import RadonETL;
-                    etl = RadonETL('/home/ubuntu/{repo}/python');
-                    etl.write_plots('/home/ubuntu/{repo}/docs/plots.html');
-                    etl.write_tables('/home/ubuntu/{repo}/docs');
+                   "import rolling_pin.repo_etl as rpo;
+                    rpo.write_repo_plots_and_tables(
+                        '/home/ubuntu/{repo}/python',
+                        '/home/ubuntu/{repo}/docs/plots.html',
+                        '/home/ubuntu/{repo}/docs',
+                    );
                 "
         '''),
         exit_repo(),
