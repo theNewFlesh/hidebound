@@ -64,7 +64,7 @@
             {
                 "label": "architecture",
                 "command": [
-                    "python3.7 -c \"import rolling_pin.repo_etl as rpo; rpo.write_repo_architecture('/home/ubuntu/$REPO/python', '/home/ubuntu/$REPO/docs/architecture.svg', exclude_regex='test|mock', orient='lr')\""
+                    "python3.7 -c \"import rolling_pin.repo_etl as rpo; rpo.write_repo_architecture('python', 'docs/architecture.svg', exclude_regex='test|mock', orient='lr')\""
                 ],
                 "type": "shell"
             },
@@ -124,7 +124,7 @@
             {
                 "label": "metrics",
                 "command": [
-                    "python3.7 -c \"import rolling_pin.repo_etl as rpo; rpo.write_repo_plots_and_tables('/home/ubuntu/$REPO/python', '/home/ubuntu/$REPO/docs/plots.html', '/home/ubuntu/$REPO/docs')\""
+                    "python3.7 -c \"import rolling_pin.repo_etl as rpo; rpo.write_repo_plots_and_tables('python', 'docs/plots.html', 'docs')\""
                 ],
                 "type": "shell"
             },
