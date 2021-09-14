@@ -1,10 +1,8 @@
 namespace: hidebound
 
-organization: k8s
-
 container:
-  image: k3d-dev-registry:5000/hidebound
-  tag: dev
+  image: hidebound
+  tag: latest
   repo: /mnt/repos/hidebound
   storage_volume: /mnt/storage
   port: 8080
