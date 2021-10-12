@@ -2,6 +2,7 @@ import hidebound.core.config  # noqa F401
 import hidebound.core.database  # noqa F401
 import hidebound.core.database_test_base  # noqa F401
 import hidebound.core.database_tools  # noqa F401
+import hidebound.core.logging  # noqa F401
 import hidebound.core.parser  # noqa F401
 import hidebound.core.specification_base  # noqa F401
 import hidebound.core.specifications  # noqa F401

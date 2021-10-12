@@ -4,13 +4,11 @@ from copy import deepcopy
 from importlib import import_module
 from pathlib import Path
 import json
-import logging
 import os
 import shutil
 import sys
 
 from pandas import DataFrame
-import json_logging
 import jsoncomment as jsonc
 import numpy as np
 import pandasql
@@ -23,20 +21,9 @@ from hidebound.exporters.local_disk_exporter import LocalDiskExporter
 from hidebound.exporters.s3_exporter import S3Exporter
 import hidebound.core.database_tools as db_tools
 import hidebound.core.tools as tools
+from hidebound.core.logging import ProgressLogger
 
-
-# LOGGING-----------------------------------------------------------------------
-json_logging.init_non_web(enable_json=True)
-LOGGER = logging.getLogger(__name__)
-LOGGER.setLevel(logging.DEBUG)
-LOGGER.addHandler(logging.StreamHandler(sys.stdout))
-handler = logging.handlers.RotatingFileHandler(
-    '/tmp/hidebound-log.json',
-    encoding='utf-8',
-    maxBytes=2**10,
-    backupCount=10,
-)
-LOGGER.addHandler(handler)
+LOGGER = ProgressLogger(__name__, '/tmp/hidebound-progress.log')
 # ------------------------------------------------------------------------------
 
 
