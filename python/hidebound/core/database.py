@@ -10,6 +10,7 @@ import shutil
 import sys
 
 from pandas import DataFrame
+import json_logging
 import jsoncomment as jsonc
 import numpy as np
 import pandasql
@@ -23,7 +24,19 @@ from hidebound.exporters.s3_exporter import S3Exporter
 import hidebound.core.database_tools as db_tools
 import hidebound.core.tools as tools
 
+
+# LOGGING-----------------------------------------------------------------------
+json_logging.init_non_web(enable_json=True)
 LOGGER = logging.getLogger(__name__)
+LOGGER.setLevel(logging.DEBUG)
+LOGGER.addHandler(logging.StreamHandler(sys.stdout))
+handler = logging.handlers.RotatingFileHandler(
+    '/tmp/hidebound-log.json',
+    encoding='utf-8',
+    maxBytes=2**10,
+    backupCount=10,
+)
+LOGGER.addHandler(handler)
 # ------------------------------------------------------------------------------
 
 
@@ -145,27 +158,33 @@ class Database:
         if len(bad_specs) > 0:
             msg = 'SpecificationBase may only contain subclasses of '
             msg += f'SpecificationBase. Found: {bad_specs}.'
+            LOGGER.error(msg)
             raise TypeError(msg)
 
         # validate root dir
         root = Path(root_dir)
         if not root.is_dir():
             msg = f'{root} is not a directory or does not exist.'
+            LOGGER.error(msg)
             raise FileNotFoundError(msg)
 
         # validate write mode
         modes = ['copy', 'move']
         if write_mode not in modes:
             msg = f'Invalid write mode: {write_mode} not in {modes}.'
+            LOGGER.error(msg)
             raise ValueError(msg)
 
         # validate hidebound dir
         hb_root = Path(hidebound_dir)
         if not hb_root.is_dir():
             msg = f'{hb_root} is not a directory or does not exist.'
+            LOGGER.error(msg)
             raise FileNotFoundError(msg)
+
         if Path(hb_root).name != 'hidebound':
             msg = f'{hb_root} directory is not named hidebound.'
+            LOGGER.error(msg)
             raise NameError(msg)
 
         self._root = root
@@ -181,6 +200,8 @@ class Database:
 
         # needed for testing
         self.__exporter_lut = None
+
+        LOGGER.info('Database initialized')
 
     def create(self):
         # type: () -> "Database"
@@ -246,6 +267,7 @@ class Database:
         # write file log
         file_log.apply(lambda x: write_log(x.metadata, x.target), axis=1)
 
+        LOGGER.info('Assets created')
         return self
 
     def read(self, group_by_asset=False):
@@ -328,6 +350,7 @@ class Database:
         cols = head_cols + tail_cols
         data = data[cols]
 
+        LOGGER.info('Database read')
         return data
 
     def update(self):
@@ -344,20 +367,33 @@ class Database:
             include_regex=self._include_regex,
             exclude_regex=self._exclude_regex
         )
+        LOGGER.info(f'Update step: parsed {self._root}')
         if len(data) > 0:
             db_tools._add_specification(data, self._specifications)
+            LOGGER.info('Update step: _add_specification')
             db_tools._validate_filepath(data)
+            LOGGER.info('Update step: _validate_filepath')
             db_tools._add_file_traits(data)
+            LOGGER.info('Update step: _add_file_traits')
             db_tools._add_relative_path(data, 'filepath', self._root)
+            LOGGER.info('Update step: _add_relative_path')
             db_tools._add_asset_name(data)
+            LOGGER.info('Update step: _add_asset_name')
             db_tools._add_asset_path(data)
+            LOGGER.info('Update step: _add_asset_path')
             db_tools._add_relative_path(data, 'asset_path', self._root)
+            LOGGER.info('Update step: _add_relative_path')
             db_tools._add_asset_type(data)
+            LOGGER.info('Update step: _add_asset_type')
             db_tools._add_asset_traits(data)
+            LOGGER.info('Update step: _add_asset_traits')
             db_tools._validate_assets(data)
+            LOGGER.info('Update step: _validate_assets')
 
         data = db_tools._cleanup(data)
         self.data = data
+
+        LOGGER.info('Database updated')
         return self
 
     def delete(self):
