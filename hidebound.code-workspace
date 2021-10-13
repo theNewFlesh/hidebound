@@ -64,7 +64,7 @@
             {
                 "label": "architecture",
                 "command": [
-                    "python3.7 -c \"import rolling_pin.repo_etl as rpo; rpo.write_repo_architecture('python', 'docs/architecture.svg', exclude_regex='test|mock', orient='lr')\""
+                    "python3.7 -c \"import rolling_pin.repo_etl as rpo; rpo.write_repo_architecture('/home/ubuntu/$REPO/python', 'docs/architecture.svg', exclude_regex='test|mock', orient='lr')\""
                 ],
                 "type": "shell"
             },
