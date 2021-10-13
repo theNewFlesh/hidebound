@@ -10,6 +10,7 @@ from hidebound.core.logging import ProgressLogger
 '''
 Service used for getting Hidebound app progress.
 '''
+# TODO: remove this app entirely and replaced with async multiprocess refactoring of db 
 
 
 def get_app():
