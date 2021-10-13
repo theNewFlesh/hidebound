@@ -427,6 +427,72 @@ def search():
     )
 
 
+@API.route('/api/worfklow', methods=['POST'])
+@swg.swag_from(dict(
+    parameters=[
+        dict(
+            name='workflow',
+            type='list',
+            description='Ordered list of API calls.',
+            required=True,
+        )
+    ],
+    responses={
+        200: dict(
+            description='Hidebound workflow ran successfully.',
+            content='application/json',
+        ),
+        500: dict(
+            description='Internal server error.',
+        )
+    }
+))
+def workflow():
+    # type: () -> flask.Response
+    '''
+    Run given hidebound workflow.
+
+    Returns:
+        Response: Flask Response instance.
+    '''
+    global CONFIG
+
+    params = flask.request.get_json()  # type: Any
+    if params is not None:
+        try:
+            params = json.loads(params)
+            workflow = params['workflow']
+        except (JSONDecodeError, TypeError, KeyError):
+            return server_tools.get_read_error()
+
+    # get and validate workflow steps
+    lut = dict(
+        initialize=initialize,
+        update=update,
+        create=create,
+        export=export,
+        delete=delete,
+    )
+    legal = sorted(list(lut.keys()))
+    diff = sorted(list(set(workflow).difference(legal)))
+    if len(diff) > 0:
+        msg = f'Found illegal workflow steps: {diff}. Legal steps: {legal}.'
+        return server_tools.error_to_response(ValueError(msg))
+
+    # run through workflow
+    for step in workflow:
+        lut[step]()
+
+    return flask.Response(
+        response=json.dumps(dict(
+            message='Workflow ran successfully.',
+            workflow=workflow,
+            config=CONFIG,
+        )),
+        mimetype='application/json'
+    )
+
+
 @API.errorhandler(DataError)
 def handle_data_error(error):
     # type: (DataError) -> flask.Response
