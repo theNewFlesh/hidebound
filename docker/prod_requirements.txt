@@ -12,6 +12,7 @@ flask-healthz
 girder-client
 humanfriendly
 jinja2
+json_logging
 jsoncomment
 lunchbox
 marshmallow
