@@ -4,7 +4,9 @@ from datetime import datetime
 from pathlib import Path
 import json
 import logging
-from logging.handlers import RotatingFileHandler
+import logging.handlers
+import os
+import sys
 
 import json_logging
 # ------------------------------------------------------------------------------
@@ -14,7 +16,7 @@ class ProgressLogger:
     '''
     Logs progress to quasi-JSON files.
     '''
-    def __init__(self, name, filepath, level=logging.DEBUG):
+    def __init__(self, name, filepath, level=logging.INFO):
         # type: (str, Union[str, Path], int) -> None
         '''
         Create ProgressLogger instance.
@@ -22,14 +24,16 @@ class ProgressLogger:
         Args:
             name (str): Logger name.
             filepath (str or Path): Log filepath.
-            level (int, optional): Log level. Default: DEBUG.
+            level (int, optional): Log level. Default: INFO.
         '''
-        filepath = Path(filepath).as_posix()
+        filepath = Path(filepath)
+        os.makedirs(filepath.parent, exist_ok=True)
+        filepath = filepath.as_posix()
         self._filepath = filepath
         self._logger = self._get_logger(name, filepath, level=level)
 
     @staticmethod
-    def _get_logger(name, filepath, level=logging.DEBUG):
+    def _get_logger(name, filepath, level=logging.INFO):
         # type: (str, Union[str, Path], int) -> logging.Logger
         '''
         Creates a JSON logger.
@@ -37,7 +41,7 @@ class ProgressLogger:
         Args:
             name (str): Name of logger.
             filepath (str or Path): Filepath of JSON log.
-            level (int, optional): Log level. Default: DEBUG.
+            level (int, optional): Log level. Default: INFO.
 
         Returns:
             Logger: JSON logger.
@@ -87,7 +91,7 @@ class ProgressLogger:
         json_logging.init_non_web(enable_json=True, custom_formatter=Formatter)
         logger = logging.getLogger(name)
         logger.setLevel(level)
-        handler = RotatingFileHandler(
+        handler = logging.handlers.RotatingFileHandler(
             filepath,
             encoding='utf-8',
             maxBytes=10 * 2**10,

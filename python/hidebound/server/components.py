@@ -5,10 +5,8 @@ import re
 
 from pandas import DataFrame
 import dash
-import dash_core_components as dcc
+from dash import dash_table, dcc, html
 import dash_cytoscape as cyto
-import dash_html_components as html
-import dash_table
 import rolling_pin.blob_etl as blob_etl
 # ------------------------------------------------------------------------------
 
