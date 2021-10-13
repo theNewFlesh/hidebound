@@ -14,7 +14,7 @@ class ProgressLogger:
     '''
     Logs progress to quasi-JSON files.
     '''
-    def __init__(self, name, filepath, level=logging.INFO):
+    def __init__(self, name, filepath, level=logging.DEBUG):
         # type: (str, Union[str, Path], int) -> None
         '''
         Create ProgressLogger instance.
@@ -22,14 +22,14 @@ class ProgressLogger:
         Args:
             name (str): Logger name.
             filepath (str or Path): Log filepath.
-            level (int, optional): Log level. Default: INFO.
+            level (int, optional): Log level. Default: DEBUG.
         '''
         filepath = Path(filepath).as_posix()
         self._filepath = filepath
         self._logger = self._get_logger(name, filepath, level=level)
 
     @staticmethod
-    def _get_logger(name, filepath, level=logging.INFO):
+    def _get_logger(name, filepath, level=logging.DEBUG):
         # type: (str, Union[str, Path], int) -> logging.Logger
         '''
         Creates a JSON logger.
@@ -37,7 +37,7 @@ class ProgressLogger:
         Args:
             name (str): Name of logger.
             filepath (str or Path): Filepath of JSON log.
-            level (int, optional): Log level. Default: INFO.
+            level (int, optional): Log level. Default: DEBUG.
 
         Returns:
             Logger: JSON logger.
@@ -48,7 +48,7 @@ class ProgressLogger:
                 progress = None
                 step = None
                 total = None
-                if isinstance(record.props, dict):
+                if hasattr(record, 'props') and isinstance(record.props, dict):
                     step = record.props.get('step', None)
                     total = record.props.get('total', None)
 
@@ -65,17 +65,12 @@ class ProgressLogger:
                     created=record.created,
                     exc_info=record.exc_info,
                     exc_text=record.exc_text,
-                    # filename=record.filename,
-                    # func_name=record.funcName,
                     message=message,
                     level_name=record.levelname,
                     level_number=record.levelno,
-                    # line_number=record.lineno,
-                    # module=record.module,
                     msecs=record.msecs,
                     original_message=orig,
                     name=record.name,
-                    # path_name=record.pathname,
                     process=record.process,
                     process_name=record.processName,
                     relative_created=record.relativeCreated,
@@ -95,7 +90,7 @@ class ProgressLogger:
         handler = RotatingFileHandler(
             filepath,
             encoding='utf-8',
-            maxBytes=5 * 2**10,
+            maxBytes=10 * 2**10,
             backupCount=10,
         )
         logger.addHandler(handler)
