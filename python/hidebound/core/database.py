@@ -22,8 +22,6 @@ from hidebound.exporters.s3_exporter import S3Exporter
 import hidebound.core.database_tools as db_tools
 import hidebound.core.tools as tools
 from hidebound.core.logging import ProgressLogger
-
-LOGGER = ProgressLogger(__name__, '/tmp/hidebound-progress.log')
 # ------------------------------------------------------------------------------
 
 
@@ -138,6 +136,20 @@ class Database:
         Returns:
             Database: Database instance.
         '''
+        # validate hidebound dir
+        hb_root = Path(hidebound_dir)
+        if not hb_root.is_dir():
+            msg = f'{hb_root} is not a directory or does not exist.'
+            raise FileNotFoundError(msg)
+
+        if Path(hb_root).name != 'hidebound':
+            msg = f'{hb_root} directory is not named hidebound.'
+            raise NameError(msg)
+
+        # setup logger
+        logpath = Path(hb_root, 'logs', 'progress', 'hidebound-progress.log')
+        self._logger = ProgressLogger(__name__, logpath)
+
         # validate spec classes
         bad_specs = list(filter(
             lambda x: not issubclass(x, SpecificationBase), specifications
@@ -145,34 +157,22 @@ class Database:
         if len(bad_specs) > 0:
             msg = 'SpecificationBase may only contain subclasses of '
             msg += f'SpecificationBase. Found: {bad_specs}.'
-            LOGGER.error(msg)
+            self._logger.error(msg)
             raise TypeError(msg)
 
         # validate root dir
         root = Path(root_dir)
         if not root.is_dir():
             msg = f'{root} is not a directory or does not exist.'
-            LOGGER.error(msg)
+            self._logger.error(msg)
             raise FileNotFoundError(msg)
 
         # validate write mode
         modes = ['copy', 'move']
         if write_mode not in modes:
             msg = f'Invalid write mode: {write_mode} not in {modes}.'
-            LOGGER.error(msg)
+            self._logger.error(msg)
             raise ValueError(msg)
-
-        # validate hidebound dir
-        hb_root = Path(hidebound_dir)
-        if not hb_root.is_dir():
-            msg = f'{hb_root} is not a directory or does not exist.'
-            LOGGER.error(msg)
-            raise FileNotFoundError(msg)
-
-        if Path(hb_root).name != 'hidebound':
-            msg = f'{hb_root} directory is not named hidebound.'
-            LOGGER.error(msg)
-            raise NameError(msg)
 
         self._root = root
         self._hb_root = hb_root
@@ -188,7 +188,7 @@ class Database:
         # needed for testing
         self.__exporter_lut = None
 
-        LOGGER.info('Database initialized')
+        self._logger.info('Database initialized')
 
     def create(self):
         # type: () -> "Database"
@@ -254,7 +254,7 @@ class Database:
         # write file log
         file_log.apply(lambda x: write_log(x.metadata, x.target), axis=1)
 
-        LOGGER.info('Assets created')
+        self._logger.info('Assets created')
         return self
 
     def read(self, group_by_asset=False):
@@ -337,7 +337,7 @@ class Database:
         cols = head_cols + tail_cols
         data = data[cols]
 
-        LOGGER.info('Database read')
+        self._logger.info('Database read')
         return data
 
     def update(self):
@@ -349,38 +349,52 @@ class Database:
         Returns:
             Database: self.
         '''
+        total = 12
+        self._logger.info('update', step=0, total=total)
+
+        exclude_re = '|'.join([self._exclude_regex, 'hidebound/logs/progress'])
         data = tools.directory_to_dataframe(
             self._root,
             include_regex=self._include_regex,
-            exclude_regex=self._exclude_regex
+            exclude_regex=exclude_re
         )
-        LOGGER.info(f'Update step: parsed {self._root}')
+        self._logger.info(f'update: parsed {self._root}', step=1, total=total)
+
         if len(data) > 0:
             db_tools._add_specification(data, self._specifications)
-            LOGGER.info('Update step: _add_specification')
+            self._logger.info('update: _add_specification', step=2, total=total)
+
             db_tools._validate_filepath(data)
-            LOGGER.info('Update step: _validate_filepath')
+            self._logger.info('update: _validate_filepath', step=3, total=total)
+
             db_tools._add_file_traits(data)
-            LOGGER.info('Update step: _add_file_traits')
+            self._logger.info('update: _add_file_traits', step=4, total=total)
+
             db_tools._add_relative_path(data, 'filepath', self._root)
-            LOGGER.info('Update step: _add_relative_path')
+            self._logger.info('update: _add_relative_path', step=5, total=total)
+
             db_tools._add_asset_name(data)
-            LOGGER.info('Update step: _add_asset_name')
+            self._logger.info('update: _add_asset_name', step=6, total=total)
+
             db_tools._add_asset_path(data)
-            LOGGER.info('Update step: _add_asset_path')
+            self._logger.info('update: _add_asset_path', step=7, total=total)
+
             db_tools._add_relative_path(data, 'asset_path', self._root)
-            LOGGER.info('Update step: _add_relative_path')
+            self._logger.info('update: _add_relative_path', step=8, total=total)
+
             db_tools._add_asset_type(data)
-            LOGGER.info('Update step: _add_asset_type')
+            self._logger.info('update: _add_asset_type', step=9, total=total)
+
             db_tools._add_asset_traits(data)
-            LOGGER.info('Update step: _add_asset_traits')
+            self._logger.info('update: _add_asset_traits', step=10, total=total)
+
             db_tools._validate_assets(data)
-            LOGGER.info('Update step: _validate_assets')
+            self._logger.info('update: _validate_assets', step=11, total=total)
 
         data = db_tools._cleanup(data)
         self.data = data
 
-        LOGGER.info('Database updated')
+        self._logger.info('Database updated', step=12, total=total)
         return self
 
     def delete(self):
@@ -461,7 +475,7 @@ class Database:
                 self.__exporter_lut[key] = exporter
 
         for response in self.call_webhooks():
-            LOGGER.info(response.content)  # pragma: no cover
+            self._logger.info(response.content)  # pragma: no cover
 
         return self
 

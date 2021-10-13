@@ -101,9 +101,12 @@ class DatabaseTests(DatabaseTestBase):
 
     def test_init_bad_root(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
-        expected = '/foo is not a directory or does not exist.'
-        with self.assertRaisesRegexp(FileNotFoundError, expected):
-            Database('/foo', '/bar', [Spec001])
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hidebound')
+            os.makedirs(hb_root)
+            expected = '/foo is not a directory or does not exist'
+            with self.assertRaisesRegexp(FileNotFoundError, expected):
+                Database('/foo', hb_root, [Spec001])
 
     def test_init_bad_hb_root(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
@@ -455,6 +458,7 @@ class DatabaseTests(DatabaseTestBase):
 
             data = Database(root, hb_root, [Spec001, Spec002]).update().data
             result = data.filepath.tolist()
+            result = list(filter(lambda x: 'progress' not in x, result))
             result = sorted(result)
             self.assertEqual(result, expected)
 
@@ -476,6 +480,7 @@ class DatabaseTests(DatabaseTestBase):
 
             result = Database(root, hb_root, [Spec001, Spec002], exclude_regex=regex)\
                 .update().data.filepath.tolist()
+            result = list(filter(lambda x: 'progress' not in x, result))
             result = sorted(result)
             self.assertEqual(result, expected)
 

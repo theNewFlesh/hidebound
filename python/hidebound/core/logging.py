@@ -4,7 +4,9 @@ from datetime import datetime
 from pathlib import Path
 import json
 import logging
-from logging.handlers import RotatingFileHandler
+import logging.handlers
+import os
+import sys
 
 import json_logging
 # ------------------------------------------------------------------------------
@@ -24,7 +26,9 @@ class ProgressLogger:
             filepath (str or Path): Log filepath.
             level (int, optional): Log level. Default: DEBUG.
         '''
-        filepath = Path(filepath).as_posix()
+        filepath = Path(filepath)
+        os.makedirs(filepath.parent, exist_ok=True)
+        filepath = filepath.as_posix()
         self._filepath = filepath
         self._logger = self._get_logger(name, filepath, level=level)
 
@@ -87,7 +91,7 @@ class ProgressLogger:
         json_logging.init_non_web(enable_json=True, custom_formatter=Formatter)
         logger = logging.getLogger(name)
         logger.setLevel(level)
-        handler = RotatingFileHandler(
+        handler = logging.handlers.RotatingFileHandler(
             filepath,
             encoding='utf-8',
             maxBytes=10 * 2**10,
