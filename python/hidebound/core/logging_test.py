@@ -128,7 +128,7 @@ class ProgressLoggerTests(unittest.TestCase):
     def test_info(self):
         with TemporaryDirectory() as root:
             filepath = Path(root, 'test.log').as_posix()
-            logger = ProgressLogger('test', filepath)
+            logger = ProgressLogger('test', filepath, level=logging.INFO)
             logger.info('foobar', step=4, total=100)
             result = logger.logs[0]
 
@@ -142,7 +142,7 @@ class ProgressLoggerTests(unittest.TestCase):
     def test_warning(self):
         with TemporaryDirectory() as root:
             filepath = Path(root, 'test.log').as_posix()
-            logger = ProgressLogger('test', filepath)
+            logger = ProgressLogger('test', filepath, level=logging.WARNING)
             logger.warning('foobar', step=4, total=100)
             result = logger.logs[0]
 
@@ -156,7 +156,7 @@ class ProgressLoggerTests(unittest.TestCase):
     def test_error(self):
         with TemporaryDirectory() as root:
             filepath = Path(root, 'test.log').as_posix()
-            logger = ProgressLogger('test', filepath)
+            logger = ProgressLogger('test', filepath, level=logging.ERROR)
             logger.error('foobar', step=4, total=100)
             result = logger.logs[0]
 
@@ -170,7 +170,7 @@ class ProgressLoggerTests(unittest.TestCase):
     def test_debug(self):
         with TemporaryDirectory() as root:
             filepath = Path(root, 'test.log').as_posix()
-            logger = ProgressLogger('test', filepath)
+            logger = ProgressLogger('test', filepath, level=logging.DEBUG)
             logger.debug('foobar', step=4, total=100)
             result = logger.logs[0]
 
@@ -184,7 +184,7 @@ class ProgressLoggerTests(unittest.TestCase):
     def test_fatal(self):
         with TemporaryDirectory() as root:
             filepath = Path(root, 'test.log').as_posix()
-            logger = ProgressLogger('test', filepath)
+            logger = ProgressLogger('test', filepath, level=logging.FATAL)
             logger.fatal('foobar', step=4, total=100)
             result = logger.logs[0]
 
@@ -198,7 +198,7 @@ class ProgressLoggerTests(unittest.TestCase):
     def test_critical(self):
         with TemporaryDirectory() as root:
             filepath = Path(root, 'test.log').as_posix()
-            logger = ProgressLogger('test', filepath)
+            logger = ProgressLogger('test', filepath, level=logging.CRITICAL)
             logger.critical('foobar', step=4, total=100)
             result = logger.logs[0]
 

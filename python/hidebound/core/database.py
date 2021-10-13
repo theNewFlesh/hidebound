@@ -211,6 +211,7 @@ class Database:
         Returns:
             Database: self.
         '''
+        total = 7
         if self.data is None:
             msg = 'Data not initialized. Please call update.'
             raise RuntimeError(msg)
@@ -226,6 +227,7 @@ class Database:
         temp = db_tools._get_data_for_write(
             self.data, self._root, self._hb_root
         )
+        self._logger.info('create: get data', step=1, total=total)
         if temp is None:
             return self
 
@@ -234,6 +236,7 @@ class Database:
         # make directories
         for item in temp:
             item.target.apply(lambda x: os.makedirs(Path(x).parent, exist_ok=True))
+        self._logger.info('create: make directories', step=2, total=total)
 
         # write file data
         if self._write_mode == 'move':
@@ -241,20 +244,25 @@ class Database:
             tools.delete_empty_directories(self._root)
         else:
             file_data.apply(lambda x: shutil.copy2(x.source, x.target), axis=1)
+        self._logger.info('create: write file data', step=3, total=total)
 
         # write asset metadata
         asset_meta.apply(lambda x: write_json(x.metadata, x.target), axis=1)
+        self._logger.info('create: write asset metadata', step=4, total=total)
 
         # write file metadata
         file_meta.apply(lambda x: write_json(x.metadata, x.target), axis=1)
+        self._logger.info('create: write file metadata', step=5, total=total)
 
         # write asset log
         asset_log.apply(lambda x: write_log(x.metadata, x.target), axis=1)
+        self._logger.info('create: write asset log', step=6, total=total)
 
         # write file log
         file_log.apply(lambda x: write_log(x.metadata, x.target), axis=1)
+        self._logger.info('create: write file log', step=7, total=total)
 
-        self._logger.info('Assets created')
+        self._logger.info('create: complete', step=7, total=total)
         return self
 
     def read(self, group_by_asset=False):
@@ -273,6 +281,7 @@ class Database:
         Returns:
             DataFrame: Formatted data.
         '''
+        total = 5
         if self.data is None:
             msg = 'Data not initialized. Please call update.'
             raise RuntimeError(msg)
@@ -286,11 +295,13 @@ class Database:
             return item
 
         data = self.data.copy()
+        self._logger.info('read: copy data', step=1, total=total)
 
         col = 'file_traits'
         if group_by_asset:
             col = 'asset_traits'
             data = data.groupby('asset_path', as_index=False).first()
+            self._logger.info('read: group by asset', step=2, total=total)
 
         data[col] = data[col].apply(coordinate_to_dict)
         traits = DataFrame(data[col].tolist())
@@ -301,6 +312,7 @@ class Database:
 
             mask = traits[col].notnull()
             data.loc[mask, col] = traits.loc[mask, col]
+        self._logger.info('read: filter traits', step=3, total=total)
 
         # find columns by legal type
         cols = self.data.columns.tolist()
@@ -311,6 +323,7 @@ class Database:
             legal_cols = set([int, float, str, bool, None])
             cols = cols.apply(lambda x: set(x).difference(legal_cols) == set())
             cols = cols[cols].index.tolist()
+            self._logger.info('read: filter legal types', step=4, total=total)
 
         # nicely order columns
         head_cols = [
@@ -336,8 +349,9 @@ class Database:
         tail_cols = sorted(list(set(cols).difference(head_cols)))
         cols = head_cols + tail_cols
         data = data[cols]
+        self._logger.info('read: order columns', step=5, total=total)
 
-        self._logger.info('Database read')
+        self._logger.info('read: complete', step=5, total=total)
         return data
 
     def update(self):
@@ -362,39 +376,40 @@ class Database:
 
         if len(data) > 0:
             db_tools._add_specification(data, self._specifications)
-            self._logger.info('update: _add_specification', step=2, total=total)
+            self._logger.info('update: add_specification', step=2, total=total)
 
             db_tools._validate_filepath(data)
-            self._logger.info('update: _validate_filepath', step=3, total=total)
+            self._logger.info('update: validate_filepath', step=3, total=total)
 
             db_tools._add_file_traits(data)
-            self._logger.info('update: _add_file_traits', step=4, total=total)
+            self._logger.info('update: add_file_traits', step=4, total=total)
 
             db_tools._add_relative_path(data, 'filepath', self._root)
-            self._logger.info('update: _add_relative_path', step=5, total=total)
+            self._logger.info('update: add_relative_path', step=5, total=total)
 
             db_tools._add_asset_name(data)
-            self._logger.info('update: _add_asset_name', step=6, total=total)
+            self._logger.info('update: add_asset_name', step=6, total=total)
 
             db_tools._add_asset_path(data)
-            self._logger.info('update: _add_asset_path', step=7, total=total)
+            self._logger.info('update: add_asset_path', step=7, total=total)
 
             db_tools._add_relative_path(data, 'asset_path', self._root)
-            self._logger.info('update: _add_relative_path', step=8, total=total)
+            self._logger.info('update: add_relative_path', step=8, total=total)
 
             db_tools._add_asset_type(data)
-            self._logger.info('update: _add_asset_type', step=9, total=total)
+            self._logger.info('update: add_asset_type', step=9, total=total)
 
             db_tools._add_asset_traits(data)
-            self._logger.info('update: _add_asset_traits', step=10, total=total)
+            self._logger.info('update: add_asset_traits', step=10, total=total)
 
             db_tools._validate_assets(data)
-            self._logger.info('update: _validate_assets', step=11, total=total)
+            self._logger.info('update: validate_assets', step=11, total=total)
 
         data = db_tools._cleanup(data)
         self.data = data
 
-        self._logger.info('Database updated', step=12, total=total)
+        self._logger.info('update: cleanup', step=12, total=total)
+        self._logger.info('update: complete', step=12, total=total)
         return self
 
     def delete(self):
@@ -406,14 +421,18 @@ class Database:
         Returns:
             Database: self.
         '''
+        total = 2
         data_dir = Path(self._hb_root, 'content')
         if data_dir.exists():
             shutil.rmtree(data_dir)
+        self._logger.info('delete: data directory', step=1, total=total)
 
         meta_dir = Path(self._hb_root, 'metadata')
         if meta_dir.exists():
             shutil.rmtree(meta_dir)
+        self._logger.info('delete: metadata directory', step=2, total=total)
 
+        self._logger.info('delete: complete', step=2, total=total)
         return self
 
     def call_webhooks(self):
@@ -424,7 +443,8 @@ class Database:
         Yields:
             requests.Response: Webhook response.
         '''
-        for hook in self._webhooks:
+        total = len(self._webhooks)
+        for i, hook in enumerate(self._webhooks):
             url = hook['url']
             headers = hook.get('headers', None)
             method = hook['method']
@@ -440,7 +460,9 @@ class Database:
                 kwargs['params'] = hook['params']
 
             method = getattr(requests, method)
-            yield method(url, headers=headers, **kwargs)
+            response = method(url, headers=headers, **kwargs)
+            self._logger.info(f'call_webhooks: {url}', step=i, total=total)
+            yield response
 
     def export(self):
         # type: () -> "Database"
@@ -466,17 +488,18 @@ class Database:
         order = ['local_disk', 's3', 'girder']
         items = sorted(self._exporters.items(), key=lambda x: order.index(x[0]))
 
-        for key, config in items:
+        total = len(items)
+        for i, (key, config) in enumerate(items):
             exporter = lut[key].from_config(config)
             exporter.export(self._hb_root)
+            self._logger.info('export: export item', step=i, total=total)
 
             # assign instance to exporter_lut for testing
             if self.__exporter_lut is not None:
                 self.__exporter_lut[key] = exporter
 
-        for response in self.call_webhooks():
-            self._logger.info(response.content)  # pragma: no cover
-
+        list(self.call_webhooks())
+        self._logger.info('export: complete')
         return self
 
     def search(self, query, group_by_asset=False):
@@ -492,7 +515,10 @@ class Database:
         Returns:
             DataFrame: Formatted data.
         '''
-        return pandasql.sqldf(
+        result = pandasql.sqldf(
             query,
             {'data': self.read(group_by_asset=group_by_asset)}
         )
+        self._logger.info(f'search: {query}', step=1, total=1)
+        self._logger.info('search: complete', step=1, total=1)
+        return result
