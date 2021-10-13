@@ -1,16 +1,14 @@
 from typing import Any, Dict, List, Tuple, Union
 from pathlib import Path
-import dash_table
 
 import json
 import os
 
+from dash import dash_table, dcc, html
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 from flask_healthz import healthz
 import dash
-import dash_core_components as dcc
-import dash_html_components as html
 import flasgger as swg
 import flask
 import flask_monitoringdashboard as fmdb
