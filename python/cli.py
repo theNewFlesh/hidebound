@@ -932,7 +932,7 @@ def tox_command():
         enter_repo(),
         start(),
         tox_repo(),
-        docker_exec() + '{repo} zsh -c "cd /tmp/{repo} && tox"',
+        docker_exec() + '{repo} zsh -c "cd /tmp/{repo} && tox -vvv"',
         exit_repo(),
     ]
     return resolve(cmds)
