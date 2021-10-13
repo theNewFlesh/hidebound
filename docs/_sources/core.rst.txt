@@ -25,6 +25,14 @@ database_tools
     :undoc-members:
     :show-inheritance:
 
+logging
+------------------
+.. automodule:: hidebound.core.logging
+    :members:
+    :private-members:
+    :undoc-members:
+    :show-inheritance:
+
 parser
 ------
 .. automodule:: hidebound.core.parser
