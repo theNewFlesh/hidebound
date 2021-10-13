@@ -118,7 +118,7 @@ percy==2.0.2
 pexpect==4.8.0
 pickleshare==0.7.5
 Pillow==8.3.2
-pip==21.3
+pip==21.2.2
 pkginfo==1.7.1
 platformdirs==2.4.0
 plotly==5.3.1
@@ -141,7 +141,7 @@ pytest==4.5.0
 pytest-cov==2.5.1
 pytest-forked==0.2
 pytest-xdist==1.20.1
-python-apt==1.6.5+ubuntu0.7
+python-apt==1.6.5+ubuntu0.6
 python-dateutil==2.8.2
 pytz==2018.4
 PyWavelets==1.1.1
@@ -162,7 +162,7 @@ scipy==1.7.1
 SecretStorage==3.3.1
 selenium==3.141.0
 Send2Trash==1.8.0
-setuptools==58.2.0
+setuptools==57.4.0
 six==1.16.0
 smmap==4.0.0
 sniffio==1.2.0
@@ -198,8 +198,8 @@ wcwidth==0.2.5
 webencodings==0.5.1
 websocket-client==1.2.1
 Werkzeug==2.0.2
-wheel==0.37.0
+wheel==0.36.2
 widgetsnbextension==3.5.1
-wrapt==1.13.1
+wrapt==1.13.2
 xmltodict==0.12.0
 zipp==3.6.0
