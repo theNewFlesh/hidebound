@@ -63,6 +63,7 @@ def get_info():
     lint         - Run linting and type checking on {repo}
     package      - Build {repo} pip package
     prod         - Start {repo} production container
+    progress     - Run progress app inside {repo} container
     publish      - Publish {repo} repository to python package index
     push         - Push {repo} production image to Dockerhub
     python       - Run python interpreter session inside {repo} container
@@ -699,6 +700,26 @@ def prod_command(args):
     return resolve(cmds)
 
 
+def progress_command():
+    # type: () -> str
+    '''
+    Returns:
+        str: Command to start progress app.
+    '''
+    cmds = [
+        enter_repo(),
+        start(),
+        line(
+            docker_exec() + '''
+                -e DEBUG_MODE=True
+                -e REPO_ENV=True {repo}
+                python3.7 /home/ubuntu/{repo}/python/{repo}/server/progress.py'''
+        ),
+        exit_repo(),
+    ]
+    return resolve(cmds)
+
+
 def publish_command():
     # type: () -> str
     '''
@@ -1044,6 +1065,7 @@ def main():
         'lint': lint_command(),
         'package': package_command(),
         'prod': prod_command(args),
+        'progress': progress_command(),
         'publish': publish_command(),
         'push': push_command(),
         'python': python_command(),

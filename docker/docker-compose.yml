@@ -11,6 +11,7 @@ services:
     ports:
       - "2000:9000"
       - "2080:8080"
+      - "2081:8081"
     userns_mode: "host"
     user: ubuntu
     volumes:

@@ -16,7 +16,7 @@ class ProgressLogger:
     '''
     Logs progress to quasi-JSON files.
     '''
-    def __init__(self, name, filepath, level=logging.DEBUG):
+    def __init__(self, name, filepath, level=logging.INFO):
         # type: (str, Union[str, Path], int) -> None
         '''
         Create ProgressLogger instance.
@@ -24,7 +24,7 @@ class ProgressLogger:
         Args:
             name (str): Logger name.
             filepath (str or Path): Log filepath.
-            level (int, optional): Log level. Default: DEBUG.
+            level (int, optional): Log level. Default: INFO.
         '''
         filepath = Path(filepath)
         os.makedirs(filepath.parent, exist_ok=True)
@@ -33,7 +33,7 @@ class ProgressLogger:
         self._logger = self._get_logger(name, filepath, level=level)
 
     @staticmethod
-    def _get_logger(name, filepath, level=logging.DEBUG):
+    def _get_logger(name, filepath, level=logging.INFO):
         # type: (str, Union[str, Path], int) -> logging.Logger
         '''
         Creates a JSON logger.
@@ -41,7 +41,7 @@ class ProgressLogger:
         Args:
             name (str): Name of logger.
             filepath (str or Path): Filepath of JSON log.
-            level (int, optional): Log level. Default: DEBUG.
+            level (int, optional): Log level. Default: INFO.
 
         Returns:
             Logger: JSON logger.
