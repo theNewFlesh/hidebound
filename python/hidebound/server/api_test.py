@@ -431,15 +431,16 @@ class ApiTests(DatabaseTestBase):
 
     # WORKFLOW------------------------------------------------------------------
     def test_workflow(self):
-        expected = [
-            'update',
-            'create',
-            'export',
-            'delete',
-        ]
-        workflow = dict(workflow=expected)
-        workflow = json.dumps(workflow)
-        result = self.client.post('/api/workflow', json=workflow).json
+        config = dict(
+            root_directory=self.root,
+            hidebound_directory=self.hb_root,
+            specification_files=[self.specs],
+        )
+        expected = ['update', 'create', 'export', 'delete']
+
+        data = dict(workflow=expected, config=config)
+        data = json.dumps(data)
+        result = self.client.post('/api/workflow', json=data).json
 
         self.assertEqual(result['message'], 'Workflow completed.')
         self.assertEqual(result['workflow'], expected)
@@ -450,23 +451,39 @@ class ApiTests(DatabaseTestBase):
         meta = Path(self.hb_root, 'metadata')
         self.assertFalse(os.path.exists(meta))
 
+    def test_workflow_create(self):
+        config = dict(
+            root_directory=self.root,
+            hidebound_directory=self.hb_root,
+            specification_files=[self.specs],
+        )
+        expected = ['update', 'create']
+
+        data = dict(workflow=expected, config=config)
+        data = json.dumps(data)
+        result = self.client.post('/api/workflow', json=data).json
+
+        self.assertEqual(result['message'], 'Workflow completed.')
+        self.assertEqual(result['workflow'], expected)
+
+        data = Path(self.hb_root, 'content')
+        self.assertTrue(os.path.exists(data))
+
+        meta = Path(self.hb_root, 'metadata')
+        self.assertTrue(os.path.exists(meta))
+
     def test_workflow_bad_params(self):
         workflow = json.dumps({})
         result = self.client.post('/api/workflow', json=workflow).json
         self.assertEqual(result['error'], 'KeyError')
 
     def test_workflow_illegal_step(self):
-        expected = [
-            'update',
-            'create',
-            'foo',
-            'bar',
-        ]
-        workflow = dict(workflow=expected)
-        workflow = json.dumps(workflow)
-        result = self.client.post('/api/workflow', json=workflow).json
+        expected = ['update', 'create', 'foo', 'bar']
+        data = dict(workflow=expected, config={})
+        data = json.dumps(data)
+        result = self.client.post('/api/workflow', json=data).json
         self.assertEqual(result['error'], 'ValueError')
 
         expected = "Found illegal workflow steps: ['bar', 'foo']. "
-        expected += "Legal steps: ['create', 'delete', 'export', 'update']."
+        expected += "Legal steps: ['update', 'create', 'export', 'delete']."
         self.assertEqual(result['args'][0], expected)

@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional
 
 from json import JSONDecodeError
 import json
@@ -6,6 +6,7 @@ import json
 import flasgger as swg
 import flask
 import numpy as np
+import requests
 from schematics.exceptions import DataError
 
 from hidebound.core.database import Database
@@ -20,8 +21,8 @@ Hidebound service API.
 
 API = flask.Blueprint('api', __name__, url_prefix='')
 # TODO: Find a way to share database and config inside Flask instance without globals.
-DATABASE = None
-CONFIG = None
+DATABASE = None  # type: Any
+CONFIG = None  # type: Optional[dict]
 
 
 @API.route('/api')
@@ -35,6 +36,17 @@ def api():
     '''
     # TODO: Test this with selenium.
     return flask.redirect(flask.url_for('flasgger.apidocs'))
+
+
+def _initialize(database, config):
+    config_ = dict(
+        specification_files=[],
+        include_regex='',
+        exclude_regex=r'\.DS_Store',
+        write_mode='copy',
+    )
+    config_.update(config)
+    return Database.from_config(config_), config_
 
 
 @API.route('/api/initialize', methods=['POST'])
@@ -119,17 +131,15 @@ def initialize():
         write_mode='copy',
     )
 
-    temp = flask.request.get_json()  # type: Any
+    config = flask.request.get_json()  # type: Any
     try:
-        temp = json.loads(temp)
+        config = json.loads(config)
     except (JSONDecodeError, TypeError):
         return server_tools.get_config_error()
-    if not isinstance(temp, dict):
+    if not isinstance(config, dict):
         return server_tools.get_config_error()
 
-    config.update(temp)
-    DATABASE = Database.from_config(config)
-    CONFIG = config
+    DATABASE, CONFIG = _initialize(DATABASE, config)
 
     return flask.Response(
         response=json.dumps(dict(
@@ -435,6 +445,12 @@ def search():
             type='list',
             description='Ordered list of API calls.',
             required=True,
+        ),
+        dict(
+            name='config',
+            type='dict',
+            description='Hidebound configuration.',
+            required=True,
         )
     ],
     responses={
@@ -455,28 +471,28 @@ def workflow():
     Returns:
         Response: Flask Response instance.
     '''
+    global DATABASE
     global CONFIG
 
     params = flask.request.get_json()  # type: Any
     params = json.loads(params)
     workflow = params['workflow']
+    config = params['config']
 
     # get and validate workflow steps
-    lut = dict(
-        update=update,
-        create=create,
-        export=export,
-        delete=delete,
-    )
-    legal = sorted(list(lut.keys()))
+    legal = ['update', 'create', 'export', 'delete']
     diff = sorted(list(set(workflow).difference(legal)))
     if len(diff) > 0:
         msg = f'Found illegal workflow steps: {diff}. Legal steps: {legal}.'
         return server_tools.error_to_response(ValueError(msg))
 
     # run through workflow
+    DATABASE, CONFIG = _initialize(DATABASE, config)
     for step in workflow:
-        lut[step]()
+        try:
+            getattr(DATABASE, step)()
+        except Exception as error:
+            return server_tools.error_to_response(error)
 
     return flask.Response(
         response=json.dumps(dict(
