@@ -157,6 +157,16 @@ this step will merely delete data created by Hidebound. If it is set to "move",
 then Hidebound will presumably delete, the only existing copy of out asset data
 on the host machine.
 
+### *Workflow*
+`/api/workflow` is a API endpoint that initializes a database a with a given
+config, and then calls each method from a given list. For instance, if you send
+this data to `/api/workflow`:
+
+```{config={...}, workflow=['update', 'create', 'export', 'delete']}```
+
+A database instance will be created with the given config, and then that
+instance will call its update, create, export and delete methods, in that order.
+
 # Naming Convention
 Hidebound is a highly opinionated framework that relies upon a strict but
 composable naming convention in order to extract metadata from filenames. All
