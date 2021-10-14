@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.15.2
+                0.15.5
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -82,14 +82,14 @@
            <div itemprop="articleBody">
              
   <h1>Source code for hidebound.server.api</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">JSONDecodeError</span>
 <span class="kn">import</span> <span class="nn">json</span>
 
-<span class="kn">import</span> <span class="nn">flasgger</span> <span class="k">as</span> <span class="nn">swg</span>
-<span class="kn">import</span> <span class="nn">flask</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">flask</span>
+<span class="kn">import</span> <span class="nn">flasgger</span> <span class="k">as</span> <span class="nn">swg</span>
 <span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">DataError</span>
 
 <span class="kn">from</span> <span class="nn">hidebound.core.database</span> <span class="kn">import</span> <span class="n">Database</span>
@@ -104,8 +104,8 @@
 
 <span class="n">API</span> <span class="o">=</span> <span class="n">flask</span><span class="o">.</span><span class="n">Blueprint</span><span class="p">(</span><span class="s1">&#39;api&#39;</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">,</span> <span class="n">url_prefix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 <span class="c1"># TODO: Find a way to share database and config inside Flask instance without globals.</span>
-<span class="n">DATABASE</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="n">CONFIG</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">DATABASE</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: Any</span>
+<span class="n">CONFIG</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: Optional[dict]</span>
 
 
 <div class="viewcode-block" id="api"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.api">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api&#39;</span><span class="p">)</span>
@@ -119,6 +119,27 @@
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># TODO: Test this with selenium.</span>
     <span class="k">return</span> <span class="n">flask</span><span class="o">.</span><span class="n">redirect</span><span class="p">(</span><span class="n">flask</span><span class="o">.</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;flasgger.apidocs&#39;</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="_get_database"><a class="viewcode-back" href="../../../server.html#hidebound.server.api._get_database">[docs]</a><span class="k">def</span> <span class="nf">_get_database</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="c1"># type: (dict) -&gt; Tuple[Database, dict]</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Convenience function for creating a database from a given config.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config (dict): Configuration.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple[Database, dict]: Database and config.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">config_</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">specification_files</span><span class="o">=</span><span class="p">[],</span>
+        <span class="n">include_regex</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="n">exclude_regex</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;\.DS_Store&#39;</span><span class="p">,</span>
+        <span class="n">write_mode</span><span class="o">=</span><span class="s1">&#39;copy&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">config_</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Database</span><span class="o">.</span><span class="n">from_config</span><span class="p">(</span><span class="n">config_</span><span class="p">),</span> <span class="n">config_</span></div>
 
 
 <div class="viewcode-block" id="initialize"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.initialize">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
@@ -196,25 +217,15 @@
     <span class="k">global</span> <span class="n">DATABASE</span>
     <span class="k">global</span> <span class="n">CONFIG</span>
 
-    <span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-        <span class="n">specification_files</span><span class="o">=</span><span class="p">[],</span>
-        <span class="n">include_regex</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
-        <span class="n">exclude_regex</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;\.DS_Store&#39;</span><span class="p">,</span>
-        <span class="n">write_mode</span><span class="o">=</span><span class="s1">&#39;copy&#39;</span><span class="p">,</span>
-    <span class="p">)</span>
-
-    <span class="n">temp</span> <span class="o">=</span> <span class="n">flask</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>  <span class="c1"># type: Any</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">flask</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>  <span class="c1"># type: Any</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">temp</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
     <span class="k">except</span> <span class="p">(</span><span class="n">JSONDecodeError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">get_config_error</span><span class="p">()</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">get_config_error</span><span class="p">()</span>
 
-    <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
-    <span class="n">DATABASE</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">from_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-    <span class="n">CONFIG</span> <span class="o">=</span> <span class="n">config</span>
-
+    <span class="n">DATABASE</span><span class="p">,</span> <span class="n">CONFIG</span> <span class="o">=</span> <span class="n">_get_database</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">flask</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span>
         <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
             <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Database initialized.&#39;</span><span class="p">,</span>
@@ -511,6 +522,73 @@
     <span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="workflow"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.workflow">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/workflow&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="nd">@swg</span><span class="o">.</span><span class="n">swag_from</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
+    <span class="n">parameters</span><span class="o">=</span><span class="p">[</span>
+        <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;workflow&#39;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;list&#39;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Ordered list of API calls.&#39;</span><span class="p">,</span>
+            <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;config&#39;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;dict&#39;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Hidebound configuration.&#39;</span><span class="p">,</span>
+            <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">],</span>
+    <span class="n">responses</span><span class="o">=</span><span class="p">{</span>
+        <span class="mi">200</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Hidebound workflow ran successfully.&#39;</span><span class="p">,</span>
+            <span class="n">content</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="mi">500</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Internal server error.&#39;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">))</span>
+<span class="k">def</span> <span class="nf">workflow</span><span class="p">():</span>
+    <span class="c1"># type: () -&gt; flask.Response</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Run given hidebound workflow.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Response: Flask Response instance.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">global</span> <span class="n">DATABASE</span>
+    <span class="k">global</span> <span class="n">CONFIG</span>
+
+    <span class="n">params</span> <span class="o">=</span> <span class="n">flask</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>  <span class="c1"># type: Any</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">workflow</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;workflow&#39;</span><span class="p">]</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">]</span>
+
+    <span class="c1"># get and validate workflow steps</span>
+    <span class="n">legal</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="s1">&#39;export&#39;</span><span class="p">,</span> <span class="s1">&#39;delete&#39;</span><span class="p">]</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">workflow</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">legal</span><span class="p">)))</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Found illegal workflow steps: </span><span class="si">{</span><span class="n">diff</span><span class="si">}</span><span class="s1">. Legal steps: </span><span class="si">{</span><span class="n">legal</span><span class="si">}</span><span class="s1">.&#39;</span>
+        <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">))</span>
+
+    <span class="c1"># run through workflow</span>
+    <span class="n">DATABASE</span><span class="p">,</span> <span class="n">CONFIG</span> <span class="o">=</span> <span class="n">_get_database</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">workflow</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="n">DATABASE</span><span class="p">,</span> <span class="n">step</span><span class="p">)()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+            <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span>
+
+    <span class="k">return</span> <span class="n">flask</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span>
+        <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Workflow completed.&#39;</span><span class="p">,</span>
+            <span class="n">workflow</span><span class="o">=</span><span class="n">workflow</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">CONFIG</span><span class="p">,</span>
+        <span class="p">)),</span>
+        <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span>
+    <span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="handle_data_error"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.handle_data_error">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">errorhandler</span><span class="p">(</span><span class="n">DataError</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">handle_data_error</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
     <span class="c1"># type: (DataError) -&gt; flask.Response</span>
@@ -524,10 +602,58 @@
 <span class="sd">        Response: DataError response.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="handle_key_error"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.handle_key_error">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">errorhandler</span><span class="p">(</span><span class="ne">KeyError</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">handle_key_error</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
+    <span class="c1"># type: (KeyError) -&gt; flask.Response</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Handles key errors.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        error (KeyError): Key error.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Response: KeyError response.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="handle_type_error"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.handle_type_error">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">errorhandler</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">handle_type_error</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
+    <span class="c1"># type: (TypeError) -&gt; flask.Response</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Handles key errors.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        error (TypeError): Key error.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Response: TypeError response.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="handle_json_decode_error"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.handle_json_decode_error">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">errorhandler</span><span class="p">(</span><span class="n">JSONDecodeError</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">handle_json_decode_error</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
+    <span class="c1"># type: (JSONDecodeError) -&gt; flask.Response</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Handles key errors.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        error (JSONDecodeError): Key error.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Response: JSONDecodeError response.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
 <span class="n">API</span><span class="o">.</span><span class="n">register_error_handler</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="n">handle_data_error</span><span class="p">)</span>
+<span class="n">API</span><span class="o">.</span><span class="n">register_error_handler</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="n">handle_key_error</span><span class="p">)</span>
+<span class="n">API</span><span class="o">.</span><span class="n">register_error_handler</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="n">handle_type_error</span><span class="p">)</span>
+<span class="n">API</span><span class="o">.</span><span class="n">register_error_handler</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="n">handle_json_decode_error</span><span class="p">)</span>
 </pre></div>
 
            </div>

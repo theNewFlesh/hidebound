@@ -31,7 +31,7 @@
             <a href="index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.15.2
+                0.15.5
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -60,6 +60,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#create"><em>Create</em></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#export"><em>Export</em></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#delete"><em>Delete</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1"><em>Workflow</em></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#naming-convention">Naming Convention</a><ul>
@@ -302,6 +303,16 @@ configuration is set to “copy”, then this step will merely delete data
 created by Hidebound. If it is set to “move”, then Hidebound will
 presumably delete, the only existing copy of out asset data on the host
 machine.</p>
+</section>
+<section id="id1">
+<h2><em>Workflow</em><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">/api/workflow</span></code> is a API endpoint that initializes a database a with a
+given config, and then calls each method from a given list. For
+instance, if you send this data to <code class="docutils literal notranslate"><span class="pre">/api/workflow</span></code>:</p>
+<p><code class="docutils literal notranslate"><span class="pre">{config={...},</span> <span class="pre">workflow=['update',</span> <span class="pre">'create',</span> <span class="pre">'export',</span> <span class="pre">'delete']}</span></code></p>
+<p>A database instance will be created with the given config, and then that
+instance will call its update, create, export and delete methods, in
+that order.</p>
 </section>
 </section>
 <section id="naming-convention">
