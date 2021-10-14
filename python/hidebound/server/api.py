@@ -38,13 +38,12 @@ def api():
     return flask.redirect(flask.url_for('flasgger.apidocs'))
 
 
-def _initialize(database, config):
-    # type: (Database, dict) -> Tuple[Database, dict]
+def _get_database(config):
+    # type: (dict) -> Tuple[Database, dict]
     '''
-    Convenience function for initializing a given database.
+    Convenience function for creating a database from a given config.
 
     Args:
-        database (Database): Database class.
         config (dict): Configuration.
 
     Returns:
@@ -135,13 +134,6 @@ def initialize():
     global DATABASE
     global CONFIG
 
-    config = dict(
-        specification_files=[],
-        include_regex='',
-        exclude_regex=r'\.DS_Store',
-        write_mode='copy',
-    )
-
     config = flask.request.get_json()  # type: Any
     try:
         config = json.loads(config)
@@ -150,8 +142,7 @@ def initialize():
     if not isinstance(config, dict):
         return server_tools.get_config_error()
 
-    DATABASE, CONFIG = _initialize(DATABASE, config)
-
+    DATABASE, CONFIG = _get_database(config)
     return flask.Response(
         response=json.dumps(dict(
             message='Database initialized.',
@@ -498,7 +489,7 @@ def workflow():
         return server_tools.error_to_response(ValueError(msg))
 
     # run through workflow
-    DATABASE, CONFIG = _initialize(DATABASE, config)
+    DATABASE, CONFIG = _get_database(config)
     for step in workflow:
         try:
             getattr(DATABASE, step)()
