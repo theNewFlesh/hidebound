@@ -493,8 +493,8 @@ def workflow():
     for step in workflow:
         try:
             getattr(DATABASE, step)()
-        except Exception as error:
-            return server_tools.error_to_response(error)
+        except Exception as error:  # pragma: no cover
+            return server_tools.error_to_response(error)  # pragma: no cover
 
     return flask.Response(
         response=json.dumps(dict(

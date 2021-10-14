@@ -487,3 +487,19 @@ class ApiTests(DatabaseTestBase):
         expected = "Found illegal workflow steps: ['bar', 'foo']. "
         expected += "Legal steps: ['update', 'create', 'export', 'delete']."
         self.assertEqual(result['args'][0], expected)
+
+    # ERROR-HANDLERS------------------------------------------------------------
+    def test_key_error_handler(self):
+        result = self.client.post(
+            '/api/workflow',
+            json=json.dumps(dict(config={})),
+        ).json
+        self.assertEqual(result['error'], 'KeyError')
+
+    def test_type_error_handler(self):
+        result = self.client.post('/api/workflow', json=json.dumps([])).json
+        self.assertEqual(result['error'], 'TypeError')
+
+    def test_json_decode_error_handler(self):
+        result = self.client.post('/api/workflow', json='bad json').json
+        self.assertEqual(result['error'], 'JSONDecodeError')
