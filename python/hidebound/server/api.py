@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any, Optional, Tuple
 
 from json import JSONDecodeError
 import json
@@ -39,6 +39,17 @@ def api():
 
 
 def _initialize(database, config):
+    # type: (Database, dict) -> Tuple[Database, dict]
+    '''
+    Convenience function for initializing a given database.
+
+    Args:
+        database (Database): Database class.
+        config (dict): Configuration.
+
+    Returns:
+        tuple[Database, dict]: Database and config.
+    '''
     config_ = dict(
         specification_files=[],
         include_regex='',
