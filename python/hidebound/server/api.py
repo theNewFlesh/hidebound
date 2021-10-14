@@ -3,10 +3,9 @@ from typing import Any, Optional, Tuple
 from json import JSONDecodeError
 import json
 
-import flasgger as swg
-import flask
 import numpy as np
-import requests
+import flask
+import flasgger as swg
 from schematics.exceptions import DataError
 
 from hidebound.core.database import Database
