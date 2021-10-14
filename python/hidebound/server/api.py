@@ -427,7 +427,7 @@ def search():
     )
 
 
-@API.route('/api/worfklow', methods=['POST'])
+@API.route('/api/workflow', methods=['POST'])
 @swg.swag_from(dict(
     parameters=[
         dict(
@@ -458,16 +458,11 @@ def workflow():
     global CONFIG
 
     params = flask.request.get_json()  # type: Any
-    if params is not None:
-        try:
-            params = json.loads(params)
-            workflow = params['workflow']
-        except (JSONDecodeError, TypeError, KeyError):
-            return server_tools.get_read_error()
+    params = json.loads(params)
+    workflow = params['workflow']
 
     # get and validate workflow steps
     lut = dict(
-        initialize=initialize,
         update=update,
         create=create,
         export=export,
@@ -485,7 +480,7 @@ def workflow():
 
     return flask.Response(
         response=json.dumps(dict(
-            message='Workflow ran successfully.',
+            message='Workflow completed.',
             workflow=workflow,
             config=CONFIG,
         )),
@@ -506,7 +501,55 @@ def handle_data_error(error):
         Response: DataError response.
     '''
     return server_tools.error_to_response(error)
+
+
+@API.errorhandler(KeyError)
+def handle_key_error(error):
+    # type: (KeyError) -> flask.Response
+    '''
+    Handles key errors.
+
+    Args:
+        error (KeyError): Key error.
+
+    Returns:
+        Response: KeyError response.
+    '''
+    return server_tools.error_to_response(error)
+
+
+@API.errorhandler(TypeError)
+def handle_type_error(error):
+    # type: (TypeError) -> flask.Response
+    '''
+    Handles key errors.
+
+    Args:
+        error (TypeError): Key error.
+
+    Returns:
+        Response: TypeError response.
+    '''
+    return server_tools.error_to_response(error)
+
+
+@API.errorhandler(JSONDecodeError)
+def handle_json_decode_error(error):
+    # type: (JSONDecodeError) -> flask.Response
+    '''
+    Handles key errors.
+
+    Args:
+        error (JSONDecodeError): Key error.
+
+    Returns:
+        Response: JSONDecodeError response.
+    '''
+    return server_tools.error_to_response(error)
 # ------------------------------------------------------------------------------
 
 
 API.register_error_handler(500, handle_data_error)
+API.register_error_handler(500, handle_key_error)
+API.register_error_handler(500, handle_type_error)
+API.register_error_handler(500, handle_json_decode_error)

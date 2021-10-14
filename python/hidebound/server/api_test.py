@@ -428,3 +428,45 @@ class ApiTests(DatabaseTestBase):
         result = self.client.post('/api/search', json=query).json['message']
         expected = 'Database not updated. Please call update.'
         self.assertRegex(result, expected)
+
+    # WORKFLOW------------------------------------------------------------------
+    def test_workflow(self):
+        expected = [
+            'update',
+            'create',
+            'export',
+            'delete',
+        ]
+        workflow = dict(workflow=expected)
+        workflow = json.dumps(workflow)
+        result = self.client.post('/api/workflow', json=workflow).json
+
+        self.assertEqual(result['message'], 'Workflow completed.')
+        self.assertEqual(result['workflow'], expected)
+
+        data = Path(self.hb_root, 'content')
+        self.assertFalse(os.path.exists(data))
+
+        meta = Path(self.hb_root, 'metadata')
+        self.assertFalse(os.path.exists(meta))
+
+    def test_workflow_bad_params(self):
+        workflow = json.dumps({})
+        result = self.client.post('/api/workflow', json=workflow).json
+        self.assertEqual(result['error'], 'KeyError')
+
+    def test_workflow_illegal_step(self):
+        expected = [
+            'update',
+            'create',
+            'foo',
+            'bar',
+        ]
+        workflow = dict(workflow=expected)
+        workflow = json.dumps(workflow)
+        result = self.client.post('/api/workflow', json=workflow).json
+        self.assertEqual(result['error'], 'ValueError')
+
+        expected = "Found illegal workflow steps: ['bar', 'foo']. "
+        expected += "Legal steps: ['create', 'delete', 'export', 'update']."
+        self.assertEqual(result['args'][0], expected)
