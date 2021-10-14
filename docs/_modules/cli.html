@@ -28,7 +28,7 @@
             <a href="../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.15.1
+                0.15.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -1016,7 +1016,7 @@
         <span class="n">enter_repo</span><span class="p">(),</span>
         <span class="n">start</span><span class="p">(),</span>
         <span class="n">tox_repo</span><span class="p">(),</span>
-        <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">{repo}</span><span class="s1"> zsh -c &quot;cd /tmp/</span><span class="si">{repo}</span><span class="s1"> &amp;&amp; tox&quot;&#39;</span><span class="p">,</span>
+        <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">{repo}</span><span class="s1"> zsh -c &quot;cd /tmp/</span><span class="si">{repo}</span><span class="s1"> &amp;&amp; tox -vvv&quot;&#39;</span><span class="p">,</span>
         <span class="n">exit_repo</span><span class="p">(),</span>
     <span class="p">]</span>
     <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span></div>

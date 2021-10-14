@@ -1,10 +1,7 @@
 apispec
 boto3
-dash-core-components
-dash-cytoscape==0.1.1
-dash-html-components
-dash-table
-dash>=1.20.0
+dash-cytoscape>=0.1.1
+dash>=2.0.0
 flasgger
 flask
 flask_monitoringdashboard
@@ -21,7 +18,7 @@ OpenEXR
 pandas
 pandasql
 pyparsing
-requests==2.22.0
+requests>=2.22.0
 rolling-pin>=0.4.2
 schematics
 scikit-image

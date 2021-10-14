@@ -25,6 +25,14 @@ components
     :undoc-members:
     :show-inheritance:
 
+progress
+----------
+.. automodule:: hidebound.server.progress
+    :members:
+    :private-members:
+    :undoc-members:
+    :show-inheritance:
+
 server_tools
 ------------
 .. automodule:: hidebound.server.server_tools
