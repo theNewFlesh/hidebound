@@ -37,7 +37,7 @@ def create():
     Returns:
         Response: Flask Response instance.
     '''
-    filepath = Path('/tmp/hidebound/logs/progress/hidebound-progress.log')
+    filepath = Path('/mnt/storage/hidebound/logs/progress/hidebound-progress.log')
     state = {}
     if filepath.is_file():
         state = ProgressLogger.read(filepath)[-1]
