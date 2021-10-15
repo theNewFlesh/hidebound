@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.15.2
+                0.15.6
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -121,7 +121,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Response: Flask Response instance.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;/tmp/hidebound/logs/progress/hidebound-progress.log&#39;</span><span class="p">)</span>
+    <span class="n">filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;/mnt/storage/hidebound/logs/progress/hidebound-progress.log&#39;</span><span class="p">)</span>
     <span class="n">state</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">if</span> <span class="n">filepath</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
         <span class="n">state</span> <span class="o">=</span> <span class="n">ProgressLogger</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filepath</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
