@@ -95,7 +95,7 @@ def is_hidebound_directory(directory):
         ValidationError: If directory is not named "hidebound".
     '''
     if Path(directory).name != 'hidebound':
-        msg = f'{directory} directory is not named hidebound.core.'
+        msg = f'{directory} directory is not named hidebound.'
         raise ValidationError(msg)
 
 

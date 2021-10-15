@@ -117,11 +117,11 @@ class ValidatorsTests(unittest.TestCase):
     def test_is_hidebound_directory(self):
         cfg.is_hidebound_directory('/foo/bar/hidebound')
 
-        expected = '/foo/bar directory is not named hidebound.core.'
+        expected = '/foo/bar directory is not named hidebound.'
         with self.assertRaisesRegexp(ValidationError, expected):
             cfg.is_hidebound_directory('/foo/bar')
 
-        expected = '/foo/bar/Hidebound directory is not named hidebound.core.'
+        expected = '/foo/bar/Hidebound directory is not named hidebound.'
         with self.assertRaisesRegexp(ValidationError, expected):
             cfg.is_hidebound_directory('/foo/bar/Hidebound')
 
