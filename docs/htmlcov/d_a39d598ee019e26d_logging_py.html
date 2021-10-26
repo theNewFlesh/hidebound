@@ -22,10 +22,10 @@
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
-            62 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">62 run</button>
+            69 statements &nbsp;
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">69 run</button>
             <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">0 missing</button>
-            <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
+            <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">6 excluded</button>
         </h2>
     </div>
 </div>
@@ -274,12 +274,46 @@
     <p id="t220" class="pln"><span class="n"><a href="#t220">220</a></span><span class="t"><span class="str">            total (int, optional): Total number of steps. Default: None.</span>&nbsp;</span><span class="r"></span></p>
     <p id="t221" class="pln"><span class="n"><a href="#t221">221</a></span><span class="t"><span class="str">        '''</span>&nbsp;</span><span class="r"></span></p>
     <p id="t222" class="run"><span class="n"><a href="#t222">222</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">log</span><span class="op">(</span><span class="nam">logging</span><span class="op">.</span><span class="nam">CRITICAL</span><span class="op">,</span> <span class="nam">message</span><span class="op">,</span> <span class="nam">step</span><span class="op">=</span><span class="nam">step</span><span class="op">,</span> <span class="nam">total</span><span class="op">=</span><span class="nam">total</span><span class="op">,</span> <span class="op">**</span><span class="nam">kwargs</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t223" class="pln"><span class="n"><a href="#t223">223</a></span><span class="t"><span class="com"># ------------------------------------------------------------------------------</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t224" class="pln"><span class="n"><a href="#t224">224</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t225" class="pln"><span class="n"><a href="#t225">225</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t226" class="run"><span class="n"><a href="#t226">226</a></span><span class="t"><span class="key">class</span> <span class="nam">DummyLogger</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t227" class="pln"><span class="n"><a href="#t227">227</a></span><span class="t">    <span class="str">'''Dummy class for logging.'''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t228" class="run"><span class="n"><a href="#t228">228</a></span><span class="t">    <span class="key">def</span> <span class="nam">info</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="op">*</span><span class="nam">args</span><span class="op">,</span> <span class="op">**</span><span class="nam">kwargs</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t229" class="pln"><span class="n"><a href="#t229">229</a></span><span class="t">        <span class="com"># type: (...) -> None</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t230" class="pln"><span class="n"><a href="#t230">230</a></span><span class="t">        <span class="str">'''Does nothing.'''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t231" class="exc show_exc"><span class="n"><a href="#t231">231</a></span><span class="t">        <span class="key">pass</span>  <span class="com"># pragma: no cover</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t232" class="pln"><span class="n"><a href="#t232">232</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t233" class="run"><span class="n"><a href="#t233">233</a></span><span class="t">    <span class="key">def</span> <span class="nam">warning</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="op">*</span><span class="nam">args</span><span class="op">,</span> <span class="op">**</span><span class="nam">kwargs</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t234" class="pln"><span class="n"><a href="#t234">234</a></span><span class="t">        <span class="com"># type: (...) -> None</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t235" class="pln"><span class="n"><a href="#t235">235</a></span><span class="t">        <span class="str">'''Does nothing.'''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t236" class="exc show_exc"><span class="n"><a href="#t236">236</a></span><span class="t">        <span class="key">pass</span>  <span class="com"># pragma: no cover</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t237" class="pln"><span class="n"><a href="#t237">237</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t238" class="run"><span class="n"><a href="#t238">238</a></span><span class="t">    <span class="key">def</span> <span class="nam">error</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="op">*</span><span class="nam">args</span><span class="op">,</span> <span class="op">**</span><span class="nam">kwargs</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t239" class="pln"><span class="n"><a href="#t239">239</a></span><span class="t">        <span class="com"># type: (...) -> None</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t240" class="pln"><span class="n"><a href="#t240">240</a></span><span class="t">        <span class="str">'''Does nothing.'''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t241" class="exc show_exc"><span class="n"><a href="#t241">241</a></span><span class="t">        <span class="key">pass</span>  <span class="com"># pragma: no cover</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t242" class="pln"><span class="n"><a href="#t242">242</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t243" class="run"><span class="n"><a href="#t243">243</a></span><span class="t">    <span class="key">def</span> <span class="nam">debug</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="op">*</span><span class="nam">args</span><span class="op">,</span> <span class="op">**</span><span class="nam">kwargs</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t244" class="pln"><span class="n"><a href="#t244">244</a></span><span class="t">        <span class="com"># type: (...) -> None</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t245" class="pln"><span class="n"><a href="#t245">245</a></span><span class="t">        <span class="str">'''Does nothing.'''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t246" class="exc show_exc"><span class="n"><a href="#t246">246</a></span><span class="t">        <span class="key">pass</span>  <span class="com"># pragma: no cover</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t247" class="pln"><span class="n"><a href="#t247">247</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t248" class="run"><span class="n"><a href="#t248">248</a></span><span class="t">    <span class="key">def</span> <span class="nam">fatal</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="op">*</span><span class="nam">args</span><span class="op">,</span> <span class="op">**</span><span class="nam">kwargs</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t249" class="pln"><span class="n"><a href="#t249">249</a></span><span class="t">        <span class="com"># type: (...) -> None</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t250" class="pln"><span class="n"><a href="#t250">250</a></span><span class="t">        <span class="str">'''Does nothing.'''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t251" class="exc show_exc"><span class="n"><a href="#t251">251</a></span><span class="t">        <span class="key">pass</span>  <span class="com"># pragma: no cover</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t252" class="pln"><span class="n"><a href="#t252">252</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t253" class="run"><span class="n"><a href="#t253">253</a></span><span class="t">    <span class="key">def</span> <span class="nam">critical</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="op">*</span><span class="nam">args</span><span class="op">,</span> <span class="op">**</span><span class="nam">kwargs</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t254" class="pln"><span class="n"><a href="#t254">254</a></span><span class="t">        <span class="com"># type: (...) -> None</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t255" class="pln"><span class="n"><a href="#t255">255</a></span><span class="t">        <span class="str">'''Does nothing.'''</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t256" class="exc show_exc"><span class="n"><a href="#t256">256</a></span><span class="t">        <span class="key">pass</span>  <span class="com"># pragma: no cover</span>&nbsp;</span><span class="r"></span></p>
 </div>
 <div id="footer">
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v6.0.2</a>,
-            created at 2021-10-13 21:05 +0000
+            created at 2021-10-26 21:44 +0000
         </p>
     </div>
 </div>
