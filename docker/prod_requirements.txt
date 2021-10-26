@@ -17,7 +17,7 @@ numpy
 OpenEXR
 pandas
 pandasql
-pyparsing
+pyparsing>=3.0.1
 requests>=2.22.0
 rolling-pin>=0.4.2
 schematics

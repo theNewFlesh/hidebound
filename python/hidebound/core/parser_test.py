@@ -120,12 +120,12 @@ class ParserTests(unittest.TestCase):
             'extension'
         ]
         name = 'p-proj002_s-spec062_f-desc_v099_f0078.exr'
-        msg = f'Illegal descriptor field indicator in "{name}". Expecting: "d-"'
+        msg = f'Illegal descriptor field indicator in "{name}". Expecting: \'d-\''
         with self.assertRaisesRegexp(ParseException, msg):
             AssetNameParser(fields).parse(name)
 
         name = 'pp-proj002_s-spec062_d-desc_v099_f0078.exr'
-        msg = f'Illegal project field indicator in "{name}". Expecting: "p-"'
+        msg = f'Illegal project field indicator in "{name}". Expecting: \'p-\''
         with self.assertRaisesRegexp(ParseException, msg):
             AssetNameParser(fields).parse(name)
 
@@ -178,7 +178,7 @@ class ParserTests(unittest.TestCase):
 
     def test_parse_project_indicator(self):
         name = 'pr-proj001_s-spec002_d-desc_v003_c0004-0005-0006_f0007.exr'
-        msg = f'Illegal project field indicator in "{name}". Expecting: "p-"'
+        msg = f'Illegal project field indicator in "{name}". Expecting: \'p-\''
         with self.assertRaisesRegexp(ParseException, msg):
             AssetNameParser(self.fields).parse(name)
 
@@ -194,7 +194,7 @@ class ParserTests(unittest.TestCase):
             AssetNameParser(self.fields).parse(name)
 
         name = 'p-proj12345_s-spec002_d-desc_v003_c0004-0005-0006_f0007.exr'
-        msg = 'Expected "_".*'
+        msg = "Expected '_'.*"
         with self.assertRaisesRegexp(ParseException, msg):
             AssetNameParser(self.fields).parse(name)
 
@@ -211,7 +211,7 @@ class ParserTests(unittest.TestCase):
 
     def test_parse_specification_indicator(self):
         name = 'p-proj001_sspec002_d-desc_v003_c0004-0005-0006_f0007.exr'
-        msg = f'Illegal specification field indicator in "{name}". Expecting: "s-"'
+        msg = f'Illegal specification field indicator in "{name}". Expecting: \'s-\''
         with self.assertRaisesRegexp(ParseException, msg):
             AssetNameParser(self.fields).parse(name)
 
@@ -236,7 +236,7 @@ class ParserTests(unittest.TestCase):
 
     def test_parse_descriptor_indicator(self):
         name = 'p-proj001_s-spec002_ddesc_v003_c0004-0005-0006_f0007.exr'
-        msg = f'Illegal descriptor field indicator in "{name}". Expecting: "d-"'
+        msg = f'Illegal descriptor field indicator in "{name}". Expecting: \'d-\''
         with self.assertRaisesRegexp(ParseException, msg):
             AssetNameParser(self.fields).parse(name)
 
@@ -255,7 +255,7 @@ class ParserTests(unittest.TestCase):
 
     def test_parse_version_indicator(self):
         name = 'p-proj001_s-spec002_d-desc_b003_c0004-0005-0006_f0007.exr'
-        msg = f'Illegal version field indicator in "{name}". Expecting: "v"'
+        msg = f'Illegal version field indicator in "{name}". Expecting: \'v\''
         with self.assertRaisesRegexp(ParseException, msg):
             AssetNameParser(self.fields).parse(name)
 
@@ -279,12 +279,12 @@ class ParserTests(unittest.TestCase):
 
     def test_parse_coordinate_indicator(self):
         name = 'p-proj001_s-spec002_d-desc_v003_x004-005-006_f0007.exr'
-        msg = f'Illegal coordinate field indicator in "{name}". Expecting: "c"'
+        msg = f'Illegal coordinate field indicator in "{name}". Expecting: \'c\''
         with self.assertRaisesRegexp(ParseException, msg):
             AssetNameParser(self.fields).parse(name)
 
         name = 'p-proj001_s-spec002_d-desc_v003_x004-y005-z006_f0007.exr'
-        msg = f'Illegal coordinate field indicator in "{name}". Expecting: "c"'
+        msg = f'Illegal coordinate field indicator in "{name}". Expecting: \'c\''
         with self.assertRaisesRegexp(ParseException, msg):
             AssetNameParser(self.fields).parse(name)
 
@@ -303,12 +303,12 @@ class ParserTests(unittest.TestCase):
 
     def test_parse_frame_indicator(self):
         name = 'p-proj001_s-spec002_d-desc_v003_c0004-0005-0006_0007.exr'
-        msg = f'Illegal frame field indicator in "{name}". Expecting: "f"'
+        msg = f'Illegal frame field indicator in "{name}". Expecting: \'f\''
         with self.assertRaisesRegexp(ParseException, msg):
             AssetNameParser(self.fields).parse(name)
 
         name = 'p-proj001_s-spec002_d-desc_v003_c0004-0005-0006_#0007.exr'
-        msg = f'Illegal frame field indicator in "{name}". Expecting: "f"'
+        msg = f'Illegal frame field indicator in "{name}". Expecting: \'f\''
         with self.assertRaisesRegexp(ParseException, msg):
             AssetNameParser(self.fields).parse(name)
 
@@ -334,7 +334,7 @@ class ParserTests(unittest.TestCase):
 
     def test_parse_extension_indicator(self):
         name = 'p-proj001_s-spec002_d-desc_v003_c0004-0005-0006_f0007_exr'
-        msg = f'Illegal extension field indicator in "{name}". Expecting: "."'
+        msg = f'Illegal extension field indicator in "{name}". Expecting: \'.\''
         with self.assertRaisesRegexp(ParseException, msg):
             AssetNameParser(self.fields).parse(name)
 
