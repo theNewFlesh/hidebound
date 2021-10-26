@@ -1,9 +1,10 @@
-from typing import Dict, Union
+from typing import Dict, Optional, Tuple, Union
 
 from pathlib import Path
 import os
 
 import jsoncomment as jsonc
+from hidebound.core.logging import DummyLogger, ProgressLogger
 # ------------------------------------------------------------------------------
 
 
@@ -41,37 +42,55 @@ class ExporterBase:
                 msg = f'{path.as_posix()} directory does not exist.'
                 raise FileNotFoundError(msg)
 
-    def export(self, hidebound_dir):
-        # type: (Union[str, Path]) -> None
+    def export(self, hidebound_dir, logger=None):
+        # type: (Union[str, Path], Optional[ProgressLogger]) -> None
         '''
         Exports data within given hidebound directory.
 
         Args:
             hidebound_dir (Path or str): Hidebound directory.
+            logger (object, optional): Progress logger. Default: None.
         '''
+        # set logger
+        if not isinstance(logger, ProgressLogger):
+            logger = DummyLogger()
+
         self._enforce_directory_structure(hidebound_dir)
 
         asset_dir = Path(hidebound_dir, 'metadata', 'asset')
         file_dir = Path(hidebound_dir, 'metadata', 'file')
-        for asset in os.listdir(asset_dir):  # type: Union[str, Path]
 
+        a_total = len(os.listdir(asset_dir))
+        for i, asset in enumerate(os.listdir(asset_dir)):  # type: Tuple[int, Union[str, Path]]
             # export asset
             asset = Path(asset_dir, asset)
             with open(asset) as f:
                 asset_meta = jsonc.JsonComment().load(f)
             self._export_asset(asset_meta)
+            logger.info(
+                f'exporter: export asset metadata of {asset}',
+                step=i,
+                total=a_total,
+            )
 
             # export files
             filepaths = asset_meta['file_ids']
             filepaths = [Path(file_dir, f'{x}.json') for x in filepaths]
-            for filepath in filepaths:
+
+            f_total = len(filepaths)
+            for j, filepath in enumerate(filepaths):
                 filepath = Path(file_dir, filepath)
                 with open(filepath) as f:
                     file_meta = jsonc.JsonComment().load(f)
                 self._export_file(file_meta)
+                logger.info(
+                    f'exporter: export files and file metadata of {asset}',
+                    step=j,
+                    total=f_total,
+                )
 
         # export logs
-        for kind in ['asset', 'file']:
+        for k, kind in enumerate(['asset', 'file']):
             log_path = Path(hidebound_dir, 'logs', kind)
             for filename in os.listdir(log_path):
                 filepath = Path(log_path, filename)
@@ -82,6 +101,10 @@ class ExporterBase:
                     self._export_asset_log(log)
                 else:
                     self._export_file_log(log)
+
+                logger.info(
+                    f'exporter: export {kind} logs', step=k, total=2,
+                )
 
     def _export_asset(self, metadata):
         # type: (Dict) -> None

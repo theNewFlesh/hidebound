@@ -220,3 +220,37 @@ class ProgressLogger:
             total (int, optional): Total number of steps. Default: None.
         '''
         self.log(logging.CRITICAL, message, step=step, total=total, **kwargs)
+# ------------------------------------------------------------------------------
+
+
+class DummyLogger:
+    '''Dummy class for logging.'''
+    def info(self, *args, **kwargs):
+        # type: (...) -> None
+        '''Does nothing.'''
+        pass  # pragma: no cover
+
+    def warning(self, *args, **kwargs):
+        # type: (...) -> None
+        '''Does nothing.'''
+        pass  # pragma: no cover
+
+    def error(self, *args, **kwargs):
+        # type: (...) -> None
+        '''Does nothing.'''
+        pass  # pragma: no cover
+
+    def debug(self, *args, **kwargs):
+        # type: (...) -> None
+        '''Does nothing.'''
+        pass  # pragma: no cover
+
+    def fatal(self, *args, **kwargs):
+        # type: (...) -> None
+        '''Does nothing.'''
+        pass  # pragma: no cover
+
+    def critical(self, *args, **kwargs):
+        # type: (...) -> None
+        '''Does nothing.'''
+        pass  # pragma: no cover

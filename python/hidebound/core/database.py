@@ -491,7 +491,7 @@ class Database:
         total = len(items)
         for i, (key, config) in enumerate(items):
             exporter = lut[key].from_config(config)
-            exporter.export(self._hb_root)
+            exporter.export(self._hb_root, logger=self._logger)
             self._logger.info('export: export item', step=i, total=total)
 
             # assign instance to exporter_lut for testing

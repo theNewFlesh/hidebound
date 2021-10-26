@@ -1,4 +1,4 @@
-from typing import Dict, Union
+from typing import Any, Dict, Union
 
 from pathlib import Path
 import os
@@ -63,13 +63,14 @@ class LocalDiskExporter(ExporterBase):
         self._target_directory = config['target_directory']
         os.makedirs(self._target_directory, exist_ok=True)
 
-    def export(self, hidebound_dir):
-        # type: (Union[str, Path]) -> None
+    def export(self, hidebound_dir, logger=None):
+        # type: (Union[str, Path], Any) -> None
         '''
         Exports data within given hidebound directory.
 
         Args:
             hidebound_dir (Path or str): Hidebound directory.
+            logger (object, optional): Ignored logger. Default: None.
         '''
         self._enforce_directory_structure(hidebound_dir)
 
