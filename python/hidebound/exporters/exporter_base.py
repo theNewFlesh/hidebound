@@ -43,7 +43,7 @@ class ExporterBase:
                 raise FileNotFoundError(msg)
 
     def export(self, hidebound_dir, logger=None):
-        # type: (Union[str, Path], Optional[ProgressLogger]) -> None
+        # type: (Union[str, Path], Optional[Union[DummyLogger, ProgressLogger]]) -> None
         '''
         Exports data within given hidebound directory.
 
