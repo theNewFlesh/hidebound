@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.15.1
+                0.15.10
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -177,8 +177,8 @@
         <span class="n">handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">RotatingFileHandler</span><span class="p">(</span>
             <span class="n">filepath</span><span class="p">,</span>
             <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span>
-            <span class="n">maxBytes</span><span class="o">=</span><span class="mi">10</span> <span class="o">*</span> <span class="mi">2</span><span class="o">**</span><span class="mi">10</span><span class="p">,</span>
-            <span class="n">backupCount</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+            <span class="n">maxBytes</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="mi">20</span><span class="p">,</span>
+            <span class="n">backupCount</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">logger</span></div>
@@ -304,6 +304,40 @@
 <span class="sd">            total (int, optional): Total number of steps. Default: None.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">step</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="DummyLogger"><a class="viewcode-back" href="../../../core.html#hidebound.core.logging.DummyLogger">[docs]</a><span class="k">class</span> <span class="nc">DummyLogger</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;Dummy class for logging.&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="DummyLogger.info"><a class="viewcode-back" href="../../../core.html#hidebound.core.logging.DummyLogger.info">[docs]</a>    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; None</span>
+        <span class="sd">&#39;&#39;&#39;Does nothing.&#39;&#39;&#39;</span>
+        <span class="k">pass</span>  <span class="c1"># pragma: no cover</span></div>
+
+<div class="viewcode-block" id="DummyLogger.warning"><a class="viewcode-back" href="../../../core.html#hidebound.core.logging.DummyLogger.warning">[docs]</a>    <span class="k">def</span> <span class="nf">warning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; None</span>
+        <span class="sd">&#39;&#39;&#39;Does nothing.&#39;&#39;&#39;</span>
+        <span class="k">pass</span>  <span class="c1"># pragma: no cover</span></div>
+
+<div class="viewcode-block" id="DummyLogger.error"><a class="viewcode-back" href="../../../core.html#hidebound.core.logging.DummyLogger.error">[docs]</a>    <span class="k">def</span> <span class="nf">error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; None</span>
+        <span class="sd">&#39;&#39;&#39;Does nothing.&#39;&#39;&#39;</span>
+        <span class="k">pass</span>  <span class="c1"># pragma: no cover</span></div>
+
+<div class="viewcode-block" id="DummyLogger.debug"><a class="viewcode-back" href="../../../core.html#hidebound.core.logging.DummyLogger.debug">[docs]</a>    <span class="k">def</span> <span class="nf">debug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; None</span>
+        <span class="sd">&#39;&#39;&#39;Does nothing.&#39;&#39;&#39;</span>
+        <span class="k">pass</span>  <span class="c1"># pragma: no cover</span></div>
+
+<div class="viewcode-block" id="DummyLogger.fatal"><a class="viewcode-back" href="../../../core.html#hidebound.core.logging.DummyLogger.fatal">[docs]</a>    <span class="k">def</span> <span class="nf">fatal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; None</span>
+        <span class="sd">&#39;&#39;&#39;Does nothing.&#39;&#39;&#39;</span>
+        <span class="k">pass</span>  <span class="c1"># pragma: no cover</span></div>
+
+<div class="viewcode-block" id="DummyLogger.critical"><a class="viewcode-back" href="../../../core.html#hidebound.core.logging.DummyLogger.critical">[docs]</a>    <span class="k">def</span> <span class="nf">critical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; None</span>
+        <span class="sd">&#39;&#39;&#39;Does nothing.&#39;&#39;&#39;</span>
+        <span class="k">pass</span>  <span class="c1"># pragma: no cover</span></div></div>
 </pre></div>
 
            </div>
