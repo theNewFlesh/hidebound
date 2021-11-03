@@ -93,8 +93,8 @@ class ProgressLogger:
         handler = logging.handlers.RotatingFileHandler(
             filepath,
             encoding='utf-8',
-            maxBytes=10 * 2**10,
-            backupCount=10,
+            maxBytes=2**20,
+            backupCount=9,
         )
         logger.addHandler(handler)
         return logger
