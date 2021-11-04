@@ -228,3 +228,18 @@ class ComponentsTests(unittest.TestCase):
         self.assertEqual(result['id'], 'root/foo/kiwi.taco')
         self.assertEqual(result['label'], 'kiwi.taco')
         self.assertEqual(result['color'], red2)
+
+        # ensure all referenced nodes exist
+        nodes = list(filter(lambda x: x['data']['group'] == 'nodes', output))
+        nodes = [x['data']['id'] for x in nodes]
+        edges = list(filter(lambda x: x['data']['group'] == 'edges', output))
+        source = [x['data']['target'] for x in edges]
+        target = [x['data']['target'] for x in edges]
+
+        # edges with bad source references
+        diff = set(source).difference(nodes)
+        self.assertEqual(diff, set())
+
+        # edges with bad target references
+        diff = set(target).difference(nodes)
+        self.assertEqual(diff, set())

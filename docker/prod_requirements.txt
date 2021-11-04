@@ -1,6 +1,6 @@
 apispec
 boto3
-dash-cytoscape<=0.2.0
+dash-cytoscape>=0.2.0
 dash>=2.0.0
 flasgger
 flask

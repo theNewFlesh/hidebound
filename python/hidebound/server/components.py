@@ -545,6 +545,8 @@ def get_asset_graph(data):
 
     edges = []
     for s, t in list(graph.edges):
+        s = re.sub('"|/asset_valid.*', '', s)
+        t = re.sub('"|/asset_valid.*', '', t)
         edge = dict(group='edges', source=s, target=t)
         edges.append(edge)
 
