@@ -461,7 +461,7 @@ class Database:
 
             method = getattr(requests, method)
             response = method(url, headers=headers, **kwargs)
-            self._logger.info(f'call_webhooks: {url}', step=i, total=total)
+            self._logger.info(f'call_webhooks: {url}', step=i + 1, total=total)
             yield response
 
     def export(self):
@@ -492,7 +492,7 @@ class Database:
         for i, (key, config) in enumerate(items):
             exporter = lut[key].from_config(config)
             exporter.export(self._hb_root, logger=self._logger)
-            self._logger.info('export: export item', step=i, total=total)
+            self._logger.info('export: export item', step=i + 1, total=total)
 
             # assign instance to exporter_lut for testing
             if self.__exporter_lut is not None:

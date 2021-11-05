@@ -69,7 +69,7 @@ class ExporterBase:
             self._export_asset(asset_meta)
             logger.info(
                 f'exporter: export asset metadata of {asset}',
-                step=i,
+                step=i + 1,
                 total=a_total,
             )
 
@@ -85,7 +85,7 @@ class ExporterBase:
                 self._export_file(file_meta)
                 logger.info(
                     f'exporter: export files and file metadata of {asset}',
-                    step=j,
+                    step=j + 1,
                     total=f_total,
                 )
 
@@ -103,7 +103,7 @@ class ExporterBase:
                     self._export_file_log(log)
 
                 logger.info(
-                    f'exporter: export {kind} logs', step=k, total=2,
+                    f'exporter: export {kind} logs', step=k + 1, total=2,
                 )
 
     def _export_asset(self, metadata):
