@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.15.6
+                0.16.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -93,7 +93,7 @@
 
 <span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">ValidationError</span>
 <span class="kn">from</span> <span class="nn">schematics.types</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">BaseType</span><span class="p">,</span> <span class="n">DictType</span><span class="p">,</span> <span class="n">ListType</span><span class="p">,</span> <span class="n">ModelType</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">URLType</span>
+    <span class="n">BaseType</span><span class="p">,</span> <span class="n">DictType</span><span class="p">,</span> <span class="n">IntType</span><span class="p">,</span> <span class="n">ListType</span><span class="p">,</span> <span class="n">ModelType</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">URLType</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">schematics</span> <span class="kn">import</span> <span class="n">Model</span>
 
@@ -264,7 +264,8 @@
         <span class="n">headers</span> <span class="o">=</span> <span class="n">DictType</span><span class="p">(</span><span class="n">StringType</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: DictType</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">DictType</span><span class="p">(</span><span class="n">BaseType</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">serialize_when_none</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: DictType</span>
         <span class="n">json</span> <span class="o">=</span> <span class="n">DictType</span><span class="p">(</span><span class="n">BaseType</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">serialize_when_none</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: DictType</span>
-        <span class="n">params</span> <span class="o">=</span> <span class="n">DictType</span><span class="p">(</span><span class="n">BaseType</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">serialize_when_none</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: DictType</span></div>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">DictType</span><span class="p">(</span><span class="n">BaseType</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">serialize_when_none</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: DictType</span>
+        <span class="n">timeout</span> <span class="o">=</span> <span class="n">IntType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">serialize_when_none</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: IntType</span></div>
     <span class="n">webhooks</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span><span class="n">ModelType</span><span class="p">(</span><span class="n">WebhookConfig</span><span class="p">),</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[])</span>  <span class="c1"># type: ListType</span></div>
 </pre></div>
 
