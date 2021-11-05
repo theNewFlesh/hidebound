@@ -459,6 +459,9 @@ class Database:
             if 'params' in hook and method == 'get':
                 kwargs['params'] = hook['params']
 
+            if 'timeout' in hook:
+                kwargs['timeout'] = hook['timeout']
+
             method = getattr(requests, method)
             response = method(url, headers=headers, **kwargs)
             self._logger.info(
@@ -496,7 +499,7 @@ class Database:
         for i, (key, config) in enumerate(items):
             exporter = lut[key].from_config(config)
             exporter.export(self._hb_root, logger=self._logger)
-            self._logger.info('export: export item', step=i + 1, total=total)
+            self._logger.info(f'export: {key}', step=i + 1, total=total)
 
             # assign instance to exporter_lut for testing
             if self.__exporter_lut is not None:

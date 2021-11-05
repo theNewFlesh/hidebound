@@ -739,6 +739,7 @@ class DatabaseTests(DatabaseTestBase):
                             'Content-Type': 'application/json',
                             'Accept': 'application/json',
                         },
+                        'timeout': 10,
                         'params': {
                             'foo': 'bar'
                         }

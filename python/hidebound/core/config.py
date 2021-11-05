@@ -9,7 +9,7 @@ import sys
 
 from schematics.exceptions import ValidationError
 from schematics.types import (
-    BaseType, DictType, ListType, ModelType, StringType, URLType
+    BaseType, DictType, IntType, ListType, ModelType, StringType, URLType
 )
 from schematics import Model
 
@@ -181,4 +181,5 @@ class Config(Model):
         data = DictType(BaseType, required=False, serialize_when_none=False)  # type: DictType
         json = DictType(BaseType, required=False, serialize_when_none=False)  # type: DictType
         params = DictType(BaseType, required=False, serialize_when_none=False)  # type: DictType
+        timeout = IntType(required=False, serialize_when_none=False)  # type: IntType
     webhooks = ListType(ModelType(WebhookConfig), required=False, default=[])  # type: ListType
