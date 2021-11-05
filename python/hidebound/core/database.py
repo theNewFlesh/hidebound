@@ -461,7 +461,11 @@ class Database:
 
             method = getattr(requests, method)
             response = method(url, headers=headers, **kwargs)
-            self._logger.info(f'call_webhooks: {url}', step=i + 1, total=total)
+            self._logger.info(
+                f'call_webhooks: {url} {response.text}',
+                step=i + 1,
+                total=total
+            )
             yield response
 
     def export(self):
