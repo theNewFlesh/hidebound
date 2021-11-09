@@ -118,8 +118,8 @@ class ComponentsTests(unittest.TestCase):
 
         dropdown = searchbar.children[0].children[4]
         self.assertEqual(dropdown.id, 'dropdown')
-        self.assertEqual(dropdown.options[0]['label'], 'file')
-        self.assertEqual(dropdown.options[1]['label'], 'asset')
+        self.assertEqual(dropdown.options[0]['label'], 'asset')
+        self.assertEqual(dropdown.options[1]['label'], 'file')
 
         button = searchbar.children[0].children[6]
         self.assertEqual(button.id, 'init-button')
