@@ -211,7 +211,7 @@ def get_searchbar(query=None):
         autoFocus=True,
         debounce=True
     )
-    dropdown = get_dropdown(['file', 'asset'])
+    dropdown = get_dropdown(['asset', 'file'])
 
     search = get_button('search')
     init = get_button('init')
