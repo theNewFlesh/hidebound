@@ -46,7 +46,7 @@ RUN echo "\n${CYAN}SETUP ZSH${CLEAR}"; \
     echo y | sh install-oh-my-zsh.sh && \
     mkdir -p /root/.oh-my-zsh/custom/plugins && \
     cd /root/.oh-my-zsh/custom/plugins && \
-    git clone https://github.com/zdharma/fast-syntax-highlighting && \
+    git clone https://github.com/zdharma-continuum/fast-syntax-highlighting && \
     git clone https://github.com/zsh-users/zsh-autosuggestions && \
     npm i -g zsh-history-enquirer --unsafe-perm && \
     cd /home/ubuntu && \
