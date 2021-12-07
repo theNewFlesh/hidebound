@@ -1,5 +1,6 @@
 ZSH_THEME="henanigans"
 export ZSH="/home/ubuntu/.oh-my-zsh"
+DISABLE_UPDATE_PROMPT=true
 plugins=(
     aws
     command-not-found
