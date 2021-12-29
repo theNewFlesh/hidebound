@@ -138,26 +138,25 @@ class GirderExporterTests(unittest.TestCase):
             with open(temp, 'w') as f:
                 f.write('')
 
-        # write asset log
-        asset_log = [json.dumps(x[1]) for x in assets]
-        asset_log = '[\n' + ',\n'.join(asset_log) + ']'
-        asset_log_name = 'hidebound-asset-log_01-01-01T01-01-01.json'
-        asset_chunk_path = Path(asset_chunk_path, asset_log_name)
+        # write asset chunk
+        asset_chunk = [json.dumps(x[1]) for x in assets]
+        asset_chunk = '[\n' + ',\n'.join(asset_chunk) + ']'
+        asset_chunk_path = Path(
+            asset_chunk_path, 'hidebound-asset-chunk_01-01-01T01-01-01.json'
+        )
         with open(asset_chunk_path, 'w') as f:
-            f.write(asset_log)
+            f.write(asset_chunk)
 
-        # write file log
-        file_log = [json.dumps(x[1]) for x in files]
-        file_log = '[\n' + ',\n'.join(file_log) + ']'
-        file_log_name = 'hidebound-file-log_01-01-01T01-01-01.json'
-        file_chunk_path = Path(file_chunk_path, file_log_name)
+        # write file chunk
+        file_chunk = [json.dumps(x[1]) for x in files]
+        file_chunk = '[\n' + ',\n'.join(file_chunk) + ']'
+        file_chunk_path = Path(
+            file_chunk_path, 'hidebound-file-chunk_01-01-01T01-01-01.json'
+        )
         with open(file_chunk_path, 'w') as f:
-            f.write(file_log)
+            f.write(file_chunk)
 
-        asset_log = dict(filename=asset_log_name, content=asset_log)
-        file_log = dict(filename=file_log_name, content=file_log)
-
-        return assets, files, asset_log, file_log
+        return assets, files, asset_chunk, file_chunk
 
     def test_from_config(self):
         GirderExporter.from_config(self.config, client=self.client)

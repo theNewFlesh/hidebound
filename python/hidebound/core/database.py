@@ -362,7 +362,7 @@ class Database:
         total = 12
         self._logger.info('update', step=0, total=total)
 
-        exclude_re = '|'.join([self._exclude_regex, 'hidebound/logs/progress'])
+        exclude_re = '|'.join([self._exclude_regex, 'hidebound/logs'])
         data = tools.directory_to_dataframe(
             self._root,
             include_regex=self._include_regex,
