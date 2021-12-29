@@ -189,12 +189,12 @@ class DatabaseTests(DatabaseTestBase):
             expected = data.asset_path.nunique()
             self.assertEqual(result, expected)
 
-            # ensure asset log is written
-            result = len(os.listdir(Path(hb_root, 'logs', 'asset')))
+            # ensure asset chunk is written
+            result = len(os.listdir(Path(hb_root, 'metadata', 'asset-chunk')))
             self.assertEqual(result, 1)
 
-            # ensure file log is written
-            result = len(os.listdir(Path(hb_root, 'logs', 'file')))
+            # ensure file chunk is written
+            result = len(os.listdir(Path(hb_root, 'metadata', 'file-chunk')))
             self.assertEqual(result, 1)
 
     def test_create_all_invalid(self):
@@ -656,15 +656,27 @@ class DatabaseTests(DatabaseTestBase):
             # asset metadata
             expected = data.asset_path.nunique()
             result = len(list(filter(
-                lambda x: re.search('metadata/asset', x), results
+                lambda x: re.search('metadata/asset/', x), results
             )))
             self.assertEqual(result, expected)
 
             # file metadata
             result = len(list(filter(
-                lambda x: re.search('metadata/file', x), results
+                lambda x: re.search('metadata/file/', x), results
             )))
             self.assertEqual(result, len(content))
+
+            # asset chunk
+            result = len(list(filter(
+                lambda x: re.search('metadata/asset-chunk/', x), results
+            )))
+            self.assertEqual(result, 1)
+
+            # file chunk
+            result = len(list(filter(
+                lambda x: re.search('metadata/file-chunk/', x), results
+            )))
+            self.assertEqual(result, 1)
 
     def test_export_local_disk(self):
         with TemporaryDirectory() as root:
