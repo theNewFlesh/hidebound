@@ -372,7 +372,7 @@ class DatabaseTests(DatabaseTestBase):
         data = lbt.relative_path(__file__, '../../../resources/fake_data.csv')
         data = pd.read_csv(data)
 
-        file_data, asset_meta, file_meta, asset_log, file_log = db_tools \
+        file_data, asset_meta, file_meta, asset_chunk, file_chunk = db_tools \
             ._get_data_for_write(data, '/tmp/projects', '/tmp/hidebound')
 
         data = data[data.asset_valid]
@@ -422,23 +422,22 @@ class DatabaseTests(DatabaseTestBase):
         for result in temp:
             self.assertTrue(result.startswith('/tmp/hidebound/content'))
 
-        # logging
-        logs = zip(['asset', 'file'], [asset_log, file_log], [asset_meta, file_meta])
-        for name, log, meta in logs:
-            self.assertEqual(len(log), 1)
-            result = log['target'].tolist()[0]
-            self.assertIn(f'hidebound-{name}-log', result)
+        # chunks
+        chunks = zip(['asset', 'file'], [asset_chunk, file_chunk], [asset_meta, file_meta])
+        for name, chunk, meta in chunks:
+            self.assertEqual(len(chunk), 1)
+            result = chunk['target'].tolist()[0]
+            self.assertIn(f'hidebound-{name}-chunk', result)
 
-            expected = meta.metadata.apply(json.dumps).tolist()
-            expected = '[\n' + ',\n'.join(expected) + '\n]'
-            result = log.metadata.tolist()[0]
+            expected = meta.metadata.tolist()
+            result = chunk.metadata.tolist()[0]
             self.assertEqual(result, expected)
 
     def test_get_data_for_write_dirs(self):
         data = lbt.relative_path(__file__, '../../../resources/fake_data.csv')
         data = pd.read_csv(data)
 
-        file_data, asset_meta, file_meta, asset_log, file_log = db_tools \
+        file_data, asset_meta, file_meta, asset_chunk, file_chunk = db_tools \
             ._get_data_for_write(
                 data,
                 '/tmp/projects',
@@ -457,6 +456,14 @@ class DatabaseTests(DatabaseTestBase):
             .apply(lambda x: '/tmp/hidebound/metadata/asset' in x).unique().tolist()
         self.assertEqual(result, [True])
 
+        result = asset_chunk.target\
+            .apply(lambda x: '/tmp/hidebound/metadata/asset-chunk' in x).unique().tolist()
+        self.assertEqual(result, [True])
+
+        result = file_chunk.target\
+            .apply(lambda x: '/tmp/hidebound/metadata/file-chunk' in x).unique().tolist()
+        self.assertEqual(result, [True])
+
     def test_get_data_for_write_empty_dataframe(self):
         data = DataFrame()
         data['asset_valid'] = [False, False]
@@ -470,21 +477,19 @@ class DatabaseTests(DatabaseTestBase):
         data = lbt.relative_path(__file__, '../../../resources/fake_data.csv')
         data = pd.read_csv(data, index_col=0)
 
-        file_data, asset_meta, file_meta, asset_log, file_log = db_tools \
+        _, a, b, _, _ = db_tools \
             ._get_data_for_write(
                 data,
                 '/tmp/projects',
                 '/tmp/hidebound'
             )
 
-        a = asset_meta
         a['asset_id'] = a.metadata.apply(lambda x: x['asset_id'])
         a['file_ids'] = a.metadata.apply(lambda x: x['file_ids'])
         keys = sorted(a.asset_id.tolist())
         vals = sorted(a.file_ids.tolist())
         a = dict(zip(keys, vals))
 
-        b = file_meta
         b['asset_id'] = b.metadata.apply(lambda x: x['asset_id'])
         b['file_ids'] = b.metadata.apply(lambda x: x['file_id'])
         b = b.groupby('asset_id', as_index=False).agg(lambda x: x.tolist())
