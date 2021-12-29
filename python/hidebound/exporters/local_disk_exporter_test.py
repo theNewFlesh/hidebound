@@ -50,6 +50,8 @@ class LocalDiskExporterTests(unittest.TestCase):
         hb_root = Path(root, 'hidebound')
         file_meta = Path(hb_root, 'metadata', 'file')
         asset_meta = Path(hb_root, 'metadata', 'asset')
+        asset_log = Path(hb_root, 'logs', 'asset')
+        file_log = Path(hb_root, 'logs', 'file')
         content = Path(hb_root, 'content')
 
         # add dummy config
@@ -101,18 +103,8 @@ class LocalDiskExporterTests(unittest.TestCase):
         c_paths = data.c_path.dropna().unique().tolist()
         filepaths = list(chain(a_paths, f_paths, c_paths))
         filepaths.extend([
-            Path(
-                hb_root,
-                'logs',
-                'asset',
-                'hidebound-asset-log_01-01-01T01-01-01.json'
-            ).as_posix(),
-            Path(
-                hb_root,
-                'logs',
-                'file',
-                'hidebound-file-log_01-01-01T01-01-01.json'
-            ).as_posix(),
+            Path(asset_log, 'hidebound-asset-log_01-01-01T01-01-01.json').as_posix(),
+            Path(file_log, 'hidebound-file-log_01-01-01T01-01-01.json').as_posix(),
         ])
         for filepath in filepaths:
             os.makedirs(Path(filepath).parent, exist_ok=True)

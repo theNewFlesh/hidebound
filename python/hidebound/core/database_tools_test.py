@@ -18,7 +18,7 @@ import hidebound.core.database_tools as db_tools
 class DatabaseTests(DatabaseTestBase):
     # SPECIFICATION-FUNCTIONS---------------------------------------------------
     def test_add_specification(self):
-        Spec001, Spec002, BadSpec = self.get_specifications()
+        Spec001, Spec002, _ = self.get_specifications()
         specs = {Spec001.name: Spec001, Spec002.name: Spec002}
 
         data = self.get_directory_to_dataframe_data('/tmp')
@@ -44,7 +44,7 @@ class DatabaseTests(DatabaseTestBase):
         self.assertRegex(result, error)
 
     def test_add_file_traits(self):
-        Spec001, Spec002, BadSpec = self.get_specifications()
+        Spec001, Spec002, _ = self.get_specifications()
         data = [
             [
                 Spec001,
@@ -114,7 +114,7 @@ class DatabaseTests(DatabaseTestBase):
         self.assertEqual(result, expected)
 
     def test_add_asset_id(self):
-        Spec001, Spec002, BadSpec = self.get_specifications()
+        Spec001, Spec002, _ = self.get_specifications()
         data = [
             [
                 Spec001,
@@ -151,7 +151,7 @@ class DatabaseTests(DatabaseTestBase):
         self.assertEqual(result, 2)
 
     def test_add_asset_name(self):
-        Spec001, Spec002, BadSpec = self.get_specifications()
+        Spec001, Spec002, _ = self.get_specifications()
         data = [
             [
                 Spec001,
@@ -188,7 +188,7 @@ class DatabaseTests(DatabaseTestBase):
         self.assertEqual(result, 2)
 
     def test_add_asset_path(self):
-        Spec001, Spec002, BadSpec = self.get_specifications()
+        Spec001, Spec002, _ = self.get_specifications()
         data = [
             [
                 Spec001,
@@ -296,7 +296,6 @@ class DatabaseTests(DatabaseTestBase):
 
     def test_validate_assets(self):
         with TemporaryDirectory() as root:
-            Spec001, Spec002, BadSpec = self.get_specifications()
             data = self.create_files(root).head(1)
             traits = dict(
                 project=['proj001'],
@@ -313,7 +312,7 @@ class DatabaseTests(DatabaseTestBase):
             data['asset_traits'] = [traits]
             db_tools._validate_assets(data)
 
-            for i, row in data.iterrows():
+            for _, row in data.iterrows():
                 self.assertTrue(np.isnan(row.asset_error))
                 self.assertTrue(row.asset_valid)
 
@@ -324,7 +323,6 @@ class DatabaseTests(DatabaseTestBase):
 
     def test_validate_assets_invalid_one_file(self):
         with TemporaryDirectory() as root:
-            Spec001, Spec002, BadSpec = self.get_specifications()
             data = self.create_files(root).head(1)
             traits = dict(
                 project=['proj001'],
@@ -341,13 +339,12 @@ class DatabaseTests(DatabaseTestBase):
             data['asset_traits'] = [traits]
             db_tools._validate_assets(data)
 
-            for i, row in data.iterrows():
+            for _, row in data.iterrows():
                 self.assertRegex(row.asset_error, '40 != 4')
                 self.assertFalse(row.asset_valid)
 
     def test_validate_assets_invalid_many_file(self):
         with TemporaryDirectory() as root:
-            Spec001, Spec002, BadSpec = self.get_specifications()
             data = self.create_files(root).head(2)
             traits = dict(
                 project=['proj001', 'proj001'],
@@ -364,7 +361,7 @@ class DatabaseTests(DatabaseTestBase):
             data['asset_traits'] = [traits, traits]
             db_tools._validate_assets(data)
 
-            for i, row in data.iterrows():
+            for _, row in data.iterrows():
                 self.assertRegex(row.asset_error, '400 != 4')
                 self.assertFalse(row.asset_valid)
 
@@ -470,21 +467,19 @@ class DatabaseTests(DatabaseTestBase):
         data = lbt.relative_path(__file__, '../../../resources/fake_data.csv')
         data = pd.read_csv(data, index_col=0)
 
-        file_data, asset_meta, file_meta, asset_log, file_log = db_tools \
+        _, a, b, _, _ = db_tools \
             ._get_data_for_write(
                 data,
                 '/tmp/projects',
                 '/tmp/hidebound'
             )
 
-        a = asset_meta
         a['asset_id'] = a.metadata.apply(lambda x: x['asset_id'])
         a['file_ids'] = a.metadata.apply(lambda x: x['file_ids'])
         keys = sorted(a.asset_id.tolist())
         vals = sorted(a.file_ids.tolist())
         a = dict(zip(keys, vals))
 
-        b = file_meta
         b['asset_id'] = b.metadata.apply(lambda x: x['asset_id'])
         b['file_ids'] = b.metadata.apply(lambda x: x['file_id'])
         b = b.groupby('asset_id', as_index=False).agg(lambda x: x.tolist())

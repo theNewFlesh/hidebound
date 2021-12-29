@@ -391,7 +391,7 @@ def _get_data_for_write(
         filepath_relative='filepaths_relative',
     )
     keys = asset_meta.columns.tolist()
-    for i, row in asset_meta.iterrows():
+    for _, row in asset_meta.iterrows():
         vals = row.tolist()
         item = dict(zip(keys, vals))
         item = {lut[k]: item[k] for k in lut.keys()}
@@ -409,9 +409,8 @@ def _get_data_for_write(
         del item['file_traits']
 
         # replace asset root
-        item['asset_path'] = Path(
-            data_dir, item['asset_path_relative']
-        ).as_posix()
+        item['asset_path'] = Path(data_dir, item['asset_path_relative']) \
+            .as_posix()
 
         meta.append(item)
     asset_meta['metadata'] = meta

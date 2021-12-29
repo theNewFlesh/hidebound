@@ -65,7 +65,7 @@ def is_specification_file(filepath):
         raise ValidationError(msg)
 
     # ensure SPECIFICATIONS is a list
-    if not isinstance(mod.SPECIFICATIONS, list):  # type: ignore
+    if not isinstance(mod.SPECIFICATIONS, list):
         sys.path = temp
         msg = f'{filepath.as_posix()} SPECIFICATIONS attribute is not a list.'
         raise ValidationError(msg)
@@ -73,7 +73,7 @@ def is_specification_file(filepath):
     # ensure all SPECIFICATIONS are subclasses of SpecificationBase
     errors = list(filter(
         lambda x: not inspect.isclass(x) or not issubclass(x, SpecificationBase),
-        mod.SPECIFICATIONS   # type: ignore
+        mod.SPECIFICATIONS
     ))
     if len(errors) > 0:
         sys.path = temp

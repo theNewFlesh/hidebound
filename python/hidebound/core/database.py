@@ -59,7 +59,7 @@ class Database:
             filename, _ = os.path.splitext(filename)
             module = import_module(filename, filepath)  # type: ignore
 
-            specs.extend(module.SPECIFICATIONS)  # type: ignore
+            specs.extend(module.SPECIFICATIONS)
 
         specs = list(set(specs))
         config['specifications'] = specs
