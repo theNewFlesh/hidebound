@@ -3,7 +3,6 @@ from typing import Any, Dict, Optional, Tuple, Union
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
-import json
 import re
 import uuid
 
@@ -437,17 +436,15 @@ def _get_data_for_write(
     # create asset chunk
     asset_chunk = DataFrame()
     asset_chunk['metadata'] = [asset_meta.metadata.tolist()]
-    asset_chunk['target'] = [
-        Path(meta_dir, 'asset-chunk', f'hidebound-asset-chunk_{now}.json') \
-        .as_posix()
-    ]
+    asset_chunk['target'] = [Path(
+        meta_dir, 'asset-chunk', f'hidebound-asset-chunk_{now}.json'
+    ).as_posix()]
 
     # create file chunk
     file_chunk = DataFrame()
     file_chunk['metadata'] = [file_meta.metadata.tolist()]
-    file_chunk['target'] = [
-        Path(meta_dir, 'file-chunk', f'hidebound-file-chunk_{now}.json') \
-        .as_posix()
-    ]
+    file_chunk['target'] = [Path(
+        meta_dir, 'file-chunk', f'hidebound-file-chunk_{now}.json'
+    ).as_posix()]
 
     return file_data, asset_meta, file_meta, asset_chunk, file_chunk
