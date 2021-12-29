@@ -12,7 +12,7 @@ from schematics.types import StringType
 import numpy as np
 import OpenEXR as openexr
 
-import hidebound.core.tools as tools
+import hidebound.core.tools as hbt
 # ------------------------------------------------------------------------------
 
 
@@ -45,12 +45,12 @@ class ToolsTests(unittest.TestCase):
     def test_error_to_string(self):
         error = KeyError('Foo')
         expected = 'KeyError( Foo )'
-        result = tools.error_to_string(error)
+        result = hbt.error_to_string(error)
         self.assertEqual(result, expected)
 
         error = ValidationError(['foo', 'bar'])
         expected = 'ValidationError(\nfoo\nbar\n)'
-        result = tools.error_to_string(error)
+        result = hbt.error_to_string(error)
         self.assertEqual(result, expected)
 
         class Foo(Model):
@@ -60,7 +60,7 @@ class ToolsTests(unittest.TestCase):
         try:
             Foo({}).validate()
         except DataError as e:
-            result = tools.error_to_string(e)
+            result = hbt.error_to_string(e)
         expected = r'DataError\(\n.*(bar|baz).*\n.*(bar|baz).*\n\)'
         self.assertRegex(result, expected)
 
@@ -71,21 +71,21 @@ class ToolsTests(unittest.TestCase):
             dict(a=1, b=2, e=3),
         ]
         expected = dict(a=[1, 1, 1], b=[2, 2, 2], c=[3], d=[3], e=[3])
-        result = tools.to_prototype(dicts)
+        result = hbt.to_prototype(dicts)
         self.assertEqual(result, expected)
 
     def test_list_all_files(self):
         expected = '/foo/bar is not a directory or does not exist.'
         with self.assertRaisesRegexp(FileNotFoundError, expected):
-            next(tools.list_all_files('/foo/bar'))
+            next(hbt.list_all_files('/foo/bar'))
 
         expected = '/foo.bar is not a directory or does not exist.'
         with self.assertRaisesRegexp(FileNotFoundError, expected):
-            next(tools.list_all_files('/foo.bar'))
+            next(hbt.list_all_files('/foo.bar'))
 
         with TemporaryDirectory() as root:
             expected = sorted(self.create_files(root))
-            result = sorted(list(tools.list_all_files(root)))
+            result = sorted(list(hbt.list_all_files(root)))
             self.assertEqual(result, expected)
 
     def test_list_all_files_include(self):
@@ -98,7 +98,7 @@ class ToolsTests(unittest.TestCase):
                 Path(root, 'a/b/c/5.txt'),
             ]
 
-            result = tools.list_all_files(root, include_regex=regex)
+            result = hbt.list_all_files(root, include_regex=regex)
             result = sorted(list(result))
             self.assertEqual(result, expected)
 
@@ -113,7 +113,7 @@ class ToolsTests(unittest.TestCase):
                 Path(root, 'a/b/c/4.json'),
             ]
 
-            result = tools.list_all_files(root, exclude_regex=regex)
+            result = hbt.list_all_files(root, exclude_regex=regex)
             result = sorted(list(result))
             self.assertEqual(result, expected)
 
@@ -128,7 +128,7 @@ class ToolsTests(unittest.TestCase):
                 Path(root, 'a/b/c/5.txt'),
             ]
 
-            result = tools.list_all_files(
+            result = hbt.list_all_files(
                 root,
                 include_regex=i_regex,
                 exclude_regex=e_regex
@@ -154,7 +154,7 @@ class ToolsTests(unittest.TestCase):
                 Path(root, 'a1/b1/l4.txt'),
             ]
             list(map(self.make_file_or_dir, paths))
-            tools.delete_empty_directories(root)
+            hbt.delete_empty_directories(root)
 
             result = sorted([x[0] for x in os.walk(root)])
             expected = [
@@ -178,14 +178,14 @@ class ToolsTests(unittest.TestCase):
 
     def test_delete_empty_directories_empty(self):
         with TemporaryDirectory() as root:
-            tools.delete_empty_directories(root)
+            hbt.delete_empty_directories(root)
             result = [x[0] for x in os.walk(root)]
             self.assertEqual(result, [root])
 
     def test_delete_empty_directories_errors(self):
         expected = '/foo/bar is not a directory or does not exist.'
         with self.assertRaisesRegexp(FileNotFoundError, expected):
-            next(tools.delete_empty_directories('/foo/bar'))
+            next(hbt.delete_empty_directories('/foo/bar'))
 
     def test_directory_to_dataframe(self):
         with TemporaryDirectory() as root:
@@ -200,7 +200,7 @@ class ToolsTests(unittest.TestCase):
             expected['extension'] = 'txt'
             expected.filepath = expected.filepath.apply(lambda x: x.as_posix())
 
-            result = tools.directory_to_dataframe(
+            result = hbt.directory_to_dataframe(
                 root,
                 include_regex=r'/a/b',
                 exclude_regex=r'\.json'
@@ -222,7 +222,7 @@ class ToolsTests(unittest.TestCase):
             output = openexr.OutputFile(exr, header)
             output.writePixels(data)
 
-            result = tools.read_exr_header(exr)
+            result = hbt.read_exr_header(exr)
             win = result['dataWindow']
             x = (win.max.x - win.min.x) + 1
             y = (win.max.y - win.min.y) + 1
@@ -240,12 +240,12 @@ class ToolsTests(unittest.TestCase):
 
             expected = f'{exr} is not an EXR file.'
             with self.assertRaisesRegexp(IOError, expected):
-                tools.read_exr_header(exr)
+                hbt.read_exr_header(exr)
 
     def test_time_string(self):
         result = re.search(
             r'\d\d\d\d-\d\d-\d\dT-\d\d-\d\d-\d\d',
-            tools.time_string()
+            hbt.time_string()
         )
         self.assertIsNotNone(result)
 
@@ -255,7 +255,7 @@ class ToolsTests(unittest.TestCase):
 
             # dict
             expected = dict(a='b', c='d')
-            tools.write_json(expected, filepath)
+            hbt.write_json(expected, filepath)
             with open(filepath) as f:
                 result = json.load(f)
             self.assertEqual(result, expected)
@@ -266,7 +266,7 @@ class ToolsTests(unittest.TestCase):
                 dict(e='f', g='h'),
                 dict(i='j', k='l'),
             ]
-            tools.write_json(expected, filepath)
+            hbt.write_json(expected, filepath)
             with open(filepath) as f:
                 result = json.load(f)
             self.assertEqual(result, expected)

@@ -9,7 +9,7 @@ from schematics.exceptions import ValidationError
 from schematics.types import IntType, ListType, StringType
 
 from hidebound.core.parser import AssetNameParser
-import hidebound.core.tools as tools
+import hidebound.core.tools as hbt
 import hidebound.core.validators as vd
 # ------------------------------------------------------------------------------
 
@@ -172,7 +172,7 @@ class SpecificationBase(Model):
             return AssetNameParser(self.filename_fields)\
                 .parse(Path(filepath).name)
         except ParseException as e:
-            return dict(filename_error=tools.error_to_string(e))
+            return dict(filename_error=hbt.error_to_string(e))
 
     def get_file_traits(self, filepath):
         # type: (Union[str, Path]) -> Dict
@@ -191,7 +191,7 @@ class SpecificationBase(Model):
             try:
                 output[name] = func(filepath)
             except Exception as e:
-                output[name + '_error'] = tools.error_to_string(e)
+                output[name + '_error'] = hbt.error_to_string(e)
         return output
 
     def get_traits(self, filepath):

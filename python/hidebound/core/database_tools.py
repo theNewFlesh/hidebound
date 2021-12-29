@@ -12,7 +12,7 @@ import numpy as np
 
 from hidebound.core.parser import AssetNameParser
 from hidebound.core.specification_base import SpecificationBase
-import hidebound.core.tools as tools
+import hidebound.core.tools as hbt
 # ------------------------------------------------------------------------------
 
 
@@ -58,7 +58,7 @@ def _add_specification(data, specifications):
     # set error
     data['file_error'] = np.nan
     mask = data.specification.apply(lambda x: x not in specifications.keys())
-    error = tools.error_to_string(KeyError('Specification not found.'))
+    error = hbt.error_to_string(KeyError('Specification not found.'))
     data.loc[mask, 'file_error'] = error
 
     # parse errors overwrite spec not found
@@ -86,7 +86,7 @@ def _validate_filepath(data):
             row.specification_class().validate_filepath(row.filepath)
             return np.nan
         except ValidationError as e:
-            return tools.error_to_string(e)
+            return hbt.error_to_string(e)
 
     mask = data.file_error.isnull()
     if len(data[mask]) > 0:
@@ -123,7 +123,7 @@ def _add_asset_traits(data):
     '''
     cols = ['asset_path', 'file_traits']
     lut = data[cols].groupby('asset_path', as_index=False)\
-        .agg(lambda x: tools.to_prototype(x.tolist()))\
+        .agg(lambda x: hbt.to_prototype(x.tolist()))\
         .apply(lambda x: x.tolist(), axis=1)\
         .tolist()
     lut = defaultdict(lambda: {}, lut)
@@ -156,7 +156,7 @@ def _validate_assets(data):
     data['asset_error'] = 'null'
     data.loc[mask, 'asset_error'] = data.loc[mask, 'asset_path']\
         .apply(lambda x: lut[x])\
-        .apply(lambda x: tools.error_to_string(x) if x is not None else np.nan)
+        .apply(lambda x: hbt.error_to_string(x) if x is not None else np.nan)
 
     # assign asset_valid column
     data['asset_valid'] = False
@@ -431,7 +431,7 @@ def _get_data_for_write(
     file_meta = file_meta[['metadata', 'target']]
 
     # get time
-    now = tools.time_string()
+    now = hbt.time_string()
 
     # create asset log
     asset_log = DataFrame()

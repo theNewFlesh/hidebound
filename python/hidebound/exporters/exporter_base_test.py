@@ -1,6 +1,6 @@
-import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
+import json
 import os
 import shutil
 import unittest
