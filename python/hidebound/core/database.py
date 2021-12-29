@@ -202,8 +202,8 @@ class Database:
                                                             structure
             * asset metadata as json to hb_parent/hidebound/metadata/asset
             * file metadata as json to hb_parent/hidebound/metadata/file
-            * asset log as json to hb_parent/hidebound/logs/asset
-            * file log as json to hb_parent/hidebound/logs/file
+            * asset metadata as single json to hb_parent/hidebound/metadata/asset-chunk
+            * file metadata as single json to hb_parent/hidebound/metadata/file-chunk
 
         Raises:
             RunTimeError: If data has not been initialized.
@@ -220,10 +220,6 @@ class Database:
             with open(filepath, 'w') as f:
                 json.dump(obj, f)
 
-        def write_log(log, filepath):
-            with open(filepath, 'w') as f:
-                f.write(log)
-
         temp = db_tools._get_data_for_write(
             self.data, self._root, self._hb_root
         )
@@ -231,7 +227,7 @@ class Database:
         if temp is None:
             return self
 
-        file_data, asset_meta, file_meta, asset_log, file_log = temp
+        file_data, asset_meta, file_meta, asset_chunk, file_chunk = temp
 
         # make directories
         for item in temp:
@@ -254,13 +250,13 @@ class Database:
         file_meta.apply(lambda x: write_json(x.metadata, x.target), axis=1)
         self._logger.info('create: write file metadata', step=5, total=total)
 
-        # write asset log
-        asset_log.apply(lambda x: write_log(x.metadata, x.target), axis=1)
-        self._logger.info('create: write asset log', step=6, total=total)
+        # write asset chunk
+        asset_chunk.apply(lambda x: write_json(x.metadata, x.target), axis=1)
+        self._logger.info('create: write asset chunk', step=6, total=total)
 
-        # write file log
-        file_log.apply(lambda x: write_log(x.metadata, x.target), axis=1)
-        self._logger.info('create: write file log', step=7, total=total)
+        # write file chunk
+        file_chunk.apply(lambda x: write_json(x.metadata, x.target), axis=1)
+        self._logger.info('create: write file chunk', step=7, total=total)
 
         self._logger.info('create: complete', step=7, total=total)
         return self

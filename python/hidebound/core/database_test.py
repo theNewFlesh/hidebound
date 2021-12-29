@@ -590,7 +590,7 @@ class DatabaseTests(DatabaseTestBase):
         with TemporaryDirectory() as root:
             hb_root = Path(root, 'hidebound')
             os.makedirs(hb_root)
-            Spec001, Spec002, BadSpec = self.get_specifications()
+            Spec001, Spec002, _ = self.get_specifications()
             self.create_files(root)
 
             exporters = dict(girder=dict(api_key='api_key', root_id='root_id'))
@@ -616,7 +616,7 @@ class DatabaseTests(DatabaseTestBase):
         with TemporaryDirectory() as root:
             hb_root = Path(root, 'hidebound')
             os.makedirs(hb_root)
-            Spec001, Spec002, BadSpec = self.get_specifications()
+            Spec001, Spec002, _ = self.get_specifications()
             data = self.create_files(root)
 
             exporters = dict(
