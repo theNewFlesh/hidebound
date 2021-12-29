@@ -699,7 +699,7 @@ class DatabaseTests(DatabaseTestBase):
 
             expected = hbt.directory_to_dataframe(hb_root).filepath
             mask = expected \
-                .apply(lambda x: re.search('asset|file|content', x)) \
+                .apply(lambda x: re.search('/(asset|file|content)', x)) \
                 .astype(bool)
             expected = expected[mask] \
                 .apply(lambda x: re.sub('.*/hidebound/', '', x)) \
