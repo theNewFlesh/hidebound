@@ -448,3 +448,15 @@ class ValidatorsTests(unittest.TestCase):
         dir_ = '/home/ubuntu/foo bar'
         with self.assertRaisesRegexp(ValidationError, expected.format(dir_)):
             vd.is_legal_directory(dir_)
+
+    def test_is_metadata_type(self):
+        vd.is_metadata_type('asset')
+        vd.is_metadata_type('file')
+        vd.is_metadata_type('asset-chunk')
+        vd.is_metadata_type('file-chunk')
+
+        expected = r"foobar is not a legal metadata type\."
+        expected += r"\\nLegal metadata types: "
+        expected += r"\[asset, file, asset-chunk, file-chunk\]"
+        with self.assertRaisesRegexp(ValidationError, expected):
+            vd.is_metadata_type('foobar')

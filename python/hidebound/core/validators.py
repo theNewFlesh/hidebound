@@ -637,3 +637,28 @@ def is_legal_directory(item):
     if not re.search(r'^[/a-z0-9_\-]+$', item, re.I):
         return False
     return True
+
+
+@validate('''{} is not a legal metadata type.
+Legal metadata types: [asset, file, asset-chunk, file-chunk]''')
+def is_metadata_type(item):
+    # type: (str) -> bool
+    '''
+    Validates that a given metadata type is legal.
+    Legal types include:
+
+        * asset
+        * file
+        * asset-chunk
+        * file-chunk
+
+    Args:
+        item (str): Metadata type.
+
+    Raises:
+        ValidationError: If metadata type is illegal.
+
+    Returns:
+        bool: Validity of metadata type.
+    '''
+    return item in ['asset', 'file', 'asset-chunk', 'file-chunk']
