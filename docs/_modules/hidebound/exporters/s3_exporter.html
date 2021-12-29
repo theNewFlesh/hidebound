@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.18.0
+                0.18.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -82,7 +82,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for hidebound.exporters.s3_exporter</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
 
 <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
 <span class="kn">import</span> <span class="nn">json</span>
@@ -92,6 +92,7 @@
 <span class="kn">import</span> <span class="nn">boto3</span> <span class="k">as</span> <span class="nn">boto</span>
 
 <span class="kn">from</span> <span class="nn">hidebound.exporters.exporter_base</span> <span class="kn">import</span> <span class="n">ExporterBase</span>
+<span class="kn">import</span> <span class="nn">hidebound.core.tools</span> <span class="k">as</span> <span class="nn">tools</span>
 <span class="kn">import</span> <span class="nn">hidebound.core.validators</span> <span class="k">as</span> <span class="nn">vd</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
@@ -205,30 +206,34 @@
             <span class="s1">&#39;hidebound/content/&#39;</span> <span class="o">+</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;filepath_relative&#39;</span><span class="p">],</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="S3Exporter._export_asset_log"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.s3_exporter.S3Exporter._export_asset_log">[docs]</a>    <span class="k">def</span> <span class="nf">_export_asset_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
-        <span class="c1"># type: (Dict[str, str]) -&gt; None</span>
+<div class="viewcode-block" id="S3Exporter._export_asset_chunk"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.s3_exporter.S3Exporter._export_asset_chunk">[docs]</a>    <span class="k">def</span> <span class="nf">_export_asset_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+        <span class="c1"># type: (List[dict]) -&gt; None</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Exports content from single asset log in hidebound/logs/asset.</span>
+<span class="sd">        Exports list of asset metadata to a single file in</span>
+<span class="sd">        hidebound/metadata/asset-chunk.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            metadata (dict): Asset log.</span>
+<span class="sd">            metadata (list[dict]): Asset metadata.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">tools</span><span class="o">.</span><span class="n">time_string</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_bucket</span><span class="o">.</span><span class="n">upload_fileobj</span><span class="p">(</span>
-            <span class="n">BytesIO</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)),</span>
-            <span class="s1">&#39;hidebound/logs/asset/&#39;</span> <span class="o">+</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">],</span>
+            <span class="n">BytesIO</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)),</span>
+            <span class="sa">f</span><span class="s1">&#39;hidebound/metadata/asset-chunk/hidebound-asset-chunk_</span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s1">.json&#39;</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="S3Exporter._export_file_log"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.s3_exporter.S3Exporter._export_file_log">[docs]</a>    <span class="k">def</span> <span class="nf">_export_file_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
-        <span class="c1"># type: (Dict[str, str]) -&gt; None</span>
+<div class="viewcode-block" id="S3Exporter._export_file_chunk"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.s3_exporter.S3Exporter._export_file_chunk">[docs]</a>    <span class="k">def</span> <span class="nf">_export_file_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+        <span class="c1"># type: (List[dict]) -&gt; None</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Exports content from single file log in hidebound/logs/file.</span>
+<span class="sd">        Exports list of file metadata to a single file in</span>
+<span class="sd">        hidebound/metadata/file-chunk.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            metadata (dict): Asset log.</span>
+<span class="sd">            metadata (list[dict]): File metadata.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">tools</span><span class="o">.</span><span class="n">time_string</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_bucket</span><span class="o">.</span><span class="n">upload_fileobj</span><span class="p">(</span>
-            <span class="n">BytesIO</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)),</span>
-            <span class="s1">&#39;hidebound/logs/file/&#39;</span> <span class="o">+</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">],</span>
+            <span class="n">BytesIO</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)),</span>
+            <span class="sa">f</span><span class="s1">&#39;hidebound/metadata/file-chunk/hidebound-file-chunk_</span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s1">.json&#39;</span><span class="p">,</span>
         <span class="p">)</span></div></div>
 </pre></div>
 

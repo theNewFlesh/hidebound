@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.18.0
+                0.18.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -82,7 +82,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for hidebound.exporters.girder_exporter</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
@@ -309,23 +309,23 @@
             <span class="o">.</span><span class="n">uploadFileToItem</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">],</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;filepath&#39;</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">response</span></div>
 
-<div class="viewcode-block" id="GirderExporter._export_asset_log"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.girder_exporter.GirderExporter._export_asset_log">[docs]</a>    <span class="k">def</span> <span class="nf">_export_asset_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
-        <span class="c1"># type: (Dict[str, str]) -&gt; None</span>
+<div class="viewcode-block" id="GirderExporter._export_asset_chunk"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.girder_exporter.GirderExporter._export_asset_chunk">[docs]</a>    <span class="k">def</span> <span class="nf">_export_asset_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+        <span class="c1"># type: (List[dict]) -&gt; None</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Exports content from asset log in hidebound/logs/asset.</span>
+<span class="sd">        Exports content from asset log in hidebound/metadata/asset-chunk.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            metadata (dict): Asset log.</span>
+<span class="sd">            metadata (list[dict]): Asset metadata chunk.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="GirderExporter._export_file_log"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.girder_exporter.GirderExporter._export_file_log">[docs]</a>    <span class="k">def</span> <span class="nf">_export_file_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
-        <span class="c1"># type: (Dict[str, str]) -&gt; None</span>
+<div class="viewcode-block" id="GirderExporter._export_file_chunk"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.girder_exporter.GirderExporter._export_file_chunk">[docs]</a>    <span class="k">def</span> <span class="nf">_export_file_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+        <span class="c1"># type: (List[dict]) -&gt; None</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Exports content from file log in hidebound/logs/file.</span>
+<span class="sd">        Exports content from file log in hidebound/metadata/file-chunk.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            metadata (dict): File log.</span>
+<span class="sd">            metadata (list[dict]): File metadata chunk.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">pass</span></div></div>
 </pre></div>

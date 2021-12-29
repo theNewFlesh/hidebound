@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.18.0
+                0.18.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -407,12 +407,12 @@
 <span class="sd">        * File data - For writing asset file data to a target filepath.</span>
 <span class="sd">        * Asset metadata - For writing asset metadata to a target json file.</span>
 <span class="sd">        * File metadata - For writing file metadata to a target json file.</span>
-<span class="sd">        * Asset log - For writing asset log to a target json file.</span>
-<span class="sd">        * File log - For writing file log to a target json file.</span>
+<span class="sd">        * Asset chunk - For writing asset metadata chunk to a target json file.</span>
+<span class="sd">        * File chunk - For writing file metadata chunk to a target json file.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        tuple[DataFrame]: file_data, asset_metadata, file_metadata, asset_log,</span>
-<span class="sd">            file_log.</span>
+<span class="sd">        tuple[DataFrame]: file_data, asset_metadata, file_metadata, asset_chunk,</span>
+<span class="sd">            file_chunk.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># TODO: flatten file_traits and flatten asset_traits</span>
     <span class="c1"># get valid asset data</span>
@@ -426,7 +426,6 @@
     <span class="n">source_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">source_dir</span><span class="p">)</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
     <span class="n">data_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="s1">&#39;content&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
     <span class="n">meta_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="s1">&#39;metadata&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
-    <span class="n">log_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="s1">&#39;logs&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
 
     <span class="c1"># add asset id</span>
     <span class="n">keys</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">asset_path</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
@@ -517,21 +516,21 @@
     <span class="c1"># get time</span>
     <span class="n">now</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">time_string</span><span class="p">()</span>
 
-    <span class="c1"># create asset log</span>
-    <span class="n">asset_log</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">()</span>
-    <span class="n">asset_log</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">asset_meta</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]</span>
-    <span class="n">asset_log</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span>
-        <span class="n">log_dir</span><span class="p">,</span> <span class="s1">&#39;asset&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;hidebound-asset-log_</span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s1">.json&#39;</span>
+    <span class="c1"># create asset chunk</span>
+    <span class="n">asset_chunk</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">()</span>
+    <span class="n">asset_chunk</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">asset_meta</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]</span>
+    <span class="n">asset_chunk</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span>
+        <span class="n">meta_dir</span><span class="p">,</span> <span class="s1">&#39;asset-chunk&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;hidebound-asset-chunk_</span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s1">.json&#39;</span>
     <span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()]</span>
 
-    <span class="c1"># create file log</span>
-    <span class="n">file_log</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">()</span>
-    <span class="n">file_log</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">file_meta</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]</span>
-    <span class="n">file_log</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span>
-        <span class="n">log_dir</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;hidebound-file-log_</span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s1">.json&#39;</span>
+    <span class="c1"># create file chunk</span>
+    <span class="n">file_chunk</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">()</span>
+    <span class="n">file_chunk</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">file_meta</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]</span>
+    <span class="n">file_chunk</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span>
+        <span class="n">meta_dir</span><span class="p">,</span> <span class="s1">&#39;file-chunk&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;hidebound-file-chunk_</span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s1">.json&#39;</span>
     <span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()]</span>
 
-    <span class="k">return</span> <span class="n">file_data</span><span class="p">,</span> <span class="n">asset_meta</span><span class="p">,</span> <span class="n">file_meta</span><span class="p">,</span> <span class="n">asset_log</span><span class="p">,</span> <span class="n">file_log</span></div>
+    <span class="k">return</span> <span class="n">file_data</span><span class="p">,</span> <span class="n">asset_meta</span><span class="p">,</span> <span class="n">file_meta</span><span class="p">,</span> <span class="n">asset_chunk</span><span class="p">,</span> <span class="n">file_chunk</span></div>
 </pre></div>
 
            </div>

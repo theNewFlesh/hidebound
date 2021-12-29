@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.18.0
+                0.18.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -82,7 +82,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for hidebound.exporters.local_disk_exporter</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -161,8 +161,8 @@
         <span class="n">hidebound_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">hidebound_dir</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">directory_to_dataframe</span><span class="p">(</span><span class="n">hidebound_dir</span><span class="p">)</span>
 
-        <span class="c1"># only include /content, /metadata and /logs directories</span>
-        <span class="n">regex</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hidebound_dir</span><span class="si">}</span><span class="s1">/(content|metadata|logs)&#39;</span>
+        <span class="c1"># only include /content and /metadata directories</span>
+        <span class="n">regex</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hidebound_dir</span><span class="si">}</span><span class="s1">/(content|metadata)&#39;</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
 
@@ -191,23 +191,23 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">pass</span>  <span class="c1"># pragma: no cover</span></div>
 
-<div class="viewcode-block" id="LocalDiskExporter._export_asset_log"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.local_disk_exporter.LocalDiskExporter._export_asset_log">[docs]</a>    <span class="k">def</span> <span class="nf">_export_asset_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
-        <span class="c1"># type: (Dict[str, str]) -&gt; None</span>
+<div class="viewcode-block" id="LocalDiskExporter._export_asset_chunk"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.local_disk_exporter.LocalDiskExporter._export_asset_chunk">[docs]</a>    <span class="k">def</span> <span class="nf">_export_asset_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+        <span class="c1"># type: (List[dict]) -&gt; None</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Exports content from single asset log in hidebound/logs/asset.</span>
+<span class="sd">        Exports content from single asset chunk in hidebound/metadata/asset-chunk.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            metadata (dict): File log.</span>
+<span class="sd">            metadata (list[dict]): Asset metadata.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">pass</span>  <span class="c1"># pragma: no cover</span></div>
 
-<div class="viewcode-block" id="LocalDiskExporter._export_file_log"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.local_disk_exporter.LocalDiskExporter._export_file_log">[docs]</a>    <span class="k">def</span> <span class="nf">_export_file_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
-        <span class="c1"># type: (Dict[str, str]) -&gt; None</span>
+<div class="viewcode-block" id="LocalDiskExporter._export_file_chunk"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.local_disk_exporter.LocalDiskExporter._export_file_chunk">[docs]</a>    <span class="k">def</span> <span class="nf">_export_file_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+        <span class="c1"># type: (List[dict]) -&gt; None</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Exports content from single file log in hidebound/logs/file.</span>
+<span class="sd">        Exports content from single file chunk in hidebound/metadata/file-chunk.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            metadata (dict): File log.</span>
+<span class="sd">            metadata (list[dict]): File metadata.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">pass</span>  <span class="c1"># pragma: no cover</span></div></div>
 </pre></div>

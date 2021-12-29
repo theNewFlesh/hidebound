@@ -31,7 +31,7 @@
             <a href="index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.18.0
+                0.18.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -447,8 +447,8 @@ directory.</p>
 </li>
 <li><p>asset metadata as json to hb_parent/hidebound/metadata/asset</p></li>
 <li><p>file metadata as json to hb_parent/hidebound/metadata/file</p></li>
-<li><p>asset log as json to hb_parent/hidebound/logs/asset</p></li>
-<li><p>file log as json to hb_parent/hidebound/logs/file</p></li>
+<li><p>asset metadata as single json to hb_parent/hidebound/metadata/asset-chunk</p></li>
+<li><p>file metadata as single json to hb_parent/hidebound/metadata/file-chunk</p></li>
 </ul>
 </div></blockquote>
 <dl class="field-list simple">
@@ -736,14 +736,14 @@ are converted to strings.</p>
 <li><p>File data - For writing asset file data to a target filepath.</p></li>
 <li><p>Asset metadata - For writing asset metadata to a target json file.</p></li>
 <li><p>File metadata - For writing file metadata to a target json file.</p></li>
-<li><p>Asset log - For writing asset log to a target json file.</p></li>
-<li><p>File log - For writing file log to a target json file.</p></li>
+<li><p>Asset chunk - For writing asset metadata chunk to a target json file.</p></li>
+<li><p>File chunk - For writing file metadata chunk to a target json file.</p></li>
 </ul>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><dl class="simple">
-<dt>file_data, asset_metadata, file_metadata, asset_log,</dt><dd><p>file_log.</p>
+<dt>file_data, asset_metadata, file_metadata, asset_chunk,</dt><dd><p>file_chunk.</p>
 </dd>
 </dl>
 </p>

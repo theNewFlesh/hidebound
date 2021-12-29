@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.18.0
+                0.18.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -82,7 +82,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for hidebound.exporters.exporter_base</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -104,9 +104,8 @@
 <span class="sd">            * metadata</span>
 <span class="sd">            * metadata/asset</span>
 <span class="sd">            * metadata/file</span>
-<span class="sd">            * logs</span>
-<span class="sd">            * logs/asset</span>
-<span class="sd">            * logs/file</span>
+<span class="sd">            * metadata/asset-chunk</span>
+<span class="sd">            * metadata/file-chunk</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            hidebound_dir (Path or str): Hidebound directory.</span>
@@ -118,10 +117,11 @@
         <span class="n">meta</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">hidebound_dir</span><span class="p">,</span> <span class="s1">&#39;metadata&#39;</span><span class="p">)</span>
         <span class="n">asset_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="s1">&#39;asset&#39;</span><span class="p">)</span>
         <span class="n">file_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">)</span>
-        <span class="n">logs</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">hidebound_dir</span><span class="p">,</span> <span class="s1">&#39;logs&#39;</span><span class="p">)</span>
-        <span class="n">asset_log</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">logs</span><span class="p">,</span> <span class="s1">&#39;asset&#39;</span><span class="p">)</span>
-        <span class="n">file_log</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">logs</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="p">[</span><span class="n">data</span><span class="p">,</span> <span class="n">meta</span><span class="p">,</span> <span class="n">asset_dir</span><span class="p">,</span> <span class="n">file_dir</span><span class="p">,</span> <span class="n">logs</span><span class="p">,</span> <span class="n">asset_log</span><span class="p">,</span> <span class="n">file_log</span><span class="p">]:</span>
+        <span class="n">asset_chunk</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="s1">&#39;asset-chunk&#39;</span><span class="p">)</span>
+        <span class="n">file_chunk</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="s1">&#39;file-chunk&#39;</span><span class="p">)</span>
+
+        <span class="n">paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">data</span><span class="p">,</span> <span class="n">meta</span><span class="p">,</span> <span class="n">asset_dir</span><span class="p">,</span> <span class="n">file_dir</span><span class="p">,</span> <span class="n">asset_chunk</span><span class="p">,</span> <span class="n">file_chunk</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
                 <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">path</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span><span class="si">}</span><span class="s1"> directory does not exist.&#39;</span>
                 <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
@@ -173,22 +173,23 @@
                     <span class="n">total</span><span class="o">=</span><span class="n">f_total</span><span class="p">,</span>
                 <span class="p">)</span>
 
-        <span class="c1"># export logs</span>
+        <span class="c1"># export chunks</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">kind</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;asset&#39;</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">]):</span>
-            <span class="n">log_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">hidebound_dir</span><span class="p">,</span> <span class="s1">&#39;logs&#39;</span><span class="p">,</span> <span class="n">kind</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">log_path</span><span class="p">):</span>
-                <span class="n">filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">log_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">hidebound_dir</span><span class="p">,</span> <span class="s1">&#39;metadata&#39;</span><span class="p">,</span> <span class="n">kind</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">root</span><span class="p">):</span>
+                <span class="n">filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                    <span class="n">log</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filepath</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+                    <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">jsonc</span><span class="o">.</span><span class="n">JsonComment</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
 
-                <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;asset&#39;</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_export_asset_log</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_export_file_log</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;asset&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_export_asset_chunk</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_export_file_chunk</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s1">&#39;exporter: export </span><span class="si">{</span><span class="n">kind</span><span class="si">}</span><span class="s1"> logs&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-                <span class="p">)</span></div>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;exporter: export </span><span class="si">{</span><span class="n">kind</span><span class="si">}</span><span class="s1"> chunk&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="p">)</span></div>
 
 <div class="viewcode-block" id="ExporterBase._export_asset"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.exporter_base.ExporterBase._export_asset">[docs]</a>    <span class="k">def</span> <span class="nf">_export_asset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
         <span class="c1"># type: (Dict) -&gt; None</span>
@@ -218,32 +219,34 @@
         <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;_export_file method must be implemented in subclass.&#39;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ExporterBase._export_asset_log"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.exporter_base.ExporterBase._export_asset_log">[docs]</a>    <span class="k">def</span> <span class="nf">_export_asset_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
-        <span class="c1"># type: (Dict[str, str]) -&gt; None</span>
+<div class="viewcode-block" id="ExporterBase._export_asset_chunk"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.exporter_base.ExporterBase._export_asset_chunk">[docs]</a>    <span class="k">def</span> <span class="nf">_export_asset_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+        <span class="c1"># type: (List[dict]) -&gt; None</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Exports content from asset log in hidebound/logs/asset.</span>
+<span class="sd">        Exports list of asset metadata to a single asset in</span>
+<span class="sd">        hidebound/metadata/asset-chunk.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            metadata (dict): Asset log.</span>
+<span class="sd">            metadata (list[dict]): asset metadata.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            NotImplementedError: If method is not implemented in subclass.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;_export_asset_log method must be implemented in subclass.&#39;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;_export_asset_chunk method must be implemented in subclass.&#39;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ExporterBase._export_file_log"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.exporter_base.ExporterBase._export_file_log">[docs]</a>    <span class="k">def</span> <span class="nf">_export_file_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
-        <span class="c1"># type: (Dict[str, str]) -&gt; None</span>
+<div class="viewcode-block" id="ExporterBase._export_file_chunk"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.exporter_base.ExporterBase._export_file_chunk">[docs]</a>    <span class="k">def</span> <span class="nf">_export_file_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+        <span class="c1"># type: (List[dict]) -&gt; None</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Exports content from file log in hidebound/logs/file.</span>
+<span class="sd">        Exports list of file metadata to a single file in</span>
+<span class="sd">        hidebound/metadata/file-chunk.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            metadata (dict): File log.</span>
+<span class="sd">            metadata (list[dict]): File metadata.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            NotImplementedError: If method is not implemented in subclass.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;_export_file_log method must be implemented in subclass.&#39;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;_export_file_chunk method must be implemented in subclass.&#39;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div></div>
 </pre></div>
 
