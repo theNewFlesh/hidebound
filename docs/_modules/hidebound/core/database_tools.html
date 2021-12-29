@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.17.0
+                0.18.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -96,7 +96,7 @@
 
 <span class="kn">from</span> <span class="nn">hidebound.core.parser</span> <span class="kn">import</span> <span class="n">AssetNameParser</span>
 <span class="kn">from</span> <span class="nn">hidebound.core.specification_base</span> <span class="kn">import</span> <span class="n">SpecificationBase</span>
-<span class="kn">import</span> <span class="nn">hidebound.core.tools</span> <span class="k">as</span> <span class="nn">tools</span>
+<span class="kn">import</span> <span class="nn">hidebound.core.tools</span> <span class="k">as</span> <span class="nn">hbt</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
@@ -142,7 +142,7 @@
     <span class="c1"># set error</span>
     <span class="n">data</span><span class="p">[</span><span class="s1">&#39;file_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">specification</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">specifications</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-    <span class="n">error</span> <span class="o">=</span> <span class="n">tools</span><span class="o">.</span><span class="n">error_to_string</span><span class="p">(</span><span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;Specification not found.&#39;</span><span class="p">))</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">error_to_string</span><span class="p">(</span><span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;Specification not found.&#39;</span><span class="p">))</span>
     <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;file_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">error</span>
 
     <span class="c1"># parse errors overwrite spec not found</span>
@@ -170,7 +170,7 @@
             <span class="n">row</span><span class="o">.</span><span class="n">specification_class</span><span class="p">()</span><span class="o">.</span><span class="n">validate_filepath</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">filepath</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
         <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">tools</span><span class="o">.</span><span class="n">error_to_string</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">hbt</span><span class="o">.</span><span class="n">error_to_string</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
     <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">file_error</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -207,7 +207,7 @@
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;asset_path&#39;</span><span class="p">,</span> <span class="s1">&#39;file_traits&#39;</span><span class="p">]</span>
     <span class="n">lut</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;asset_path&#39;</span><span class="p">,</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>\
-        <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">tools</span><span class="o">.</span><span class="n">to_prototype</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span>\
+        <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">hbt</span><span class="o">.</span><span class="n">to_prototype</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span>\
         <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>\
         <span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
     <span class="n">lut</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">{},</span> <span class="n">lut</span><span class="p">)</span>
@@ -240,7 +240,7 @@
     <span class="n">data</span><span class="p">[</span><span class="s1">&#39;asset_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;null&#39;</span>
     <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;asset_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;asset_path&#39;</span><span class="p">]</span>\
         <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">lut</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>\
-        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">tools</span><span class="o">.</span><span class="n">error_to_string</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">hbt</span><span class="o">.</span><span class="n">error_to_string</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
 
     <span class="c1"># assign asset_valid column</span>
     <span class="n">data</span><span class="p">[</span><span class="s1">&#39;asset_valid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
@@ -515,7 +515,7 @@
     <span class="n">file_meta</span> <span class="o">=</span> <span class="n">file_meta</span><span class="p">[[</span><span class="s1">&#39;metadata&#39;</span><span class="p">,</span> <span class="s1">&#39;target&#39;</span><span class="p">]]</span>
 
     <span class="c1"># get time</span>
-    <span class="n">now</span> <span class="o">=</span> <span class="n">tools</span><span class="o">.</span><span class="n">time_string</span><span class="p">()</span>
+    <span class="n">now</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">time_string</span><span class="p">()</span>
 
     <span class="c1"># create asset log</span>
     <span class="n">asset_log</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">()</span>
