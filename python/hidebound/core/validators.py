@@ -662,3 +662,43 @@ def is_metadata_type(item):
         bool: Validity of metadata type.
     '''
     return item in ['asset', 'file', 'asset-chunk', 'file-chunk']
+
+
+def is_hidebound_directory(directory):
+    # type: (Union[str, Path]) -> None
+    '''
+    Ensures directory name is "hidebound".
+
+    Args:
+        directory (str or Path): Hidebound directory.
+
+    Raises:
+        ValidationError: If directory is not named "hidebound".
+    '''
+    if Path(directory).name != 'hidebound':
+        msg = f'{directory} directory is not named hidebound.'
+        raise ValidationError(msg)
+
+
+def is_http_method(method):
+    # type: (str) -> None
+    '''
+    Ensures given method is a legal HTTP method.
+    Legal methods include:
+
+        * get
+        * put
+        * post
+        * delete
+        * patch
+
+    Args:
+        method (str): HTTP method.
+
+    Raises:
+        ValidationError: If method is not a legal HTTP method.
+    '''
+    methods = ['get', 'put', 'post', 'delete', 'patch']
+    if method not in methods:
+        msg = f'{method} is not a legal HTTP method. Legal methods: {methods}.'
+        raise ValidationError(msg)

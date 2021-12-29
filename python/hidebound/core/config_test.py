@@ -114,26 +114,6 @@ class ValidatorsTests(unittest.TestCase):
             with self.assertRaisesRegexp(ValidationError, expected):
                 cfg.is_specification_file(filepath)
 
-    def test_is_hidebound_directory(self):
-        cfg.is_hidebound_directory('/foo/bar/hidebound')
-
-        expected = '/foo/bar directory is not named hidebound.'
-        with self.assertRaisesRegexp(ValidationError, expected):
-            cfg.is_hidebound_directory('/foo/bar')
-
-        expected = '/foo/bar/Hidebound directory is not named hidebound.'
-        with self.assertRaisesRegexp(ValidationError, expected):
-            cfg.is_hidebound_directory('/foo/bar/Hidebound')
-
-    def test_is_http_method(self):
-        methods = ['get', 'put', 'post', 'delete', 'patch']
-        for method in methods:
-            cfg.is_http_method(method)
-
-        expected = 'trace is not a legal HTTP method.'
-        with self.assertRaisesRegexp(ValidationError, expected):
-            cfg.is_http_method('trace')
-
 
 # CONFIG------------------------------------------------------------------------
 class ConfigTests(unittest.TestCase):

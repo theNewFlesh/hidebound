@@ -81,46 +81,6 @@ def is_specification_file(filepath):
         raise ValidationError(msg)
 
     sys.path = temp
-
-
-def is_hidebound_directory(directory):
-    # type: (Union[str, Path]) -> None
-    '''
-    Ensures directory name is "hidebound".
-
-    Args:
-        directory (str or Path): Hidebound directory.
-
-    Raises:
-        ValidationError: If directory is not named "hidebound".
-    '''
-    if Path(directory).name != 'hidebound':
-        msg = f'{directory} directory is not named hidebound.'
-        raise ValidationError(msg)
-
-
-def is_http_method(method):
-    # type: (str) -> None
-    '''
-    Ensures given method is a legal HTTP method.
-    Legal methods include:
-
-        * get
-        * put
-        * post
-        * delete
-        * patch
-
-    Args:
-        method (str): HTTP method.
-
-    Raises:
-        ValidationError: If method is not a legal HTTP method.
-    '''
-    methods = ['get', 'put', 'post', 'delete', 'patch']
-    if method not in methods:
-        msg = f'{method} is not a legal HTTP method. Legal methods: {methods}.'
-        raise ValidationError(msg)
 # ------------------------------------------------------------------------------
 
 
@@ -147,7 +107,7 @@ class Config(Model):
         required=True, validators=[vd.is_directory]
     )  # type: StringType
     hidebound_directory = StringType(
-        required=True, validators=[vd.is_directory, is_hidebound_directory]
+        required=True, validators=[vd.is_directory, vd.is_hidebound_directory]
     )  # type: StringType
     specification_files = ListType(
         StringType(validators=[is_specification_file, vd.is_file]),
@@ -176,7 +136,7 @@ class Config(Model):
 
     class WebhookConfig(Model):
         url = URLType(required=True)  # type: URLType
-        method = StringType(required=True, validators=[is_http_method])  # type: StringType
+        method = StringType(required=True, validators=[vd.is_http_method])  # type: StringType
         headers = DictType(StringType, required=False)  # type: DictType
         data = DictType(BaseType, required=False, serialize_when_none=False)  # type: DictType
         json = DictType(BaseType, required=False, serialize_when_none=False)  # type: DictType
