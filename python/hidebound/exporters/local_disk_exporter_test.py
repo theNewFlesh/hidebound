@@ -50,8 +50,8 @@ class LocalDiskExporterTests(unittest.TestCase):
         hb_root = Path(root, 'hidebound')
         file_meta = Path(hb_root, 'metadata', 'file')
         asset_meta = Path(hb_root, 'metadata', 'asset')
-        asset_log = Path(hb_root, 'logs', 'asset')
-        file_log = Path(hb_root, 'logs', 'file')
+        asset_chunk = Path(hb_root, 'metadata', 'asset-chunk')
+        file_chunk = Path(hb_root, 'metadata', 'file-chunk')
         content = Path(hb_root, 'content')
 
         # add dummy config
@@ -103,8 +103,8 @@ class LocalDiskExporterTests(unittest.TestCase):
         c_paths = data.c_path.dropna().unique().tolist()
         filepaths = list(chain(a_paths, f_paths, c_paths))
         filepaths.extend([
-            Path(asset_log, 'hidebound-asset-log_01-01-01T01-01-01.json').as_posix(),
-            Path(file_log, 'hidebound-file-log_01-01-01T01-01-01.json').as_posix(),
+            Path(asset_chunk, 'hidebound-asset-chunk_01-01-01T01-01-01.json').as_posix(),
+            Path(file_chunk, 'hidebound-file-chunk_01-01-01T01-01-01.json').as_posix(),
         ])
         for filepath in filepaths:
             os.makedirs(Path(filepath).parent, exist_ok=True)
@@ -126,7 +126,7 @@ class LocalDiskExporterTests(unittest.TestCase):
 
             expected = hbt.directory_to_dataframe(hb_root)
             mask = expected.filepath \
-                .apply(lambda x: re.search('/(content|metadata|logs)', x)) \
+                .apply(lambda x: re.search('/(content|metadata)', x)) \
                 .astype(bool)
             expected = expected[mask]
             expected = expected.filepath \

@@ -139,45 +139,37 @@ class S3ExporterTests(unittest.TestCase):
                 self.assertEqual(json.load(f), content)
 
     @mock_s3
-    def test_export_asset_log(self):
+    def test_export_asset_chunk(self):
         exporter = S3Exporter(**self.config)
-        filename = 'hidebound-asset-log_01-01-01T01-01-01.json'
-        exp = [
-            json.dumps(dict(foo='bar')),
-            json.dumps(dict(pizza='taco')),
+        expected = [
+            dict(foo='bar'),
+            dict(pizza='taco'),
         ]
-        expected = '[\n' + ',\n'.join(exp) + ']'
-        temp = dict(filename=filename, content=expected)
-        exporter._export_asset_log(temp)
+        exporter._export_asset_chunk(expected)
 
+        keys = [x.key for x in self.bucket.objects.all()]
+        key = list(filter(lambda x: 'asset-chunk' in x, keys))[0]
         with TemporaryDirectory() as root:
-            file_ = Path(root, filename)
-            with open(file_, 'wb') as f:
-                self.bucket.download_fileobj(
-                    f'hidebound/logs/asset/{filename}',
-                    f
-                )
-            with open(file_, 'r') as f:
-                self.assertEqual(f.read(), expected)
+            temp = Path(root, 'temp.json')
+            with open(temp, 'wb') as f:
+                self.bucket.download_fileobj(key, f)
+            with open(temp, 'r') as f:
+                self.assertEqual(json.load(f), expected)
 
     @mock_s3
-    def test_export_file_log(self):
+    def test_export_file_chunk(self):
         exporter = S3Exporter(**self.config)
-        filename = 'hidebound-file-log_01-01-01T01-01-01.json'
-        exp = [
-            json.dumps(dict(foo='bar')),
-            json.dumps(dict(pizza='taco')),
+        expected = [
+            dict(foo='bar'),
+            dict(pizza='taco'),
         ]
-        expected = '[\n' + ',\n'.join(exp) + ']'
-        temp = dict(filename=filename, content=expected)
-        exporter._export_file_log(temp)
+        exporter._export_file_chunk(expected)
 
+        keys = [x.key for x in self.bucket.objects.all()]
+        key = list(filter(lambda x: 'file-chunk' in x, keys))[0]
         with TemporaryDirectory() as root:
-            file_ = Path(root, filename)
-            with open(file_, 'wb') as f:
-                self.bucket.download_fileobj(
-                    f'hidebound/logs/file/{filename}',
-                    f
-                )
-            with open(file_, 'r') as f:
-                self.assertEqual(f.read(), expected)
+            temp = Path(root, 'temp.json')
+            with open(temp, 'wb') as f:
+                self.bucket.download_fileobj(key, f)
+            with open(temp, 'r') as f:
+                self.assertEqual(json.load(f), expected)

@@ -1,4 +1,4 @@
-from typing import Any, Dict, Union
+from typing import Any, Dict, List, Union
 
 from pathlib import Path
 
@@ -225,22 +225,22 @@ class GirderExporter(ExporterBase):
             .uploadFileToItem(response['_id'], metadata['filepath'])
         return response
 
-    def _export_asset_log(self, metadata):
-        # type: (Dict[str, str]) -> None
+    def _export_asset_chunk(self, metadata):
+        # type: (List[dict]) -> None
         '''
-        Exports content from asset log in hidebound/logs/asset.
+        Exports content from asset log in hidebound/metadata/asset-chunk.
 
         Args:
-            metadata (dict): Asset log.
+            metadata (list[dict]): Asset metadata chunk.
         '''
         pass
 
-    def _export_file_log(self, metadata):
-        # type: (Dict[str, str]) -> None
+    def _export_file_chunk(self, metadata):
+        # type: (List[dict]) -> None
         '''
-        Exports content from file log in hidebound/logs/file.
+        Exports content from file log in hidebound/metadata/file-chunk.
 
         Args:
-            metadata (dict): File log.
+            metadata (list[dict]): File metadata chunk.
         '''
         pass

@@ -1,4 +1,4 @@
-from typing import Dict, Optional, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 from pathlib import Path
 import os
@@ -20,9 +20,8 @@ class ExporterBase:
             * metadata
             * metadata/asset
             * metadata/file
-            * logs
-            * logs/asset
-            * logs/file
+            * metadata/asset-chunk
+            * metadata/file-chunk
 
         Args:
             hidebound_dir (Path or str): Hidebound directory.
@@ -34,10 +33,11 @@ class ExporterBase:
         meta = Path(hidebound_dir, 'metadata')
         asset_dir = Path(meta, 'asset')
         file_dir = Path(meta, 'file')
-        logs = Path(hidebound_dir, 'logs')
-        asset_log = Path(logs, 'asset')
-        file_log = Path(logs, 'file')
-        for path in [data, meta, asset_dir, file_dir, logs, asset_log, file_log]:
+        asset_chunk = Path(meta, 'asset-chunk')
+        file_chunk = Path(meta, 'file-chunk')
+
+        paths = [data, meta, asset_dir, file_dir, asset_chunk, file_chunk]
+        for path in paths:
             if not path.is_dir():
                 msg = f'{path.as_posix()} directory does not exist.'
                 raise FileNotFoundError(msg)
@@ -89,22 +89,23 @@ class ExporterBase:
                     total=f_total,
                 )
 
-        # export logs
+        # export chunks
         for k, kind in enumerate(['asset', 'file']):
-            log_path = Path(hidebound_dir, 'logs', kind)
-            for filename in os.listdir(log_path):
-                filepath = Path(log_path, filename)
+            data = []
+            root = Path(hidebound_dir, 'metadata', kind)
+            for filename in os.listdir(root):
+                filepath = Path(root, filename)
                 with open(filepath) as f:
-                    log = dict(filename=filepath.name, content=f.read())
+                    data.append(jsonc.JsonComment().load(f))
 
-                if kind == 'asset':
-                    self._export_asset_log(log)
-                else:
-                    self._export_file_log(log)
+            if kind == 'asset':
+                self._export_asset_chunk(data)
+            else:
+                self._export_file_chunk(data)
 
-                logger.info(
-                    f'exporter: export {kind} logs', step=k + 1, total=2,
-                )
+            logger.info(
+                f'exporter: export {kind} chunk', step=k + 1, total=2,
+            )
 
     def _export_asset(self, metadata):
         # type: (Dict) -> None
@@ -134,30 +135,32 @@ class ExporterBase:
         msg = '_export_file method must be implemented in subclass.'
         raise NotImplementedError(msg)
 
-    def _export_asset_log(self, metadata):
-        # type: (Dict[str, str]) -> None
+    def _export_asset_chunk(self, metadata):
+        # type: (List[dict]) -> None
         '''
-        Exports content from asset log in hidebound/logs/asset.
+        Exports list of asset metadata to a single asset in
+        hidebound/metadata/asset-chunk.
 
         Args:
-            metadata (dict): Asset log.
+            metadata (list[dict]): asset metadata.
 
         Raises:
             NotImplementedError: If method is not implemented in subclass.
         '''
-        msg = '_export_asset_log method must be implemented in subclass.'
+        msg = '_export_asset_chunk method must be implemented in subclass.'
         raise NotImplementedError(msg)
 
-    def _export_file_log(self, metadata):
-        # type: (Dict[str, str]) -> None
+    def _export_file_chunk(self, metadata):
+        # type: (List[dict]) -> None
         '''
-        Exports content from file log in hidebound/logs/file.
+        Exports list of file metadata to a single file in
+        hidebound/metadata/file-chunk.
 
         Args:
-            metadata (dict): File log.
+            metadata (list[dict]): File metadata.
 
         Raises:
             NotImplementedError: If method is not implemented in subclass.
         '''
-        msg = '_export_file_log method must be implemented in subclass.'
+        msg = '_export_file_chunk method must be implemented in subclass.'
         raise NotImplementedError(msg)

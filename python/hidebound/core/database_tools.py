@@ -323,12 +323,12 @@ def _get_data_for_write(
         * File data - For writing asset file data to a target filepath.
         * Asset metadata - For writing asset metadata to a target json file.
         * File metadata - For writing file metadata to a target json file.
-        * Asset log - For writing asset log to a target json file.
-        * File log - For writing file log to a target json file.
+        * Asset chunk - For writing asset metadata chunk to a target json file.
+        * File chunk - For writing file metadata chunk to a target json file.
 
     Returns:
-        tuple[DataFrame]: file_data, asset_metadata, file_metadata, asset_log,
-            file_log.
+        tuple[DataFrame]: file_data, asset_metadata, file_metadata, asset_chunk,
+            file_chunk.
     '''
     # TODO: flatten file_traits and flatten asset_traits
     # get valid asset data
@@ -342,7 +342,6 @@ def _get_data_for_write(
     source_dir = Path(source_dir).absolute().as_posix()
     data_dir = Path(target_dir, 'content').absolute().as_posix()
     meta_dir = Path(target_dir, 'metadata').absolute().as_posix()
-    log_dir = Path(target_dir, 'logs').absolute().as_posix()
 
     # add asset id
     keys = data.asset_path.unique().tolist()
@@ -433,18 +432,18 @@ def _get_data_for_write(
     # get time
     now = hbt.time_string()
 
-    # create asset log
-    asset_log = DataFrame()
-    asset_log['metadata'] = [asset_meta.metadata.tolist()]
-    asset_log['target'] = [Path(
-        log_dir, 'asset', f'hidebound-asset-log_{now}.json'
+    # create asset chunk
+    asset_chunk = DataFrame()
+    asset_chunk['metadata'] = [asset_meta.metadata.tolist()]
+    asset_chunk['target'] = [Path(
+        meta_dir, 'asset-chunk', f'hidebound-asset-chunk_{now}.json'
     ).as_posix()]
 
-    # create file log
-    file_log = DataFrame()
-    file_log['metadata'] = [file_meta.metadata.tolist()]
-    file_log['target'] = [Path(
-        log_dir, 'file', f'hidebound-file-log_{now}.json'
+    # create file chunk
+    file_chunk = DataFrame()
+    file_chunk['metadata'] = [file_meta.metadata.tolist()]
+    file_chunk['target'] = [Path(
+        meta_dir, 'file-chunk', f'hidebound-file-chunk_{now}.json'
     ).as_posix()]
 
-    return file_data, asset_meta, file_meta, asset_log, file_log
+    return file_data, asset_meta, file_meta, asset_chunk, file_chunk

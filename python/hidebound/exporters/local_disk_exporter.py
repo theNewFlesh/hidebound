@@ -1,4 +1,4 @@
-from typing import Any, Dict, Union
+from typing import Any, Dict, List, Union
 
 from pathlib import Path
 import os
@@ -77,8 +77,8 @@ class LocalDiskExporter(ExporterBase):
         hidebound_dir = Path(hidebound_dir).as_posix()
         data = hbt.directory_to_dataframe(hidebound_dir)
 
-        # only include /content, /metadata and /logs directories
-        regex = f'{hidebound_dir}/(content|metadata|logs)'
+        # only include /content and /metadata directories
+        regex = f'{hidebound_dir}/(content|metadata)'
         mask = data.filepath.apply(lambda x: re.search(regex, x)).astype(bool)
         data = data[mask]
 
@@ -107,22 +107,22 @@ class LocalDiskExporter(ExporterBase):
         '''
         pass  # pragma: no cover
 
-    def _export_asset_log(self, metadata):
-        # type: (Dict[str, str]) -> None
+    def _export_asset_chunk(self, metadata):
+        # type: (List[dict]) -> None
         '''
-        Exports content from single asset log in hidebound/logs/asset.
+        Exports content from single asset chunk in hidebound/metadata/asset-chunk.
 
         Args:
-            metadata (dict): File log.
+            metadata (list[dict]): Asset metadata.
         '''
         pass  # pragma: no cover
 
-    def _export_file_log(self, metadata):
-        # type: (Dict[str, str]) -> None
+    def _export_file_chunk(self, metadata):
+        # type: (List[dict]) -> None
         '''
-        Exports content from single file log in hidebound/logs/file.
+        Exports content from single file chunk in hidebound/metadata/file-chunk.
 
         Args:
-            metadata (dict): File log.
+            metadata (list[dict]): File metadata.
         '''
         pass  # pragma: no cover

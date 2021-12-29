@@ -369,7 +369,7 @@ class DatabaseTests(DatabaseTestBase):
         data = lbt.relative_path(__file__, '../../../resources/fake_data.csv')
         data = pd.read_csv(data)
 
-        file_data, asset_meta, file_meta, asset_log, file_log = db_tools \
+        file_data, asset_meta, file_meta, asset_chunk, file_chunk = db_tools \
             ._get_data_for_write(data, '/tmp/projects', '/tmp/hidebound')
 
         data = data[data.asset_valid]
@@ -419,31 +419,31 @@ class DatabaseTests(DatabaseTestBase):
         for result in temp:
             self.assertTrue(result.startswith('/tmp/hidebound/content'))
 
-        # asset log
-        self.assertEqual(len(asset_log), 1)
+        # asset chunk
+        self.assertEqual(len(asset_chunk), 1)
 
-        result = asset_log['target'].tolist()[0]
-        self.assertIn('hidebound-asset-log', result)
+        result = asset_chunk['target'].tolist()[0]
+        self.assertIn('hidebound-asset-chunk', result)
 
         expected = asset_meta.metadata.tolist()
-        result = asset_log.metadata.tolist()[0]
+        result = asset_chunk.metadata.tolist()[0]
         self.assertEqual(result, expected)
 
-        # file log
-        self.assertEqual(len(file_log), 1)
+        # file chunk
+        self.assertEqual(len(file_chunk), 1)
 
-        result = file_log['target'].tolist()[0]
-        self.assertIn('hidebound-file-log', result)
+        result = file_chunk['target'].tolist()[0]
+        self.assertIn('hidebound-file-chunk', result)
 
         expected = file_meta.metadata.tolist()
-        result = file_log.metadata.tolist()[0]
+        result = file_chunk.metadata.tolist()[0]
         self.assertEqual(result, expected)
 
     def test_get_data_for_write_dirs(self):
         data = lbt.relative_path(__file__, '../../../resources/fake_data.csv')
         data = pd.read_csv(data)
 
-        file_data, asset_meta, file_meta, asset_log, file_log = db_tools \
+        file_data, asset_meta, file_meta, asset_chunk, file_chunk = db_tools \
             ._get_data_for_write(
                 data,
                 '/tmp/projects',
@@ -464,13 +464,13 @@ class DatabaseTests(DatabaseTestBase):
             .unique().tolist()
         self.assertEqual(result, [True])
 
-        result = asset_log.target \
-            .apply(lambda x: '/tmp/hidebound/logs/asset' in x) \
+        result = asset_chunk.target \
+            .apply(lambda x: '/tmp/hidebound/metadata/asset-chunk' in x) \
             .unique().tolist()
         self.assertEqual(result, [True])
 
-        result = file_log.target \
-            .apply(lambda x: '/tmp/hidebound/logs/file' in x) \
+        result = file_chunk.target \
+            .apply(lambda x: '/tmp/hidebound/metadata/file-chunk' in x) \
             .unique().tolist()
         self.assertEqual(result, [True])
 

@@ -189,12 +189,12 @@ class DatabaseTests(DatabaseTestBase):
             expected = data.asset_path.nunique()
             self.assertEqual(result, expected)
 
-            # ensure asset log is written
-            result = len(os.listdir(Path(hb_root, 'logs', 'asset')))
+            # ensure asset chunk is written
+            result = len(os.listdir(Path(hb_root, 'metadata', 'asset-chunk')))
             self.assertEqual(result, 1)
 
-            # ensure file log is written
-            result = len(os.listdir(Path(hb_root, 'logs', 'file')))
+            # ensure file chunk is written
+            result = len(os.listdir(Path(hb_root, 'metadata', 'file-chunk')))
             self.assertEqual(result, 1)
 
     def test_create_all_invalid(self):
@@ -656,30 +656,38 @@ class DatabaseTests(DatabaseTestBase):
             # asset metadata
             expected = data.asset_path.nunique()
             result = len(list(filter(
-                lambda x: re.search('metadata/asset', x), results
+                lambda x: re.search('metadata/asset/', x), results
             )))
             self.assertEqual(result, expected)
 
             # file metadata
             result = len(list(filter(
-                lambda x: re.search('metadata/file', x), results
+                lambda x: re.search('metadata/file/', x), results
             )))
             self.assertEqual(result, len(content))
+
+            # asset chunk
+            result = len(list(filter(
+                lambda x: re.search('metadata/asset-chunk/', x), results
+            )))
+            self.assertEqual(result, 1)
+
+            # file chunk
+            result = len(list(filter(
+                lambda x: re.search('metadata/file-chunk/', x), results
+            )))
+            self.assertEqual(result, 1)
 
     def test_export_local_disk(self):
         with TemporaryDirectory() as root:
             hb_root = Path(root, 'hidebound')
             os.makedirs(hb_root)
-            Spec001, Spec002, BadSpec = self.get_specifications()
+            Spec001, Spec002, _ = self.get_specifications()
             self.create_files(root)
 
             target = Path(root, 'target').as_posix()
             os.makedirs(target)
-            exporters = dict(
-                local_disk=dict(
-                    target_directory=target
-                )
-            )
+            exporters = dict(local_disk=dict(target_directory=target))
 
             db = Database(
                 root, hb_root, [Spec001, Spec002], exporters=exporters
@@ -689,7 +697,11 @@ class DatabaseTests(DatabaseTestBase):
             self.assertEqual(len(os.listdir(target)), 0)
             db.export()
 
-            expected = hbt.directory_to_dataframe(hb_root).filepath \
+            expected = hbt.directory_to_dataframe(hb_root).filepath
+            mask = expected \
+                .apply(lambda x: re.search('/(asset|file|content)', x)) \
+                .astype(bool)
+            expected = expected[mask] \
                 .apply(lambda x: re.sub('.*/hidebound/', '', x)) \
                 .tolist()
             expected = sorted(expected)

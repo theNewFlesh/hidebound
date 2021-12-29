@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 
 from io import BytesIO
 import json
@@ -8,6 +8,7 @@ from schematics.types import StringType
 import boto3 as boto
 
 from hidebound.exporters.exporter_base import ExporterBase
+import hidebound.core.tools as tools
 import hidebound.core.validators as vd
 # ------------------------------------------------------------------------------
 
@@ -121,28 +122,32 @@ class S3Exporter(ExporterBase):
             'hidebound/content/' + metadata['filepath_relative'],
         )
 
-    def _export_asset_log(self, metadata):
-        # type: (Dict[str, str]) -> None
+    def _export_asset_chunk(self, metadata):
+        # type: (List[dict]) -> None
         '''
-        Exports content from single asset log in hidebound/logs/asset.
+        Exports list of asset metadata to a single file in
+        hidebound/metadata/asset-chunk.
 
         Args:
-            metadata (dict): Asset log.
+            metadata (list[dict]): Asset metadata.
         '''
+        now = tools.time_string()
         self._bucket.upload_fileobj(
-            BytesIO(metadata['content'].encode('utf-8')),
-            'hidebound/logs/asset/' + metadata['filename'],
+            BytesIO(json.dumps(metadata).encode('utf-8')),
+            f'hidebound/metadata/asset-chunk/hidebound-asset-chunk_{now}.json',
         )
 
-    def _export_file_log(self, metadata):
-        # type: (Dict[str, str]) -> None
+    def _export_file_chunk(self, metadata):
+        # type: (List[dict]) -> None
         '''
-        Exports content from single file log in hidebound/logs/file.
+        Exports list of file metadata to a single file in
+        hidebound/metadata/file-chunk.
 
         Args:
-            metadata (dict): Asset log.
+            metadata (list[dict]): File metadata.
         '''
+        now = tools.time_string()
         self._bucket.upload_fileobj(
-            BytesIO(metadata['content'].encode('utf-8')),
-            'hidebound/logs/file/' + metadata['filename'],
+            BytesIO(json.dumps(metadata).encode('utf-8')),
+            f'hidebound/metadata/file-chunk/hidebound-file-chunk_{now}.json',
         )
