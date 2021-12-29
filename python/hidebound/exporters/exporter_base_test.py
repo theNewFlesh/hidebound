@@ -1,4 +1,3 @@
-import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import os
@@ -6,7 +5,7 @@ import shutil
 import unittest
 
 from hidebound.exporters.exporter_base import ExporterBase
-import hidebound.core.tools as tools
+import hidebound.core.tools as hbt
 # ------------------------------------------------------------------------------
 
 
@@ -52,19 +51,19 @@ class ExporterBaseTests(unittest.TestCase):
 
         # write asset metadata
         for filepath, data in assets:
-            tools.write_json(data, filepath)
+            hbt.write_json(data, filepath)
 
         # write asset chunk
         asset_chunk = [x[1] for x in assets]
-        tools.write_json(asset_chunk, asset_chunk_path)
+        hbt.write_json(asset_chunk, asset_chunk_path)
 
         # write file metadata
         for filepath, data in files:
-            tools.write_json(data, filepath)
+            hbt.write_json(data, filepath)
 
         # write file chunk
         file_chunk = [x[1] for x in files]
-        tools.write_json(file_chunk, file_chunk_path)
+        hbt.write_json(file_chunk, file_chunk_path)
 
         return assets, files, asset_chunk, file_chunk
 

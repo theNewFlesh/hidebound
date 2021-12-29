@@ -20,7 +20,7 @@ from hidebound.exporters.girder_exporter import GirderExporter
 from hidebound.exporters.local_disk_exporter import LocalDiskExporter
 from hidebound.exporters.s3_exporter import S3Exporter
 import hidebound.core.database_tools as db_tools
-import hidebound.core.tools as tools
+import hidebound.core.tools as hbt
 from hidebound.core.logging import ProgressLogger
 # ------------------------------------------------------------------------------
 
@@ -233,25 +233,25 @@ class Database:
         # write file data
         if self._write_mode == 'move':
             file_data.apply(lambda x: shutil.move(x.source, x.target), axis=1)
-            tools.delete_empty_directories(self._root)
+            hbt.delete_empty_directories(self._root)
         else:
             file_data.apply(lambda x: shutil.copy2(x.source, x.target), axis=1)
         self._logger.info('create: write file data', step=3, total=total)
 
         # write asset metadata
-        asset_meta.apply(lambda x: tools.write_json(x.metadata, x.target), axis=1)
+        asset_meta.apply(lambda x: hbt.write_json(x.metadata, x.target), axis=1)
         self._logger.info('create: write asset metadata', step=4, total=total)
 
         # write file metadata
-        file_meta.apply(lambda x: tools.write_json(x.metadata, x.target), axis=1)
+        file_meta.apply(lambda x: hbt.write_json(x.metadata, x.target), axis=1)
         self._logger.info('create: write file metadata', step=5, total=total)
 
         # write asset chunk
-        asset_chunk.apply(lambda x: tools.write_json(x.metadata, x.target), axis=1)
+        asset_chunk.apply(lambda x: hbt.write_json(x.metadata, x.target), axis=1)
         self._logger.info('create: write asset chunk', step=6, total=total)
 
         # write file chunk
-        file_chunk.apply(lambda x: tools.write_json(x.metadata, x.target), axis=1)
+        file_chunk.apply(lambda x: hbt.write_json(x.metadata, x.target), axis=1)
         self._logger.info('create: write file chunk', step=7, total=total)
 
         self._logger.info('create: complete', step=7, total=total)
@@ -359,7 +359,7 @@ class Database:
         self._logger.info('update', step=0, total=total)
 
         exclude_re = '|'.join([self._exclude_regex, 'hidebound/logs'])
-        data = tools.directory_to_dataframe(
+        data = hbt.directory_to_dataframe(
             self._root,
             include_regex=self._include_regex,
             exclude_regex=exclude_re
