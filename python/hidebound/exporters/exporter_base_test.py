@@ -6,6 +6,7 @@ import shutil
 import unittest
 
 from hidebound.exporters.exporter_base import ExporterBase
+import hidebound.core.tools as tools
 # ------------------------------------------------------------------------------
 
 
@@ -51,23 +52,19 @@ class ExporterBaseTests(unittest.TestCase):
 
         # write asset metadata
         for filepath, data in assets:
-            with open(filepath, 'w') as f:
-                json.dump(data, f)
+            tools.write_json(data, filepath)
 
         # write asset chunk
         asset_chunk = [x[1] for x in assets]
-        with open(asset_chunk_path, 'w') as f:
-            json.dump(asset_chunk, f)
+        tools.write_json(asset_chunk, asset_chunk_path)
 
         # write file metadata
         for filepath, data in files:
-            with open(filepath, 'w') as f:
-                json.dump(data, f)
+            tools.write_json(data, filepath)
 
         # write file chunk
         file_chunk = [x[1] for x in files]
-        with open(file_chunk_path, 'w') as f:
-            json.dump(file_chunk, f)
+        tools.write_json(file_chunk, file_chunk_path)
 
         return assets, files, asset_chunk, file_chunk
 
