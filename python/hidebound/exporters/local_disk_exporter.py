@@ -1,4 +1,4 @@
-from typing import Any, Dict, Union
+from typing import Any, Dict, List, Union
 
 from pathlib import Path
 import os
@@ -108,21 +108,21 @@ class LocalDiskExporter(ExporterBase):
         pass  # pragma: no cover
 
     def _export_asset_chunk(self, metadata):
-        # type: (Dict[str, str]) -> None
+        # type: (List[dict]) -> None
         '''
-        Exports content from single asset log in hidebound/metadata/asset-chunk.
+        Exports content from single asset chunk in hidebound/metadata/asset-chunk.
 
         Args:
-            metadata (dict): File log.
+            metadata (list[dict]): Asset metadata.
         '''
         pass  # pragma: no cover
 
     def _export_file_chunk(self, metadata):
-        # type: (Dict[str, str]) -> None
+        # type: (List[dict]) -> None
         '''
-        Exports content from single file log in hidebound/metadata/file-chunk.
+        Exports content from single file chunk in hidebound/metadata/file-chunk.
 
         Args:
-            metadata (dict): File log.
+            metadata (list[dict]): File metadata.
         '''
         pass  # pragma: no cover

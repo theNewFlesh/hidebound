@@ -697,7 +697,11 @@ class DatabaseTests(DatabaseTestBase):
             self.assertEqual(len(os.listdir(target)), 0)
             db.export()
 
-            expected = hbt.directory_to_dataframe(hb_root).filepath \
+            expected = hbt.directory_to_dataframe(hb_root).filepath
+            mask = expected \
+                .apply(lambda x: re.search('asset|file|content', x)) \
+                .astype(bool)
+            expected = expected[mask] \
                 .apply(lambda x: re.sub('.*/hidebound/', '', x)) \
                 .tolist()
             expected = sorted(expected)
