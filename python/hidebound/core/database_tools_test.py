@@ -422,16 +422,25 @@ class DatabaseTests(DatabaseTestBase):
         for result in temp:
             self.assertTrue(result.startswith('/tmp/hidebound/content'))
 
-        # chunks
-        chunks = zip(['asset', 'file'], [asset_chunk, file_chunk], [asset_meta, file_meta])
-        for name, chunk, meta in chunks:
-            self.assertEqual(len(chunk), 1)
-            result = chunk['target'].tolist()[0]
-            self.assertIn(f'hidebound-{name}-chunk', result)
+        # asset chunk
+        self.assertEqual(len(asset_chunk), 1)
 
-            expected = meta.metadata.tolist()
-            result = chunk.metadata.tolist()[0]
-            self.assertEqual(result, expected)
+        result = asset_chunk['target'].tolist()[0]
+        self.assertIn('hidebound-asset-chunk', result)
+
+        expected = asset_meta.metadata.tolist()
+        result = asset_chunk.metadata.tolist()[0]
+        self.assertEqual(result, expected)
+
+        # file chunk
+        self.assertEqual(len(file_chunk), 1)
+
+        result = file_chunk['target'].tolist()[0]
+        self.assertIn('hidebound-file-chunk', result)
+
+        expected = file_meta.metadata.tolist()
+        result = file_chunk.metadata.tolist()[0]
+        self.assertEqual(result, expected)
 
     def test_get_data_for_write_dirs(self):
         data = lbt.relative_path(__file__, '../../../resources/fake_data.csv')
@@ -444,24 +453,28 @@ class DatabaseTests(DatabaseTestBase):
                 '/tmp/hidebound'
             )
 
-        result = file_data.target\
+        result = file_data.target \
             .apply(lambda x: '/tmp/hidebound/content' in x).unique().tolist()
         self.assertEqual(result, [True])
 
-        result = file_meta.target\
-            .apply(lambda x: '/tmp/hidebound/metadata/file' in x).unique().tolist()
+        result = file_meta.target \
+            .apply(lambda x: '/tmp/hidebound/metadata/file' in x) \
+            .unique().tolist()
         self.assertEqual(result, [True])
 
-        result = asset_meta.target\
-            .apply(lambda x: '/tmp/hidebound/metadata/asset' in x).unique().tolist()
+        result = asset_meta.target \
+            .apply(lambda x: '/tmp/hidebound/metadata/asset' in x) \
+            .unique().tolist()
         self.assertEqual(result, [True])
 
-        result = asset_chunk.target\
-            .apply(lambda x: '/tmp/hidebound/metadata/asset-chunk' in x).unique().tolist()
+        result = asset_chunk.target \
+            .apply(lambda x: '/tmp/hidebound/metadata/asset-chunk' in x) \
+            .unique().tolist()
         self.assertEqual(result, [True])
 
-        result = file_chunk.target\
-            .apply(lambda x: '/tmp/hidebound/metadata/file-chunk' in x).unique().tolist()
+        result = file_chunk.target \
+            .apply(lambda x: '/tmp/hidebound/metadata/file-chunk' in x) \
+            .unique().tolist()
         self.assertEqual(result, [True])
 
     def test_get_data_for_write_empty_dataframe(self):
