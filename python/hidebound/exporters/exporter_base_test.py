@@ -15,19 +15,21 @@ class ExporterBaseTests(unittest.TestCase):
         metadata = Path(root, 'metadata')
         asset = Path(root, 'metadata', 'asset')
         file_ = Path(root, 'metadata', 'file')
-        asset_log_path = Path(root, 'logs', 'asset')
-        file_log_path = Path(root, 'logs', 'file')
+        asset_chunk_path = Path(root, 'metadata', 'asset-chunk')
+        file_chunk_path = Path(root, 'metadata', 'file-chunk')
+        logs = Path(root, 'logs')
 
         os.makedirs(data)
         os.makedirs(metadata)
         os.makedirs(asset)
         os.makedirs(file_)
-        os.makedirs(asset_log_path)
-        os.makedirs(file_log_path)
-        asset_log_name = 'hidebound-asset-log_01-01-01T01-01-01.json'
-        asset_log_path = Path(asset_log_path, asset_log_name)
-        file_log_name = 'hidebound-file-log_01-01-01T01-01-01.json'
-        file_log_path = Path(file_log_path, file_log_name)
+        os.makedirs(asset_chunk_path)
+        os.makedirs(file_chunk_path)
+        os.makedirs(logs)
+        asset_chunk_name = 'hidebound-asset-chunk_01-01-01T01-01-01.json'
+        asset_chunk_path = Path(asset_chunk_path, asset_chunk_name)
+        file_chunk_name = 'hidebound-file-chunk_01-01-01T01-01-01.json'
+        file_chunk_path = Path(file_chunk_path, file_chunk_name)
 
         # create asset data
         assets = [
@@ -50,33 +52,26 @@ class ExporterBaseTests(unittest.TestCase):
         ]
 
         # write asset metadata
-        asset_log = []
         for filepath, data in assets:
-            asset_log.append(json.dumps(data))
             with open(filepath, 'w') as f:
                 json.dump(data, f)
 
-        # write asset log
-        asset_log = '[\n' + '\n'.join(asset_log) + ']'
-        with open(asset_log_path, 'w') as f:
-            f.write(asset_log)
+        # write asset chunk
+        asset_chunk = [x[1] for x in assets]
+        with open(asset_chunk_path, 'w') as f:
+            json.dump(asset_chunk, f)
 
         # write file metadata
-        file_log = []
         for filepath, data in files:
-            file_log.append(json.dumps(data))
             with open(filepath, 'w') as f:
                 json.dump(data, f)
 
-        # write file log
-        file_log = '[\n' + '\n'.join(file_log) + ']'
-        with open(file_log_path, 'w') as f:
-            f.write(file_log)
+        # write file chunk
+        file_chunk = [x[1] for x in files]
+        with open(file_chunk_path, 'w') as f:
+            json.dump(file_chunk, f)
 
-        asset_log = dict(filename=asset_log_name, content=asset_log)
-        file_log = dict(filename=file_log_name, content=file_log)
-
-        return assets, files, asset_log, file_log
+        return assets, files, asset_chunk, file_chunk
 
     def test_enforce_directory_structure(self):
         with TemporaryDirectory() as root:
@@ -84,11 +79,13 @@ class ExporterBaseTests(unittest.TestCase):
             metadata = Path(root, 'metadata')
             asset = Path(root, 'metadata', 'asset')
             file_ = Path(root, 'metadata', 'file')
+            asset_chunk = Path(root, 'metadata', 'asset-chunk')
+            file_chunk = Path(root, 'metadata', 'file-chunk')
             logs = Path(root, 'logs')
-            asset_log = Path(logs, 'asset')
-            file_log = Path(logs, 'file')
 
-            dirs = [content, metadata, asset, file_, logs, asset_log, file_log]
+            dirs = [
+                content, metadata, asset, file_, asset_chunk, file_chunk, logs
+            ]
             for dir_ in dirs:
                 os.makedirs(dir_)
             ExporterBase()._enforce_directory_structure(root)
@@ -105,8 +102,8 @@ class ExporterBaseTests(unittest.TestCase):
     def test_export(self):
         r_assets = []
         r_files = []
-        r_asset_log = []
-        r_file_log = []
+        r_asset_chunk = []
+        r_file_chunk = []
 
         class Foo(ExporterBase):
             def _export_asset(self, metadata):
@@ -115,22 +112,36 @@ class ExporterBaseTests(unittest.TestCase):
             def _export_file(self, metadata):
                 r_files.append(metadata)
 
-            def _export_asset_log(self, metadata):
-                r_asset_log.append(metadata)
+            def _export_asset_chunk(self, metadata):
+                r_asset_chunk.append(metadata)
 
-            def _export_file_log(self, metadata):
-                r_file_log.append(metadata)
+            def _export_file_chunk(self, metadata):
+                r_file_chunk.append(metadata)
 
         with TemporaryDirectory() as root:
-            e_assets, e_files, e_asset_log, e_file_log = self.create_data(root)
+            e_assets, e_files, e_asset_chunk, e_file_chunk = self.create_data(root)
             e_assets = [x[1] for x in e_assets]
             e_files = [x[1] for x in e_files]
 
             Foo().export(root)
+
+            # asset
             self.assertEqual(r_assets, e_assets)
+
+            # file
             self.assertEqual(r_files, e_files)
-            self.assertEqual(r_asset_log[0], e_asset_log)
-            self.assertEqual(r_file_log[0], e_file_log)
+
+            # asset-chunk
+            r_asset_chunk = r_asset_chunk[0]
+            self.assertEqual(len(r_asset_chunk), len(e_asset_chunk))
+            for expected in e_asset_chunk:
+                self.assertIn(expected, r_asset_chunk)
+
+            # file-chunk
+            r_file_chunk = r_file_chunk[0]
+            self.assertEqual(len(r_file_chunk), len(e_file_chunk))
+            for expected in e_file_chunk:
+                self.assertIn(expected, r_file_chunk)
 
     def test_export_asset(self):
         class Foo(ExporterBase):
@@ -146,16 +157,16 @@ class ExporterBaseTests(unittest.TestCase):
         with self.assertRaisesRegexp(NotImplementedError, expected):
             Foo()._export_file({})
 
-    def test_export_asset_log(self):
+    def test_export_asset_chunk(self):
         class Foo(ExporterBase):
             pass
-        expected = '_export_asset_log method must be implemented in subclass.'
+        expected = '_export_asset_chunk method must be implemented in subclass.'
         with self.assertRaisesRegexp(NotImplementedError, expected):
-            Foo()._export_asset_log({})
+            Foo()._export_asset_chunk({})
 
-    def test_export_file_log(self):
+    def test_export_file_chunk(self):
         class Foo(ExporterBase):
             pass
-        expected = '_export_file_log method must be implemented in subclass.'
+        expected = '_export_file_chunk method must be implemented in subclass.'
         with self.assertRaisesRegexp(NotImplementedError, expected):
-            Foo()._export_file_log({})
+            Foo()._export_file_chunk({})
