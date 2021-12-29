@@ -1,6 +1,8 @@
 from pathlib import Path
-import os
 from tempfile import TemporaryDirectory
+import json
+import os
+import re
 import unittest
 
 from pandas import DataFrame
@@ -239,3 +241,38 @@ class ToolsTests(unittest.TestCase):
             expected = f'{exr} is not an EXR file.'
             with self.assertRaisesRegexp(IOError, expected):
                 tools.read_exr_header(exr)
+
+    def test_time_string(self):
+        result = re.search(
+            r'\d\d\d\d-\d\d-\d\dT-\d\d-\d\d-\d\d',
+            tools.time_string()
+        )
+        self.assertIsNotNone(result)
+
+    def test_write_json(self):
+        with TemporaryDirectory() as root:
+            filepath = Path(root, 'test.json')
+
+            # dict
+            expected = dict(a='b', c='d')
+            tools.write_json(expected, filepath)
+            with open(filepath) as f:
+                result = json.load(f)
+            self.assertEqual(result, expected)
+
+            # list
+            expected = [
+                dict(a='b', c='d'),
+                dict(e='f', g='h'),
+                dict(i='j', k='l'),
+            ]
+            tools.write_json(expected, filepath)
+            with open(filepath) as f:
+                result = json.load(f)
+            self.assertEqual(result, expected)
+
+            with open(filepath) as f:
+                result = f.read()
+            expected = map(json.dumps, expected)
+            expected = '[\n' + ',\n'.join(expected) + '\n]'
+            self.assertEqual(result, expected)
