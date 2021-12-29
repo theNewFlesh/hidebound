@@ -1,7 +1,6 @@
 from typing import Any, Dict, Optional, Tuple, Union
 
 from collections import defaultdict
-from datetime import datetime
 from pathlib import Path
 import json
 import re
@@ -433,7 +432,7 @@ def _get_data_for_write(
     file_meta = file_meta[['metadata', 'target']]
 
     # create asset log
-    now = datetime.now().strftime('%Y-%m-%dT-%H-%M-%S')
+    now = tools.time_string()
     asset_log = DataFrame()
     asset_log['target'] = [Path(
         log_dir, 'asset', f'hidebound-asset-log_{now}.json'
