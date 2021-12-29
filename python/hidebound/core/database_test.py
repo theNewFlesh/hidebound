@@ -682,16 +682,12 @@ class DatabaseTests(DatabaseTestBase):
         with TemporaryDirectory() as root:
             hb_root = Path(root, 'hidebound')
             os.makedirs(hb_root)
-            Spec001, Spec002, BadSpec = self.get_specifications()
+            Spec001, Spec002, _ = self.get_specifications()
             self.create_files(root)
 
             target = Path(root, 'target').as_posix()
             os.makedirs(target)
-            exporters = dict(
-                local_disk=dict(
-                    target_directory=target
-                )
-            )
+            exporters = dict(local_disk=dict(target_directory=target))
 
             db = Database(
                 root, hb_root, [Spec001, Spec002], exporters=exporters

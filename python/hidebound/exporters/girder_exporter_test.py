@@ -79,20 +79,18 @@ class GirderExporterTests(unittest.TestCase):
 
     def create_data(self, root):
         data = Path(root, 'content')
-        metadata = Path(root, 'metadata')
-        asset = Path(root, 'metadata', 'asset')
-        file_ = Path(root, 'metadata', 'file')
-        logs = Path(root, 'logs')
-        asset_log_path = Path(logs, 'asset')
-        file_log_path = Path(logs, 'file')
+        meta = Path(root, 'metadata')
+        asset = Path(meta, 'asset')
+        file_ = Path(meta, 'file')
+        asset_chunk_path = Path(meta, 'asset-chunk')
+        file_chunk_path = Path(meta, 'file-chunk')
 
         os.makedirs(data)
-        os.makedirs(metadata)
+        os.makedirs(meta)
         os.makedirs(asset)
         os.makedirs(file_)
-        os.makedirs(logs)
-        os.makedirs(asset_log_path)
-        os.makedirs(file_log_path)
+        os.makedirs(asset_chunk_path)
+        os.makedirs(file_chunk_path)
 
         # create asset data
         asset_data = [
@@ -144,16 +142,16 @@ class GirderExporterTests(unittest.TestCase):
         asset_log = [json.dumps(x[1]) for x in assets]
         asset_log = '[\n' + ',\n'.join(asset_log) + ']'
         asset_log_name = 'hidebound-asset-log_01-01-01T01-01-01.json'
-        asset_log_path = Path(asset_log_path, asset_log_name)
-        with open(asset_log_path, 'w') as f:
+        asset_chunk_path = Path(asset_chunk_path, asset_log_name)
+        with open(asset_chunk_path, 'w') as f:
             f.write(asset_log)
 
         # write file log
         file_log = [json.dumps(x[1]) for x in files]
         file_log = '[\n' + ',\n'.join(file_log) + ']'
         file_log_name = 'hidebound-file-log_01-01-01T01-01-01.json'
-        file_log_path = Path(file_log_path, file_log_name)
-        with open(file_log_path, 'w') as f:
+        file_chunk_path = Path(file_chunk_path, file_log_name)
+        with open(file_chunk_path, 'w') as f:
             f.write(file_log)
 
         asset_log = dict(filename=asset_log_name, content=asset_log)

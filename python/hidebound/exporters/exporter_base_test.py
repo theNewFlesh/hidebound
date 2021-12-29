@@ -17,7 +17,6 @@ class ExporterBaseTests(unittest.TestCase):
         file_ = Path(root, 'metadata', 'file')
         asset_chunk_path = Path(root, 'metadata', 'asset-chunk')
         file_chunk_path = Path(root, 'metadata', 'file-chunk')
-        logs = Path(root, 'logs')
 
         os.makedirs(data)
         os.makedirs(metadata)
@@ -25,7 +24,6 @@ class ExporterBaseTests(unittest.TestCase):
         os.makedirs(file_)
         os.makedirs(asset_chunk_path)
         os.makedirs(file_chunk_path)
-        os.makedirs(logs)
         asset_chunk_name = 'hidebound-asset-chunk_01-01-01T01-01-01.json'
         asset_chunk_path = Path(asset_chunk_path, asset_chunk_name)
         file_chunk_name = 'hidebound-file-chunk_01-01-01T01-01-01.json'
@@ -81,11 +79,8 @@ class ExporterBaseTests(unittest.TestCase):
             file_ = Path(root, 'metadata', 'file')
             asset_chunk = Path(root, 'metadata', 'asset-chunk')
             file_chunk = Path(root, 'metadata', 'file-chunk')
-            logs = Path(root, 'logs')
 
-            dirs = [
-                content, metadata, asset, file_, asset_chunk, file_chunk, logs
-            ]
+            dirs = [content, metadata, asset, file_, asset_chunk, file_chunk]
             for dir_ in dirs:
                 os.makedirs(dir_)
             ExporterBase()._enforce_directory_structure(root)

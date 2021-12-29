@@ -22,7 +22,6 @@ class ExporterBase:
             * metadata/file
             * metadata/asset-chunk
             * metadata/file-chunk
-            * logs
 
         Args:
             hidebound_dir (Path or str): Hidebound directory.
@@ -36,9 +35,8 @@ class ExporterBase:
         file_dir = Path(meta, 'file')
         asset_chunk = Path(meta, 'asset-chunk')
         file_chunk = Path(meta, 'file-chunk')
-        logs = Path(hidebound_dir, 'logs')
 
-        paths = [data, meta, asset_dir, file_dir, logs, asset_chunk, file_chunk]
+        paths = [data, meta, asset_dir, file_dir, asset_chunk, file_chunk]
         for path in paths:
             if not path.is_dir():
                 msg = f'{path.as_posix()} directory does not exist.'
