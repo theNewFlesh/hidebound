@@ -1,6 +1,7 @@
 from typing import Any, Dict, Generator, List, Union
 
 from collections import defaultdict
+from datetime import datetime
 from pathlib import Path
 from pprint import pformat
 import os
@@ -194,3 +195,12 @@ def read_exr_header(fullpath):
 
     img = openexr.InputFile(fullpath)
     return img.header()
+
+
+def time_string():
+    # type: () -> str
+    '''
+    Returns:
+        str: String representing current time.
+    '''
+    return datetime.now().strftime('%Y-%m-%dT-%H-%M-%S')

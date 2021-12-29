@@ -1,6 +1,7 @@
 from pathlib import Path
-import os
 from tempfile import TemporaryDirectory
+import os
+import re
 import unittest
 
 from pandas import DataFrame
@@ -239,3 +240,10 @@ class ToolsTests(unittest.TestCase):
             expected = f'{exr} is not an EXR file.'
             with self.assertRaisesRegexp(IOError, expected):
                 tools.read_exr_header(exr)
+
+    def test_time_string(self):
+        result = re.search(
+            r'\d\d\d\d-\d\d-\d\dT-\d\d-\d\d-\d\d',
+            tools.time_string()
+        )
+        self.assertIsNotNone(result)

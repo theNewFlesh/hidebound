@@ -431,7 +431,7 @@ def _get_data_for_write(
     file_meta = file_meta[['metadata', 'target']]
 
     # get time
-    now = datetime.now().strftime('%Y-%m-%dT-%H-%M-%S')
+    now = tools.time_string()
 
     # create asset chunk
     asset_chunk = DataFrame()
