@@ -4,6 +4,7 @@ from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 from pprint import pformat
+import json
 import os
 import re
 import shutil
@@ -204,3 +205,23 @@ def time_string():
         str: String representing current time.
     '''
     return datetime.now().strftime('%Y-%m-%dT-%H-%M-%S')
+
+
+def write_json(data, filepath):
+    # type: (object, Union[Path, str]) -> None
+    '''
+    Convenience function for writing objects to JSON files.
+    Writes lists with 1 item per line.
+
+    Args:
+        data (object): Object to be written.
+        filepath (Path or str): Filepath.
+    '''
+    if isinstance(data, list):
+        with open(filepath, 'w') as f:
+            f.write('[\n')
+            f.write(',\n'.join(map(json.dumps, data)))
+            f.write('\n]')
+    else:
+        with open(filepath, 'w') as f:
+            json.dump(data, f)

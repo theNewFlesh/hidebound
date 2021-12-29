@@ -216,10 +216,6 @@ class Database:
             msg = 'Data not initialized. Please call update.'
             raise RuntimeError(msg)
 
-        def write_json(obj, filepath):
-            with open(filepath, 'w') as f:
-                json.dump(obj, f)
-
         temp = db_tools._get_data_for_write(
             self.data, self._root, self._hb_root
         )
@@ -243,19 +239,19 @@ class Database:
         self._logger.info('create: write file data', step=3, total=total)
 
         # write asset metadata
-        asset_meta.apply(lambda x: write_json(x.metadata, x.target), axis=1)
+        asset_meta.apply(lambda x: tools.write_json(x.metadata, x.target), axis=1)
         self._logger.info('create: write asset metadata', step=4, total=total)
 
         # write file metadata
-        file_meta.apply(lambda x: write_json(x.metadata, x.target), axis=1)
+        file_meta.apply(lambda x: tools.write_json(x.metadata, x.target), axis=1)
         self._logger.info('create: write file metadata', step=5, total=total)
 
         # write asset chunk
-        asset_chunk.apply(lambda x: write_json(x.metadata, x.target), axis=1)
+        asset_chunk.apply(lambda x: tools.write_json(x.metadata, x.target), axis=1)
         self._logger.info('create: write asset chunk', step=6, total=total)
 
         # write file chunk
-        file_chunk.apply(lambda x: write_json(x.metadata, x.target), axis=1)
+        file_chunk.apply(lambda x: tools.write_json(x.metadata, x.target), axis=1)
         self._logger.info('create: write file chunk', step=7, total=total)
 
         self._logger.info('create: complete', step=7, total=total)
