@@ -419,17 +419,25 @@ class DatabaseTests(DatabaseTestBase):
         for result in temp:
             self.assertTrue(result.startswith('/tmp/hidebound/content'))
 
-        # logging
-        logs = zip(['asset', 'file'], [asset_log, file_log], [asset_meta, file_meta])
-        for name, log, meta in logs:
-            self.assertEqual(len(log), 1)
-            result = log['target'].tolist()[0]
-            self.assertIn(f'hidebound-{name}-log', result)
+        # asset log
+        self.assertEqual(len(asset_log), 1)
 
-            expected = meta.metadata.apply(json.dumps).tolist()
-            expected = '[\n' + ',\n'.join(expected) + '\n]'
-            result = log.metadata.tolist()[0]
-            self.assertEqual(result, expected)
+        result = asset_log['target'].tolist()[0]
+        self.assertIn('hidebound-asset-log', result)
+
+        expected = asset_meta.metadata.tolist()
+        result = asset_log.metadata.tolist()[0]
+        self.assertEqual(result, expected)
+
+        # file log
+        self.assertEqual(len(file_log), 1)
+
+        result = file_log['target'].tolist()[0]
+        self.assertIn('hidebound-file-log', result)
+
+        expected = file_meta.metadata.tolist()
+        result = file_log.metadata.tolist()[0]
+        self.assertEqual(result, expected)
 
     def test_get_data_for_write_dirs(self):
         data = lbt.relative_path(__file__, '../../../resources/fake_data.csv')
@@ -442,16 +450,28 @@ class DatabaseTests(DatabaseTestBase):
                 '/tmp/hidebound'
             )
 
-        result = file_data.target\
+        result = file_data.target \
             .apply(lambda x: '/tmp/hidebound/content' in x).unique().tolist()
         self.assertEqual(result, [True])
 
-        result = file_meta.target\
-            .apply(lambda x: '/tmp/hidebound/metadata/file' in x).unique().tolist()
+        result = file_meta.target \
+            .apply(lambda x: '/tmp/hidebound/metadata/file' in x) \
+            .unique().tolist()
         self.assertEqual(result, [True])
 
-        result = asset_meta.target\
-            .apply(lambda x: '/tmp/hidebound/metadata/asset' in x).unique().tolist()
+        result = asset_meta.target \
+            .apply(lambda x: '/tmp/hidebound/metadata/asset' in x) \
+            .unique().tolist()
+        self.assertEqual(result, [True])
+
+        result = asset_log.target \
+            .apply(lambda x: '/tmp/hidebound/logs/asset' in x) \
+            .unique().tolist()
+        self.assertEqual(result, [True])
+
+        result = file_log.target \
+            .apply(lambda x: '/tmp/hidebound/logs/file' in x) \
+            .unique().tolist()
         self.assertEqual(result, [True])
 
     def test_get_data_for_write_empty_dataframe(self):

@@ -2,7 +2,6 @@ from typing import Any, Dict, Optional, Tuple, Union
 
 from collections import defaultdict
 from pathlib import Path
-import json
 import re
 import uuid
 
@@ -431,21 +430,21 @@ def _get_data_for_write(
         .apply(lambda x: Path(meta_dir, 'file', x + '.json').as_posix())
     file_meta = file_meta[['metadata', 'target']]
 
-    # create asset log
+    # get time
     now = tools.time_string()
+
+    # create asset log
     asset_log = DataFrame()
+    asset_log['metadata'] = [asset_meta.metadata.tolist()]
     asset_log['target'] = [Path(
         log_dir, 'asset', f'hidebound-asset-log_{now}.json'
     ).as_posix()]
-    log = asset_meta.metadata.apply(json.dumps).tolist()
-    asset_log['metadata'] = ['[\n' + ',\n'.join(log) + '\n]']
 
     # create file log
     file_log = DataFrame()
+    file_log['metadata'] = [file_meta.metadata.tolist()]
     file_log['target'] = [Path(
         log_dir, 'file', f'hidebound-file-log_{now}.json'
     ).as_posix()]
-    log = file_meta.metadata.apply(json.dumps).tolist()
-    file_log['metadata'] = ['[\n' + ',\n'.join(log) + '\n]']
 
     return file_data, asset_meta, file_meta, asset_log, file_log
