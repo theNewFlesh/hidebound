@@ -102,7 +102,7 @@ class Config(Model):
             hidebound/content directory. Default: copy.
         exporters (dict, optional): Dictionary of exporter configs, where the
             key is the exporter name and the value is its config. Default: {}.
-        export_metadata_types (list, optional): List of metadata types for export.
+        metadata_types (list, optional): List of metadata types for export.
             Default: [asset, file, asset-chunk, file-chunk].
     '''
     root_directory = StringType(
@@ -123,7 +123,7 @@ class Config(Model):
         validators=[lambda x: vd.is_in(x, ['copy', 'move'])],
         default="copy",
     )  # type: StringType
-    export_metadata_types = ListType(
+    metadata_types = ListType(
         StringType(validators=[vd.is_metadata_type]),
         required=True,
         default=['asset', 'file', 'asset-chunk', 'file-chunk']

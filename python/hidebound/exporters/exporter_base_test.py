@@ -158,7 +158,7 @@ class ExporterBaseTests(unittest.TestCase):
             for expected in e_files:
                 self.assertIn(expected, foo.file_chunk)
 
-    def test_export_metadata_types(self):
+    def test_metadata_types(self):
         with TemporaryDirectory() as root:
             e_content, e_assets, e_files = self.create_data(root)
             foo = Foo(metadata_types=['asset', 'file-chunk'])

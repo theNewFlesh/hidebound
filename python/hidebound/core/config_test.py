@@ -208,7 +208,7 @@ class ConfigTests(unittest.TestCase):
             with self.assertRaisesRegexp(DataError, expected):
                 cfg.Config(self.config).validate()
 
-    def test_export_metadata_types(self):
+    def test_metadata_types(self):
         with TemporaryDirectory() as temp:
             self.set_data(temp)
             os.makedirs(self.root)
@@ -216,13 +216,13 @@ class ConfigTests(unittest.TestCase):
 
             cfg.Config(self.config).validate()
 
-            self.config['export_metadata_types'] = ['asset']
+            self.config['metadata_types'] = ['asset']
             cfg.Config(self.config).validate()
 
-            self.config['export_metadata_types'] = ['file', 'asset-chunk']
+            self.config['metadata_types'] = ['file', 'asset-chunk']
             cfg.Config(self.config).validate()
 
-            self.config['export_metadata_types'] = ['foobar', 'file-chunk', 'x']
+            self.config['metadata_types'] = ['foobar', 'file-chunk', 'x']
             expected = 'foobar is not a legal metadata type.'
             with self.assertRaisesRegexp(DataError, expected):
                 cfg.Config(self.config).validate()
