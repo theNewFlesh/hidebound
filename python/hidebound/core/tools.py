@@ -248,3 +248,4 @@ def read_json(filepath):
         msg = f'No JSON data could be decoded from {filepath}. '
         msg += 'Please remove any inline comments.'
         raise json.JSONDecodeError(msg, '', 0)
+    return output
