@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.18.1
+                0.19.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -82,20 +82,51 @@
            <div itemprop="articleBody">
              
   <h1>Source code for hidebound.exporters.exporter_base</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">schematics</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">schematics.types</span> <span class="kn">import</span> <span class="n">ListType</span><span class="p">,</span> <span class="n">StringType</span>
+<span class="kn">import</span> <span class="nn">re</span>
 
-<span class="kn">import</span> <span class="nn">jsoncomment</span> <span class="k">as</span> <span class="nn">jsonc</span>
 <span class="kn">from</span> <span class="nn">hidebound.core.logging</span> <span class="kn">import</span> <span class="n">DummyLogger</span><span class="p">,</span> <span class="n">ProgressLogger</span>
+<span class="kn">import</span> <span class="nn">hidebound.core.tools</span> <span class="k">as</span> <span class="nn">hbt</span>
+<span class="kn">import</span> <span class="nn">hidebound.core.validators</span> <span class="k">as</span> <span class="nn">vd</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="ExporterConfigBase"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.exporter_base.ExporterConfigBase">[docs]</a><span class="k">class</span> <span class="nc">ExporterConfigBase</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    A class for validating configurations supplied to S3Exporter.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        metadata_types (list, optional): List of metadata types for export.</span>
+<span class="sd">            Default: [asset, file, asset-chunk, file-chunk].</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">metadata_types</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
+        <span class="n">StringType</span><span class="p">(</span><span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_metadata_type</span><span class="p">]),</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asset&#39;</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;asset-chunk&#39;</span><span class="p">,</span> <span class="s1">&#39;file-chunk&#39;</span><span class="p">]</span>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ExporterBase"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.exporter_base.ExporterBase">[docs]</a><span class="k">class</span> <span class="nc">ExporterBase</span><span class="p">:</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Abstract base class for hidebound exporters.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
+<div class="viewcode-block" id="ExporterBase.__init__"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.exporter_base.ExporterBase.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">metadata_types</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asset&#39;</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;asset-chunk&#39;</span><span class="p">,</span> <span class="s1">&#39;file-chunk&#39;</span><span class="p">]</span>
+    <span class="p">):</span>
+        <span class="c1"># type: (List[str]) -&gt; None</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Constructs a ExporterBase instance.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            metadata_types (list[st], optional). Metadata types to be exported.</span>
+<span class="sd">                Default: [asset, file, asset-chunk, file-chunk].</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_metadata_types</span> <span class="o">=</span> <span class="n">metadata_types</span></div>
+
 <div class="viewcode-block" id="ExporterBase._enforce_directory_structure"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.exporter_base.ExporterBase._enforce_directory_structure">[docs]</a>    <span class="k">def</span> <span class="nf">_enforce_directory_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hidebound_dir</span><span class="p">):</span>
         <span class="c1"># type: (Union[str, Path]) -&gt; None</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -126,8 +157,12 @@
                 <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">path</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span><span class="si">}</span><span class="s1"> directory does not exist.&#39;</span>
                 <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ExporterBase.export"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.exporter_base.ExporterBase.export">[docs]</a>    <span class="k">def</span> <span class="nf">export</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hidebound_dir</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="c1"># type: (Union[str, Path], Optional[Union[DummyLogger, ProgressLogger]]) -&gt; None</span>
+<div class="viewcode-block" id="ExporterBase.export"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.exporter_base.ExporterBase.export">[docs]</a>    <span class="k">def</span> <span class="nf">export</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">hidebound_dir</span><span class="p">,</span>  <span class="c1"># type: Union[str, Path]</span>
+        <span class="n">logger</span><span class="o">=</span><span class="kc">None</span>  <span class="c1"># type: Optional[Union[DummyLogger, ProgressLogger]]</span>
+    <span class="p">):</span>
+        <span class="c1"># type: (...) -&gt; None</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Exports data within given hidebound directory.</span>
 
@@ -141,55 +176,45 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_enforce_directory_structure</span><span class="p">(</span><span class="n">hidebound_dir</span><span class="p">)</span>
 
-        <span class="n">asset_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">hidebound_dir</span><span class="p">,</span> <span class="s1">&#39;metadata&#39;</span><span class="p">,</span> <span class="s1">&#39;asset&#39;</span><span class="p">)</span>
-        <span class="n">file_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">hidebound_dir</span><span class="p">,</span> <span class="s1">&#39;metadata&#39;</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">)</span>
+        <span class="n">hidebound_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">hidebound_dir</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">directory_to_dataframe</span><span class="p">(</span><span class="n">hidebound_dir</span><span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="n">a_total</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">asset_dir</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">asset</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">asset_dir</span><span class="p">)):</span>  <span class="c1"># type: Tuple[int, Union[str, Path]]</span>
-            <span class="c1"># export asset</span>
-            <span class="n">asset</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">asset_dir</span><span class="p">,</span> <span class="n">asset</span><span class="p">)</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">asset</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                <span class="n">asset_meta</span> <span class="o">=</span> <span class="n">jsonc</span><span class="o">.</span><span class="n">JsonComment</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_export_asset</span><span class="p">(</span><span class="n">asset_meta</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;exporter: export asset metadata of </span><span class="si">{</span><span class="n">asset</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                <span class="n">step</span><span class="o">=</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-                <span class="n">total</span><span class="o">=</span><span class="n">a_total</span><span class="p">,</span>
-            <span class="p">)</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_metadata_types</span><span class="p">)</span>
 
-            <span class="c1"># export files</span>
-            <span class="n">filepaths</span> <span class="o">=</span> <span class="n">asset_meta</span><span class="p">[</span><span class="s1">&#39;file_ids&#39;</span><span class="p">]</span>
-            <span class="n">filepaths</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="n">file_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s1">.json&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">filepaths</span><span class="p">]</span>
+        <span class="c1"># export content</span>
+        <span class="n">regex</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hidebound_dir</span><span class="si">}</span><span class="s1">/metadata/file/&#39;</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">hbt</span><span class="o">.</span><span class="n">read_json</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_export_content</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;exporter: export content&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>
 
-            <span class="n">f_total</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">filepaths</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">filepath</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">filepaths</span><span class="p">):</span>
-                <span class="n">filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_dir</span><span class="p">,</span> <span class="n">filepath</span><span class="p">)</span>
-                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                    <span class="n">file_meta</span> <span class="o">=</span> <span class="n">jsonc</span><span class="o">.</span><span class="n">JsonComment</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_export_file</span><span class="p">(</span><span class="n">file_meta</span><span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s1">&#39;exporter: export files and file metadata of </span><span class="si">{</span><span class="n">asset</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                    <span class="n">step</span><span class="o">=</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-                    <span class="n">total</span><span class="o">=</span><span class="n">f_total</span><span class="p">,</span>
-                <span class="p">)</span>
+        <span class="c1"># export metadata</span>
+        <span class="n">lut</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;asset&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_export_asset</span><span class="p">,</span>
+            <span class="s1">&#39;file&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_export_file</span><span class="p">,</span>
+            <span class="s1">&#39;asset-chunk&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_export_asset_chunk</span><span class="p">,</span>
+            <span class="s1">&#39;file-chunk&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_export_file_chunk</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">mtype</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_metadata_types</span><span class="p">):</span>
+            <span class="n">regex</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hidebound_dir</span><span class="si">}</span><span class="s1">/metadata/</span><span class="si">{</span><span class="n">mtype</span><span class="si">}</span><span class="s1">/&#39;</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">hbt</span><span class="o">.</span><span class="n">read_json</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">lut</span><span class="p">[</span><span class="n">mtype</span><span class="p">])</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;exporter: export </span><span class="si">{</span><span class="n">mtype</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span></div>
 
-        <span class="c1"># export chunks</span>
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">kind</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;asset&#39;</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">]):</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="n">root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">hidebound_dir</span><span class="p">,</span> <span class="s1">&#39;metadata&#39;</span><span class="p">,</span> <span class="n">kind</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">root</span><span class="p">):</span>
-                <span class="n">filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                    <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">jsonc</span><span class="o">.</span><span class="n">JsonComment</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+<div class="viewcode-block" id="ExporterBase._export_content"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.exporter_base.ExporterBase._export_content">[docs]</a>    <span class="k">def</span> <span class="nf">_export_content</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+        <span class="c1"># type: (Dict) -&gt; None</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Exports from file from hidebound/content named in metadata.</span>
+<span class="sd">        Metadata should have filepath, filepath_relative keys.</span>
 
-            <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;asset&#39;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_export_asset_chunk</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_export_file_chunk</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="sd">        Args:</span>
+<span class="sd">            metadata (dict): File metadata.</span>
 
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;exporter: export </span><span class="si">{</span><span class="n">kind</span><span class="si">}</span><span class="s1"> chunk&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-            <span class="p">)</span></div>
+<span class="sd">        Raises:</span>
+<span class="sd">            NotImplementedError: If method is not implemented in subclass.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;_export_content method must be implemented in subclass.&#39;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ExporterBase._export_asset"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.exporter_base.ExporterBase._export_asset">[docs]</a>    <span class="k">def</span> <span class="nf">_export_asset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
         <span class="c1"># type: (Dict) -&gt; None</span>

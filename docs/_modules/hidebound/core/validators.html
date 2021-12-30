@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.18.1
+                0.19.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -721,6 +721,71 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^[/a-z0-9_\-]+$&#39;</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">False</span>
     <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="is_metadata_type"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_metadata_type">[docs]</a><span class="nd">@validate</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{}</span><span class="s1"> is not a legal metadata type.</span>
+<span class="s1">Legal metadata types: [asset, file, asset-chunk, file-chunk]&#39;&#39;&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">is_metadata_type</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="c1"># type: (str) -&gt; bool</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Validates that a given metadata type is legal.</span>
+<span class="sd">    Legal types include:</span>
+
+<span class="sd">        * asset</span>
+<span class="sd">        * file</span>
+<span class="sd">        * asset-chunk</span>
+<span class="sd">        * file-chunk</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        item (str): Metadata type.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValidationError: If metadata type is illegal.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: Validity of metadata type.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">item</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;asset&#39;</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;asset-chunk&#39;</span><span class="p">,</span> <span class="s1">&#39;file-chunk&#39;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="is_hidebound_directory"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_hidebound_directory">[docs]</a><span class="k">def</span> <span class="nf">is_hidebound_directory</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+    <span class="c1"># type: (Union[str, Path]) -&gt; None</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Ensures directory name is &quot;hidebound&quot;.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        directory (str or Path): Hidebound directory.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValidationError: If directory is not named &quot;hidebound&quot;.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s1">&#39;hidebound&#39;</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">directory</span><span class="si">}</span><span class="s1"> directory is not named hidebound.&#39;</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="is_http_method"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_http_method">[docs]</a><span class="k">def</span> <span class="nf">is_http_method</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
+    <span class="c1"># type: (str) -&gt; None</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Ensures given method is a legal HTTP method.</span>
+<span class="sd">    Legal methods include:</span>
+
+<span class="sd">        * get</span>
+<span class="sd">        * put</span>
+<span class="sd">        * post</span>
+<span class="sd">        * delete</span>
+<span class="sd">        * patch</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        method (str): HTTP method.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValidationError: If method is not a legal HTTP method.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="s1">&#39;put&#39;</span><span class="p">,</span> <span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="s1">&#39;delete&#39;</span><span class="p">,</span> <span class="s1">&#39;patch&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">methods</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1"> is not a legal HTTP method. Legal methods: </span><span class="si">{</span><span class="n">methods</span><span class="si">}</span><span class="s1">.&#39;</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

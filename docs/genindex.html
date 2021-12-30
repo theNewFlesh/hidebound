@@ -28,7 +28,7 @@
             <a href="index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.18.1
+                0.19.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -120,6 +120,8 @@
 </li>
         <li><a href="core.html#hidebound.core.specification_base.SpecificationBase.__init__">(hidebound.core.specification_base.SpecificationBase method)</a>
 </li>
+        <li><a href="exporters.html#hidebound.exporters.exporter_base.ExporterBase.__init__">(hidebound.exporters.exporter_base.ExporterBase method)</a>
+</li>
         <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderExporter.__init__">(hidebound.exporters.girder_exporter.GirderExporter method)</a>
 </li>
         <li><a href="exporters.html#hidebound.exporters.local_disk_exporter.LocalDiskExporter.__init__">(hidebound.exporters.local_disk_exporter.LocalDiskExporter method)</a>
@@ -167,8 +169,20 @@
         <li><a href="exporters.html#hidebound.exporters.s3_exporter.S3Exporter._export_asset_chunk">(hidebound.exporters.s3_exporter.S3Exporter method)</a>
 </li>
       </ul></li>
+      <li><a href="exporters.html#hidebound.exporters.exporter_base.ExporterBase._export_content">_export_content() (hidebound.exporters.exporter_base.ExporterBase method)</a>
+
+      <ul>
+        <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderExporter._export_content">(hidebound.exporters.girder_exporter.GirderExporter method)</a>
+</li>
+        <li><a href="exporters.html#hidebound.exporters.local_disk_exporter.LocalDiskExporter._export_content">(hidebound.exporters.local_disk_exporter.LocalDiskExporter method)</a>
+</li>
+        <li><a href="exporters.html#hidebound.exporters.s3_exporter.S3Exporter._export_content">(hidebound.exporters.s3_exporter.S3Exporter method)</a>
+</li>
+      </ul></li>
       <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderExporter._export_dirs">_export_dirs() (hidebound.exporters.girder_exporter.GirderExporter method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="exporters.html#hidebound.exporters.exporter_base.ExporterBase._export_file">_export_file() (hidebound.exporters.exporter_base.ExporterBase method)</a>
 
       <ul>
@@ -179,8 +193,6 @@
         <li><a href="exporters.html#hidebound.exporters.s3_exporter.S3Exporter._export_file">(hidebound.exporters.s3_exporter.S3Exporter method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="exporters.html#hidebound.exporters.exporter_base.ExporterBase._export_file_chunk">_export_file_chunk() (hidebound.exporters.exporter_base.ExporterBase method)</a>
 
       <ul>
@@ -226,6 +238,8 @@
 </li>
         <li><a href="core.html#hidebound.core.specifications.Raw002._schema">(hidebound.core.specifications.Raw002 attribute)</a>
 </li>
+        <li><a href="exporters.html#hidebound.exporters.exporter_base.ExporterConfigBase._schema">(hidebound.exporters.exporter_base.ExporterConfigBase attribute)</a>
+</li>
         <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig._schema">(hidebound.exporters.girder_exporter.GirderConfig attribute)</a>
 </li>
         <li><a href="exporters.html#hidebound.exporters.local_disk_exporter.LocalDiskConfig._schema">(hidebound.exporters.local_disk_exporter.LocalDiskConfig attribute)</a>
@@ -245,11 +259,11 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="exporters.html#hidebound.exporters.s3_exporter.S3Config.access_key">access_key (hidebound.exporters.s3_exporter.S3Config attribute)</a>, <a href="exporters.html#id6">[1]</a>
+      <li><a href="exporters.html#hidebound.exporters.s3_exporter.S3Config.access_key">access_key (hidebound.exporters.s3_exporter.S3Config attribute)</a>, <a href="exporters.html#id8">[1]</a>
 </li>
       <li><a href="server.html#hidebound.server.api.api">api() (in module hidebound.server.api)</a>
 </li>
-      <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig.api_key">api_key (hidebound.exporters.girder_exporter.GirderConfig attribute)</a>, <a href="exporters.html#id0">[1]</a>
+      <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig.api_key">api_key (hidebound.exporters.girder_exporter.GirderConfig attribute)</a>, <a href="exporters.html#id1">[1]</a>
 </li>
       <li><a href="cli.html#cli.app_command">app_command() (in module cli)</a>
 </li>
@@ -281,7 +295,7 @@
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="exporters.html#hidebound.exporters.s3_exporter.S3Config.bucket">bucket (hidebound.exporters.s3_exporter.S3Config attribute)</a>, <a href="exporters.html#id7">[1]</a>
+      <li><a href="exporters.html#hidebound.exporters.s3_exporter.S3Config.bucket">bucket (hidebound.exporters.s3_exporter.S3Config attribute)</a>, <a href="exporters.html#id9">[1]</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -431,14 +445,14 @@
       <ul>
         <li><a href="exporters.html#hidebound.exporters.exporter_base.ExporterBase.export">(hidebound.exporters.exporter_base.ExporterBase method)</a>
 </li>
-        <li><a href="exporters.html#hidebound.exporters.local_disk_exporter.LocalDiskExporter.export">(hidebound.exporters.local_disk_exporter.LocalDiskExporter method)</a>
-</li>
         <li><a href="server.html#hidebound.server.api.export">(in module hidebound.server.api)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="exporters.html#hidebound.exporters.exporter_base.ExporterBase">ExporterBase (class in hidebound.exporters.exporter_base)</a>
+</li>
+      <li><a href="exporters.html#hidebound.exporters.exporter_base.ExporterConfigBase">ExporterConfigBase (class in hidebound.exporters.exporter_base)</a>
 </li>
       <li><a href="core.html#hidebound.core.config.Config.exporters">exporters (hidebound.core.config.Config attribute)</a>, <a href="core.html#id1">[1]</a>
 </li>
@@ -765,7 +779,7 @@
       </ul></li>
       <li><a href="core.html#hidebound.core.config.Config.hidebound_directory">hidebound_directory (hidebound.core.config.Config attribute)</a>, <a href="core.html#id2">[1]</a>
 </li>
-      <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig.host">host (hidebound.exporters.girder_exporter.GirderConfig attribute)</a>, <a href="exporters.html#id1">[1]</a>
+      <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig.host">host (hidebound.exporters.girder_exporter.GirderConfig attribute)</a>, <a href="exporters.html#id2">[1]</a>
 </li>
   </ul></td>
 </tr></table>
@@ -811,11 +825,11 @@
 </li>
       <li><a href="core.html#hidebound.core.validators.is_gte">is_gte() (in module hidebound.core.validators)</a>
 </li>
-      <li><a href="core.html#hidebound.core.config.is_hidebound_directory">is_hidebound_directory() (in module hidebound.core.config)</a>
+      <li><a href="core.html#hidebound.core.validators.is_hidebound_directory">is_hidebound_directory() (in module hidebound.core.validators)</a>
 </li>
       <li><a href="core.html#hidebound.core.validators.is_homogenous">is_homogenous() (in module hidebound.core.validators)</a>
 </li>
-      <li><a href="core.html#hidebound.core.config.is_http_method">is_http_method() (in module hidebound.core.config)</a>
+      <li><a href="core.html#hidebound.core.validators.is_http_method">is_http_method() (in module hidebound.core.validators)</a>
 </li>
       <li><a href="core.html#hidebound.core.validators.is_in">is_in() (in module hidebound.core.validators)</a>
 </li>
@@ -824,6 +838,8 @@
       <li><a href="core.html#hidebound.core.validators.is_lt">is_lt() (in module hidebound.core.validators)</a>
 </li>
       <li><a href="core.html#hidebound.core.validators.is_lte">is_lte() (in module hidebound.core.validators)</a>
+</li>
+      <li><a href="core.html#hidebound.core.validators.is_metadata_type">is_metadata_type() (in module hidebound.core.validators)</a>
 </li>
       <li><a href="core.html#hidebound.core.validators.is_not_missing_values">is_not_missing_values() (in module hidebound.core.validators)</a>
 </li>
@@ -881,6 +897,16 @@
 </li>
       <li><a href="cli.html#cli.make_docs_dir">make_docs_dir() (in module cli)</a>
 </li>
+      <li><a href="exporters.html#hidebound.exporters.exporter_base.ExporterConfigBase.metadata_types">metadata_types (hidebound.exporters.exporter_base.ExporterConfigBase attribute)</a>, <a href="exporters.html#id0">[1]</a>
+
+      <ul>
+        <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig.metadata_types">(hidebound.exporters.girder_exporter.GirderConfig attribute)</a>, <a href="exporters.html#id3">[1]</a>
+</li>
+        <li><a href="exporters.html#hidebound.exporters.local_disk_exporter.LocalDiskConfig.metadata_types">(hidebound.exporters.local_disk_exporter.LocalDiskConfig attribute)</a>
+</li>
+        <li><a href="exporters.html#hidebound.exporters.s3_exporter.S3Config.metadata_types">(hidebound.exporters.s3_exporter.S3Config attribute)</a>
+</li>
+      </ul></li>
       <li><a href="core.html#hidebound.core.config.Config.WebhookConfig.method">method (hidebound.core.config.Config.WebhookConfig attribute)</a>
 </li>
       <li>
@@ -962,7 +988,7 @@
 </li>
       <li><a href="core.html#hidebound.core.parser.AssetNameParser.parse_specification">parse_specification() (hidebound.core.parser.AssetNameParser static method)</a>
 </li>
-      <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig.port">port (hidebound.exporters.girder_exporter.GirderConfig attribute)</a>, <a href="exporters.html#id2">[1]</a>
+      <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig.port">port (hidebound.exporters.girder_exporter.GirderConfig attribute)</a>, <a href="exporters.html#id4">[1]</a>
 </li>
       <li><a href="cli.html#cli.PORT">PORT (in module cli)</a>
 </li>
@@ -1016,9 +1042,11 @@
       </ul></li>
       <li><a href="core.html#hidebound.core.tools.read_exr_header">read_exr_header() (in module hidebound.core.tools)</a>
 </li>
+      <li><a href="core.html#hidebound.core.tools.read_json">read_json() (in module hidebound.core.tools)</a>
+</li>
       <li><a href="server.html#hidebound.server.app.readiness">readiness() (in module hidebound.server.app)</a>
 </li>
-      <li><a href="exporters.html#hidebound.exporters.s3_exporter.S3Config.region">region (hidebound.exporters.s3_exporter.S3Config attribute)</a>, <a href="exporters.html#id8">[1]</a>
+      <li><a href="exporters.html#hidebound.exporters.s3_exporter.S3Config.region">region (hidebound.exporters.s3_exporter.S3Config attribute)</a>, <a href="exporters.html#id10">[1]</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -1036,9 +1064,9 @@
 </li>
       <li><a href="core.html#hidebound.core.config.Config.root_directory">root_directory (hidebound.core.config.Config attribute)</a>, <a href="core.html#id4">[1]</a>
 </li>
-      <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig.root_id">root_id (hidebound.exporters.girder_exporter.GirderConfig attribute)</a>, <a href="exporters.html#id3">[1]</a>
+      <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig.root_id">root_id (hidebound.exporters.girder_exporter.GirderConfig attribute)</a>, <a href="exporters.html#id5">[1]</a>
 </li>
-      <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig.root_type">root_type (hidebound.exporters.girder_exporter.GirderConfig attribute)</a>, <a href="exporters.html#id4">[1]</a>
+      <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig.root_type">root_type (hidebound.exporters.girder_exporter.GirderConfig attribute)</a>, <a href="exporters.html#id6">[1]</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1058,7 +1086,7 @@
         <li><a href="server.html#hidebound.server.api.search">(in module hidebound.server.api)</a>
 </li>
       </ul></li>
-      <li><a href="exporters.html#hidebound.exporters.s3_exporter.S3Config.secret_key">secret_key (hidebound.exporters.s3_exporter.S3Config attribute)</a>, <a href="exporters.html#id9">[1]</a>
+      <li><a href="exporters.html#hidebound.exporters.s3_exporter.S3Config.secret_key">secret_key (hidebound.exporters.s3_exporter.S3Config attribute)</a>, <a href="exporters.html#id11">[1]</a>
 </li>
       <li><a href="core.html#hidebound.core.specification_base.SequenceSpecificationBase">SequenceSpecificationBase (class in hidebound.core.specification_base)</a>
 </li>
@@ -1102,7 +1130,7 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="exporters.html#hidebound.exporters.local_disk_exporter.LocalDiskConfig.target_directory">target_directory (hidebound.exporters.local_disk_exporter.LocalDiskConfig attribute)</a>, <a href="exporters.html#id5">[1]</a>
+      <li><a href="exporters.html#hidebound.exporters.local_disk_exporter.LocalDiskConfig.target_directory">target_directory (hidebound.exporters.local_disk_exporter.LocalDiskConfig attribute)</a>, <a href="exporters.html#id7">[1]</a>
 </li>
       <li><a href="cli.html#cli.test_command">test_command() (in module cli)</a>
 </li>

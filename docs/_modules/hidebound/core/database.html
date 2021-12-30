@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.18.1
+                0.19.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -177,16 +177,16 @@
 
 <div class="viewcode-block" id="Database.__init__"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">root_dir</span><span class="p">,</span>
-        <span class="n">hidebound_dir</span><span class="p">,</span>
-        <span class="n">specifications</span><span class="o">=</span><span class="p">[],</span>
-        <span class="n">include_regex</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
-        <span class="n">exclude_regex</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;\.DS_Store&#39;</span><span class="p">,</span>
-        <span class="n">write_mode</span><span class="o">=</span><span class="s1">&#39;copy&#39;</span><span class="p">,</span>
-        <span class="n">exporters</span><span class="o">=</span><span class="p">{},</span>
-        <span class="n">webhooks</span><span class="o">=</span><span class="p">[],</span>
+        <span class="n">root_dir</span><span class="p">,</span>                     <span class="c1"># type: Union[str, Path]</span>
+        <span class="n">hidebound_dir</span><span class="p">,</span>                <span class="c1"># type: Union[str, Path]</span>
+        <span class="n">specifications</span><span class="o">=</span><span class="p">[],</span>            <span class="c1"># type: List[SpecificationBase]</span>
+        <span class="n">include_regex</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>             <span class="c1"># type: str</span>
+        <span class="n">exclude_regex</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;\.DS_Store&#39;</span><span class="p">,</span>  <span class="c1"># type: str</span>
+        <span class="n">write_mode</span><span class="o">=</span><span class="s1">&#39;copy&#39;</span><span class="p">,</span>            <span class="c1"># type: str</span>
+        <span class="n">exporters</span><span class="o">=</span><span class="p">{},</span>                 <span class="c1"># type: Dict[str, Any]</span>
+        <span class="n">webhooks</span><span class="o">=</span><span class="p">[],</span>                  <span class="c1"># type: List[Dict]</span>
     <span class="p">):</span>
-        <span class="c1"># type: (Union[str, Path], Union[str, Path], List[SpecificationBase], str, str, str, Dict[str, Any], List[Dict]) -&gt; None  # noqa E501</span>
+        <span class="c1"># type: (...) -&gt; None</span>
         <span class="sa">r</span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Creates an instance of Database but does not populate it with data.</span>
 

@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.18.1
+                0.19.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -82,23 +82,21 @@
            <div itemprop="articleBody">
              
   <h1>Source code for hidebound.exporters.local_disk_exporter</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
 
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 
-<span class="kn">from</span> <span class="nn">schematics</span> <span class="kn">import</span> <span class="n">Model</span>
 <span class="kn">from</span> <span class="nn">schematics.types</span> <span class="kn">import</span> <span class="n">StringType</span>
 
-<span class="kn">from</span> <span class="nn">hidebound.exporters.exporter_base</span> <span class="kn">import</span> <span class="n">ExporterBase</span>
+<span class="kn">from</span> <span class="nn">hidebound.exporters.exporter_base</span> <span class="kn">import</span> <span class="n">ExporterBase</span><span class="p">,</span> <span class="n">ExporterConfigBase</span>
 <span class="kn">import</span> <span class="nn">hidebound.core.tools</span> <span class="k">as</span> <span class="nn">hbt</span>
 <span class="kn">import</span> <span class="nn">hidebound.core.validators</span> <span class="k">as</span> <span class="nn">vd</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
-<div class="viewcode-block" id="LocalDiskConfig"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.local_disk_exporter.LocalDiskConfig">[docs]</a><span class="k">class</span> <span class="nc">LocalDiskConfig</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<div class="viewcode-block" id="LocalDiskConfig"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.local_disk_exporter.LocalDiskConfig">[docs]</a><span class="k">class</span> <span class="nc">LocalDiskConfig</span><span class="p">(</span><span class="n">ExporterConfigBase</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    A class for validating configurations supplied to LocalDiskExporter.</span>
 
@@ -128,8 +126,12 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="n">LocalDiskExporter</span><span class="p">(</span><span class="o">**</span><span class="n">config</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="LocalDiskExporter.__init__"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.local_disk_exporter.LocalDiskExporter.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_directory</span><span class="p">):</span>
-        <span class="c1"># type: (str) -&gt; None</span>
+<div class="viewcode-block" id="LocalDiskExporter.__init__"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.local_disk_exporter.LocalDiskExporter.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">target_directory</span><span class="p">,</span>
+        <span class="n">metadata_types</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asset&#39;</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;asset-chunk&#39;</span><span class="p">,</span> <span class="s1">&#39;file-chunk&#39;</span><span class="p">],</span>
+    <span class="p">):</span>
+        <span class="c1"># type: (str, List[str]) -&gt; None</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Constructs a LocalDiskExporter instance.</span>
 <span class="sd">        Creates target directory if it does not exist.</span>
@@ -140,36 +142,34 @@
 <span class="sd">        Raises:</span>
 <span class="sd">            DataError: If config is invalid.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">target_directory</span><span class="o">=</span><span class="n">target_directory</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">metadata_types</span><span class="o">=</span><span class="n">metadata_types</span><span class="p">)</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">target_directory</span><span class="o">=</span><span class="n">target_directory</span><span class="p">,</span>
+            <span class="n">metadata_types</span><span class="o">=</span><span class="n">metadata_types</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="n">LocalDiskConfig</span><span class="p">(</span><span class="n">config</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
         <span class="c1"># ----------------------------------------------------------------------</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_target_directory</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;target_directory&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_target_directory</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;target_directory&#39;</span><span class="p">])</span>  <span class="c1"># type: str</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_target_directory</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="LocalDiskExporter.export"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.local_disk_exporter.LocalDiskExporter.export">[docs]</a>    <span class="k">def</span> <span class="nf">export</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hidebound_dir</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="c1"># type: (Union[str, Path], Any) -&gt; None</span>
+<div class="viewcode-block" id="LocalDiskExporter._export_content"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.local_disk_exporter.LocalDiskExporter._export_content">[docs]</a>    <span class="k">def</span> <span class="nf">_export_content</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+        <span class="c1"># type: (Dict) -&gt; None</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Exports data within given hidebound directory.</span>
+<span class="sd">        Exports content from filepath in given metadata.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            hidebound_dir (Path or str): Hidebound directory.</span>
-<span class="sd">            logger (object, optional): Ignored logger. Default: None.</span>
+<span class="sd">            metadata (dict): File metadata.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_enforce_directory_structure</span><span class="p">(</span><span class="n">hidebound_dir</span><span class="p">)</span>
-
-        <span class="n">hidebound_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">hidebound_dir</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">directory_to_dataframe</span><span class="p">(</span><span class="n">hidebound_dir</span><span class="p">)</span>
-
-        <span class="c1"># only include /content and /metadata directories</span>
-        <span class="n">regex</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hidebound_dir</span><span class="si">}</span><span class="s1">/(content|metadata)&#39;</span>
-        <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
-
-        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">filepath</span> \
-            <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">hidebound_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_target_directory</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
-        <span class="n">data</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-        <span class="n">data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">filepath</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">target</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;filepath&#39;</span><span class="p">]</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_target_directory</span><span class="p">,</span>
+            <span class="s1">&#39;content&#39;</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;filepath_relative&#39;</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">target</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LocalDiskExporter._export_asset"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.local_disk_exporter.LocalDiskExporter._export_asset">[docs]</a>    <span class="k">def</span> <span class="nf">_export_asset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
         <span class="c1"># type: (Dict) -&gt; None</span>
@@ -179,7 +179,14 @@
 <span class="sd">        Args:</span>
 <span class="sd">            metadata (dict): Asset metadata.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="k">pass</span>  <span class="c1"># pragma: no cover</span></div>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_target_directory</span><span class="p">,</span>
+            <span class="s1">&#39;metadata&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;asset&#39;</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;asset_id&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.json&#39;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">target</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">hbt</span><span class="o">.</span><span class="n">write_json</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LocalDiskExporter._export_file"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.local_disk_exporter.LocalDiskExporter._export_file">[docs]</a>    <span class="k">def</span> <span class="nf">_export_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
         <span class="c1"># type: (Dict) -&gt; None</span>
@@ -189,7 +196,14 @@
 <span class="sd">        Args:</span>
 <span class="sd">            metadata (dict): File metadata.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="k">pass</span>  <span class="c1"># pragma: no cover</span></div>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_target_directory</span><span class="p">,</span>
+            <span class="s1">&#39;metadata&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;file&#39;</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;file_id&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.json&#39;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">target</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">hbt</span><span class="o">.</span><span class="n">write_json</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LocalDiskExporter._export_asset_chunk"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.local_disk_exporter.LocalDiskExporter._export_asset_chunk">[docs]</a>    <span class="k">def</span> <span class="nf">_export_asset_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
         <span class="c1"># type: (List[dict]) -&gt; None</span>
@@ -199,7 +213,15 @@
 <span class="sd">        Args:</span>
 <span class="sd">            metadata (list[dict]): Asset metadata.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="k">pass</span>  <span class="c1"># pragma: no cover</span></div>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">time_string</span><span class="p">()</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_target_directory</span><span class="p">,</span>
+            <span class="s1">&#39;metadata&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;asset-chunk&#39;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s1">&#39;hidebound-asset-chunk_</span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s1">.json&#39;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">target</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">hbt</span><span class="o">.</span><span class="n">write_json</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LocalDiskExporter._export_file_chunk"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.local_disk_exporter.LocalDiskExporter._export_file_chunk">[docs]</a>    <span class="k">def</span> <span class="nf">_export_file_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
         <span class="c1"># type: (List[dict]) -&gt; None</span>
@@ -209,7 +231,15 @@
 <span class="sd">        Args:</span>
 <span class="sd">            metadata (list[dict]): File metadata.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="k">pass</span>  <span class="c1"># pragma: no cover</span></div></div>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">time_string</span><span class="p">()</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_target_directory</span><span class="p">,</span>
+            <span class="s1">&#39;metadata&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;file-chunk&#39;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s1">&#39;hidebound-file-chunk_</span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s1">.json&#39;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">target</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">hbt</span><span class="o">.</span><span class="n">write_json</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

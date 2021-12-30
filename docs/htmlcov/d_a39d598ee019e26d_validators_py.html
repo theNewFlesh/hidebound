@@ -43,8 +43,8 @@
             </div>
         </div>
         <h2>
-            <span class="text">145 statements &nbsp;</span>
-            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">145<span class="text"> run</span></button>
+            <span class="text">156 statements &nbsp;</span>
+            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">156<span class="text"> run</span></button>
             <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">0<span class="text"> missing</span></button>
             <button type="button" class="exc show_exc button_toggle_exc" value="exc" data-shortcut="x" title="Toggle lines excluded">11<span class="text"> excluded</span></button>
         </h2>
@@ -696,12 +696,77 @@
     <p class="run"><span class="n"><a id="t637" href="#t637">637</a></span><span class="t">    <span class="key">if</span> <span class="key">not</span> <span class="nam">re</span><span class="op">.</span><span class="nam">search</span><span class="op">(</span><span class="str">r'^[/a-z0-9_\-]+$'</span><span class="op">,</span> <span class="nam">item</span><span class="op">,</span> <span class="nam">re</span><span class="op">.</span><span class="nam">I</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t638" href="#t638">638</a></span><span class="t">        <span class="key">return</span> <span class="key">False</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t639" href="#t639">639</a></span><span class="t">    <span class="key">return</span> <span class="key">True</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t640" href="#t640">640</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t641" href="#t641">641</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t642" href="#t642">642</a></span><span class="t"><span class="op">@</span><span class="nam">validate</span><span class="op">(</span><span class="str">'''{} is not a legal metadata type.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t643" href="#t643">643</a></span><span class="t"><span class="str">Legal metadata types: [asset, file, asset-chunk, file-chunk]'''</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t644" href="#t644">644</a></span><span class="t"><span class="key">def</span> <span class="nam">is_metadata_type</span><span class="op">(</span><span class="nam">item</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t645" href="#t645">645</a></span><span class="t">    <span class="com"># type: (str) -> bool</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t646" href="#t646">646</a></span><span class="t">    <span class="str">'''</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t647" href="#t647">647</a></span><span class="t"><span class="str">    Validates that a given metadata type is legal.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t648" href="#t648">648</a></span><span class="t"><span class="str">    Legal types include:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t649" href="#t649">649</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t650" href="#t650">650</a></span><span class="t"><span class="str">        * asset</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t651" href="#t651">651</a></span><span class="t"><span class="str">        * file</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t652" href="#t652">652</a></span><span class="t"><span class="str">        * asset-chunk</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t653" href="#t653">653</a></span><span class="t"><span class="str">        * file-chunk</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t654" href="#t654">654</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t655" href="#t655">655</a></span><span class="t"><span class="str">    Args:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t656" href="#t656">656</a></span><span class="t"><span class="str">        item (str): Metadata type.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t657" href="#t657">657</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t658" href="#t658">658</a></span><span class="t"><span class="str">    Raises:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t659" href="#t659">659</a></span><span class="t"><span class="str">        ValidationError: If metadata type is illegal.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t660" href="#t660">660</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t661" href="#t661">661</a></span><span class="t"><span class="str">    Returns:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t662" href="#t662">662</a></span><span class="t"><span class="str">        bool: Validity of metadata type.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t663" href="#t663">663</a></span><span class="t"><span class="str">    '''</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t664" href="#t664">664</a></span><span class="t">    <span class="key">return</span> <span class="nam">item</span> <span class="key">in</span> <span class="op">[</span><span class="str">'asset'</span><span class="op">,</span> <span class="str">'file'</span><span class="op">,</span> <span class="str">'asset-chunk'</span><span class="op">,</span> <span class="str">'file-chunk'</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t665" href="#t665">665</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t666" href="#t666">666</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t667" href="#t667">667</a></span><span class="t"><span class="key">def</span> <span class="nam">is_hidebound_directory</span><span class="op">(</span><span class="nam">directory</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t668" href="#t668">668</a></span><span class="t">    <span class="com"># type: (Union[str, Path]) -> None</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t669" href="#t669">669</a></span><span class="t">    <span class="str">'''</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t670" href="#t670">670</a></span><span class="t"><span class="str">    Ensures directory name is "hidebound".</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t671" href="#t671">671</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t672" href="#t672">672</a></span><span class="t"><span class="str">    Args:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t673" href="#t673">673</a></span><span class="t"><span class="str">        directory (str or Path): Hidebound directory.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t674" href="#t674">674</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t675" href="#t675">675</a></span><span class="t"><span class="str">    Raises:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t676" href="#t676">676</a></span><span class="t"><span class="str">        ValidationError: If directory is not named "hidebound".</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t677" href="#t677">677</a></span><span class="t"><span class="str">    '''</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t678" href="#t678">678</a></span><span class="t">    <span class="key">if</span> <span class="nam">Path</span><span class="op">(</span><span class="nam">directory</span><span class="op">)</span><span class="op">.</span><span class="nam">name</span> <span class="op">!=</span> <span class="str">'hidebound'</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t679" href="#t679">679</a></span><span class="t">        <span class="nam">msg</span> <span class="op">=</span> <span class="str">f'{directory} directory is not named hidebound.'</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t680" href="#t680">680</a></span><span class="t">        <span class="key">raise</span> <span class="nam">ValidationError</span><span class="op">(</span><span class="nam">msg</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t681" href="#t681">681</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t682" href="#t682">682</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t683" href="#t683">683</a></span><span class="t"><span class="key">def</span> <span class="nam">is_http_method</span><span class="op">(</span><span class="nam">method</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t684" href="#t684">684</a></span><span class="t">    <span class="com"># type: (str) -> None</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t685" href="#t685">685</a></span><span class="t">    <span class="str">'''</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t686" href="#t686">686</a></span><span class="t"><span class="str">    Ensures given method is a legal HTTP method.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t687" href="#t687">687</a></span><span class="t"><span class="str">    Legal methods include:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t688" href="#t688">688</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t689" href="#t689">689</a></span><span class="t"><span class="str">        * get</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t690" href="#t690">690</a></span><span class="t"><span class="str">        * put</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t691" href="#t691">691</a></span><span class="t"><span class="str">        * post</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t692" href="#t692">692</a></span><span class="t"><span class="str">        * delete</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t693" href="#t693">693</a></span><span class="t"><span class="str">        * patch</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t694" href="#t694">694</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t695" href="#t695">695</a></span><span class="t"><span class="str">    Args:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t696" href="#t696">696</a></span><span class="t"><span class="str">        method (str): HTTP method.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t697" href="#t697">697</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t698" href="#t698">698</a></span><span class="t"><span class="str">    Raises:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t699" href="#t699">699</a></span><span class="t"><span class="str">        ValidationError: If method is not a legal HTTP method.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t700" href="#t700">700</a></span><span class="t"><span class="str">    '''</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t701" href="#t701">701</a></span><span class="t">    <span class="nam">methods</span> <span class="op">=</span> <span class="op">[</span><span class="str">'get'</span><span class="op">,</span> <span class="str">'put'</span><span class="op">,</span> <span class="str">'post'</span><span class="op">,</span> <span class="str">'delete'</span><span class="op">,</span> <span class="str">'patch'</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t702" href="#t702">702</a></span><span class="t">    <span class="key">if</span> <span class="nam">method</span> <span class="key">not</span> <span class="key">in</span> <span class="nam">methods</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t703" href="#t703">703</a></span><span class="t">        <span class="nam">msg</span> <span class="op">=</span> <span class="str">f'{method} is not a legal HTTP method. Legal methods: {methods}.'</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t704" href="#t704">704</a></span><span class="t">        <span class="key">raise</span> <span class="nam">ValidationError</span><span class="op">(</span><span class="nam">msg</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
 </main>
 <footer>
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v6.2</a>,
-            created at 2021-12-29 20:47 +0000
+            created at 2021-12-30 10:53 +0000
         </p>
     </div>
 </footer>
