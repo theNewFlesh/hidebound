@@ -1,10 +1,11 @@
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict, List, Optional, Union
 
 from pathlib import Path
-import os
+import re
 
-import jsoncomment as jsonc
 from hidebound.core.logging import DummyLogger, ProgressLogger
+import hidebound.core.tools as hbt
+import jsoncomment as jsonc
 # ------------------------------------------------------------------------------
 
 
@@ -12,6 +13,19 @@ class ExporterBase:
     '''
     Abstract base class for hidebound exporters.
     '''
+    def __init__(
+        self, metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk']
+    ):
+        # type: (List[str]) -> None
+        '''
+        Constructs a ExporterBase instance.
+
+        Args:
+            metadata_types (list[st], optional). Metadata types to be exported.
+                Default: [asset, file, asset-chunk, file-chunk].
+        '''
+        self._metadata_types = metadata_types
+
     def _enforce_directory_structure(self, hidebound_dir):
         # type: (Union[str, Path]) -> None
         '''
@@ -57,55 +71,46 @@ class ExporterBase:
 
         self._enforce_directory_structure(hidebound_dir)
 
-        asset_dir = Path(hidebound_dir, 'metadata', 'asset')
-        file_dir = Path(hidebound_dir, 'metadata', 'file')
+        hidebound_dir = Path(hidebound_dir).as_posix()
+        data = hbt.directory_to_dataframe(hidebound_dir)
+        data['metadata'] = None
 
-        a_total = len(os.listdir(asset_dir))
-        for i, asset in enumerate(os.listdir(asset_dir)):  # type: Tuple[int, Union[str, Path]]
-            # export asset
-            asset = Path(asset_dir, asset)
-            with open(asset) as f:
-                asset_meta = jsonc.JsonComment().load(f)
-            self._export_asset(asset_meta)
-            logger.info(
-                f'exporter: export asset metadata of {asset}',
-                step=i + 1,
-                total=a_total,
-            )
+        total = 1 + len(self._metadata_types)
 
-            # export files
-            filepaths = asset_meta['file_ids']
-            filepaths = [Path(file_dir, f'{x}.json') for x in filepaths]
+        # export content
+        regex = f'{hidebound_dir}/metadata/file/'
+        mask = data.filepath.apply(lambda x: re.search(regex, x)).astype(bool)
+        data[mask].filepath \
+            .apply(lambda x: hbt.read_json(x)['filepath']) \
+            .apply(self._export_content)
+        logger.info('exporter: export content', step=1, total=total)
 
-            f_total = len(filepaths)
-            for j, filepath in enumerate(filepaths):
-                filepath = Path(file_dir, filepath)
-                with open(filepath) as f:
-                    file_meta = jsonc.JsonComment().load(f)
-                self._export_file(file_meta)
-                logger.info(
-                    f'exporter: export files and file metadata of {asset}',
-                    step=j + 1,
-                    total=f_total,
-                )
+        # export metadata
+        lut = {
+            'asset': self._export_asset,
+            'file': self._export_file,
+            'asset-chunk': self._export_asset_chunk,
+            'file-chunk': self._export_file_chunk,
+        }
+        for i, mtype in enumerate(self._metadata_types):
+            regex = f'{hidebound_dir}/metadata/{mtype}/'
+            mask = data.filepath.apply(lambda x: re.search(regex, x)).astype(bool)
+            data[mask].filepath.apply(hbt.read_json).apply(lut[mtype])
+            logger.info(f'exporter: export {mtype}', step=i + 1, total=total)
 
-        # export chunks
-        for k, kind in enumerate(['asset', 'file']):
-            data = []
-            root = Path(hidebound_dir, 'metadata', kind)
-            for filename in os.listdir(root):
-                filepath = Path(root, filename)
-                with open(filepath) as f:
-                    data.append(jsonc.JsonComment().load(f))
+    def _export_content(self, str):
+        # type: (str) -> None
+        '''
+        Exports given file found in hidebound/content.
 
-            if kind == 'asset':
-                self._export_asset_chunk(data)
-            else:
-                self._export_file_chunk(data)
+        Args:
+            filepath (str): Filepath.
 
-            logger.info(
-                f'exporter: export {kind} chunk', step=k + 1, total=2,
-            )
+        Raises:
+            NotImplementedError: If method is not implemented in subclass.
+        '''
+        msg = '_export_content method must be implemented in subclass.'
+        raise NotImplementedError(msg)
 
     def _export_asset(self, metadata):
         # type: (Dict) -> None

@@ -31,41 +31,51 @@ class ExporterBaseTests(unittest.TestCase):
 
         # create asset data
         assets = [
-            [Path(asset, '1.json'), dict(file_ids=['1-1', '1-2', '1-3'])],
-            [Path(asset, '2.json'), dict(file_ids=['2-1', '2-2', '2-3'])],
-            [Path(asset, '3.json'), dict(file_ids=['3-1', '3-2', '3-3'])],
+            dict(
+                asset_path=Path(asset, '1.json').as_posix(),
+                file_ids=['1-1', '1-2', '1-3'],
+            ),
+            dict(
+                asset_path=Path(asset, '2.json').as_posix(),
+                file_ids=['2-1', '2-2', '2-3'],
+            ),
+            dict(
+                asset_path=Path(asset, '3.json').as_posix(),
+                file_ids=['3-1', '3-2', '3-3'],
+            ),
         ]
 
         # create file data
         files = [
-            [Path(file_, '1-1.json'), dict(foo='bar-1-1')],
-            [Path(file_, '1-2.json'), dict(foo='bar-1-2')],
-            [Path(file_, '1-3.json'), dict(foo='bar-1-3')],
-            [Path(file_, '2-1.json'), dict(foo='bar-2-1')],
-            [Path(file_, '2-2.json'), dict(foo='bar-2-2')],
-            [Path(file_, '2-3.json'), dict(foo='bar-2-3')],
-            [Path(file_, '3-1.json'), dict(foo='bar-3-1')],
-            [Path(file_, '3-2.json'), dict(foo='bar-3-2')],
-            [Path(file_, '3-3.json'), dict(foo='bar-3-3')],
+            dict(filepath=Path(file_, '1-1.json').as_posix(), foo='bar-1-1'),
+            dict(filepath=Path(file_, '1-2.json').as_posix(), foo='bar-1-2'),
+            dict(filepath=Path(file_, '1-3.json').as_posix(), foo='bar-1-3'),
+            dict(filepath=Path(file_, '2-1.json').as_posix(), foo='bar-2-1'),
+            dict(filepath=Path(file_, '2-2.json').as_posix(), foo='bar-2-2'),
+            dict(filepath=Path(file_, '2-3.json').as_posix(), foo='bar-2-3'),
+            dict(filepath=Path(file_, '3-1.json').as_posix(), foo='bar-3-1'),
+            dict(filepath=Path(file_, '3-2.json').as_posix(), foo='bar-3-2'),
+            dict(filepath=Path(file_, '3-3.json').as_posix(), foo='bar-3-3'),
         ]
 
+        # create content
+        content = [x['filepath'] for x in files]
+
         # write asset metadata
-        for filepath, data in assets:
-            hbt.write_json(data, filepath)
+        for data in assets:
+            hbt.write_json(data, data['asset_path'])
 
         # write asset chunk
-        asset_chunk = [x[1] for x in assets]
-        hbt.write_json(asset_chunk, asset_chunk_path)
+        hbt.write_json(assets, asset_chunk_path)
 
         # write file metadata
-        for filepath, data in files:
-            hbt.write_json(data, filepath)
+        for data in files:
+            hbt.write_json(data, data['filepath'])
 
         # write file chunk
-        file_chunk = [x[1] for x in files]
-        hbt.write_json(file_chunk, file_chunk_path)
+        hbt.write_json(files, file_chunk_path)
 
-        return assets, files, asset_chunk, file_chunk
+        return content, assets, files
 
     def test_enforce_directory_structure(self):
         with TemporaryDirectory() as root:
@@ -91,12 +101,16 @@ class ExporterBaseTests(unittest.TestCase):
                 os.makedirs(dir_)
 
     def test_export(self):
+        r_content = []
         r_assets = []
         r_files = []
         r_asset_chunk = []
         r_file_chunk = []
 
         class Foo(ExporterBase):
+            def _export_content(self, filepath):
+                r_content.append(filepath)
+
             def _export_asset(self, metadata):
                 r_assets.append(metadata)
 
@@ -110,11 +124,12 @@ class ExporterBaseTests(unittest.TestCase):
                 r_file_chunk.append(metadata)
 
         with TemporaryDirectory() as root:
-            e_assets, e_files, e_asset_chunk, e_file_chunk = self.create_data(root)
-            e_assets = [x[1] for x in e_assets]
-            e_files = [x[1] for x in e_files]
+            e_content, e_assets, e_files = self.create_data(root)
 
             Foo().export(root)
+
+            # content
+            self.assertEqual(r_content, e_content)
 
             # asset
             self.assertEqual(r_assets, e_assets)
@@ -124,14 +139,14 @@ class ExporterBaseTests(unittest.TestCase):
 
             # asset-chunk
             r_asset_chunk = r_asset_chunk[0]
-            self.assertEqual(len(r_asset_chunk), len(e_asset_chunk))
-            for expected in e_asset_chunk:
+            self.assertEqual(len(r_asset_chunk), len(e_assets))
+            for expected in e_assets:
                 self.assertIn(expected, r_asset_chunk)
 
             # file-chunk
             r_file_chunk = r_file_chunk[0]
-            self.assertEqual(len(r_file_chunk), len(e_file_chunk))
-            for expected in e_file_chunk:
+            self.assertEqual(len(r_file_chunk), len(e_files))
+            for expected in e_files:
                 self.assertIn(expected, r_file_chunk)
 
     def test_export_asset(self):
