@@ -73,6 +73,7 @@ class Database:
             write_mode=config['write_mode'],
             exporters=config['exporters'],
             webhooks=config['webhooks'],
+            export_metadata_types=config['export_metadata_types'],
         )
 
     @staticmethod
@@ -93,16 +94,19 @@ class Database:
 
     def __init__(
         self,
-        root_dir,
-        hidebound_dir,
-        specifications=[],
-        include_regex='',
-        exclude_regex=r'\.DS_Store',
-        write_mode='copy',
-        exporters={},
-        webhooks=[],
+        root_dir,                     # type: Union[str, Path]
+        hidebound_dir,                # type: Union[str, Path]
+        specifications=[],            # type: List[SpecificationBase]
+        include_regex='',             # type: str
+        exclude_regex=r'\.DS_Store',  # type: str
+        write_mode='copy',            # type: str
+        exporters={},                 # type: Dict[str, Any]
+        webhooks=[],                  # type: List[Dict]
+        export_metadata_types=[
+            'asset', 'file', 'asset-chunk', 'file-chunk'
+        ],  # type: List[str]
     ):
-        # type: (Union[str, Path], Union[str, Path], List[SpecificationBase], str, str, str, Dict[str, Any], List[Dict]) -> None  # noqa E501
+        # type: (...) -> None
         r'''
         Creates an instance of Database but does not populate it with data.
 
@@ -123,6 +127,8 @@ class Database:
                 Default: {}.
             webhooks (list[dict], optional): List of webhooks to call.
                 Default: [].
+            export_metadata_types (list, optional): List of metadata types for
+                export. Default: [asset, file, asset-chunk, file-chunk].
 
         Raises:
             TypeError: If specifications contains a non-SpecificationBase
@@ -183,6 +189,7 @@ class Database:
             # type: Dict[str, SpecificationBase]
         self._exporters = exporters
         self._webhooks = webhooks
+        self._export_metadata_types = export_metadata_types
         self.data = None
 
         # needed for testing
