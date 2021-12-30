@@ -4,9 +4,9 @@ import os
 import shutil
 import unittest
 
-from schematics.exceptions import ValidationError
+from schematics.exceptions import DataError
 
-from hidebound.exporters.exporter_base import ExporterBase
+from hidebound.exporters.exporter_base import ExporterBase, ExporterConfigBase
 import hidebound.core.tools as hbt
 # ------------------------------------------------------------------------------
 
@@ -36,6 +36,28 @@ class Foo(ExporterBase):
 
     def _export_file_chunk(self, metadata):
         self.file_chunk = metadata
+
+
+class ExporterConfigBaseTests(unittest.TestCase):
+    def test_metadata_types(self):
+        config = dict(
+            metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk']
+        )
+        ExporterConfigBase(config).validate()
+
+        for mtype in ['asset', 'file', 'asset-chunk', 'file-chunk']:
+            config = dict(metadata_types=[mtype])
+            ExporterConfigBase(config).validate()
+
+        config = dict(metadata_types=[])
+        ExporterConfigBase(config).validate()
+
+        ExporterConfigBase({}).validate()
+
+        config = dict(metadata_types=['foobar', 'file-chunk', 'x'])
+        expected = 'foobar is not a legal metadata type.'
+        with self.assertRaisesRegexp(DataError, expected):
+            ExporterConfigBase(config).validate()
 
 
 class ExporterBaseTests(unittest.TestCase):
@@ -106,9 +128,6 @@ class ExporterBaseTests(unittest.TestCase):
     def test_init(self):
         result = Foo(metadata_types=['file'])
         self.assertEqual(result._metadata_types, ['file'])
-
-        with self.assertRaises(ValidationError):
-            Foo(metadata_types=['file', 'foobar'])
 
     def test_enforce_directory_structure(self):
         with TemporaryDirectory() as root:

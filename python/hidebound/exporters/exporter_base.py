@@ -1,12 +1,29 @@
 from typing import Dict, List, Optional, Union
 
 from pathlib import Path
+from schematics import Model
+from schematics.types import ListType, StringType
 import re
 
 from hidebound.core.logging import DummyLogger, ProgressLogger
 import hidebound.core.tools as hbt
 import hidebound.core.validators as vd
 # ------------------------------------------------------------------------------
+
+
+class ExporterConfigBase(Model):
+    '''
+    A class for validating configurations supplied to S3Exporter.
+
+    Attributes:
+        metadata_types (list, optional): List of metadata types for export.
+            Default: [asset, file, asset-chunk, file-chunk].
+    '''
+    metadata_types = ListType(
+        StringType(validators=[vd.is_metadata_type]),
+        required=True,
+        default=['asset', 'file', 'asset-chunk', 'file-chunk']
+    )
 
 
 class ExporterBase:
@@ -23,12 +40,7 @@ class ExporterBase:
         Args:
             metadata_types (list[st], optional). Metadata types to be exported.
                 Default: [asset, file, asset-chunk, file-chunk].
-
-        Raises:
-            ValidationError: If any metadata type is illegal.
         '''
-        for mtype in metadata_types:
-            vd.is_metadata_type(mtype)
         self._metadata_types = metadata_types
 
     def _enforce_directory_structure(self, hidebound_dir):
