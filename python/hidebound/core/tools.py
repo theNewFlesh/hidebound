@@ -238,12 +238,13 @@ def read_json(filepath):
         filepath (Path or str): Filepath.
 
     Raises:
-        JSONDecodeError: If no JSON object found.
+        JSONDecodeError: If no JSON data could be decoded.
 
     Returns:
         object: JSON object.
     '''
     output = jsonc.JsonComment().loadf(filepath)
     if output is None:
-        msg = f'No JSON data found in {filepath}.'
-        raise json.JSONDecodeError(msg)
+        msg = f'No JSON data could be decoded from {filepath}. '
+        msg += 'Please remove any inline comments.'
+        raise json.JSONDecodeError(msg, '', 0)
