@@ -1,11 +1,9 @@
-from typing import Any, Dict, List, Union
+from typing import Dict, List
 
 from pathlib import Path
 import os
-import re
 import shutil
 
-from schematics import Model
 from schematics.types import StringType
 
 from hidebound.exporters.exporter_base import ExporterBase, ExporterConfigBase
@@ -44,8 +42,12 @@ class LocalDiskExporter(ExporterBase):
         '''
         return LocalDiskExporter(**config)
 
-    def __init__(self, target_directory):
-        # type: (str) -> None
+    def __init__(
+        self,
+        target_directory,
+        metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk'],
+    ):
+        # type: (str, List[str]) -> None
         '''
         Constructs a LocalDiskExporter instance.
         Creates target directory if it does not exist.
@@ -56,36 +58,34 @@ class LocalDiskExporter(ExporterBase):
         Raises:
             DataError: If config is invalid.
         '''
-        config = dict(target_directory=target_directory)
+        super().__init__(metadata_types=metadata_types)
+
+        config = dict(
+            target_directory=target_directory,
+            metadata_types=metadata_types,
+        )
         LocalDiskConfig(config).validate()
         # ----------------------------------------------------------------------
 
-        self._target_directory = config['target_directory']
+        self._target_directory = str(config['target_directory'])  # type: str
         os.makedirs(self._target_directory, exist_ok=True)
 
-    def export(self, hidebound_dir, logger=None):
-        # type: (Union[str, Path], Any) -> None
+    def _export_content(self, metadata):
+        # type: (Dict) -> None
         '''
-        Exports data within given hidebound directory.
+        Exports content from filepath in given metadata.
 
         Args:
-            hidebound_dir (Path or str): Hidebound directory.
-            logger (object, optional): Ignored logger. Default: None.
+            metadata (dict): File metadata.
         '''
-        self._enforce_directory_structure(hidebound_dir)
-
-        hidebound_dir = Path(hidebound_dir).as_posix()
-        data = hbt.directory_to_dataframe(hidebound_dir)
-
-        # only include /content and /metadata directories
-        regex = f'{hidebound_dir}/(content|metadata)'
-        mask = data.filepath.apply(lambda x: re.search(regex, x)).astype(bool)
-        data = data[mask]
-
-        data['target'] = data.filepath \
-            .apply(lambda x: re.sub(hidebound_dir, self._target_directory, x))
-        data.target.apply(lambda x: os.makedirs(Path(x).parent, exist_ok=True))
-        data.apply(lambda x: shutil.copy(x.filepath, x.target), axis=1)
+        source = metadata['filepath']
+        target = Path(
+            self._target_directory,
+            'content',
+            metadata['filepath_relative'],
+        )
+        os.makedirs(Path(target).parent, exist_ok=True)
+        shutil.copy(source, target)
 
     def _export_asset(self, metadata):
         # type: (Dict) -> None
@@ -95,7 +95,14 @@ class LocalDiskExporter(ExporterBase):
         Args:
             metadata (dict): Asset metadata.
         '''
-        pass  # pragma: no cover
+        target = Path(
+            self._target_directory,
+            'metadata',
+            'asset',
+            metadata['asset_id'] + '.json',
+        )
+        os.makedirs(Path(target).parent, exist_ok=True)
+        hbt.write_json(metadata, target)
 
     def _export_file(self, metadata):
         # type: (Dict) -> None
@@ -105,7 +112,14 @@ class LocalDiskExporter(ExporterBase):
         Args:
             metadata (dict): File metadata.
         '''
-        pass  # pragma: no cover
+        target = Path(
+            self._target_directory,
+            'metadata',
+            'file',
+            metadata['file_id'] + '.json',
+        )
+        os.makedirs(Path(target).parent, exist_ok=True)
+        hbt.write_json(metadata, target)
 
     def _export_asset_chunk(self, metadata):
         # type: (List[dict]) -> None
@@ -115,7 +129,15 @@ class LocalDiskExporter(ExporterBase):
         Args:
             metadata (list[dict]): Asset metadata.
         '''
-        pass  # pragma: no cover
+        now = hbt.time_string()
+        target = Path(
+            self._target_directory,
+            'metadata',
+            'asset-chunk',
+            f'hidebound-asset-chunk_{now}.json',
+        )
+        os.makedirs(Path(target).parent, exist_ok=True)
+        hbt.write_json(metadata, target)
 
     def _export_file_chunk(self, metadata):
         # type: (List[dict]) -> None
@@ -125,4 +147,12 @@ class LocalDiskExporter(ExporterBase):
         Args:
             metadata (list[dict]): File metadata.
         '''
-        pass  # pragma: no cover
+        now = hbt.time_string()
+        target = Path(
+            self._target_directory,
+            'metadata',
+            'file-chunk',
+            f'hidebound-file-chunk_{now}.json',
+        )
+        os.makedirs(Path(target).parent, exist_ok=True)
+        hbt.write_json(metadata, target)

@@ -256,7 +256,7 @@ class ConfigTests(unittest.TestCase):
             ),
             local_disk=dict(
                 target_directory=self.target_dir,
-                # metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk'],
+                metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk'],
             )
         )
 

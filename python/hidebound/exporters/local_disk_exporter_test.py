@@ -47,12 +47,20 @@ class LocalDiskExporterTests(unittest.TestCase):
             self.assertTrue(Path(config['target_directory']).is_dir())
 
     def setup_hidebound_directory(self, root):
+        now = hbt.time_string()
+
+        # create paths
         hb_root = Path(root, 'hidebound')
-        file_meta = Path(hb_root, 'metadata', 'file')
-        asset_meta = Path(hb_root, 'metadata', 'asset')
-        asset_chunk = Path(hb_root, 'metadata', 'asset-chunk')
-        file_chunk = Path(hb_root, 'metadata', 'file-chunk')
         content = Path(hb_root, 'content')
+        meta_root = Path(hb_root, 'metadata')
+        file_meta = Path(meta_root, 'file')
+        asset_meta = Path(meta_root, 'asset')
+        asset_chunk = Path(
+            meta_root, 'asset-chunk', f'hidebound-asset-chunk_{now}.json'
+        )
+        file_chunk = Path(
+            meta_root, 'file-chunk', f'hidebound-file-chunk_{now}.json'
+        )
 
         # add dummy config
         config = Path(hb_root, 'config')
@@ -70,46 +78,79 @@ class LocalDiskExporterTests(unittest.TestCase):
             asset_id = str(uuid4())
             for f in range(0, 3):
                 file_id = str(uuid4())
-                rel_path = Path(name, name + f'_f{f:04d}.png')
+                item = Path(name, name + f'_f{f:04d}.png')
                 data.append(dict(
                     project=proj,
                     spec=spec,
                     asset_name=name,
                     asset_id=asset_id,
                     file_id=file_id,
-                    a_path=Path(asset_meta, asset_id + '.json').as_posix(),
-                    f_path=Path(file_meta, file_id + '.json').as_posix(),
-                    c_path=Path(content, proj, spec, rel_path).as_posix()
+                    asset_meta_path=Path(asset_meta, asset_id + '.json').as_posix(),
+                    file_meta_path=Path(file_meta, file_id + '.json').as_posix(),
+                    asset_path=Path(content, proj, spec, name).as_posix(),
+                    asset_path_relative=Path(proj, spec, name).as_posix(),
+                    filepath=Path(content, proj, spec, item).as_posix(),
+                    filepath_relative=Path(proj, spec, item).as_posix(),
                 ))
 
         # add file asset
         spec = 'text001'
-        filename = f'p-proj001_s-{spec}_d-file_v001.txt'
+        name = f'p-proj001_s-{spec}_d-file_v001.txt'
         asset_id = str(uuid4())
+        file_id = str(uuid4())
         data.append(dict(
             project=proj,
             spec=spec,
             asset_name=name,
             asset_id=asset_id,
-            file_id=None,
-            a_path=Path(asset_meta, asset_id + '.json').as_posix(),
-            f_path=None,
-            c_path=Path(content, proj, spec, filename).as_posix()
+            file_id=file_id,
+            asset_meta_path=Path(asset_meta, asset_id + '.json').as_posix(),
+            file_meta_path=Path(file_meta, file_id + '.json').as_posix(),
+            asset_path=Path(content, proj, spec, name).as_posix(),
+            asset_path_relative=Path(proj, spec, name).as_posix(),
+            filepath=Path(content, proj, spec, name).as_posix(),
+            filepath_relative=Path(proj, spec, name).as_posix(),
         ))
         data = DataFrame(data)
 
-        a_paths = data.a_path.dropna().unique().tolist()
-        f_paths = data.f_path.dropna().unique().tolist()
-        c_paths = data.c_path.dropna().unique().tolist()
-        filepaths = list(chain(a_paths, f_paths, c_paths))
-        filepaths.extend([
-            Path(asset_chunk, 'hidebound-asset-chunk_01-01-01T01-01-01.json').as_posix(),
-            Path(file_chunk, 'hidebound-file-chunk_01-01-01T01-01-01.json').as_posix(),
-        ])
-        for filepath in filepaths:
-            os.makedirs(Path(filepath).parent, exist_ok=True)
-            with open(filepath, 'w') as f:
-                f.write('data')
+        # make directories
+        for col in ['asset_meta_path', 'file_meta_path', 'filepath']:
+            data[col].dropna().apply(
+                lambda x: os.makedirs(Path(x).parent, exist_ok=True)
+            )
+        os.makedirs(asset_chunk.parent, exist_ok=True)
+        os.makedirs(file_chunk.parent, exist_ok=True)
+
+        # write asset metadata
+        assets = data \
+            .groupby('asset_id') \
+            .apply(lambda x: dict(
+                asset_id=x.asset_id.tolist()[0],
+                file_ids=x.file_id.tolist(),
+                asset_meta_path=x.asset_meta_path.tolist()[0],
+                asset_name=x.asset_name.tolist()[0],
+                asset_path=x.asset_path.tolist()[0],
+                asset_path_relative=x.asset_path_relative.tolist()[0],
+                filepaths=x.filepath.tolist(),
+                filepath_relatives=x.filepath_relative.tolist(),
+            ))
+        assets.apply(lambda x: hbt.write_json(x, x['asset_meta_path']))
+
+        # write asset chunk
+        hbt.write_json(assets.tolist(), asset_chunk)
+
+        # write file metadata
+        data.apply(
+            lambda x: hbt.write_json(x.to_dict(), x['file_meta_path']),
+            axis=1,
+        )
+
+        # write file chunk
+        meta = data.apply(lambda x: x.to_dict(), axis=1).tolist()
+        hbt.write_json(meta, file_chunk)
+
+        # write content
+        data.apply(lambda x: hbt.write_json({}, x['filepath']), axis=1)
 
         return hb_root
 

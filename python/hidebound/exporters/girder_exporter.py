@@ -182,26 +182,8 @@ class GirderExporter(ExporterBase):
             parentType='folder',
         )
 
-    def _export_asset(self, metadata):
-        # type: (Dict) -> None
-        '''
-        Export asset metadata to Girder.
-        Metadata must contain these fields:
-            * asset_type
-            * asset_path_relative
-
-        Args:
-            metadata (dict): Asset metadata.
-        '''
-        if metadata['asset_type'] != 'file':
-            self._export_dirs(
-                metadata['asset_path_relative'],
-                metadata=metadata,
-                exists_ok=True,
-            )
-
     def _export_content(self, metadata):
-        # type: (Dict) -> Any
+        # type: (dict) -> Any
         '''
         Export file content and metadata to Girder.
         Metadata must contain these fields:
@@ -237,8 +219,26 @@ class GirderExporter(ExporterBase):
             .uploadFileToItem(response['_id'], metadata['filepath'])
         return response
 
+    def _export_asset(self, metadata):
+        # type: (dict) -> None
+        '''
+        Export asset metadata to Girder.
+        Metadata must contain these fields:
+            * asset_type
+            * asset_path_relative
+
+        Args:
+            metadata (dict): Asset metadata.
+        '''
+        if metadata['asset_type'] != 'file':
+            self._export_dirs(
+                metadata['asset_path_relative'],
+                metadata=metadata,
+                exists_ok=True,
+            )
+
     def _export_file(self, metadata):
-        # type: (List[dict]) -> None
+        # type: (dict) -> None
         '''
         Exports content from file metadata in hidebound/metadata/file.
 
