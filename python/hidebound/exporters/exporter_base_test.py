@@ -4,9 +4,38 @@ import os
 import shutil
 import unittest
 
+from schematics.exceptions import ValidationError
+
 from hidebound.exporters.exporter_base import ExporterBase
 import hidebound.core.tools as hbt
 # ------------------------------------------------------------------------------
+
+
+class Foo(ExporterBase):
+    def __init__(
+        self, metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk']
+    ):
+        super().__init__(metadata_types=metadata_types)
+        self.content = []
+        self.assets = []
+        self.files = []
+        self.asset_chunk = None
+        self.file_chunk = None
+
+    def _export_content(self, filepath):
+        self.content.append(filepath)
+
+    def _export_asset(self, metadata):
+        self.assets.append(metadata)
+
+    def _export_file(self, metadata):
+        self.files.append(metadata)
+
+    def _export_asset_chunk(self, metadata):
+        self.asset_chunk = metadata
+
+    def _export_file_chunk(self, metadata):
+        self.file_chunk = metadata
 
 
 class ExporterBaseTests(unittest.TestCase):
@@ -77,6 +106,13 @@ class ExporterBaseTests(unittest.TestCase):
 
         return content, assets, files
 
+    def test_init(self):
+        result = Foo(metadata_types=['file'])
+        self.assertEqual(result._metadata_types, ['file'])
+
+        with self.assertRaises(ValidationError):
+            Foo(metadata_types=['file', 'foobar'])
+
     def test_enforce_directory_structure(self):
         with TemporaryDirectory() as root:
             content = Path(root, 'content')
@@ -101,78 +137,79 @@ class ExporterBaseTests(unittest.TestCase):
                 os.makedirs(dir_)
 
     def test_export(self):
-        r_content = []
-        r_assets = []
-        r_files = []
-        r_asset_chunk = []
-        r_file_chunk = []
-
-        class Foo(ExporterBase):
-            def _export_content(self, filepath):
-                r_content.append(filepath)
-
-            def _export_asset(self, metadata):
-                r_assets.append(metadata)
-
-            def _export_file(self, metadata):
-                r_files.append(metadata)
-
-            def _export_asset_chunk(self, metadata):
-                r_asset_chunk.append(metadata)
-
-            def _export_file_chunk(self, metadata):
-                r_file_chunk.append(metadata)
-
         with TemporaryDirectory() as root:
             e_content, e_assets, e_files = self.create_data(root)
-
-            Foo().export(root)
+            foo = Foo()
+            foo.export(root)
 
             # content
-            self.assertEqual(r_content, e_content)
+            self.assertEqual(foo.content, e_content)
 
             # asset
-            self.assertEqual(r_assets, e_assets)
+            self.assertEqual(foo.assets, e_assets)
 
             # file
-            self.assertEqual(r_files, e_files)
+            self.assertEqual(foo.files, e_files)
 
             # asset-chunk
-            r_asset_chunk = r_asset_chunk[0]
-            self.assertEqual(len(r_asset_chunk), len(e_assets))
+            foo.asset_chunk = foo.asset_chunk[0]
+            self.assertEqual(len(foo.asset_chunk), len(e_assets))
             for expected in e_assets:
-                self.assertIn(expected, r_asset_chunk)
+                self.assertIn(expected, foo.asset_chunk)
 
             # file-chunk
-            r_file_chunk = r_file_chunk[0]
-            self.assertEqual(len(r_file_chunk), len(e_files))
+            foo.file_chunk = foo.file_chunk[0]
+            self.assertEqual(len(foo.file_chunk), len(e_files))
             for expected in e_files:
-                self.assertIn(expected, r_file_chunk)
+                self.assertIn(expected, foo.file_chunk)
+
+    def test_export_metadata_types(self):
+        with TemporaryDirectory() as root:
+            e_content, e_assets, e_files = self.create_data(root)
+            foo = Foo(metadata_types=['asset', 'file-chunk'])
+            foo.export(root)
+
+            # content
+            self.assertEqual(foo.content, e_content)
+
+            # asset
+            self.assertEqual(foo.assets, e_assets)
+
+            # file
+            self.assertEqual(foo.files, [])
+
+            # asset-chunk
+            self.assertIsNone(foo.asset_chunk)
+
+            # file-chunk
+            self.assertEqual(len(foo.file_chunk), len(e_files))
+            for expected in e_files:
+                self.assertIn(expected, foo.file_chunk)
 
     def test_export_asset(self):
-        class Foo(ExporterBase):
+        class Bar(ExporterBase):
             pass
         expected = '_export_asset method must be implemented in subclass.'
         with self.assertRaisesRegexp(NotImplementedError, expected):
-            Foo()._export_asset({})
+            Bar()._export_asset({})
 
     def test_export_file(self):
-        class Foo(ExporterBase):
+        class Bar(ExporterBase):
             pass
         expected = '_export_file method must be implemented in subclass.'
         with self.assertRaisesRegexp(NotImplementedError, expected):
-            Foo()._export_file({})
+            Bar()._export_file({})
 
     def test_export_asset_chunk(self):
-        class Foo(ExporterBase):
+        class Bar(ExporterBase):
             pass
         expected = '_export_asset_chunk method must be implemented in subclass.'
         with self.assertRaisesRegexp(NotImplementedError, expected):
-            Foo()._export_asset_chunk({})
+            Bar()._export_asset_chunk({})
 
     def test_export_file_chunk(self):
-        class Foo(ExporterBase):
+        class Bar(ExporterBase):
             pass
         expected = '_export_file_chunk method must be implemented in subclass.'
         with self.assertRaisesRegexp(NotImplementedError, expected):
-            Foo()._export_file_chunk({})
+            Bar()._export_file_chunk({})

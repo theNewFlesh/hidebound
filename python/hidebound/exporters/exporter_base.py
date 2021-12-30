@@ -5,7 +5,7 @@ import re
 
 from hidebound.core.logging import DummyLogger, ProgressLogger
 import hidebound.core.tools as hbt
-import jsoncomment as jsonc
+import hidebound.core.validators as vd
 # ------------------------------------------------------------------------------
 
 
@@ -23,7 +23,12 @@ class ExporterBase:
         Args:
             metadata_types (list[st], optional). Metadata types to be exported.
                 Default: [asset, file, asset-chunk, file-chunk].
+
+        Raises:
+            ValidationError: If any metadata type is illegal.
         '''
+        for mtype in metadata_types:
+            vd.is_metadata_type(mtype)
         self._metadata_types = metadata_types
 
     def _enforce_directory_structure(self, hidebound_dir):
