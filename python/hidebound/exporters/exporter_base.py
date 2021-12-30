@@ -73,8 +73,12 @@ class ExporterBase:
                 msg = f'{path.as_posix()} directory does not exist.'
                 raise FileNotFoundError(msg)
 
-    def export(self, hidebound_dir, logger=None):
-        # type: (Union[str, Path], Optional[Union[DummyLogger, ProgressLogger]]) -> None
+    def export(
+        self,
+        hidebound_dir,  # type: Union[str, Path]
+        logger=None  # type: Optional[Union[DummyLogger, ProgressLogger]]
+    ):
+        # type: (...) -> None
         '''
         Exports data within given hidebound directory.
 
