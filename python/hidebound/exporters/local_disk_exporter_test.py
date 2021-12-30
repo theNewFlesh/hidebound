@@ -189,3 +189,88 @@ class LocalDiskExporterTests(unittest.TestCase):
             result = sorted(result)
 
             self.assertEqual(result, expected)
+
+    def test_export_content(self):
+        with TemporaryDirectory() as root:
+            config = self.get_config(root)
+            exp = LocalDiskExporter.from_config(config)
+
+            src = Path(root, 'source', 'content.json')
+            src_rel = Path('content.json')
+            os.makedirs(src.parent)
+            hbt.write_json({'foo': 'bar'}, src)
+
+            meta = dict(
+                filepath=src.as_posix(),
+                filepath_relative=src_rel.as_posix(),
+            )
+            exp._export_content(meta)
+
+            target = Path(exp._target_directory, 'content', 'content.json')
+            self.assertTrue(target.is_file())
+
+            result = hbt.read_json(target)
+            expected = hbt.read_json(src)
+            self.assertEqual(result, expected)
+
+    def test_export_asset(self):
+        with TemporaryDirectory() as root:
+            config = self.get_config(root)
+            exp = LocalDiskExporter.from_config(config)
+
+            result = Path(
+                exp._target_directory, 'metadata', 'asset', '1234.json'
+            )
+            expected = dict(asset_id='1234')
+            os.makedirs(result.parent)
+            exp._export_asset(expected)
+
+            self.assertTrue(result.is_file())
+            result = hbt.read_json(result)
+            self.assertEqual(result, expected)
+
+    def test_export_file(self):
+        with TemporaryDirectory() as root:
+            config = self.get_config(root)
+            exp = LocalDiskExporter.from_config(config)
+
+            result = Path(
+                exp._target_directory, 'metadata', 'file', '1234.json'
+            )
+            expected = dict(file_id='1234')
+            os.makedirs(result.parent)
+            exp._export_file(expected)
+
+            self.assertTrue(result.is_file())
+            result = hbt.read_json(result)
+            self.assertEqual(result, expected)
+
+    def test_export_asset_chunk(self):
+        with TemporaryDirectory() as root:
+            config = self.get_config(root)
+            exp = LocalDiskExporter.from_config(config)
+
+            result = Path(exp._target_directory, 'metadata', 'asset-chunk')
+            os.makedirs(result.parent)
+            expected = [dict(foo='bar')]
+            exp._export_asset_chunk(expected)
+
+            result = Path(result, os.listdir(result)[0])
+            self.assertTrue(result.is_file())
+            result = hbt.read_json(result)
+            self.assertEqual(result, expected)
+
+    def test_export_file_chunk(self):
+        with TemporaryDirectory() as root:
+            config = self.get_config(root)
+            exp = LocalDiskExporter.from_config(config)
+
+            result = Path(exp._target_directory, 'metadata', 'file-chunk')
+            os.makedirs(result.parent)
+            expected = [dict(foo='bar')]
+            exp._export_file_chunk(expected)
+
+            result = Path(result, os.listdir(result)[0])
+            self.assertTrue(result.is_file())
+            result = hbt.read_json(result)
+            self.assertEqual(result, expected)
