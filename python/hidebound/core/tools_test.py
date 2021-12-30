@@ -276,3 +276,18 @@ class ToolsTests(unittest.TestCase):
             expected = map(json.dumps, expected)
             expected = '[\n' + ',\n'.join(expected) + '\n]'
             self.assertEqual(result, expected)
+
+    def test_read_json(self):
+        with TemporaryDirectory() as root:
+            filepath = Path(root, 'test.json')
+            with open(filepath, 'w') as f:
+                f.write('''
+// a comment
+{
+    "a": "b",
+    "c": "d",
+}''')
+
+            result = hbt.read_json(filepath)
+            expected = {"a": "b", "c": "d"}
+            self.assertEqual(result, expected)

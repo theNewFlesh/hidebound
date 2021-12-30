@@ -9,8 +9,9 @@ import os
 import re
 import shutil
 
-import OpenEXR as openexr
 from schematics.exceptions import DataError, ValidationError
+import jsoncomment as jsonc
+import OpenEXR as openexr
 
 from pandas import DataFrame
 # ------------------------------------------------------------------------------
@@ -225,3 +226,24 @@ def write_json(data, filepath):
     else:
         with open(filepath, 'w') as f:
             json.dump(data, f)
+
+
+def read_json(filepath):
+    # type (Union[Path, str]) -> object
+    '''
+    Convenience function for reading JSON files.
+    Files may include comments.
+
+    Args:
+        filepath (Path or str): Filepath.
+
+    Raises:
+        JSONDecodeError: If no JSON object found.
+
+    Returns:
+        object: JSON object.
+    '''
+    output = jsonc.JsonComment().loadf(filepath)
+    if output is None:
+        msg = f'No JSON data found in {filepath}.'
+        raise json.JSONDecodeError(msg)
