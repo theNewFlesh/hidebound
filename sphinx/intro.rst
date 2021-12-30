@@ -47,18 +47,17 @@ Run ``bin/hidebound --help`` for more help on the command line tool.
 Overview
 ========
 
-Hidebound is a local, dockerized; database, asset framework, asset
-validation and display service. Hidebound is not a competitor to
-databases like MongoDB, Amazon Web Service's (AWS) S3, Postgres, etc.
+Hidebound is an ephemeral database and asset framework used for
+generating, validating and exporting assets to various data stores.
 Hidebound enables developers to ingest arbitrary sets of files and
-output them as validated assets and metadata for consumption by
-databases like the aforementioned.
+output them as content and generated metadata, which has validated
+according to specifications they define.
 
-Hidebound is framework for validating, and extracting metadata from
-files and directories according, to user defined specifications. Assets
-are placed into a root directory (typically one reserved for Hidebound
-projects) and then discovered, validated, extracted, and copied or moved
-by Hidebound.
+Assets are placed into an ingress directory, typically reserved for
+Hidebound projects, and then processed by Hidebound. Hidebound extracts
+metadata from the files and directories that make each asset according
+to their name, location and file properties. This data comprises the
+entirety of Hidebound's database at any one time.
 
 Dataflow
 ========
@@ -69,9 +68,9 @@ Dataflow
 Data begins as files on disk. Hidebound creates a JSON-compatible dict
 from their name traits and file traits and then constructs an internal
 database table from them, one dict per row. All the rows are then
-aggregated by asset, and converted into a JSON blobs. Those blobs are
-then validated according to their respective specifications. Files from
-valid assets are then copied or moved into Hidebound's data directory,
+aggregated by asset, and converted into JSON blobs. Those blobs are then
+validated according to their respective specifications. Files from valid
+assets are then copied or moved into Hidebound's content directory,
 according to their same directory structure and naming. Metadata is
 written to JSON files inside Hidebound's metadata directory. Each file's
 metadata is written as a JSON file in /hidebound/metadata/file, and each
@@ -146,8 +145,10 @@ Next we click the create button. For each valid asset, Hidebound
 generates file and asset metadata as JSON files within the
 hidebound/metadata directory. Hidebound also copies or moves, depending
 on the config write mode, valid files and directories into the
-hidebound/content directory. Thus we now have a hidebound directory that
-looks like this (unmentioned assets are collapsed behind the ellipses):
+hidebound/content directory. Hidebound/content and hidebound/metadata
+are both staging directories used for generating a valid ephemeral
+database. We now have a hidebound directory that looks like this
+(unmentioned assets are collapsed behind the ellipses):
 
 ::
 
@@ -180,14 +181,15 @@ looks like this (unmentioned assets are collapsed behind the ellipses):
 *Export*
 ~~~~~~~~
 
-This directory contains only valid assets and their associated metadata.
-We are now free to export this data to various databases, such as AWS
-S3, MongoDB, and Girder. Exporters are are defined within the exporters
+The hidebound directories contain only valid assets. Thus, we are now
+free to export this data to various data stores, such as AWS S3,
+MongoDB, and Girder. Exporters are are defined within the exporters
 subpackage. They expect a populated hidebound directory and use the
 files and metadata therein to export hidebound data. Exporter
-configurations are stored in the hidebound conig, under the "exporters"
-key. Below we can see the results of an export to Girder in the Girder
-web app.
+configurations are stored in the hidebound config, under the "exporters"
+key. Currently supported exporters include, local disk, s3 and girder.
+Below we can see the results of an export to Girder in the Girder web
+app.
 
 .. figure:: resources/screenshots/girder.png
    :alt: 
@@ -201,7 +203,8 @@ directories and all their contents. If write\_mode in the Hidebound
 configuration is set to "copy", then this step will merely delete data
 created by Hidebound. If it is set to "move", then Hidebound will
 presumably delete, the only existing copy of out asset data on the host
-machine.
+machine. The delete stage in combination with the removal of assets from
+the ingress directory is what makes Hidebound's database ephemeral.
 
 *Workflow*
 ~~~~~~~~~~
