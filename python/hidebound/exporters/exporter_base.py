@@ -85,9 +85,7 @@ class ExporterBase:
         # export content
         regex = f'{hidebound_dir}/metadata/file/'
         mask = data.filepath.apply(lambda x: re.search(regex, x)).astype(bool)
-        data[mask].filepath \
-            .apply(lambda x: hbt.read_json(x)['filepath']) \
-            .apply(self._export_content)
+        data[mask].filepath.apply(hbt.read_json).apply(self._export_content)
         logger.info('exporter: export content', step=1, total=total)
 
         # export metadata
@@ -103,13 +101,14 @@ class ExporterBase:
             data[mask].filepath.apply(hbt.read_json).apply(lut[mtype])
             logger.info(f'exporter: export {mtype}', step=i + 1, total=total)
 
-    def _export_content(self, str):
-        # type: (str) -> None
+    def _export_content(self, metadata):
+        # type: (Dict) -> None
         '''
-        Exports given file found in hidebound/content.
+        Exports from file from hidebound/content named in metadata.
+        Metadata should have filepath, filepath_relative keys.
 
         Args:
-            filepath (str): Filepath.
+            metadata (dict): File metadata.
 
         Raises:
             NotImplementedError: If method is not implemented in subclass.

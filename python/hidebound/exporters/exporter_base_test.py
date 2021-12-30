@@ -22,8 +22,8 @@ class Foo(ExporterBase):
         self.asset_chunk = None
         self.file_chunk = None
 
-    def _export_content(self, filepath):
-        self.content.append(filepath)
+    def _export_content(self, metadata):
+        self.content.append(metadata)
 
     def _export_asset(self, metadata):
         self.assets.append(metadata)
@@ -87,9 +87,6 @@ class ExporterBaseTests(unittest.TestCase):
             dict(filepath=Path(file_, '3-3.json').as_posix(), foo='bar-3-3'),
         ]
 
-        # create content
-        content = [x['filepath'] for x in files]
-
         # write asset metadata
         for data in assets:
             hbt.write_json(data, data['asset_path'])
@@ -104,7 +101,7 @@ class ExporterBaseTests(unittest.TestCase):
         # write file chunk
         hbt.write_json(files, file_chunk_path)
 
-        return content, assets, files
+        return files, assets, files
 
     def test_init(self):
         result = Foo(metadata_types=['file'])
@@ -152,13 +149,11 @@ class ExporterBaseTests(unittest.TestCase):
             self.assertEqual(foo.files, e_files)
 
             # asset-chunk
-            foo.asset_chunk = foo.asset_chunk[0]
             self.assertEqual(len(foo.asset_chunk), len(e_assets))
             for expected in e_assets:
                 self.assertIn(expected, foo.asset_chunk)
 
             # file-chunk
-            foo.file_chunk = foo.file_chunk[0]
             self.assertEqual(len(foo.file_chunk), len(e_files))
             for expected in e_files:
                 self.assertIn(expected, foo.file_chunk)
