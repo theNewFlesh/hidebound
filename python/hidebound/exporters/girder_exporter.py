@@ -74,8 +74,9 @@ class GirderExporter(ExporterBase):
         host='http://0.0.0.0',
         port=8180,
         client=None,
+        metadata_types=['asset', 'file'],
     ):
-        # type: (str, str, str, str, int, Any) -> None
+        # type: (str, str, str, str, int, Any, List[str]) -> None
         '''
         Constructs a GirderExporter instances and creates a Girder client.
 
@@ -90,6 +91,9 @@ class GirderExporter(ExporterBase):
             port (int, optional): Docker host port. Default: 8180.
             client (object, optional): Client instance, for testing.
                 Default: None.
+            metadata_types (list[str], optional): Metadata types to export.
+                Default: [asset, file].
+    ):
 
         Raises:
             DataError: If config is invalid.
@@ -97,6 +101,12 @@ class GirderExporter(ExporterBase):
         # sudo ip addr show docker0 | grep inet | grep docker0 | awk '{print $2}' | sed 's/\/.*//'
         # will give you the ip address of the docker network which binds to
         # localhost
+
+        metadata_types = list(
+            filter(lambda x: x in ['asset', 'file'], metadata_types)
+        )
+        super().__init__(metadata_types=metadata_types)
+
         config = dict(
             api_key=api_key,
             root_id=root_id,
@@ -175,27 +185,18 @@ class GirderExporter(ExporterBase):
 
         Args:
             metadata (dict): Asset metadata.
-
-        Raises:
-            HttpError: If final asset directory already exists.
         '''
         if metadata['asset_type'] != 'file':
-            try:
-                self._export_dirs(
-                    metadata['asset_path_relative'],
-                    metadata=metadata
-                )
-            except HttpError as e:
-                msg = f"{metadata['asset_path_relative']} directory already "
-                msg += 'exists. ' + e.responseText
-                e.responseText = msg
-                e.args = [msg]
-                raise e
+            self._export_dirs(
+                metadata['asset_path_relative'],
+                metadata=metadata,
+                exists_ok=True,
+            )
 
-    def _export_file(self, metadata):
+    def _export_content(self, metadata):
         # type: (Dict) -> Any
         '''
-        Export file metadata to Girder.
+        Export file content and metadata to Girder.
         Metadata must contain these fields:
             * filepath_relative
             * filename
@@ -215,15 +216,29 @@ class GirderExporter(ExporterBase):
         # folder error will always be raised before duplicate file conflict is
         # encountered, so don't test for duplicate files within directory
 
+        meta = metadata
+        if 'file' not in self._metadata_types:
+            meta = {}
+
         response = self._client.createItem(
             response['_id'],
             filename,
-            metadata=metadata,
+            metadata=meta,
             reuseExisting=True,
         )
         response = self._client\
             .uploadFileToItem(response['_id'], metadata['filepath'])
         return response
+
+    def _export_file(self, metadata):
+        # type: (List[dict]) -> None
+        '''
+        Exports content from file metadata in hidebound/metadata/file.
+
+        Args:
+            metadata (dict): File metadata.
+        '''
+        pass
 
     def _export_asset_chunk(self, metadata):
         # type: (List[dict]) -> None

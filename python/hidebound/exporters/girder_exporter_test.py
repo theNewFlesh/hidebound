@@ -196,6 +196,28 @@ class GirderExporterTests(unittest.TestCase):
             result = sorted(list(result))
             self.assertEqual(result, e_files)
 
+    def test_export_no_file_metadata(self):
+        with TemporaryDirectory() as root:
+            self.client = MockGirderClient(add_suffix=False)
+
+            e_assets, e_files, _, _ = self.create_data(root)
+            e_assets = [x[1]['asset_name'] for x in e_assets]
+            e_files = [x[1]['filename'] for x in e_files]
+
+            config = self.config
+            config['metadata_types'] = ['asset']
+            GirderExporter\
+                .from_config(config, client=self.client) \
+                .export(root)
+
+            result = self.client.folders.keys()
+            result = sorted(list(result))
+            self.assertEqual(result, e_assets)
+
+            result = self.client.items.keys()
+            result = sorted(list(result))
+            self.assertEqual(result, e_files)
+
     def test_export_dirs(self):
         dirpath = '/foo/bar/baz'
         meta = dict(foo='bar')
@@ -259,17 +281,13 @@ class GirderExporterTests(unittest.TestCase):
         self.assertEqual(result, ['bar', 'baz', 'foo'])
         self.assertEqual(self.client.files, {})
 
-        expected = 'foo/bar/baz directory already exists'
-        with self.assertRaisesRegexp(HttpError, expected):
-            self.exporter._export_asset(metadata)
-
-    def test_export_file(self):
+    def test_export_content(self):
         expected = dict(
             filepath='/home/ubuntu/foo/bar/taco.txt',
             filepath_relative='foo/bar/taco.txt',
             filename='taco.txt'
         )
-        self.exporter._export_file(expected)
+        self.exporter._export_content(expected)
 
         result = list(sorted(self.client.folders.keys()))
         self.assertEqual(result, ['bar', 'foo'])
@@ -280,13 +298,13 @@ class GirderExporterTests(unittest.TestCase):
             result['taco.txt']['file_content'], expected['filepath']
         )
 
-    def test_export_file_error(self):
+    def test_export_content_error(self):
         meta = dict(
             filepath='/home/ubuntu/foo/bar/taco.txt',
             filepath_relative='foo/bar/taco.txt',
             filename='taco.txt'
         )
-        self.exporter._export_file(meta)
+        self.exporter._export_content(meta)
 
         item = self.client.items['taco.txt']['_id']
         items = self.client.folders['bar']['items']
