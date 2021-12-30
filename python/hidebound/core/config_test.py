@@ -208,25 +208,6 @@ class ConfigTests(unittest.TestCase):
             with self.assertRaisesRegexp(DataError, expected):
                 cfg.Config(self.config).validate()
 
-    def test_metadata_types(self):
-        with TemporaryDirectory() as temp:
-            self.set_data(temp)
-            os.makedirs(self.root)
-            os.makedirs(self.hb_root)
-
-            cfg.Config(self.config).validate()
-
-            self.config['metadata_types'] = ['asset']
-            cfg.Config(self.config).validate()
-
-            self.config['metadata_types'] = ['file', 'asset-chunk']
-            cfg.Config(self.config).validate()
-
-            self.config['metadata_types'] = ['foobar', 'file-chunk', 'x']
-            expected = 'foobar is not a legal metadata type.'
-            with self.assertRaisesRegexp(DataError, expected):
-                cfg.Config(self.config).validate()
-
     def test_specification_files_good(self):
         with TemporaryDirectory() as temp:
             self.set_data(temp)
@@ -264,15 +245,18 @@ class ConfigTests(unittest.TestCase):
                 root_type='collection',
                 host='http://1.0.1.0',
                 port=2020,
+                metadata_types=['asset', 'file'],
             ),
             s3=dict(
                 access_key='foo',
                 secret_key='bar',
                 bucket='bucket',
                 region='us-west-2',
+                metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk'],
             ),
             local_disk=dict(
-                target_directory=self.target_dir
+                target_directory=self.target_dir,
+                # metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk'],
             )
         )
 

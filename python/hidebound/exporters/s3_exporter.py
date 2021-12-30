@@ -3,17 +3,16 @@ from typing import List
 from io import BytesIO
 import json
 
-from schematics import Model
 from schematics.types import StringType
 import boto3 as boto
 
-from hidebound.exporters.exporter_base import ExporterBase
+from hidebound.exporters.exporter_base import ExporterBase, ExporterConfigBase
 import hidebound.core.tools as tools
 import hidebound.core.validators as vd
 # ------------------------------------------------------------------------------
 
 
-class S3Config(Model):
+class S3Config(ExporterConfigBase):
     '''
     A class for validating configurations supplied to S3Exporter.
 
@@ -57,8 +56,9 @@ class S3Exporter(ExporterBase):
         secret_key,
         bucket,
         region,
+        metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk'],
     ):
-        # type: (str, str, str, str) -> None
+        # type: (str, str, str, str, List[str]) -> None
         '''
         Constructs a S3Exporter instances and creates a bucket with given name
         if it does not exist.
@@ -68,15 +68,20 @@ class S3Exporter(ExporterBase):
             secret_key (str): AWS secret key.
             bucket (str): AWS bucket name.
             region (str): AWS region.
+            metadata_types (list, optional): List of metadata types for export.
+                Default: [asset, file, asset-chunk, file-chunk].
 
         Raises:
             DataError: If config is invalid.
         '''
+        super().__init__(metadata_types=metadata_types)
+
         config = dict(
             access_key=access_key,
             secret_key=secret_key,
             bucket=bucket,
             region=region,
+            metadata_types=metadata_types,
         )
         S3Config(config).validate()
         # ----------------------------------------------------------------------

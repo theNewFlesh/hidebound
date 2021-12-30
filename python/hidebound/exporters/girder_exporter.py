@@ -2,9 +2,8 @@ from typing import Any, Dict, List, Union
 
 from pathlib import Path
 
-from girder_client import HttpError
 from schematics import Model
-from schematics.types import IntType, StringType, URLType
+from schematics.types import IntType, ListType, StringType, URLType
 import girder_client
 
 from hidebound.exporters.exporter_base import ExporterBase
@@ -24,6 +23,8 @@ class GirderConfig(Model):
             Options: folder, collection
         host (str, optional): Docker host URL address. Default: http://0.0.0.0
         port (int, optional): Docker host port. Default: 8180.
+        metadata_types (list, optional): List of metadata types for export.
+            Default: [asset, file].
     '''
     api_key = StringType(required=True)  # type: StringType
     root_id = StringType(required=True)  # type: StringType
@@ -41,6 +42,11 @@ class GirderConfig(Model):
             lambda x: vd.is_gt(x, 1023),
         ]
     )  # type: IntType
+    metadata_types = ListType(
+        StringType(validators=[vd.is_metadata_type]),
+        required=True,
+        default=['asset', 'file']
+    )
 
 
 class GirderExporter(ExporterBase):
@@ -113,6 +119,7 @@ class GirderExporter(ExporterBase):
             root_type=root_type,
             host=host,
             port=port,
+            metadata_types=metadata_types,
         )
         config = GirderConfig(config)
         config.validate()

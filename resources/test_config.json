@@ -13,7 +13,8 @@
       "root_id": "5ed735c8d8dd6242642406e5",
       "root_type": "collection",
       "host": "http://172.17.0.1",
-      "port": 8180
+      "port": 8180,
+      "metadata_types": ["asset", "file"]
     }
   },
   "webhooks": [

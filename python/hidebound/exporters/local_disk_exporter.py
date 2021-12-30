@@ -8,13 +8,13 @@ import shutil
 from schematics import Model
 from schematics.types import StringType
 
-from hidebound.exporters.exporter_base import ExporterBase
+from hidebound.exporters.exporter_base import ExporterBase, ExporterConfigBase
 import hidebound.core.tools as hbt
 import hidebound.core.validators as vd
 # ------------------------------------------------------------------------------
 
 
-class LocalDiskConfig(Model):
+class LocalDiskConfig(ExporterConfigBase):
     '''
     A class for validating configurations supplied to LocalDiskExporter.
 
