@@ -100,6 +100,35 @@ class S3ExporterTests(unittest.TestCase):
                 self.assertEqual(json.load(f), expected)
 
     @mock_s3
+    def test_export_content(self):
+        with TemporaryDirectory() as root:
+            n = 'p-proj001_spec001_d-desc_v001'
+            rel_path = f'projects/proj001/spec001/{n}/{n}_f0000.json'
+            filepath = Path(root, rel_path)
+
+            content = {'foo': 'bar'}
+            os.makedirs(filepath.parent, exist_ok=True)
+            with open(Path(root, filepath), 'w') as f:
+                json.dump(content, f)
+
+            exporter = S3Exporter(**self.config)
+            id_ = 'abc123'
+            expected = dict(
+                file_id=id_,
+                foo='bar',
+                filepath=filepath.as_posix(),
+                filepath_relative=rel_path,
+            )
+            exporter._export_content(expected)
+
+            # content
+            file_ = Path(root, 'content.json')
+            with open(file_, 'wb') as f:
+                self.bucket.download_fileobj(f'hidebound/content/{rel_path}', f)
+            with open(file_, 'r') as f:
+                self.assertEqual(json.load(f), content)
+
+    @mock_s3
     def test_export_file(self):
         with TemporaryDirectory() as root:
             n = 'p-proj001_spec001_d-desc_v001'
@@ -130,13 +159,6 @@ class S3ExporterTests(unittest.TestCase):
                 )
             with open(file_, 'r') as f:
                 self.assertEqual(json.load(f), expected)
-
-            # content
-            file_ = Path(root, 'content.json')
-            with open(file_, 'wb') as f:
-                self.bucket.download_fileobj(f'hidebound/content/{rel_path}', f)
-            with open(file_, 'r') as f:
-                self.assertEqual(json.load(f), content)
 
     @mock_s3
     def test_export_asset_chunk(self):

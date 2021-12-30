@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import List
 
 from io import BytesIO
 import json
@@ -36,7 +36,7 @@ class S3Config(Model):
 class S3Exporter(ExporterBase):
     @staticmethod
     def from_config(config):
-        # type: (Dict) -> S3Exporter
+        # type: (dict) -> S3Exporter
         '''
         Construct a S3Exporter from a given config.
 
@@ -92,8 +92,21 @@ class S3Exporter(ExporterBase):
                 CreateBucketConfiguration={'LocationConstraint': region}
             )
 
+    def _export_content(self, metadata):
+        # type: (dict) -> None
+        '''
+        Exports metadata from single JSON file in hidebound/metadata/file.
+
+        Args:
+            metadata (dict): File metadata.
+        '''
+        self._bucket.upload_file(
+            metadata['filepath'],
+            'hidebound/content/' + metadata['filepath_relative'],
+        )
+
     def _export_asset(self, metadata):
-        # type: (Dict) -> None
+        # type: (dict) -> None
         '''
         Exports metadata from single JSON file in hidebound/metadata/asset.
 
@@ -106,7 +119,7 @@ class S3Exporter(ExporterBase):
         )
 
     def _export_file(self, metadata):
-        # type: (Dict) -> None
+        # type: (dict) -> None
         '''
         Exports metadata from single JSON file in hidebound/metadata/file.
 
@@ -116,10 +129,6 @@ class S3Exporter(ExporterBase):
         self._bucket.upload_fileobj(
             BytesIO(json.dumps(metadata, indent=4).encode('utf-8')),
             'hidebound/metadata/file/' + metadata['file_id'] + '.json',
-        )
-        self._bucket.upload_file(
-            metadata['filepath'],
-            'hidebound/content/' + metadata['filepath_relative'],
         )
 
     def _export_asset_chunk(self, metadata):
