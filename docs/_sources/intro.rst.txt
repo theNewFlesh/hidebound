@@ -271,6 +271,330 @@ Fields are comprised of two main parts:
 | Field token       | a set of 1+ characters that define the field's data   |
 +-------------------+-------------------------------------------------------+
 
+--------------
+
+**Example Diagrams**
+~~~~~~~~~~~~~~~~~~~~
+
+In our example filename:
+``p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png`` the
+metadata will be:
+
+.. code:: json
+
+    {
+        "project": "cat001",
+        "specification": "spec001",
+        "descriptor": "running-cat",
+        "version": 1,
+        "coordinate": [0, 5],
+        "frame": 3,
+        "extension": "png",
+    }
+
+The spec001 specification is derived from the second field of this
+filename:
+
+.. code:: shell
+
+          field   field
+      indicator   token
+              | __|__
+             | |     |
+    p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png
+             |_______|
+                 |
+               field
+
++--------------------+----------------------------+
+| Part               | Value                      |
++====================+============================+
+| Field              | s-spec001                  |
++--------------------+----------------------------+
+| Field indicator    | s-                         |
++--------------------+----------------------------+
+| Field token        | spec001                    |
++--------------------+----------------------------+
+| Derived metadata   | {specification: spec001}   |
++--------------------+----------------------------+
+
+*Special Field Syntax*
+~~~~~~~~~~~~~~~~~~~~~~
+
+-  Projects begin with 3 or 4 letters followed by 1 to 4 numbers
+-  Specifications begin with 3 or 4 letters followed by 3 numbers
+-  Descriptors begin with a letter or number and may also contain
+   hyphens
+-  Descriptors may not begin with the words master, final or last
+-  Versions are triple-padded with zeros and must be greater than 0
+-  Coordinates may contain up to 3 quadruple-padded numbers, separated
+   by hyphens
+-  Coordinates are always evaluated in XYZ order. For example:
+   ``c0001-0002-0003`` produces ``{x: 1, y: 2, z: 3}``.
+-  Each element of a coordinate may be equal to or greater than zero
+-  Frames are quadruple-padded and are greater than or equal to 0
+-  Extensions may only contain upper and lower case letters a to z and
+   numbers 0 to 9
+
+*Semantics*
+~~~~~~~~~~~
+
+Hidebound is highly opionated, especially with regards to its semantics.
+It contains exactly seven field types, as indicated by their field
+indicators. They are:
+
++-----------------+-------------+
+| Field           | Indicator   |
++=================+=============+
+| project         | p-          |
++-----------------+-------------+
+| specification   | s-          |
++-----------------+-------------+
+| descriptor      | d-          |
++-----------------+-------------+
+| version         | v           |
++-----------------+-------------+
+| coordinate      | c           |
++-----------------+-------------+
+| frame           | f           |
++-----------------+-------------+
+| extension       | .           |
++-----------------+-------------+
+
+*Grammar*
+~~~~~~~~~
+
+The grammar is fairly simple:
+
+-  Names are comprised of an ordered set of fields drawn from the seven
+   above
+-  All names must contain the specification field
+-  All specification must define a field order
+-  All fields of a name under that specification must occcur in its
+   defined field order
+
+Its is highly encouraged that fields be defined in the following order:
+
+``project specification descriptor version coordinate frame extension``
+
+The grammatical concept of field order here is one of rough
+encapsulation:
+
+-  Projects contain assets
+-  Assets are grouped by specification
+-  A set of assets of the same content is grouped by a descriptor
+-  That set of assets consists of multiple versions of the same content
+-  A single asset may broken into chunks, identified by 1, 2 or 3
+   coordinates
+-  Each chunk may consist of a series of files seperated by frame number
+-  Each file has an extension
+
+*Encouraged Lexical Conventions*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-  Specifications end with a triple padded number so that they may be
+   explicitely versioned. You redefine an asset specification to
+   something slightly different, by copying its specification class,
+   adding one to its name and change the class attributes in some way.
+   That way you always maintain backwards compatibility with legacy
+   assets.
+-  Descriptors are not a dumping ground for useless terms like wtf,
+   junk, stuff, wip and test.
+-  Descriptors should not specify information known at the asset
+   specification level, such as the project name, the generic content of
+   the asset (ie image, mask, png, etc).
+-  Descriptors should not include information that can be known from the
+   preceding tokens, such as version, frame or extension.
+-  A descriptor should be applicable to every version of the asset it
+   designates.
+-  Use of hyphens in descriptors is encouraged.
+-  When in doubt, hyphenate and put into the descriptor.
+
+Project Structure
+=================
+
+Hidebound does not formally define a project structure. It merely
+stipulates that assets must exist under some particular root directory.
+Each asset specification does define a directory structure for the files
+that make up that asset. Assets are divided into 3 types: file, sequence
+and complex. File defines an asset that consists of a single file.
+Sequence is defined to be a single directory containing one or more
+files. Complex is for assets that consist of an arbitrarily complex
+layout of directories and files.
+
+The following project structure is recommended:
+
+.. code:: shell
+
+    project
+        |-- specification
+            |-- descriptor
+                |-- asset      # either a file or directory of files and directories
+                    |- file
+
+For Example
+^^^^^^^^^^^
+
+.. code:: shell
+
+    /tmp/projects
+    └── p-cat001
+        ├── s-spec002
+        │   ├── d-calico-jumping
+        │   │   └── p-cat001_s-spec002_d-calico-jumping_v001
+        │   │       ├── p-cat001_s-spec002_d-calico-jumping_v001_f0001.png
+        │   │       ├── p-cat001_s-spec002_d-calico-jumping_v001_f0002.png
+        │   │       └── p-cat001_s-spec002_d-calico-jumping_v001_f0003.png
+        │   │
+        │   └── d-tabby-playing
+        │       ├── p-cat001_s-spec002_d-tabby-playing_v001
+        │       │   ├── p-cat001_s-spec002_d-tabby-playing_v001_f0001.png
+        │       │   ├── p-cat001_s-spec002_d-tabby-playing_v001_f0002.png
+        │       │   └── p-cat001_s-spec002_d-tabby-playing_v001_f0003.png
+        │       │
+        │       └── p-cat001_s-spec002_d-tabby-playing_v002
+        │           ├── p-cat001_s-spec002_d-tabby-playing_v002_f0001.png
+        │           ├── p-cat001_s-spec002_d-tabby-playing_v002_f0002.png
+        │           └── p-cat001_s-spec002_d-tabby-playing_v002_f0003.png
+        │
+        └── spec001
+            └── p-cat001_s-spec001_d-running-cat_v001
+                ├── p-cat001_s-spec001_d-Running-Cat_v001_c0000-0005_f0002.png
+                ├── p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0001.png
+                └── p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png
+
+Application
+===========
+
+The Hidebound web application has five sections: data, graph, config,
+api and docs.
+
+Data
+~~~~
+
+The data tab is the workhorse of the Hidebound app.
+
+.. figure:: resources/screenshots/update.png
+   :alt: 
+
+Its functions are as follows:
+
+-  Search - Search the updated database's data via SQL
+-  Dropdown - Groups search results by file or asset
+-  Init - Initialized the database with the current config
+-  Update - Initializes and updates the database with the current config
+-  Create - Copies or moves valid assets to hidebound/content directory
+   and creates JSON files in hidebound/metadata directory
+-  Delete - Deletes hidebound/content and hidebound/metadata directories
+
+Prior to calling update, the application will look like this:
+
+.. figure:: resources/screenshots/pre_update.png
+   :alt: 
+
+Graph
+~~~~~
+
+The graph tab is used for visualizing the state of all the assets within
+a root directory.
+
+.. figure:: resources/screenshots/graph.png
+   :alt: 
+
+It's color code is as follows:
+
++---------+-------------------------------+
+| Color   | Meaning                       |
++=========+===============================+
+| Cyan    | Non-asset file or directory   |
++---------+-------------------------------+
+| Green   | Valid asset                   |
++---------+-------------------------------+
+| Red     | Invalid asset                 |
++---------+-------------------------------+
+
+Config
+~~~~~~
+
+The config tab is used for uploading and writing Hidebound's
+configuration file.
+
+.. figure:: resources/screenshots/config.png
+   :alt: 
+
+Its functions are as follows:
+
++----------+----------------------------------------------------+
+| Name     | Function                                           |
++==========+====================================================+
+| Upload   | Upload a config JSON file                          |
++----------+----------------------------------------------------+
+| Write    | Write config to hidebound/hidebound\_config.json   |
++----------+----------------------------------------------------+
+
+API
+~~~
+
+The API tab is really a link to Hidebound's REST API documentation.
+
+.. figure:: resources/screenshots/api.png
+   :alt: 
+
+Docs
+~~~~
+
+The API tab is really a link to Hidebound's github documentation.
+
+.. figure:: resources/screenshots/docs.png
+   :alt: 
+
+Errors
+~~~~~~
+
+Hidebound is oriented towards developers and technically proficient
+users. It displays errors in their entirety within the application.
+
+.. figure:: resources/screenshots/error.png
+   :alt: 
+
+Configuration
+=============
+
+Hidebound is configured via the hidebound/config/hidebound\_config.json
+file.
+
+Hidebound configs consist of three main sections:
+
+Base
+~~~~
+
+-  root\_directory - the directory hidebound parses for assets that
+   comprise its database
+-  hidebound\_directory - the staging directory valid assets are created
+   in
+-  specification\_files - a list of python specification files
+-  include\_regex - filepaths in the root that match this are included
+   in the database
+-  exclude\_regex - filepaths in the root that match this are excluded
+   from the database
+-  write\_mode - whether to copy or move files from root to staging
+
+Exporters
+~~~~~~~~~
+
+Which exporters to us in the workflow. Options include:
+
+-  s3
+-  local\_disk
+-  girder
+
+Webhooks
+~~~~~~~~
+
+Webhooks to call after the export phase has completed.
+
+--------------
+
 Here is a full example config with comments:
 
 .. code:: json

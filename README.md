@@ -209,8 +209,8 @@ Fields are comprised of two main parts:
 ---
 ### **Example Diagrams**
 In our example filename:
-`p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png` the metadata will
-be:
+`p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png` the metadata will be:
+
 ```json
 {
     "project": "cat001",
@@ -438,7 +438,7 @@ Hidebound configs consist of three main sections:
 * exclude_regex - filepaths in the root that match this are excluded from the database
 * write_mode - whether to copy or move files from root to staging
 
-### exporters
+### Exporters
 Which exporters to us in the workflow.
 Options include:
 
@@ -446,7 +446,7 @@ Options include:
 * local_disk
 * girder
 
-### webhooks
+### Webhooks
 Webhooks to call after the export phase has completed.
 
 ---

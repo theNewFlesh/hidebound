@@ -28,7 +28,7 @@
             <a href="../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.15.2
+                0.19.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -48,6 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../intro.html#naming-convention">Naming Convention</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../intro.html#project-structure">Project Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../intro.html#application">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro.html#configuration">Configuration</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
@@ -579,7 +580,8 @@
             <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;&#39;&#39;-e REPO_ENV=True </span><span class="si">{repo}</span><span class="s1"></span>
 <span class="s1">                 zsh -c &quot;</span>
 <span class="s1">                    pandoc /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/README.md</span>
-<span class="s1">                        -o /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/sphinx/intro.rst;</span>
+<span class="s1">                        -o /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/sphinx/intro.rst</span>
+<span class="s1">                        --from markdown-yaml_metadata_block;</span>
 <span class="s1">                    sphinx-build</span>
 <span class="s1">                        /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/sphinx</span>
 <span class="s1">                        /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/docs;</span>
