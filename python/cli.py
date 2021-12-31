@@ -495,7 +495,8 @@ def docs_command():
             docker_exec() + '''-e REPO_ENV=True {repo}
                  zsh -c "
                     pandoc /home/ubuntu/{repo}/README.md
-                        -o /home/ubuntu/{repo}/sphinx/intro.rst;
+                        -o /home/ubuntu/{repo}/sphinx/intro.rst
+                        --from markdown-yaml_metadata_block;
                     sphinx-build
                         /home/ubuntu/{repo}/sphinx
                         /home/ubuntu/{repo}/docs;

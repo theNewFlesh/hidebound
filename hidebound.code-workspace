@@ -80,7 +80,7 @@
                 "label": "docs",
                 "command": [
                     "mkdir -p docs &&",
-                    "pandoc README.md -o sphinx/intro.rst &&",
+                    "pandoc README.md -o sphinx/intro.rst --from markdown-yaml_metadata_block &&",
                     "sphinx-build sphinx docs &&",
                     "cp sphinx/style.css docs/_static/style.css &&",
                     "touch docs/.nojekyll &&",
