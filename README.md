@@ -111,7 +111,7 @@ and directories into the hidebound/content directory. Hidebound/content and
 hidebound/metadata are both staging directories used for generating a valid
 ephemeral database. We now have a hidebound directory that looks like this
 (unmentioned assets are collapsed behind the ellipses):
-```
+```shell
 /tmp/hidebound
 ├── hidebound_config.json
 │
@@ -211,20 +211,20 @@ Fields are comprised of two main parts:
 In our example filename:
 `p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png` the metadata will
 be:
-```
+```json
 {
-    'project': 'cat001',
-    'specification': 'spec001',
-    'descriptor': 'running-cat',
-    'version': 1,
-    'coordinate': [0, 5],
-    'frame': 3,
-    'extension': 'png',
+    "project": "cat001",
+    "specification": "spec001",
+    "descriptor": "running-cat",
+    "version": 1,
+    "coordinate": [0, 5],
+    "frame": 3,
+    "extension": "png",
 }
 ```
 
 The spec001 specification is derived from the second field of this filename:
-```
+```shell
       field   field
   indicator   token
           | __|__
@@ -323,7 +323,7 @@ arbitrarily complex layout of directories and files.
 
 The following project structure is recommended:
 
-```
+```shell
 project
     |-- specification
         |-- descriptor
@@ -332,7 +332,7 @@ project
 ```
 
 #### For Example
-```
+```shell
 /tmp/projects
 └── p-cat001
     ├── s-spec002
@@ -424,3 +424,86 @@ Hidebound is oriented towards developers and technically proficient users. It
 displays errors in their entirety within the application.
 
 ![](resources/screenshots/error.png)
+
+# Configuration
+Hidebound is configured via the hidebound/config/hidebound_config.json file.
+
+Hidebound configs consist of three main sections:
+
+### Base
+* root_directory - the directory hidebound parses for assets that comprise its database
+* hidebound_directory - the staging directory valid assets are created in
+* specification_files - a list of python specification files
+* include_regex - filepaths in the root that match this are included in the database
+* exclude_regex - filepaths in the root that match this are excluded from the database
+* write_mode - whether to copy or move files from root to staging
+
+### exporters
+Which exporters to us in the workflow.
+Options include:
+
+* s3
+* local_disk
+* girder
+
+### webhooks
+Webhooks to call after the export phase has completed.
+
+---
+
+Here is a full example config with comments:
+```json
+{
+    "root_directory": "/mnt/storage/projects",                         // where hb looks for assets
+    "hidebound_directory": "/mnt/storage/hidebound",                   // hb staging directory
+    "specification_files": [                                           // list of spec files
+        "/mnt/storage/specs/image_specs.py",
+        "/mnt/storage/specs/video_specs.py"
+    ],
+    "include_regex": "",                                               // include files that match
+    "exclude_regex": "\\.DS_Store",                                    // exclude files that match
+    "write_mode": "copy",                                              // copy files from root to staging
+                                                                       // options: copy, move
+    "exporters": {                                                     // list of exporter configs
+        "s3": {                                                        // export to s3
+            "access_key": "ABCDEFGHIJKLMNOPQRST",                      // aws access key
+            "secret_key": "abcdefghijklmnopqrstuvwxyz1234567890abcd",  // aws secret key
+            "bucket": "prod-data",                                     // s3 bucket
+            "region": "us-west-2",                                     // bucket region
+            "metadata_types": ["asset", "asset-chunk", "file-chunk"]   // drop file metadata
+                                                                       // options: asset, file, asset-chunk, file-chunk
+        },
+        "local_disk": {                                                // export to local disk
+            "target_directory": "/mnt/storage/archive",                // target location
+            "metadata_types": ["asset", "file"]                        // only asset and file metadata
+                                                                       // options: asset, file, asset-chunk, file-chunk
+        },
+        "girder": {                                                    // export to girder
+            "api_key": "eyS0nj9qPC5E7yK5l7nhGVPqDOBKPdA3EC60Rs9h",     // girder api key
+            "root_id": "5ed735c8d8dd6242642406e5",                     // root resource id
+            "root_type": "collection",                                 // root resource type
+            "host": "http://prod.girder.com",                          // girder server url
+            "port": 8180,                                              // girder server port
+            "metadata_types": ["asset"]                                // only export asset metadata
+                                                                       // options: asset, file
+        }
+    },
+    "webhooks": [                                                      // call these after export
+        {
+            "url": "https://hooks.slack.com/services/ABCDEFGHI/JKLMNOPQRST/UVWXYZ1234567890abcdefgh",
+            "method": "post",                                          // post this to slack
+            "timeout": 60,                                             // timeout after 60 seconds
+            // "params": {},                                           // params to post (NA here)
+            // "json": {},                                             // json to post (NA here)
+            "data": {                                                  // data to post
+                "channel": "#hidebound",                               // slack data
+                "text": "export complete",                             // slack data
+                "username": "hidebound"                                // slack data
+            },
+            "headers": {
+                "Content-type": "application/json"                     // request headers
+            }
+        }
+    ]
+}
+```
