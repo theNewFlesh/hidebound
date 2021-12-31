@@ -507,3 +507,71 @@ Here is a full example config with comments:
     ]
 }
 ```
+
+# Specification
+Asset specifications are defined in python using the base classes found in
+specification_base.py. The base classes are defined using the schematics
+framework. Hidebound generates a single JSON blob of metadata for each file of
+an asset, and then combines blob into a single blob with a list values per key.
+Thus every class member defined with schematics is encapsulated with ListType.
+
+### Example asset
+
+Suppose we have an image sequence asset that we wish to define a specificqtion
+for. Our image sequences consist of a directory containing 1 or 3 channel png
+with frame numbers in the filename.
+
+```shell
+projects
+    └── cat001
+        └── raw001
+            └── p-cat001_s-raw001_d-calico-jumping_v001
+                ├── p-cat001_s-raw001_d-calico-jumping_v001_f0001.png
+                ├── p-cat001_s-raw001_d-calico-jumping_v001_f0002.png
+                └── p-cat001_s-raw001_d-calico-jumping_v001_f0003.png
+```
+
+### Example specification
+
+We would write the following specification for such an asset.
+
+```python
+from schematics.types import IntType, ListType, StringType
+import hidebound.core.validators as vd  # validates traits
+import hidebound.core.traits as tr      # gets properties of files and file names
+from hidebound.core.specification_base import SequenceSpecificationBase
+
+class Raw001(SequenceSpecificationBase):
+    asset_name_fields = [  # naming convention for asset directory
+        'project', 'specification', 'descriptor', 'version'
+    ]
+    filename_fields = [    # naming convention for asset files
+        'project', 'specification', 'descriptor', 'version', 'frame',
+        'extension'
+    ]
+    height = ListType(IntType(), required=True)  # heights of png images
+    width = ListType(IntType(), required=True)   # widths of png images
+    frame = ListType(
+        IntType(),
+        required=True,
+        validators=[vd.is_frame]  # validates that frame is between 0 and 9999
+    )
+    channels = ListType(
+        IntType(),
+        required=True,
+        validators=[lambda x: vd.is_in(x, [1, 3])]  # validates that png is 1 or 3 channel
+    )
+    extension = ListType(
+        StringType(),
+        required=True,
+        validators=[
+            vd.is_extension,
+            lambda x: vd.is_eq(x, 'png')  # validates that image is png
+        ]
+    )
+    file_traits = dict(
+        width=tr.get_image_width,            # retrieves image width from file
+        height=tr.get_image_height,          # retrieves image height from file
+        channels=tr.get_num_image_channels,  # retrieves image channel number from file
+    )
+```
