@@ -88,6 +88,11 @@
 <li class="toctree-l2"><a class="reference internal" href="#webhooks">Webhooks</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="#specification">Specification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#example-asset">Example asset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-specification">Example specification</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
@@ -811,6 +816,74 @@ from the database</p></li>
         }
     ]
 }
+</pre></div>
+</div>
+</section>
+</section>
+<section id="specification">
+<h1>Specification<a class="headerlink" href="#specification" title="Permalink to this headline">¶</a></h1>
+<p>Asset specifications are defined in python using the base classes found
+in specification_base.py. The base classes are defined using the
+schematics framework. Hidebound generates a single JSON blob of metadata
+for each file of an asset, and then combines blob into a single blob
+with a list values per key. Thus every class member defined with
+schematics is encapsulated with ListType.</p>
+<section id="example-asset">
+<h2>Example asset<a class="headerlink" href="#example-asset" title="Permalink to this headline">¶</a></h2>
+<p>Suppose we have an image sequence asset that we wish to define a
+specificqtion for. Our image sequences consist of a directory containing
+1 or 3 channel png with frame numbers in the filename.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>projects
+    └── cat001
+        └── raw001
+            └── p-cat001_s-raw001_d-calico-jumping_v001
+                ├── p-cat001_s-raw001_d-calico-jumping_v001_f0001.png
+                ├── p-cat001_s-raw001_d-calico-jumping_v001_f0002.png
+                └── p-cat001_s-raw001_d-calico-jumping_v001_f0003.png
+</pre></div>
+</div>
+</section>
+<section id="example-specification">
+<h2>Example specification<a class="headerlink" href="#example-specification" title="Permalink to this headline">¶</a></h2>
+<p>We would write the following specification for such an asset.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">schematics.types</span> <span class="kn">import</span> <span class="n">IntType</span><span class="p">,</span> <span class="n">ListType</span><span class="p">,</span> <span class="n">StringType</span>
+<span class="kn">import</span> <span class="nn">hidebound.core.validators</span> <span class="k">as</span> <span class="nn">vd</span>  <span class="c1"># validates traits</span>
+<span class="kn">import</span> <span class="nn">hidebound.core.traits</span> <span class="k">as</span> <span class="nn">tr</span>      <span class="c1"># gets properties of files and file names</span>
+<span class="kn">from</span> <span class="nn">hidebound.core.specification_base</span> <span class="kn">import</span> <span class="n">SequenceSpecificationBase</span>
+
+<span class="k">class</span> <span class="nc">Raw001</span><span class="p">(</span><span class="n">SequenceSpecificationBase</span><span class="p">):</span>
+    <span class="n">asset_name_fields</span> <span class="o">=</span> <span class="p">[</span>  <span class="c1"># naming convention for asset directory</span>
+        <span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="s1">&#39;specification&#39;</span><span class="p">,</span> <span class="s1">&#39;descriptor&#39;</span><span class="p">,</span> <span class="s1">&#39;version&#39;</span>
+    <span class="p">]</span>
+    <span class="n">filename_fields</span> <span class="o">=</span> <span class="p">[</span>    <span class="c1"># naming convention for asset files</span>
+        <span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="s1">&#39;specification&#39;</span><span class="p">,</span> <span class="s1">&#39;descriptor&#39;</span><span class="p">,</span> <span class="s1">&#39;version&#39;</span><span class="p">,</span> <span class="s1">&#39;frame&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;extension&#39;</span>
+    <span class="p">]</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span><span class="n">IntType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># heights of png images</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span><span class="n">IntType</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>   <span class="c1"># widths of png images</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
+        <span class="n">IntType</span><span class="p">(),</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_frame</span><span class="p">]</span>  <span class="c1"># validates that frame is between 0 and 9999</span>
+    <span class="p">)</span>
+    <span class="n">channels</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
+        <span class="n">IntType</span><span class="p">(),</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_in</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])]</span>  <span class="c1"># validates that png is 1 or 3 channel</span>
+    <span class="p">)</span>
+    <span class="n">extension</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
+        <span class="n">StringType</span><span class="p">(),</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">validators</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">vd</span><span class="o">.</span><span class="n">is_extension</span><span class="p">,</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_eq</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;png&#39;</span><span class="p">)</span>  <span class="c1"># validates that image is png</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">file_traits</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">width</span><span class="o">=</span><span class="n">tr</span><span class="o">.</span><span class="n">get_image_width</span><span class="p">,</span>            <span class="c1"># retrieves image width from file</span>
+        <span class="n">height</span><span class="o">=</span><span class="n">tr</span><span class="o">.</span><span class="n">get_image_height</span><span class="p">,</span>          <span class="c1"># retrieves image height from file</span>
+        <span class="n">channels</span><span class="o">=</span><span class="n">tr</span><span class="o">.</span><span class="n">get_num_image_channels</span><span class="p">,</span>  <span class="c1"># retrieves image channel number from file</span>
+    <span class="p">)</span>
 </pre></div>
 </div>
 </section>
