@@ -65,21 +65,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#naming-convention">Naming Convention</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#syntax"><em>Syntax</em></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#example-diagrams"><strong>Example Diagrams</strong></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#special-field-syntax"><em>Special Field Syntax</em></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#semantics"><em>Semantics</em></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#grammar"><em>Grammar</em></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#encouraged-lexical-conventions"><em>Encouraged Lexical Conventions</em></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="#project-structure">Project Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#application">Application</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#data">Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#graph">Graph</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#config">Config</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#api">API</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#docs">Docs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#errors">Errors</a></li>
 </ul>
 </li>
 </ul>
@@ -253,7 +238,7 @@ hidebound/content directory. Hidebound/content and hidebound/metadata
 are both staging directories used for generating a valid ephemeral
 database. We now have a hidebound directory that looks like this
 (unmentioned assets are collapsed behind the ellipses):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>/tmp/hidebound
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>/tmp/hidebound
 ├── hidebound_config.json
 │
 ├── specifications
@@ -401,321 +386,62 @@ extension.</p></li>
 </tr>
 </tbody>
 </table>
-</section>
-<hr class="docutils" />
-<section id="example-diagrams">
-<h2><strong>Example Diagrams</strong><a class="headerlink" href="#example-diagrams" title="Permalink to this headline">¶</a></h2>
-<p>In our example filename:
-<code class="docutils literal notranslate"><span class="pre">p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png</span></code> the
-metadata will be:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s1">&#39;project&#39;</span><span class="p">:</span> <span class="s1">&#39;cat001&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;specification&#39;</span><span class="p">:</span> <span class="s1">&#39;spec001&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;descriptor&#39;</span><span class="p">:</span> <span class="s1">&#39;running-cat&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;version&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s1">&#39;coordinate&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
-    <span class="s1">&#39;frame&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-    <span class="s1">&#39;extension&#39;</span><span class="p">:</span> <span class="s1">&#39;png&#39;</span><span class="p">,</span>
-<span class="p">}</span>
+<p>Here is a full example config with comments:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>{
+    &quot;root_directory&quot;: &quot;/mnt/storage/projects&quot;,                         // where hb looks for assets
+    &quot;hidebound_directory&quot;: &quot;/mnt/storage/hidebound&quot;,                   // hb staging directory
+    &quot;specification_files&quot;: [                                           // list of spec files
+        &quot;/mnt/storage/specs/image_specs.py&quot;,
+        &quot;/mnt/storage/specs/video_specs.py&quot;
+    ],
+    &quot;include_regex&quot;: &quot;&quot;,                                               // include files that match
+    &quot;exclude_regex&quot;: &quot;\\.DS_Store&quot;,                                    // exclude files that match
+    &quot;write_mode&quot;: &quot;copy&quot;,                                              // copy files from root to staging
+                                                                       // options: copy, move
+    &quot;exporters&quot;: {                                                     // list of exporter configs
+        &quot;s3&quot;: {                                                        // export to s3
+            &quot;access_key&quot;: &quot;ABCDEFGHIJKLMNOPQRST&quot;,                      // aws access key
+            &quot;secret_key&quot;: &quot;abcdefghijklmnopqrstuvwxyz1234567890abcd&quot;,  // aws secret key
+            &quot;bucket&quot;: &quot;prod-data&quot;,                                     // s3 bucket
+            &quot;region&quot;: &quot;us-west-2&quot;,                                     // bucket region
+            &quot;metadata_types&quot;: [&quot;asset&quot;, &quot;asset-chunk&quot;, &quot;file-chunk&quot;]   // drop file metadata
+                                                                       // options: asset, file, asset-chunk, file-chunk
+        },
+        &quot;local_disk&quot;: {                                                // export to local disk
+            &quot;target_directory&quot;: &quot;/mnt/storage/archive&quot;,                // target location
+            &quot;metadata_types&quot;: [&quot;asset&quot;, &quot;file&quot;]                        // only asset and file metadata
+                                                                       // options: asset, file, asset-chunk, file-chunk
+        },
+        &quot;girder&quot;: {                                                    // export to girder
+            &quot;api_key&quot;: &quot;eyS0nj9qPC5E7yK5l7nhGVPqDOBKPdA3EC60Rs9h&quot;,     // girder api key
+            &quot;root_id&quot;: &quot;5ed735c8d8dd6242642406e5&quot;,                     // root resource id
+            &quot;root_type&quot;: &quot;collection&quot;,                                 // root resource type
+            &quot;host&quot;: &quot;http://prod.girder.com&quot;,                          // girder server url
+            &quot;port&quot;: 8180,                                              // girder server port
+            &quot;metadata_types&quot;: [&quot;asset&quot;]                                // only export asset metadata
+                                                                       // options: asset, file
+        }
+    },
+    &quot;webhooks&quot;: [                                                      // call these after export
+        {
+            &quot;url&quot;: &quot;https://hooks.slack.com/services/ABCDEFGHI/JKLMNOPQRST/UVWXYZ1234567890abcdefgh&quot;,
+            &quot;method&quot;: &quot;post&quot;,                                          // post this to slack
+            &quot;timeout&quot;: 60,                                             // timeout after 60 seconds
+            // &quot;params&quot;: {},                                           // params to post (NA here)
+            // &quot;json&quot;: {},                                             // json to post (NA here)
+            &quot;data&quot;: {                                                  // data to post
+                &quot;channel&quot;: &quot;#hidebound&quot;,                               // slack data
+                &quot;text&quot;: &quot;export complete&quot;,                             // slack data
+                &quot;username&quot;: &quot;hidebound&quot;                                // slack data
+            },
+            &quot;headers&quot;: {
+                &quot;Content-type&quot;: &quot;application/json&quot;                     // request headers
+            }
+        }
+    ]
+}
 </pre></div>
 </div>
-<p>The spec001 specification is derived from the second field of this
-filename:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>      <span class="n">field</span>   <span class="n">field</span>
-  <span class="n">indicator</span>   <span class="n">token</span>
-          <span class="o">|</span> <span class="n">__</span><span class="o">|</span><span class="n">__</span>
-         <span class="o">|</span> <span class="o">|</span>     <span class="o">|</span>
-<span class="n">p</span><span class="o">-</span><span class="n">cat001_s</span><span class="o">-</span><span class="n">spec001_d</span><span class="o">-</span><span class="n">running</span><span class="o">-</span><span class="n">cat_v001_c0000</span><span class="o">-</span><span class="mi">0005</span><span class="n">_f0003</span><span class="o">.</span><span class="n">png</span>
-         <span class="o">|</span><span class="n">_______</span><span class="o">|</span>
-             <span class="o">|</span>
-           <span class="n">field</span>
-</pre></div>
-</div>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 42%" />
-<col style="width: 58%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Part</p></th>
-<th class="head"><p>Value</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>Field</p></td>
-<td><p>s-spec001</p></td>
-</tr>
-<tr class="row-odd"><td><p>Field indicator</p></td>
-<td><p>s-</p></td>
-</tr>
-<tr class="row-even"><td><p>Field token</p></td>
-<td><p>spec001</p></td>
-</tr>
-<tr class="row-odd"><td><p>Derived metadata</p></td>
-<td><p>{specification: spec001}</p></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="special-field-syntax">
-<h2><em>Special Field Syntax</em><a class="headerlink" href="#special-field-syntax" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><p>Projects begin with 3 or 4 letters followed by 1 to 4 numbers</p></li>
-<li><p>Specifications begin with 3 or 4 letters followed by 3 numbers</p></li>
-<li><p>Descriptors begin with a letter or number and may also contain
-hyphens</p></li>
-<li><p>Descriptors may not begin with the words master, final or last</p></li>
-<li><p>Versions are triple-padded with zeros and must be greater than 0</p></li>
-<li><p>Coordinates may contain up to 3 quadruple-padded numbers, separated
-by hyphens</p></li>
-<li><p>Coordinates are always evaluated in XYZ order. For example:
-<code class="docutils literal notranslate"><span class="pre">c0001-0002-0003</span></code> produces <code class="docutils literal notranslate"><span class="pre">{x:</span> <span class="pre">1,</span> <span class="pre">y:</span> <span class="pre">2,</span> <span class="pre">z:</span> <span class="pre">3}</span></code>.</p></li>
-<li><p>Each element of a coordinate may be equal to or greater than zero</p></li>
-<li><p>Frames are quadruple-padded and are greater than or equal to 0</p></li>
-<li><p>Extensions may only contain upper and lower case letters a to z and
-numbers 0 to 9</p></li>
-</ul>
-</section>
-<section id="semantics">
-<h2><em>Semantics</em><a class="headerlink" href="#semantics" title="Permalink to this headline">¶</a></h2>
-<p>Hidebound is highly opionated, especially with regards to its semantics.
-It contains exactly seven field types, as indicated by their field
-indicators. They are:</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 57%" />
-<col style="width: 43%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Field</p></th>
-<th class="head"><p>Indicator</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>project</p></td>
-<td><p>p-</p></td>
-</tr>
-<tr class="row-odd"><td><p>specification</p></td>
-<td><p>s-</p></td>
-</tr>
-<tr class="row-even"><td><p>descriptor</p></td>
-<td><p>d-</p></td>
-</tr>
-<tr class="row-odd"><td><p>version</p></td>
-<td><p>v</p></td>
-</tr>
-<tr class="row-even"><td><p>coordinate</p></td>
-<td><p>c</p></td>
-</tr>
-<tr class="row-odd"><td><p>frame</p></td>
-<td><p>f</p></td>
-</tr>
-<tr class="row-even"><td><p>extension</p></td>
-<td><p>.</p></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="grammar">
-<h2><em>Grammar</em><a class="headerlink" href="#grammar" title="Permalink to this headline">¶</a></h2>
-<p>The grammar is fairly simple:</p>
-<ul class="simple">
-<li><p>Names are comprised of an ordered set of fields drawn from the seven
-above</p></li>
-<li><p>All names must contain the specification field</p></li>
-<li><p>All specification must define a field order</p></li>
-<li><p>All fields of a name under that specification must occcur in its
-defined field order</p></li>
-</ul>
-<p>Its is highly encouraged that fields be defined in the following order:</p>
-<p><code class="docutils literal notranslate"><span class="pre">project</span> <span class="pre">specification</span> <span class="pre">descriptor</span> <span class="pre">version</span> <span class="pre">coordinate</span> <span class="pre">frame</span> <span class="pre">extension</span></code></p>
-<p>The grammatical concept of field order here is one of rough
-encapsulation:</p>
-<ul class="simple">
-<li><p>Projects contain assets</p></li>
-<li><p>Assets are grouped by specification</p></li>
-<li><p>A set of assets of the same content is grouped by a descriptor</p></li>
-<li><p>That set of assets consists of multiple versions of the same content</p></li>
-<li><p>A single asset may broken into chunks, identified by 1, 2 or 3
-coordinates</p></li>
-<li><p>Each chunk may consist of a series of files seperated by frame number</p></li>
-<li><p>Each file has an extension</p></li>
-</ul>
-</section>
-<section id="encouraged-lexical-conventions">
-<h2><em>Encouraged Lexical Conventions</em><a class="headerlink" href="#encouraged-lexical-conventions" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><p>Specifications end with a triple padded number so that they may be
-explicitely versioned. You redefine an asset specification to
-something slightly different, by copying its specification class,
-adding one to its name and change the class attributes in some way.
-That way you always maintain backwards compatibility with legacy
-assets.</p></li>
-<li><p>Descriptors are not a dumping ground for useless terms like wtf,
-junk, stuff, wip and test.</p></li>
-<li><p>Descriptors should not specify information known at the asset
-specification level, such as the project name, the generic content of
-the asset (ie image, mask, png, etc).</p></li>
-<li><p>Descriptors should not include information that can be known from the
-preceding tokens, such as version, frame or extension.</p></li>
-<li><p>A descriptor should be applicable to every version of the asset it
-designates.</p></li>
-<li><p>Use of hyphens in descriptors is encouraged.</p></li>
-<li><p>When in doubt, hyphenate and put into the descriptor.</p></li>
-</ul>
-</section>
-</section>
-<section id="project-structure">
-<h1>Project Structure<a class="headerlink" href="#project-structure" title="Permalink to this headline">¶</a></h1>
-<p>Hidebound does not formally define a project structure. It merely
-stipulates that assets must exist under some particular root directory.
-Each asset specification does define a directory structure for the files
-that make up that asset. Assets are divided into 3 types: file, sequence
-and complex. File defines an asset that consists of a single file.
-Sequence is defined to be a single directory containing one or more
-files. Complex is for assets that consist of an arbitrarily complex
-layout of directories and files.</p>
-<p>The following project structure is recommended:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">project</span>
-    <span class="o">|--</span> <span class="n">specification</span>
-        <span class="o">|--</span> <span class="n">descriptor</span>
-            <span class="o">|--</span> <span class="n">asset</span>      <span class="c1"># either a file or directory of files and directories</span>
-                <span class="o">|-</span> <span class="n">file</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>/tmp/projects
-└── p-cat001
-    ├── s-spec002
-    │   ├── d-calico-jumping
-    │   │   └── p-cat001_s-spec002_d-calico-jumping_v001
-    │   │       ├── p-cat001_s-spec002_d-calico-jumping_v001_f0001.png
-    │   │       ├── p-cat001_s-spec002_d-calico-jumping_v001_f0002.png
-    │   │       └── p-cat001_s-spec002_d-calico-jumping_v001_f0003.png
-    │   │
-    │   └── d-tabby-playing
-    │       ├── p-cat001_s-spec002_d-tabby-playing_v001
-    │       │   ├── p-cat001_s-spec002_d-tabby-playing_v001_f0001.png
-    │       │   ├── p-cat001_s-spec002_d-tabby-playing_v001_f0002.png
-    │       │   └── p-cat001_s-spec002_d-tabby-playing_v001_f0003.png
-    │       │
-    │       └── p-cat001_s-spec002_d-tabby-playing_v002
-    │           ├── p-cat001_s-spec002_d-tabby-playing_v002_f0001.png
-    │           ├── p-cat001_s-spec002_d-tabby-playing_v002_f0002.png
-    │           └── p-cat001_s-spec002_d-tabby-playing_v002_f0003.png
-    │
-    └── spec001
-        └── p-cat001_s-spec001_d-running-cat_v001
-            ├── p-cat001_s-spec001_d-Running-Cat_v001_c0000-0005_f0002.png
-            ├── p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0001.png
-            └── p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png
-</pre></div>
-</div>
-</section>
-<section id="application">
-<h1>Application<a class="headerlink" href="#application" title="Permalink to this headline">¶</a></h1>
-<p>The Hidebound web application has five sections: data, graph, config,
-api and docs.</p>
-<section id="data">
-<h2>Data<a class="headerlink" href="#data" title="Permalink to this headline">¶</a></h2>
-<p>The data tab is the workhorse of the Hidebound app.</p>
-<figure class="align-default">
-<img alt="" src="resources/screenshots/update.png" />
-</figure>
-<p>Its functions are as follows:</p>
-<ul class="simple">
-<li><p>Search - Search the updated database’s data via SQL</p></li>
-<li><p>Dropdown - Groups search results by file or asset</p></li>
-<li><p>Init - Initialized the database with the current config</p></li>
-<li><p>Update - Initializes and updates the database with the current config</p></li>
-<li><p>Create - Copies or moves valid assets to hidebound/content directory
-and creates JSON files in hidebound/metadata directory</p></li>
-<li><p>Delete - Deletes hidebound/content and hidebound/metadata directories</p></li>
-</ul>
-<p>Prior to calling update, the application will look like this:</p>
-<figure class="align-default">
-<img alt="" src="resources/screenshots/pre_update.png" />
-</figure>
-</section>
-<section id="graph">
-<h2>Graph<a class="headerlink" href="#graph" title="Permalink to this headline">¶</a></h2>
-<p>The graph tab is used for visualizing the state of all the assets within
-a root directory.</p>
-<figure class="align-default">
-<img alt="" src="resources/screenshots/graph.png" />
-</figure>
-<p>It’s color code is as follows:</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 23%" />
-<col style="width: 78%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Color</p></th>
-<th class="head"><p>Meaning</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>Cyan</p></td>
-<td><p>Non-asset file or directory</p></td>
-</tr>
-<tr class="row-odd"><td><p>Green</p></td>
-<td><p>Valid asset</p></td>
-</tr>
-<tr class="row-even"><td><p>Red</p></td>
-<td><p>Invalid asset</p></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="config">
-<h2>Config<a class="headerlink" href="#config" title="Permalink to this headline">¶</a></h2>
-<p>The config tab is used for uploading and writing Hidebound’s
-configuration file.</p>
-<figure class="align-default">
-<img alt="" src="resources/screenshots/config.png" />
-</figure>
-<p>Its functions are as follows:</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 16%" />
-<col style="width: 84%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Name</p></th>
-<th class="head"><p>Function</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>Upload</p></td>
-<td><p>Upload a config JSON file</p></td>
-</tr>
-<tr class="row-odd"><td><p>Write</p></td>
-<td><p>Write config to hidebound/hidebound_config.json</p></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="api">
-<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
-<p>The API tab is really a link to Hidebound’s REST API documentation.</p>
-<figure class="align-default">
-<img alt="" src="resources/screenshots/api.png" />
-</figure>
-</section>
-<section id="docs">
-<h2>Docs<a class="headerlink" href="#docs" title="Permalink to this headline">¶</a></h2>
-<p>The API tab is really a link to Hidebound’s github documentation.</p>
-<figure class="align-default">
-<img alt="" src="resources/screenshots/docs.png" />
-</figure>
-</section>
-<section id="errors">
-<h2>Errors<a class="headerlink" href="#errors" title="Permalink to this headline">¶</a></h2>
-<p>Hidebound is oriented towards developers and technically proficient
-users. It displays errors in their entirety within the application.</p>
-<figure class="align-default">
-<img alt="" src="resources/screenshots/error.png" />
-</figure>
 </section>
 </section>
 
