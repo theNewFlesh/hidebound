@@ -3,6 +3,7 @@ from typing import List
 from io import BytesIO
 import json
 
+from botocore.exceptions import ClientError
 from schematics.types import StringType
 import boto3 as boto
 
@@ -92,7 +93,10 @@ class S3Exporter(ExporterBase):
             region_name=region,
         )
         self._bucket = session.resource('s3').Bucket(bucket)
-        if self._bucket.creation_date is None:
+
+        try:
+            session.resource('s3').meta.client.head_bucket(Bucket=bucket)
+        except ClientError:
             self._bucket.create(
                 CreateBucketConfiguration={'LocationConstraint': region}
             )
