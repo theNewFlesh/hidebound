@@ -32,7 +32,6 @@ RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${CLEAR}"; \
         pandoc \
         parallel \
         python3-pydot \
-        python3.7-dev \
         software-properties-common \
         tree \
         vim \
@@ -61,6 +60,8 @@ RUN echo "\n${CYAN}SETUP PYTHON3.7${CLEAR}"; \
     add-apt-repository -y ppa:deadsnakes/ppa && \
     apt update && \
     apt install --fix-missing -y \
+        python3-distutils \
+        python3.7-dev \
         python3.7 && \
     wget https://bootstrap.pypa.io/get-pip.py && \
     python3.7 get-pip.py && \
