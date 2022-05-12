@@ -9,11 +9,11 @@ import os
 import re
 import shutil
 
+from pandas import DataFrame
 from schematics.exceptions import DataError, ValidationError
+import dask.dataframe as dd
 import jsoncomment as jsonc
 import OpenEXR as openexr
-
-from pandas import DataFrame
 # ------------------------------------------------------------------------------
 
 
@@ -95,8 +95,10 @@ def delete_empty_directories(directory):
             shutil.rmtree(path)
 
 
-def directory_to_dataframe(directory, include_regex='', exclude_regex=r'\.DS_Store'):
-    # type: (Union[str, Path], str, str) -> DataFrame
+def directory_to_dataframe(
+    directory, include_regex='', exclude_regex=r'\.DS_Store', chunk_size=100
+):
+    # type: (Union[str, Path], str, str, int) -> dd.DataFrame
     r'''
     Recursively list files with in a given directory as rows in a DataFrame.
 
@@ -106,9 +108,11 @@ def directory_to_dataframe(directory, include_regex='', exclude_regex=r'\.DS_Sto
             Default: None.
         exclude_regex (str, optional): Exclude filenames that match this regex.
             Default: '\.DS_Store'.
+        chunk_size (int, optional): Number of rows per parallel operation.
+            Default: 100.
 
     Returns:
-        DataFrame: DataFrame with one file per row.
+        dd.DataFrame: Dask DataFrame with one file per row.
     '''
     files = list_all_files(
         directory,
@@ -119,9 +123,13 @@ def directory_to_dataframe(directory, include_regex='', exclude_regex=r'\.DS_Sto
 
     data = DataFrame()
     data['filepath'] = files
-    data['filename'] = data.filepath.apply(lambda x: x.name)
-    data['extension'] = data.filepath.apply(lambda x: os.path.splitext(x)[-1][1:])
-    data.filepath = data.filepath.apply(lambda x: x.absolute().as_posix())
+    data = dd.from_pandas(data, chunksize=chunk_size)
+    data['filename'] = data.filepath \
+        .apply(lambda x: x.name, meta=('filename', str))
+    data['extension'] = data.filepath \
+        .apply(lambda x: os.path.splitext(x)[-1][1:], meta=('extension', str))
+    data['filepath'] = data.filepath \
+        .apply(lambda x: x.absolute().as_posix(), meta=('filepath', str))
     return data
 
 

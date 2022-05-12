@@ -2,6 +2,7 @@ apispec
 boto3
 dash-cytoscape>=0.2.0
 dash>=2.0.0
+dask
 flasgger
 flask
 flask_monitoringdashboard
