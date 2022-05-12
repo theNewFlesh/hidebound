@@ -127,7 +127,7 @@ def directory_to_dataframe(
     data['filename'] = data.filepath \
         .apply(lambda x: x.name, meta=('filename', str))
     data['extension'] = data.filepath \
-        .apply(lambda x: os.path.splitext(x)[-1][1:], meta=('extension', str))
+        .apply(lambda x: os.path.splitext(x)[-1].lstrip('.'), meta=('extension', str))
     data['filepath'] = data.filepath \
         .apply(lambda x: x.absolute().as_posix(), meta=('filepath', str))
     return data
