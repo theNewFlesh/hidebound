@@ -405,6 +405,11 @@ class ParserTests(unittest.TestCase):
         result = parser.parseString(name)[0].asDict()
         self.assertEqual(result, expected)
 
+        # bad spec
+        name = 'p-proj001_s-spec0002_d-desc_v003_c0004-0005-0006_f0007.exr'
+        with self.assertRaises(ParseException):
+            parser.parseString(name)[0].asDict()
+
         name = 'p-proj001.s-spec002.d-desc.v003.c0004-0005-0006.f0007.exr'
         with self.assertRaises(ParseException):
             parser.parseString(name)[0].asDict()
@@ -446,11 +451,12 @@ class ParserTests(unittest.TestCase):
             's.spec001',
             's-001spec',
             's-sp001',
-            's-specification001'
+            's-specification001',
+            'p-proj001_s-spec0001_d-desc-s-123_v001',
         ]
         for name in names:
             with self.assertRaises(ParseException):
-                parser.parseString(name)[0].asDict()
+                parser.parseString(name)
 
     def test_parse_specification(self):
         expected = dict(specification='spec001')
