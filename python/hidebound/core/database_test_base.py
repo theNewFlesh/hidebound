@@ -6,6 +6,7 @@ import unittest
 
 from pandas import DataFrame
 from schematics.types import ListType, IntType, StringType
+import dask.dataframe as dd
 import numpy as np
 import skimage.io
 
@@ -107,7 +108,7 @@ class DatabaseTestBase(unittest.TestCase):
         return data
 
     def get_directory_to_dataframe_data(self, root):
-        # type: (str) -> "DataFrame"
+        # type: (str) -> "dd.DataFrame"
         files = self.get_data(root)
         data = DataFrame()
         data['filename'] = files.filename
@@ -115,7 +116,8 @@ class DatabaseTestBase(unittest.TestCase):
         data.filepath = data\
             .apply(lambda x: Path(x.filepath, x.filename), axis=1)
         data['extension'] = files\
-            .filename.apply(lambda x: os.path.splitext(x)[1:])
+            .filename.apply(lambda x: os.path.splitext(x)[-1].lstrip('.'))
+        data = dd.from_pandas(data, chunksize=100)
         return data
 
     def get_specifications(self):
