@@ -90,15 +90,18 @@ def _validate_filepath(data):
         dd.DataFrame: Dask DataFrame with updated file_error columns.
     '''
     def validate(row):
-        if row.file_error is np.nan:
-            try:
-                row.specification_class().validate_filepath(row.filepath)
-                return np.nan
-            except ValidationError as e:
-                return hbt.error_to_string(e)
-        return row.file_error
+        try:
+            row.specification_class().validate_filepath(row.filepath)
+            return np.nan
+        except ValidationError as e:
+            return hbt.error_to_string(e)
 
-    data.file_error = data.apply(validate, axis=1)
+    data.file_error = hbt.row_combinator(
+        data,
+        lambda x: x.file_error is np.nan,
+        validate,
+        lambda x: x.file_error,
+    )
     return data
 
 
