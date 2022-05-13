@@ -106,22 +106,25 @@ def _validate_filepath(data):
 
 
 def _add_file_traits(data):
-    # type: (DataFrame) -> None
+    # type: (dd.DataFrame) -> dd.DataFrame
     '''
     Adds traits derived from file in filepath.
     Add file_traits column and one column per traits key.
 
     Args:
-        data (DataFrame): DataFrame.
+        data (dd.DataFrame): Dask DataFrame.
+
+    Returns:
+        dd.DataFrame: Dask DataFrame with updated file_error columns.
     '''
-    data['file_traits'] = np.nan
-    data.file_traits = data.file_traits.apply(lambda x: {})
-    mask = data.specification_class.notnull()
-    if len(data[mask]) > 0:
-        data.loc[mask, 'file_traits'] = data[mask].apply(
-            lambda x: x.specification_class().get_traits(x.filepath),
-            axis=1
-        )
+    data['file_traits'] = hbt.row_combinator(
+        data,
+        lambda x: x.specification_class is not np.nan,
+        lambda x: x.specification_class().get_traits(x.filepath),
+        lambda x: {},
+        meta=dict,
+    )
+    return data
 
 
 def _add_asset_traits(data):

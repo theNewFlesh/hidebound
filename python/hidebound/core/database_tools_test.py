@@ -17,7 +17,7 @@ import hidebound.core.database_tools as db_tools
 # ------------------------------------------------------------------------------
 
 
-class DatabaseTests(DatabaseTestBase):
+class DatabaseToolsTests(DatabaseTestBase):
     # SPECIFICATION-FUNCTIONS---------------------------------------------------
     def test_add_specification(self):
         Spec001, Spec002, _ = self.get_specifications()
@@ -104,8 +104,9 @@ class DatabaseTests(DatabaseTestBase):
         ]
         data.columns = ['specification_class', 'filepath', 'file_error'] + cols
         temp = data.copy()
+        data = dd.from_pandas(data, chunksize=100)
 
-        db_tools._add_file_traits(data)
+        data = db_tools._add_file_traits(data).compute()
         for col in cols:
             result = data[col].fillna('null').tolist()
             expected = temp[col].fillna('null').tolist()
