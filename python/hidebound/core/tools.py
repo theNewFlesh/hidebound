@@ -1,4 +1,4 @@
-from typing import Any, Dict, Generator, List, Union
+from typing import Any, Callable, Dict, Generator, List, Union
 
 from collections import defaultdict
 from datetime import datetime
@@ -9,7 +9,7 @@ import os
 import re
 import shutil
 
-from pandas import DataFrame
+from pandas import DataFrame, Series
 from schematics.exceptions import DataError, ValidationError
 import dask.dataframe as dd
 import jsoncomment as jsonc
@@ -257,3 +257,34 @@ def read_json(filepath):
         msg += 'Please remove any inline comments.'
         raise json.JSONDecodeError(msg, '', 0)
     return output
+
+
+def row_combinator(
+    data,                   # type: Union[DataFrame, dd.DataFrame]
+    predicate,              # type: Callable[[Any], bool]
+    true_func,              # type: Callable[[Any], bool]
+    false_func,             # type: Callable[[Any], bool]
+    meta='__no_default__',  # type: Any
+):
+    # type: (...) -> Union[dd.DataFrame, dd.Series]
+    '''
+    Apply true_func to rows where predicate if true and false_func to rows where
+    it is false.
+
+    Args:
+        data (DataFrame): DataFrame.
+        predicate (function): Function that expects a row and returns a bool.
+        true_func (function): Function that expects a row. Called when predicate
+            is true.
+        true_func (function): Function that expects a row. Called when predicate
+            is false.
+        meta (object, optional): Metadata inference. Default: '__no_default__'.
+
+    Returns:
+        dd.DataFrame or dd.Series: DataFrame.apply results.
+    '''
+    return data.apply(
+        lambda x: true_func(x) if predicate(x) else false_func(x),
+        axis=1,
+        meta=meta,
+    )

@@ -5,10 +5,11 @@ import os
 import re
 import unittest
 
-from pandas import DataFrame
+from pandas import DataFrame, Series
 from schematics.exceptions import DataError, ValidationError
 from schematics.models import Model
 from schematics.types import StringType
+import dask.dataframe as dd
 import numpy as np
 import OpenEXR as openexr
 
@@ -306,3 +307,52 @@ class ToolsTests(unittest.TestCase):
             expected += 'Please remove any inline comments.'
             with self.assertRaisesRegexp(json.JSONDecodeError, expected):
                 hbt.read_json(filepath)
+
+    def test_row_combinator(self):
+        data = DataFrame()
+        data['foo'] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        data['bar'] = [1, 2, 3, 4, 5, 6, 2, 1, 2]
+        data = dd.from_pandas(data, chunksize=3)
+        result = hbt.row_combinator(
+            data,
+            lambda x: (x.foo + x.bar) % 2 == 0,
+            lambda x: 'even',
+            lambda x: 'odd',
+            meta=str,
+        )
+        result = result.compute().tolist()
+        expected = ['even'] * 6 + ['odd'] * 3
+        self.assertEqual(result, expected)
+
+    def test_row_combinator_nan(self):
+        # no meta
+        data = DataFrame()
+        data['foo'] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        data['bar'] = [1, 2, 3, 4, 5, 6, 2, 1, 2]
+
+        expected = ['even'] * 6 + [np.nan] * 3
+        expected = Series(expected).fillna('null').tolist()
+
+        temp = dd.from_pandas(data, chunksize=3)
+        result = hbt.row_combinator(
+            temp,
+            lambda x: (x.foo + x.bar) % 2 == 0,
+            lambda x: 'even',
+            lambda x: np.nan,
+        )
+        result = result.compute().tolist()
+        result = Series(result).fillna('null').tolist()
+        self.assertEqual(result, expected)
+
+        # meta = str
+        temp = dd.from_pandas(data, chunksize=3)
+        result = hbt.row_combinator(
+            temp,
+            lambda x: (x.foo + x.bar) % 2 == 0,
+            lambda x: 'even',
+            lambda x: np.nan,
+            meta=str,
+        )
+        result = result.compute().tolist()
+        result = Series(result).fillna('null').tolist()
+        self.assertEqual(result, expected)
