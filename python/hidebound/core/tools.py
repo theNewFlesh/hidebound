@@ -9,7 +9,7 @@ import os
 import re
 import shutil
 
-from pandas import DataFrame, Series
+from pandas import DataFrame
 from schematics.exceptions import DataError, ValidationError
 import dask.dataframe as dd
 import jsoncomment as jsonc
@@ -262,8 +262,8 @@ def read_json(filepath):
 def row_combinator(
     data,                   # type: Union[DataFrame, dd.DataFrame]
     predicate,              # type: Callable[[Any], bool]
-    true_func,              # type: Callable[[Any], bool]
-    false_func,             # type: Callable[[Any], bool]
+    true_func,              # type: Callable[[Any], Any]
+    false_func,             # type: Callable[[Any], Any]
     meta='__no_default__',  # type: Any
 ):
     # type: (...) -> Union[dd.DataFrame, dd.Series]
