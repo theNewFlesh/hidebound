@@ -114,59 +114,60 @@ class AssetNameParser:
         Returns:
             dict: Grammar.
         '''
-        project = Regex(r'[a-z]{3,4}\d\d?\d?\d?')\
-            .setResultsName('project')\
+        project = Regex(r'[a-z]{3,4}\d\d?\d?\d?') \
+            .setResultsName('project') \
             .setFailAction(AssetNameParser._raise_field_error('project', 'token'))
 
-        specification = Regex(r'[a-z]{3,4}\d\d\d')\
-            .setResultsName('specification')\
+        specification = Regex(r'[a-z]{3,4}\d\d\d') \
+            .setResultsName('specification') \
             .setFailAction(AssetNameParser._raise_field_error('specification', 'token'))
 
-        descriptor = Regex(r'[a-z0-9][a-z0-9-]*')\
-            .setResultsName('descriptor')\
+        descriptor = Regex(r'[a-z0-9][a-z0-9-]*') \
+            .setResultsName('descriptor') \
             .setFailAction(AssetNameParser._raise_field_error('descriptor', 'token'))
 
-        version = Regex(r'\d{' + str(AssetNameParser.VERSION_PADDING) + '}')\
-            .setParseAction(lambda s, l, t: int(t[0]))\
-            .setResultsName('version')\
+        version = Regex(r'\d{' + str(AssetNameParser.VERSION_PADDING) + '}') \
+            .setParseAction(lambda s, l, t: int(t[0])) \
+            .setResultsName('version') \
             .setFailAction(AssetNameParser._raise_field_error('version', 'token'))
 
-        coord = Regex(r'\d{' + str(AssetNameParser.COORDINATE_PADDING) + '}')\
+        coord = Regex(r'\d{' + str(AssetNameParser.COORDINATE_PADDING) + '}') \
             .setParseAction(lambda s, l, t: int(t[0]))
         t_sep = Suppress(AssetNameParser.TOKEN_SEPARATOR)
-        coordinate = Group(coord + Optional(t_sep + coord) + Optional(t_sep + coord))\
-            .setResultsName('coordinate')\
+        opt_coord = Optional(t_sep + coord)  # type: ignore
+        coordinate = Group(coord + opt_coord + opt_coord) \
+            .setResultsName('coordinate') \
             .setFailAction(AssetNameParser._raise_field_error('coordinate', 'token'))
 
-        frame = Regex(r'\d{' + str(AssetNameParser.FRAME_PADDING) + '}')\
-            .setParseAction(lambda s, l, t: int(t[0]))\
-            .setResultsName('frame')\
+        frame = Regex(r'\d{' + str(AssetNameParser.FRAME_PADDING) + '}') \
+            .setParseAction(lambda s, l, t: int(t[0])) \
+            .setResultsName('frame') \
             .setFailAction(AssetNameParser._raise_field_error('frame', 'token'))
 
-        extension = Regex(r'[a-zA-Z0-9]+$')\
-            .setResultsName('extension')\
+        extension = Regex(r'[a-zA-Z0-9]+$') \
+            .setResultsName('extension') \
             .setFailAction(AssetNameParser._raise_field_error('extension', 'token'))
         # ----------------------------------------------------------------------
 
-        project_indicator = Suppress(AssetNameParser.PROJECT_INDICATOR)\
+        project_indicator = Suppress(AssetNameParser.PROJECT_INDICATOR) \
             .setFailAction(AssetNameParser._raise_field_error('project', 'indicator'))
 
-        specification_indicator = Suppress(AssetNameParser.SPECIFICATION_INDICATOR)\
+        specification_indicator = Suppress(AssetNameParser.SPECIFICATION_INDICATOR) \
             .setFailAction(AssetNameParser._raise_field_error('specification', 'indicator'))
 
-        descriptor_indicator = Suppress(AssetNameParser.DESCRIPTOR_INDICATOR)\
+        descriptor_indicator = Suppress(AssetNameParser.DESCRIPTOR_INDICATOR) \
             .setFailAction(AssetNameParser._raise_field_error('descriptor', 'indicator'))
 
-        version_indicator = Suppress(AssetNameParser.VERSION_INDICATOR)\
+        version_indicator = Suppress(AssetNameParser.VERSION_INDICATOR) \
             .setFailAction(AssetNameParser._raise_field_error('version', 'indicator'))
 
-        coordinate_indicator = Suppress(AssetNameParser.COORDINATE_INDICATOR)\
+        coordinate_indicator = Suppress(AssetNameParser.COORDINATE_INDICATOR) \
             .setFailAction(AssetNameParser._raise_field_error('coordinate', 'indicator'))
 
-        frame_indicator = Suppress(AssetNameParser.FRAME_INDICATOR)\
+        frame_indicator = Suppress(AssetNameParser.FRAME_INDICATOR) \
             .setFailAction(AssetNameParser._raise_field_error('frame', 'indicator'))
 
-        extension_indicator = Suppress(AssetNameParser.EXTENSION_INDICATOR)\
+        extension_indicator = Suppress(AssetNameParser.EXTENSION_INDICATOR) \
             .setFailAction(AssetNameParser._raise_field_error('extension', 'indicator'))
         # ----------------------------------------------------------------------
 
@@ -197,9 +198,9 @@ class AssetNameParser:
         Returns:
             Group: Parser.
         '''
-        parser = Optional(Suppress(Regex(r'.*\.|.*?'))) + grammar['extension_token']
-        parser = Group(parser)
-        return parser
+        parser = Optional(Suppress(Regex(r'.*\.|.*?'))) + grammar['extension_token']  # type: ignore
+        output = Group(parser)
+        return output
 
     @staticmethod
     def _get_parser(grammar, fields):
@@ -214,15 +215,15 @@ class AssetNameParser:
         Returns:
             Group: Parser.
         '''
-        parser = Suppress(Regex('^'))
+        parser = Suppress(Regex('^'))  # type: Any
         for i, field in enumerate(fields[:-1]):
             parser += grammar[field]
             if fields[i + 1] != 'extension':
                 parser += grammar['field_separator']
         parser += grammar[fields[-1]]
         parser += Suppress(Regex('$'))
-        parser = Group(parser)
-        return parser
+        output = Group(parser)
+        return output
 
     @staticmethod
     def _get_specification_parser():
@@ -264,7 +265,7 @@ class AssetNameParser:
             raise ParseException(msg)
 
     def parse(self, text):
-        # type: (str) -> Group
+        # type: (str) -> dict
         '''
         Parse a given string.
 
@@ -275,14 +276,14 @@ class AssetNameParser:
             ParseException: If parse fails.
 
         Returns:
-            Group: parser.
+            dict: parser.
         '''
         if self._fields == ['extension']:
             return self._extension_parser.parseString(text)[0].asDict()
         return self._parser.parseString(text)[0].asDict()
 
     def to_string(self, dict_):
-        # type: (Dict) -> Any
+        # type: (Dict) -> str
         '''
         Converts a given dictionary to a string.
 
