@@ -38,7 +38,8 @@ def _add_specification(data, specifications):
         specifications (dict): Dictionary of specifications.
 
     Returns:
-        dd.DataFrame: Dask DataFrame with specifications columns.
+        dd.DataFrame: Dask DataFrame with specification, specification_class
+            and file_error columns.
     '''
     def get_spec(filename):
         # type: (str) -> Dict
@@ -69,22 +70,24 @@ def _add_specification(data, specifications):
 
     # add spec not found errors to rows with no file errors
     error = hbt.error_to_string(KeyError('Specification not found.'))
-    mask = data.apply(
-        lambda x: [x.file_error, x.specification_class] == [np.nan, np.nan],
-        axis=1
+    data.file_error = data.file_error.mask(
+        data.file_error.isnull() & data.specification_class.isnull(),
+        error
     )
-    data.file_error = data.file_error.mask(mask, error)
     return data
 
 
 def _validate_filepath(data):
-    # type: (dd.DataFrame) -> None
+    # type: (dd.DataFrame) -> dd.DataFrame
     '''
     Validates filepath column of given DataFrame.
     Adds error to error column if invalid.
 
     Args:
-        data (DataFrame): DataFrame.
+        data (dd.DataFrame): Dask DataFrame.
+
+    Returns:
+        dd.DataFrame: Dask DataFrame with updated file_error columns.
     '''
     def validate(row):
         try:
@@ -93,9 +96,8 @@ def _validate_filepath(data):
         except ValidationError as e:
             return hbt.error_to_string(e)
 
-    mask = data.file_error.isnull()
-    if len(data[mask]) > 0:
-        data.loc[mask, 'file_error'] = data[mask].apply(validate, axis=1)
+    data = data.mask(data.file_error.isnull(), validate)
+    return data
 
 
 def _add_file_traits(data):
