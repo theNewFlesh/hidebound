@@ -4,6 +4,7 @@ import json
 import re
 
 from pandas import DataFrame
+import dask.dataframe as dd
 import lunchbox.tools as lbt
 import numpy as np
 import pandas as pd
@@ -48,7 +49,7 @@ class DatabaseTests(DatabaseTestBase):
 
     # FILE-FUNCTIONS------------------------------------------------------------
     def test_validate_filepath(self):
-        data = self.get_data('/tmp')
+        data = self.get_data('/tmp', nans=True)
 
         error = 'Invalid asset directory name'
         mask = data.file_error == error
@@ -57,7 +58,8 @@ class DatabaseTests(DatabaseTestBase):
         cols = ['specification_class', 'filepath', 'file_error']
         data = data[cols]
 
-        db_tools._validate_filepath(data)
+        data = dd.from_pandas(data, chunksize=100)
+        data = db_tools._validate_filepath(data).compute()
         result = data.loc[mask, 'file_error'].tolist()[0]
         self.assertRegex(result, error)
 
