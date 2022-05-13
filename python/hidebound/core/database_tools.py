@@ -23,7 +23,7 @@ A library of tools for Database to use in construction of its central DataFrame.
 
 
 def _add_specification(data, specifications):
-    # type: (dd.DataFrame, Dict[str, SpecificationBase]) -> None
+    # type: (dd.DataFrame, Dict[str, SpecificationBase]) -> dd.DataFrame
     '''
     Adds specification data to given DataFrame.
 
@@ -36,6 +36,9 @@ def _add_specification(data, specifications):
     Args:
         data (dd.DataFrame): dd.DataFrame.
         specifications (dict): Dictionary of specifications.
+
+    Returns:
+        dd.DataFrame: Dask DataFrame with specifications columns.
     '''
     def get_spec(filename):
         # type: (str) -> Dict
@@ -75,7 +78,7 @@ def _add_specification(data, specifications):
 
 
 def _validate_filepath(data):
-    # type: (DataFrame) -> None
+    # type: (dd.DataFrame) -> None
     '''
     Validates filepath column of given DataFrame.
     Adds error to error column if invalid.
