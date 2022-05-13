@@ -435,7 +435,6 @@ class ParserTests(unittest.TestCase):
             'pizzas-spec001',
             'pizza_s-spec001',
             's-spec001banana',
-            's-spec0012',
             'p-proj001_s-spec001_d-desc_v001',
             'p-proj001_s-spec001_d-descs-123_v001',
             'p-proj001_s-spec001_d-desc-s-123_v001',
@@ -446,6 +445,7 @@ class ParserTests(unittest.TestCase):
 
         names = [
             'spec001',
+            's-spec0012',
             '-spec001',
             'p-spec001',
             's.spec001',
