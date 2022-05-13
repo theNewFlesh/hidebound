@@ -7,6 +7,7 @@ import uuid
 
 from pandas import DataFrame
 from schematics.exceptions import ValidationError
+import dask.dataframe as dd
 import lunchbox.tools as lbt
 import numpy as np
 
@@ -22,7 +23,7 @@ A library of tools for Database to use in construction of its central DataFrame.
 
 
 def _add_specification(data, specifications):
-    # type: (DataFrame, Dict[str, SpecificationBase]) -> None
+    # type: (dd.DataFrame, Dict[str, SpecificationBase]) -> None
     '''
     Adds specification data to given DataFrame.
 
@@ -33,7 +34,7 @@ def _add_specification(data, specifications):
         * file_error
 
     Args:
-        data (DataFrame): DataFrame.
+        data (dd.DataFrame): dd.DataFrame.
         specifications (dict): Dictionary of specifications.
     '''
     def get_spec(filename):
@@ -48,28 +49,29 @@ def _add_specification(data, specifications):
                 output[key] = np.nan
         return output
 
-    spec = data.filename.apply(get_spec).tolist()
-    spec = DataFrame(spec)
+    # parse filenames
+    parse = data.filename.apply(get_spec)
 
     # set specifications
-    mask = spec.specification.notnull()
-    data.loc[mask, 'specification'] = spec.loc[mask, 'specification']
+    data['specification'] = parse.apply(lambda x: x['specification'], meta=str)
 
-    # set error
-    data['file_error'] = np.nan
-    mask = data.specification.apply(lambda x: x not in specifications.keys())
+    # set file errors
+    data['file_error'] = parse.apply(lambda x: x['file_error'], meta=str)
+
+    # add specification classes
+    data['specification_class'] = data.specification.apply(
+        lambda x: lbt.try_(lambda y: specifications[y], x, np.nan),
+        meta=SpecificationBase
+    )
+
+    # add spec not found errors to rows with no file errors
     error = hbt.error_to_string(KeyError('Specification not found.'))
-    data.loc[mask, 'file_error'] = error
-
-    # parse errors overwrite spec not found
-    mask = spec.file_error.notnull()
-    data.loc[mask, 'file_error'] = spec.loc[mask, 'file_error']
-
-    # set specification class
-    mask = data.file_error.isnull()
-    data['specification_class'] = np.nan
-    data.loc[mask, 'specification_class'] = data.loc[mask, 'specification']\
-        .apply(lambda x: specifications[x])
+    mask = data.apply(
+        lambda x: [x.file_error, x.specification_class] == [np.nan, np.nan],
+        axis=1
+    )
+    data.file_error = data.file_error.mask(mask, error)
+    return data
 
 
 def _validate_filepath(data):

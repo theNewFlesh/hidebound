@@ -1,11 +1,12 @@
-import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
+import json
+import re
 
-import lunchbox.tools as lbt
-import pandas as pd
 from pandas import DataFrame
+import lunchbox.tools as lbt
 import numpy as np
+import pandas as pd
 
 from hidebound.core.database_test_base import DatabaseTestBase
 from hidebound.core.specification_base import ComplexSpecificationBase
@@ -22,11 +23,28 @@ class DatabaseTests(DatabaseTestBase):
         specs = {Spec001.name: Spec001, Spec002.name: Spec002}
 
         data = self.get_directory_to_dataframe_data('/tmp')
-        db_tools._add_specification(data, specs)
 
-        result = data.specification.tolist()
-        expected = data.specification
-        self.assertEqual(result, expected.tolist())
+        expected = data.copy().compute()
+        expected['specification'] = expected.filename.apply(
+            lambda x: lbt.try_(
+                lambda y: re.search(r's-([a-z]+\d\d\d)_d', y).group(1), x, np.nan,
+            )
+        )
+        expected['specification_class'] = expected.specification.apply(
+            lambda x: lbt.try_(lambda y: specs[y], x, np.nan)
+        )
+
+        result = db_tools._add_specification(data, specs).compute()
+
+        self.assertEqual(
+            result.specification.tolist(),
+            expected.specification.tolist(),
+        )
+
+        self.assertEqual(
+            result.specification_class.tolist(),
+            expected.specification_class.tolist(),
+        )
 
     # FILE-FUNCTIONS------------------------------------------------------------
     def test_validate_filepath(self):
