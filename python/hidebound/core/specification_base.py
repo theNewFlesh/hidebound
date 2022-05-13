@@ -85,8 +85,9 @@ class SpecificationBase(Model):
             str: Asset name.
         '''
         filepath = Path(filepath)
-        data = AssetNameParser(self.filename_fields).parse(filepath.name)
-        return AssetNameParser(self.asset_name_fields).to_string(data)
+        data = AssetNameParser(self.filename_fields).parse(filepath.name)  # type: dict
+        output = AssetNameParser(self.asset_name_fields).to_string(data)  # type: str
+        return output
 
     def get_asset_path(self, filepath):
         # type: (Union[str, Path]) -> Path
