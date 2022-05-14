@@ -128,22 +128,27 @@ def _add_file_traits(data):
 
 
 def _add_asset_traits(data):
-    # type: (DataFrame) -> None
+    # type: (dd.DataFrame) -> dd.DataFrame
     '''
     Adds traits derived from aggregation of file traits.
     Add asset_traits column and one column per traits key.
 
     Args:
-        data (DataFrame): DataFrame.
+        data (dd.DataFrame): Dask DataFrame.
+
+    Returns:
+        dd.DataFrame: Dask DataFrame with asset_traits column.
     '''
     cols = ['asset_path', 'file_traits']
-    lut = data[cols].groupby('asset_path', as_index=False)\
-        .agg(lambda x: hbt.to_prototype(x.tolist()))\
-        .apply(lambda x: x.tolist(), axis=1)\
-        .tolist()
-    lut = defaultdict(lambda: {}, lut)
+    lut = data[cols].groupby('asset_path').file_traits.apply(
+        lambda x: [hbt.to_prototype(x.tolist())], meta=list,
+    ).compute()
+    keys = lut.index.tolist()
+    vals = lut.apply(lambda x: x[0]).tolist()
+    lut = defaultdict(lambda: {}, zip(keys, vals))
 
     data['asset_traits'] = data.asset_path.apply(lambda x: lut[x])
+    return data
 
 
 def _validate_assets(data):
