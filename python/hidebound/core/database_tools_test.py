@@ -259,8 +259,11 @@ class DatabaseToolsTests(DatabaseTestBase):
             '/foo/bar/kiwi.txt',
             '/tmp/pizza.txt',
         ]
-        db_tools._add_relative_path(data, 'foo', '/foo/bar')
-        result = data['foo_relative'].tolist()
+        data = dd.from_pandas(data, chunksize=3)
+
+        result = db_tools \
+            ._add_relative_path(data, 'foo', '/foo/bar') \
+            .compute()['foo_relative'].tolist()
         expected = [
             'taco.txt',
             'kiwi.txt',
@@ -269,8 +272,9 @@ class DatabaseToolsTests(DatabaseTestBase):
         self.assertEqual(result, expected)
 
         del data['foo_relative']
-        db_tools._add_relative_path(data, 'foo', '/foo/bar/')
-        result = data['foo_relative'].tolist()
+        result = db_tools \
+            ._add_relative_path(data, 'foo', '/foo/bar/') \
+            .compute()['foo_relative'].tolist()
         expected = [
             'taco.txt',
             'kiwi.txt',
@@ -332,9 +336,10 @@ class DatabaseToolsTests(DatabaseTestBase):
                 channels=[3],
             )
             data['asset_traits'] = [traits]
-            db_tools._validate_assets(data)
+            data = dd.from_pandas(data, chunksize=3)
 
-            for _, row in data.iterrows():
+            result = db_tools._validate_assets(data).compute()
+            for _, row in result.iterrows():
                 self.assertTrue(np.isnan(row.asset_error))
                 self.assertTrue(row.asset_valid)
 
@@ -359,9 +364,10 @@ class DatabaseToolsTests(DatabaseTestBase):
                 channels=[3],
             )
             data['asset_traits'] = [traits]
-            db_tools._validate_assets(data)
+            data = dd.from_pandas(data, chunksize=3)
 
-            for _, row in data.iterrows():
+            result = db_tools._validate_assets(data).compute()
+            for _, row in result.iterrows():
                 self.assertRegex(row.asset_error, '40 != 4')
                 self.assertFalse(row.asset_valid)
 
@@ -381,9 +387,10 @@ class DatabaseToolsTests(DatabaseTestBase):
                 channels=[3, 3],
             )
             data['asset_traits'] = [traits, traits]
-            db_tools._validate_assets(data)
+            data = dd.from_pandas(data, chunksize=100)
 
-            for _, row in data.iterrows():
+            result = db_tools._validate_assets(data).compute()
+            for _, row in result.iterrows():
                 self.assertRegex(row.asset_error, '400 != 4')
                 self.assertFalse(row.asset_valid)
 

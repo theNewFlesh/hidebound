@@ -245,23 +245,27 @@ def _add_asset_path(data):
 
 
 def _add_relative_path(data, column, root_dir):
-    # type: (DataFrame, str, Union[str, Path]) -> None
+    # type: (dd.DataFrame, str, Union[str, Path]) -> None
     '''
     Adds relative path column derived from given column.
 
     Args:
-        data (DataFrame): DataFrame.
+        data (dd.DataFrame): Dask DataFrame.
         column (str): Column to be made relative.
         root_dir (Path or str): Root path to be removed.
     '''
     root_dir = Path(root_dir).as_posix()
     if not root_dir.endswith('/'):
         root_dir += '/'
-    mask = data[column].notnull()
     col = column + '_relative'
-    data[col] = np.nan
-    data.loc[mask, col] = data.loc[mask, column]\
-        .apply(lambda x: re.sub(root_dir, '', Path(x).as_posix()))
+    data[col] = hbt.pred_combinator(
+        data[column],
+        lambda x: isinstance(x, str),
+        lambda x: re.sub(root_dir, '', Path(x).as_posix()),
+        lambda x: x,
+        meta=str,
+    )
+    return data
 
 
 def _add_asset_type(data):
