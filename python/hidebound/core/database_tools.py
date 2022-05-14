@@ -96,7 +96,7 @@ def _validate_filepath(data):
         except ValidationError as e:
             return hbt.error_to_string(e)
 
-    data.file_error = hbt.row_combinator(
+    data.file_error = hbt.pred_combinator(
         data,
         lambda x: x.file_error is np.nan,
         validate,
@@ -117,7 +117,7 @@ def _add_file_traits(data):
     Returns:
         dd.DataFrame: Dask DataFrame with updated file_error columns.
     '''
-    data['file_traits'] = hbt.row_combinator(
+    data['file_traits'] = hbt.pred_combinator(
         data,
         lambda x: x.specification_class is not np.nan,
         lambda x: x.specification_class().get_traits(x.filepath),
