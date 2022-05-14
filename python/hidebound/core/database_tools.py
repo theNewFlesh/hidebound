@@ -127,6 +127,83 @@ def _add_file_traits(data):
     return data
 
 
+def _add_relative_path(data, column, root_dir):
+    # type: (dd.DataFrame, str, Union[str, Path]) -> None
+    '''
+    Adds relative path column derived from given column.
+
+    Args:
+        data (dd.DataFrame): Dask DataFrame.
+        column (str): Column to be made relative.
+        root_dir (Path or str): Root path to be removed.
+    '''
+    root_dir = Path(root_dir).as_posix()
+    if not root_dir.endswith('/'):
+        root_dir += '/'
+    col = column + '_relative'
+    data[col] = hbt.pred_combinator(
+        data[column],
+        lambda x: isinstance(x, str),
+        lambda x: re.sub(root_dir, '', Path(x).as_posix()),
+        lambda x: x,
+        meta=str,
+    )
+    return data
+
+
+def _add_asset_name(data):
+    # type: (DataFrame) -> None
+    '''
+    Adds asset_name column derived from filepath.
+
+    Args:
+        data (DataFrame): DataFrame.
+    '''
+    mask = data.file_error.isnull()
+    data['asset_name'] = np.nan
+    if len(data[mask]) > 0:
+        data.loc[mask, 'asset_name'] = data.loc[mask].apply(
+            lambda x: x.specification_class().get_asset_name(x.filepath),
+            axis=1
+        )
+
+
+def _add_asset_path(data):
+    # type: (DataFrame) -> None
+    '''
+    Adds asset_path column derived from filepath.
+
+    Args:
+        data (DataFrame): DataFrame.
+    '''
+    mask = data.specification_class.notnull()
+    data['asset_path'] = np.nan
+    if len(data[mask]) > 0:
+        data.loc[mask, 'asset_path'] = data.loc[mask].apply(
+            lambda x: x.specification_class().get_asset_path(x.filepath),
+            axis=1
+        )
+
+    # overwrite asset_path for misnamed files within asset directory
+    for path in data.asset_path.dropna().unique():
+        mask = data.filepath.apply(lambda x: path.absolute().as_posix() in x)
+        data.loc[mask, 'asset_path'] = path
+
+
+def _add_asset_type(data):
+    # type: (DataFrame) -> None
+    '''
+    Adds asset_type column derived from specification.
+
+    Args:
+        data (DataFrame): DataFrame.
+    '''
+    mask = data.specification_class.notnull()
+    data['asset_type'] = np.nan
+    data.loc[mask, 'asset_type'] = data.loc[mask, 'specification_class']\
+        .apply(lambda x: x.asset_type)
+
+
 def _add_asset_traits(data):
     # type: (dd.DataFrame) -> dd.DataFrame
     '''
@@ -188,100 +265,6 @@ def _validate_assets(data):
         .apply(lambda x: np.nan if x == 'null' else x)
 
 
-def _add_asset_id(data):
-    # type: (DataFrame) -> None
-    '''
-    Adds asset_id column derived UUID hash of asset filepath.
-
-    Args:
-        data (DataFrame): DataFrame.
-    '''
-    mask = data.file_error.isnull()
-    data['asset_id'] = np.nan
-    if len(data[mask]) > 0:
-        data.loc[mask, 'asset_id'] = data.loc[mask].apply(
-            lambda x: x.specification_class().get_asset_id(x.filepath),
-            axis=1
-        )
-
-
-def _add_asset_name(data):
-    # type: (DataFrame) -> None
-    '''
-    Adds asset_name column derived from filepath.
-
-    Args:
-        data (DataFrame): DataFrame.
-    '''
-    mask = data.file_error.isnull()
-    data['asset_name'] = np.nan
-    if len(data[mask]) > 0:
-        data.loc[mask, 'asset_name'] = data.loc[mask].apply(
-            lambda x: x.specification_class().get_asset_name(x.filepath),
-            axis=1
-        )
-
-
-def _add_asset_path(data):
-    # type: (DataFrame) -> None
-    '''
-    Adds asset_path column derived from filepath.
-
-    Args:
-        data (DataFrame): DataFrame.
-    '''
-    mask = data.specification_class.notnull()
-    data['asset_path'] = np.nan
-    if len(data[mask]) > 0:
-        data.loc[mask, 'asset_path'] = data.loc[mask].apply(
-            lambda x: x.specification_class().get_asset_path(x.filepath),
-            axis=1
-        )
-
-    # overwrite asset_path for misnamed files within asset directory
-    for path in data.asset_path.dropna().unique():
-        mask = data.filepath.apply(lambda x: path.absolute().as_posix() in x)
-        data.loc[mask, 'asset_path'] = path
-
-
-def _add_relative_path(data, column, root_dir):
-    # type: (dd.DataFrame, str, Union[str, Path]) -> None
-    '''
-    Adds relative path column derived from given column.
-
-    Args:
-        data (dd.DataFrame): Dask DataFrame.
-        column (str): Column to be made relative.
-        root_dir (Path or str): Root path to be removed.
-    '''
-    root_dir = Path(root_dir).as_posix()
-    if not root_dir.endswith('/'):
-        root_dir += '/'
-    col = column + '_relative'
-    data[col] = hbt.pred_combinator(
-        data[column],
-        lambda x: isinstance(x, str),
-        lambda x: re.sub(root_dir, '', Path(x).as_posix()),
-        lambda x: x,
-        meta=str,
-    )
-    return data
-
-
-def _add_asset_type(data):
-    # type: (DataFrame) -> None
-    '''
-    Adds asset_type column derived from specification.
-
-    Args:
-        data (DataFrame): DataFrame.
-    '''
-    mask = data.specification_class.notnull()
-    data['asset_type'] = np.nan
-    data.loc[mask, 'asset_type'] = data.loc[mask, 'specification_class']\
-        .apply(lambda x: x.asset_type)
-
-
 def _cleanup(data):
     # type: (DataFrame) -> DataFrame
     '''
@@ -327,6 +310,23 @@ def _cleanup(data):
         data.loc[mask, col] = data.loc[mask, col]\
             .apply(lambda x: x.absolute().as_posix())
     return data
+
+
+def _add_asset_id(data):
+    # type: (DataFrame) -> None
+    '''
+    Adds asset_id column derived UUID hash of asset filepath.
+
+    Args:
+        data (DataFrame): DataFrame.
+    '''
+    mask = data.file_error.isnull()
+    data['asset_id'] = np.nan
+    if len(data[mask]) > 0:
+        data.loc[mask, 'asset_id'] = data.loc[mask].apply(
+            lambda x: x.specification_class().get_asset_id(x.filepath),
+            axis=1
+        )
 
 
 def _get_data_for_write(
