@@ -305,8 +305,10 @@ class DatabaseToolsTests(DatabaseTestBase):
             Spec003,
             np.nan,
         ]
-        db_tools._add_asset_type(data)
-        result = data['asset_type'].fillna('null').tolist()
+        data = dd.from_pandas(data, chunksize=3)
+
+        result = db_tools._add_asset_type(data).compute()
+        result = result['asset_type'].fillna('null').tolist()
         expected = ['file', 'sequence', 'complex', 'null']
         self.assertEqual(result, expected)
 

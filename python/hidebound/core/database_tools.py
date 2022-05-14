@@ -207,17 +207,24 @@ def _add_asset_path(data):
 
 
 def _add_asset_type(data):
-    # type: (DataFrame) -> None
+    # type: (dd.DataFrame) -> dd.DataFrame
     '''
     Adds asset_type column derived from specification.
 
     Args:
-        data (DataFrame): DataFrame.
+        data (dd.DataFrame): Dask DataFrame.
+
+    Returns:
+        dd.DataFrame: Dask DataFrame with asset_type column.
     '''
-    mask = data.specification_class.notnull()
-    data['asset_type'] = np.nan
-    data.loc[mask, 'asset_type'] = data.loc[mask, 'specification_class']\
-        .apply(lambda x: x.asset_type)
+    data['asset_type'] = hbt.pred_combinator(
+        data.specification_class,
+        lambda x: x is not np.nan,
+        lambda x: x.asset_type,
+        lambda x: np.nan,
+        meta=str,
+    )
+    return data
 
 
 def _add_asset_traits(data):
