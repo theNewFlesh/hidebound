@@ -246,11 +246,13 @@ class DatabaseToolsTests(DatabaseTestBase):
             .apply(lambda x: Path(x).parent).apply(str).tolist()
         expected[-1] = 'nan'
 
-        db_tools._add_asset_path(data)
-        result = data['asset_path'].apply(str).tolist()
+        data = dd.from_pandas(data, chunksize=3)
+
+        results = db_tools._add_asset_path(data).compute()
+        result = results['asset_path'].apply(str).tolist()
         self.assertEqual(result, expected)
 
-        result = data['asset_path'].dropna().nunique()
+        result = results['asset_path'].dropna().nunique()
         self.assertEqual(result, 3)
 
     def test_add_relative_path(self):
