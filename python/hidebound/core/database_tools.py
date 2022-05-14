@@ -128,7 +128,7 @@ def _add_file_traits(data):
 
 
 def _add_relative_path(data, column, root_dir):
-    # type: (dd.DataFrame, str, Union[str, Path]) -> None
+    # type: (dd.DataFrame, str, Union[str, Path]) -> dd.DataFrame
     '''
     Adds relative path column derived from given column.
 
@@ -136,6 +136,9 @@ def _add_relative_path(data, column, root_dir):
         data (dd.DataFrame): Dask DataFrame.
         column (str): Column to be made relative.
         root_dir (Path or str): Root path to be removed.
+
+    Returns:
+        dd.DataFrame: Dask DataFrame with updated [column]_relative column.
     '''
     root_dir = Path(root_dir).as_posix()
     if not root_dir.endswith('/'):
@@ -152,20 +155,24 @@ def _add_relative_path(data, column, root_dir):
 
 
 def _add_asset_name(data):
-    # type: (DataFrame) -> None
+    # type: (dd.DataFrame) -> dd.DataFrame
     '''
     Adds asset_name column derived from filepath.
 
     Args:
-        data (DataFrame): DataFrame.
+        data (dd.DataFrame): Dask DataFrame.
+
+    Returns:
+        dd.DataFrame: Dask DataFrame with updated asset_name column.
     '''
-    mask = data.file_error.isnull()
-    data['asset_name'] = np.nan
-    if len(data[mask]) > 0:
-        data.loc[mask, 'asset_name'] = data.loc[mask].apply(
-            lambda x: x.specification_class().get_asset_name(x.filepath),
-            axis=1
-        )
+    data['asset_name'] = hbt.pred_combinator(
+        data,
+        lambda x: x.file_error is np.nan,
+        lambda x: x.specification_class().get_asset_name(x.filepath),
+        lambda x: np.nan,
+        meta=str,
+    )
+    return data
 
 
 def _add_asset_path(data):

@@ -204,9 +204,10 @@ class DatabaseToolsTests(DatabaseTestBase):
 
         data = DataFrame(data)
         data.columns = ['specification_class', 'filepath', 'file_error']
+        data = dd.from_pandas(data, chunksize=4)
 
-        db_tools._add_asset_name(data)
-        result = data['asset_name'].dropna().nunique()
+        result = db_tools._add_asset_name(data).compute()
+        result = result['asset_name'].dropna().nunique()
         self.assertEqual(result, 2)
 
     def test_add_asset_path(self):
