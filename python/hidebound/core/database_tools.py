@@ -252,40 +252,45 @@ def _add_asset_traits(data):
 
 
 def _validate_assets(data):
-    # type: (DataFrame) -> None
+    # type: (dd.DataFrame) -> dd.DataFrame
     '''
     Validates assets according to their specification.
     Add asset_error and asset_valid columns.
 
     Args:
         data (DataFrame): DataFrame.
+
+    Returns:
+        dd.DataFrame: Dask DataFrame with asset_error and asset_valid columns.
     '''
     # create error lut
-    error = data.groupby('asset_path')\
+    error = data.copy().groupby('asset_path')\
         .first()\
         .apply(
             lambda y: lbt.try_(
                 lambda x: x.specification_class(x.asset_traits).validate(),
                 y,
                 'error'),
-            axis=1)
+            axis=1) \
+        .compute()
     lut = dict(zip(error.index.tolist(), error.tolist()))
 
+    def func(item, lut):
+        output = np.nan
+        if item in lut.keys():
+            temp = lut[item]
+            if temp is not None:
+                output = hbt.error_to_string(temp)
+        return output
+
     # assign asset_error column
-    mask = data.asset_path.apply(lambda x: x in lut.keys())
-    data['asset_error'] = 'null'
-    data.loc[mask, 'asset_error'] = data.loc[mask, 'asset_path']\
-        .apply(lambda x: lut[x])\
-        .apply(lambda x: hbt.error_to_string(x) if x is not None else np.nan)
+    data['asset_error'] = data.asset_path \
+        .apply(lambda x: func(x, lut), meta=str)
 
     # assign asset_valid column
-    data['asset_valid'] = False
-    mask = data.asset_error.isnull()
-    data.loc[mask, 'asset_valid'] = True
+    data['asset_valid'] = data.asset_error.isnull()
 
-    # cleanup asset_error
-    data.asset_error = data.asset_error\
-        .apply(lambda x: np.nan if x == 'null' else x)
+    return data
 
 
 def _cleanup(data):
