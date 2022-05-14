@@ -259,8 +259,8 @@ def read_json(filepath):
     return output
 
 
-def row_combinator(
-    data,                   # type: Union[DataFrame, dd.DataFrame]
+def pred_combinator(
+    data,                   # type: Union[dd.DataFrame, dd.Series]
     predicate,              # type: Callable[[Any], bool]
     true_func,              # type: Callable[[Any], Any]
     false_func,             # type: Callable[[Any], Any]
@@ -272,7 +272,7 @@ def row_combinator(
     it is false.
 
     Args:
-        data (DataFrame): DataFrame.
+        data (DataFrame): DataFrame or Series.
         predicate (function): Function that expects a row and returns a bool.
         true_func (function): Function that expects a row. Called when predicate
             is true.
@@ -281,10 +281,15 @@ def row_combinator(
         meta (object, optional): Metadata inference. Default: '__no_default__'.
 
     Returns:
-        dd.DataFrame or dd.Series: DataFrame.apply results.
+        dd.DataFrame or dd.Series: Apply results.
     '''
+    if isinstance(data, dd.DataFrame):
+        return data.apply(
+            lambda x: true_func(x) if predicate(x) else false_func(x),
+            axis=1,
+            meta=meta,
+        )
     return data.apply(
         lambda x: true_func(x) if predicate(x) else false_func(x),
-        axis=1,
         meta=meta,
     )

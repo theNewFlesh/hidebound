@@ -308,12 +308,12 @@ class ToolsTests(unittest.TestCase):
             with self.assertRaisesRegexp(json.JSONDecodeError, expected):
                 hbt.read_json(filepath)
 
-    def test_row_combinator(self):
+    def test_pred_combinator_df(self):
         data = DataFrame()
         data['foo'] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
         data['bar'] = [1, 2, 3, 4, 5, 6, 2, 1, 2]
         data = dd.from_pandas(data, chunksize=3)
-        result = hbt.row_combinator(
+        result = hbt.pred_combinator(
             data,
             lambda x: (x.foo + x.bar) % 2 == 0,
             lambda x: 'even',
@@ -324,7 +324,7 @@ class ToolsTests(unittest.TestCase):
         expected = ['even'] * 6 + ['odd'] * 3
         self.assertEqual(result, expected)
 
-    def test_row_combinator_nan(self):
+    def test_pred_combinator_df_nan(self):
         # no meta
         data = DataFrame()
         data['foo'] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -334,7 +334,7 @@ class ToolsTests(unittest.TestCase):
         expected = Series(expected).fillna('null').tolist()
 
         temp = dd.from_pandas(data, chunksize=3)
-        result = hbt.row_combinator(
+        result = hbt.pred_combinator(
             temp,
             lambda x: (x.foo + x.bar) % 2 == 0,
             lambda x: 'even',
@@ -346,7 +346,7 @@ class ToolsTests(unittest.TestCase):
 
         # meta = str
         temp = dd.from_pandas(data, chunksize=3)
-        result = hbt.row_combinator(
+        result = hbt.pred_combinator(
             temp,
             lambda x: (x.foo + x.bar) % 2 == 0,
             lambda x: 'even',
@@ -355,4 +355,18 @@ class ToolsTests(unittest.TestCase):
         )
         result = result.compute().tolist()
         result = Series(result).fillna('null').tolist()
+        self.assertEqual(result, expected)
+
+    def test_pred_combinator_series(self):
+        data = Series([2, 2, 2, 2, 3, 3, 3, 3])
+        data = dd.from_pandas(data, chunksize=3)
+        result = hbt.pred_combinator(
+            data,
+            lambda x: x % 2 == 0,
+            lambda x: 'even',
+            lambda x: 'odd',
+            meta=str,
+        )
+        result = result.compute().tolist()
+        expected = ['even'] * 4 + ['odd'] * 4
         self.assertEqual(result, expected)
