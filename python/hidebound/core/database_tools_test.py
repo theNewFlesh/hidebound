@@ -125,7 +125,9 @@ class DatabaseToolsTests(DatabaseTestBase):
         ]
         data = dd.from_pandas(data, chunksize=1)
 
-        result = db_tools._add_asset_traits(data).compute().asset_traits.tolist()
+        result = db_tools._add_asset_traits(data).compute() \
+            .asset_traits.apply(lambda x: {k: sorted(v) for k, v in x.items()}) \
+            .tolist()
         expected = [
             dict(w=[0], x=[1, 2], y=[1, 2]),
             dict(w=[0], x=[1, 2], y=[1, 2]),
