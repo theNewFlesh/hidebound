@@ -229,15 +229,13 @@ def _add_asset_traits(data):
     Returns:
         dd.DataFrame: Dask DataFrame with asset_traits column.
     '''
-    cols = ['asset_path', 'file_traits']
-    lut = data[cols].groupby('asset_path').file_traits.apply(
-        lambda x: [hbt.to_prototype(x.tolist())], meta=list,
-    ).compute()
-    keys = lut.index.tolist()
-    vals = lut.apply(lambda x: x[0]).tolist()
-    lut = defaultdict(lambda: {}, zip(keys, vals))
-
-    data['asset_traits'] = data.asset_path.apply(lambda x: lut[x])
+    data = hbt.lut_combinator(
+        data,
+        'asset_path',
+        'asset_traits',
+        lambda x: hbt.to_prototype(x.file_traits.tolist()),
+        meta=list,
+    )
     return data
 
 

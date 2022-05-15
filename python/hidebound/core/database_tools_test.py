@@ -104,7 +104,7 @@ class DatabaseToolsTests(DatabaseTestBase):
         ]
         data.columns = ['specification_class', 'filepath', 'file_error'] + cols
         temp = data.copy()
-        data = dd.from_pandas(data, chunksize=100)
+        data = dd.from_pandas(data, chunksize=1)
 
         data = db_tools._add_file_traits(data).compute()
         for col in cols:
@@ -125,15 +125,18 @@ class DatabaseToolsTests(DatabaseTestBase):
         ]
         data = dd.from_pandas(data, chunksize=1)
 
-        result = db_tools._add_asset_traits(data).compute() \
-            .asset_traits.apply(lambda x: {k: sorted(v) for k, v in x.items()}) \
-            .tolist()
+        result = db_tools._add_asset_traits(data).compute()
+        result = result.sort_values('asset_path').asset_traits
+        mask = result.notnull()
+        result[mask] = result[mask] \
+            .apply(lambda x: {k: sorted(v) for k, v in x.items()})
+        result = result.tolist()
         expected = [
             dict(w=[0], x=[1, 2], y=[1, 2]),
             dict(w=[0], x=[1, 2], y=[1, 2]),
             dict(x=[1, 2], y=[1, 2], z=[1, 2]),
             dict(x=[1, 2], y=[1, 2], z=[1, 2]),
-            {}
+            np.nan,
         ]
         self.assertEqual(result, expected)
 
