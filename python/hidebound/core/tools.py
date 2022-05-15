@@ -307,7 +307,7 @@ def get_lut(data, column, aggregator, meta='__no_default__'):
     '''
     grp = data.groupby(column)
     keys = grp[column].first().to_frame(name='key')
-    vals = grp.apply(aggregator, axis=1, meta=meta).to_frame(name='value')
+    vals = grp.apply(aggregator, meta=meta).to_frame(name='value')
     lut = dd.merge(keys, vals).reset_index(drop=True)
     return lut
 
