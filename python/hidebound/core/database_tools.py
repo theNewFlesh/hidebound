@@ -186,7 +186,6 @@ def _add_asset_path(data):
     Returns:
         dd.DataFrame: Dask DataFrame with asset_path column.
     '''
-    parts = data.npartitions
     data['asset_path'] = hbt.pred_combinator(
         data,
         lambda x: x.specification_class is not np.nan,
@@ -194,15 +193,6 @@ def _add_asset_path(data):
         lambda x: np.nan,
         meta=str,
     )
-    data = data.compute()
-    chunk_size = int(len(data) / parts)
-
-    # overwrite asset_path for misnamed files within asset directory
-    for path in data.asset_path.dropna().unique():
-        mask = data.filepath.apply(lambda x: path.absolute().as_posix() in x)
-        data.loc[mask, 'asset_path'] = path
-
-    data = dd.from_pandas(data, chunksize=chunk_size)
     return data
 
 
