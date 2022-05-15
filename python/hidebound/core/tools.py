@@ -286,3 +286,56 @@ def pred_combinator(
         lambda x: true_func(x) if predicate(x) else false_func(x),
         meta=meta,
     )
+
+
+def get_lut(data, column, aggregator, meta='__no_default__'):
+    # type: (dd.DataFrame, str, Callable[[dd.DataFrame], Any], Any) -> dd.DataFrame
+    '''
+    Constructs a lookup table with the given column as its keys and the
+    aggregator results as its values.
+    Data is grouped by given column and the given aggregator is applied to each
+    group of values.
+
+    Args:
+        data (dd.DataFrame): Dask DataFrame.
+        column (str): Column to be used as the key.
+        aggregator (function): Function that expects a DataFrame.
+        meta (object, optional): Metadata inference. Default: '__no_default__'.
+
+    Returns:
+        dd.DataFrame: Dask DataFrame with key and value columns.
+    '''
+    grp = data.groupby(column)
+    keys = grp[column].first().to_frame(name='key')
+    vals = grp.apply(aggregator, axis=1, meta=meta).to_frame(name='value')
+    lut = dd.merge(keys, vals).reset_index(drop=True)
+    return lut
+
+
+def lut_combinator(
+    data, key_column, value_column, aggregator, meta='__no_default__'
+):
+    # type: (dd.DataFrame, str, str, Callable[[dd.DataFrame], Any], Any) -> dd.DataFrame
+    '''
+    Constructs a lookup table from given key_column, then applies it to given
+    data as value column.
+
+    Args:
+        data (dd.DataFrame): Dask DataFrame.
+        key_column (str): Column to be used as the lut keys.
+        value_column (str): Column to be used as the values.
+        aggregator (function): Function that expects a DataFrame.
+        meta (object, optional): Metadata inference. Default: '__no_default__'.
+
+    Returns:
+        dd.DataFrame: Dask DataFrame with value column.
+    '''
+    lut = get_lut(
+        data,
+        key_column,
+        aggregator,
+        meta=meta,
+    )
+    lut.columns = [key_column, value_column]
+    data = dd.merge(data, lut, on=key_column, how='left')
+    return data
