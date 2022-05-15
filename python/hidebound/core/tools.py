@@ -95,10 +95,8 @@ def delete_empty_directories(directory):
             shutil.rmtree(path)
 
 
-def directory_to_dataframe(
-    directory, include_regex='', exclude_regex=r'\.DS_Store', chunk_size=100
-):
-    # type: (Union[str, Path], str, str, int) -> dd.DataFrame
+def directory_to_dataframe(directory, include_regex='', exclude_regex=r'\.DS_Store'):
+    # type: (Union[str, Path], str, str) -> DataFrame
     r'''
     Recursively list files with in a given directory as rows in a DataFrame.
 
@@ -108,11 +106,9 @@ def directory_to_dataframe(
             Default: None.
         exclude_regex (str, optional): Exclude filenames that match this regex.
             Default: '\.DS_Store'.
-        chunk_size (int, optional): Number of rows per parallel operation.
-            Default: 100.
 
     Returns:
-        dd.DataFrame: Dask DataFrame with one file per row.
+        DataFrame: DataFrame with one file per row.
     '''
     files = list_all_files(
         directory,
@@ -123,13 +119,10 @@ def directory_to_dataframe(
 
     data = DataFrame()
     data['filepath'] = files
-    data = dd.from_pandas(data, chunksize=chunk_size)
-    data['filename'] = data.filepath \
-        .apply(lambda x: x.name, meta=('filename', str))
+    data['filename'] = data.filepath.apply(lambda x: x.name)
     data['extension'] = data.filepath \
-        .apply(lambda x: os.path.splitext(x)[-1].lstrip('.'), meta=('extension', str))
-    data['filepath'] = data.filepath \
-        .apply(lambda x: x.absolute().as_posix(), meta=('filepath', str))
+        .apply(lambda x: os.path.splitext(x)[-1].lstrip('.'))
+    data.filepath = data.filepath.apply(lambda x: x.absolute().as_posix())
     return data
 
 

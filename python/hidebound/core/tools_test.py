@@ -205,7 +205,7 @@ class ToolsTests(unittest.TestCase):
                 root,
                 include_regex=r'/a/b',
                 exclude_regex=r'\.json'
-            ).compute()
+            )
             cols = ['filepath', 'filename', 'extension']
             for col in cols:
                 self.assertEqual(result[col].tolist(), expected[col].tolist())
