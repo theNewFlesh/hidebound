@@ -269,7 +269,7 @@ def pred_combinator(
         predicate (function): Function that expects a row and returns a bool.
         true_func (function): Function that expects a row. Called when predicate
             is true.
-        true_func (function): Function that expects a row. Called when predicate
+        false_func (function): Function that expects a row. Called when predicate
             is false.
         meta (object, optional): Metadata inference. Default: '__no_default__'.
 
