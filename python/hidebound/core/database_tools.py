@@ -43,7 +43,6 @@ def _add_specification(data, specifications):
             and file_error columns.
     '''
     def get_spec(filename):
-        # type: (str) -> Dict
         output = lbt.try_(
             AssetNameParser.parse_specification, filename, 'error'
         )
@@ -138,14 +137,14 @@ def _add_relative_path(data, column, root_dir):
     Returns:
         dd.DataFrame: Dask DataFrame with updated [column]_relative column.
     '''
-    root_dir = Path(root_dir).as_posix()
-    if not root_dir.endswith('/'):
-        root_dir += '/'
+    root_dir_ = Path(root_dir).as_posix()  # type: str
+    if not root_dir_.endswith('/'):
+        root_dir_ += '/'
     col = column + '_relative'
     data[col] = hbt.pred_combinator(
         data[column],
         lambda x: isinstance(x, str),
-        lambda x: re.sub(root_dir, '', Path(x).as_posix()),
+        lambda x: re.sub(root_dir_, '', Path(x).as_posix()),
         lambda x: x,
         meta=str,
     )

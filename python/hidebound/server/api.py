@@ -191,7 +191,7 @@ def read():
     if DATABASE is None:
         return server_tools.get_initialization_error()
 
-    params = flask.request.get_json()
+    params = flask.request.get_json()  # type: Any
     grp = False
     if params not in [None, {}]:
         try:

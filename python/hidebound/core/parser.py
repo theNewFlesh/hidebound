@@ -134,7 +134,7 @@ class AssetNameParser:
         coord = Regex(r'\d{' + str(AssetNameParser.COORDINATE_PADDING) + '}') \
             .setParseAction(lambda s, l, t: int(t[0]))
         t_sep = Suppress(AssetNameParser.TOKEN_SEPARATOR)
-        opt_coord = Optional(t_sep + coord)  # type: ignore
+        opt_coord = Optional(t_sep + coord)
         coordinate = Group(coord + opt_coord + opt_coord) \
             .setResultsName('coordinate') \
             .setFailAction(AssetNameParser._raise_field_error('coordinate', 'token'))
@@ -198,7 +198,7 @@ class AssetNameParser:
         Returns:
             Group: Parser.
         '''
-        parser = Optional(Suppress(Regex(r'.*\.|.*?'))) + grammar['extension_token']  # type: ignore
+        parser = Optional(Suppress(Regex(r'.*\.|.*?'))) + grammar['extension_token']
         output = Group(parser)
         return output
 
