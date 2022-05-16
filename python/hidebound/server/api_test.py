@@ -141,7 +141,7 @@ class ApiTests(DatabaseTestBase):
         self.client.post('/api/update')
 
         # call read
-        result = self.client.post('/api/read').json['response']
+        result = self.client.post('/api/read', json={}).json['response']
         expected = api.DATABASE.read()\
             .replace({np.nan: None})\
             .to_dict(orient='records')
@@ -149,7 +149,7 @@ class ApiTests(DatabaseTestBase):
 
         # test general exceptions
         api.DATABASE = 'foo'
-        result = self.client.post('/api/read').json['error']
+        result = self.client.post('/api/read', json={}).json['error']
         self.assertEqual(result, 'AttributeError')
 
     def test_read_group_by_asset(self):
@@ -185,7 +185,7 @@ class ApiTests(DatabaseTestBase):
         self.assertRegex(result, expected)
 
     def test_read_no_init(self):
-        result = self.client.post('/api/read').json['message']
+        result = self.client.post('/api/read', json={}).json['message']
         expected = 'Database not initialized. Please call initialize.'
         self.assertRegex(result, expected)
 
@@ -200,7 +200,7 @@ class ApiTests(DatabaseTestBase):
         self.client.post('/api/initialize', json=config)
 
         # call read
-        result = self.client.post('/api/read').json['message']
+        result = self.client.post('/api/read', json={}).json['message']
         expected = 'Database not updated. Please call update.'
         self.assertRegex(result, expected)
 
@@ -363,7 +363,7 @@ class ApiTests(DatabaseTestBase):
         self.assertEqual(result, expected)
 
     def test_search_no_query(self):
-        result = self.client.post('/api/search').json['message']
+        result = self.client.post('/api/search', json={}).json['message']
         expected = 'Please supply valid search params in the form '
         expected += r'\{"query": SQL query, "group_by_asset": BOOL\}\.'
         self.assertRegex(result, expected)
@@ -396,7 +396,7 @@ class ApiTests(DatabaseTestBase):
         )
         config = json.dumps(config)
         self.client.post('/api/initialize', json=config)
-        self.client.post('/api/update')
+        self.client.post('/api/update', json={})
 
         # call search
         query = {'query': 'SELECT * FROM data WHERE foo == "bar"'}
