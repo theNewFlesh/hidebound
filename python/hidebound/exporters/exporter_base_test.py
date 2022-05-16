@@ -200,6 +200,13 @@ class ExporterBaseTests(unittest.TestCase):
             for expected in e_files:
                 self.assertIn(expected, foo.file_chunk)
 
+    def test_export_content(self):
+        class Bar(ExporterBase):
+            pass
+        expected = '_export_content method must be implemented in subclass.'
+        with self.assertRaisesRegexp(NotImplementedError, expected):
+            Bar()._export_content({})
+
     def test_export_asset(self):
         class Bar(ExporterBase):
             pass
