@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.19.0
+                0.20.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -48,6 +48,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#naming-convention">Naming Convention</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#project-structure">Project Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#application">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#configuration">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#specification">Specification</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
@@ -82,7 +84,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for hidebound.core.tools</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
@@ -93,11 +95,15 @@
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">DataError</span><span class="p">,</span> <span class="n">ValidationError</span>
+<span class="kn">import</span> <span class="nn">dask.dataframe</span> <span class="k">as</span> <span class="nn">dd</span>
 <span class="kn">import</span> <span class="nn">jsoncomment</span> <span class="k">as</span> <span class="nn">jsonc</span>
 <span class="kn">import</span> <span class="nn">OpenEXR</span> <span class="k">as</span> <span class="nn">openexr</span>
 
-<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
+<span class="n">FilePath</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]</span>
+<span class="n">DF</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">dd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span>
+<span class="n">DFS</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">dd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">dd</span><span class="o">.</span><span class="n">Series</span><span class="p">]</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
@@ -107,7 +113,7 @@
 
 
 <div class="viewcode-block" id="list_all_files"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.list_all_files">[docs]</a><span class="k">def</span> <span class="nf">list_all_files</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">include_regex</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">exclude_regex</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
-    <span class="c1"># type: (Union[str, Path], str, str) -&gt; Generator[Path, None, None]</span>
+    <span class="c1"># type: (FilePath, str, str) -&gt; Generator[Path, None, None]</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Recusively list all files within a given directory.</span>
 
@@ -148,7 +154,7 @@
 
 
 <div class="viewcode-block" id="delete_empty_directories"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.delete_empty_directories">[docs]</a><span class="k">def</span> <span class="nf">delete_empty_directories</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
-    <span class="c1"># type: (Union[str, Path]) -&gt; None</span>
+    <span class="c1"># type: (FilePath) -&gt; None</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Recurses given directory tree and deletes directories that do not contain</span>
 <span class="sd">    files or directories trees with files. .DS_Store files do not count as</span>
@@ -180,9 +186,9 @@
 
 
 <div class="viewcode-block" id="directory_to_dataframe"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.directory_to_dataframe">[docs]</a><span class="k">def</span> <span class="nf">directory_to_dataframe</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">include_regex</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">exclude_regex</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;\.DS_Store&#39;</span><span class="p">):</span>
-    <span class="c1"># type: (Union[str, Path], str, str) -&gt; DataFrame</span>
+    <span class="c1"># type: (FilePath, str, str) -&gt; pd.DataFrame</span>
     <span class="sa">r</span><span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Recursively list files with in a given directory as rows in a DataFrame.</span>
+<span class="sd">    Recursively list files with in a given directory as rows in a pd.DataFrame.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        directory (str or Path): Directory to walk.</span>
@@ -192,7 +198,7 @@
 <span class="sd">            Default: &#39;\.DS_Store&#39;.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        DataFrame: DataFrame with one file per row.</span>
+<span class="sd">        pd.DataFrame: pd.DataFrame with one file per row.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">files</span> <span class="o">=</span> <span class="n">list_all_files</span><span class="p">(</span>
         <span class="n">directory</span><span class="p">,</span>
@@ -201,10 +207,11 @@
     <span class="p">)</span>  <span class="c1"># type: Any</span>
     <span class="n">files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">files</span><span class="p">))</span>
 
-    <span class="n">data</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">()</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
     <span class="n">data</span><span class="p">[</span><span class="s1">&#39;filepath&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">files</span>
     <span class="n">data</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;extension&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;extension&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">filepath</span> \
+        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">))</span>
     <span class="n">data</span><span class="o">.</span><span class="n">filepath</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">())</span>
     <span class="k">return</span> <span class="n">data</span></div>
 
@@ -261,7 +268,7 @@
 
 
 <div class="viewcode-block" id="read_exr_header"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.read_exr_header">[docs]</a><span class="k">def</span> <span class="nf">read_exr_header</span><span class="p">(</span><span class="n">fullpath</span><span class="p">):</span>
-    <span class="c1"># type: (Union[str, Path]) -&gt; dict</span>
+    <span class="c1"># type: (FilePath) -&gt; dict</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Reads an OpenEXR image file header.</span>
 
@@ -293,7 +300,7 @@
 
 
 <div class="viewcode-block" id="write_json"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.write_json">[docs]</a><span class="k">def</span> <span class="nf">write_json</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
-    <span class="c1"># type: (object, Union[Path, str]) -&gt; None</span>
+    <span class="c1"># type: (object, FilePath) -&gt; None</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Convenience function for writing objects to JSON files.</span>
 <span class="sd">    Writes lists with 1 item per line.</span>
@@ -313,7 +320,7 @@
 
 
 <div class="viewcode-block" id="read_json"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.read_json">[docs]</a><span class="k">def</span> <span class="nf">read_json</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
-    <span class="c1"># type (Union[Path, str]) -&gt; object</span>
+    <span class="c1"># type (FilePath) -&gt; object</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Convenience function for reading JSON files.</span>
 <span class="sd">    Files may include comments.</span>
@@ -333,6 +340,125 @@
         <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;Please remove any inline comments.&#39;</span>
         <span class="k">raise</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">output</span></div>
+
+
+<div class="viewcode-block" id="get_meta_kwargs"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.get_meta_kwargs">[docs]</a><span class="k">def</span> <span class="nf">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+    <span class="c1"># type: (DFS, Any) -&gt; dict</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Convenience utility for coercing the meta keyword between pandas and dask.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (DataFrame or Series): Pandas or dask object.</span>
+<span class="sd">        meta (object): Meta key word argument.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Appropriate keyword args.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">meta</span> <span class="o">!=</span> <span class="s1">&#39;__no_default__&#39;</span> <span class="ow">and</span> <span class="n">data</span><span class="o">.</span><span class="vm">__class__</span> <span class="ow">in</span> <span class="p">[</span><span class="n">dd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">dd</span><span class="o">.</span><span class="n">Series</span><span class="p">]:</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">meta</span><span class="o">=</span><span class="n">meta</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">kwargs</span></div>
+
+
+<div class="viewcode-block" id="pred_combinator"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.pred_combinator">[docs]</a><span class="k">def</span> <span class="nf">pred_combinator</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">,</span>                   <span class="c1"># type: DFS</span>
+    <span class="n">predicate</span><span class="p">,</span>              <span class="c1"># type: Callable[[Any], bool]</span>
+    <span class="n">true_func</span><span class="p">,</span>              <span class="c1"># type: Callable[[Any], Any]</span>
+    <span class="n">false_func</span><span class="p">,</span>             <span class="c1"># type: Callable[[Any], Any]</span>
+    <span class="n">meta</span><span class="o">=</span><span class="s1">&#39;__no_default__&#39;</span><span class="p">,</span>  <span class="c1"># type: Any</span>
+<span class="p">):</span>
+    <span class="c1"># type: (...) -&gt; DFS</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Apply true_func to rows where predicate if true and false_func to rows where</span>
+<span class="sd">    it is false.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (DataFrame): DataFrame or Series.</span>
+<span class="sd">        predicate (function): Function that expects a row and returns a bool.</span>
+<span class="sd">        true_func (function): Function that expects a row. Called when predicate</span>
+<span class="sd">            is true.</span>
+<span class="sd">        false_func (function): Function that expects a row. Called when predicate</span>
+<span class="sd">            is false.</span>
+<span class="sd">        meta (object, optional): Metadata inference. Default: &#39;__no_default__&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame or Series: Apply results.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="vm">__class__</span> <span class="ow">in</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">dd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">true_func</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="n">predicate</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">else</span> <span class="n">false_func</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+            <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">true_func</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="n">predicate</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">else</span> <span class="n">false_func</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_lut"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.get_lut">[docs]</a><span class="k">def</span> <span class="nf">get_lut</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">aggregator</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="s1">&#39;__no_default__&#39;</span><span class="p">):</span>
+    <span class="c1"># type: (DF, str, Callable[[DF], Any], Any) -&gt; DF</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Constructs a lookup table with the given column as its keys and the</span>
+<span class="sd">    aggregator results as its values.</span>
+<span class="sd">    Data is grouped by given column and the given aggregator is applied to each</span>
+<span class="sd">    group of values.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (DataFrame): DataFrame.</span>
+<span class="sd">        column (str): Column to be used as the key.</span>
+<span class="sd">        aggregator (function): Function that expects a group DataFrame and</span>
+<span class="sd">            returns a scalar.</span>
+<span class="sd">        meta (object, optional): Metadata inference. Default: &#39;__no_default__&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame: DataFrame with key and value columns.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">meta</span><span class="p">))</span>
+    <span class="n">merge</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span>
+    <span class="n">empty</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">merge</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">merge</span>
+        <span class="n">empty</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">empty</span><span class="p">,</span> <span class="n">npartitions</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">grp</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="n">grp</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;key&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">empty</span>
+    <span class="n">vals</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">aggregator</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+    <span class="n">lut</span> <span class="o">=</span> <span class="n">merge</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">vals</span><span class="p">,</span> <span class="n">left_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">right_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> \
+        <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">lut</span></div>
+
+
+<div class="viewcode-block" id="lut_combinator"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.lut_combinator">[docs]</a><span class="k">def</span> <span class="nf">lut_combinator</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">,</span> <span class="n">key_column</span><span class="p">,</span> <span class="n">value_column</span><span class="p">,</span> <span class="n">aggregator</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="s1">&#39;__no_default__&#39;</span>
+<span class="p">):</span>
+    <span class="c1"># type: (DF, str, str, Callable[[DF], Any], Any) -&gt; DF</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Constructs a lookup table from given key_column, then applies it to given</span>
+<span class="sd">    data as value column.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (DataFrame): DataFrame.</span>
+<span class="sd">        key_column (str): Column to be used as the lut keys.</span>
+<span class="sd">        value_column (str): Column to be used as the values.</span>
+<span class="sd">        aggregator (function): Function that expects a pd.DataFrame.</span>
+<span class="sd">        meta (object, optional): Metadata irom_nference. Default: &#39;__no_default__&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame: DataFrame with value column.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
+    <span class="n">merge</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">merge</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">merge</span>
+
+    <span class="n">lut</span> <span class="o">=</span> <span class="n">get_lut</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">key_column</span><span class="p">,</span> <span class="n">aggregator</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">lut</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">key_column</span><span class="p">,</span> <span class="n">value_column</span><span class="p">]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">merge</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">lut</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="n">key_column</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
 </pre></div>
 
            </div>

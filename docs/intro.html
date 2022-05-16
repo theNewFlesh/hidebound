@@ -31,7 +31,7 @@
             <a href="index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.19.1
+                0.20.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -419,15 +419,15 @@ extension.</p></li>
 <p>In our example filename:
 <code class="docutils literal notranslate"><span class="pre">p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png</span></code> the
 metadata will be:</p>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="nt">&quot;project&quot;</span><span class="p">:</span> <span class="s2">&quot;cat001&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;specification&quot;</span><span class="p">:</span> <span class="s2">&quot;spec001&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;descriptor&quot;</span><span class="p">:</span> <span class="s2">&quot;running-cat&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="nt">&quot;coordinate&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
-    <span class="nt">&quot;frame&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-    <span class="nt">&quot;extension&quot;</span><span class="p">:</span> <span class="s2">&quot;png&quot;</span><span class="p">,</span>
-<span class="p">}</span>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;project&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cat001&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;specification&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;spec001&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;descriptor&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;running-cat&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;coordinate&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;frame&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;extension&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;png&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The spec001 specification is derived from the second field of this
@@ -747,6 +747,8 @@ in the database</p></li>
 <li><p>exclude_regex - filepaths in the root that match this are excluded
 from the database</p></li>
 <li><p>write_mode - whether to copy or move files from root to staging</p></li>
+<li><p>dask_enabled - whether to enable Dask distributed computing</p></li>
+<li><p>dask_partitions - number of Dask partitions to use</p></li>
 </ul>
 </section>
 <section id="exporters">
@@ -763,59 +765,61 @@ from the database</p></li>
 <p>Webhooks to call after the export phase has completed.</p>
 <hr class="docutils" />
 <p>Here is a full example config with comments:</p>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>{
-    &quot;root_directory&quot;: &quot;/mnt/storage/projects&quot;,                         // where hb looks for assets
-    &quot;hidebound_directory&quot;: &quot;/mnt/storage/hidebound&quot;,                   // hb staging directory
-    &quot;specification_files&quot;: [                                           // list of spec files
-        &quot;/mnt/storage/specs/image_specs.py&quot;,
-        &quot;/mnt/storage/specs/video_specs.py&quot;
-    ],
-    &quot;include_regex&quot;: &quot;&quot;,                                               // include files that match
-    &quot;exclude_regex&quot;: &quot;\\.DS_Store&quot;,                                    // exclude files that match
-    &quot;write_mode&quot;: &quot;copy&quot;,                                              // copy files from root to staging
-                                                                       // options: copy, move
-    &quot;exporters&quot;: {                                                     // list of exporter configs
-        &quot;s3&quot;: {                                                        // export to s3
-            &quot;access_key&quot;: &quot;ABCDEFGHIJKLMNOPQRST&quot;,                      // aws access key
-            &quot;secret_key&quot;: &quot;abcdefghijklmnopqrstuvwxyz1234567890abcd&quot;,  // aws secret key
-            &quot;bucket&quot;: &quot;prod-data&quot;,                                     // s3 bucket
-            &quot;region&quot;: &quot;us-west-2&quot;,                                     // bucket region
-            &quot;metadata_types&quot;: [&quot;asset&quot;, &quot;asset-chunk&quot;, &quot;file-chunk&quot;]   // drop file metadata
-                                                                       // options: asset, file, asset-chunk, file-chunk
-        },
-        &quot;local_disk&quot;: {                                                // export to local disk
-            &quot;target_directory&quot;: &quot;/mnt/storage/archive&quot;,                // target location
-            &quot;metadata_types&quot;: [&quot;asset&quot;, &quot;file&quot;]                        // only asset and file metadata
-                                                                       // options: asset, file, asset-chunk, file-chunk
-        },
-        &quot;girder&quot;: {                                                    // export to girder
-            &quot;api_key&quot;: &quot;eyS0nj9qPC5E7yK5l7nhGVPqDOBKPdA3EC60Rs9h&quot;,     // girder api key
-            &quot;root_id&quot;: &quot;5ed735c8d8dd6242642406e5&quot;,                     // root resource id
-            &quot;root_type&quot;: &quot;collection&quot;,                                 // root resource type
-            &quot;host&quot;: &quot;http://prod.girder.com&quot;,                          // girder server url
-            &quot;port&quot;: 8180,                                              // girder server port
-            &quot;metadata_types&quot;: [&quot;asset&quot;]                                // only export asset metadata
-                                                                       // options: asset, file
-        }
-    },
-    &quot;webhooks&quot;: [                                                      // call these after export
-        {
-            &quot;url&quot;: &quot;https://hooks.slack.com/services/ABCDEFGHI/JKLMNOPQRST/UVWXYZ1234567890abcdefgh&quot;,
-            &quot;method&quot;: &quot;post&quot;,                                          // post this to slack
-            &quot;timeout&quot;: 60,                                             // timeout after 60 seconds
-            // &quot;params&quot;: {},                                           // params to post (NA here)
-            // &quot;json&quot;: {},                                             // json to post (NA here)
-            &quot;data&quot;: {                                                  // data to post
-                &quot;channel&quot;: &quot;#hidebound&quot;,                               // slack data
-                &quot;text&quot;: &quot;export complete&quot;,                             // slack data
-                &quot;username&quot;: &quot;hidebound&quot;                                // slack data
-            },
-            &quot;headers&quot;: {
-                &quot;Content-type&quot;: &quot;application/json&quot;                     // request headers
-            }
-        }
-    ]
-}
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;root_directory&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/mnt/storage/projects&quot;</span><span class="p">,</span><span class="w">                         </span><span class="c1">// where hb looks for assets</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;hidebound_directory&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/mnt/storage/hidebound&quot;</span><span class="p">,</span><span class="w">                   </span><span class="c1">// hb staging directory</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;specification_files&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">                                           </span><span class="c1">// list of spec files</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;/mnt/storage/specs/image_specs.py&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="s2">&quot;/mnt/storage/specs/video_specs.py&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;include_regex&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="w">                                               </span><span class="c1">// include files that match</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;exclude_regex&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;\\.DS_Store&quot;</span><span class="p">,</span><span class="w">                                    </span><span class="c1">// exclude files that match</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;write_mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;copy&quot;</span><span class="p">,</span><span class="w">                                              </span><span class="c1">// copy files from root to staging</span><span class="w"></span>
+<span class="w">                                                                       </span><span class="c1">// options: copy, move</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;dask_enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">                                              </span><span class="c1">// enable Dask distributed computing</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;dask_partitions&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span><span class="w">                                             </span><span class="c1">// number of Dask partitions to use</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;exporters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">                                                     </span><span class="c1">// list of exporter configs</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;s3&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">                                                        </span><span class="c1">// export to s3</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;access_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ABCDEFGHIJKLMNOPQRST&quot;</span><span class="p">,</span><span class="w">                      </span><span class="c1">// aws access key</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;secret_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;abcdefghijklmnopqrstuvwxyz1234567890abcd&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1">// aws secret key</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;bucket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;prod-data&quot;</span><span class="p">,</span><span class="w">                                     </span><span class="c1">// s3 bucket</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;region&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;us-west-2&quot;</span><span class="p">,</span><span class="w">                                     </span><span class="c1">// bucket region</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;metadata_types&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;asset&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;asset-chunk&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;file-chunk&quot;</span><span class="p">]</span><span class="w">   </span><span class="c1">// drop file metadata</span><span class="w"></span>
+<span class="w">                                                                       </span><span class="c1">// options: asset, file, asset-chunk, file-chunk</span><span class="w"></span>
+<span class="w">        </span><span class="p">},</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;local_disk&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">                                                </span><span class="c1">// export to local disk</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;target_directory&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/mnt/storage/archive&quot;</span><span class="p">,</span><span class="w">                </span><span class="c1">// target location</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;metadata_types&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;asset&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;file&quot;</span><span class="p">]</span><span class="w">                        </span><span class="c1">// only asset and file metadata</span><span class="w"></span>
+<span class="w">                                                                       </span><span class="c1">// options: asset, file, asset-chunk, file-chunk</span><span class="w"></span>
+<span class="w">        </span><span class="p">},</span><span class="w"></span>
+<span class="w">        </span><span class="nt">&quot;girder&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">                                                    </span><span class="c1">// export to girder</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;api_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;eyS0nj9qPC5E7yK5l7nhGVPqDOBKPdA3EC60Rs9h&quot;</span><span class="p">,</span><span class="w">     </span><span class="c1">// girder api key</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;root_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5ed735c8d8dd6242642406e5&quot;</span><span class="p">,</span><span class="w">                     </span><span class="c1">// root resource id</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;root_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;collection&quot;</span><span class="p">,</span><span class="w">                                 </span><span class="c1">// root resource type</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://prod.girder.com&quot;</span><span class="p">,</span><span class="w">                          </span><span class="c1">// girder server url</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8180</span><span class="p">,</span><span class="w">                                              </span><span class="c1">// girder server port</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;metadata_types&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;asset&quot;</span><span class="p">]</span><span class="w">                                </span><span class="c1">// only export asset metadata</span><span class="w"></span>
+<span class="w">                                                                       </span><span class="c1">// options: asset, file</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;webhooks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">                                                      </span><span class="c1">// call these after export</span><span class="w"></span>
+<span class="w">        </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://hooks.slack.com/services/ABCDEFGHI/JKLMNOPQRST/UVWXYZ1234567890abcdefgh&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;post&quot;</span><span class="p">,</span><span class="w">                                          </span><span class="c1">// post this to slack</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;timeout&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span><span class="w">                                             </span><span class="c1">// timeout after 60 seconds</span><span class="w"></span>
+<span class="w">            </span><span class="c1">// &quot;params&quot;: {},                                           // params to post (NA here)</span><span class="w"></span>
+<span class="w">            </span><span class="c1">// &quot;json&quot;: {},                                             // json to post (NA here)</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">                                                  </span><span class="c1">// data to post</span><span class="w"></span>
+<span class="w">                </span><span class="nt">&quot;channel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#hidebound&quot;</span><span class="p">,</span><span class="w">                               </span><span class="c1">// slack data</span><span class="w"></span>
+<span class="w">                </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;export complete&quot;</span><span class="p">,</span><span class="w">                             </span><span class="c1">// slack data</span><span class="w"></span>
+<span class="w">                </span><span class="nt">&quot;username&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;hidebound&quot;</span><span class="w">                                </span><span class="c1">// slack data</span><span class="w"></span>
+<span class="w">            </span><span class="p">},</span><span class="w"></span>
+<span class="w">            </span><span class="nt">&quot;headers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span><span class="nt">&quot;Content-type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;application/json&quot;</span><span class="w">                     </span><span class="c1">// request headers</span><span class="w"></span>
+<span class="w">            </span><span class="p">}</span><span class="w"></span>
+<span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="w">    </span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </section>

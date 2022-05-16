@@ -578,6 +578,8 @@ Base
 -  exclude\_regex - filepaths in the root that match this are excluded
    from the database
 -  write\_mode - whether to copy or move files from root to staging
+-  dask\_enabled - whether to enable Dask distributed computing
+-  dask\_partitions - number of Dask partitions to use
 
 Exporters
 ~~~~~~~~~
@@ -610,6 +612,8 @@ Here is a full example config with comments:
         "exclude_regex": "\\.DS_Store",                                    // exclude files that match
         "write_mode": "copy",                                              // copy files from root to staging
                                                                            // options: copy, move
+        "dask_enabled": true,                                              // enable Dask distributed computing
+        "dask_partitions": 16,                                             // number of Dask partitions to use
         "exporters": {                                                     // list of exporter configs
             "s3": {                                                        // export to s3
                 "access_key": "ABCDEFGHIJKLMNOPQRST",                      // aws access key

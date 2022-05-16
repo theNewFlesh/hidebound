@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.18.1
+                0.20.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -48,6 +48,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#naming-convention">Naming Convention</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#project-structure">Project Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#application">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#configuration">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#specification">Specification</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
@@ -89,14 +91,17 @@
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
 
-<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
-<span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">ValidationError</span>
+<span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">DataError</span><span class="p">,</span> <span class="n">ValidationError</span>
+<span class="kn">import</span> <span class="nn">dask.dataframe</span> <span class="k">as</span> <span class="nn">dd</span>
 <span class="kn">import</span> <span class="nn">lunchbox.tools</span> <span class="k">as</span> <span class="nn">lbt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">from</span> <span class="nn">hidebound.core.parser</span> <span class="kn">import</span> <span class="n">AssetNameParser</span>
 <span class="kn">from</span> <span class="nn">hidebound.core.specification_base</span> <span class="kn">import</span> <span class="n">SpecificationBase</span>
 <span class="kn">import</span> <span class="nn">hidebound.core.tools</span> <span class="k">as</span> <span class="nn">hbt</span>
+
+<span class="n">DF</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">dd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
@@ -105,8 +110,8 @@
 <span class="sd">&#39;&#39;&#39;</span>
 
 
-<div class="viewcode-block" id="_add_specification"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools._add_specification">[docs]</a><span class="k">def</span> <span class="nf">_add_specification</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">specifications</span><span class="p">):</span>
-    <span class="c1"># type: (DataFrame, Dict[str, SpecificationBase]) -&gt; None</span>
+<div class="viewcode-block" id="add_specification"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools.add_specification">[docs]</a><span class="k">def</span> <span class="nf">add_specification</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">specifications</span><span class="p">):</span>
+    <span class="c1"># type: (DF, Dict[str, SpecificationBase]) -&gt; DF</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Adds specification data to given DataFrame.</span>
 
@@ -119,51 +124,55 @@
 <span class="sd">    Args:</span>
 <span class="sd">        data (DataFrame): DataFrame.</span>
 <span class="sd">        specifications (dict): Dictionary of specifications.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame: DataFrame with specification, specification_class and</span>
+<span class="sd">            file_error columns.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">def</span> <span class="nf">get_spec</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-        <span class="c1"># type: (str) -&gt; Dict</span>
         <span class="n">output</span> <span class="o">=</span> <span class="n">lbt</span><span class="o">.</span><span class="n">try_</span><span class="p">(</span>
             <span class="n">AssetNameParser</span><span class="o">.</span><span class="n">parse_specification</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span>
         <span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="n">output</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">file_error</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">output</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;specification&#39;</span><span class="p">,</span> <span class="s1">&#39;file_error&#39;</span><span class="p">]:</span>
-            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                <span class="n">output</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-        <span class="k">return</span> <span class="n">output</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">output</span><span class="p">[</span><span class="s1">&#39;specification&#39;</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
 
-    <span class="n">spec</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">filename</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">get_spec</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-    <span class="n">spec</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+    <span class="c1"># parse filenames</span>
+    <span class="n">parse</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">filename</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">get_spec</span><span class="p">)</span>
 
     <span class="c1"># set specifications</span>
-    <span class="n">mask</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">specification</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
-    <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;specification&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;specification&#39;</span><span class="p">]</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;specification&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="c1"># set error</span>
-    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;file_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-    <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">specification</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">specifications</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="c1"># set file errors</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;file_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="c1"># add specification classes</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;specification_class&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">specification</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">specifications</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">),</span>
+        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">SpecificationBase</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="c1"># add spec not found errors to rows with no file errors</span>
     <span class="n">error</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">error_to_string</span><span class="p">(</span><span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;Specification not found.&#39;</span><span class="p">))</span>
-    <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;file_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">error</span>
-
-    <span class="c1"># parse errors overwrite spec not found</span>
-    <span class="n">mask</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">file_error</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
-    <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;file_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;file_error&#39;</span><span class="p">]</span>
-
-    <span class="c1"># set specification class</span>
-    <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">file_error</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
-    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;specification_class&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-    <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;specification_class&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;specification&#39;</span><span class="p">]</span>\
-        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">specifications</span><span class="p">[</span><span class="n">x</span><span class="p">])</span></div>
+    <span class="n">data</span><span class="o">.</span><span class="n">file_error</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">file_error</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">file_error</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">data</span><span class="o">.</span><span class="n">specification_class</span><span class="o">.</span><span class="n">isnull</span><span class="p">(),</span>
+        <span class="n">error</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
 
 
-<div class="viewcode-block" id="_validate_filepath"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools._validate_filepath">[docs]</a><span class="k">def</span> <span class="nf">_validate_filepath</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="c1"># type: (DataFrame) -&gt; None</span>
+<div class="viewcode-block" id="validate_filepath"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools.validate_filepath">[docs]</a><span class="k">def</span> <span class="nf">validate_filepath</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1"># type: (DF) -&gt; DF</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates filepath column of given DataFrame.</span>
 <span class="sd">    Adds error to error column if invalid.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        data (DataFrame): DataFrame.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame: DataFrame with updated file_error columns.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
@@ -172,144 +181,39 @@
         <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">hbt</span><span class="o">.</span><span class="n">error_to_string</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
-    <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">file_error</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;file_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">validate</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+    <span class="n">data</span><span class="o">.</span><span class="n">file_error</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">pred_combinator</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">,</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">file_error</span><span class="p">),</span>
+        <span class="n">validate</span><span class="p">,</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">file_error</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
 
 
-<div class="viewcode-block" id="_add_file_traits"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools._add_file_traits">[docs]</a><span class="k">def</span> <span class="nf">_add_file_traits</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="c1"># type: (DataFrame) -&gt; None</span>
+<div class="viewcode-block" id="add_file_traits"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools.add_file_traits">[docs]</a><span class="k">def</span> <span class="nf">add_file_traits</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1"># type: (DF) -&gt; DF</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Adds traits derived from file in filepath.</span>
 <span class="sd">    Add file_traits column and one column per traits key.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        data (DataFrame): DataFrame.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame: DataFrame with updated file_error columns.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;file_traits&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-    <span class="n">data</span><span class="o">.</span><span class="n">file_traits</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">file_traits</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">{})</span>
-    <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">specification_class</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;file_traits&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">()</span><span class="o">.</span><span class="n">get_traits</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">filepath</span><span class="p">),</span>
-            <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
-        <span class="p">)</span></div>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;file_traits&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">pred_combinator</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">,</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">),</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">()</span><span class="o">.</span><span class="n">get_traits</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">filepath</span><span class="p">),</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">{},</span>
+        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
 
 
-<div class="viewcode-block" id="_add_asset_traits"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools._add_asset_traits">[docs]</a><span class="k">def</span> <span class="nf">_add_asset_traits</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="c1"># type: (DataFrame) -&gt; None</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Adds traits derived from aggregation of file traits.</span>
-<span class="sd">    Add asset_traits column and one column per traits key.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        data (DataFrame): DataFrame.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;asset_path&#39;</span><span class="p">,</span> <span class="s1">&#39;file_traits&#39;</span><span class="p">]</span>
-    <span class="n">lut</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;asset_path&#39;</span><span class="p">,</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>\
-        <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">hbt</span><span class="o">.</span><span class="n">to_prototype</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span>\
-        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>\
-        <span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-    <span class="n">lut</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">{},</span> <span class="n">lut</span><span class="p">)</span>
-
-    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;asset_traits&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">asset_path</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">lut</span><span class="p">[</span><span class="n">x</span><span class="p">])</span></div>
-
-
-<div class="viewcode-block" id="_validate_assets"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools._validate_assets">[docs]</a><span class="k">def</span> <span class="nf">_validate_assets</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="c1"># type: (DataFrame) -&gt; None</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Validates assets according to their specification.</span>
-<span class="sd">    Add asset_error and asset_valid columns.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        data (DataFrame): DataFrame.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="c1"># create error lut</span>
-    <span class="n">error</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;asset_path&#39;</span><span class="p">)</span>\
-        <span class="o">.</span><span class="n">first</span><span class="p">()</span>\
-        <span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-            <span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="n">lbt</span><span class="o">.</span><span class="n">try_</span><span class="p">(</span>
-                <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">asset_traits</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">(),</span>
-                <span class="n">y</span><span class="p">,</span>
-                <span class="s1">&#39;error&#39;</span><span class="p">),</span>
-            <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">lut</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">error</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span>
-
-    <span class="c1"># assign asset_error column</span>
-    <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">asset_path</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">lut</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;asset_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;null&#39;</span>
-    <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;asset_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;asset_path&#39;</span><span class="p">]</span>\
-        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">lut</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>\
-        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">hbt</span><span class="o">.</span><span class="n">error_to_string</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
-
-    <span class="c1"># assign asset_valid column</span>
-    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;asset_valid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">asset_error</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
-    <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;asset_valid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-
-    <span class="c1"># cleanup asset_error</span>
-    <span class="n">data</span><span class="o">.</span><span class="n">asset_error</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">asset_error</span>\
-        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="s1">&#39;null&#39;</span> <span class="k">else</span> <span class="n">x</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="_add_asset_id"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools._add_asset_id">[docs]</a><span class="k">def</span> <span class="nf">_add_asset_id</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="c1"># type: (DataFrame) -&gt; None</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Adds asset_id column derived UUID hash of asset filepath.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        data (DataFrame): DataFrame.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">file_error</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
-    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;asset_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;asset_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">()</span><span class="o">.</span><span class="n">get_asset_id</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">filepath</span><span class="p">),</span>
-            <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
-        <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="_add_asset_name"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools._add_asset_name">[docs]</a><span class="k">def</span> <span class="nf">_add_asset_name</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="c1"># type: (DataFrame) -&gt; None</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Adds asset_name column derived from filepath.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        data (DataFrame): DataFrame.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">file_error</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
-    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;asset_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;asset_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">()</span><span class="o">.</span><span class="n">get_asset_name</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">filepath</span><span class="p">),</span>
-            <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
-        <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="_add_asset_path"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools._add_asset_path">[docs]</a><span class="k">def</span> <span class="nf">_add_asset_path</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="c1"># type: (DataFrame) -&gt; None</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Adds asset_path column derived from filepath.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        data (DataFrame): DataFrame.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">specification_class</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
-    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;asset_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;asset_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">()</span><span class="o">.</span><span class="n">get_asset_path</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">filepath</span><span class="p">),</span>
-            <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
-        <span class="p">)</span>
-
-    <span class="c1"># overwrite asset_path for misnamed files within asset directory</span>
-    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">asset_path</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
-        <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">path</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span> <span class="ow">in</span> <span class="n">x</span><span class="p">)</span>
-        <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;asset_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span></div>
-
-
-<div class="viewcode-block" id="_add_relative_path"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools._add_relative_path">[docs]</a><span class="k">def</span> <span class="nf">_add_relative_path</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">root_dir</span><span class="p">):</span>
-    <span class="c1"># type: (DataFrame, str, Union[str, Path]) -&gt; None</span>
+<div class="viewcode-block" id="add_relative_path"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools.add_relative_path">[docs]</a><span class="k">def</span> <span class="nf">add_relative_path</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">root_dir</span><span class="p">):</span>
+    <span class="c1"># type: (DF, str, Union[str, Path]) -&gt; DF</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Adds relative path column derived from given column.</span>
 
@@ -317,33 +221,157 @@
 <span class="sd">        data (DataFrame): DataFrame.</span>
 <span class="sd">        column (str): Column to be made relative.</span>
 <span class="sd">        root_dir (Path or str): Root path to be removed.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame: DataFrame with updated [column]_relative column.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">root_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root_dir</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">root_dir</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">):</span>
-        <span class="n">root_dir</span> <span class="o">+=</span> <span class="s1">&#39;/&#39;</span>
-    <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
+    <span class="n">root_dir_</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root_dir</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>  <span class="c1"># type: str</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">root_dir_</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">):</span>
+        <span class="n">root_dir_</span> <span class="o">+=</span> <span class="s1">&#39;/&#39;</span>
     <span class="n">col</span> <span class="o">=</span> <span class="n">column</span> <span class="o">+</span> <span class="s1">&#39;_relative&#39;</span>
-    <span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-    <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="n">column</span><span class="p">]</span>\
-        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">root_dir</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()))</span></div>
+    <span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">pred_combinator</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">column</span><span class="p">],</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">root_dir_</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()),</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
 
 
-<div class="viewcode-block" id="_add_asset_type"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools._add_asset_type">[docs]</a><span class="k">def</span> <span class="nf">_add_asset_type</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="c1"># type: (DataFrame) -&gt; None</span>
+<div class="viewcode-block" id="add_asset_name"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools.add_asset_name">[docs]</a><span class="k">def</span> <span class="nf">add_asset_name</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1"># type: (DF) -&gt; DF</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Adds asset_name column derived from filepath.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (DataFrame): DataFrame.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame: DataFrame with updated asset_name column.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;asset_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">pred_combinator</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">,</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">file_error</span><span class="p">),</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">()</span><span class="o">.</span><span class="n">get_asset_name</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">filepath</span><span class="p">),</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="add_asset_path"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools.add_asset_path">[docs]</a><span class="k">def</span> <span class="nf">add_asset_path</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1"># type: (DF) -&gt; DF</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Adds asset_path column derived from filepath.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (DataFrame): DataFrame.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame: DataFrame with asset_path column.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;asset_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">pred_combinator</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">,</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">),</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">()</span><span class="o">.</span><span class="n">get_asset_path</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">filepath</span><span class="p">),</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="add_asset_type"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools.add_asset_type">[docs]</a><span class="k">def</span> <span class="nf">add_asset_type</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1"># type: (DF) -&gt; DF</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Adds asset_type column derived from specification.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        data (DataFrame): DataFrame.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame: DataFrame with asset_type column.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">specification_class</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
-    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;asset_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-    <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;asset_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;specification_class&#39;</span><span class="p">]</span>\
-        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">asset_type</span><span class="p">)</span></div>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;asset_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">pred_combinator</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">specification_class</span><span class="p">,</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">asset_type</span><span class="p">,</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
 
 
-<div class="viewcode-block" id="_cleanup"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools._cleanup">[docs]</a><span class="k">def</span> <span class="nf">_cleanup</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="c1"># type: (DataFrame) -&gt; DataFrame</span>
+<div class="viewcode-block" id="add_asset_traits"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools.add_asset_traits">[docs]</a><span class="k">def</span> <span class="nf">add_asset_traits</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1"># type: (DF) -&gt; DF</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Adds traits derived from aggregation of file traits.</span>
+<span class="sd">    Add asset_traits column and one column per traits key.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (DataFrame): DataFrame.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame: DataFrame with asset_traits column.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">lut_combinator</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">,</span>
+        <span class="s1">&#39;asset_path&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;asset_traits&#39;</span><span class="p">,</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">file_traits</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">object</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">asset_traits</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">pred_combinator</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">asset_traits</span><span class="p">,</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span>
+        <span class="n">hbt</span><span class="o">.</span><span class="n">to_prototype</span><span class="p">,</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="validate_assets"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools.validate_assets">[docs]</a><span class="k">def</span> <span class="nf">validate_assets</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1"># type: (DF) -&gt; DF</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Validates assets according to their specification.</span>
+<span class="sd">    Add asset_error and asset_valid columns.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (DataFrame): DataFrame.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame: DataFrame with asset_error and asset_valid columns.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">error_func</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">specification_class</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">asset_traits</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">DataError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">hbt</span><span class="o">.</span><span class="n">error_to_string</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+    <span class="c1"># add asset error</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;asset_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">pred_combinator</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">,</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">asset_traits</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">),</span>
+        <span class="n">error_func</span><span class="p">,</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="c1"># assign asset_valid column</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;asset_valid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">pred_combinator</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">,</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">asset_error</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">file_error</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">),</span>  <span class="c1"># noqa E501</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="cleanup"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools.cleanup">[docs]</a><span class="k">def</span> <span class="nf">cleanup</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1"># type: (DF) -&gt; DF</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Ensures only specific columns are present and in correct order and Paths</span>
 <span class="sd">    are converted to strings.</span>
@@ -389,11 +417,32 @@
     <span class="k">return</span> <span class="n">data</span></div>
 
 
-<div class="viewcode-block" id="_get_data_for_write"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools._get_data_for_write">[docs]</a><span class="k">def</span> <span class="nf">_get_data_for_write</span><span class="p">(</span>
-    <span class="n">data</span><span class="p">,</span>        <span class="c1"># type: DataFrame</span>
+<div class="viewcode-block" id="add_asset_id"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools.add_asset_id">[docs]</a><span class="k">def</span> <span class="nf">add_asset_id</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1"># type: (pd.DataFrame) -&gt; pd.DataFrame</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Adds asset_id column derived UUID hash of asset filepath.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (pd.DataFrame): DataFrame.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: DataFrame with asset_id column.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">file_error</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;asset_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;asset_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">()</span><span class="o">.</span><span class="n">get_asset_id</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">filepath</span><span class="p">),</span>
+            <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="get_data_for_write"><a class="viewcode-back" href="../../../core.html#hidebound.core.database_tools.get_data_for_write">[docs]</a><span class="k">def</span> <span class="nf">get_data_for_write</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">,</span>        <span class="c1"># type: pd.DataFrame</span>
     <span class="n">source_dir</span><span class="p">,</span>  <span class="c1"># type: Union[str, Path]</span>
     <span class="n">target_dir</span><span class="p">,</span>  <span class="c1"># type: Union[str, Path]</span>
-<span class="p">):</span>               <span class="c1"># type: (...) -&gt; Optional[Tuple[DataFrame, DataFrame, DataFrame, DataFrame, DataFrame]]  # noqa: E501</span>
+<span class="p">):</span>               <span class="c1"># type: (...) -&gt; Optional[Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]]  # noqa: E501</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Split given data into three DataFrame creating files.</span>
 
@@ -517,14 +566,14 @@
     <span class="n">now</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">time_string</span><span class="p">()</span>
 
     <span class="c1"># create asset chunk</span>
-    <span class="n">asset_chunk</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">()</span>
+    <span class="n">asset_chunk</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
     <span class="n">asset_chunk</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">asset_meta</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]</span>
     <span class="n">asset_chunk</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span>
         <span class="n">meta_dir</span><span class="p">,</span> <span class="s1">&#39;asset-chunk&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;hidebound-asset-chunk_</span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s1">.json&#39;</span>
     <span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()]</span>
 
     <span class="c1"># create file chunk</span>
-    <span class="n">file_chunk</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">()</span>
+    <span class="n">file_chunk</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
     <span class="n">file_chunk</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">file_meta</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]</span>
     <span class="n">file_chunk</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span>
         <span class="n">meta_dir</span><span class="p">,</span> <span class="s1">&#39;file-chunk&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;hidebound-file-chunk_</span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s1">.json&#39;</span>

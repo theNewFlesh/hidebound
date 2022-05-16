@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.19.0
+                0.20.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -48,6 +48,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#naming-convention">Naming Convention</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#project-structure">Project Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#application">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#configuration">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#specification">Specification</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
@@ -93,7 +95,8 @@
 
 <span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">ValidationError</span>
 <span class="kn">from</span> <span class="nn">schematics.types</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">BaseType</span><span class="p">,</span> <span class="n">DictType</span><span class="p">,</span> <span class="n">IntType</span><span class="p">,</span> <span class="n">ListType</span><span class="p">,</span> <span class="n">ModelType</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">URLType</span>
+    <span class="n">BaseType</span><span class="p">,</span> <span class="n">BooleanType</span><span class="p">,</span> <span class="n">DictType</span><span class="p">,</span> <span class="n">IntType</span><span class="p">,</span> <span class="n">ListType</span><span class="p">,</span> <span class="n">ModelType</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span>
+    <span class="n">URLType</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">schematics</span> <span class="kn">import</span> <span class="n">Model</span>
 
@@ -205,6 +208,10 @@
         <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_in</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;copy&#39;</span><span class="p">,</span> <span class="s1">&#39;move&#39;</span><span class="p">])],</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;copy&quot;</span><span class="p">,</span>
     <span class="p">)</span>  <span class="c1"># type: StringType</span>
+    <span class="n">dask_enabled</span> <span class="o">=</span> <span class="n">BooleanType</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: BooleanType</span>
+    <span class="n">dask_partitions</span> <span class="o">=</span> <span class="n">IntType</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_gt</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span>
+    <span class="p">)</span>  <span class="c1"># type: IntType</span>
 
 <div class="viewcode-block" id="Config.ExportersConfig"><a class="viewcode-back" href="../../../core.html#hidebound.core.config.Config.ExportersConfig">[docs]</a>    <span class="k">class</span> <span class="nc">ExportersConfig</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
         <span class="n">girder</span> <span class="o">=</span> <span class="n">ModelType</span><span class="p">(</span>
