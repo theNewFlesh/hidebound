@@ -122,88 +122,91 @@ class DatabaseTestBase(unittest.TestCase):
 
     def get_specifications(self):
         # type: () -> Tuple[Any, Any, Any]
-        class Spec001(SpecificationBase):
-            name = 'spec001'
-            filename_fields = [
-                'project',
-                'specification',
-                'descriptor',
-                'version',
-                'coordinate',
-                'frame',
-                'extension',
-            ]
-            coordinate = ListType(ListType(IntType()), required=True)
-            frame = ListType(IntType(), required=True)
-            extension = ListType(
-                StringType(),
-                required=True,
-                validators=[lambda x: vd.is_eq(x, 'png')]
-            )
-
-            height = ListType(
-                IntType(),
-                required=True, validators=[lambda x: vd.is_eq(x, 5)]
-            )
-            width = ListType(
-                IntType(),
-                required=True, validators=[lambda x: vd.is_eq(x, 4)]
-            )
-            channels = ListType(
-                IntType(),
-                required=True, validators=[lambda x: vd.is_eq(x, 3)]
-            )
-
-            file_traits = dict(
-                width=tr.get_image_width,
-                height=tr.get_image_height,
-                channels=tr.get_num_image_channels,
-            )
-
-            def get_asset_path(self, filepath):
-                return Path(filepath).parents[0]
-
-        class Spec002(SpecificationBase):
-            name = 'spec002'
-            filename_fields = [
-                'project',
-                'specification',
-                'descriptor',
-                'version',
-                'frame',
-                'extension',
-            ]
-
-            frame = ListType(IntType(), required=True)
-            extension = ListType(
-                StringType(),
-                required=True,
-                validators=[lambda x: vd.is_eq(x, 'jpg')]
-            )
-
-            height = ListType(
-                IntType(),
-                required=True, validators=[lambda x: vd.is_eq(x, 5)]
-            )
-            width = ListType(
-                IntType(),
-                required=True, validators=[lambda x: vd.is_eq(x, 4)]
-            )
-            channels = ListType(
-                IntType(),
-                required=True, validators=[lambda x: vd.is_eq(x, 3)]
-            )
-
-            file_traits = dict(
-                width=tr.get_image_width,
-                height=tr.get_image_height,
-                channels=tr.get_num_image_channels,
-            )
-
-            def get_asset_path(self, filepath):
-                return Path(filepath).parents[0]
-
-        class BadSpec:
-            pass
-
         return Spec001, Spec002, BadSpec
+
+
+class Spec001(SpecificationBase):
+    name = 'spec001'
+    filename_fields = [
+        'project',
+        'specification',
+        'descriptor',
+        'version',
+        'coordinate',
+        'frame',
+        'extension',
+    ]
+    coordinate = ListType(ListType(IntType()), required=True)
+    frame = ListType(IntType(), required=True)
+    extension = ListType(
+        StringType(),
+        required=True,
+        validators=[lambda x: vd.is_eq(x, 'png')]
+    )
+
+    height = ListType(
+        IntType(),
+        required=True, validators=[lambda x: vd.is_eq(x, 5)]
+    )
+    width = ListType(
+        IntType(),
+        required=True, validators=[lambda x: vd.is_eq(x, 4)]
+    )
+    channels = ListType(
+        IntType(),
+        required=True, validators=[lambda x: vd.is_eq(x, 3)]
+    )
+
+    file_traits = dict(
+        width=tr.get_image_width,
+        height=tr.get_image_height,
+        channels=tr.get_num_image_channels,
+    )
+
+    def get_asset_path(self, filepath):
+        return Path(filepath).parents[0]
+
+
+class Spec002(SpecificationBase):
+    name = 'spec002'
+    filename_fields = [
+        'project',
+        'specification',
+        'descriptor',
+        'version',
+        'frame',
+        'extension',
+    ]
+
+    frame = ListType(IntType(), required=True)
+    extension = ListType(
+        StringType(),
+        required=True,
+        validators=[lambda x: vd.is_eq(x, 'jpg')]
+    )
+
+    height = ListType(
+        IntType(),
+        required=True, validators=[lambda x: vd.is_eq(x, 5)]
+    )
+    width = ListType(
+        IntType(),
+        required=True, validators=[lambda x: vd.is_eq(x, 4)]
+    )
+    channels = ListType(
+        IntType(),
+        required=True, validators=[lambda x: vd.is_eq(x, 3)]
+    )
+
+    file_traits = dict(
+        width=tr.get_image_width,
+        height=tr.get_image_height,
+        channels=tr.get_num_image_channels,
+    )
+
+    def get_asset_path(self, filepath):
+        return Path(filepath).parents[0]
+
+
+class BadSpec:
+    pass

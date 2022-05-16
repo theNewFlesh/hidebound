@@ -6,7 +6,7 @@ import re
 import uuid
 
 from pandas import DataFrame
-from schematics.exceptions import ValidationError
+from schematics.exceptions import DataError, ValidationError
 import dask.dataframe as dd
 import lunchbox.tools as lbt
 import numpy as np
@@ -257,21 +257,15 @@ def _validate_assets(data):
     Returns:
         dd.DataFrame: Dask DataFrame with asset_error and asset_valid columns.
     '''
-    data = hbt.lut_combinator(
-        data,
-        'asset_path',
-        'asset_error',
-        lambda y: lbt.try_(
-            lambda x: x.specification_class(x.asset_traits).validate(),
-            y, 'error'
-        )
-    )
+    def error_func(row):
+        try:
+            row.specification_class(row.asset_traits).validate()
+        except DataError as e:
+            return hbt.error_to_string(e)
+        return np.nan
 
-    # convert errors to string
-    data.asset_error = data.asset_error.mask(
-        data.asset_error.notnull(),
-        lambda y: y.apply(lambda x: hbt.error_to_string(x) if x is not None else np.nan)
-    )
+    # add asset error
+    data['asset_error'] = data.apply(error_func, axis=1, meta=str)
 
     # assign asset_valid column
     data['asset_valid'] = data.asset_error.isnull()

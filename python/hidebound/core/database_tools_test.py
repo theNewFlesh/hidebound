@@ -1,3 +1,4 @@
+from copy import deepcopy
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import json
@@ -346,17 +347,37 @@ class DatabaseToolsTests(DatabaseTestBase):
                 channels=[3],
             )
             data['asset_traits'] = [traits]
+
+            # add bad asset
+            bad = data.copy()
+            bad_traits = deepcopy(traits)
+            bad_traits['descriptor'] = ['kiwi']
+            bad_traits['height'] = [99]
+            bad['asset_traits'] = [bad_traits]
+            bad['asset_id'] = 1
+            cols = ['asset_name', 'asset_path', 'filename']
+            bad[cols] = bad[cols].applymap(lambda x: re.sub('pizza', 'kiwi', x))
+            data = pd.concat([data, bad])
+            cols = ['specification_class', 'asset_traits']
+            data = data[cols]
+
             data = dd.from_pandas(data, chunksize=3)
 
-            result = db_tools._validate_assets(data).compute()
-            for _, row in result.iterrows():
-                self.assertTrue(np.isnan(row.asset_error))
-                self.assertTrue(row.asset_valid)
+            result = db_tools._validate_assets(data).compute() \
+                .reset_index(drop=True)
 
-            result = data.columns.tolist()
+            # columns
             cols = ['asset_error', 'asset_valid']
             for expected in cols:
-                self.assertIn(expected, result)
+                self.assertIn(expected, result.columns.tolist())
+
+            # asset_valid
+            self.assertTrue(result.loc[0, 'asset_valid'])
+            self.assertFalse(result.loc[1, 'asset_valid'])
+
+            # asset_error
+            self.assertIs(result.loc[0, 'asset_error'], np.nan)
+            self.assertRegex(result.loc[1, 'asset_error'], '99 != 5')
 
     def test_validate_assets_invalid_one_file(self):
         with TemporaryDirectory() as root:
