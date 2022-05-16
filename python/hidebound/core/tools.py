@@ -256,6 +256,24 @@ def read_json(filepath):
     return output
 
 
+def get_meta_kwargs(data, meta):
+    # type: (DFS, Any) -> dict
+    '''
+    Convenience utility for coercing the meta keyword between pandas and dask.
+
+    Args:
+        data (DataFrame or Series): Pandas or dask object.
+        meta (object): Meta key word argument.
+
+    Returns:
+        dict: Appropriate keyword args.
+    '''
+    kwargs = {}
+    if meta != '__no_default__' and data.__class__ in [dd.DataFrame, dd.Series]:
+        kwargs = dict(meta=meta)
+    return kwargs
+
+
 def pred_combinator(
     data,                   # type: DFS
     predicate,              # type: Callable[[Any], bool]
@@ -280,10 +298,7 @@ def pred_combinator(
     Returns:
         DataFrame or Series: Apply results.
     '''
-    kwargs = {}
-    if meta != '__no_default__' and data.__class__ not in [pd.DataFrame, pd.Series]:
-        kwargs = dict(meta=meta)
-
+    kwargs = get_meta_kwargs(data, meta)
     if data.__class__ in [pd.DataFrame, dd.DataFrame]:
         return data.apply(
             lambda x: true_func(x) if predicate(x) else false_func(x),
@@ -314,12 +329,10 @@ def get_lut(data, column, aggregator, meta='__no_default__'):
     Returns:
         DataFrame: DataFrame with key and value columns.
     '''
-    kwargs = {}
+    kwargs = get_meta_kwargs(data, ('value', meta))
     merge = pd.merge
     if isinstance(data, dd.DataFrame):
         merge = dd.merge
-        if meta != '__no_default__':
-            kwargs = dict(meta=('value', meta))
 
     grp = data.groupby(column)
     keys = grp[column].first().to_frame(name='key')
@@ -347,12 +360,10 @@ def lut_combinator(
     Returns:
         DataFrame: DataFrame with value column.
     '''
-    kwargs = {}
+    kwargs = get_meta_kwargs(data, meta)
     merge = pd.merge
     if isinstance(data, dd.DataFrame):
         merge = dd.merge
-        if meta != '__no_default__':
-            kwargs = dict(meta=meta)
 
     lut = get_lut(data, key_column, aggregator, **kwargs)
     lut.columns = [key_column, value_column]

@@ -309,6 +309,34 @@ class ToolsTests(unittest.TestCase):
             with self.assertRaisesRegexp(json.JSONDecodeError, expected):
                 hbt.read_json(filepath)
 
+    def test_get_meta_kwargs(self):
+        # pd.DataFrame
+        result = hbt.get_meta_kwargs(pd.DataFrame(), str)
+        self.assertEqual(result, {})
+
+        # pd.Series
+        result = hbt.get_meta_kwargs(pd.Series(), str)
+        self.assertEqual(result, {})
+
+        # dd.DataFrame
+        data = dd.from_pandas(pd.DataFrame(), chunksize=1)
+        result = hbt.get_meta_kwargs(data, str)
+        self.assertEqual(result, dict(meta=str))
+
+        # dd.DataFrame no meta
+        result = hbt.get_meta_kwargs(data, '__no_default__')
+        self.assertEqual(result, {})
+
+        # dd.Series
+        data = dd.from_pandas(pd.Series(), chunksize=1)
+        result = hbt.get_meta_kwargs(data, str)
+        self.assertEqual(result, dict(meta=str))
+
+        # dd.Series no meta
+        result = hbt.get_meta_kwargs(data, '__no_default__')
+        self.assertEqual(result, {})
+
+
     # PRED_COMBINATOR-----------------------------------------------------------
     def test_pred_combinator_dd_dataframe(self):
         data = DataFrame()
