@@ -14,6 +14,10 @@ from schematics.exceptions import DataError, ValidationError
 import dask.dataframe as dd
 import jsoncomment as jsonc
 import OpenEXR as openexr
+
+FilePath = Union[str, Path]
+DF = Union[pd.DataFrame, dd.DataFrame]
+DFS = Union[pd.DataFrame, pd.Series, dd.DataFrame, dd.Series]
 # ------------------------------------------------------------------------------
 
 
@@ -23,7 +27,7 @@ The tools module contains general functions useful to other hidebound modules.
 
 
 def list_all_files(directory, include_regex='', exclude_regex=''):
-    # type: (Union[str, Path], str, str) -> Generator[Path, None, None]
+    # type: (FilePath, str, str) -> Generator[Path, None, None]
     '''
     Recusively list all files within a given directory.
 
@@ -64,7 +68,7 @@ def list_all_files(directory, include_regex='', exclude_regex=''):
 
 
 def delete_empty_directories(directory):
-    # type: (Union[str, Path]) -> None
+    # type: (FilePath) -> None
     '''
     Recurses given directory tree and deletes directories that do not contain
     files or directories trees with files. .DS_Store files do not count as
@@ -96,7 +100,7 @@ def delete_empty_directories(directory):
 
 
 def directory_to_dataframe(directory, include_regex='', exclude_regex=r'\.DS_Store'):
-    # type: (Union[str, Path], str, str) -> pd.DataFrame
+    # type: (FilePath, str, str) -> pd.DataFrame
     r'''
     Recursively list files with in a given directory as rows in a pd.DataFrame.
 
@@ -178,7 +182,7 @@ def to_prototype(dicts):
 
 
 def read_exr_header(fullpath):
-    # type: (Union[str, Path]) -> dict
+    # type: (FilePath) -> dict
     '''
     Reads an OpenEXR image file header.
 
@@ -210,7 +214,7 @@ def time_string():
 
 
 def write_json(data, filepath):
-    # type: (object, Union[Path, str]) -> None
+    # type: (object, FilePath) -> None
     '''
     Convenience function for writing objects to JSON files.
     Writes lists with 1 item per line.
@@ -230,7 +234,7 @@ def write_json(data, filepath):
 
 
 def read_json(filepath):
-    # type (Union[Path, str]) -> object
+    # type (FilePath) -> object
     '''
     Convenience function for reading JSON files.
     Files may include comments.
@@ -253,13 +257,13 @@ def read_json(filepath):
 
 
 def pred_combinator(
-    data,                   # type: Union[pd.DataFrame, pd.Series, dd.DataFrame, dd.Series]
+    data,                   # type: DFS
     predicate,              # type: Callable[[Any], bool]
     true_func,              # type: Callable[[Any], Any]
     false_func,             # type: Callable[[Any], Any]
     meta='__no_default__',  # type: Any
 ):
-    # type: (...) -> Union[pd.DataFrame, pd.Series, dd.DataFrame, dd.Series]
+    # type: (...) -> DFS
     '''
     Apply true_func to rows where predicate if true and false_func to rows where
     it is false.
@@ -292,13 +296,8 @@ def pred_combinator(
     )
 
 
-def get_lut(
-    data,                   # type: Union[pd.DataFrame, dd.DataFrame]
-    column,                 # type: str
-    aggregator,             # type: Callable[[Union[pd.DataFrame, dd.DataFrame]], Any]
-    meta='__no_default__',  # type: Any
-):
-    # type: (...) -> Union[pd.DataFrame, dd.DataFrame]
+def get_lut(data, column, aggregator, meta='__no_default__'):
+    # type: (DF, str, Callable[[DF], Any], Any) -> DF
     '''
     Constructs a lookup table with the given column as its keys and the
     aggregator results as its values.
@@ -331,13 +330,9 @@ def get_lut(
 
 
 def lut_combinator(
-    data,                   # type: Union[pd.DataFrame, dd.DataFrame]
-    key_column,             # type: str
-    value_column,           # type: str
-    aggregator,             # type: Callable[[Union[pd.DataFrame, dd.DataFrame]], Any]
-    meta='__no_default__',  # type: Any
+    data, key_column, value_column, aggregator, meta='__no_default__'
 ):
-    # type: (...) -> Union[pd.DataFrame, dd.DataFrame]
+    # type: (DF, str, str, Callable[[DF], Any], Any) -> DF
     '''
     Constructs a lookup table from given key_column, then applies it to given
     data as value column.

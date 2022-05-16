@@ -5,7 +5,6 @@ from pathlib import Path
 import re
 import uuid
 
-from pandas import DataFrame
 from schematics.exceptions import DataError, ValidationError
 import dask.dataframe as dd
 import lunchbox.tools as lbt
@@ -15,6 +14,8 @@ import pandas as pd
 from hidebound.core.parser import AssetNameParser
 from hidebound.core.specification_base import SpecificationBase
 import hidebound.core.tools as hbt
+
+DF = Union[pd.DataFrame, dd.DataFrame]
 # ------------------------------------------------------------------------------
 
 
@@ -24,7 +25,7 @@ A library of tools for Database to use in construction of its central DataFrame.
 
 
 def add_specification(data, specifications):
-    # type: (dd.DataFrame, Dict[str, SpecificationBase]) -> dd.DataFrame
+    # type: (DF, Dict[str, SpecificationBase]) -> DF
     '''
     Adds specification data to given DataFrame.
 
@@ -35,12 +36,12 @@ def add_specification(data, specifications):
         * file_error
 
     Args:
-        data (dd.DataFrame): dd.DataFrame.
+        data (DataFrame): DataFrame.
         specifications (dict): Dictionary of specifications.
 
     Returns:
-        dd.DataFrame: Dask DataFrame with specification, specification_class
-            and file_error columns.
+        DataFrame: DataFrame with specification, specification_class and
+            file_error columns.
     '''
     def get_spec(filename):
         output = lbt.try_(
@@ -75,16 +76,16 @@ def add_specification(data, specifications):
 
 
 def validate_filepath(data):
-    # type: (dd.DataFrame) -> dd.DataFrame
+    # type: (DF) -> DF
     '''
     Validates filepath column of given DataFrame.
     Adds error to error column if invalid.
 
     Args:
-        data (dd.DataFrame): Dask DataFrame.
+        data (DataFrame): DataFrame.
 
     Returns:
-        dd.DataFrame: Dask DataFrame with updated file_error columns.
+        DataFrame: DataFrame with updated file_error columns.
     '''
     def validate(row):
         try:
@@ -103,16 +104,16 @@ def validate_filepath(data):
 
 
 def add_file_traits(data):
-    # type: (dd.DataFrame) -> dd.DataFrame
+    # type: (DF) -> DF
     '''
     Adds traits derived from file in filepath.
     Add file_traits column and one column per traits key.
 
     Args:
-        data (dd.DataFrame): Dask DataFrame.
+        data (DataFrame): DataFrame.
 
     Returns:
-        dd.DataFrame: Dask DataFrame with updated file_error columns.
+        DataFrame: DataFrame with updated file_error columns.
     '''
     data['file_traits'] = hbt.pred_combinator(
         data,
@@ -125,17 +126,17 @@ def add_file_traits(data):
 
 
 def add_relative_path(data, column, root_dir):
-    # type: (dd.DataFrame, str, Union[str, Path]) -> dd.DataFrame
+    # type: (DF, str, Union[str, Path]) -> DF
     '''
     Adds relative path column derived from given column.
 
     Args:
-        data (dd.DataFrame): Dask DataFrame.
+        data (DataFrame): DataFrame.
         column (str): Column to be made relative.
         root_dir (Path or str): Root path to be removed.
 
     Returns:
-        dd.DataFrame: Dask DataFrame with updated [column]_relative column.
+        DataFrame: DataFrame with updated [column]_relative column.
     '''
     root_dir_ = Path(root_dir).as_posix()  # type: str
     if not root_dir_.endswith('/'):
@@ -152,15 +153,15 @@ def add_relative_path(data, column, root_dir):
 
 
 def add_asset_name(data):
-    # type: (dd.DataFrame) -> dd.DataFrame
+    # type: (DF) -> DF
     '''
     Adds asset_name column derived from filepath.
 
     Args:
-        data (dd.DataFrame): Dask DataFrame.
+        data (DataFrame): DataFrame.
 
     Returns:
-        dd.DataFrame: Dask DataFrame with updated asset_name column.
+        DataFrame: DataFrame with updated asset_name column.
     '''
     data['asset_name'] = hbt.pred_combinator(
         data,
@@ -173,15 +174,15 @@ def add_asset_name(data):
 
 
 def add_asset_path(data):
-    # type: (dd.DataFrame) -> dd.DataFrame
+    # type: (DF) -> DF
     '''
     Adds asset_path column derived from filepath.
 
     Args:
-        data (dd.DataFrame): Dask DataFrame.
+        data (DataFrame): DataFrame.
 
     Returns:
-        dd.DataFrame: Dask DataFrame with asset_path column.
+        DataFrame: DataFrame with asset_path column.
     '''
     data['asset_path'] = hbt.pred_combinator(
         data,
@@ -194,15 +195,15 @@ def add_asset_path(data):
 
 
 def add_asset_type(data):
-    # type: (dd.DataFrame) -> dd.DataFrame
+    # type: (DF) -> DF
     '''
     Adds asset_type column derived from specification.
 
     Args:
-        data (dd.DataFrame): Dask DataFrame.
+        data (DataFrame): DataFrame.
 
     Returns:
-        dd.DataFrame: Dask DataFrame with asset_type column.
+        DataFrame: DataFrame with asset_type column.
     '''
     data['asset_type'] = hbt.pred_combinator(
         data.specification_class,
@@ -215,16 +216,16 @@ def add_asset_type(data):
 
 
 def add_asset_traits(data):
-    # type: (dd.DataFrame) -> dd.DataFrame
+    # type: (DF) -> DF
     '''
     Adds traits derived from aggregation of file traits.
     Add asset_traits column and one column per traits key.
 
     Args:
-        data (dd.DataFrame): Dask DataFrame.
+        data (DataFrame): DataFrame.
 
     Returns:
-        dd.DataFrame: Dask DataFrame with asset_traits column.
+        DataFrame: DataFrame with asset_traits column.
     '''
     data = hbt.lut_combinator(
         data,
@@ -243,7 +244,7 @@ def add_asset_traits(data):
 
 
 def validate_assets(data):
-    # type: (dd.DataFrame) -> dd.DataFrame
+    # type: (DF) -> DF
     '''
     Validates assets according to their specification.
     Add asset_error and asset_valid columns.
@@ -252,7 +253,7 @@ def validate_assets(data):
         data (DataFrame): DataFrame.
 
     Returns:
-        dd.DataFrame: Dask DataFrame with asset_error and asset_valid columns.
+        DataFrame: DataFrame with asset_error and asset_valid columns.
     '''
     def error_func(row):
         try:
@@ -282,16 +283,16 @@ def validate_assets(data):
 
 
 def cleanup(data):
-    # type: (dd.DataFrame) -> dd.DataFrame
+    # type: (DF) -> DF
     '''
     Ensures only specific columns are present and in correct order and Paths
     are converted to strings.
 
     Args:
-        data (dd.DataFrame): Dask DataFrame.
+        data (DataFrame): DataFrame.
 
     Returns:
-        dd.DataFrame: Cleaned up DataFrame.
+        DataFrame: Cleaned up DataFrame.
     '''
     columns = [
         'specification',
@@ -329,12 +330,15 @@ def cleanup(data):
 
 
 def add_asset_id(data):
-    # type: (DataFrame) -> None
+    # type: (pd.DataFrame) -> pd.DataFrame
     '''
     Adds asset_id column derived UUID hash of asset filepath.
 
     Args:
-        data (DataFrame): DataFrame.
+        data (pd.DataFrame): DataFrame.
+
+    Returns:
+        pd.DataFrame: DataFrame with asset_id column.
     '''
     mask = data.file_error.isnull()
     data['asset_id'] = np.nan
@@ -343,13 +347,14 @@ def add_asset_id(data):
             lambda x: x.specification_class().get_asset_id(x.filepath),
             axis=1
         )
+    return data
 
 
 def get_data_for_write(
-    data,        # type: DataFrame
+    data,        # type: pd.DataFrame
     source_dir,  # type: Union[str, Path]
     target_dir,  # type: Union[str, Path]
-):               # type: (...) -> Optional[Tuple[DataFrame, DataFrame, DataFrame, DataFrame, DataFrame]]  # noqa: E501
+):               # type: (...) -> Optional[Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]]  # noqa: E501
     '''
     Split given data into three DataFrame creating files.
 
@@ -473,14 +478,14 @@ def get_data_for_write(
     now = hbt.time_string()
 
     # create asset chunk
-    asset_chunk = DataFrame()
+    asset_chunk = pd.DataFrame()
     asset_chunk['metadata'] = [asset_meta.metadata.tolist()]
     asset_chunk['target'] = [Path(
         meta_dir, 'asset-chunk', f'hidebound-asset-chunk_{now}.json'
     ).as_posix()]
 
     # create file chunk
-    file_chunk = DataFrame()
+    file_chunk = pd.DataFrame()
     file_chunk['metadata'] = [file_meta.metadata.tolist()]
     file_chunk['target'] = [Path(
         meta_dir, 'file-chunk', f'hidebound-file-chunk_{now}.json'
