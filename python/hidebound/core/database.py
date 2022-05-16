@@ -379,7 +379,6 @@ class Database:
             data = db_tools._add_asset_type(data)
             data = db_tools._add_asset_traits(data)
             data = db_tools._validate_assets(data)
-            data.visualize('artifacts/10_validate_assets.dot')
             data = data.compute()
         self._logger.info('update: generate', step=2, total=total)
 
