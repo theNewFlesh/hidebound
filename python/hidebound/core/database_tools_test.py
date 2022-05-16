@@ -329,7 +329,7 @@ class DatabaseToolsTests(DatabaseTestBase):
 
     def test_cleanup(self):
         data = DataFrame()
-        result = db_tools._cleanup(data).columns.tolist()
+        result = db_tools.cleanup(data).columns.tolist()
         self.assertEqual(result, self.columns)
 
         data['filepath'] = [np.nan, Path('/foo/bar'), Path('/bar/foo')]
