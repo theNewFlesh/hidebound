@@ -5,6 +5,7 @@ import os
 import re
 import unittest
 
+import pandas as pd
 from pandas import DataFrame, Series
 from schematics.exceptions import DataError, ValidationError
 from schematics.models import Model
@@ -308,7 +309,7 @@ class ToolsTests(unittest.TestCase):
             with self.assertRaisesRegexp(json.JSONDecodeError, expected):
                 hbt.read_json(filepath)
 
-    def test_pred_combinator_df(self):
+    def test_pred_combinator_dd_dataframe(self):
         data = DataFrame()
         data['foo'] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
         data['bar'] = [1, 2, 3, 4, 5, 6, 2, 1, 2]
@@ -320,11 +321,13 @@ class ToolsTests(unittest.TestCase):
             lambda x: 'odd',
             meta=str,
         )
+        self.assertIsInstance(result, dd.Series)
+
         result = result.compute().tolist()
         expected = ['even'] * 6 + ['odd'] * 3
         self.assertEqual(result, expected)
 
-    def test_pred_combinator_df_nan(self):
+    def test_pred_combinator_dd_dataframe_nan(self):
         # no meta
         data = DataFrame()
         data['foo'] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -353,6 +356,8 @@ class ToolsTests(unittest.TestCase):
             lambda x: np.nan,
             meta=str,
         )
+        self.assertIsInstance(result, dd.Series)
+
         result = result.compute().tolist()
         result = Series(result).fillna('null').tolist()
         self.assertEqual(result, expected)
@@ -367,6 +372,30 @@ class ToolsTests(unittest.TestCase):
             lambda x: 'odd',
             meta=str,
         )
+        self.assertIsInstance(result, dd.Series)
+
         result = result.compute().tolist()
         expected = ['even'] * 4 + ['odd'] * 4
         self.assertEqual(result, expected)
+
+    def test_pred_combinator_pd_dataframe(self):
+        data = pd.DataFrame()
+        data['x'] = [1, 1, 1, 2, 2, 3]
+        data['y'] = [1, 1, 1, 2, 2, 3]
+        expected = [10, 10, 10, 20, 20, 20]
+
+        result = hbt.pred_combinator(
+            data, lambda x: x.x + x.y == 2, lambda x: 10, lambda x: 20,
+        )
+        self.assertEqual(result.tolist(), expected)
+        self.assertIsInstance(result, pd.Series)
+
+    def test_pred_combinator_pd_series(self):
+        data = pd.Series([1, 1, 1, 2, 2, 3])
+        expected = [10, 10, 10, 20, 20, 20]
+
+        result = hbt.pred_combinator(
+            data, lambda x: x == 1, lambda x: 10, lambda x: 20,
+        )
+        self.assertEqual(result.tolist(), expected)
+        self.assertIsInstance(result, pd.Series)

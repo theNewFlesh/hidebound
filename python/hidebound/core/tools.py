@@ -9,7 +9,7 @@ import os
 import re
 import shutil
 
-from pandas import DataFrame
+import pandas as pd
 from schematics.exceptions import DataError, ValidationError
 import dask.dataframe as dd
 import jsoncomment as jsonc
@@ -96,9 +96,9 @@ def delete_empty_directories(directory):
 
 
 def directory_to_dataframe(directory, include_regex='', exclude_regex=r'\.DS_Store'):
-    # type: (Union[str, Path], str, str) -> DataFrame
+    # type: (Union[str, Path], str, str) -> pd.DataFrame
     r'''
-    Recursively list files with in a given directory as rows in a DataFrame.
+    Recursively list files with in a given directory as rows in a pd.DataFrame.
 
     Args:
         directory (str or Path): Directory to walk.
@@ -108,7 +108,7 @@ def directory_to_dataframe(directory, include_regex='', exclude_regex=r'\.DS_Sto
             Default: '\.DS_Store'.
 
     Returns:
-        DataFrame: DataFrame with one file per row.
+        pd.DataFrame: pd.DataFrame with one file per row.
     '''
     files = list_all_files(
         directory,
@@ -117,7 +117,7 @@ def directory_to_dataframe(directory, include_regex='', exclude_regex=r'\.DS_Sto
     )  # type: Any
     files = sorted(list(files))
 
-    data = DataFrame()
+    data = pd.DataFrame()
     data['filepath'] = files
     data['filename'] = data.filepath.apply(lambda x: x.name)
     data['extension'] = data.filepath \
@@ -253,13 +253,13 @@ def read_json(filepath):
 
 
 def pred_combinator(
-    data,                   # type: Union[dd.DataFrame, dd.Series]
+    data,                   # type: Union[pd.DataFrame, pd.Series, dd.DataFrame, dd.Series]
     predicate,              # type: Callable[[Any], bool]
     true_func,              # type: Callable[[Any], Any]
     false_func,             # type: Callable[[Any], Any]
     meta='__no_default__',  # type: Any
 ):
-    # type: (...) -> Union[dd.DataFrame, dd.Series]
+    # type: (...) -> Union[pd.DataFrame, pd.Series, dd.DataFrame, dd.Series]
     '''
     Apply true_func to rows where predicate if true and false_func to rows where
     it is false.
@@ -274,22 +274,31 @@ def pred_combinator(
         meta (object, optional): Metadata inference. Default: '__no_default__'.
 
     Returns:
-        dd.DataFrame or dd.Series: Apply results.
+        DataFrame or Series: Apply results.
     '''
-    if isinstance(data, dd.DataFrame):
+    kwargs = {}
+    if meta != '__no_default__' and data.__class__ not in [pd.DataFrame, pd.Series]:
+        kwargs = dict(meta=meta)
+
+    if data.__class__ in [pd.DataFrame, dd.DataFrame]:
         return data.apply(
             lambda x: true_func(x) if predicate(x) else false_func(x),
             axis=1,
-            meta=meta,
+            **kwargs,
         )
     return data.apply(
         lambda x: true_func(x) if predicate(x) else false_func(x),
-        meta=meta,
+        **kwargs,
     )
 
 
-def get_lut(data, column, aggregator, meta='__no_default__'):
-    # type: (dd.DataFrame, str, Callable[[dd.DataFrame], Any], Any) -> dd.DataFrame
+def get_lut(
+    data,                   # type: Union[pd.DataFrame, dd.DataFrame]
+    column,                 # type: str
+    aggregator,             # type: Callable[[Union[pd.DataFrame, dd.DataFrame]], Any]
+    meta='__no_default__',  # type: Any
+):
+    # type: (...) -> Union[pd.DataFrame, dd.DataFrame]
     '''
     Constructs a lookup table with the given column as its keys and the
     aggregator results as its values.
@@ -297,50 +306,61 @@ def get_lut(data, column, aggregator, meta='__no_default__'):
     group of values.
 
     Args:
-        data (dd.DataFrame): Dask DataFrame.
+        data (DataFrame): DataFrame.
         column (str): Column to be used as the key.
         aggregator (function): Function that expects a group DataFrame and
             returns a scalar.
         meta (object, optional): Metadata inference. Default: '__no_default__'.
 
     Returns:
-        dd.DataFrame: Dask DataFrame with key and value columns.
+        DataFrame: DataFrame with key and value columns.
     '''
     kwargs = {}
-    if meta != '__no_default__':
-        kwargs['meta'] = ('value', meta)
+    merge = pd.merge
+    if isinstance(data, dd.DataFrame):
+        merge = dd.merge
+        if meta != '__no_default__':
+            kwargs = dict(meta=('value', meta))
 
     grp = data.groupby(column)
-    keys = grp[column].first().to_frame(name='key')
+    keys = grp[column].first()
+    if isinstance(data, dd.DataFrame):
+        keys = keys.to_frame(name='key')
     vals = grp.apply(aggregator, **kwargs).to_frame(name='value')
-    lut = dd.merge(keys, vals).reset_index(drop=True)
+    lut = merge(keys, vals).reset_index(drop=True)
     return lut
 
 
 def lut_combinator(
-    data, key_column, value_column, aggregator, meta='__no_default__'
+    data,                   # type: Union[pd.DataFrame, dd.DataFrame]
+    key_column,             # type: str
+    value_column,           # type: str
+    aggregator,             # type: Callable[[Union[pd.DataFrame, dd.DataFrame]], Any]
+    meta='__no_default__',  # type: Any
 ):
-    # type: (dd.DataFrame, str, str, Callable[[dd.DataFrame], Any], Any) -> dd.DataFrame
+    # type: (...) -> Union[pd.DataFrame, dd.DataFrame]
     '''
     Constructs a lookup table from given key_column, then applies it to given
     data as value column.
 
     Args:
-        data (dd.DataFrame): Dask DataFrame.
+        data (DataFrame): DataFrame.
         key_column (str): Column to be used as the lut keys.
         value_column (str): Column to be used as the values.
-        aggregator (function): Function that expects a DataFrame.
+        aggregator (function): Function that expects a pd.DataFrame.
         meta (object, optional): Metadata irom_nference. Default: '__no_default__'.
 
     Returns:
-        dd.DataFrame: Dask DataFrame with value column.
+        DataFrame: DataFrame with value column.
     '''
-    lut = get_lut(
-        data,
-        key_column,
-        aggregator,
-        meta=meta,
-    )
+    kwargs = {}
+    merge = pd.merge
+    if isinstance(data, dd.DataFrame):
+        merge = dd.merge
+        if meta != '__no_default__':
+            kwargs = dict(meta=meta)
+
+    lut = get_lut(data, key_column, aggregator, **kwargs)
     lut.columns = [key_column, value_column]
-    data = dd.merge(data, lut, on=key_column, how='left')
+    data = merge(data, lut, on=key_column, how='left')
     return data
