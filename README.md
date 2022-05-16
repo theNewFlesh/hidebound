@@ -437,6 +437,8 @@ Hidebound configs consist of three main sections:
 * include_regex - filepaths in the root that match this are included in the database
 * exclude_regex - filepaths in the root that match this are excluded from the database
 * write_mode - whether to copy or move files from root to staging
+* dask_enabled - whether to enable Dask distributed computing
+* dask_partitions - number of Dask partitions to use
 
 ### Exporters
 Which exporters to us in the workflow.
@@ -464,6 +466,8 @@ Here is a full example config with comments:
     "exclude_regex": "\\.DS_Store",                                    // exclude files that match
     "write_mode": "copy",                                              // copy files from root to staging
                                                                        // options: copy, move
+    "dask_enabled": true,                                              // enable Dask distributed computing
+    "dask_partitions": 16,                                             // number of Dask partitions to use
     "exporters": {                                                     // list of exporter configs
         "s3": {                                                        // export to s3
             "access_key": "ABCDEFGHIJKLMNOPQRST",                      // aws access key
