@@ -309,6 +309,7 @@ class ToolsTests(unittest.TestCase):
             with self.assertRaisesRegexp(json.JSONDecodeError, expected):
                 hbt.read_json(filepath)
 
+    # PRED_COMBINATOR-----------------------------------------------------------
     def test_pred_combinator_dd_dataframe(self):
         data = DataFrame()
         data['foo'] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -399,3 +400,68 @@ class ToolsTests(unittest.TestCase):
         )
         self.assertEqual(result.tolist(), expected)
         self.assertIsInstance(result, pd.Series)
+    # --------------------------------------------------------------------------
+
+    def test_get_lut_pd_dataframe(self):
+        data = pd.DataFrame()
+        data['grp'] = [1, 1, 1, 2, 2, 3]
+        data['val'] = [1, 1, 1, 2, 2, 'foo']
+
+        result = hbt.get_lut(data, 'grp', lambda x: x.val.tolist())
+        self.assertIsInstance(result, pd.DataFrame)
+
+        self.assertEqual(result.key.tolist(), [1, 2, 3])
+        self.assertEqual(result.value.tolist(), [[1, 1, 1], [2, 2], ['foo']])
+
+    def test_get_lut_dd_dataframe(self):
+        data = pd.DataFrame()
+        data['grp'] = [1, 1, 1, 2, 2, 3]
+        data['val'] = [1, 1, 1, 2, 2, 'foo']
+        data = dd.from_pandas(data, chunksize=1)
+
+        result = hbt.get_lut(data, 'grp', lambda x: x.val.tolist())
+        self.assertIsInstance(result, dd.DataFrame)
+
+        result = result.compute()
+        self.assertEqual(result.key.tolist(), [1, 2, 3])
+        self.assertEqual(result.value.tolist(), [[1, 1, 1], [2, 2], ['foo']])
+
+    def test_lut_combinator_pd_dataframe(self):
+        data = pd.DataFrame()
+        data['grp'] = [1, 1, 1, 2, 2, 3]
+        data['val'] = [1, 1, 1, 2, 2, 'foo']
+
+        result = hbt.lut_combinator(data, 'grp', 'vals', lambda x: x.val.tolist())
+        self.assertIsInstance(result, pd.DataFrame)
+
+        self.assertIn('vals', result.columns)
+        expected = [ 
+            [1, 1, 1],
+            [1, 1, 1],
+            [1, 1, 1],
+            [2, 2],
+            [2, 2],
+            ['foo'],
+        ]
+        self.assertEqual(result.vals.tolist(), expected)
+
+    def test_lut_combinator_dd_dataframe(self):
+        data = pd.DataFrame()
+        data['grp'] = [1, 1, 1, 2, 2, 3]
+        data['val'] = [1, 1, 1, 2, 2, 'foo']
+        data = dd.from_pandas(data, chunksize=1)
+
+        result = hbt.lut_combinator(data, 'grp', 'vals', lambda x: x.val.tolist())
+        self.assertIsInstance(result, dd.DataFrame)
+
+        result = result.compute()
+        self.assertIn('vals', result.columns)
+        expected = [ 
+            [1, 1, 1],
+            [1, 1, 1],
+            [1, 1, 1],
+            [2, 2],
+            [2, 2],
+            ['foo'],
+        ]
+        self.assertEqual(result.vals.tolist(), expected)
