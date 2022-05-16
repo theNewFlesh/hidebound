@@ -125,7 +125,7 @@ class Config(Model):
     dask_enabled = BooleanType(default=False, required=True)  # type: BooleanType
     dask_partitions = IntType(
         default=8, required=True, validators=[lambda x: vd.is_gt(x, 0)]
-        )  # type: IntType
+    )  # type: IntType
 
     class ExportersConfig(Model):
         girder = ModelType(

@@ -336,7 +336,6 @@ class ToolsTests(unittest.TestCase):
         result = hbt.get_meta_kwargs(data, '__no_default__')
         self.assertEqual(result, {})
 
-
     # PRED_COMBINATOR-----------------------------------------------------------
     def test_pred_combinator_dd_dataframe(self):
         data = DataFrame()
