@@ -331,11 +331,15 @@ def get_lut(data, column, aggregator, meta='__no_default__'):
     '''
     kwargs = get_meta_kwargs(data, ('value', meta))
     merge = pd.merge
+    empty = pd.DataFrame(columns=['key', 'value'])
     if isinstance(data, dd.DataFrame):
         merge = dd.merge
+        empty = dd.from_pandas(empty, npartitions=1)
 
     grp = data.groupby(column)
     keys = grp[column].first().to_frame(name='key')
+    if len(keys) == 0:
+        return empty
     vals = grp.apply(aggregator, **kwargs).to_frame(name='value')
     lut = merge(keys, vals, left_index=True, right_index=True) \
         .reset_index(drop=True)

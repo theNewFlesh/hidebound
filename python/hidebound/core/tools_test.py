@@ -428,7 +428,17 @@ class ToolsTests(unittest.TestCase):
         )
         self.assertEqual(result.tolist(), expected)
         self.assertIsInstance(result, pd.Series)
-    # --------------------------------------------------------------------------
+
+    # GET_LUT-------------------------------------------------------------------
+    def test_get_lut_empty(self):
+        data = pd.DataFrame()
+        data['grp'] = [np.nan] * 6
+        data['val'] = [1, 1, 1, 2, 2, 'foo']
+
+        result = hbt.get_lut(data, 'grp', lambda x: x.val.tolist())
+        self.assertIsInstance(result, pd.DataFrame)
+        self.assertEqual(result.shape, (0, 2))
+        self.assertEqual(result.columns.tolist(), ['key', 'value'])
 
     def test_get_lut_pd_dataframe(self):
         data = pd.DataFrame()
@@ -454,6 +464,7 @@ class ToolsTests(unittest.TestCase):
         self.assertEqual(result.key.tolist(), [1, 2, 3])
         self.assertEqual(result.value.tolist(), ['[1, 1, 1]', '[2, 2]', "['foo']"])
 
+    # LUT_COMBINATOR------------------------------------------------------------
     def test_lut_combinator_pd_dataframe(self):
         data = pd.DataFrame()
         data['grp'] = [1, 1, 1, 2, 2, 3]

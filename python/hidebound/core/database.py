@@ -368,7 +368,7 @@ class Database:
         self._logger.info(f'update: parsed {self._root}', step=1, total=total)
 
         if len(data) > 0:
-            data = dd.from_pandas(data, chunksize=100)
+            data = dd.from_pandas(data, npartitions=2)
             data = db_tools.add_specification(data, self._specifications)
             data = db_tools.validate_filepath(data)
             data = db_tools.add_file_traits(data)
