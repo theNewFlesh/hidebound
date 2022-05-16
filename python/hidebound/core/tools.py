@@ -325,7 +325,8 @@ def get_lut(
     grp = data.groupby(column)
     keys = grp[column].first().to_frame(name='key')
     vals = grp.apply(aggregator, **kwargs).to_frame(name='value')
-    lut = merge(keys, vals, on=column).reset_index(drop=True)
+    lut = merge(keys, vals, left_index=True, right_index=True) \
+        .reset_index(drop=True)
     return lut
 
 

@@ -419,12 +419,12 @@ class ToolsTests(unittest.TestCase):
         data['val'] = [1, 1, 1, 2, 2, 'foo']
         data = dd.from_pandas(data, chunksize=1)
 
-        result = hbt.get_lut(data, 'grp', lambda x: x.val.tolist())
+        result = hbt.get_lut(data, 'grp', lambda x: str(x.val.tolist()), meta=str)
         self.assertIsInstance(result, dd.DataFrame)
 
         result = result.compute()
         self.assertEqual(result.key.tolist(), [1, 2, 3])
-        self.assertEqual(result.value.tolist(), [[1, 1, 1], [2, 2], ['foo']])
+        self.assertEqual(result.value.tolist(), ['[1, 1, 1]', '[2, 2]', "['foo']"])
 
     def test_lut_combinator_pd_dataframe(self):
         data = pd.DataFrame()
@@ -435,7 +435,7 @@ class ToolsTests(unittest.TestCase):
         self.assertIsInstance(result, pd.DataFrame)
 
         self.assertIn('vals', result.columns)
-        expected = [ 
+        expected = [
             [1, 1, 1],
             [1, 1, 1],
             [1, 1, 1],
@@ -456,7 +456,7 @@ class ToolsTests(unittest.TestCase):
 
         result = result.compute()
         self.assertIn('vals', result.columns)
-        expected = [ 
+        expected = [
             [1, 1, 1],
             [1, 1, 1],
             [1, 1, 1],
