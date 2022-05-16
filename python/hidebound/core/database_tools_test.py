@@ -397,7 +397,7 @@ class DatabaseToolsTests(DatabaseTestBase):
             data['asset_traits'] = [traits]
             data = dd.from_pandas(data, chunksize=3)
 
-            result = db_tools._validate_assets(data).compute()
+            result = db_tools._validate_assets(data).compute().reset_index()
             for _, row in result.iterrows():
                 self.assertRegex(row.asset_error, '40 != 4')
                 self.assertFalse(row.asset_valid)
@@ -420,7 +420,7 @@ class DatabaseToolsTests(DatabaseTestBase):
             data['asset_traits'] = [traits, traits]
             data = dd.from_pandas(data, chunksize=100)
 
-            result = db_tools._validate_assets(data).compute()
+            result = db_tools._validate_assets(data).compute().reset_index()
             for _, row in result.iterrows():
                 self.assertRegex(row.asset_error, '400 != 4')
                 self.assertFalse(row.asset_valid)
