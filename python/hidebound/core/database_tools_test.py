@@ -36,7 +36,7 @@ class DatabaseToolsTests(DatabaseTestBase):
             lambda x: lbt.try_(lambda y: specs[y], x, np.nan)
         )
 
-        result = db_tools._add_specification(data, specs).compute()
+        result = db_tools.add_specification(data, specs).compute()
 
         self.assertEqual(
             result.specification.tolist(),
@@ -69,7 +69,7 @@ class DatabaseToolsTests(DatabaseTestBase):
         data = data[cols]
 
         data = dd.from_pandas(data, chunksize=100)
-        data = db_tools._validate_filepath(data).compute()
+        data = db_tools.validate_filepath(data).compute()
         result = data.loc[mask, 'file_error'].tolist()[0]
         self.assertRegex(result, error)
 
@@ -116,7 +116,7 @@ class DatabaseToolsTests(DatabaseTestBase):
         temp = data.copy()
         data = dd.from_pandas(data, chunksize=1)
 
-        data = db_tools._add_file_traits(data).compute()
+        data = db_tools.add_file_traits(data).compute()
         for col in cols:
             result = data[col].fillna('null').tolist()
             expected = temp[col].fillna('null').tolist()
@@ -135,7 +135,7 @@ class DatabaseToolsTests(DatabaseTestBase):
         ]
         data = dd.from_pandas(data, chunksize=1)
 
-        result = db_tools._add_asset_traits(data).compute()
+        result = db_tools.add_asset_traits(data).compute()
         result = result.sort_values('asset_path').asset_traits
         mask = result.notnull()
         result[mask] = result[mask] \
@@ -183,7 +183,7 @@ class DatabaseToolsTests(DatabaseTestBase):
         data = DataFrame(data)
         data.columns = ['specification_class', 'filepath', 'file_error']
 
-        db_tools._add_asset_id(data)
+        db_tools.add_asset_id(data)
         result = data['asset_id'].dropna().nunique()
         self.assertEqual(result, 2)
 
@@ -221,7 +221,7 @@ class DatabaseToolsTests(DatabaseTestBase):
         data.columns = ['specification_class', 'filepath', 'file_error']
         data = dd.from_pandas(data, chunksize=4)
 
-        result = db_tools._add_asset_name(data).compute()
+        result = db_tools.add_asset_name(data).compute()
         result = result['asset_name'].dropna().nunique()
         self.assertEqual(result, 2)
 
@@ -263,7 +263,7 @@ class DatabaseToolsTests(DatabaseTestBase):
 
         data = dd.from_pandas(data, chunksize=3)
 
-        results = db_tools._add_asset_path(data).compute()
+        results = db_tools.add_asset_path(data).compute()
         result = results['asset_path'].apply(str).tolist()
         self.assertEqual(result, expected)
 
@@ -280,7 +280,7 @@ class DatabaseToolsTests(DatabaseTestBase):
         data = dd.from_pandas(data, chunksize=3)
 
         result = db_tools \
-            ._add_relative_path(data, 'foo', '/foo/bar') \
+            .add_relative_path(data, 'foo', '/foo/bar') \
             .compute()['foo_relative'].tolist()
         expected = [
             'taco.txt',
@@ -291,7 +291,7 @@ class DatabaseToolsTests(DatabaseTestBase):
 
         del data['foo_relative']
         result = db_tools \
-            ._add_relative_path(data, 'foo', '/foo/bar/') \
+            .add_relative_path(data, 'foo', '/foo/bar/') \
             .compute()['foo_relative'].tolist()
         expected = [
             'taco.txt',
@@ -322,7 +322,7 @@ class DatabaseToolsTests(DatabaseTestBase):
         ]
         data = dd.from_pandas(data, chunksize=3)
 
-        result = db_tools._add_asset_type(data).compute()
+        result = db_tools.add_asset_type(data).compute()
         result = result['asset_type'].fillna('null').tolist()
         expected = ['file', 'sequence', 'complex', 'null']
         self.assertEqual(result, expected)
@@ -334,10 +334,10 @@ class DatabaseToolsTests(DatabaseTestBase):
 
         data['filepath'] = [np.nan, Path('/foo/bar'), Path('/bar/foo')]
         expected = [np.nan, '/foo/bar', '/bar/foo']
-        result = db_tools._cleanup(data).filepath.tolist()
+        result = db_tools.cleanup(data).filepath.tolist()
         self.assertEqual(result, expected)
 
-        result = db_tools._cleanup(data).columns.tolist()
+        result = db_tools.cleanup(data).columns.tolist()
         self.assertEqual(result, self.columns)
 
     def test_validate_assets(self):
@@ -379,7 +379,7 @@ class DatabaseToolsTests(DatabaseTestBase):
 
             data = dd.from_pandas(data, chunksize=3)
 
-            result = db_tools._validate_assets(data).compute() \
+            result = db_tools.validate_assets(data).compute() \
                 .reset_index(drop=True)
 
             # columns
@@ -413,7 +413,7 @@ class DatabaseToolsTests(DatabaseTestBase):
             data['asset_traits'] = [traits]
             data = dd.from_pandas(data, chunksize=3)
 
-            result = db_tools._validate_assets(data).compute().reset_index()
+            result = db_tools.validate_assets(data).compute().reset_index()
             for _, row in result.iterrows():
                 self.assertRegex(row.asset_error, '40 != 4')
                 self.assertFalse(row.asset_valid)
@@ -436,7 +436,7 @@ class DatabaseToolsTests(DatabaseTestBase):
             data['asset_traits'] = [traits, traits]
             data = dd.from_pandas(data, chunksize=100)
 
-            result = db_tools._validate_assets(data).compute().reset_index()
+            result = db_tools.validate_assets(data).compute().reset_index()
             for _, row in result.iterrows():
                 self.assertRegex(row.asset_error, '400 != 4')
                 self.assertFalse(row.asset_valid)
@@ -446,7 +446,7 @@ class DatabaseToolsTests(DatabaseTestBase):
         data = pd.read_csv(data)
 
         file_data, asset_meta, file_meta, asset_chunk, file_chunk = db_tools \
-            ._get_data_for_write(data, '/tmp/projects', '/tmp/hidebound')
+            .get_data_for_write(data, '/tmp/projects', '/tmp/hidebound')
 
         data = data[data.asset_valid]
 
@@ -520,7 +520,7 @@ class DatabaseToolsTests(DatabaseTestBase):
         data = pd.read_csv(data)
 
         file_data, asset_meta, file_meta, asset_chunk, file_chunk = db_tools \
-            ._get_data_for_write(
+            .get_data_for_write(
                 data,
                 '/tmp/projects',
                 '/tmp/hidebound'
@@ -554,7 +554,7 @@ class DatabaseToolsTests(DatabaseTestBase):
         data = DataFrame()
         data['asset_valid'] = [False, False]
 
-        result = db_tools._get_data_for_write(
+        result = db_tools.get_data_for_write(
             data, '/tmp/projects', '/tmp/hidebound'
         )
         self.assertIs(result, None)
@@ -564,7 +564,7 @@ class DatabaseToolsTests(DatabaseTestBase):
         data = pd.read_csv(data, index_col=0)
 
         _, a, b, _, _ = db_tools \
-            ._get_data_for_write(
+            .get_data_for_write(
                 data,
                 '/tmp/projects',
                 '/tmp/hidebound'

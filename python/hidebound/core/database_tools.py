@@ -23,7 +23,7 @@ A library of tools for Database to use in construction of its central DataFrame.
 '''
 
 
-def _add_specification(data, specifications):
+def add_specification(data, specifications):
     # type: (dd.DataFrame, Dict[str, SpecificationBase]) -> dd.DataFrame
     '''
     Adds specification data to given DataFrame.
@@ -74,7 +74,7 @@ def _add_specification(data, specifications):
     return data
 
 
-def _validate_filepath(data):
+def validate_filepath(data):
     # type: (dd.DataFrame) -> dd.DataFrame
     '''
     Validates filepath column of given DataFrame.
@@ -102,7 +102,7 @@ def _validate_filepath(data):
     return data
 
 
-def _add_file_traits(data):
+def add_file_traits(data):
     # type: (dd.DataFrame) -> dd.DataFrame
     '''
     Adds traits derived from file in filepath.
@@ -124,7 +124,7 @@ def _add_file_traits(data):
     return data
 
 
-def _add_relative_path(data, column, root_dir):
+def add_relative_path(data, column, root_dir):
     # type: (dd.DataFrame, str, Union[str, Path]) -> dd.DataFrame
     '''
     Adds relative path column derived from given column.
@@ -151,7 +151,7 @@ def _add_relative_path(data, column, root_dir):
     return data
 
 
-def _add_asset_name(data):
+def add_asset_name(data):
     # type: (dd.DataFrame) -> dd.DataFrame
     '''
     Adds asset_name column derived from filepath.
@@ -172,7 +172,7 @@ def _add_asset_name(data):
     return data
 
 
-def _add_asset_path(data):
+def add_asset_path(data):
     # type: (dd.DataFrame) -> dd.DataFrame
     '''
     Adds asset_path column derived from filepath.
@@ -193,7 +193,7 @@ def _add_asset_path(data):
     return data
 
 
-def _add_asset_type(data):
+def add_asset_type(data):
     # type: (dd.DataFrame) -> dd.DataFrame
     '''
     Adds asset_type column derived from specification.
@@ -214,7 +214,7 @@ def _add_asset_type(data):
     return data
 
 
-def _add_asset_traits(data):
+def add_asset_traits(data):
     # type: (dd.DataFrame) -> dd.DataFrame
     '''
     Adds traits derived from aggregation of file traits.
@@ -242,7 +242,7 @@ def _add_asset_traits(data):
     return data
 
 
-def _validate_assets(data):
+def validate_assets(data):
     # type: (dd.DataFrame) -> dd.DataFrame
     '''
     Validates assets according to their specification.
@@ -281,7 +281,7 @@ def _validate_assets(data):
     return data
 
 
-def _cleanup(data):
+def cleanup(data):
     # type: (dd.DataFrame) -> dd.DataFrame
     '''
     Ensures only specific columns are present and in correct order and Paths
@@ -328,7 +328,7 @@ def _cleanup(data):
     return data
 
 
-def _add_asset_id(data):
+def add_asset_id(data):
     # type: (DataFrame) -> None
     '''
     Adds asset_id column derived UUID hash of asset filepath.
@@ -345,7 +345,7 @@ def _add_asset_id(data):
         )
 
 
-def _get_data_for_write(
+def get_data_for_write(
     data,        # type: DataFrame
     source_dir,  # type: Union[str, Path]
     target_dir,  # type: Union[str, Path]

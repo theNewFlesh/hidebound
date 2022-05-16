@@ -217,7 +217,7 @@ class Database:
             msg = 'Data not initialized. Please call update.'
             raise RuntimeError(msg)
 
-        temp = db_tools._get_data_for_write(
+        temp = db_tools.get_data_for_write(
             self.data, self._root, self._hb_root
         )
         self._logger.info('create: get data', step=1, total=total)
@@ -369,20 +369,20 @@ class Database:
 
         if len(data) > 0:
             data = dd.from_pandas(data, chunksize=100)
-            data = db_tools._add_specification(data, self._specifications)
-            data = db_tools._validate_filepath(data)
-            data = db_tools._add_file_traits(data)
-            data = db_tools._add_relative_path(data, 'filepath', self._root)
-            data = db_tools._add_asset_name(data)
-            data = db_tools._add_asset_path(data)
-            data = db_tools._add_relative_path(data, 'asset_path', self._root)
-            data = db_tools._add_asset_type(data)
-            data = db_tools._add_asset_traits(data)
-            data = db_tools._validate_assets(data)
+            data = db_tools.add_specification(data, self._specifications)
+            data = db_tools.validate_filepath(data)
+            data = db_tools.add_file_traits(data)
+            data = db_tools.add_relative_path(data, 'filepath', self._root)
+            data = db_tools.add_asset_name(data)
+            data = db_tools.add_asset_path(data)
+            data = db_tools.add_relative_path(data, 'asset_path', self._root)
+            data = db_tools.add_asset_type(data)
+            data = db_tools.add_asset_traits(data)
+            data = db_tools.validate_assets(data)
             data = data.compute()
         self._logger.info('update: generate', step=2, total=total)
 
-        data = db_tools._cleanup(data)
+        data = db_tools.cleanup(data)
         self.data = data
 
         self._logger.info('update: cleanup', step=3, total=total)
