@@ -74,6 +74,8 @@ class Database:
             write_mode=config['write_mode'],
             exporters=config['exporters'],
             webhooks=config['webhooks'],
+            dask_enabled=config['dask_enabled'],
+            dask_partitions=config['dask_partitions'],
         )
 
     @staticmethod
@@ -102,6 +104,8 @@ class Database:
         write_mode='copy',            # type: str
         exporters={},                 # type: Dict[str, Any]
         webhooks=[],                  # type: List[Dict]
+        dask_enabled=False,            # type: bool
+        dask_partitions=8,             # type: int
     ):
         # type: (...) -> None
         r'''
@@ -124,6 +128,10 @@ class Database:
                 Default: {}.
             webhooks (list[dict], optional): List of webhooks to call.
                 Default: [].
+            dask_enabled (bool, optional): Whether to enable Dask.
+                Default: False.
+            dask_partitions (int, optional): Number of partitions to use for
+                Dask. Must be 1 or greater. Default: 8.
 
         Raises:
             TypeError: If specifications contains a non-SpecificationBase
@@ -184,6 +192,8 @@ class Database:
             # type: Dict[str, SpecificationBase]
         self._exporters = exporters
         self._webhooks = webhooks
+        self._dask_enabled = dask_enabled
+        self._dask_partitions = dask_partitions
         self.data = None
 
         # needed for testing
@@ -368,7 +378,8 @@ class Database:
         self._logger.info(f'update: parsed {self._root}', step=1, total=total)
 
         if len(data) > 0:
-            data = dd.from_pandas(data, npartitions=2)
+            if self._dask_enabled:
+                data = dd.from_pandas(data, npartitions=self._dask_partitions)
             data = db_tools.add_specification(data, self._specifications)
             data = db_tools.validate_filepath(data)
             data = db_tools.add_file_traits(data)
@@ -379,7 +390,8 @@ class Database:
             data = db_tools.add_asset_type(data)
             data = db_tools.add_asset_traits(data)
             data = db_tools.validate_assets(data)
-            data = data.compute()
+            if self._dask_enabled:
+                data = data.compute()
         self._logger.info('update: generate', step=2, total=total)
 
         data = db_tools.cleanup(data)

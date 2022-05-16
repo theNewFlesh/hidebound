@@ -9,7 +9,8 @@ import sys
 
 from schematics.exceptions import ValidationError
 from schematics.types import (
-    BaseType, DictType, IntType, ListType, ModelType, StringType, URLType
+    BaseType, BooleanType, DictType, IntType, ListType, ModelType, StringType,
+    URLType
 )
 from schematics import Model
 
@@ -121,6 +122,10 @@ class Config(Model):
         validators=[lambda x: vd.is_in(x, ['copy', 'move'])],
         default="copy",
     )  # type: StringType
+    dask_enabled = BooleanType(default=False, required=True)  # type: BooleanType
+    dask_partitions = IntType(
+        default=8, required=True, validators=[lambda x: vd.is_gt(x, 0)]
+        )  # type: IntType
 
     class ExportersConfig(Model):
         girder = ModelType(

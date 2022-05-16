@@ -162,6 +162,8 @@ class ConfigTests(unittest.TestCase):
             include_regex='foo',
             exclude_regex='bar',
             write_mode='copy',
+            dask_enabled=True,
+            dask_partitions=99,
         )
     # --------------------------------------------------------------------------
 
@@ -418,5 +420,16 @@ class ConfigTests(unittest.TestCase):
             self.add_webhooks_to_config(temp)
             self.config['webhooks'][0]['method'] = 'trace'
             expected = 'trace is not a legal HTTP method.'
+            with self.assertRaisesRegexp(DataError, expected):
+                cfg.Config(self.config).validate()
+
+    # DASK----------------------------------------------------------------------
+    def test_dask_partitons(self):
+        with TemporaryDirectory() as temp:
+            self.set_data(temp)
+            os.makedirs(self.root)
+            os.makedirs(self.hb_root)
+            self.config['dask_partitions'] = 0
+            expected = '0 !> 0'
             with self.assertRaisesRegexp(DataError, expected):
                 cfg.Config(self.config).validate()
