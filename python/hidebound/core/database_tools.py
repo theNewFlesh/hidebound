@@ -233,8 +233,14 @@ def _add_asset_traits(data):
         data,
         'asset_path',
         'asset_traits',
-        lambda x: hbt.to_prototype(x.file_traits.tolist()),
-        meta=list,
+        lambda x: x.file_traits.tolist(),
+    )
+    data.asset_traits = hbt.pred_combinator(
+        data.asset_traits,
+        lambda x: x is not np.nan,
+        hbt.to_prototype,
+        lambda x: np.nan,
+        meta=dict,
     )
     return data
 
@@ -251,29 +257,21 @@ def _validate_assets(data):
     Returns:
         dd.DataFrame: Dask DataFrame with asset_error and asset_valid columns.
     '''
-    # create error lut
-    error = data.copy().groupby('asset_path')\
-        .first()\
-        .apply(
-            lambda y: lbt.try_(
-                lambda x: x.specification_class(x.asset_traits).validate(),
-                y,
-                'error'),
-            axis=1) \
-        .compute()
-    lut = dict(zip(error.index.tolist(), error.tolist()))
+    data = hbt.lut_combinator(
+        data,
+        'asset_path',
+        'asset_error',
+        lambda y: lbt.try_(
+            lambda x: x.specification_class(x.asset_traits).validate(),
+            y, 'error'
+        )
+    )
 
-    def func(item, lut):
-        output = np.nan
-        if item in lut.keys():
-            temp = lut[item]
-            if temp is not None:
-                output = hbt.error_to_string(temp)
-        return output
-
-    # assign asset_error column
-    data['asset_error'] = data.asset_path \
-        .apply(lambda x: func(x, lut), meta=str)
+    # convert errors to string
+    data.asset_error = data.asset_error.mask(
+        data.asset_error.notnull(),
+        lambda y: y.apply(lambda x: hbt.error_to_string(x) if x is not None else np.nan)
+    )
 
     # assign asset_valid column
     data['asset_valid'] = data.asset_error.isnull()
@@ -282,16 +280,16 @@ def _validate_assets(data):
 
 
 def _cleanup(data):
-    # type: (DataFrame) -> DataFrame
+    # type: (dd.DataFrame) -> dd.DataFrame
     '''
     Ensures only specific columns are present and in correct order and Paths
     are converted to strings.
 
     Args:
-        data (DataFrame): DataFrame.
+        data (dd.DataFrame): Dask DataFrame.
 
     Returns:
-        DataFrame: Cleaned up DataFrame.
+        dd.DataFrame: Cleaned up DataFrame.
     '''
     columns = [
         'specification',

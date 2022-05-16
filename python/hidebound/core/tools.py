@@ -299,15 +299,20 @@ def get_lut(data, column, aggregator, meta='__no_default__'):
     Args:
         data (dd.DataFrame): Dask DataFrame.
         column (str): Column to be used as the key.
-        aggregator (function): Function that expects a DataFrame.
+        aggregator (function): Function that expects a group DataFrame and
+            returns a scalar.
         meta (object, optional): Metadata inference. Default: '__no_default__'.
 
     Returns:
         dd.DataFrame: Dask DataFrame with key and value columns.
     '''
+    kwargs = {}
+    if meta != '__no_default__':
+        kwargs['meta'] = ('value', meta)
+
     grp = data.groupby(column)
     keys = grp[column].first().to_frame(name='key')
-    vals = grp.apply(aggregator, meta=meta).to_frame(name='value')
+    vals = grp.apply(aggregator, **kwargs).to_frame(name='value')
     lut = dd.merge(keys, vals).reset_index(drop=True)
     return lut
 
@@ -325,7 +330,7 @@ def lut_combinator(
         key_column (str): Column to be used as the lut keys.
         value_column (str): Column to be used as the values.
         aggregator (function): Function that expects a DataFrame.
-        meta (object, optional): Metadata inference. Default: '__no_default__'.
+        meta (object, optional): Metadata irom_nference. Default: '__no_default__'.
 
     Returns:
         dd.DataFrame: Dask DataFrame with value column.
