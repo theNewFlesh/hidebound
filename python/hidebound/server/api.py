@@ -7,6 +7,7 @@ import numpy as np
 import flask
 import flasgger as swg
 from schematics.exceptions import DataError
+from werkzeug.exceptions import BadRequest
 
 from hidebound.core.database import Database
 import hidebound.server.server_tools as server_tools
@@ -62,47 +63,10 @@ def _get_database(config):
 @swg.swag_from(dict(
     parameters=[
         dict(
-            name='root_directory',
-            type='string',
-            description='Root directory to recurse.',
+            name='config',
+            type='dict',
+            description='Hidebound configuration.',
             required=True,
-            default='',
-        ),
-        dict(
-            name='hidebound_directory',
-            type='string',
-            description='Directory where hidebound directory will be created and hidebound data saved.',  # noqa E501
-            required=True,
-            default='',
-        ),
-        dict(
-            name='specification_files',
-            type='list',
-            description='List of asset specification files.',
-            required=False,
-            default='',
-        ),
-        dict(
-            name='include_regex',
-            type='string',
-            description='Include filenames that match this regex.',
-            required=False,
-            default='',
-        ),
-        dict(
-            name='exclude_regex',
-            type='string',
-            description='Exclude filenames that match this regex.',
-            required=False,
-            default=r'\.DS_Store',
-        ),
-        dict(
-            name='write_mode',
-            type='string',
-            description='How assets will be extracted to hidebound/content directory.',
-            required=False,
-            default='copy',
-            enum=['copy', 'move'],
         )
     ],
     responses={
@@ -133,10 +97,10 @@ def initialize():
     global DATABASE
     global CONFIG
 
-    config = flask.request.get_json()  # type: Any
     try:
+        config = flask.request.get_json()  # type: Any
         config = json.loads(config)
-    except (JSONDecodeError, TypeError):
+    except (BadRequest, JSONDecodeError, TypeError):
         return server_tools.get_config_error()
     if not isinstance(config, dict):
         return server_tools.get_config_error()
@@ -229,7 +193,7 @@ def read():
 
     params = flask.request.get_json()
     grp = False
-    if params is not None:
+    if params not in [None, {}]:
         try:
             params = json.loads(params)
             grp = params['group_by_asset']
