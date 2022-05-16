@@ -13,6 +13,7 @@ jinja2
 json_logging
 jsoncomment
 lunchbox
+MarkupSafe==2.0.1
 marshmallow
 numpy
 OpenEXR
