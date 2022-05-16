@@ -48,6 +48,15 @@ class DatabaseToolsTests(DatabaseTestBase):
             expected.specification_class.tolist(),
         )
 
+        mask = result.filename.apply(lambda x: 'misc.txt' in x)
+        expected = result[mask].file_error.values[0]
+        self.assertRegex(
+            expected,
+            'Specification not found in "misc.txt"',
+        )
+
+        self.assertIs(result.loc[0, 'file_error'], np.nan)
+
     # FILE-FUNCTIONS------------------------------------------------------------
     def test_validate_filepath(self):
         data = self.get_data('/tmp', nans=True)
@@ -357,9 +366,16 @@ class DatabaseToolsTests(DatabaseTestBase):
             bad['asset_id'] = 1
             cols = ['asset_name', 'asset_path', 'filename']
             bad[cols] = bad[cols].applymap(lambda x: re.sub('pizza', 'kiwi', x))
-            data = pd.concat([data, bad])
-            cols = ['specification_class', 'asset_traits']
+            data = pd.concat([data, bad], ignore_index=True)
+
+            cols = [
+                'asset_traits',
+                'specification_class',
+                'file_error',
+                'specification',
+            ]
             data = data[cols]
+            data['file_error'] = np.nan
 
             data = dd.from_pandas(data, chunksize=3)
 

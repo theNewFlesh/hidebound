@@ -10,6 +10,7 @@ from schematics.exceptions import DataError, ValidationError
 import dask.dataframe as dd
 import lunchbox.tools as lbt
 import numpy as np
+import pandas as pd
 
 from hidebound.core.parser import AssetNameParser
 from hidebound.core.specification_base import SpecificationBase
@@ -46,26 +47,23 @@ def _add_specification(data, specifications):
         output = lbt.try_(
             AssetNameParser.parse_specification, filename, 'error'
         )
-        if not isinstance(output, dict):
-            output = dict(file_error=str(output))
-        for key in ['specification', 'file_error']:
-            if key not in output.keys():
-                output[key] = np.nan
-        return output
+        if isinstance(output, dict):
+            return output['specification'], np.nan
+        return np.nan, str(output)
 
     # parse filenames
     parse = data.filename.apply(get_spec)
 
     # set specifications
-    data['specification'] = parse.apply(lambda x: x['specification'], meta=str)
+    data['specification'] = parse.apply(lambda x: x[0], meta=str)
 
     # set file errors
-    data['file_error'] = parse.apply(lambda x: x['file_error'], meta=str)
+    data['file_error'] = parse.apply(lambda x: x[1], meta=str)
 
     # add specification classes
     data['specification_class'] = data.specification.apply(
-        lambda x: lbt.try_(lambda y: specifications[y], x, np.nan),
-        meta=SpecificationBase
+        lambda x: specifications.get(x, np.nan),
+        meta=SpecificationBase,
     )
 
     # add spec not found errors to rows with no file errors
@@ -98,7 +96,7 @@ def _validate_filepath(data):
 
     data.file_error = hbt.pred_combinator(
         data,
-        lambda x: x.file_error is np.nan,
+        lambda x: pd.isnull(x.file_error),
         validate,
         lambda x: x.file_error,
     )
@@ -119,7 +117,7 @@ def _add_file_traits(data):
     '''
     data['file_traits'] = hbt.pred_combinator(
         data,
-        lambda x: x.specification_class is not np.nan,
+        lambda x: pd.notnull(x.specification_class),
         lambda x: x.specification_class().get_traits(x.filepath),
         lambda x: {},
         meta=dict,
@@ -167,7 +165,7 @@ def _add_asset_name(data):
     '''
     data['asset_name'] = hbt.pred_combinator(
         data,
-        lambda x: x.file_error is np.nan,
+        lambda x: pd.isnull(x.file_error),
         lambda x: x.specification_class().get_asset_name(x.filepath),
         lambda x: np.nan,
         meta=str,
@@ -188,7 +186,7 @@ def _add_asset_path(data):
     '''
     data['asset_path'] = hbt.pred_combinator(
         data,
-        lambda x: x.specification_class is not np.nan,
+        lambda x: pd.notnull(x.specification_class),
         lambda x: x.specification_class().get_asset_path(x.filepath),
         lambda x: np.nan,
         meta=str,
@@ -209,7 +207,7 @@ def _add_asset_type(data):
     '''
     data['asset_type'] = hbt.pred_combinator(
         data.specification_class,
-        lambda x: x is not np.nan,
+        lambda x: pd.notnull(x),
         lambda x: x.asset_type,
         lambda x: np.nan,
         meta=str,
@@ -237,7 +235,7 @@ def _add_asset_traits(data):
     )
     data.asset_traits = hbt.pred_combinator(
         data.asset_traits,
-        lambda x: x is not np.nan,
+        lambda x: isinstance(x, list),
         hbt.to_prototype,
         lambda x: np.nan,
         meta=dict,
@@ -265,11 +263,22 @@ def _validate_assets(data):
         return np.nan
 
     # add asset error
-    data['asset_error'] = data.apply(error_func, axis=1, meta=str)
+    data['asset_error'] = hbt.pred_combinator(
+        data,
+        lambda x: isinstance(x.asset_traits, dict) and pd.notnull(x.specification_class),
+        error_func,
+        lambda x: np.nan,
+        meta=Exception,
+    )
 
     # assign asset_valid column
-    data['asset_valid'] = data.asset_error.isnull()
-
+    data['asset_valid'] = hbt.pred_combinator(
+        data,
+        lambda x: pd.isnull(x.asset_error) and pd.isnull(x.file_error) and pd.notnull(x.specification_class),  # noqa E501
+        lambda x: True,
+        lambda x: False,
+        meta=bool,
+    )
     return data
 
 

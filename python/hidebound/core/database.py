@@ -9,6 +9,7 @@ import shutil
 import sys
 
 from pandas import DataFrame
+import dask.dataframe as dd
 import jsoncomment as jsonc
 import numpy as np
 import pandasql
@@ -355,7 +356,7 @@ class Database:
         Returns:
             Database: self.
         '''
-        total = 12
+        total = 3
         self._logger.info('update', step=0, total=total)
 
         exclude_re = '|'.join([self._exclude_regex, 'hidebound/logs'])
@@ -367,41 +368,26 @@ class Database:
         self._logger.info(f'update: parsed {self._root}', step=1, total=total)
 
         if len(data) > 0:
-            db_tools._add_specification(data, self._specifications)
-            self._logger.info('update: add_specification', step=2, total=total)
-
-            db_tools._validate_filepath(data)
-            self._logger.info('update: validate_filepath', step=3, total=total)
-
-            db_tools._add_file_traits(data)
-            self._logger.info('update: add_file_traits', step=4, total=total)
-
-            db_tools._add_relative_path(data, 'filepath', self._root)
-            self._logger.info('update: add_relative_path', step=5, total=total)
-
-            db_tools._add_asset_name(data)
-            self._logger.info('update: add_asset_name', step=6, total=total)
-
-            db_tools._add_asset_path(data)
-            self._logger.info('update: add_asset_path', step=7, total=total)
-
-            db_tools._add_relative_path(data, 'asset_path', self._root)
-            self._logger.info('update: add_relative_path', step=8, total=total)
-
-            db_tools._add_asset_type(data)
-            self._logger.info('update: add_asset_type', step=9, total=total)
-
-            db_tools._add_asset_traits(data)
-            self._logger.info('update: add_asset_traits', step=10, total=total)
-
-            db_tools._validate_assets(data)
-            self._logger.info('update: validate_assets', step=11, total=total)
+            data = dd.from_pandas(data, chunksize=100)
+            data = db_tools._add_specification(data, self._specifications)
+            data = db_tools._validate_filepath(data)
+            data = db_tools._add_file_traits(data)
+            data = db_tools._add_relative_path(data, 'filepath', self._root)
+            data = db_tools._add_asset_name(data)
+            data = db_tools._add_asset_path(data)
+            data = db_tools._add_relative_path(data, 'asset_path', self._root)
+            data = db_tools._add_asset_type(data)
+            data = db_tools._add_asset_traits(data)
+            data = db_tools._validate_assets(data)
+            data.visualize('artifacts/10_validate_assets.dot')
+            data = data.compute()
+        self._logger.info('update: generate', step=2, total=total)
 
         data = db_tools._cleanup(data)
         self.data = data
 
-        self._logger.info('update: cleanup', step=12, total=total)
-        self._logger.info('update: complete', step=12, total=total)
+        self._logger.info('update: cleanup', step=3, total=total)
+        self._logger.info('update: complete', step=3, total=total)
         return self
 
     def delete(self):
