@@ -451,17 +451,19 @@ class ToolsTests(unittest.TestCase):
         data['val'] = [1, 1, 1, 2, 2, 'foo']
         data = dd.from_pandas(data, chunksize=1)
 
-        result = hbt.lut_combinator(data, 'grp', 'vals', lambda x: x.val.tolist())
+        result = hbt.lut_combinator(
+            data, 'grp', 'vals', lambda x: str(x.val.tolist()), meta=str
+        )
         self.assertIsInstance(result, dd.DataFrame)
 
         result = result.compute()
         self.assertIn('vals', result.columns)
         expected = [
-            [1, 1, 1],
-            [1, 1, 1],
-            [1, 1, 1],
-            [2, 2],
-            [2, 2],
-            ['foo'],
+            '[1, 1, 1]',
+            '[1, 1, 1]',
+            '[1, 1, 1]',
+            '[2, 2]',
+            '[2, 2]',
+            "['foo']",
         ]
         self.assertEqual(result.vals.tolist(), expected)

@@ -245,7 +245,7 @@ class GirderExporter(ExporterBase):
         Args:
             metadata (dict): File metadata.
         '''
-        pass
+        pass  # pragma: no cover
 
     def _export_asset_chunk(self, metadata):
         # type: (List[dict]) -> None
@@ -255,7 +255,7 @@ class GirderExporter(ExporterBase):
         Args:
             metadata (list[dict]): Asset metadata chunk.
         '''
-        pass
+        pass  # pragma: no cover
 
     def _export_file_chunk(self, metadata):
         # type: (List[dict]) -> None
@@ -265,4 +265,4 @@ class GirderExporter(ExporterBase):
         Args:
             metadata (list[dict]): File metadata chunk.
         '''
-        pass
+        pass  # pragma: no cover
