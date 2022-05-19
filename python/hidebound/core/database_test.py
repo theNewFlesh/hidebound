@@ -466,29 +466,6 @@ class DatabaseTests(DatabaseTestBase):
             expected = [True, True, False, True, False]
             self.assertEqual(result, expected)
 
-    def test_update_dask(self):
-        with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
-            Spec001, Spec002, BadSpec = self.get_specifications()
-
-            expected = self.create_files(root).filepath\
-                .apply(lambda x: x.as_posix()).tolist()
-            expected = sorted(expected)
-
-            data = Database(
-                root, hb_root, [Spec001, Spec002],
-                dask_enabled=True, dask_partitions=2,
-            ).update().data
-            result = data.filepath.tolist()
-            result = list(filter(lambda x: 'progress' not in x, result))
-            result = sorted(result)
-            self.assertEqual(result, expected)
-
-            result = data.groupby('asset_path').asset_valid.first().tolist()
-            expected = [True, True, False, True, False]
-            self.assertEqual(result, expected)
-
     def test_update_exclude(self):
         with TemporaryDirectory() as root:
             hb_root = Path(root, 'hidebound')
@@ -801,3 +778,28 @@ class DatabaseTests(DatabaseTestBase):
             db = Database.from_config(config)
             for response in db.call_webhooks():
                 self.assertEqual(response.status_code, 403)
+
+
+class DatabaseDaskTests(DatabaseTestBase):
+    def test_update_dask(self):
+        with TemporaryDirectory() as root:
+            hb_root = Path(root, 'hidebound')
+            os.makedirs(hb_root)
+            Spec001, Spec002, BadSpec = self.get_specifications()
+
+            expected = self.create_files(root).filepath\
+                .apply(lambda x: x.as_posix()).tolist()
+            expected = sorted(expected)
+
+            data = Database(
+                root, hb_root, [Spec001, Spec002],
+                dask_enabled=True, dask_partitions=2,
+            ).update().data
+            result = data.filepath.tolist()
+            result = list(filter(lambda x: 'progress' not in x, result))
+            result = sorted(result)
+            self.assertEqual(result, expected)
+
+            result = data.groupby('asset_path').asset_valid.first().tolist()
+            expected = [True, True, False, True, False]
+            self.assertEqual(result, expected)
