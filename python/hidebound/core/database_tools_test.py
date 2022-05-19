@@ -6,6 +6,7 @@ import re
 
 from pandas import DataFrame
 import dask.dataframe as dd
+import dask.distributed as dist
 import lunchbox.tools as lbt
 import numpy as np
 import pandas as pd
@@ -18,7 +19,30 @@ import hidebound.core.database_tools as db_tools
 # ------------------------------------------------------------------------------
 
 
+class Spec001(FileSpecificationBase):
+    name = 'spec001'
+    filename_fields = ['specification']
+
+
+class Spec002(SequenceSpecificationBase):
+    name = 'spec002'
+    filename_fields = ['specification']
+
+
+class Spec003(ComplexSpecificationBase):
+    name = 'spec003'
+    filename_fields = ['specification']
+
+
 class DatabaseToolsTests(DatabaseTestBase):
+    def setUp(self):
+        self.dask_partitions = 2
+        self.dask_cluster = dist.LocalCluster(n_workers=self.dask_partitions)
+        self.dask_client = dist.Client(self.dask_cluster)
+
+    def tearDown(self):
+        self.dask_client.shutdown()
+
     # SPECIFICATION-FUNCTIONS---------------------------------------------------
     def test_add_specification(self):
         Spec001, Spec002, _ = self.get_specifications()
@@ -39,13 +63,13 @@ class DatabaseToolsTests(DatabaseTestBase):
         result = db_tools.add_specification(data, specs).compute()
 
         self.assertEqual(
-            result.specification.tolist(),
-            expected.specification.tolist(),
+            result.specification.fillna('null').tolist(),
+            expected.specification.fillna('null').tolist(),
         )
 
         self.assertEqual(
-            result.specification_class.tolist(),
-            expected.specification_class.tolist(),
+            result.specification_class.fillna('null').tolist(),
+            expected.specification_class.fillna('null').tolist(),
         )
 
         mask = result.filename.apply(lambda x: 'misc.txt' in x)
@@ -55,7 +79,7 @@ class DatabaseToolsTests(DatabaseTestBase):
             'Specification not found in "misc.txt"',
         )
 
-        self.assertIs(result.loc[0, 'file_error'], np.nan)
+        self.assertTrue(pd.isnull(result.loc[0, 'file_error']))
 
     # FILE-FUNCTIONS------------------------------------------------------------
     def test_validate_filepath(self):
@@ -68,7 +92,7 @@ class DatabaseToolsTests(DatabaseTestBase):
         cols = ['specification_class', 'filepath', 'file_error']
         data = data[cols]
 
-        data = dd.from_pandas(data, chunksize=100)
+        data = dd.from_pandas(data, npartitions=self.dask_partitions)
         data = db_tools.validate_filepath(data).compute()
         result = data.loc[mask, 'file_error'].tolist()[0]
         self.assertRegex(result, error)
@@ -114,7 +138,7 @@ class DatabaseToolsTests(DatabaseTestBase):
         ]
         data.columns = ['specification_class', 'filepath', 'file_error'] + cols
         temp = data.copy()
-        data = dd.from_pandas(data, chunksize=1)
+        data = dd.from_pandas(data, npartitions=self.dask_partitions)
 
         data = db_tools.add_file_traits(data).compute()
         for col in cols:
@@ -133,20 +157,21 @@ class DatabaseToolsTests(DatabaseTestBase):
             dict(x=2, y=2, z=2),
             {},
         ]
-        data = dd.from_pandas(data, chunksize=1)
+        data = dd.from_pandas(data, npartitions=self.dask_partitions)
 
         result = db_tools.add_asset_traits(data).compute()
         result = result.sort_values('asset_path').asset_traits
         mask = result.notnull()
         result[mask] = result[mask] \
             .apply(lambda x: {k: sorted(v) for k, v in x.items()})
+        result[result.isnull()] = 'null'
         result = result.tolist()
         expected = [
             dict(w=[0], x=[1, 2], y=[1, 2]),
             dict(w=[0], x=[1, 2], y=[1, 2]),
             dict(x=[1, 2], y=[1, 2], z=[1, 2]),
             dict(x=[1, 2], y=[1, 2], z=[1, 2]),
-            np.nan,
+            'null',
         ]
         self.assertEqual(result, expected)
 
@@ -219,7 +244,7 @@ class DatabaseToolsTests(DatabaseTestBase):
 
         data = DataFrame(data)
         data.columns = ['specification_class', 'filepath', 'file_error']
-        data = dd.from_pandas(data, chunksize=4)
+        data = dd.from_pandas(data, npartitions=self.dask_partitions)
 
         result = db_tools.add_asset_name(data).compute()
         result = result['asset_name'].dropna().nunique()
@@ -261,7 +286,7 @@ class DatabaseToolsTests(DatabaseTestBase):
             .apply(lambda x: Path(x).parent).apply(str).tolist()
         expected[-1] = 'nan'
 
-        data = dd.from_pandas(data, chunksize=3)
+        data = dd.from_pandas(data, npartitions=self.dask_partitions)
 
         results = db_tools.add_asset_path(data).compute()
         result = results['asset_path'].apply(str).tolist()
@@ -277,7 +302,7 @@ class DatabaseToolsTests(DatabaseTestBase):
             '/foo/bar/kiwi.txt',
             '/tmp/pizza.txt',
         ]
-        data = dd.from_pandas(data, chunksize=3)
+        data = dd.from_pandas(data, npartitions=self.dask_partitions)
 
         result = db_tools \
             .add_relative_path(data, 'foo', '/foo/bar') \
@@ -301,18 +326,6 @@ class DatabaseToolsTests(DatabaseTestBase):
         self.assertEqual(result, expected)
 
     def test_add_asset_type(self):
-        class Spec001(FileSpecificationBase):
-            name = 'spec001'
-            filename_fields = ['specification']
-
-        class Spec002(SequenceSpecificationBase):
-            name = 'spec002'
-            filename_fields = ['specification']
-
-        class Spec003(ComplexSpecificationBase):
-            name = 'spec003'
-            filename_fields = ['specification']
-
         data = DataFrame()
         data['specification_class'] = [
             Spec001,
@@ -320,7 +333,7 @@ class DatabaseToolsTests(DatabaseTestBase):
             Spec003,
             np.nan,
         ]
-        data = dd.from_pandas(data, chunksize=3)
+        data = dd.from_pandas(data, npartitions=self.dask_partitions)
 
         result = db_tools.add_asset_type(data).compute()
         result = result['asset_type'].fillna('null').tolist()
@@ -377,7 +390,7 @@ class DatabaseToolsTests(DatabaseTestBase):
             data = data[cols]
             data['file_error'] = np.nan
 
-            data = dd.from_pandas(data, chunksize=3)
+            data = dd.from_pandas(data, npartitions=self.dask_partitions)
 
             result = db_tools.validate_assets(data).compute() \
                 .reset_index(drop=True)
@@ -392,7 +405,7 @@ class DatabaseToolsTests(DatabaseTestBase):
             self.assertFalse(result.loc[1, 'asset_valid'])
 
             # asset_error
-            self.assertIs(result.loc[0, 'asset_error'], np.nan)
+            self.assertTrue(pd.isnull(result.loc[0, 'asset_error']))
             self.assertRegex(result.loc[1, 'asset_error'], '99 != 5')
 
     def test_validate_assets_invalid_one_file(self):
@@ -411,7 +424,7 @@ class DatabaseToolsTests(DatabaseTestBase):
                 channels=[3],
             )
             data['asset_traits'] = [traits]
-            data = dd.from_pandas(data, chunksize=3)
+            data = dd.from_pandas(data, npartitions=self.dask_partitions)
 
             result = db_tools.validate_assets(data).compute().reset_index()
             for _, row in result.iterrows():
@@ -434,7 +447,7 @@ class DatabaseToolsTests(DatabaseTestBase):
                 channels=[3, 3],
             )
             data['asset_traits'] = [traits, traits]
-            data = dd.from_pandas(data, chunksize=100)
+            data = dd.from_pandas(data, npartitions=self.dask_partitions)
 
             result = db_tools.validate_assets(data).compute().reset_index()
             for _, row in result.iterrows():
