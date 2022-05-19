@@ -5,14 +5,15 @@ import os
 import re
 import unittest
 
-import pandas as pd
 from pandas import DataFrame, Series
 from schematics.exceptions import DataError, ValidationError
 from schematics.models import Model
 from schematics.types import StringType
 import dask.dataframe as dd
+import dask.distributed as dist
 import numpy as np
 import OpenEXR as openexr
+import pandas as pd
 
 import hidebound.core.tools as hbt
 # ------------------------------------------------------------------------------
@@ -335,6 +336,16 @@ class ToolsTests(unittest.TestCase):
         # dd.Series no meta
         result = hbt.get_meta_kwargs(data, '__no_default__')
         self.assertEqual(result, {})
+
+
+class ToolsDaskTests(unittest.TestCase):
+    def setUp(self):
+        self.dask_partitions = 2
+        self.dask_cluster = dist.LocalCluster(n_workers=self.dask_partitions)
+        self.dask_client = dist.Client(self.dask_cluster)
+
+    def tearDown(self):
+        self.dask_client.shutdown()
 
     # PRED_COMBINATOR-----------------------------------------------------------
     def test_pred_combinator_dd_dataframe(self):
