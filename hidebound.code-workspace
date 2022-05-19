@@ -39,7 +39,8 @@
             "**/CVS": true,
             "*/*/**/node_modules": true,
             "**/.vscode": true,
-            "**/flask_monitoringdashboard.db": true
+            "**/flask_monitoringdashboard.db": true,
+            "**/dask-worker-space": true
         }
     },
     "tasks": {

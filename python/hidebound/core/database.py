@@ -10,6 +10,7 @@ import sys
 
 from pandas import DataFrame
 import dask.dataframe as dd
+import dask.distributed as dist
 import jsoncomment as jsonc
 import numpy as np
 import pandasql
@@ -379,7 +380,10 @@ class Database:
 
         if len(data) > 0:
             if self._dask_enabled:
+                cluster = dist.LocalCluster(n_workers=self._dask_partitions)
+                dist.Client(cluster)
                 data = dd.from_pandas(data, npartitions=self._dask_partitions)
+
             data = db_tools.add_specification(data, self._specifications)
             data = db_tools.validate_filepath(data)
             data = db_tools.add_file_traits(data)

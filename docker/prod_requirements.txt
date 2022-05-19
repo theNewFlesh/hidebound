@@ -1,8 +1,10 @@
 apispec
+bokeh>=2.1.1
 boto3
+click==8.0.4
 dash-cytoscape>=0.2.0
 dash>=2.0.0
-dask
+dask[distributed]
 flasgger
 flask
 flask_monitoringdashboard

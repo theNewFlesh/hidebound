@@ -4,6 +4,10 @@ devops/ansible/**/*.retry
 # c
 *.so
 
+# dask
+dask-worker-space
+dask-worker-space/*
+
 # flask
 flask_monitoringdashboard*
 
