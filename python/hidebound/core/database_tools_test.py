@@ -16,6 +16,8 @@ from hidebound.core.specification_base import ComplexSpecificationBase
 from hidebound.core.specification_base import FileSpecificationBase
 from hidebound.core.specification_base import SequenceSpecificationBase
 import hidebound.core.database_tools as db_tools
+
+ENABLE_DASK_CLUSTER = False
 # ------------------------------------------------------------------------------
 
 
@@ -37,11 +39,16 @@ class Spec003(ComplexSpecificationBase):
 class DatabaseToolsTests(DatabaseTestBase):
     def setUp(self):
         self.dask_partitions = 2
-        self.dask_cluster = dist.LocalCluster(n_workers=self.dask_partitions)
-        self.dask_client = dist.Client(self.dask_cluster)
+        if ENABLE_DASK_CLUSTER:
+            self.dask_cluster = dist.LocalCluster(n_workers=self.dask_partitions)
+            self.dask_client = dist.Client(self.dask_cluster)
 
     def tearDown(self):
-        self.dask_client.shutdown()
+        if ENABLE_DASK_CLUSTER:
+            try:
+                self.dask_client.shutdown()
+            except Exception:
+                pass
 
     # SPECIFICATION-FUNCTIONS---------------------------------------------------
     def test_add_specification(self):

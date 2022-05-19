@@ -16,6 +16,8 @@ import OpenEXR as openexr
 import pandas as pd
 
 import hidebound.core.tools as hbt
+
+ENABLE_DASK_CLUSTER = False
 # ------------------------------------------------------------------------------
 
 
@@ -341,11 +343,16 @@ class ToolsTests(unittest.TestCase):
 class ToolsDaskTests(unittest.TestCase):
     def setUp(self):
         self.dask_partitions = 2
-        self.dask_cluster = dist.LocalCluster(n_workers=self.dask_partitions)
-        self.dask_client = dist.Client(self.dask_cluster)
+        if ENABLE_DASK_CLUSTER:
+            self.dask_cluster = dist.LocalCluster(n_workers=self.dask_partitions)
+            self.dask_client = dist.Client(self.dask_cluster)
 
     def tearDown(self):
-        self.dask_client.shutdown()
+        if ENABLE_DASK_CLUSTER:
+            try:
+                self.dask_client.shutdown()
+            except Exception:
+                pass
 
     # PRED_COMBINATOR-----------------------------------------------------------
     def test_pred_combinator_dd_dataframe(self):
