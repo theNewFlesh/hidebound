@@ -79,7 +79,7 @@ ipysheet==0.5.0
 ipython==7.33.0
 ipython-genutils==0.2.0
 ipywidgets==7.7.0
-itsdangerous==2.1.2
+itsdangerous==2.0.1
 jedi==0.18.1
 jeepney==0.8.0
 Jinja2==3.1.2
