@@ -52,7 +52,7 @@ __pycache__
 sftp-config.json
 
 # testing
-.coverage
+.coverage*
 .pytest_cache
 artifacts
 

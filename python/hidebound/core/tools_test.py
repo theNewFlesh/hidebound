@@ -17,7 +17,7 @@ import pandas as pd
 
 import hidebound.core.tools as hbt
 
-ENABLE_DASK_CLUSTER = True
+ENABLE_DASK_CLUSTER = False
 # ------------------------------------------------------------------------------
 
 
