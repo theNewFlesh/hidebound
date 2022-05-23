@@ -123,7 +123,7 @@ class Config(Model):
         default="copy",
     )  # type: StringType
     dask_enabled = BooleanType(default=False, required=True)  # type: BooleanType
-    dask_partitions = IntType(
+    dask_workers = IntType(
         default=8, required=True, validators=[lambda x: vd.is_gt(x, 0)]
     )  # type: IntType
 

@@ -38,9 +38,9 @@ class Spec003(ComplexSpecificationBase):
 
 class DatabaseToolsTests(DatabaseTestBase):
     def setUp(self):
-        self.dask_partitions = 2
+        self.dask_workers = 2
         if ENABLE_DASK_CLUSTER:
-            self.dask_cluster = dist.LocalCluster(n_workers=self.dask_partitions)
+            self.dask_cluster = dist.LocalCluster(n_workers=self.dask_workers)
             self.dask_client = dist.Client(self.dask_cluster)
 
     def tearDown(self):
@@ -99,7 +99,7 @@ class DatabaseToolsTests(DatabaseTestBase):
         cols = ['specification_class', 'filepath', 'file_error']
         data = data[cols]
 
-        data = dd.from_pandas(data, npartitions=self.dask_partitions)
+        data = dd.from_pandas(data, npartitions=self.dask_workers)
         data = db_tools.validate_filepath(data).compute()
         result = data.loc[mask, 'file_error'].tolist()[0]
         self.assertRegex(result, error)
@@ -145,7 +145,7 @@ class DatabaseToolsTests(DatabaseTestBase):
         ]
         data.columns = ['specification_class', 'filepath', 'file_error'] + cols
         temp = data.copy()
-        data = dd.from_pandas(data, npartitions=self.dask_partitions)
+        data = dd.from_pandas(data, npartitions=self.dask_workers)
 
         data = db_tools.add_file_traits(data).compute()
         for col in cols:
@@ -164,7 +164,7 @@ class DatabaseToolsTests(DatabaseTestBase):
             dict(x=2, y=2, z=2),
             {},
         ]
-        data = dd.from_pandas(data, npartitions=self.dask_partitions)
+        data = dd.from_pandas(data, npartitions=self.dask_workers)
 
         result = db_tools.add_asset_traits(data).compute()
         result = result.sort_values('asset_path').asset_traits
@@ -251,7 +251,7 @@ class DatabaseToolsTests(DatabaseTestBase):
 
         data = DataFrame(data)
         data.columns = ['specification_class', 'filepath', 'file_error']
-        data = dd.from_pandas(data, npartitions=self.dask_partitions)
+        data = dd.from_pandas(data, npartitions=self.dask_workers)
 
         result = db_tools.add_asset_name(data).compute()
         result = result['asset_name'].dropna().nunique()
@@ -293,7 +293,7 @@ class DatabaseToolsTests(DatabaseTestBase):
             .apply(lambda x: Path(x).parent).apply(str).tolist()
         expected[-1] = 'nan'
 
-        data = dd.from_pandas(data, npartitions=self.dask_partitions)
+        data = dd.from_pandas(data, npartitions=self.dask_workers)
 
         results = db_tools.add_asset_path(data).compute()
         result = results['asset_path'].apply(str).tolist()
@@ -309,7 +309,7 @@ class DatabaseToolsTests(DatabaseTestBase):
             '/foo/bar/kiwi.txt',
             '/tmp/pizza.txt',
         ]
-        data = dd.from_pandas(data, npartitions=self.dask_partitions)
+        data = dd.from_pandas(data, npartitions=self.dask_workers)
 
         result = db_tools \
             .add_relative_path(data, 'foo', '/foo/bar') \
@@ -340,7 +340,7 @@ class DatabaseToolsTests(DatabaseTestBase):
             Spec003,
             np.nan,
         ]
-        data = dd.from_pandas(data, npartitions=self.dask_partitions)
+        data = dd.from_pandas(data, npartitions=self.dask_workers)
 
         result = db_tools.add_asset_type(data).compute()
         result = result['asset_type'].fillna('null').tolist()
@@ -397,7 +397,7 @@ class DatabaseToolsTests(DatabaseTestBase):
             data = data[cols]
             data['file_error'] = np.nan
 
-            data = dd.from_pandas(data, npartitions=self.dask_partitions)
+            data = dd.from_pandas(data, npartitions=self.dask_workers)
 
             result = db_tools.validate_assets(data).compute() \
                 .reset_index(drop=True)
@@ -431,7 +431,7 @@ class DatabaseToolsTests(DatabaseTestBase):
                 channels=[3],
             )
             data['asset_traits'] = [traits]
-            data = dd.from_pandas(data, npartitions=self.dask_partitions)
+            data = dd.from_pandas(data, npartitions=self.dask_workers)
 
             result = db_tools.validate_assets(data).compute().reset_index()
             for _, row in result.iterrows():
@@ -454,7 +454,7 @@ class DatabaseToolsTests(DatabaseTestBase):
                 channels=[3, 3],
             )
             data['asset_traits'] = [traits, traits]
-            data = dd.from_pandas(data, npartitions=self.dask_partitions)
+            data = dd.from_pandas(data, npartitions=self.dask_workers)
 
             result = db_tools.validate_assets(data).compute().reset_index()
             for _, row in result.iterrows():

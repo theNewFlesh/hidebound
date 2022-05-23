@@ -793,7 +793,7 @@ class DatabaseDaskTests(DatabaseTestBase):
 
             data = Database(
                 root, hb_root, [Spec001, Spec002],
-                dask_enabled=True, dask_partitions=2,
+                dask_enabled=True, dask_workers=2,
             ).update().data
             result = data.filepath.tolist()
             result = list(filter(lambda x: 'progress' not in x, result))

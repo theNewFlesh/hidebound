@@ -107,7 +107,7 @@ column says it has three.
 Next we click the create button. For each valid asset, Hidebound generates file
 and asset metadata as JSON files within the hidebound/metadata directory.
 Hidebound also copies or moves, depending on the config write mode, valid files
-and directories into the hidebound/content directory. Hidebound/content and 
+and directories into the hidebound/content directory. Hidebound/content and
 hidebound/metadata are both staging directories used for generating a valid
 ephemeral database. We now have a hidebound directory that looks like this
 (unmentioned assets are collapsed behind the ellipses):
@@ -438,7 +438,7 @@ Hidebound configs consist of three main sections:
 * exclude_regex - filepaths in the root that match this are excluded from the database
 * write_mode - whether to copy or move files from root to staging
 * dask_enabled - whether to enable Dask distributed computing
-* dask_partitions - number of Dask partitions to use
+* dask_workers - number of Dask partitions to use
 
 ### Exporters
 Which exporters to us in the workflow.
@@ -467,7 +467,7 @@ Here is a full example config with comments:
     "write_mode": "copy",                                              // copy files from root to staging
                                                                        // options: copy, move
     "dask_enabled": true,                                              // enable Dask distributed computing
-    "dask_partitions": 16,                                             // number of Dask partitions to use
+    "dask_workers": 16,                                             // number of Dask partitions to use
     "exporters": {                                                     // list of exporter configs
         "s3": {                                                        // export to s3
             "access_key": "ABCDEFGHIJKLMNOPQRST",                      // aws access key

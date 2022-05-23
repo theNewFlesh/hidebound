@@ -163,7 +163,7 @@ class ConfigTests(unittest.TestCase):
             exclude_regex='bar',
             write_mode='copy',
             dask_enabled=True,
-            dask_partitions=99,
+            dask_workers=99,
         )
     # --------------------------------------------------------------------------
 
@@ -429,7 +429,7 @@ class ConfigTests(unittest.TestCase):
             self.set_data(temp)
             os.makedirs(self.root)
             os.makedirs(self.hb_root)
-            self.config['dask_partitions'] = 0
+            self.config['dask_workers'] = 0
             expected = '0 !> 0'
             with self.assertRaisesRegexp(DataError, expected):
                 cfg.Config(self.config).validate()

@@ -76,7 +76,7 @@ class Database:
             exporters=config['exporters'],
             webhooks=config['webhooks'],
             dask_enabled=config['dask_enabled'],
-            dask_partitions=config['dask_partitions'],
+            dask_workers=config['dask_workers'],
         )
 
     @staticmethod
@@ -106,7 +106,7 @@ class Database:
         exporters={},                 # type: Dict[str, Any]
         webhooks=[],                  # type: List[Dict]
         dask_enabled=False,            # type: bool
-        dask_partitions=8,             # type: int
+        dask_workers=8,             # type: int
     ):
         # type: (...) -> None
         r'''
@@ -131,7 +131,7 @@ class Database:
                 Default: [].
             dask_enabled (bool, optional): Whether to enable Dask.
                 Default: False.
-            dask_partitions (int, optional): Number of partitions to use for
+            dask_workers (int, optional): Number of partitions to use for
                 Dask. Must be 1 or greater. Default: 8.
 
         Raises:
@@ -194,7 +194,7 @@ class Database:
         self._exporters = exporters
         self._webhooks = webhooks
         self._dask_enabled = dask_enabled
-        self._dask_partitions = dask_partitions
+        self._dask_workers = dask_workers
         self.data = None
 
         # needed for testing
@@ -380,9 +380,9 @@ class Database:
 
         if len(data) > 0:
             if self._dask_enabled:
-                cluster = dist.LocalCluster(n_workers=self._dask_partitions)
+                cluster = dist.LocalCluster(n_workers=self._dask_workers)
                 dist.Client(cluster)
-                data = dd.from_pandas(data, npartitions=self._dask_partitions)
+                data = dd.from_pandas(data, npartitions=self._dask_workers)
 
             data = db_tools.add_specification(data, self._specifications)
             data = db_tools.validate_filepath(data)

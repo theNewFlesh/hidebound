@@ -342,9 +342,9 @@ class ToolsTests(unittest.TestCase):
 
 class ToolsDaskTests(unittest.TestCase):
     def setUp(self):
-        self.dask_partitions = 2
+        self.dask_workers = 2
         if ENABLE_DASK_CLUSTER:
-            self.dask_cluster = dist.LocalCluster(n_workers=self.dask_partitions)
+            self.dask_cluster = dist.LocalCluster(n_workers=self.dask_workers)
             self.dask_client = dist.Client(self.dask_cluster)
 
     def tearDown(self):
