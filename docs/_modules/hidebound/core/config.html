@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.20.0
+                0.21.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -209,7 +209,7 @@
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;copy&quot;</span><span class="p">,</span>
     <span class="p">)</span>  <span class="c1"># type: StringType</span>
     <span class="n">dask_enabled</span> <span class="o">=</span> <span class="n">BooleanType</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: BooleanType</span>
-    <span class="n">dask_partitions</span> <span class="o">=</span> <span class="n">IntType</span><span class="p">(</span>
+    <span class="n">dask_workers</span> <span class="o">=</span> <span class="n">IntType</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_gt</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span>
     <span class="p">)</span>  <span class="c1"># type: IntType</span>
 

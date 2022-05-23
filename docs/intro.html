@@ -31,7 +31,7 @@
             <a href="index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.21.1
+                0.21.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -748,7 +748,7 @@ in the database</p></li>
 from the database</p></li>
 <li><p>write_mode - whether to copy or move files from root to staging</p></li>
 <li><p>dask_enabled - whether to enable Dask distributed computing</p></li>
-<li><p>dask_partitions - number of Dask partitions to use</p></li>
+<li><p>dask_workers - number of Dask partitions to use</p></li>
 </ul>
 </section>
 <section id="exporters">
@@ -777,7 +777,7 @@ from the database</p></li>
 <span class="w">    </span><span class="nt">&quot;write_mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;copy&quot;</span><span class="p">,</span><span class="w">                                              </span><span class="c1">// copy files from root to staging</span><span class="w"></span>
 <span class="w">                                                                       </span><span class="c1">// options: copy, move</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;dask_enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">                                              </span><span class="c1">// enable Dask distributed computing</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;dask_partitions&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span><span class="w">                                             </span><span class="c1">// number of Dask partitions to use</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;dask_workers&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span><span class="w">                                             </span><span class="c1">// number of Dask partitions to use</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;exporters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">                                                     </span><span class="c1">// list of exporter configs</span><span class="w"></span>
 <span class="w">        </span><span class="nt">&quot;s3&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">                                                        </span><span class="c1">// export to s3</span><span class="w"></span>
 <span class="w">            </span><span class="nt">&quot;access_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ABCDEFGHIJKLMNOPQRST&quot;</span><span class="p">,</span><span class="w">                      </span><span class="c1">// aws access key</span><span class="w"></span>
