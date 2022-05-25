@@ -52,7 +52,7 @@ function _dir() {
 }
 
 function _prompt() {
- echo "%{$RED%}▶%{$reset_color%}"
+ echo "%{$RED%}>%{$reset_color%}"
 }
 
 function _text() {
