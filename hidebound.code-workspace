@@ -26,6 +26,7 @@
         "files.exclude": {
             "**/.classpath": true,
             "**/.coverage": true,
+            ".coverage*": true,
             "**/.DS_Store": true,
             "**/.factorypath": true,
             "**/.git": true,
