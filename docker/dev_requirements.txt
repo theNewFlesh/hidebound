@@ -30,4 +30,5 @@ sphinx-rtd-theme
 sphinxcontrib-napoleon
 tox
 twine
+types-PyYAML
 types-requests

@@ -9,6 +9,7 @@ import re
 from moto import mock_s3
 from schematics.exceptions import DataError
 import boto3 as boto
+import yaml
 
 from hidebound.core.database import Database
 from hidebound.core.database_test_base import DatabaseTestBase
@@ -84,6 +85,27 @@ class DatabaseTests(DatabaseTestBase):
                 json.dump(config, f)
 
             Database.from_json(config_file)
+
+    def test_from_yaml(self):
+        with TemporaryDirectory() as root:
+            # create hb root dir
+            hb_root = Path(root, 'hidebound').as_posix()
+            os.makedirs(hb_root)
+            spec_file = self.write_spec_file(root)
+
+            config = dict(
+                root_directory=root,
+                hidebound_directory=hb_root,
+                specification_files=[spec_file],
+                include_regex='foo',
+                exclude_regex='bar',
+                write_mode='copy',
+            )
+            config_file = Path(root, 'config.yaml')
+            with open(config_file, 'w') as f:
+                yaml.safe_dump(config, f)
+
+            Database.from_yaml(config_file)
 
     def test_init(self):
         Spec001, Spec002, BadSpec = self.get_specifications()

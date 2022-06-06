@@ -21,6 +21,7 @@ OpenEXR
 pandas
 pandasql
 pyparsing>=3.0.1
+pyyaml
 requests>=2.22.0
 rolling-pin>=0.4.2
 schematics

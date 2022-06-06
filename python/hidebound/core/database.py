@@ -15,6 +15,7 @@ import jsoncomment as jsonc
 import numpy as np
 import pandasql
 import requests
+import yaml
 
 from hidebound.core.config import Config
 from hidebound.core.specification_base import SpecificationBase
@@ -93,6 +94,22 @@ class Database:
         '''
         with open(filepath) as f:
             config = jsonc.JsonComment().load(f)
+        return Database.from_config(config)
+
+    @staticmethod
+    def from_yaml(filepath):
+        # type: (Union[str, Path]) -> "Database"
+        '''
+        Constructs a Database instance from a given yaml file.
+
+        Args:
+            filepath (str or Path): Filepath of yaml config file.
+
+        Returns:
+            Database: Database instance.
+        '''
+        with open(filepath) as f:
+            config = yaml.safe_load(f)
         return Database.from_config(config)
 
     def __init__(
