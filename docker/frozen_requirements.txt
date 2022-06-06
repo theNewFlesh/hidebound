@@ -38,6 +38,7 @@ dash-cytoscape==0.3.0
 dash-html-components==2.0.0
 dash-table==5.0.0
 dask==2022.2.0
+dask-gateway==0.9.0
 debugpy==1.6.0
 decorator==5.1.1
 defusedxml==0.7.1
@@ -214,6 +215,7 @@ trio==0.20.0
 trio-websocket==0.9.2
 twine==4.0.0
 typed-ast==1.5.3
+types-PyYAML==6.0.8
 types-requests==2.27.27
 types-urllib3==1.26.14
 typing_extensions==4.2.0
