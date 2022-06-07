@@ -355,7 +355,7 @@ class ApiExtension:
         try:
             params = json.loads(params)
             query = params['query']
-            if 'group_by_asset' in params.keys(self):
+            if 'group_by_asset' in params.keys():
                 grp = params['group_by_asset']
                 assert(isinstance(grp, bool))
         except (JSONDecodeError, TypeError, KeyError, AssertionError):
@@ -387,12 +387,6 @@ class ApiExtension:
                 name='workflow',
                 type='list',
                 description='Ordered list of API calls.',
-                required=True,
-            ),
-            dict(
-                name='config',
-                type='dict',
-                description='Hidebound configuration.',
                 required=True,
             )
         ],

@@ -10,11 +10,11 @@ import numpy as np
 
 from hidebound.core.database_test_base import DatabaseTestBase
 from hidebound.exporters.mock_girder import MockGirderExporter
-import hidebound.server.api as api
+from hidebound.server.api import api_extension
 # ------------------------------------------------------------------------------
 
 
-class ApiTests(DatabaseTestBase):
+class ApiExtensionTests(DatabaseTestBase):
     def setUp(self):
         # setup files and dirs
         self.tempdir = TemporaryDirectory()
@@ -27,18 +27,19 @@ class ApiTests(DatabaseTestBase):
 
         self.create_files(self.root)
 
+        os.environ['HIDEBOUND_ROOT_DIRECTORY'] = self.root
+        os.environ['HIDEBOUND_HIDEBOUND_DIRECTORY'] = self.hb_root
+
         # setup app
         app = flask.Flask(__name__)
         swg.Swagger(app)
-        app.register_blueprint(api.API)
+        self.api = api_extension
+        api_extension.init_app(app)
         self.context = app.app_context()
         self.context.push()
 
         self.app = self.context.app
-        api.DATABASE = None
-        api.CONFIG = None
 
-        self.api = api
         self.client = self.app.test_client()
         self.app.config['TESTING'] = True
 
@@ -96,7 +97,6 @@ class ApiTests(DatabaseTestBase):
             specification_files=[self.specs],
         )
         config = json.dumps(config)
-        self.client.post('/api/initialize', json=config)
         self.client.post('/api/update')
 
         data = Path(self.hb_root, 'content')
@@ -111,62 +111,33 @@ class ApiTests(DatabaseTestBase):
         self.assertTrue(os.path.exists(meta))
 
     def test_create_no_update(self):
-        config = dict(
-            root_directory=self.root,
-            hidebound_directory=self.hb_root,
-            specification_files=[self.specs],
-        )
-        config = json.dumps(config)
-        self.client.post('/api/initialize', json=config)
-
         result = self.client.post('/api/create').json['message']
         expected = 'Database not updated. Please call update.'
         self.assertRegex(result, expected)
 
-    def test_create_no_init(self):
-        result = self.client.post('/api/create').json['message']
-        expected = 'Database not initialized. Please call initialize.'
-        self.assertRegex(result, expected)
-
     # READ----------------------------------------------------------------------
     def test_read(self):
-        # init database
-        config = dict(
-            root_directory=self.root,
-            hidebound_directory=self.hb_root,
-            specification_files=[self.specs],
-        )
-        config = json.dumps(config)
-        self.client.post('/api/initialize', json=config)
         self.client.post('/api/update')
 
         # call read
         result = self.client.post('/api/read', json={}).json['response']
-        expected = api.DATABASE.read()\
+        expected = self.api.database.read()\
             .replace({np.nan: None})\
             .to_dict(orient='records')
         self.assertEqual(result, expected)
 
         # test general exceptions
-        api.DATABASE = 'foo'
+        self.api.database = 'foo'
         result = self.client.post('/api/read', json={}).json['error']
         self.assertEqual(result, 'AttributeError')
 
     def test_read_group_by_asset(self):
-        # init database
-        config = dict(
-            root_directory=self.root,
-            hidebound_directory=self.hb_root,
-            specification_files=[self.specs],
-        )
-        config = json.dumps(config)
-        self.client.post('/api/initialize', json=config)
         self.client.post('/api/update')
 
         # good params
         params = json.dumps({'group_by_asset': True})
         result = self.client.post('/api/read', json=params).json['response']
-        expected = api.DATABASE.read(group_by_asset=True)\
+        expected = self.api.database.read(group_by_asset=True)\
             .replace({np.nan: None})\
             .to_dict(orient='records')
         self.assertEqual(result, expected)
@@ -184,56 +155,19 @@ class ApiTests(DatabaseTestBase):
         expected += r'\{"group_by_asset": BOOL\}\.'
         self.assertRegex(result, expected)
 
-    def test_read_no_init(self):
-        result = self.client.post('/api/read', json={}).json['message']
-        expected = 'Database not initialized. Please call initialize.'
-        self.assertRegex(result, expected)
-
     def test_read_no_update(self):
-        # init database
-        config = dict(
-            root_directory=self.root,
-            hidebound_directory=self.hb_root,
-            specification_files=[self.specs],
-        )
-        config = json.dumps(config)
-        self.client.post('/api/initialize', json=config)
-
-        # call read
         result = self.client.post('/api/read', json={}).json['message']
         expected = 'Database not updated. Please call update.'
         self.assertRegex(result, expected)
 
     # UPDATE--------------------------------------------------------------------
     def test_update(self):
-        # init database
-        config = dict(
-            root_directory=self.root,
-            hidebound_directory=self.hb_root,
-            specification_files=[self.specs],
-        )
-        config = json.dumps(config)
-        self.client.post('/api/initialize', json=config)
-
-        # call update
         result = self.client.post('/api/update').json['message']
         expected = 'Database updated.'
         self.assertEqual(result, expected)
 
-    def test_update_no_init(self):
-        result = self.client.post('/api/update').json['message']
-        expected = 'Database not initialized. Please call initialize.'
-        self.assertRegex(result, expected)
-
     # DELETE--------------------------------------------------------------------
     def test_delete(self):
-        config = dict(
-            root_directory=self.root,
-            hidebound_directory=self.hb_root,
-            specification_files=[self.specs],
-        )
-        config = json.dumps(config)
-        self.client.post('/api/initialize', json=config)
         self.client.post('/api/update')
         self.client.post('/api/create')
 
@@ -249,14 +183,6 @@ class ApiTests(DatabaseTestBase):
         self.assertFalse(os.path.exists(meta))
 
     def test_delete_no_create(self):
-        config = dict(
-            root_directory=self.root,
-            hidebound_directory=self.hb_root,
-            specification_files=[self.specs],
-        )
-        config = json.dumps(config)
-        self.client.post('/api/initialize', json=config)
-
         result = self.client.post('/api/delete').json['message']
         expected = 'Hidebound data deleted.'
         self.assertEqual(result, expected)
@@ -266,29 +192,16 @@ class ApiTests(DatabaseTestBase):
         self.assertFalse(os.path.exists(data))
         self.assertFalse(os.path.exists(meta))
 
-    def test_delete_no_init(self):
-        result = self.client.post('/api/delete').json['message']
-        expected = 'Database not initialized. Please call initialize.'
-        self.assertRegex(result, expected)
-
     # EXPORT--------------------------------------------------------------------
     def test_export(self):
-        config = dict(
-            root_directory=self.root,
-            hidebound_directory=self.hb_root,
-            specification_files=[self.specs],
-            exporters=dict(girder=dict(api_key='api_key', root_id='root_id'))
-        )
-        config = json.dumps(config)
-        self.client.post('/api/initialize', json=config)
-        self.api.DATABASE._Database__exporter_lut = dict(
+        self.api.database._Database__exporter_lut = dict(
             girder=MockGirderExporter
         )
         self.client.post('/api/update')
         self.client.post('/api/create')
         self.client.post('/api/export')
 
-        client = self.api.DATABASE._Database__exporter_lut['girder']._client
+        client = self.api.database._Database__exporter_lut['girder']._client
         result = list(client.folders.keys())
         asset_paths = [
             'p-proj001_s-spec001_d-pizza_v001',
@@ -297,21 +210,8 @@ class ApiTests(DatabaseTestBase):
         for expected in asset_paths:
             self.assertIn(expected, result)
 
-    def test_export_no_init(self):
-        result = self.client.post('/api/export').json['message']
-        expected = 'Database not initialized. Please call initialize.'
-        self.assertRegex(result, expected)
-
     def test_export_error(self):
-        config = dict(
-            root_directory=self.root,
-            hidebound_directory=self.hb_root,
-            specification_files=[self.specs],
-            exporters=dict(girder=dict(api_key='api_key', root_id='root_id'))
-        )
-        config = json.dumps(config)
-        self.client.post('/api/initialize', json=config)
-        self.api.DATABASE._Database__exporter_lut = dict(
+        self.api.database._Database__exporter_lut = dict(
             girder=MockGirderExporter
         )
         self.client.post('/api/update')
@@ -321,35 +221,20 @@ class ApiTests(DatabaseTestBase):
 
     # SEARCH--------------------------------------------------------------------
     def test_search(self):
-        # init database
-        config = dict(
-            root_directory=self.root,
-            hidebound_directory=self.hb_root,
-            specification_files=[self.specs],
-        )
-        config = json.dumps(config)
-        self.client.post('/api/initialize', json=config)
         self.client.post('/api/update')
 
         # call search
         query = 'SELECT * FROM data WHERE specification == "spec001"'
         temp = {'query': query}
         temp = json.dumps(temp)
-        result = self.client.post('/api/search', json=temp).json['response']
-        expected = api.DATABASE.search(query)\
+        result = self.client.post('/api/search', json=temp)
+        result = result.json['response']
+        expected = self.api.database.search(query)\
             .replace({np.nan: None})\
             .to_dict(orient='records')
         self.assertEqual(result, expected)
 
     def test_search_group_by_asset(self):
-        # init database
-        config = dict(
-            root_directory=self.root,
-            hidebound_directory=self.hb_root,
-            specification_files=[self.specs],
-        )
-        config = json.dumps(config)
-        self.client.post('/api/initialize', json=config)
         self.client.post('/api/update')
 
         # call search
@@ -357,7 +242,7 @@ class ApiTests(DatabaseTestBase):
         temp = {'query': query, 'group_by_asset': True}
         temp = json.dumps(temp)
         result = self.client.post('/api/search', json=temp).json['response']
-        expected = api.DATABASE.search(query, group_by_asset=True)\
+        expected = self.api.database.search(query, group_by_asset=True)\
             .replace({np.nan: None})\
             .to_dict(orient='records')
         self.assertEqual(result, expected)
@@ -388,14 +273,6 @@ class ApiTests(DatabaseTestBase):
         self.assertRegex(result, expected)
 
     def test_search_bad_query(self):
-        # init database
-        config = dict(
-            root_directory=self.root,
-            hidebound_directory=self.hb_root,
-            specification_files=[self.specs],
-        )
-        config = json.dumps(config)
-        self.client.post('/api/initialize', json=config)
         self.client.post('/api/update', json={})
 
         # call search
@@ -405,24 +282,7 @@ class ApiTests(DatabaseTestBase):
         expected = 'PandaSQLException'
         self.assertEqual(result, expected)
 
-    def test_search_no_init(self):
-        query = {'query': 'SELECT * FROM data WHERE specification == "spec001"'}
-        query = json.dumps(query)
-        result = self.client.post('/api/search', json=query).json['message']
-        expected = 'Database not initialized. Please call initialize.'
-        self.assertRegex(result, expected)
-
     def test_search_no_update(self):
-        # init database
-        config = dict(
-            root_directory=self.root,
-            hidebound_directory=self.hb_root,
-            specification_files=[self.specs],
-        )
-        config = json.dumps(config)
-        self.client.post('/api/initialize', json=config)
-
-        # call search
         query = {'query': 'SELECT * FROM data WHERE specification == "spec001"'}
         query = json.dumps(query)
         result = self.client.post('/api/search', json=query).json['message']
@@ -431,14 +291,9 @@ class ApiTests(DatabaseTestBase):
 
     # WORKFLOW------------------------------------------------------------------
     def test_workflow(self):
-        config = dict(
-            root_directory=self.root,
-            hidebound_directory=self.hb_root,
-            specification_files=[self.specs],
-        )
         expected = ['update', 'create', 'export', 'delete']
 
-        data = dict(workflow=expected, config=config)
+        data = dict(workflow=expected)
         data = json.dumps(data)
         result = self.client.post('/api/workflow', json=data).json
 
@@ -452,14 +307,9 @@ class ApiTests(DatabaseTestBase):
         self.assertFalse(os.path.exists(meta))
 
     def test_workflow_create(self):
-        config = dict(
-            root_directory=self.root,
-            hidebound_directory=self.hb_root,
-            specification_files=[self.specs],
-        )
         expected = ['update', 'create']
 
-        data = dict(workflow=expected, config=config)
+        data = dict(workflow=expected)
         data = json.dumps(data)
         result = self.client.post('/api/workflow', json=data).json
 
