@@ -7,6 +7,7 @@ import flasgger as swg
 import flask
 import lunchbox.tools as lbt
 import numpy as np
+import yaml
 
 from hidebound.core.database_test_base import DatabaseTestBase
 from hidebound.exporters.mock_girder import MockGirderExporter
@@ -17,18 +18,27 @@ from hidebound.server.api import api_extension
 class ApiExtensionTests(DatabaseTestBase):
     def setUp(self):
         # setup files and dirs
-        self.tempdir = TemporaryDirectory()
-        temp = self.tempdir.name
+        self.temp_dir = TemporaryDirectory()
+        temp = self.temp_dir.name
         self.hb_root = Path(temp, 'hidebound').as_posix()
         os.makedirs(self.hb_root)
 
         self.root = Path(temp, 'projects').as_posix()
         os.makedirs(self.root)
 
+        self.target_dir = Path(temp, 'archive').as_posix()
+        os.makedirs(self.target_dir)
+
         self.create_files(self.root)
 
         os.environ['HIDEBOUND_ROOT_DIRECTORY'] = self.root
         os.environ['HIDEBOUND_HIDEBOUND_DIRECTORY'] = self.hb_root
+        os.environ['HIDEBOUND_EXPORTERS'] = yaml.safe_dump(dict(
+            local_disk=dict(
+                target_directory=self.target_dir,
+                metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk'],
+            )
+        ))
 
         # setup app
         app = flask.Flask(__name__)
@@ -50,7 +60,7 @@ class ApiExtensionTests(DatabaseTestBase):
 
     def tearDown(self):
         self.context.pop()
-        self.tempdir.cleanup()
+        self.temp_dir.cleanup()
 
     # INITIALIZE----------------------------------------------------------------
     def test_initialize(self):
@@ -194,26 +204,18 @@ class ApiExtensionTests(DatabaseTestBase):
 
     # EXPORT--------------------------------------------------------------------
     def test_export(self):
-        self.api.database._Database__exporter_lut = dict(
-            girder=MockGirderExporter
-        )
+        result = os.listdir(self.target_dir)
+        self.assertEqual(result, [])
+
         self.client.post('/api/update')
         self.client.post('/api/create')
         self.client.post('/api/export')
 
-        client = self.api.database._Database__exporter_lut['girder']._client
-        result = list(client.folders.keys())
-        asset_paths = [
-            'p-proj001_s-spec001_d-pizza_v001',
-            'p-proj001_s-spec001_d-pizza_v002',
-        ]
-        for expected in asset_paths:
-            self.assertIn(expected, result)
+        result = os.listdir(self.target_dir)
+        self.assertIn('content', result)
+        self.assertIn('metadata', result)
 
     def test_export_error(self):
-        self.api.database._Database__exporter_lut = dict(
-            girder=MockGirderExporter
-        )
         self.client.post('/api/update')
         result = self.client.post('/api/export').json['message']
         expected = 'hidebound/content directory does not exist'
