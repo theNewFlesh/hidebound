@@ -15,7 +15,7 @@ import hidebound.server.server_tools as server_tools
 # ------------------------------------------------------------------------------
 
 
-class HideboundExtension:
+class ApiExtension:
     def __init__(self, app=None):
         # type: (Optional[flask.Flask]) -> None
         '''
@@ -492,4 +492,4 @@ class HideboundExtension:
 # ------------------------------------------------------------------------------
 
 
-hidebound_extension = HideboundExtension()
+api_extension = ApiExtension()
