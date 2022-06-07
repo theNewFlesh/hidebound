@@ -16,6 +16,7 @@ services:
     user: ubuntu
     env_file:
       - env
+      - dev-env
     volumes:
       - ../:/home/ubuntu/hidebound
       - ./jupyter:/home/ubuntu/.jupyter

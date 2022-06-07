@@ -1,0 +1,26 @@
+HIDEBOUND_ROOT_DIRECTORY=/tmp/projects
+HIDEBOUND_HIDEBOUND_DIRECTORY=/tmp/hidebound
+HIDEBOUND_INCLUDE_REGEX=''
+HIDEBOUND_EXCLUDE_REGEX='\.DS_Store'
+HIDEBOUND_WRITE_MODE=copy
+HIDEBOUND_SPECIFICATION_FILES='
+- /home/ubuntu/hidebound/python/hidebound/core/test_specifications.py
+'
+HIDEBOUND_EXPORTERS='
+girder:
+  api_key: "eyS0nj9qPC5E7yK5l7nhGVPqDOBKPdA3EC60Rs9h"
+  root_id: "5ed735c8d8dd6242642406e5"
+  root_type: "collection"
+  host: "http://172.17.0.1"
+  port: 8180
+  metadata_types: ["asset", "file"]
+'
+HIDEBOUND_WEBHOOKS='
+- url: "http://foobar.com/api/user?"
+  method: get
+  params:
+    id: 123
+  headers:
+    Content-Type: "application/json"
+    Accept: "application/json"
+'
