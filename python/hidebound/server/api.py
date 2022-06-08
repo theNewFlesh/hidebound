@@ -20,12 +20,10 @@ class ApiExtension:
         # type: (Optional[flask.Flask]) -> None
         '''
         Initialize flask extension.
-        Sets self.database to a Hidebound instance if app is not None.
 
         Args:
             app (flask.Flask, optional): Flask app.
         '''
-        self.database = None  # type: Optional[Database]
         if app is not None:
             self.init_app(app)
 
@@ -48,17 +46,12 @@ class ApiExtension:
     def init_app(self, app):
         # type: (flask.Flask) -> None
         '''
-        Initialize Database instance from flask app.config and set it to
-        self.database.
+        Add endpoints and error handlers to given app.
+        Assigns given app to self.app.
 
         Args:
             app (Flask): Flask app.
         '''
-        # get config and create database
-        app.config.from_prefixed_env('HIDEBOUND')
-        self.config = self._get_config(app)
-        self.database = Database.from_config(self.config)
-
         # register routes
         app.add_url_rule('/api', methods=['GET'], view_func=self.api)
         app.add_url_rule('/api/initialize', methods=['POST'], view_func=self.initialize)
@@ -75,6 +68,20 @@ class ApiExtension:
         app.register_error_handler(KeyError, self.handle_key_error)
         app.register_error_handler(TypeError, self.handle_type_error)
         app.register_error_handler(JSONDecodeError, self.handle_json_decode_error)
+
+        self.app = app
+
+    def connect(self):
+        # type: () -> None
+        '''
+        Connect app to hidebound database and config.
+        Gets config from environment variables and assigns it to app.hb_config.
+        Create a Database instance from config and assign it to app.hb_database.
+        '''
+        # get config and create database
+        self.app.config.from_prefixed_env('HIDEBOUND')
+        self.app.hb_config = self._get_config(self.app)
+        self.app.hb_database = Database.from_config(self.app.hb_config)
 
     def api(self):
         # type: () -> Any

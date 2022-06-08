@@ -1,5 +1,4 @@
 from typing import Any, Dict, List, Tuple, Union
-from pathlib import Path
 
 import json
 import os
@@ -11,12 +10,13 @@ from flask_healthz import healthz
 import dash
 import flasgger as swg
 import flask
+from flask import current_app
 import flask_monitoringdashboard as fmdb
 
+from hidebound.core.config import Config
 import hidebound.server.api as api
 import hidebound.server.components as components
 import hidebound.server.server_tools as server_tools
-from hidebound.core.config import Config
 # ------------------------------------------------------------------------------
 
 
@@ -49,7 +49,7 @@ def get_app():
     '''
     app = flask.Flask('hidebound')  # type: Union[flask.Flask, dash.Dash]
     swg.Swagger(app)
-    app.register_blueprint(api.API)
+    api.api_extension.init_app(app)
 
     # healthz endpoints
     app.register_blueprint(healthz, url_prefix="/healthz")
@@ -69,7 +69,6 @@ def get_app():
 
 
 APP = get_app()
-CONFIG_PATH = None  # type: Union[str, Path, None]
 
 
 @APP.server.route('/static/<stylesheet>')
@@ -122,9 +121,10 @@ def on_event(*inputs):
         dict: Store data.
     '''
     APP.logger.debug(f'on_event called with inputs: {str(inputs)[:50]}')
+    ctx = current_app
 
     store = inputs[-1] or {}  # type: Any
-    config = store.get('config', api.CONFIG)  # type: Dict
+    config = store.get('config', ctx.hb_config)  # type: Dict
     conf = json.dumps(config)
 
     context = dash.callback_context
@@ -144,42 +144,41 @@ def on_event(*inputs):
 
     input_id = context.triggered[0]['prop_id'].split('.')[0]
 
-    server = APP.server
     if input_id == 'init-button':
-        response = server.test_client().post('/api/initialize', json=conf).json
+        response = ctx.test_client().post('/api/initialize', json=conf).json
         if 'error' in response.keys():
             store['/api/read'] = response
 
     elif input_id == 'update-button':
-        if api.DATABASE is None:
-            response = server.test_client().post('/api/initialize', json=conf).json
+        if ctx.hb_database is None:
+            response = ctx.test_client().post('/api/initialize', json=conf).json
             if 'error' in response.keys():
                 store['/api/read'] = response
 
-        server.test_client().post('/api/update')
+        ctx.test_client().post('/api/update')
 
         params = json.dumps({'group_by_asset': grp})
-        response = server.test_client().post('/api/read', json=params).json
+        response = ctx.test_client().post('/api/read', json=params).json
         store['/api/read'] = response
 
     elif input_id == 'create-button':
-        server.test_client().post('/api/create')
+        ctx.test_client().post('/api/create')
 
     elif input_id == 'export-button':
-        response = server.test_client().post('/api/export')
+        response = ctx.test_client().post('/api/export')
         code = response.status_code
         if code < 200 or code >= 300:
             store['/api/read'] = response.json
 
     elif input_id == 'delete-button':
-        server.test_client().post('/api/delete')
+        ctx.test_client().post('/api/delete')
 
     elif input_id == 'search-button':
         query = json.dumps({
             'query': inputs_['query'],
             'group_by_asset': inputs_['dropdown']
         })
-        response = server.test_client().post('/api/search', json=query).json
+        response = ctx.test_client().post('/api/search', json=query).json
         store['/api/read'] = response
         store['query'] = inputs_['query']
 
@@ -196,15 +195,15 @@ def on_event(*inputs):
             store['config'] = temp
             store['config_error'] = server_tools.error_to_response(error).json
 
-    elif input_id == 'write-button':
-        try:
-            config = store['config']
-            Config(config).validate()
-            with open(CONFIG_PATH, 'w') as f:  # type: ignore
-                json.dump(config, f, indent=4, sort_keys=True)
-            store['config_error'] = None
-        except Exception as error:
-            store['config_error'] = server_tools.error_to_response(error).json
+    # elif input_id == 'write-button':
+    #     try:
+    #         config = store['config']
+    #         Config(config).validate()
+    #         with open(CONFIG_PATH, 'w') as f:  # type: ignore
+    #             json.dump(config, f, indent=4, sort_keys=True)
+    #         store['config_error'] = None
+    #     except Exception as error:
+    #         store['config_error'] = server_tools.error_to_response(error).json
 
     return store
 
@@ -277,7 +276,7 @@ def on_get_tab(tab, store):
         return components.get_asset_graph(data['response'])
 
     elif tab == 'config':
-        config = store.get('config', api.CONFIG)
+        config = store.get('config', current_app.hb_config)
         return components.get_config_tab(config)
 
     elif tab == 'api':
@@ -335,20 +334,6 @@ def on_config_card_update(timestamp, store):
 
 
 if __name__ == '__main__':
+    api.api_extension.connect()
     debug = 'DEBUG_MODE' in os.environ.keys()
-    config_path = None  # type: Any
-    if debug:
-        config, config_path = server_tools\
-            .setup_hidebound_directory(
-                '/tmp',
-                config_path='/home/ubuntu/hidebound/resources/test_config.json'
-            )
-    else:
-        config_path = '/mnt/storage/hidebound/config/hidebound_config.json'
-        if not Path(config_path).is_file():
-            config_path = None
-        config, config_path = server_tools \
-            .setup_hidebound_directory('/mnt/storage', config_path=config_path)
-    api.CONFIG = config
-    CONFIG_PATH = config_path
     APP.run_server(debug=debug, host='0.0.0.0', port=8080)
