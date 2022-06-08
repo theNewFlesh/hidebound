@@ -24,22 +24,30 @@ class ApiExtension:
         Args:
             app (flask.Flask, optional): Flask app.
         '''
+        self.disconnect()
+        self.app = None
         if app is not None:
             self.init_app(app)
 
     def _get_config(self, app):
+        dask_enabled = str(app.config.get('DASK_ENABLED', False))
+        if dask_enabled.lower() == 'true':
+            dask_enabled = True
+        elif dask_enabled.lower() == 'false':
+            dask_enabled = False
+
         return dict(
             root_directory=app.config.get('ROOT_DIRECTORY'),
             hidebound_directory=app.config.get('HIDEBOUND_DIRECTORY'),
             include_regex=app.config.get('INCLUDE_REGEX', ''),
             exclude_regex=app.config.get('EXCLUDE_REGEX', r'\.DS_Store'),
             write_mode=app.config.get('WRITE_MODE', 'copy'),
-            dask_enabled=app.config.get('DASK_ENABLED', False),
-            dask_workers=app.config.get('DASK_WORKERS', 8),
+            dask_enabled=dask_enabled,
+            dask_workers=int(app.config.get('DASK_WORKERS', 8)),
             specification_files=yaml.safe_load(
                 app.config.get('SPECIFICATION_FILES', '[]')
             ),
-            exporters=yaml.safe_load(app.config.get('EXPORTERS', '[]')),
+            exporters=yaml.safe_load(app.config.get('EXPORTERS', '{}')),
             webhooks=yaml.safe_load(app.config.get('WEBHOOKS', '[]')),
         )
 
@@ -70,18 +78,29 @@ class ApiExtension:
         app.register_error_handler(JSONDecodeError, self.handle_json_decode_error)
 
         self.app = app
+        self.app.api = self
 
     def connect(self):
         # type: () -> None
         '''
-        Connect app to hidebound database and config.
+        Create hidebound database and config.
         Gets config from environment variables and assigns it to app.hb_config.
         Create a Database instance from config and assign it to app.hb_database.
         '''
-        # get config and create database
+        # create config
         self.app.config.from_prefixed_env('HIDEBOUND')
-        self.app.hb_config = self._get_config(self.app)
-        self.app.hb_database = Database.from_config(self.app.hb_config)
+        self.config = self._get_config(self.app)
+
+        # create database
+        self.database = Database.from_config(self.config)
+
+    def disconnect(self):
+        # type: () -> None
+        '''
+        Sets self.config and self.database to None.
+        '''
+        self.config = None
+        self.database = None
 
     def api(self):
         # type: () -> Any

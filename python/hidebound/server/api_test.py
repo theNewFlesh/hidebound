@@ -51,42 +51,79 @@ class ApiExtensionFlaskTests(DatabaseTestBase):
         self.context.pop()
         self.temp_dir.cleanup()
 
-    def test_init(self):
-        result = ApiExtension(app=None).database
-        self.assertIsNone(result)
+    def get_env_config(self, temp_dir):
+        ingress = Path(temp_dir, 'ingress').as_posix()
+        hidebound = Path(temp_dir, 'hidebound').as_posix()
+        archive = Path(temp_dir, 'archive').as_posix()
 
-        result = ApiExtension(app=self.app).database
-        self.assertIsInstance(result, Database)
+        # creates dirs
+        os.makedirs(ingress)
+        os.makedirs(hidebound)
+        os.makedirs(archive)
+
+        config = dict(
+            root_directory=ingress,
+            hidebound_directory=hidebound,
+            include_regex='',
+            exclude_regex=r'\.DS_Store',
+            write_mode='copy',
+            dask_enabled=False,
+            dask_workers=3,
+        )
+        extra = dict(
+            specification_files=[
+                '/home/ubuntu/hidebound/python/hidebound/core/test_specifications.py'
+            ],
+            exporters=dict(
+                local_disk=dict(
+                    target_directory=archive,
+                    metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk']
+                )
+            ),
+            webhooks=[
+                dict(
+                    url='http://foobar.com/api/user?',
+                    method='get',
+                    params={'id': 123},
+                    headers={
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    }
+                )
+            ]
+        )
+
+        for key, val in config.items():
+            os.environ[f'HIDEBOUND_{key.upper()}'] = str(val)
+        for key, val in extra.items():
+            os.environ[f'HIDEBOUND_{key.upper()}'] = yaml.safe_dump(val)
+
+        config.update(extra)
+        return config
+
+    def test_init(self):
+        result = ApiExtension(app=None)
+        self.assertIsNone(result.app)
+        self.assertIsNone(result.config)
+        self.assertIsNone(result.database)
+
+        result = ApiExtension(app=self.app)
+        self.assertIs(result.app, self.app)
+        self.assertIs(result.app.api, result)
+        self.assertIsNone(result.config)
+        self.assertIsNone(result.database)
 
     def test_get_config(self):
-        expected = dict(
-            ROOT_DIRECTORY='/taco/truck',
-            HIDEBOUND_DIRECTORY='/foo/bar',
-            INCLUDE_REGEX='foo',
-            EXCLUDE_REGEX='bar',
-            WRITE_MODE='baz',
-            DASK_ENABLED=True,
-            DASK_WORKERS=9,
-            SPECIFICATION_FILES=yaml.safe_dump(['a', 'b', 'c']),
-            EXPORTERS=yaml.safe_dump(['d', 'e', 'f']),
-            WEBHOOKS=yaml.safe_dump([1, 2, 3]),
-        )
-        self.app.config.update(expected)
-
-        expected['SPECIFICATION_FILES'] = ['a', 'b', 'c']
-        expected['EXPORTERS'] = ['d', 'e', 'f']
-        expected['WEBHOOKS'] = [1, 2, 3]
-
-        result = ApiExtension()._get_config(self.app)
-        for key, val in expected.items():
-            self.assertEqual(result[key.lower()], expected[key])
+        with TemporaryDirectory() as root:
+            expected = self.get_env_config(root)
+            self.app.config.from_prefixed_env('HIDEBOUND')
+            result = ApiExtension()._get_config(self.app)
+            for key, val in expected.items():
+                self.assertEqual(result[key], val)
 
     def test_init_app(self):
         api = ApiExtension()
         api.init_app(self.app)
-
-        # database
-        self.assertIsInstance(api.database, Database)
 
         # endpoints
         result = [x.rule for x in self.app.url_map.iter_rules()]
@@ -108,8 +145,29 @@ class ApiExtensionFlaskTests(DatabaseTestBase):
         self.assertIn('handle_type_error', result)
         self.assertIn('handle_json_decode_error', result)
 
+        # instance binding
+        self.assertIs(api.app, self.app)
+        self.assertIs(self.app.api, api)
 
-class ApiExtensionTests(DatabaseTestBase):
+    def test_connect(self):
+        with TemporaryDirectory() as root:
+            expected = self.get_env_config(root)
+            result = ApiExtension(app=self.app)
+            result.connect()
+            self.assertEqual(result.config, expected)
+            self.assertIsInstance(result.database, Database)
+
+    def test_disconnect(self):
+        with TemporaryDirectory() as root:
+            self.get_env_config(root)
+            result = ApiExtension(app=self.app)
+            result.connect()
+            result.disconnect()
+            self.assertIsNone(result.config)
+            self.assertIsNone(result.database)
+
+
+class ApiExtensionRestTests(DatabaseTestBase):
     def setUp(self):
         # setup files and dirs
         self.temp_dir = TemporaryDirectory()
