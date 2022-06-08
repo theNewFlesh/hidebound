@@ -9,10 +9,104 @@ import lunchbox.tools as lbt
 import numpy as np
 import yaml
 
+from hidebound.core.database import Database
 from hidebound.core.database_test_base import DatabaseTestBase
-from hidebound.exporters.mock_girder import MockGirderExporter
-from hidebound.server.api import api_extension
+from hidebound.server.api import api_extension, ApiExtension
 # ------------------------------------------------------------------------------
+
+
+class ApiExtensionFlaskTests(DatabaseTestBase):
+    def setUp(self):
+        # setup files and dirs
+        self.temp_dir = TemporaryDirectory()
+        temp = self.temp_dir.name
+        self.hb_root = Path(temp, 'hidebound').as_posix()
+        os.makedirs(self.hb_root)
+
+        self.root = Path(temp, 'projects').as_posix()
+        os.makedirs(self.root)
+
+        self.target_dir = Path(temp, 'archive').as_posix()
+        os.makedirs(self.target_dir)
+
+        self.create_files(self.root)
+
+        os.environ['HIDEBOUND_ROOT_DIRECTORY'] = self.root
+        os.environ['HIDEBOUND_HIDEBOUND_DIRECTORY'] = self.hb_root
+        os.environ['HIDEBOUND_EXPORTERS'] = yaml.safe_dump(dict(
+            local_disk=dict(
+                target_directory=self.target_dir,
+                metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk'],
+            )
+        ))
+
+        # setup app
+        app = flask.Flask(__name__)
+        self.context = app.app_context()
+        self.context.push()
+        self.app = self.context.app
+        self.app.config['TESTING'] = True
+
+    def tearDown(self):
+        self.context.pop()
+        self.temp_dir.cleanup()
+
+    def test_init(self):
+        result = ApiExtension(app=None).database
+        self.assertIsNone(result)
+
+        result = ApiExtension(app=self.app).database
+        self.assertIsInstance(result, Database)
+
+    def test_get_config(self):
+        expected = dict(
+            ROOT_DIRECTORY='/taco/truck',
+            HIDEBOUND_DIRECTORY='/foo/bar',
+            INCLUDE_REGEX='foo',
+            EXCLUDE_REGEX='bar',
+            WRITE_MODE='baz',
+            DASK_ENABLED=True,
+            DASK_WORKERS=9,
+            SPECIFICATION_FILES=yaml.safe_dump(['a', 'b', 'c']),
+            EXPORTERS=yaml.safe_dump(['d', 'e', 'f']),
+            WEBHOOKS=yaml.safe_dump([1, 2, 3]),
+        )
+        self.app.config.update(expected)
+
+        expected['SPECIFICATION_FILES'] = ['a', 'b', 'c']
+        expected['EXPORTERS'] = ['d', 'e', 'f']
+        expected['WEBHOOKS'] = [1, 2, 3]
+
+        result = ApiExtension()._get_config(self.app)
+        for key, val in expected.items():
+            self.assertEqual(result[key.lower()], expected[key])
+
+    def test_init_app(self):
+        api = ApiExtension()
+        api.init_app(self.app)
+
+        # database
+        self.assertIsInstance(api.database, Database)
+
+        # endpoints
+        result = [x.rule for x in self.app.url_map.iter_rules()]
+        self.assertIn('/api', result)
+        self.assertIn('/api/create', result)
+        self.assertIn('/api/delete', result)
+        self.assertIn('/api/export', result)
+        self.assertIn('/api/initialize', result)
+        self.assertIn('/api/read', result)
+        self.assertIn('/api/search', result)
+        self.assertIn('/api/update', result)
+        self.assertIn('/api/workflow', result)
+
+        # error handlers
+        result = self.app.error_handler_spec[None][None].values()
+        result = [x.__name__ for x in result]
+        self.assertIn('handle_data_error', result)
+        self.assertIn('handle_key_error', result)
+        self.assertIn('handle_type_error', result)
+        self.assertIn('handle_json_decode_error', result)
 
 
 class ApiExtensionTests(DatabaseTestBase):
