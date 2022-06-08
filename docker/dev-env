@@ -1,4 +1,4 @@
-HIDEBOUND_ROOT_DIRECTORY=/tmp/projects
+HIDEBOUND_ROOT_DIRECTORY=/tmp/ingress
 HIDEBOUND_HIDEBOUND_DIRECTORY=/tmp/hidebound
 HIDEBOUND_INCLUDE_REGEX=''
 HIDEBOUND_EXCLUDE_REGEX='\.DS_Store'
@@ -8,7 +8,7 @@ HIDEBOUND_SPECIFICATION_FILES='
 '
 HIDEBOUND_EXPORTERS='
 local_disk:
-  target_directory: /tmp/archive,
+  target_directory: /tmp/archive
   metadata_types:
     - asset
     - file

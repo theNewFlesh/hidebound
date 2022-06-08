@@ -1,5 +1,5 @@
 {
-    "root_directory": "/tmp/projects",
+    "root_directory": "/tmp/ingress",
     "hidebound_directory": "/tmp/hidebound",
     "specification_files": [
         "/home/ubuntu/hidebound/python/hidebound/core/test_specifications.py"
