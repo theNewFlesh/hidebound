@@ -99,8 +99,8 @@ class ApiExtensionTestBase(DatabaseTestBase):
 
     def write_config(self, config, temp_dir):
         filepath = None
-        filepath = Path(temp_dir, 'hidebound_config.yaml').as_posix()
-        with open(filepath) as f:
+        filepath = Path(temp_dir, 'hidebound_config.yaml')
+        with open(filepath, 'w') as f:
             yaml.safe_dump(config, f)
         return filepath
 # ------------------------------------------------------------------------------
@@ -119,13 +119,28 @@ class ApiExtensionInitTests(ApiExtensionTestBase):
         self.assertIsNone(result.config)
         self.assertIsNone(result.database)
 
-    def test_get_config(self):
+    def test_get_config_from_env(self):
         with TemporaryDirectory() as root:
-            expected = self.get_env_config(root)
+            expected = self.get_config(root)
             self.app.config.from_prefixed_env('HIDEBOUND')
-            result = ApiExtension()._get_config(self.app)
+            result = ApiExtension()._get_config_from_env(self.app)
             for key, val in expected.items():
                 self.assertEqual(result[key], val)
+
+    def test_get_config_from_file(self):
+        with TemporaryDirectory() as root:
+            expected = self.get_config(root)
+            filepath = self.write_config(expected, root)
+            result = ApiExtension()._get_config_from_file(filepath)
+            for key, val in expected.items():
+                self.assertEqual(result[key], val)
+
+    def test_get_config_from_file_error(self):
+        expected = 'Hidebound config files must end in one of these extensions:'
+        expected += r" \['json', 'yml', 'yaml'\]\. Given file: "
+        expected += r'/foo/bar/config\.pizza\.'
+        with self.assertRaisesRegexp(FileNotFoundError, expected):
+            ApiExtension()._get_config_from_file('/foo/bar/config.pizza')
 
     def test_init_app(self):
         api = ApiExtension()

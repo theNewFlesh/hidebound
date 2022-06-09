@@ -71,8 +71,8 @@ class ApiExtension:
         ext = os.path.splitext(fp)[-1].lower().lstrip('.')
         exts = ['json', 'yml', 'yaml']
         if ext not in exts:
-            msg = f'Hidebound config file {fp} must have one of these '
-            msg += f'extensions: {exts}.'
+            msg = 'Hidebound config files must end in one of these extensions: '
+            msg += f'{exts}. Given file: {fp}.'
             raise FileNotFoundError(msg)
 
         with open(filepath) as f:
