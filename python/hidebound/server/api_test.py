@@ -101,11 +101,16 @@ class ApiExtensionTestBase(DatabaseTestBase):
         config.update(extra)
         return config
 
-    def write_config(self, config, temp_dir):
+    def write_config(self, config, temp_dir, yaml=True):
         filepath = None
-        filepath = Path(temp_dir, 'hidebound_config.yaml').as_posix()
-        with open(filepath, 'w') as f:
-            yaml.safe_dump(config, f)
+        if yaml:
+            filepath = Path(temp_dir, 'hidebound_config.yaml').as_posix()
+            with open(filepath, 'w') as f:
+                yaml.safe_dump(config, f)
+        else:
+            filepath = Path(temp_dir, 'hidebound_config.json').as_posix()
+            with open(filepath, 'w') as f:
+                json.dump(config, f)
 
         os.environ['HIDEBOUND_CONFIG_FILEPATH'] = filepath
         return filepath
@@ -133,10 +138,28 @@ class ApiExtensionInitTests(ApiExtensionTestBase):
             for key, val in expected.items():
                 self.assertEqual(result[key], val)
 
+    def test_get_config_from_env_bool(self):
+        with TemporaryDirectory() as root:
+            expected = self.get_config(root)
+            expected['dask_enabled'] = True
+            os.environ['HIDEBOUND_DASK_ENABLED'] = 'True'
+            self.app.config.from_prefixed_env('HIDEBOUND')
+            result = ApiExtension()._get_config_from_env(self.app)
+            for key, val in expected.items():
+                self.assertEqual(result[key], val)
+
     def test_get_config_from_file(self):
         with TemporaryDirectory() as root:
             expected = self.get_config(root)
             filepath = self.write_config(expected, root)
+            result = ApiExtension()._get_config_from_file(filepath)
+            for key, val in expected.items():
+                self.assertEqual(result[key], val)
+
+    def test_get_config_from_file_json(self):
+        with TemporaryDirectory() as root:
+            expected = self.get_config(root)
+            filepath = self.write_config(expected, root, yaml=False)
             result = ApiExtension()._get_config_from_file(filepath)
             for key, val in expected.items():
                 self.assertEqual(result[key], val)
