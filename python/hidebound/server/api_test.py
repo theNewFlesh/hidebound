@@ -101,9 +101,9 @@ class ApiExtensionTestBase(DatabaseTestBase):
         config.update(extra)
         return config
 
-    def write_config(self, config, temp_dir, yaml=True):
+    def write_config(self, config, temp_dir, as_yaml=True):
         filepath = None
-        if yaml:
+        if as_yaml:
             filepath = Path(temp_dir, 'hidebound_config.yaml').as_posix()
             with open(filepath, 'w') as f:
                 yaml.safe_dump(config, f)
@@ -159,7 +159,7 @@ class ApiExtensionInitTests(ApiExtensionTestBase):
     def test_get_config_from_file_json(self):
         with TemporaryDirectory() as root:
             expected = self.get_config(root)
-            filepath = self.write_config(expected, root, yaml=False)
+            filepath = self.write_config(expected, root, as_yaml=False)
             result = ApiExtension()._get_config_from_file(filepath)
             for key, val in expected.items():
                 self.assertEqual(result[key], val)
