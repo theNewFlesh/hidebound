@@ -96,6 +96,13 @@ class ApiExtensionTestBase(DatabaseTestBase):
 
         config.update(extra)
         return config
+
+    def write_config(self, config, temp_dir):
+        filepath = None
+        filepath = Path(temp_dir, 'hidebound_config.yaml').as_posix()
+        with open(filepath) as f:
+            yaml.safe_dump(config, f)
+        return filepath
 # ------------------------------------------------------------------------------
 
 
