@@ -124,7 +124,7 @@ def on_event(*inputs):
     ctx = current_app
 
     store = inputs[-1] or {}  # type: Any
-    config = store.get('config', ctx.hb_config)  # type: Dict
+    config = store.get('config', ctx.api.config)  # type: Dict
     conf = json.dumps(config)
 
     context = dash.callback_context
@@ -150,7 +150,7 @@ def on_event(*inputs):
             store['/api/read'] = response
 
     elif input_id == 'update-button':
-        if ctx.hb_database is None:
+        if ctx.api.database is None:
             response = ctx.test_client().post('/api/initialize', json=conf).json
             if 'error' in response.keys():
                 store['/api/read'] = response
@@ -276,7 +276,7 @@ def on_get_tab(tab, store):
         return components.get_asset_graph(data['response'])
 
     elif tab == 'config':
-        config = store.get('config', current_app.hb_config)
+        config = store.get('config', current_app.api.config)
         return components.get_config_tab(config)
 
     elif tab == 'api':
@@ -334,6 +334,6 @@ def on_config_card_update(timestamp, store):
 
 
 if __name__ == '__main__':
-    APP.api.connect()
+    APP.server.api.connect()
     debug = 'DEBUG_MODE' in os.environ.keys()
     APP.run_server(debug=debug, host='0.0.0.0', port=8080)
