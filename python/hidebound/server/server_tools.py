@@ -207,3 +207,16 @@ def get_search_error():
     msg += '{"query": SQL query, "group_by_asset": BOOL}.'
     error = ValueError(msg)
     return error_to_response(error)
+
+
+def get_connection_error():
+    # type: () -> flask.Response
+    '''
+    Convenience function for returning a database connection error response.
+
+    Returns:
+        Response: Connection error.
+    '''
+    msg = 'Database not connected.'
+    error = RuntimeError(msg)
+    return error_to_response(error)
