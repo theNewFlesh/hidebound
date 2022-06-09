@@ -1,6 +1,7 @@
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 from json import JSONDecodeError
+from pathlib import Path
 import json
 import os
 
@@ -34,6 +35,16 @@ class ApiExtension:
             self.init_app(app)
 
     def _get_config(self, app):
+        # type: (flask.Flask) -> dict
+        '''
+        Get config from envirnment variables or config file.
+
+        Args:
+            app (flask.Flask): Flask app.
+
+        Returns:
+            dict: Database config.
+        '''
         config_path = os.environ.get('HIDEBOUND_CONFIG_FILEPATH', None)
         if config_path is not None:
             return self._get_config_from_file(config_path)
@@ -42,10 +53,25 @@ class ApiExtension:
         return self._get_config_from_env(app)
 
     def _get_config_from_file(self, filepath):
-        ext = os.path.splitext(filepath)[-1].lower().lstrip('.')
+        # type: (Union[str, Path]) -> dict
+        '''
+        Get config from envirnment variables or config file.
+
+        Args:
+            filepath (str or Path): Filepath of hidebound config.
+
+        Raises:
+            FileNotFoundError: If HIDEBOUND_CONFIG_FILEPATH is set to a file
+                that does not end in json, yml or yaml.
+
+        Returns:
+            dict: Database config.
+        '''
+        fp = Path(filepath).as_posix()
+        ext = os.path.splitext(fp)[-1].lower().lstrip('.')
         exts = ['json', 'yml', 'yaml']
         if ext not in exts:
-            msg = f'Hidebound config file {filepath} must have one of these '
+            msg = f'Hidebound config file {fp} must have one of these '
             msg += f'extensions: {exts}.'
             raise FileNotFoundError(msg)
 
@@ -55,7 +81,17 @@ class ApiExtension:
             return jsonc.JsonComment().load(f)
 
     def _get_config_from_env(self, app):
-        dask_enabled = str(app.config.get('DASK_ENABLED', False))
+        # type: (flask.Flask) -> dict
+        '''
+        Get config from environment variables.
+
+        Args:
+            app (flask.Flask): Flask app.
+
+        Returns:
+            dict: Database config.
+        '''
+        dask_enabled = str(app.config.get('DASK_ENABLED', False))  # type: Any
         if dask_enabled.lower() == 'true':
             dask_enabled = True
         elif dask_enabled.lower() == 'false':
