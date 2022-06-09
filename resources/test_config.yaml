@@ -1,11 +1,11 @@
-hidebound_root_directory: /tmp/ingress
-hidebound_hidebound_directory: /tmp/hidebound
-hidebound_include_regex: ""
-hidebound_exclude_regex: "\.DS_Store"
-hidebound_write_mode: copy
-hidebound_specification_files:
+root_directory: /tmp/ingress
+hidebound_directory: /tmp/hidebound
+include_regex: ""
+exclude_regex: "\\.DS_Store"
+write_mode: copy
+specification_files:
   - /home/ubuntu/hidebound/python/hidebound/core/test_specifications.py
-hidebound_exporters:
+exporters:
   local_disk:
     target_directory: /tmp/archive
     metadata_types:
@@ -13,7 +13,7 @@ hidebound_exporters:
       - file
       - asset-chunk
       - file-chunk
-hidebound_webhooks:
+webhooks:
   - url: "http://foobar.com/api/user?"
     method: get
     params:
