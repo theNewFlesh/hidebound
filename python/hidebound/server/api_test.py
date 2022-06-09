@@ -19,7 +19,7 @@ class ApiExtensionTestBase(DatabaseTestBase):
     def setUp(self):
         # setup files and dirs
         self.temp_dir = TemporaryDirectory()
-        self.config = self.get_env_config(self.temp_dir.name)
+        self.config = self.get_config(self.temp_dir.name)
         self.root = self.config['root_directory']
         self.hb_root = self.config['hidebound_directory']
         self.target_dir = self.config['exporters']['local_disk']['target_directory']
@@ -47,7 +47,7 @@ class ApiExtensionTestBase(DatabaseTestBase):
         self.api = ApiExtension(self.app)
         self.api.connect()
 
-    def get_env_config(self, temp_dir):
+    def get_config(self, temp_dir):
         ingress = Path(temp_dir, 'ingress').as_posix()
         hidebound = Path(temp_dir, 'hidebound').as_posix()
         archive = Path(temp_dir, 'archive').as_posix()
@@ -150,7 +150,7 @@ class ApiExtensionInitTests(ApiExtensionTestBase):
 
     def test_connect(self):
         with TemporaryDirectory() as root:
-            expected = self.get_env_config(root)
+            expected = self.get_config(root)
             result = ApiExtension(app=self.app)
             result.connect()
             self.assertEqual(result.config, expected)
@@ -158,7 +158,7 @@ class ApiExtensionInitTests(ApiExtensionTestBase):
 
     def test_disconnect(self):
         with TemporaryDirectory() as root:
-            self.get_env_config(root)
+            self.get_config(root)
             result = ApiExtension(app=self.app)
             result.connect()
             result.disconnect()
