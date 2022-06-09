@@ -148,8 +148,8 @@ class ApiExtension:
         Gets config from environment variables and assigns it to self.config.
         Create a Database instance from config and assign it to self.database.
         '''
-        self.config = self._get_config(self.app)
-        self.database = Database.from_config(self.config)  # type: ignore
+        self.config = self._get_config(self.app)  # type: ignore
+        self.database = Database.from_config(self.config)
 
     def disconnect(self):
         # type: () -> None
