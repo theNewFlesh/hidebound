@@ -2,6 +2,7 @@ import json
 import os
 from pathlib import Path
 from tempfile import TemporaryDirectory
+import unittest
 
 import flasgger as swg
 import flask
@@ -11,7 +12,16 @@ import yaml
 
 from hidebound.core.database import Database
 from hidebound.core.database_test_base import DatabaseTestBase
-from hidebound.server.api import ApiExtension
+from hidebound.server.api import ApiExtension, Singleton
+# ------------------------------------------------------------------------------
+
+
+class SingletonTests(unittest.TestCase):
+    def test_new(self):
+        class Foo(Singleton):
+            pass
+
+        self.assertIs(Foo(), Foo())
 # ------------------------------------------------------------------------------
 
 

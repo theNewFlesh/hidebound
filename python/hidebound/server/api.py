@@ -18,7 +18,17 @@ import hidebound.server.server_tools as server_tools
 # ------------------------------------------------------------------------------
 
 
-class ApiExtension:
+class Singleton:
+    '''
+    A super class for creating singleton classes.
+    '''
+    def __new__(cls, *args, **kwargs):
+        if not hasattr(cls, '_instance'):
+            cls._instance = super(Singleton, cls).__new__(cls)
+        return cls._instance
+
+
+class ApiExtension(Singleton):
     def __init__(self, app=None):
         # type: (Optional[flask.Flask]) -> None
         '''
