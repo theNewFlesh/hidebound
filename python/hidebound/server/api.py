@@ -30,6 +30,7 @@ class ApiExtension:
         self.config = None  # type: Optional[dict]
         self.database = None  # type: Optional[Database]
         self.app = None  # type: Optional[flask.Flask]
+        self.connected = False  # type: bool
         self.disconnect()
         if app is not None:
             self.init_app(app)
@@ -150,6 +151,7 @@ class ApiExtension:
         '''
         self.config = self._get_config(self.app)  # type: ignore
         self.database = Database.from_config(self.config)
+        self.connected = True
 
     def disconnect(self):
         # type: () -> None
@@ -158,6 +160,7 @@ class ApiExtension:
         '''
         self.config = None
         self.database = None
+        self.connected = False
 
     def api(self):
         # type: () -> Any
@@ -239,11 +242,11 @@ class ApiExtension:
         Returns:
             Response: Flask Response instance.
         '''
-        if self.database is None:
-            return server_tools.get_initialization_error()
+        if not self.connected:
+            return server_tools.get_connection_error()
 
         try:
-            self.database.create()
+            self.database.create()  # type: ignore
         except RuntimeError:
             return server_tools.get_update_error()
 
@@ -280,8 +283,8 @@ class ApiExtension:
         Returns:
             Response: Flask Response instance.
         '''
-        if self.database is None:
-            return server_tools.get_initialization_error()
+        if not self.connected:
+            return server_tools.get_connection_error()
 
         params = flask.request.get_json()  # type: Any
         grp = False
@@ -295,7 +298,7 @@ class ApiExtension:
 
         response = {}  # type: Any
         try:
-            response = self.database.read(group_by_asset=grp)
+            response = self.database.read(group_by_asset=grp)  # type: ignore
         except Exception as error:
             if isinstance(error, RuntimeError):
                 return server_tools.get_update_error()
@@ -328,10 +331,10 @@ class ApiExtension:
         Returns:
             Response: Flask Response instance.
         '''
-        if self.database is None:
-            return server_tools.get_initialization_error()
+        if not self.connected:
+            return server_tools.get_connection_error()
 
-        self.database.update()
+        self.database.update()  # type: ignore
         return flask.Response(
             response=json.dumps(dict(message='Database updated.')),
             mimetype='application/json'
@@ -357,10 +360,10 @@ class ApiExtension:
         Returns:
             Response: Flask Response instance.
         '''
-        if self.database is None:
-            return server_tools.get_initialization_error()
+        if not self.connected:
+            return server_tools.get_connection_error()
 
-        self.database.delete()
+        self.database.delete()  # type: ignore
         return flask.Response(
             response=json.dumps(dict(message='Hidebound data deleted.')),
             mimetype='application/json'
@@ -386,11 +389,11 @@ class ApiExtension:
         Returns:
             Response: Flask Response instance.
         '''
-        if self.database is None:
-            return server_tools.get_initialization_error()
+        if not self.connected:
+            return server_tools.get_connection_error()
 
         try:
-            self.database.export()
+            self.database.export()  # type: ignore
         except Exception as error:
             return server_tools.error_to_response(error)
 
@@ -444,15 +447,15 @@ class ApiExtension:
         except (JSONDecodeError, TypeError, KeyError, AssertionError):
             return server_tools.get_search_error()
 
-        if self.database is None:
-            return server_tools.get_initialization_error()
+        if not self.connected:
+            return server_tools.get_connection_error()
 
-        if self.database.data is None:
+        if self.database.data is None:  # type: ignore
             return server_tools.get_update_error()
 
         response = None
         try:
-            response = self.database.search(query, group_by_asset=grp)
+            response = self.database.search(query, group_by_asset=grp)  # type: ignore
         except Exception as e:
             return server_tools.error_to_response(e)
 

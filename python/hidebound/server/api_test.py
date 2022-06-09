@@ -224,15 +224,18 @@ class ApiExtensionInitTests(ApiExtensionTestBase):
             result.connect()
             self.assertEqual(result.config, expected)
             self.assertIsInstance(result.database, Database)
+            self.assertTrue(result.connected)
 
     def test_disconnect(self):
         with TemporaryDirectory() as root:
             self.get_config(root)
             result = ApiExtension(app=self.app)
             result.connect()
+            self.assertTrue(result.connected)
             result.disconnect()
             self.assertIsNone(result.config)
             self.assertIsNone(result.database)
+            self.assertFalse(result.connected)
 # ------------------------------------------------------------------------------
 
 
@@ -298,6 +301,12 @@ class ApiExtensionEndpointTests(ApiExtensionTestBase):
         expected = 'Database not updated. Please call update.'
         self.assertRegex(result, expected)
 
+    def test_create_connection_error(self):
+        self.api.disconnect()
+        result = self.client.post('/api/create').json['message']
+        expected = 'Database not connected.'
+        self.assertRegex(result, expected)
+
     # READ----------------------------------------------------------------------
     def test_read(self):
         self.client.post('/api/update')
@@ -338,6 +347,12 @@ class ApiExtensionEndpointTests(ApiExtensionTestBase):
         expected += r'\{"group_by_asset": BOOL\}\.'
         self.assertRegex(result, expected)
 
+    def test_read_connection_error(self):
+        self.api.disconnect()
+        result = self.client.post('/api/read', json={}).json['message']
+        expected = 'Database not connected.'
+        self.assertRegex(result, expected)
+
     def test_read_no_update(self):
         result = self.client.post('/api/read', json={}).json['message']
         expected = 'Database not updated. Please call update.'
@@ -348,6 +363,12 @@ class ApiExtensionEndpointTests(ApiExtensionTestBase):
         result = self.client.post('/api/update').json['message']
         expected = 'Database updated.'
         self.assertEqual(result, expected)
+
+    def test_update_connection_error(self):
+        self.api.disconnect()
+        result = self.client.post('/api/update').json['message']
+        expected = 'Database not connected.'
+        self.assertRegex(result, expected)
 
     # DELETE--------------------------------------------------------------------
     def test_delete(self):
@@ -375,6 +396,12 @@ class ApiExtensionEndpointTests(ApiExtensionTestBase):
         self.assertFalse(os.path.exists(data))
         self.assertFalse(os.path.exists(meta))
 
+    def test_delete_connection_error(self):
+        self.api.disconnect()
+        result = self.client.post('/api/delete').json['message']
+        expected = 'Database not connected.'
+        self.assertRegex(result, expected)
+
     # EXPORT--------------------------------------------------------------------
     def test_export(self):
         result = os.listdir(self.target_dir)
@@ -387,6 +414,12 @@ class ApiExtensionEndpointTests(ApiExtensionTestBase):
         result = os.listdir(self.target_dir)
         self.assertIn('content', result)
         self.assertIn('metadata', result)
+
+    def test_export_connection_error(self):
+        self.api.disconnect()
+        result = self.client.post('/api/export').json['message']
+        expected = 'Database not connected.'
+        self.assertRegex(result, expected)
 
     def test_export_error(self):
         self.client.post('/api/update')
@@ -456,6 +489,14 @@ class ApiExtensionEndpointTests(ApiExtensionTestBase):
         result = self.client.post('/api/search', json=query).json['error']
         expected = 'PandaSQLException'
         self.assertEqual(result, expected)
+
+    def test_search_connection_error(self):
+        self.api.disconnect()
+        query = {'query': 'SELECT * FROM data WHERE specification == "spec001"'}
+        query = json.dumps(query)
+        result = self.client.post('/api/search', json=query).json['message']
+        expected = 'Database not connected.'
+        self.assertRegex(result, expected)
 
     def test_search_no_update(self):
         query = {'query': 'SELECT * FROM data WHERE specification == "spec001"'}
