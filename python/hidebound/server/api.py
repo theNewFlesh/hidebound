@@ -2,11 +2,13 @@ from typing import Any, Optional
 
 from json import JSONDecodeError
 import json
+import os
 
 from schematics.exceptions import DataError
 from werkzeug.exceptions import BadRequest
 import flasgger as swg
 import flask
+import jsoncomment as jsonc
 import numpy as np
 import yaml
 
@@ -32,6 +34,27 @@ class ApiExtension:
             self.init_app(app)
 
     def _get_config(self, app):
+        config_path = os.environ.get('HIDEBOUND_CONFIG_FILEPATH', None)
+        if config_path is not None:
+            return self._get_config_from_file(config_path)
+
+        app.config.from_prefixed_env('HIDEBOUND')
+        return self._get_config_from_env(app)
+
+    def _get_config_from_file(self, filepath):
+        ext = os.path.splitext(filepath)[-1].lower().lstrip('.')
+        exts = ['json', 'yml', 'yaml']
+        if ext not in exts:
+            msg = f'Hidebound config file {filepath} must have one of these '
+            msg += f'extensions: {exts}.'
+            raise FileNotFoundError(msg)
+
+        with open(filepath) as f:
+            if ext in ['yml', 'yaml']:
+                return yaml.safe_load(f)
+            return jsonc.JsonComment().load(f)
+
+    def _get_config_from_env(self, app):
         dask_enabled = str(app.config.get('DASK_ENABLED', False))
         if dask_enabled.lower() == 'true':
             dask_enabled = True
@@ -89,11 +112,7 @@ class ApiExtension:
         Gets config from environment variables and assigns it to self.config.
         Create a Database instance from config and assign it to self.database.
         '''
-        # create config
-        self.app.config.from_prefixed_env('HIDEBOUND')  # type: ignore
         self.config = self._get_config(self.app)
-
-        # create database
         self.database = Database.from_config(self.config)  # type: ignore
 
     def disconnect(self):
