@@ -49,7 +49,7 @@ def get_app():
     '''
     app = flask.Flask('hidebound')  # type: Union[flask.Flask, dash.Dash]
     swg.Swagger(app)
-    api.api_extension.init_app(app)
+    api.ApiExtension(app)
 
     # healthz endpoints
     app.register_blueprint(healthz, url_prefix="/healthz")
@@ -334,6 +334,6 @@ def on_config_card_update(timestamp, store):
 
 
 if __name__ == '__main__':
-    api.api_extension.connect()
+    APP.api.connect()
     debug = 'DEBUG_MODE' in os.environ.keys()
     APP.run_server(debug=debug, host='0.0.0.0', port=8080)

@@ -11,85 +11,19 @@ import yaml
 
 from hidebound.core.database import Database
 from hidebound.core.database_test_base import DatabaseTestBase
-from hidebound.server.api import api_extension, ApiExtension
+from hidebound.server.api import ApiExtension
 # ------------------------------------------------------------------------------
 
 
-def get_env_config(temp_dir):
-    ingress = Path(temp_dir, 'ingress').as_posix()
-    hidebound = Path(temp_dir, 'hidebound').as_posix()
-    archive = Path(temp_dir, 'archive').as_posix()
-
-    # creates dirs
-    os.makedirs(ingress)
-    os.makedirs(hidebound)
-    os.makedirs(archive)
-
-    config = dict(
-        root_directory=ingress,
-        hidebound_directory=hidebound,
-        include_regex='',
-        exclude_regex=r'\.DS_Store',
-        write_mode='copy',
-        dask_enabled=False,
-        dask_workers=3,
-    )
-    extra = dict(
-        specification_files=[
-            '/home/ubuntu/hidebound/python/hidebound/core/test_specifications.py'
-        ],
-        exporters=dict(
-            local_disk=dict(
-                target_directory=archive,
-                metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk']
-            )
-        ),
-        webhooks=[
-            dict(
-                url='http://foobar.com/api/user?',
-                method='get',
-                params={'id': 123},
-                headers={
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                }
-            )
-        ]
-    )
-
-    for key, val in config.items():
-        os.environ[f'HIDEBOUND_{key.upper()}'] = str(val)
-    for key, val in extra.items():
-        os.environ[f'HIDEBOUND_{key.upper()}'] = yaml.safe_dump(val)
-
-    config.update(extra)
-    return config
-
-
-class ApiExtensionFlaskTests(DatabaseTestBase):
+class ApiExtensionTestBase(DatabaseTestBase):
     def setUp(self):
         # setup files and dirs
         self.temp_dir = TemporaryDirectory()
-        temp = self.temp_dir.name
-        self.hb_root = Path(temp, 'hidebound').as_posix()
-        os.makedirs(self.hb_root)
-
-        self.root = Path(temp, 'projects').as_posix()
-        os.makedirs(self.root)
-
-        self.target_dir = Path(temp, 'archive').as_posix()
-        os.makedirs(self.target_dir)
-
+        self.config = self.get_env_config(self.temp_dir.name)
+        self.root = self.config['root_directory']
+        self.hb_root = self.config['hidebound_directory']
+        self.target_dir = self.config['exporters']['local_disk']['target_directory']
         self.create_files(self.root)
-
-        os.environ['HIDEBOUND_ROOT_DIRECTORY'] = self.root
-        os.environ['HIDEBOUND_HIDEBOUND_DIRECTORY'] = self.hb_root
-        os.environ['HIDEBOUND_EXPORTERS'] = yaml.safe_dump(dict(
-            local_disk=dict(
-                target_directory=self.target_dir,
-                metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk'],
-            )
-        ))
 
         # setup app
         app = flask.Flask(__name__)
@@ -98,10 +32,74 @@ class ApiExtensionFlaskTests(DatabaseTestBase):
         self.app = self.context.app
         self.app.config['TESTING'] = True
 
+        # set instance members
+        self.client = self.app.test_client()
+        self.specs = lbt.relative_path(
+            __file__, '../core/test_specifications.py'
+        ).absolute().as_posix()
+
     def tearDown(self):
         self.context.pop()
         self.temp_dir.cleanup()
 
+    def setup_api(self):
+        swg.Swagger(self.app)
+        self.api = ApiExtension(self.app)
+        self.api.connect()
+
+    def get_env_config(self, temp_dir):
+        ingress = Path(temp_dir, 'ingress').as_posix()
+        hidebound = Path(temp_dir, 'hidebound').as_posix()
+        archive = Path(temp_dir, 'archive').as_posix()
+
+        # creates dirs
+        os.makedirs(ingress)
+        os.makedirs(hidebound)
+        os.makedirs(archive)
+
+        config = dict(
+            root_directory=ingress,
+            hidebound_directory=hidebound,
+            include_regex='',
+            exclude_regex=r'\.DS_Store',
+            write_mode='copy',
+            dask_enabled=False,
+            dask_workers=3,
+        )
+        extra = dict(
+            specification_files=[
+                '/home/ubuntu/hidebound/python/hidebound/core/test_specifications.py'
+            ],
+            exporters=dict(
+                local_disk=dict(
+                    target_directory=archive,
+                    metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk']
+                )
+            ),
+            webhooks=[
+                dict(
+                    url='http://foobar.com/api/user?',
+                    method='get',
+                    params={'id': 123},
+                    headers={
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    }
+                )
+            ]
+        )
+
+        for key, val in config.items():
+            os.environ[f'HIDEBOUND_{key.upper()}'] = str(val)
+        for key, val in extra.items():
+            os.environ[f'HIDEBOUND_{key.upper()}'] = yaml.safe_dump(val)
+
+        config.update(extra)
+        return config
+# ------------------------------------------------------------------------------
+
+
+class ApiExtensionInitTests(ApiExtensionTestBase):
     def test_init(self):
         result = ApiExtension(app=None)
         self.assertIsNone(result.app)
@@ -116,7 +114,7 @@ class ApiExtensionFlaskTests(DatabaseTestBase):
 
     def test_get_config(self):
         with TemporaryDirectory() as root:
-            expected = get_env_config(root)
+            expected = self.get_env_config(root)
             self.app.config.from_prefixed_env('HIDEBOUND')
             result = ApiExtension()._get_config(self.app)
             for key, val in expected.items():
@@ -152,7 +150,7 @@ class ApiExtensionFlaskTests(DatabaseTestBase):
 
     def test_connect(self):
         with TemporaryDirectory() as root:
-            expected = get_env_config(root)
+            expected = self.get_env_config(root)
             result = ApiExtension(app=self.app)
             result.connect()
             self.assertEqual(result.config, expected)
@@ -160,48 +158,19 @@ class ApiExtensionFlaskTests(DatabaseTestBase):
 
     def test_disconnect(self):
         with TemporaryDirectory() as root:
-            get_env_config(root)
+            self.get_env_config(root)
             result = ApiExtension(app=self.app)
             result.connect()
             result.disconnect()
             self.assertIsNone(result.config)
             self.assertIsNone(result.database)
+#-------------------------------------------------------------------------------
 
 
-class ApiExtensionRestTests(DatabaseTestBase):
+class ApiExtensionEndpointTests(ApiExtensionTestBase):
     def setUp(self):
-        # setup files and dirs
-        self.temp_dir = TemporaryDirectory()
-        self.config = get_env_config(self.temp_dir.name)
-        self.root = self.config['root_directory']
-        self.hb_root = self.config['hidebound_directory']
-        self.target_dir = self.config['exporters']['local_disk']['target_directory']
-
-        self.create_files(self.root)
-
-        # setup app
-        app = flask.Flask(__name__)
-        swg.Swagger(app)
-
-        self.api = ApiExtension(app)
-        self.api.connect()
-
-        self.context = app.app_context()
-        self.context.push()
-
-        self.app = self.context.app
-
-        self.client = self.app.test_client()
-        self.app.config['TESTING'] = True
-
-        self.specs = lbt.relative_path(
-            __file__,
-            '../core/test_specifications.py'
-        ).absolute().as_posix()
-
-    def tearDown(self):
-        self.context.pop()
-        self.temp_dir.cleanup()
+        super().setUp()
+        self.setup_api()
 
     # INITIALIZE----------------------------------------------------------------
     def test_initialize(self):

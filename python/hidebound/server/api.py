@@ -509,7 +509,3 @@ class ApiExtension:
             Response: JSONDecodeError response.
         '''
         return server_tools.error_to_response(error)
-# ------------------------------------------------------------------------------
-
-
-api_extension = ApiExtension()
