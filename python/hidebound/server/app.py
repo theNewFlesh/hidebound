@@ -14,7 +14,7 @@ from flask import current_app
 import flask_monitoringdashboard as fmdb
 
 from hidebound.core.config import Config
-import hidebound.server.api as api
+from hidebound.server.api import ApiExtension
 import hidebound.server.components as components
 import hidebound.server.server_tools as server_tools
 # ------------------------------------------------------------------------------
@@ -49,7 +49,7 @@ def get_app():
     '''
     app = flask.Flask('hidebound')  # type: Union[flask.Flask, dash.Dash]
     swg.Swagger(app)
-    api.ApiExtension(app)
+    ApiExtension(app)
 
     # healthz endpoints
     app.register_blueprint(healthz, url_prefix="/healthz")
@@ -122,9 +122,10 @@ def on_event(*inputs):
     '''
     APP.logger.debug(f'on_event called with inputs: {str(inputs)[:50]}')
     ctx = current_app
+    api = getattr(current_app, 'api')  # type: ApiExtension
 
     store = inputs[-1] or {}  # type: Any
-    config = store.get('config', ctx.api.config)  # type: Dict
+    config = store.get('config', api.config)  # type: Dict
     conf = json.dumps(config)
 
     context = dash.callback_context
@@ -146,13 +147,13 @@ def on_event(*inputs):
 
     if input_id == 'init-button':
         response = ctx.test_client().post('/api/initialize', json=conf).json
-        if 'error' in response.keys():
+        if 'error' in response.keys():  # type: ignore
             store['/api/read'] = response
 
     elif input_id == 'update-button':
-        if ctx.api.database is None:
+        if api.database is None:
             response = ctx.test_client().post('/api/initialize', json=conf).json
-            if 'error' in response.keys():
+            if 'error' in response.keys():  # type: ignore
                 store['/api/read'] = response
 
         ctx.test_client().post('/api/update')
@@ -255,6 +256,8 @@ def on_get_tab(tab, store):
     Returns:
         flask.Response: Response.
     '''
+    api = getattr(current_app, 'api')  # type: ApiExtension
+
     APP.logger.debug(
         f'on_get_tab called with tab: {tab} and store: {str(store)[:50]}'
     )
@@ -276,7 +279,7 @@ def on_get_tab(tab, store):
         return components.get_asset_graph(data['response'])
 
     elif tab == 'config':
-        config = store.get('config', current_app.api.config)
+        config = store.get('config', api.config)
         return components.get_config_tab(config)
 
     elif tab == 'api':
