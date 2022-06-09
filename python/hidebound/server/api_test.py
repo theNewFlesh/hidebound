@@ -164,7 +164,7 @@ class ApiExtensionInitTests(ApiExtensionTestBase):
             result.disconnect()
             self.assertIsNone(result.config)
             self.assertIsNone(result.database)
-#-------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 
 class ApiExtensionEndpointTests(ApiExtensionTestBase):

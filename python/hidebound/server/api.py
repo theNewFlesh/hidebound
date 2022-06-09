@@ -24,8 +24,10 @@ class ApiExtension:
         Args:
             app (flask.Flask, optional): Flask app.
         '''
+        self.config = None  # type: Optional[dict]
+        self.database = None  # type: Optional[Database]
+        self.app = None  # type: Optional[flask.Flask]
         self.disconnect()
-        self.app = None
         if app is not None:
             self.init_app(app)
 
@@ -78,21 +80,21 @@ class ApiExtension:
         app.register_error_handler(JSONDecodeError, self.handle_json_decode_error)
 
         self.app = app
-        self.app.api = self
+        setattr(self.app, 'api', self)
 
     def connect(self):
         # type: () -> None
         '''
         Create hidebound database and config.
-        Gets config from environment variables and assigns it to app.hb_config.
-        Create a Database instance from config and assign it to app.hb_database.
+        Gets config from environment variables and assigns it to self.config.
+        Create a Database instance from config and assign it to self.database.
         '''
         # create config
-        self.app.config.from_prefixed_env('HIDEBOUND')
+        self.app.config.from_prefixed_env('HIDEBOUND')  # type: ignore
         self.config = self._get_config(self.app)
 
         # create database
-        self.database = Database.from_config(self.config)
+        self.database = Database.from_config(self.config)  # type: ignore
 
     def disconnect(self):
         # type: () -> None
@@ -347,7 +349,7 @@ class ApiExtension:
             dict(
                 name='query',
                 type='string',
-                description='SQL query for searching database. Make sure to use "FROM data" in query.',
+                description='SQL query for searching database. Make sure to use "FROM data" in query.',  # noqa: E501
                 required=True,
             ),
             dict(
