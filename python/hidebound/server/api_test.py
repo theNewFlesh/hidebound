@@ -42,6 +42,10 @@ class ApiExtensionTestBase(DatabaseTestBase):
         self.context.pop()
         self.temp_dir.cleanup()
 
+        # remove HIDEBOUND_XXX env vars
+        keys = filter(lambda x: x.startswith('HIDEBOUND_'), os.environ.keys())
+        list(map(os.environ.pop, keys))
+
     def setup_api(self):
         swg.Swagger(self.app)
         self.api = ApiExtension(self.app)
@@ -99,9 +103,11 @@ class ApiExtensionTestBase(DatabaseTestBase):
 
     def write_config(self, config, temp_dir):
         filepath = None
-        filepath = Path(temp_dir, 'hidebound_config.yaml')
+        filepath = Path(temp_dir, 'hidebound_config.yaml').as_posix()
         with open(filepath, 'w') as f:
             yaml.safe_dump(config, f)
+
+        os.environ['HIDEBOUND_CONFIG_FILEPATH'] = filepath
         return filepath
 # ------------------------------------------------------------------------------
 
@@ -141,6 +147,24 @@ class ApiExtensionInitTests(ApiExtensionTestBase):
         expected += r'/foo/bar/config\.pizza\.'
         with self.assertRaisesRegexp(FileNotFoundError, expected):
             ApiExtension()._get_config_from_file('/foo/bar/config.pizza')
+
+    def test_get_config_env_vars(self):
+        with TemporaryDirectory() as root:
+            expected = self.get_config(root)
+            self.app.config.from_prefixed_env('HIDEBOUND')
+            result = ApiExtension()._get_config(self.app)
+            for key, val in expected.items():
+                self.assertEqual(result[key], val)
+
+    def test_get_config_filepath(self):
+        with TemporaryDirectory() as root:
+            expected = self.get_config(root)
+            expected['write_mode'] = 'move'
+            self.write_config(expected, root)
+            self.app.config.from_prefixed_env('HIDEBOUND')
+            result = ApiExtension()._get_config(self.app)
+            for key, val in expected.items():
+                self.assertEqual(result[key], val)
 
     def test_init_app(self):
         api = ApiExtension()
