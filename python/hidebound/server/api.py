@@ -37,10 +37,7 @@ class ApiExtension(Singleton):
         Args:
             app (flask.Flask, optional): Flask app.
         '''
-        self.config = None  # type: Optional[dict]
-        self.database = None  # type: Optional[Database]
         self.app = None  # type: Optional[flask.Flask]
-        self.connected = False  # type: bool
         self.disconnect()
         if app is not None:
             self.init_app(app)
@@ -168,9 +165,9 @@ class ApiExtension(Singleton):
         '''
         Sets self.config and self.database to None.
         '''
-        self.config = None
-        self.database = None
-        self.connected = False
+        self.config = None  # type: Optional[dict]
+        self.database = None  # type: Optional[Database]
+        self.connected = False  # type: bool
 
     def api(self):
         # type: () -> Any
