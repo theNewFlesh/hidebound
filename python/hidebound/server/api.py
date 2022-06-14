@@ -297,18 +297,18 @@ class ApiExtension(Singleton):
             return server_tools.get_connection_error()
 
         params = flask.request.get_json()  # type: Any
-        grp = False
+        group_by_asset = False
         if params not in [None, {}]:
             try:
                 params = json.loads(params)
-                grp = params['group_by_asset']
-                assert(isinstance(grp, bool))
+                group_by_asset = params['group_by_asset']
+                assert(isinstance(group_by_asset, bool))
             except (JSONDecodeError, TypeError, KeyError, AssertionError):
                 return server_tools.get_read_error()
 
         response = {}  # type: Any
         try:
-            response = self.database.read(group_by_asset=grp)  # type: ignore
+            response = self.database.read(group_by_asset=group_by_asset)  # type: ignore
         except Exception as error:
             if isinstance(error, RuntimeError):
                 return server_tools.get_update_error()
@@ -447,13 +447,13 @@ class ApiExtension(Singleton):
             Response: Flask Response instance.
         '''
         params = flask.request.get_json()  # type: Any
-        grp = False
+        group_by_asset = False
         try:
             params = json.loads(params)
             query = params['query']
             if 'group_by_asset' in params.keys():
-                grp = params['group_by_asset']
-                assert(isinstance(grp, bool))
+                group_by_asset = params['group_by_asset']
+                assert(isinstance(group_by_asset, bool))
         except (JSONDecodeError, TypeError, KeyError, AssertionError):
             return server_tools.get_search_error()
 
@@ -465,7 +465,7 @@ class ApiExtension(Singleton):
 
         response = None
         try:
-            response = self.database.search(query, group_by_asset=grp)  # type: ignore
+            response = self.database.search(query, group_by_asset=group_by_asset)  # type: ignore
         except Exception as e:
             return server_tools.error_to_response(e)
 
