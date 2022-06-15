@@ -88,8 +88,11 @@ def make_files(temp_dir, config, make_dirs):
 
 @pytest.fixture()
 def config(temp_dir):
-    spec = '../python/hidebound/core/test_specifications.py'
+    spec = '../hidebound/hidebound/core/test_specifications.py'
+    if 'REPO_ENV' in os.environ:
+        spec = '../python/hidebound/core/test_specifications.py'
     spec = lbt.relative_path(__file__, spec).absolute().as_posix()
+
     config = dict(
         root_directory=Path(temp_dir, 'ingress').as_posix(),
         hidebound_directory=Path(temp_dir, 'hidebound').as_posix(),

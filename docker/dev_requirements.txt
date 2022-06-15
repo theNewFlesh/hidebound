@@ -6,7 +6,6 @@ ipysheet
 ipython
 ipython-genutils
 ipywidgets
-jinja2==2.10.3
 jupyterlab_henanigans>=0.2.2
 jupyterlab_sublime
 jupyterlab-git
