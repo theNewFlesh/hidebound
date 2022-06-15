@@ -26,16 +26,6 @@ The tools module contains general functions useful to other hidebound modules.
 '''
 
 
-class Singleton:
-    '''
-    A super class for creating singleton classes.
-    '''
-    def __new__(cls, *args, **kwargs):
-        if not hasattr(cls, '_instance'):
-            cls._instance = super(Singleton, cls).__new__(cls)
-        return cls._instance
-
-
 def list_all_files(directory, include_regex='', exclude_regex=''):
     # type: (FilePath, str, str) -> Generator[Path, None, None]
     '''
