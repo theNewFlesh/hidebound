@@ -7,7 +7,7 @@ import numpy as np
 # ------------------------------------------------------------------------------
 
 
-# INITIALIZE----------------------------------------------------------------
+# INITIALIZE--------------------------------------------------------------------
 def test_initialize(env, extension, config, client):
     conf = dict(
         root_directory=config['root_directory'],
@@ -46,7 +46,7 @@ def test_initialize_bad_config(env, extension, config, client):
     assert re.search(expected, result) is not None
 
 
-# CREATE--------------------------------------------------------------------
+# CREATE------------------------------------------------------------------------
 def test_create(env, extension, config, client, make_files):
     client.post('/api/update')
 
@@ -68,7 +68,7 @@ def test_create_no_update(env, extension, client):
     assert re.search(expected, result) is not None
 
 
-# READ----------------------------------------------------------------------
+# READ--------------------------------------------------------------------------
 def test_read(env, extension, client, make_files):
     client.post('/api/update')
 
@@ -116,14 +116,14 @@ def test_read_no_update(env, extension, client):
     assert re.search(expected, result) is not None
 
 
-# UPDATE--------------------------------------------------------------------
+# UPDATE------------------------------------------------------------------------
 def test_update(env, extension, client, make_files):
     result = client.post('/api/update').json['message']
     expected = 'Database updated.'
     assert result == expected
 
 
-# DELETE--------------------------------------------------------------------
+# DELETE------------------------------------------------------------------------
 def test_delete(env, extension, client, config, make_files):
     client.post('/api/update')
     client.post('/api/create')
@@ -151,7 +151,7 @@ def test_delete_no_create(env, extension, client, config, make_files):
     assert os.path.exists(meta) is False
 
 
-# EXPORT--------------------------------------------------------------------
+# EXPORT------------------------------------------------------------------------
 def test_export(env, extension, client, config, make_files):
     target_dir = config['exporters']['local_disk']['target_directory']
     result = os.listdir(target_dir)
@@ -173,7 +173,7 @@ def test_export_error(env, extension, client, config, make_files):
     assert re.search(expected, result) is not None
 
 
-# SEARCH--------------------------------------------------------------------
+# SEARCH------------------------------------------------------------------------
 def test_search(env, extension, client, make_files):
     client.post('/api/update')
 
@@ -248,7 +248,7 @@ def test_search_no_update(env, extension, client, make_files):
     assert re.search(expected, result) is not None
 
 
-# WORKFLOW------------------------------------------------------------------
+# WORKFLOW----------------------------------------------------------------------
 def test_workflow(env, extension, client, config, make_files):
     expected = ['update', 'create', 'export', 'delete']
 
@@ -301,7 +301,7 @@ def test_workflow_illegal_step(env, extension, client, make_files):
     assert result['args'][0] == expected
 
 
-# ERROR-HANDLERS------------------------------------------------------------
+# ERROR-HANDLERS----------------------------------------------------------------
 def test_key_error_handler(env, extension, client, make_files):
     result = client.post(
         '/api/workflow',
