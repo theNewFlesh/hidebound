@@ -13,6 +13,7 @@ import hidebound.core.tools as hbt
 # ------------------------------------------------------------------------------
 
 
+# inheriting from Singleton breaks init and init_app tests
 class HideboundExtension:
     def __init__(self, app=None):
         # type: (Optional[flask.Flask]) -> None
