@@ -20,7 +20,7 @@ import hidebound.server.server_tools as server_tools
 
 TESTING = True
 if __name__ == '__main__':
-    TESTING = False
+    TESTING = False  # pragma: no cover
 # ------------------------------------------------------------------------------
 
 
