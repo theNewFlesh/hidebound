@@ -339,6 +339,17 @@ class ToolsTests(unittest.TestCase):
         result = hbt.get_meta_kwargs(data, '__no_default__')
         self.assertEqual(result, {})
 
+    def test_str_to_bool(self):
+        assert hbt.str_to_bool('true') is True
+        assert hbt.str_to_bool('True') is True
+        assert hbt.str_to_bool('TRUE') is True
+        assert hbt.str_to_bool('TrUe') is True
+
+        assert hbt.str_to_bool('false') is False
+        assert hbt.str_to_bool('False') is False
+        assert hbt.str_to_bool('FALSE') is False
+        assert hbt.str_to_bool('any-string') is False
+
 
 class ToolsDaskTests(unittest.TestCase):
     def setUp(self):

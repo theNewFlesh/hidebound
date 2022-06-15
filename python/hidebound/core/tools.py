@@ -373,3 +373,19 @@ def lut_combinator(
     lut.columns = [key_column, value_column]
     data = merge(data, lut, on=key_column, how='left')
     return data
+
+
+def str_to_bool(string):
+    # type: (str) -> bool
+    '''
+    Converts a string to a boolean value.
+
+    Args:
+        string (str): String to be converted.
+
+    Returns:
+        bool: Boolean
+    '''
+    if string.lower() == 'true':
+        return True
+    return False
