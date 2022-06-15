@@ -109,7 +109,7 @@ def create():
         Response: Flask Response instance.
     '''
     try:
-        ext.hidebound.database.create()  # type: ignore
+        ext.hidebound.database.create()
     except RuntimeError:
         return server_tools.get_update_error()
 
@@ -160,7 +160,7 @@ def read():
 
     response = {}  # type: Any
     try:
-        response = ext.hidebound.database.read(group_by_asset=group_by_asset)  # type: ignore
+        response = ext.hidebound.database.read(group_by_asset=group_by_asset)
     except Exception as error:
         if isinstance(error, RuntimeError):
             return server_tools.get_update_error()
@@ -195,7 +195,7 @@ def update():
     Returns:
         Response: Flask Response instance.
     '''
-    ext.hidebound.database.update()  # type: ignore
+    ext.hidebound.database.update()
     return flask.Response(
         response=json.dumps(dict(message='Database updated.')),
         mimetype='application/json'
@@ -223,7 +223,7 @@ def delete():
     Returns:
         Response: Flask Response instance.
     '''
-    ext.hidebound.database.delete()  # type: ignore
+    ext.hidebound.database.delete()
     return flask.Response(
         response=json.dumps(dict(message='Hidebound data deleted.')),
         mimetype='application/json'
@@ -252,7 +252,7 @@ def export():
         Response: Flask Response instance.
     '''
     try:
-        ext.hidebound.database.export()  # type: ignore
+        ext.hidebound.database.export()
     except Exception as error:
         return server_tools.error_to_response(error)
 
@@ -308,12 +308,13 @@ def search():
     except (JSONDecodeError, TypeError, KeyError, AssertionError):
         return server_tools.get_search_error()
 
-    if ext.hidebound.database.data is None:  # type: ignore
+    if ext.hidebound.database.data is None:
         return server_tools.get_update_error()
 
     response = None
     try:
-        response = ext.hidebound.database.search(query, group_by_asset=group_by_asset)  # type: ignore
+        response = ext.hidebound.database \
+            .search(query, group_by_asset=group_by_asset)
     except Exception as e:
         return server_tools.error_to_response(e)
 

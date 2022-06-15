@@ -1,4 +1,4 @@
-from typing import Any, Optional, Union
+from typing import Optional, Union
 
 from pathlib import Path
 import os
@@ -108,5 +108,5 @@ class HideboundExtension:
         app.extensions['hidebound'] = self
         app.register_blueprint(API)
         if not app.config['TESTING']:
-            self.config = self._get_config(app)  # type: ignore
+            self.config = self._get_config(app)
             self.database = Database.from_config(self.config)
