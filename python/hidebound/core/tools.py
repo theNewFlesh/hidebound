@@ -125,7 +125,7 @@ def directory_to_dataframe(directory, include_regex='', exclude_regex=r'\.DS_Sto
     data['filepath'] = files
     data['filename'] = data.filepath.apply(lambda x: x.name)
     data['extension'] = data.filepath \
-        .apply(lambda x: os.path.splitext(x)[-1].lstrip('.'))
+        .apply(lambda x: Path(x).suffix.lstrip('.'))
     data.filepath = data.filepath.apply(lambda x: x.absolute().as_posix())
     return data
 
