@@ -1,5 +1,6 @@
 from typing import Any, Dict, List, Tuple, Union
 
+from collections import namedtuple
 import json
 import os
 
@@ -11,6 +12,7 @@ import dash
 import flask
 from flask import current_app
 import flask_monitoringdashboard as fmdb
+import requests
 
 from hidebound.core.config import Config
 import hidebound.server.components as components
@@ -27,6 +29,24 @@ if __name__ == '__main__':
 '''
 Hidebound service used for displaying and interacting with Hidebound database.
 '''
+
+
+HOST = '0.0.0.0'
+PORT = 8080
+Endpoints = namedtuple(
+    'Endpoints',
+    ['api', 'init', 'update', 'create', 'export', 'delete', 'read', 'search'],
+)
+EP = Endpoints(
+    api=f'http://{HOST}:{PORT}/api',
+    init=f'http://{HOST}:{PORT}/api/initialize',
+    update=f'http://{HOST}:{PORT}/api/update',
+    create=f'http://{HOST}:{PORT}/api/create',
+    export=f'http://{HOST}:{PORT}/api/export',
+    delete=f'http://{HOST}:{PORT}/api/delete',
+    read=f'http://{HOST}:{PORT}/api/read',
+    search=f'http://{HOST}:{PORT}/api/search',
+)
 
 
 def liveness():
@@ -126,7 +146,6 @@ def on_event(*inputs):
         dict: Store data.
     '''
     APP.logger.debug(f'on_event called with inputs: {str(inputs)[:50]}')
-    ctx = current_app
     hb = current_app.extensions['hidebound']
 
     store = inputs[-1] or {}  # type: Any
@@ -151,40 +170,40 @@ def on_event(*inputs):
     input_id = context.triggered[0]['prop_id'].split('.')[0]
 
     if input_id == 'init-button':
-        response = ctx.test_client().post('/api/initialize', json=conf).json
-        if 'error' in response.keys():  # type: ignore
+        response = requests.post(EP.init, json=conf).json()
+        if 'error' in response.keys():
             store['/api/read'] = response
 
     elif input_id == 'update-button':
         if hb.database is None:
-            response = ctx.test_client().post('/api/initialize', json=conf).json
-            if 'error' in response.keys():  # type: ignore
+            response = requests.post(EP.init, json=conf).json()
+            if 'error' in response.keys():
                 store['/api/read'] = response
 
-        ctx.test_client().post('/api/update')
+        requests.post(EP.update)
 
         params = json.dumps({'group_by_asset': grp})
-        response = ctx.test_client().post('/api/read', json=params).json
+        response = requests.post(EP.read, json=params).json()
         store['/api/read'] = response
 
     elif input_id == 'create-button':
-        ctx.test_client().post('/api/create')
+        requests.post(EP.create)
 
     elif input_id == 'export-button':
-        response = ctx.test_client().post('/api/export')
+        response = requests.post(EP.export)
         code = response.status_code
         if code < 200 or code >= 300:
             store['/api/read'] = response.json
 
     elif input_id == 'delete-button':
-        ctx.test_client().post('/api/delete')
+        requests.post(EP.delete)
 
     elif input_id == 'search-button':
         query = json.dumps({
             'query': inputs_['query'],
             'group_by_asset': inputs_['dropdown']
         })
-        response = ctx.test_client().post('/api/search', json=query).json
+        response = requests.post(EP.search, json=query).json()
         store['/api/read'] = response
         store['query'] = inputs_['query']
 
@@ -343,4 +362,4 @@ def on_config_card_update(timestamp, store):
 
 if __name__ == '__main__':
     debug = 'DEBUG_MODE' in os.environ.keys()
-    APP.run_server(debug=debug, host='0.0.0.0', port=8080)
+    APP.run_server(debug=debug, host=HOST, port=PORT)
