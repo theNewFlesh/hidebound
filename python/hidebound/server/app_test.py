@@ -54,7 +54,7 @@ class AppTests(DatabaseTestBase):
 
     @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
     def test_get_app(self):
-        result = application.get_app()
+        result = application.get_app(testing=True)
         assert isinstance(result, dash.Dash)
 
     def test_serve_stylesheet(self):
