@@ -22,6 +22,18 @@ ENABLE_DASK_CLUSTER = False
 
 
 class ToolsTests(unittest.TestCase):
+    def test_singleton(self):
+        class Foo(hbt.Singleton):
+            def __init__(self):
+                self.foo = 'pizza'
+
+        a = Foo()
+        b = Foo()
+        a.foo = 'bar'
+        self.assertIs(a, b)
+        self.assertEqual(a.foo, 'bar')
+        self.assertEqual(b.foo, 'bar')
+
     def create_files(self, root):
         filepaths = [
             'a/1.foo',
