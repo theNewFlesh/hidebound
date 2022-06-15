@@ -97,7 +97,7 @@ class DatabaseTestBase(unittest.TestCase):
         for filepath in data.filepath.tolist():
             os.makedirs(filepath.parent, exist_ok=True)
 
-            ext = os.path.splitext(filepath)[-1][1:]
+            ext = Path(filepath).suffix.lstrip('.')
             if ext in ['png', 'jpg']:
                 img = np.zeros((5, 4, 3), dtype=np.uint8)
                 img[:, :, 2] = 128
@@ -116,7 +116,7 @@ class DatabaseTestBase(unittest.TestCase):
         data.filepath = data\
             .apply(lambda x: Path(x.filepath, x.filename), axis=1)
         data['extension'] = files\
-            .filename.apply(lambda x: os.path.splitext(x)[-1].lstrip('.'))
+            .filename.apply(lambda x: Path(x).suffix.lstrip('.'))
         data = dd.from_pandas(data, chunksize=100)
         return data
 
