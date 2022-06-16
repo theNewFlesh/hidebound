@@ -35,7 +35,7 @@ extension
 
 extensions
 ----------
-.. automodule:: hidebound.server.extension
+.. automodule:: hidebound.server.extensions
     :members:
     :private-members:
     :undoc-members:
