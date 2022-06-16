@@ -25,8 +25,24 @@ components
     :undoc-members:
     :show-inheritance:
 
-progress
+extension
+---------
+.. automodule:: hidebound.server.extension
+    :members:
+    :private-members:
+    :undoc-members:
+    :show-inheritance:
+
+extensions
 ----------
+.. automodule:: hidebound.server.extensions
+    :members:
+    :private-members:
+    :undoc-members:
+    :show-inheritance:
+
+progress
+--------
 .. automodule:: hidebound.server.progress
     :members:
     :private-members:

@@ -153,7 +153,7 @@ database. We now have a hidebound directory that looks like this
 .. code:: shell
 
     /tmp/hidebound
-    ├── hidebound_config.json
+    ├── hidebound_config.yaml
     │
     ├── specifications
     │   └── specifications.py
@@ -527,9 +527,9 @@ Its functions are as follows:
 +----------+----------------------------------------------------+
 | Name     | Function                                           |
 +==========+====================================================+
-| Upload   | Upload a config JSON file                          |
+| Upload   | Upload a config YAML file                          |
 +----------+----------------------------------------------------+
-| Write    | Write config to hidebound/hidebound\_config.json   |
+| Write    | Write config to hidebound/hidebound\_config.yaml   |
 +----------+----------------------------------------------------+
 
 API
@@ -560,8 +560,8 @@ users. It displays errors in their entirety within the application.
 Configuration
 =============
 
-Hidebound is configured via the hidebound/config/hidebound\_config.json
-file.
+Hidebound is configured via a configuration file or environment
+variables.
 
 Hidebound configs consist of three main sections:
 
@@ -597,65 +597,91 @@ Webhooks to call after the export phase has completed.
 
 --------------
 
+Environment Variables
+~~~~~~~~~~~~~~~~~~~~~
+
+If ``HIDEBOUND_CONFIG_FILEPATH`` is set, Hidebound will ignore all other
+environment variables and read the given filepath in as a yaml or json
+config file.
+
++-----------------------------------+----------+--------------------------------------------+
+| Variable                          | Format   | Portion                                    |
++===================================+==========+============================================+
+| HIDEBOUND\_CONFIG\_FILEPATH       | str      | Entire Hidebound config file               |
++-----------------------------------+----------+--------------------------------------------+
+| HIDEBOUND\_ROOT\_DIRECTORY        | str      | root\_directory parameter of config        |
++-----------------------------------+----------+--------------------------------------------+
+| HIDEBOUND\_HIDEBOUND\_DIRECTORY   | str      | hidebound\_directory parameter of config   |
++-----------------------------------+----------+--------------------------------------------+
+| HIDEBOUND\_SPECIFICATION\_FILES   | yaml     | specification\_files section of config     |
++-----------------------------------+----------+--------------------------------------------+
+| HIDEBOUND\_INCLUDE\_REGEX         | str      | include\_regex parameter of config         |
++-----------------------------------+----------+--------------------------------------------+
+| HIDEBOUND\_EXCLUDE\_REGEX         | str      | exclude\_regex parameter of config         |
++-----------------------------------+----------+--------------------------------------------+
+| HIDEBOUND\_WRITE\_MODE            | str      | write\_mode parameter of config            |
++-----------------------------------+----------+--------------------------------------------+
+| HIDEBOUND\_DASK\_ENABLED          | str      | dask\_enabled parameter of config          |
++-----------------------------------+----------+--------------------------------------------+
+| HIDEBOUND\_DASK\_WORKERS          | int      | dask\_workers parameter of config          |
++-----------------------------------+----------+--------------------------------------------+
+| HIDEBOUND\_EXPORTERS              | yaml     | exporters section of config                |
++-----------------------------------+----------+--------------------------------------------+
+| HIDEBOUND\_WEBHOOKS               | yaml     | webhooks section of config                 |
++-----------------------------------+----------+--------------------------------------------+
+
+--------------
+
 Here is a full example config with comments:
 
-.. code:: json
+.. code:: yaml
 
-    {
-        "root_directory": "/mnt/storage/projects",                         // where hb looks for assets
-        "hidebound_directory": "/mnt/storage/hidebound",                   // hb staging directory
-        "specification_files": [                                           // list of spec files
-            "/mnt/storage/specs/image_specs.py",
-            "/mnt/storage/specs/video_specs.py"
-        ],
-        "include_regex": "",                                               // include files that match
-        "exclude_regex": "\\.DS_Store",                                    // exclude files that match
-        "write_mode": "copy",                                              // copy files from root to staging
-                                                                           // options: copy, move
-        "dask_enabled": true,                                              // enable Dask distributed computing
-        "dask_workers": 16,                                             // number of Dask partitions to use
-        "exporters": {                                                     // list of exporter configs
-            "s3": {                                                        // export to s3
-                "access_key": "ABCDEFGHIJKLMNOPQRST",                      // aws access key
-                "secret_key": "abcdefghijklmnopqrstuvwxyz1234567890abcd",  // aws secret key
-                "bucket": "prod-data",                                     // s3 bucket
-                "region": "us-west-2",                                     // bucket region
-                "metadata_types": ["asset", "asset-chunk", "file-chunk"]   // drop file metadata
-                                                                           // options: asset, file, asset-chunk, file-chunk
-            },
-            "local_disk": {                                                // export to local disk
-                "target_directory": "/mnt/storage/archive",                // target location
-                "metadata_types": ["asset", "file"]                        // only asset and file metadata
-                                                                           // options: asset, file, asset-chunk, file-chunk
-            },
-            "girder": {                                                    // export to girder
-                "api_key": "eyS0nj9qPC5E7yK5l7nhGVPqDOBKPdA3EC60Rs9h",     // girder api key
-                "root_id": "5ed735c8d8dd6242642406e5",                     // root resource id
-                "root_type": "collection",                                 // root resource type
-                "host": "http://prod.girder.com",                          // girder server url
-                "port": 8180,                                              // girder server port
-                "metadata_types": ["asset"]                                // only export asset metadata
-                                                                           // options: asset, file
-            }
-        },
-        "webhooks": [                                                      // call these after export
-            {
-                "url": "https://hooks.slack.com/services/ABCDEFGHI/JKLMNOPQRST/UVWXYZ1234567890abcdefgh",
-                "method": "post",                                          // post this to slack
-                "timeout": 60,                                             // timeout after 60 seconds
-                // "params": {},                                           // params to post (NA here)
-                // "json": {},                                             // json to post (NA here)
-                "data": {                                                  // data to post
-                    "channel": "#hidebound",                               // slack data
-                    "text": "export complete",                             // slack data
-                    "username": "hidebound"                                // slack data
-                },
-                "headers": {
-                    "Content-type": "application/json"                     // request headers
-                }
-            }
-        ]
-    }
+    root_directory: /mnt/storage/projects                        # where hb looks for assets
+    hidebound_directory: /mnt/storage/hidebound                  # hb staging directory
+    specification_files:                                         # list of spec files
+      - /mnt/storage/specs/image_specs.py
+      - /mnt/storage/specs/video_specs.py
+    include_regex: ""                                            # include files that match
+    exclude_regex: "\\.DS_Store"                                 # exclude files that match
+    write_mode: copy                                             # copy files from root to staging
+                                                                 # options: copy, move
+    dask_enabled: true                                           # enable Dask distributed computing
+    dask_workers: 16                                             # number of Dask partitions to use
+    exporters:                                                   # dict of exporter configs
+      s3:                                                        # export to s3
+        access_key: ABCDEFGHIJKLMNOPQRST                         # aws access key
+        secret_key: abcdefghijklmnopqrstuvwxyz1234567890abcd     # aws secret key
+        bucket: prod-data                                        # s3 bucket
+        region: us-west-2                                        # bucket region
+        metadata_types:                                          # options: asset, file, asset-chunk, file-chunk
+          - asset                                                # drop file metadata
+          - asset-chunk
+          - file-chunk
+      local_disk:                                                # export to local disk
+        target_directory: /mnt/storage/archive                   # target location
+        metadata_types:                                          # options: asset, file, asset-chunk, file-chunk
+          - asset                                                # only asset and file metadata
+          - file
+      girder:                                                    # export to girder
+        api_key: eyS0nj9qPC5E7yK5l7nhGVPqDOBKPdA3EC60Rs9h        # girder api key
+        root_id: 5ed735c8d8dd6242642406e5                        # root resource id
+        root_type: collection                                    # root resource type
+        host: http://prod.girder.com                             # girder server url
+        port: 8180                                               # girder server port
+        metadata_types:                                          # options: asset, file
+          - asset                                                # only asset metadata
+    webhooks:                                                    # call these after export
+      - url: https://hooks.slack.com/services/ABCDEFGHI/JKLMNO   # slack URL
+        method: post                                             # post this to slack
+        timeout: 60                                              # timeout after 60 seconds
+        # params: {}                                             # params to post (NA here)
+        # json: {}                                               # json to post (NA here)
+        data:                                                    # data to post
+          channel: "#hidebound"                                  # slack data
+          text: export complete                                  # slack data
+          username: hidebound                                    # slack data
+        headers:                                                 # request headers
+          Content-type: application/json
 
 Specification
 =============
