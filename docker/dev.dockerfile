@@ -77,7 +77,7 @@ RUN echo "\n${CYAN}INSTALL NODE.JS${CLEAR}"; \
 # install tini
 RUN echo "\n${CYAN}INSTALL TINI${CLEAR}"; \
     curl -LJ https://github.com/krallin/tini/releases/download/v0.19.0/tini \
-    -o /usr/bin/tini && \
+        -o /usr/bin/tini && \
     chown ubuntu:ubuntu /usr/bin/tini && \
     chmod +x /usr/bin/tini
 
