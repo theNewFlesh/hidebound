@@ -7,7 +7,6 @@ import os
 from dash import dash_table, dcc, html
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
-from flask_healthz import healthz
 import dash
 import flask
 from flask import current_app
@@ -72,16 +71,17 @@ def get_app(testing=False):
         Dash: Dash app.
     '''
     app = flask.Flask('hidebound')  # type: Union[flask.Flask, dash.Dash]
-    app.config['TESTING'] = testing
+    app.config.update(
+        TESTING=testing,
+        HEALTHZ=dict(
+            live=liveness,
+            ready=readiness,
+        )
+    )
+
     ext.swagger.init_app(app)
     ext.hidebound.init_app(app)
-
-    # healthz endpoints
-    app.register_blueprint(healthz, url_prefix="/healthz")
-    app.config.update(HEALTHZ={
-        "live": liveness,
-        "ready": readiness,
-    })
+    ext.healthz.init_app(app)
 
     # flask monitoring
     fmdb.config.link = 'monitor'
