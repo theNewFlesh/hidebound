@@ -12,6 +12,7 @@ services:
       - "2000:9000"
       - "2080:8080"
       - "2081:8081"
+      - "2087:8087"
     userns_mode: "host"
     user: ubuntu
     env_file:
