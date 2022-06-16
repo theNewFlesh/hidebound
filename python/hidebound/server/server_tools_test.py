@@ -85,6 +85,11 @@ class ServerToolsTests(DatabaseTestBase):
         expected += r'\{"query": SQL query, "group_by_asset": BOOL\}\.'
         self.assertRegex(result, expected)
 
+    def test_get_connection_error(self):
+        result = server_tools.get_connection_error().json['message']
+        expected = 'Database not connected.'
+        self.assertRegex(result, expected)
+
     def test_error_to_response(self):
         error = TypeError('foo')
         result = server_tools.error_to_response(error)

@@ -1,4 +1,4 @@
-from typing import Any, Optional, Tuple
+from typing import Any
 
 from json import JSONDecodeError
 import json
@@ -10,6 +10,7 @@ from schematics.exceptions import DataError
 from werkzeug.exceptions import BadRequest
 
 from hidebound.core.database import Database
+import hidebound.server.extensions as ext
 import hidebound.server.server_tools as server_tools
 # ------------------------------------------------------------------------------
 
@@ -19,10 +20,7 @@ Hidebound service API.
 '''
 
 
-API = flask.Blueprint('api', __name__, url_prefix='')
-# TODO: Find a way to share database and config inside Flask instance without globals.
-DATABASE = None  # type: Any
-CONFIG = None  # type: Optional[dict]
+API = flask.Blueprint('hidebound_api', __name__, url_prefix='')
 
 
 @API.route('/api')
@@ -36,27 +34,6 @@ def api():
     '''
     # TODO: Test this with selenium.
     return flask.redirect(flask.url_for('flasgger.apidocs'))
-
-
-def _get_database(config):
-    # type: (dict) -> Tuple[Database, dict]
-    '''
-    Convenience function for creating a database from a given config.
-
-    Args:
-        config (dict): Configuration.
-
-    Returns:
-        tuple[Database, dict]: Database and config.
-    '''
-    config_ = dict(
-        specification_files=[],
-        include_regex='',
-        exclude_regex=r'\.DS_Store',
-        write_mode='copy',
-    )
-    config_.update(config)
-    return Database.from_config(config_), config_
 
 
 @API.route('/api/initialize', methods=['POST'])
@@ -94,9 +71,6 @@ def initialize():
     Returns:
         Response: Flask Response instance.
     '''
-    global DATABASE
-    global CONFIG
-
     try:
         config = flask.request.get_json()  # type: Any
         config = json.loads(config)
@@ -105,12 +79,10 @@ def initialize():
     if not isinstance(config, dict):
         return server_tools.get_config_error()
 
-    DATABASE, CONFIG = _get_database(config)
+    ext.hidebound.database = Database.from_config(config)
+
     return flask.Response(
-        response=json.dumps(dict(
-            message='Database initialized.',
-            config=config,
-        )),
+        response=json.dumps(dict(message='Database initialized.')),
         mimetype='application/json'
     )
 
@@ -136,22 +108,13 @@ def create():
     Returns:
         Response: Flask Response instance.
     '''
-    global DATABASE
-    global CONFIG
-
-    if DATABASE is None:
-        return server_tools.get_initialization_error()
-
     try:
-        DATABASE.create()
+        ext.hidebound.database.create()
     except RuntimeError:
         return server_tools.get_update_error()
 
     return flask.Response(
-        response=json.dumps(dict(
-            message='Hidebound data created.',
-            config=CONFIG,
-        )),
+        response=json.dumps(dict(message='Hidebound data created.')),
         mimetype='application/json'
     )
 
@@ -185,25 +148,19 @@ def read():
     Returns:
         Response: Flask Response instance.
     '''
-    global DATABASE
-    global CONFIG
-
-    if DATABASE is None:
-        return server_tools.get_initialization_error()
-
     params = flask.request.get_json()  # type: Any
-    grp = False
+    group_by_asset = False
     if params not in [None, {}]:
         try:
             params = json.loads(params)
-            grp = params['group_by_asset']
-            assert(isinstance(grp, bool))
+            group_by_asset = params['group_by_asset']
+            assert(isinstance(group_by_asset, bool))
         except (JSONDecodeError, TypeError, KeyError, AssertionError):
             return server_tools.get_read_error()
 
     response = {}  # type: Any
     try:
-        response = DATABASE.read(group_by_asset=grp)
+        response = ext.hidebound.database.read(group_by_asset=group_by_asset)
     except Exception as error:
         if isinstance(error, RuntimeError):
             return server_tools.get_update_error()
@@ -238,18 +195,9 @@ def update():
     Returns:
         Response: Flask Response instance.
     '''
-    global DATABASE
-    global CONFIG
-
-    if DATABASE is None:
-        return server_tools.get_initialization_error()
-
-    DATABASE.update()
+    ext.hidebound.database.update()
     return flask.Response(
-        response=json.dumps(dict(
-            message='Database updated.',
-            config=CONFIG,
-        )),
+        response=json.dumps(dict(message='Database updated.')),
         mimetype='application/json'
     )
 
@@ -275,18 +223,9 @@ def delete():
     Returns:
         Response: Flask Response instance.
     '''
-    global DATABASE
-    global CONFIG
-
-    if DATABASE is None:
-        return server_tools.get_initialization_error()
-
-    DATABASE.delete()
+    ext.hidebound.database.delete()
     return flask.Response(
-        response=json.dumps(dict(
-            message='Hidebound data deleted.',
-            config=CONFIG,
-        )),
+        response=json.dumps(dict(message='Hidebound data deleted.')),
         mimetype='application/json'
     )
 
@@ -312,22 +251,13 @@ def export():
     Returns:
         Response: Flask Response instance.
     '''
-    global DATABASE
-    global CONFIG
-
-    if DATABASE is None:
-        return server_tools.get_initialization_error()
-
     try:
-        DATABASE.export()
+        ext.hidebound.database.export()
     except Exception as error:
         return server_tools.error_to_response(error)
 
     return flask.Response(
-        response=json.dumps(dict(
-            message='Hidebound data exported.',
-            config=CONFIG,
-        )),
+        response=json.dumps(dict(message='Hidebound data exported.')),
         mimetype='application/json'
     )
 
@@ -367,29 +297,24 @@ def search():
     Returns:
         Response: Flask Response instance.
     '''
-    global DATABASE
-    global CONFIG
-
     params = flask.request.get_json()  # type: Any
-    grp = False
+    group_by_asset = False
     try:
         params = json.loads(params)
         query = params['query']
         if 'group_by_asset' in params.keys():
-            grp = params['group_by_asset']
-            assert(isinstance(grp, bool))
+            group_by_asset = params['group_by_asset']
+            assert(isinstance(group_by_asset, bool))
     except (JSONDecodeError, TypeError, KeyError, AssertionError):
         return server_tools.get_search_error()
 
-    if DATABASE is None:
-        return server_tools.get_initialization_error()
-
-    if DATABASE.data is None:
+    if ext.hidebound.database.data is None:
         return server_tools.get_update_error()
 
     response = None
     try:
-        response = DATABASE.search(query, group_by_asset=grp)
+        response = ext.hidebound.database \
+            .search(query, group_by_asset=group_by_asset)
     except Exception as e:
         return server_tools.error_to_response(e)
 
@@ -436,13 +361,9 @@ def workflow():
     Returns:
         Response: Flask Response instance.
     '''
-    global DATABASE
-    global CONFIG
-
     params = flask.request.get_json()  # type: Any
     params = json.loads(params)
     workflow = params['workflow']
-    config = params['config']
 
     # get and validate workflow steps
     legal = ['update', 'create', 'export', 'delete']
@@ -452,19 +373,15 @@ def workflow():
         return server_tools.error_to_response(ValueError(msg))
 
     # run through workflow
-    DATABASE, CONFIG = _get_database(config)
     for step in workflow:
         try:
-            getattr(DATABASE, step)()
+            getattr(ext.hidebound.database, step)()
         except Exception as error:  # pragma: no cover
             return server_tools.error_to_response(error)  # pragma: no cover
 
     return flask.Response(
         response=json.dumps(dict(
-            message='Workflow completed.',
-            workflow=workflow,
-            config=CONFIG,
-        )),
+            message='Workflow completed.', workflow=workflow)),
         mimetype='application/json'
     )
 

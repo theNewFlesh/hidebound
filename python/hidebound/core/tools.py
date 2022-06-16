@@ -125,7 +125,7 @@ def directory_to_dataframe(directory, include_regex='', exclude_regex=r'\.DS_Sto
     data['filepath'] = files
     data['filename'] = data.filepath.apply(lambda x: x.name)
     data['extension'] = data.filepath \
-        .apply(lambda x: os.path.splitext(x)[-1].lstrip('.'))
+        .apply(lambda x: Path(x).suffix.lstrip('.'))
     data.filepath = data.filepath.apply(lambda x: x.absolute().as_posix())
     return data
 
@@ -373,3 +373,19 @@ def lut_combinator(
     lut.columns = [key_column, value_column]
     data = merge(data, lut, on=key_column, how='left')
     return data
+
+
+def str_to_bool(string):
+    # type: (str) -> bool
+    '''
+    Converts a string to a boolean value.
+
+    Args:
+        string (str): String to be converted.
+
+    Returns:
+        bool: Boolean
+    '''
+    if string.lower() == 'true':
+        return True
+    return False

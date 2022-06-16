@@ -1,0 +1,23 @@
+root_directory: /tmp/ingress
+hidebound_directory: /tmp/hidebound
+include_regex: ""
+exclude_regex: "\\.DS_Store"
+write_mode: copy
+specification_files:
+  - /home/ubuntu/hidebound/python/hidebound/core/test_specifications.py
+exporters:
+  local_disk:
+    target_directory: /tmp/archive
+    metadata_types:
+      - asset
+      - file
+      - asset-chunk
+      - file-chunk
+webhooks:
+  - url: "http://foobar.com/api/user?"
+    method: get
+    params:
+      id: 123
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
