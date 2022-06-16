@@ -74,6 +74,13 @@ RUN echo "\n${CYAN}INSTALL NODE.JS${CLEAR}"; \
     apt install -y nodejs && \
     rm -rf /var/lib/apt/lists/*
 
+# install tini
+RUN echo "\n${CYAN}INSTALL TINI${CLEAR}"; \
+    curl -LJ https://github.com/krallin/tini/releases/download/v0.19.0/tini \
+    -o /usr/bin/tini && \
+    chown ubuntu:ubuntu /usr/bin/tini && \
+    chmod +x /usr/bin/tini
+
 USER ubuntu
 ENV PATH="/home/ubuntu/.local/bin:$PATH"
 COPY ./henanigans.zsh-theme .oh-my-zsh/custom/themes/henanigans.zsh-theme
@@ -116,3 +123,5 @@ RUN echo "\n${CYAN}INSTALL PYTHON DEPENDENCIES${CLEAR}"; \
     pip3.7 install -r dev_requirements.txt && \
     pip3.7 install -r prod_requirements.txt && \
     jupyter server extension enable --py --user jupyterlab_git
+
+ENTRYPOINT ["/usr/bin/tini", "--"]
