@@ -124,7 +124,7 @@ def resolve(commands):
         red='\033[0;31m',
         white='\033[0;37m',
         yellow='\033[0;33m',
-        github_user=GITHUB_USER,
+        github_user=GITHUB_USER.lower(),
         port=str(PORT),
         pythonpath='{PYTHONPATH}',
         repo_path=REPO_PATH,
