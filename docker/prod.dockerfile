@@ -24,7 +24,6 @@ RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${CLEAR}"; \
     apt update && \
     apt install -y \
         graphviz \
-        python3-dev \
         python3-pydot \
         software-properties-common \
         wget
@@ -34,16 +33,25 @@ RUN echo "\n${CYAN}SETUP PYTHON3.7${CLEAR}"; \
     add-apt-repository -y ppa:deadsnakes/ppa && \
     apt update && \
     apt install --fix-missing -y \
+        python3-distutils \
+        python3.7-dev \
         python3.7 && \
     wget https://bootstrap.pypa.io/get-pip.py && \
     python3.7 get-pip.py && \
     rm -rf /home/ubuntu/get-pip.py
 
+# install tini
+RUN echo "\n${CYAN}INSTALL TINI${CLEAR}"; \
+    curl -LJ https://github.com/krallin/tini/releases/download/v0.19.0/tini \
+        -o /usr/bin/tini && \
+    chown ubuntu:ubuntu /usr/bin/tini && \
+    chmod +x /usr/bin/tini
+
 # install OpenEXR
-ENV CC gcc
-ENV CXX g++
-ENV LD_LIBRARY_PATH='/usr/include/python3.7m'
-RUN echo "\n${CYAN}INSTALL OPENEXR${NO_COLOR}"; \
+ENV CC=gcc
+ENV CXX=g++
+ENV LD_LIBRARY_PATH='/usr/include/python3.7m/dist-packages'
+RUN echo "\n${CYAN}INSTALL OPENEXR${CLEAR}"; \
     apt update && \
     apt install -y \
         build-essential \
@@ -60,7 +68,4 @@ ENV PYTHONPATH "${PYTHONPATH}:/home/ubuntu/$REPO/python"
 RUN echo "\n${CYAN}INSTALL HIDEBOUND{CLEAR}"; \
     pip3.7 install hidebound
 
-ENTRYPOINT [\
-    "python3.7", \
-    "/home/ubuntu/.local/lib/python3.7/site-packages/hidebound/server/app.py" \
-]
+ENTRYPOINT ["/usr/bin/tini", "--"]
