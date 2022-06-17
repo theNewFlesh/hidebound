@@ -111,7 +111,6 @@ RUN echo "\n${CYAN}INSTALL OPENEXR${CLEAR}"; \
         gcc \
         libopenexr-dev \
         openexr \
-        python3.7-dev \
         zlib1g-dev
 
 USER ubuntu
