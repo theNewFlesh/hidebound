@@ -23,6 +23,7 @@ WORKDIR /home/ubuntu
 RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${CLEAR}"; \
     apt update && \
     apt install -y \
+        curl \
         graphviz \
         python3-pydot \
         software-properties-common \
