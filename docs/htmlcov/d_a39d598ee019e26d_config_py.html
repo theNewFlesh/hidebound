@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="d_a39d598ee019e26d_database_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io">coverage.py v6.4.1</a>,
-            created at 2022-06-16 01:34 +0000
+            created at 2022-06-21 23:52 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"/>
@@ -222,7 +222,7 @@
     <p class="run"><span class="n"><a id="t140" href="#t140">140</a></span><span class="t">    <span class="nam">exporters</span> <span class="op">=</span> <span class="nam">ModelType</span><span class="op">(</span><span class="nam">ExportersConfig</span><span class="op">,</span> <span class="nam">required</span><span class="op">=</span><span class="key">False</span><span class="op">,</span> <span class="nam">default</span><span class="op">=</span><span class="op">{</span><span class="op">}</span><span class="op">)</span>  <span class="com"># type: ModelType</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t141" href="#t141">141</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t142" href="#t142">142</a></span><span class="t">    <span class="key">class</span> <span class="nam">WebhookConfig</span><span class="op">(</span><span class="nam">Model</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t143" href="#t143">143</a></span><span class="t">        <span class="nam">url</span> <span class="op">=</span> <span class="nam">URLType</span><span class="op">(</span><span class="nam">required</span><span class="op">=</span><span class="key">True</span><span class="op">)</span>  <span class="com"># type: URLType</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t143" href="#t143">143</a></span><span class="t">        <span class="nam">url</span> <span class="op">=</span> <span class="nam">URLType</span><span class="op">(</span><span class="nam">required</span><span class="op">=</span><span class="key">True</span><span class="op">,</span> <span class="nam">fqdn</span><span class="op">=</span><span class="key">False</span><span class="op">)</span>  <span class="com"># type: URLType</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t144" href="#t144">144</a></span><span class="t">        <span class="nam">method</span> <span class="op">=</span> <span class="nam">StringType</span><span class="op">(</span><span class="nam">required</span><span class="op">=</span><span class="key">True</span><span class="op">,</span> <span class="nam">validators</span><span class="op">=</span><span class="op">[</span><span class="nam">vd</span><span class="op">.</span><span class="nam">is_http_method</span><span class="op">]</span><span class="op">)</span>  <span class="com"># type: StringType</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t145" href="#t145">145</a></span><span class="t">        <span class="nam">headers</span> <span class="op">=</span> <span class="nam">DictType</span><span class="op">(</span><span class="nam">StringType</span><span class="op">,</span> <span class="nam">required</span><span class="op">=</span><span class="key">False</span><span class="op">)</span>  <span class="com"># type: DictType</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t146" href="#t146">146</a></span><span class="t">        <span class="nam">data</span> <span class="op">=</span> <span class="nam">DictType</span><span class="op">(</span><span class="nam">BaseType</span><span class="op">,</span> <span class="nam">required</span><span class="op">=</span><span class="key">False</span><span class="op">,</span> <span class="nam">serialize_when_none</span><span class="op">=</span><span class="key">False</span><span class="op">)</span>  <span class="com"># type: DictType</span>&nbsp;</span><span class="r"></span></p>
@@ -239,7 +239,7 @@
             <a id="nextFileLink" class="nav" href="d_a39d598ee019e26d_database_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io">coverage.py v6.4.1</a>,
-            created at 2022-06-16 01:34 +0000
+            created at 2022-06-21 23:52 +0000
         </p>
     </div>
 </footer>
