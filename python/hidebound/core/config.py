@@ -140,7 +140,7 @@ class Config(Model):
     exporters = ModelType(ExportersConfig, required=False, default={})  # type: ModelType
 
     class WebhookConfig(Model):
-        url = URLType(required=True)  # type: URLType
+        url = URLType(required=True, fqdn=False)  # type: URLType
         method = StringType(required=True, validators=[vd.is_http_method])  # type: StringType
         headers = DictType(StringType, required=False)  # type: DictType
         data = DictType(BaseType, required=False, serialize_when_none=False)  # type: DictType

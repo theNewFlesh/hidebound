@@ -415,6 +415,10 @@ class ConfigTests(unittest.TestCase):
             with self.assertRaisesRegexp(DataError, expected):
                 cfg.Config(self.config).validate()
 
+            # allow invalid fqdns for kubernetes
+            self.config['webhooks'][0]['url'] = 'http://foo.invalid-fqdn/bar'
+            cfg.Config(self.config).validate()
+
     def test_webhooks_method(self):
         with TemporaryDirectory() as temp:
             self.add_webhooks_to_config(temp)
