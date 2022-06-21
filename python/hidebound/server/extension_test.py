@@ -64,6 +64,18 @@ def test_get_config_env_vars(env, app, config):
         assert result[key] == val
 
 
+def test_get_config_env_vars_empty_lists(env, app, config):
+    os.environ['HIDEBOUND_SPECIFICATION_FILES'] = '[]'
+    os.environ['HIDEBOUND_WEBHOOKS'] = '[]'
+    app.config.from_prefixed_env('HIDEBOUND')
+
+    result = HideboundExtension()._get_config(app)['specification_files']
+    assert result == []
+
+    result = HideboundExtension()._get_config(app)['webhooks']
+    assert result == []
+
+
 def test_get_config_filepath(env, app, config, config_yaml_file):
     os.environ['HIDEBOUND_ROOT_DIRECTORY'] = 'foobar'
     app.config.from_prefixed_env('HIDEBOUND')

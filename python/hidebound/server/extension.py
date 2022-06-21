@@ -92,10 +92,10 @@ class HideboundExtension:
             dask_enabled=hbt.str_to_bool(app.config.get('DASK_ENABLED', 'False')),
             dask_workers=int(app.config.get('DASK_WORKERS', 8)),
             specification_files=yaml.safe_load(
-                app.config.get('SPECIFICATION_FILES', '[]')
+                str(app.config.get('SPECIFICATION_FILES', '[]'))
             ),
-            exporters=yaml.safe_load(app.config.get('EXPORTERS', '{}')),
-            webhooks=yaml.safe_load(app.config.get('WEBHOOKS', '[]')),
+            exporters=yaml.safe_load(str(app.config.get('EXPORTERS', '{}'))),
+            webhooks=yaml.safe_load(str(app.config.get('WEBHOOKS', '[]'))),
         )
 
     def init_app(self, app):
