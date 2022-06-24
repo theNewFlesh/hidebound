@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.20.0
+                0.22.4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -274,7 +274,7 @@
     <span class="n">data</span><span class="p">[</span><span class="s1">&#39;asset_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">pred_combinator</span><span class="p">(</span>
         <span class="n">data</span><span class="p">,</span>
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">),</span>
-        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">()</span><span class="o">.</span><span class="n">get_asset_path</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">filepath</span><span class="p">),</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">()</span><span class="o">.</span><span class="n">get_asset_path</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">filepath</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">(),</span>
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
         <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
     <span class="p">)</span>
