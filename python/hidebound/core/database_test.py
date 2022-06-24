@@ -472,7 +472,7 @@ class DatabaseTests(DatabaseTestBase):
         with TemporaryDirectory() as root:
             hb_root = Path(root, 'hidebound')
             os.makedirs(hb_root)
-            Spec001, Spec002, BadSpec = self.get_specifications()
+            Spec001, Spec002, _ = self.get_specifications()
 
             expected = self.create_files(root).filepath\
                 .apply(lambda x: x.as_posix()).tolist()
@@ -486,6 +486,21 @@ class DatabaseTests(DatabaseTestBase):
 
             result = data.groupby('asset_path').asset_valid.first().tolist()
             expected = [True, True, False, True, False]
+            self.assertEqual(result, expected)
+
+            # filepath_relative
+            prefix = root + '/'
+            temp = data.dropna(subset=['filepath'])
+            expected = temp \
+                .filepath.apply(lambda x: re.sub(prefix, '', x)).tolist()
+            result = temp.filepath_relative.tolist()
+            self.assertEqual(result, expected)
+
+            # asset_path_relative
+            temp = data.dropna(subset=['asset_path'])
+            expected = temp \
+                .asset_path.apply(lambda x: re.sub(prefix, '', x)).tolist()
+            result = temp.asset_path_relative.tolist()
             self.assertEqual(result, expected)
 
     def test_update_exclude(self):

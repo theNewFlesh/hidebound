@@ -188,7 +188,7 @@ def add_asset_path(data):
     data['asset_path'] = hbt.pred_combinator(
         data,
         lambda x: pd.notnull(x.specification_class),
-        lambda x: x.specification_class().get_asset_path(x.filepath),
+        lambda x: x.specification_class().get_asset_path(x.filepath).as_posix(),
         lambda x: np.nan,
         **hbt.get_meta_kwargs(data, str)
     )
