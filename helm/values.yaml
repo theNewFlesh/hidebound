@@ -31,6 +31,7 @@ base:
     FLASK_ENV:
     FLASK_RUN_PORT: "8080"
     FLASK_RUN_HOST: 0.0.0.0
+    REPO_ENV: "False"
     HIDEBOUND_ROOT_DIRECTORY: /mnt/storage/ingress
     HIDEBOUND_HIDEBOUND_DIRECTORY: /mnt/storage/hidebound
     HIDEBOUND_INCLUDE_REGEX: ""
