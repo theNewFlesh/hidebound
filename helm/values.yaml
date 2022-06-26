@@ -45,7 +45,8 @@ base:
     HIDEBOUND_EXPORTERS:
 
   deployment:
-    repository:
+    repository: thenewflesh/hidebound
+    image_tag: latest
     repo_path: /home/ubuntu/hidebound
     storage_path: /mnt/storage
     image_pull_policy: IfNotPresent
@@ -101,7 +102,6 @@ overlays:
       match: HostRegexp(`hidebound.local`)
 
     deployment:
-      image_tag:
       command:
         - /usr/bin/python3.7
         - /home/ubuntu/hidebound/python/hidebound/server/app.py
