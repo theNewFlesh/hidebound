@@ -30,7 +30,7 @@ def render_template(filename, parameters):
     tempdir = lbt.relative_path(__file__, '../templates').as_posix()
 
     # path to templates inside repo
-    if 'REPO_ENV' in os.environ.keys():
+    if os.environ.get('REPO_ENV', 'False').lower() == 'true':
         tempdir = lbt.relative_path(__file__, '../../../templates').as_posix()
 
     env = jinja2.Environment(
