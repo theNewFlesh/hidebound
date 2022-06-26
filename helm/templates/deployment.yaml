@@ -1,18 +1,9 @@
-kind: Namespace
-apiVersion: v1
-metadata:
-  name: {{ .Values.namespace }}
-  annotations:
-   kubectl.kubernetes.io/last-applied-configuration: "{}"
-
----
+{{- with (include "overlay" . | fromYaml) -}}
 kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: hidebound
-  namespace: {{ .Values.namespace }}
-  annotations:
-   kubectl.kubernetes.io/last-applied-configuration: "{}"
+  namespace: {{ .namespace.name }}
 spec:
   replicas: 1
   selector:
@@ -24,80 +15,68 @@ spec:
         app: hidebound
     spec:
       containers:
-        - name: hidebound
-          image: {{ .Values.container.image }}:{{ .Values.container.tag }}
-          imagePullPolicy: {{ .Values.container.image_pull_policy }}
-          command: [{{ join ", " .Values.container.command }}]
-          env: {{- range .Values.container.env }}
-            - name: {{ .name }}
-              value: "{{ .value }}"
+        - name: hidebound-container
+          image: "{{ .deployment.repository }}:{{ .deployment.image_tag }}"
+          imagePullPolicy: {{ .deployment.image_pull_policy }}
+          command:
+          {{- range $item := .deployment.command }}
+            - {{ $item }}
           {{- end }}
+          args:
+          {{- range $item := .deployment.args }}
+            - {{ $item }}
+          {{- end }}
+          envFrom:
+            {{- if .enable.env_configmap }}
+            - configMapRef:
+                name: hidebound-env-configmap
+            {{- end }}
+            {{- if .enable.env_secret }}
+            - secretRef:
+                name: hidebound-env-secret
+            {{- end }}
           ports:
-            - containerPort: {{ .Values.container.port }}
+            - containerPort: {{ .service.target_port }}
+          {{- if .enable.liveness_probe }}
           livenessProbe:
             httpGet:
               path: /healthz/live
-              port: {{ .Values.container.port }}
+              port: {{ .service.target_port }}
             initialDelaySeconds: 5
             timeoutSeconds: 1
+          {{- end }}
+          {{- if .enable.readiness_probe }}
           readinessProbe:
             httpGet:
               path: /healthz/ready
-              port: {{ .Values.container.port }}
+              port: {{ .service.target_port }}
             initialDelaySeconds: 5
             timeoutSeconds: 1
+          {{- end }}
           volumeMounts:
             - name: storage
-              mountPath: /mnt/storage
+              mountPath: {{ .deployment.storage_path }}
+            {{- if .enable.repo_volume }}
             - name: repo
-              mountPath: /home/ubuntu/hidebound
-            - name: config
-              mountPath: /mnt/storage/hidebound/hidebound_config.json
-              subPath: hidebound_config.json
+              mountPath: {{ .deployment.repo_path }}
+            {{- end }}
       volumes:
+      {{- if .enable.nfs_volume }}
         - name: storage
-          hostPath:
-            path: {{ .Values.container.storage_volume }}
-            type: Directory
+          nfs:
+             path: {{ .deployment.storage_path }}
+             server: {{ .deployment.nfs_server }}
+             readOnly: false
+      {{- else if .enable.desktop_volume }}
+        - name: storage
+          persistentVolumeClaim:
+            claimName: hidebound-storage-pvc
+      {{- end }}
+      {{- if .enable.repo_volume }}
         - name: repo
-          hostPath:
-            path: {{ .Values.container.repo }}
-            type: Directory
-        - name: config
-          configMap:
-            name: hidebound
-
----
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: hidebound
-  namespace: {{ .Values.namespace }}
-  annotations:
-   kubectl.kubernetes.io/last-applied-configuration: "{}"
-data:
-  hidebound_config.json: |
-    {
-        "root_directory": "{{ .Values.config.root_directory }}",
-        "hidebound_directory": "{{ .Values.config.hidebound_directory }}",
-        "specification_files": {{- toJson .Values.config.specification_files }},
-        "include_regex": "{{ .Values.config.include_regex }}",
-        "exclude_regex": "{{ .Values.config.exclude_regex }}",
-        "write_mode": "{{ .Values.config.write_mode }}"
-    }
-
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: hidebound
-  namespace: {{ .Values.namespace }}
-  annotations:
-   kubectl.kubernetes.io/last-applied-configuration: "{}"
-spec:
-  type: ClusterIP
-  selector:
-    app: hidebound
-  ports:
-    - port: {{ .Values.service.port }}
-      targetPort: {{ .Values.container.port }}
+          persistentVolumeClaim:
+            claimName: hidebound-repo-pvc
+      {{- end }}
+      imagePullSecrets:
+        - name: image-pull-secret
+{{- end -}}

@@ -1,0 +1,17 @@
+{{- with (include "overlay" . | fromYaml) -}}
+{{ if .enable.traefik_ingress }}
+kind: IngressRoute
+apiVersion: traefik.containo.us/v1alpha1
+metadata:
+  name: hidebound-traefik-ingress
+  namespace: {{ .namespace.name }}
+spec:
+  routes:
+    - match: {{ .traefik_ingress.match }}
+      kind: Rule
+      services:
+        - name: hidebound-service
+          kind: Service
+          port: 80
+{{ end }}
+{{- end -}}

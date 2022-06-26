@@ -1,0 +1,27 @@
+{{- with (include "overlay" . | fromYaml) -}}
+{{ if .enable.argocd_application }}
+kind: Application
+apiVersion: argoproj.io/v1alpha1
+metadata:
+  name: {{ .argocd_application.name }}
+  namespace: {{ .argocd_application.source_namespace }}
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/theNewFlesh/hidebound.git
+    targetRevision: master
+    path: helm
+    helm:
+      values: |
+        overlay: rancher_desktop
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: {{ .argocd_application.target_namespace }}
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
+{{ end }}
+{{- end -}}

@@ -1,0 +1,14 @@
+{{- with (include "overlay" . | fromYaml) -}}
+kind: Service
+apiVersion: v1
+metadata:
+  name: hidebound-service
+  namespace: {{ .namespace.name }}
+spec:
+  type: ClusterIP
+  selector:
+    app: hidebound
+  ports:
+    - port: {{ .service.port }}
+      targetPort: {{ .service.target_port }}
+{{- end -}}

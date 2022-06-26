@@ -1,29 +1,124 @@
-namespace: hidebound
+# CONTEXT-----------------------------------------------------------------------
+overlay: rancher_desktop
 
-container:
-  image: hidebound
-  tag: latest
-  repo: /mnt/repos/hidebound
-  storage_volume: /mnt/storage
-  port: 8080
-  image_pull_policy: IfNotPresent
-  command:
-    [
-      "python3.7",
-      "/home/ubuntu/hidebound/python/hidebound/server/app.py",
-    ]
-  env:
-    - name: REPO_ENV
-      value: "True"
+# BASE--------------------------------------------------------------------------
+base:
+  enable:
+    namespace: false
+    argocd_application: false
+    env_configmap: true
+    env_secret: false
+    image_pull_secret: false
+    repo_volume: false
+    desktop_volume: false
+    nfs_volume: false
+    nginx_ingress: false
+    traefik_ingress: false
+    readiness_probe: true
+    liveness_probe: true
 
-service:
-  port: 80
+  namespace:
+    name: asset-ingest
 
-config:
-  root_directory: /mnt/storage/projects
-  hidebound_directory: /mnt/storage/hidebound
-  specification_files:
-    - /mnt/storage/hidebound/specifications/test_specifications.py
-  include_regex:
-  exclude_regex: \\.DS_Store
-  write_mode: copy
+  argocd_application:
+    name: hidebound
+    source_namespace: argocd
+    target_namespace: hidebound
+
+  env_configmap:
+    FLASK_APP: server.app:get_app
+    FLASK_DEBUG:
+    FLASK_ENV:
+    FLASK_RUN_PORT: "8080"
+    FLASK_RUN_HOST: 0.0.0.0
+    HIDEBOUND_ROOT_DIRECTORY: /mnt/storage/ingress
+    HIDEBOUND_HIDEBOUND_DIRECTORY: /mnt/storage/hidebound
+    HIDEBOUND_INCLUDE_REGEX: ""
+    HIDEBOUND_EXCLUDE_REGEX: "\\\\.DS_Store"
+    HIDEBOUND_WRITE_MODE: move
+    HIDEBOUND_DASK_ENABLED: "False"
+    HIDEBOUND_DASK_WORKERS: "16"
+    HIDEBOUND_SPECIFICATION_FILES: []
+
+  env_secret:
+    HIDEBOUND_WEBHOOKS:
+    HIDEBOUND_EXPORTERS:
+
+  deployment:
+    repository:
+    repo_path: /home/ubuntu/hidebound
+    storage_path: /mnt/storage
+    image_pull_policy: IfNotPresent
+    nfs_server:
+    command:
+      - /usr/bin/python3.7
+      - /home/ubuntu/.local/lib/python3.7/site-packages/hidebound/server/app.py
+    args:
+    env_configmap: hidebound-env-configmap
+    env_secret: hidebound-env-secret
+
+  service:
+    port: 80
+    target_port: 8080
+
+  repo_volume:
+    path:
+
+  desktop_volume:
+    path:
+
+  nginx_ingress:
+    host:
+
+  traefik_ingress:
+    match:
+
+  image_pull_secret:
+    docker_config:
+
+# OVERLAYS----------------------------------------------------------------------
+overlays:
+  # RANCHER-DESKTOP-------------------------------------------------------------
+  rancher_desktop:
+    enable:
+      namespace: true
+      env_secret: true
+      image_pull_secret: true
+      repo_volume: true
+      desktop_volume: true
+      traefik_ingress: true
+
+    namespace:
+      name: hidebound
+
+    repo_volume:
+      path: /local/path/to/hidebound/repository
+
+    desktop_volume:
+      path: /local/storage/path
+
+    traefik_ingress:
+      match: HostRegexp(`hidebound.local`)
+
+    deployment:
+      image_tag:
+      command:
+        - /usr/bin/python3.7
+        - /home/ubuntu/hidebound/python/hidebound/server/app.py
+
+    env_configmap:
+      FLASK_DEBUG: "1"
+      FLASK_ENV: development
+      REPO_ENV: "True"
+      HIDEBOUND_INCLUDE_REGEX: ""
+      HIDEBOUND_WRITE_MODE: copy
+      HIDEBOUND_SPECIFICATION_FILES:
+        - /home/ubuntu/hidebound/python/hidebound/core/test_specifications.py
+
+    env_secret:
+      HIDEBOUND_EXPORTERS:
+        local_disk:
+          target_directory: /mnt/storage/archive
+          metadata_types:
+            - asset-chunk
+            - file-chunk

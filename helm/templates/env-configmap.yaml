@@ -1,0 +1,11 @@
+{{- with (include "overlay" . | fromYaml) -}}
+{{ if .enable.env_configmap }}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: hidebound-env-configmap
+  namespace: {{ .namespace.name }}
+data:
+{{- .env_configmap | toYaml | nindent 2 }}
+{{ end }}
+{{- end -}}

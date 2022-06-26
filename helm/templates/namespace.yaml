@@ -1,0 +1,8 @@
+{{- with (include "overlay" . | fromYaml) -}}
+{{ if .enable.namespace }}
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: {{ .namespace.name }}
+{{ end }}
+{{- end -}}

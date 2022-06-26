@@ -1,0 +1,24 @@
+{{- with (include "overlay" . | fromYaml) -}}
+{{ if .enable.nginx_ingress }}
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: hidebound-nginx-ingress
+  namespace: {{ .namespace.name }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+spec:
+  rules:
+    - host: {{ .nginx_ingress.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: hidebound-service
+                port:
+                  number: 80
+{{ end }}
+{{- end -}}
