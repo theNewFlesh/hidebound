@@ -84,8 +84,8 @@ overlays:
     enable:
       namespace: true
       env_secret: true
-      image_pull_secret: true
-      repo_volume: true
+      image_pull_secret: false
+      repo_volume: false
       desktop_volume: true
       traefik_ingress: true
 
@@ -104,7 +104,7 @@ overlays:
     deployment:
       command:
         - /usr/bin/python3.7
-        - /home/ubuntu/hidebound/python/hidebound/server/app.py
+        - /home/ubuntu/.local/lib/python3.7/site-packages/hidebound/server/app.py
 
     env_configmap:
       FLASK_DEBUG: "1"
@@ -112,8 +112,7 @@ overlays:
       REPO_ENV: "True"
       HIDEBOUND_INCLUDE_REGEX: ""
       HIDEBOUND_WRITE_MODE: copy
-      HIDEBOUND_SPECIFICATION_FILES:
-        - /home/ubuntu/hidebound/python/hidebound/core/test_specifications.py
+      HIDEBOUND_SPECIFICATION_FILES: []
 
     env_secret:
       HIDEBOUND_EXPORTERS:
