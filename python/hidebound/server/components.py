@@ -135,7 +135,7 @@ def get_dash_app(server, storage_type='memory'):
         className='content',
         type="dot",
         style={
-            'align-items': 'center',
+            'alignItems': 'center',
             'opacity': '50%',
             'background': COLOR_SCHEME['bg'],
         },
