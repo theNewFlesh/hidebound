@@ -1,5 +1,5 @@
-root_directory: /tmp/ingress
-hidebound_directory: /tmp/hidebound
+root_directory: /tmp/mnt/ingress
+hidebound_directory: /tmp/mnt/hidebound
 include_regex: ""
 exclude_regex: "\\.DS_Store"
 write_mode: copy
@@ -7,7 +7,7 @@ specification_files:
   - /home/ubuntu/hidebound/python/hidebound/core/test_specifications.py
 exporters:
   local_disk:
-    target_directory: /tmp/archive
+    target_directory: /tmp/mnt/archive
     metadata_types:
       - asset
       - file
