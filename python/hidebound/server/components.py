@@ -130,18 +130,7 @@ def get_dash_app(server, storage_type='memory'):
             )
         ],
     )
-    content = dcc.Loading(
-        id="content",
-        className='content',
-        type="dot",
-        style={
-            'alignItems': 'center',
-            'opacity': '50%',
-            'background': COLOR_SCHEME['bg'],
-        },
-        fullscreen=True,
-        color=COLOR_SCHEME['cyan2'],
-    )
+    content = html.Div(id="content", className='content')
 
     app = dash.Dash(
         name='hidebound',
