@@ -134,7 +134,7 @@ def get_dash_app(server, storage_type='memory'):
         id="content-container",
         className='content-container',
         children=[
-            html.Div(id="progressbar", className='progressbar'),
+            get_progressbar({}),
             html.Div(id="content", className='content')
         ],
     )
@@ -299,6 +299,45 @@ def get_configbar(config):
     ]
     configbar = html.Div(id='configbar', className='menubar', children=rows)
     return configbar
+
+
+def get_progressbar(data):
+    # type: (Dict) -> html.Div
+    '''
+    Creates a progress bar given progress data.
+
+    Args:
+        data (dict): Progress dictionary.
+
+    Returns:
+        Div: Progress bar.
+    '''
+    style = {}
+    if data in [{}, None]:
+        style = dict(display='none')
+        data = dict(
+            message='unknown',
+            progress=1.0,
+        )
+
+    pct = round(data['progress'] * 100, 2)
+    width = str(int(pct * 0.86)) + '%'
+
+    title = html.Div(
+        id='progressbar-title',
+        className='progressbar-title',
+        children=data['message'],
+        style={'min-width': '14%'}
+    )
+    body = html.Div(
+        id='progressbar-body',
+        className='progressbar-body',
+        style=dict(width=width)
+    )
+    progressbar = html.Div(
+        id='progressbar', children=[title, body], style=style
+    )
+    return progressbar
 
 
 # ELEMENTS----------------------------------------------------------------------

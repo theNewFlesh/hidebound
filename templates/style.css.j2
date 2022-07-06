@@ -175,13 +175,28 @@ button:active {
     z-index: 0;
     display: flex;
     flex-direction: column;
-    padding-top: 31px;
+    padding-top: 26px;
 }
 
 /* Progressbar */
 #progressbar {
+    display: flex;
     min-height: 27px;
     background: {{ COLOR_SCHEME['grey1'] }};
+    font-size: 20px;
+    font-family: {{ FONT_FAMILY }};
+    padding-top: 5px;
+}
+
+#progressbar-title {
+    min-height: 27px;
+    color: {{ COLOR_SCHEME['bg'] }};
+    background: {{ COLOR_SCHEME['cyan2'] }};
+}
+
+#progressbar-body {
+    min-height: 27px;
+    background: {{ COLOR_SCHEME['cyan1'] }};
 }
 
 /* Content */
