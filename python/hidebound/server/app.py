@@ -1,8 +1,10 @@
 from typing import Any, Dict, List, Tuple, Union
 
 from collections import namedtuple
+from pathlib import Path
 import json
 import os
+import time
 
 from dash import dash_table, dcc, html
 from dash.dependencies import Input, Output, State
@@ -14,6 +16,7 @@ import flask_monitoringdashboard as fmdb
 import requests
 
 from hidebound.core.config import Config
+from hidebound.core.logging import ProgressLogger
 import hidebound.server.components as components
 import hidebound.server.extensions as ext
 import hidebound.server.server_tools as server_tools
@@ -116,11 +119,65 @@ def serve_stylesheet(stylesheet):
     return flask.Response(content, mimetype='text/css')
 
 
+# TOOLS-------------------------------------------------------------------------
+def get_progress(
+    log_file='/tmp/mnt/hidebound/logs/progress/hidebound-progress.log'
+):
+    # type: (Union[str, Path]) -> dict
+    '''
+    Gets current progress state.
+
+    Args:
+        log_file (str or Path): Progress log filepath.
+
+    Returns:
+        dict: Progess.
+    '''
+    filepath = Path(log_file)
+    temp = dict(progress=1.0, message='unknown state')
+    if filepath.is_file():
+        temp.update(ProgressLogger.read(filepath)[-1])
+
+    keys = [
+        'message', 'original_message', 'timestamp', 'progress', 'step', 'total'
+    ]
+    progress = {}
+    for key in keys:
+        if key in temp:
+            progress[key] = temp[key]
+    return progress
+
+
+def async_post(url, delay=0.9):
+    try:
+        requests.post(url, timeout=0.00001)
+    except requests.exceptions.ReadTimeout:
+        pass
+    while True:
+        time.sleep(delay)
+        progress = get_progress()
+        if progress['progress'] == 1:
+            yield progress
+            break
+        yield progress
+
+
+def search(store, query, group_by_asset):
+    params = json.dumps({
+        'query': query,
+        'group_by_asset': group_by_asset,
+    })
+    response = requests.post(EP.search, json=params).json()
+    store['/api/read'] = response
+    store['query'] = query
+    return store
+
+
 # EVENTS------------------------------------------------------------------------
 # TODO: Find a way to test events.
-@APP.callback(
-    Output('store', 'data'),
-    [
+@APP.long_callback(
+    output=Output('store', 'data'),
+    inputs=[
         Input('init-button', 'n_clicks'),
         Input('update-button', 'n_clicks'),
         Input('create-button', 'n_clicks'),
@@ -132,10 +189,24 @@ def serve_stylesheet(stylesheet):
         Input('upload', 'contents'),
         Input('write-button', 'n_clicks'),
     ],
-    [State('store', 'data')]
+    progress=[Output('progressbar-container', 'children')],
+    running=[
+        (
+            Output('progressbar-container', 'style'),
+            dict(display='block'),
+            dict(display='none'),
+        ),
+        (
+            Output('progressbar-container-static', 'style'),
+            dict(display='none'),
+            dict(display='block'),
+        ),
+    ],
+    state=[State('store', 'data')],
+    prevent_initial_call=True,
 )
-def on_event(*inputs):
-    # type: (Tuple[Any, ...]) -> Dict[str, Any]
+def on_event(set_progress, *inputs):
+    # type: (Any, Tuple[Any, ...]) -> Dict[str, Any]
     '''
     Update Hidebound database instance, and updates store with input data.
 
@@ -161,11 +232,13 @@ def on_event(*inputs):
             val = item['value']
         inputs_[key] = val
 
+    # get query value
+    query = inputs_['query']
+
     # convert search dropdown to boolean
-    grp = False
+    group_by_asset = False
     if inputs_['dropdown'] == 'asset':
-        grp = True
-    inputs_['dropdown'] = grp
+        group_by_asset = True
 
     input_id = context.triggered[0]['prop_id'].split('.')[0]
 
@@ -175,37 +248,27 @@ def on_event(*inputs):
             store['/api/read'] = response
 
     elif input_id == 'update-button':
-        if hb.database is None:
-            response = requests.post(EP.init, json=conf).json()
-            if 'error' in response.keys():
-                store['/api/read'] = response
-
-        requests.post(EP.update)
-
-        params = json.dumps({'group_by_asset': grp})
-        response = requests.post(EP.read, json=params).json()
-        store['/api/read'] = response
+        for prog in async_post(EP.update):
+            set_progress([components.get_progressbar(prog)])
+        store = search(store, query, group_by_asset)
 
     elif input_id == 'create-button':
-        requests.post(EP.create)
+        for prog in async_post(EP.create):
+            set_progress([components.get_progressbar(prog)])
+        store = search(store, query, group_by_asset)
 
     elif input_id == 'export-button':
-        response = requests.post(EP.export)
-        code = response.status_code
-        if code < 200 or code >= 300:
-            store['/api/read'] = response.json
+        for prog in async_post(EP.export):
+            set_progress([components.get_progressbar(prog)])
+        store = search(store, query, group_by_asset)
 
     elif input_id == 'delete-button':
-        requests.post(EP.delete)
+        for prog in async_post(EP.delete):
+            set_progress([components.get_progressbar(prog)])
+        store = search(store, query, group_by_asset)
 
     elif input_id == 'search-button':
-        query = json.dumps({
-            'query': inputs_['query'],
-            'group_by_asset': inputs_['dropdown']
-        })
-        response = requests.post(EP.search, json=query).json()
-        store['/api/read'] = response
-        store['query'] = inputs_['query']
+        store = search(store, query, group_by_asset)
 
     elif input_id == 'upload':
         temp = 'invalid'  # type: Any
@@ -357,6 +420,24 @@ def on_config_card_update(timestamp, store):
     msg += f'config: {config} and error: {str(error)[:50]}'
     APP.logger.debug(msg)
     return output
+
+
+@APP.callback(
+    Output('progressbar-container-static', 'children'),
+    [Input('store', 'modified_timestamp')],
+)
+def on_progress(timestamp):
+    # type: (int) -> flask.Response
+    '''
+    Updates progressbar.
+
+    Args:
+        timestamp (int): Store modification timestamp.
+
+    Returns:
+        flask.Response: Response.
+    '''
+    return components.get_progressbar(get_progress(), '-static')
 # ------------------------------------------------------------------------------
 
 

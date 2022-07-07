@@ -217,7 +217,7 @@ class Database:
         # needed for testing
         self.__exporter_lut = None
 
-        self._logger.info('Database initialized')
+        self._logger.info('Database initialized', step=1, total=1)
 
     def create(self):
         # type: () -> "Database"
@@ -516,7 +516,7 @@ class Database:
                 self.__exporter_lut[key] = exporter
 
         list(self.call_webhooks())
-        self._logger.info('export: complete')
+        self._logger.info('export: complete', step=i + 1, total=total)
         return self
 
     def search(self, query, group_by_asset=False):

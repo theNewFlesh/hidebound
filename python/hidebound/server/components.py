@@ -1,12 +1,14 @@
 from typing import Any, Dict, List, Optional
-import flask
 
+import diskcache
 import re
 
+from dash import dash_table, dcc, html
+from dash.long_callback import DiskcacheLongCallbackManager
 from pandas import DataFrame
 import dash
-from dash import dash_table, dcc, html
 import dash_cytoscape as cyto
+import flask
 import rolling_pin.blob_etl as blob_etl
 # ------------------------------------------------------------------------------
 
@@ -134,16 +136,23 @@ def get_dash_app(server, storage_type='memory'):
         id="content-container",
         className='content-container',
         children=[
-            get_progressbar({}),
+            html.Div(
+                id="progressbar-container", className='progressbar-container'
+            ),
+            html.Div(
+                id="progressbar-container-static", className='progressbar-container-static'
+            ),
             html.Div(id="content", className='content')
         ],
     )
 
+    manager = DiskcacheLongCallbackManager(diskcache.Cache('/tmp/cache'))
     app = dash.Dash(
         name='hidebound',
         title='Hidebound',
         server=server,
         external_stylesheets=['/static/style.css'],
+        long_callback_manager=manager,
     )
     app.layout = html.Div(id='layout', children=[store, tabs, content])
     app.config['suppress_callback_exceptions'] = True
@@ -264,6 +273,7 @@ def get_dummy_elements():
         html.Div(className='dummy', id='delete-button', n_clicks=None),
         dcc.Upload(className='dummy', id='upload', contents=None),
         html.Div(className='dummy', id='write-button', n_clicks=None),
+        dcc.Input(className='dummy', id='progressbar-static', style=None),
     ]
 
 
@@ -301,8 +311,8 @@ def get_configbar(config):
     return configbar
 
 
-def get_progressbar(data):
-    # type: (Dict) -> html.Div
+def get_progressbar(data, suffix=''):
+    # type: (Dict, str) -> html.Div
     '''
     Creates a progress bar given progress data.
 
@@ -312,31 +322,29 @@ def get_progressbar(data):
     Returns:
         Div: Progress bar.
     '''
-    style = {}
     if data in [{}, None]:
-        style = dict(display='none')
         data = dict(
             message='unknown',
             progress=1.0,
         )
 
-    pct = round(data['progress'] * 100, 2)
-    width = str(int(pct * 0.86)) + '%'
+    pct = data.get('progress', 1.0)
+    if pct is None:
+        pct = 1.0
+    pct = round(pct * 100, 2)
+    width = str(int(pct)) + '%'
 
     title = html.Div(
-        id='progressbar-title',
-        className='progressbar-title',
+        id=f'progressbar-title{suffix}',
+        className=f'progressbar-title{suffix}',
         children=data['message'],
-        style={'min-width': '14%'}
     )
     body = html.Div(
-        id='progressbar-body',
-        className='progressbar-body',
+        id=f'progressbar-body{suffix}',
+        className=f'progressbar-body{suffix}',
         style=dict(width=width)
     )
-    progressbar = html.Div(
-        id='progressbar', children=[title, body], style=style
-    )
+    progressbar = html.Div(id=f'progressbar{suffix}', children=[title, body])
     return progressbar
 
 

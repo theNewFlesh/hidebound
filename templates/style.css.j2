@@ -179,24 +179,36 @@ button:active {
 }
 
 /* Progressbar */
-#progressbar {
-    display: flex;
-    min-height: 27px;
-    background: {{ COLOR_SCHEME['grey1'] }};
-    font-size: 20px;
-    font-family: {{ FONT_FAMILY }};
-    padding-top: 5px;
-}
-
-#progressbar-title {
-    min-height: 27px;
-    color: {{ COLOR_SCHEME['bg'] }};
-    background: {{ COLOR_SCHEME['cyan2'] }};
-}
-
-#progressbar-body {
-    min-height: 27px;
+#progressbar-container,
+#progressbar-container-static {
+    height: 27px;
     background: {{ COLOR_SCHEME['cyan1'] }};
+    border-top-width: 4px;
+    border-color: {{ COLOR_SCHEME['grey1'] }};
+}
+
+#progressbar-title,
+#progressbar-title-static {
+    color: {{ COLOR_SCHEME['bg'] }};
+    background: transparent;
+    height: 27px;
+    position: fixed;
+    z-index: 1;
+    width: 100%;
+    padding-top: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 15px;
+    font-weight: bold;
+    font-family: {{ FONT_FAMILY }};
+}
+
+#progressbar-body,
+#progressbar-body-static {
+    z-index: 0;
+    position: fixed;
+    height: 27px;
+    background: {{ COLOR_SCHEME['cyan2'] }};
 }
 
 /* Content */
