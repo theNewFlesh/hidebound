@@ -298,7 +298,7 @@ def get_configbar(config):
             children=[expander, spacer, upload, spacer, write],
         ),
         html.Div(className='row-spacer'),
-        html.Div(id='config-content', children=[
+        html.Div(id='config', children=[
             get_key_value_card(config, header='config', id_='config-card')
         ])
     ]

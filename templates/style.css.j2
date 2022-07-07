@@ -311,6 +311,24 @@ button:active {
     color: {{ COLOR_SCHEME['red2'] }};
 }
 
+/* Config Card */
+#config .key-value-card-row {
+    border-color: {{ COLOR_SCHEME['orange2'] }};
+}
+
+#config .key-value-card-header {
+    background: {{ COLOR_SCHEME['orange2'] }};
+}
+
+#config .key-value-card-key {
+    color: {{ COLOR_SCHEME['light1'] }};
+    border-color: {{ COLOR_SCHEME['orange2'] }};
+}
+
+#config .key-value-card-value {
+    color: {{ COLOR_SCHEME['orange2'] }};
+}
+
 /* Plot */
 .plot {
     flex-grow: 1;
@@ -676,31 +694,6 @@ button:active {
     --selected-background: transparent !important;
     --faded-dropdown: transparent !important;
     --muted: transparent !important;
-}
-
-/* Config */
-.config-row {
-    display: flex;
-    height: 27px;
-    width: 100%;
-    padding-bottom: 2px;
-}
-
-.config-key {
-    background: {{ COLOR_SCHEME['grey2'] }};
-    color: {{ COLOR_SCHEME['light1'] }};
-    padding: 4px 8px 4px 8px;
-    min-width: 200px;
-    text-align: right;
-    border-right: 2px solid {{ COLOR_SCHEME['bg'] }};
-}
-
-.config-value {
-    background: {{ COLOR_SCHEME['grey1'] }};
-    color: {{ COLOR_SCHEME['cyan2'] }};
-    flex-grow: 10;
-    font-size: 15px;
-    padding-left: 10px;
 }
 
 /* Asset Graph */
