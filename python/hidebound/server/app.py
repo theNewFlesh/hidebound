@@ -4,7 +4,6 @@ from collections import namedtuple
 from pathlib import Path
 import json
 import os
-import time
 
 from dash import dash_table, dcc, html
 from dash.dependencies import Input, Output, State
@@ -148,20 +147,6 @@ def get_progress(
     return progress
 
 
-def async_post(url, delay=0.9):
-    try:
-        requests.post(url, timeout=0.00001)
-    except requests.exceptions.ReadTimeout:
-        pass
-    while True:
-        time.sleep(delay)
-        progress = get_progress()
-        if progress['progress'] == 1:
-            yield progress
-            break
-        yield progress
-
-
 def search(store, query, group_by_asset):
     params = json.dumps({
         'query': query,
@@ -175,7 +160,7 @@ def search(store, query, group_by_asset):
 
 # EVENTS------------------------------------------------------------------------
 # TODO: Find a way to test events.
-@APP.long_callback(
+@APP.callback(
     output=Output('store', 'data'),
     inputs=[
         Input('init-button', 'n_clicks'),
@@ -188,19 +173,6 @@ def search(store, query, group_by_asset):
         Input('query', 'value'),
         Input('upload', 'contents'),
         Input('write-button', 'n_clicks'),
-    ],
-    progress=[Output('progressbar-container', 'children')],
-    running=[
-        (
-            Output('progressbar-container', 'style'),
-            dict(display='block'),
-            dict(display='none'),
-        ),
-        (
-            Output('progressbar-container-static', 'style'),
-            dict(display='none'),
-            dict(display='block'),
-        ),
     ],
     state=[State('store', 'data')],
     prevent_initial_call=True,
@@ -248,24 +220,17 @@ def on_event(set_progress, *inputs):
             store['/api/read'] = response
 
     elif input_id == 'update-button':
-        for prog in async_post(EP.update):
-            set_progress([components.get_progressbar(prog)])
+        requests.post(EP.update)
         store = search(store, query, group_by_asset)
 
     elif input_id == 'create-button':
-        for prog in async_post(EP.create):
-            set_progress([components.get_progressbar(prog)])
-        store = search(store, query, group_by_asset)
+        requests.post(EP.create)
 
     elif input_id == 'export-button':
-        for prog in async_post(EP.export):
-            set_progress([components.get_progressbar(prog)])
-        store = search(store, query, group_by_asset)
+        requests.post(EP.export)
 
     elif input_id == 'delete-button':
-        for prog in async_post(EP.delete):
-            set_progress([components.get_progressbar(prog)])
-        store = search(store, query, group_by_asset)
+        requests.post(EP.delete)
 
     elif input_id == 'search-button':
         store = search(store, query, group_by_asset)
@@ -423,8 +388,8 @@ def on_config_card_update(timestamp, store):
 
 
 @APP.callback(
-    Output('progressbar-container-static', 'children'),
-    [Input('store', 'modified_timestamp')],
+    Output('progressbar-container', 'children'),
+    [Input('clock', 'n_intervals')],
 )
 def on_progress(timestamp):
     # type: (int) -> flask.Response
@@ -437,7 +402,7 @@ def on_progress(timestamp):
     Returns:
         flask.Response: Response.
     '''
-    return components.get_progressbar(get_progress(), '-static')
+    return components.get_progressbar(get_progress())
 # ------------------------------------------------------------------------------
 
 
