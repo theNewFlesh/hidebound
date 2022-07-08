@@ -153,6 +153,7 @@ ZV9yZWdleCI6ICJcXC5EU19TdG9yZXx5b3VyLW1vbSIsCiAgICAid3JpdGVfbW9kZSI6ICJjb3B5Igp\
         with self.assertRaisesRegexp(ValueError, expected):
             hst.parse_json_file_content(content)
 
+    # DASH-TOOLS----------------------------------------------------------------
     def test_get_progress(self):
         with TemporaryDirectory() as root:
             log = Path(root, 'test.log')
