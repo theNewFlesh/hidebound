@@ -148,14 +148,23 @@ def get_progress(
 
 
 def search(store, query, group_by_asset):
-    params = json.dumps({
+    params = {
         'query': query,
         'group_by_asset': group_by_asset,
-    })
-    response = requests.post(EP.search, json=params).json()
-    store['/api/read'] = response
+    }
+    store['/api/read'] = request(store, EP.search, params)
     store['query'] = query
     return store
+
+
+def request(store, endpoint, params=None):
+    if params is not None:
+        params = json.dumps(params)
+    response = requests.post(endpoint, json=params)
+    code = response.status_code
+    if code < 200 or code >= 300:
+        store['/api/read'] = response.json
+    return response.json()
 
 
 # EVENTS------------------------------------------------------------------------
@@ -177,8 +186,8 @@ def search(store, query, group_by_asset):
     state=[State('store', 'data')],
     prevent_initial_call=True,
 )
-def on_event(set_progress, *inputs):
-    # type: (Any, Tuple[Any, ...]) -> Dict[str, Any]
+def on_event(*inputs):
+    # type: (Tuple[Any, ...]) -> Dict[str, Any]
     '''
     Update Hidebound database instance, and updates store with input data.
 
@@ -191,62 +200,43 @@ def on_event(set_progress, *inputs):
     APP.logger.debug(f'on_event called with inputs: {str(inputs)[:50]}')
     hb = current_app.extensions['hidebound']
 
-    store = inputs[-1] or {}  # type: Any
-    config = store.get('config', hb.config)  # type: Dict
-    conf = json.dumps(config)
-
+    # get context values
     context = dash.callback_context
-    inputs_ = {}
-    for item in context.inputs_list:
-        key = item['id']
-        val = None
-        if 'value' in item.keys():
-            val = item['value']
-        inputs_[key] = val
+    store = context.states['store.data'] or {}  # type: Any
+    trigger = context.triggered_id
+    value = context.triggered[0]['value']
+    query = context.inputs['query.value']
+    group_by_asset = context.inputs['dropdown.value'] == 'asset'
 
-    # get query value
-    query = inputs_['query']
+    if trigger == 'init-button':
+        request(store, EP.update, store.get('config', hb.config))
 
-    # convert search dropdown to boolean
-    group_by_asset = False
-    if inputs_['dropdown'] == 'asset':
-        group_by_asset = True
-
-    input_id = context.triggered[0]['prop_id'].split('.')[0]
-
-    if input_id == 'init-button':
-        response = requests.post(EP.init, json=conf).json()
-        if 'error' in response.keys():
-            store['/api/read'] = response
-
-    elif input_id == 'update-button':
-        requests.post(EP.update)
+    elif trigger == 'update-button':
+        request(store, EP.update)
         store = search(store, query, group_by_asset)
 
-    elif input_id == 'create-button':
-        requests.post(EP.create)
+    elif trigger == 'create-button':
+        request(store, EP.create)
 
-    elif input_id == 'export-button':
-        requests.post(EP.export)
+    elif trigger == 'export-button':
+        request(store, EP.export)
 
-    elif input_id == 'delete-button':
-        requests.post(EP.delete)
+    elif trigger == 'delete-button':
+        request(store, EP.delete)
 
-    elif input_id == 'search-button':
+    elif trigger == 'search-button':
         store = search(store, query, group_by_asset)
 
-    elif input_id == 'upload':
+    elif trigger == 'upload':
         temp = 'invalid'  # type: Any
         try:
-            upload = inputs_['upload']  # type: Any
-            temp = server_tools.parse_json_file_content(upload)
+            temp = server_tools.parse_json_file_content(value)
             Config(temp).validate()
             store['config'] = temp
             store['config_error'] = None
         except Exception as error:
-            response = server_tools.error_to_response(error)
             store['config'] = temp
-            store['config_error'] = server_tools.error_to_response(error).json
+            store['config_error'] = server_tools.error_to_response(error).json()
 
     # elif input_id == 'write-button':
     #     try:
