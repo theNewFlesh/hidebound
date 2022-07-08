@@ -62,6 +62,10 @@ RUN echo "\n${CYAN}INSTALL OPENEXR${CLEAR}"; \
         openexr \
         zlib1g-dev
 
+# chown /var/log
+RUN echo "\n${CYAN}CHOWN /VAR/LOG${CLEAR}"; \
+    chown ubuntu:ubuntu /var/log
+
 # install hidebound
 USER ubuntu
 ENV REPO='hidebound'
