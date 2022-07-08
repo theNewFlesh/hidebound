@@ -153,7 +153,7 @@ def setup_hidebound_directory(root, config_path=None):
     target = Path(config_dir, 'hidebound_config.json').as_posix()
 
     config = {
-        'root_directory': Path(root, 'projects').as_posix(),
+        'root_directory': Path(root, 'ingress').as_posix(),
         'hidebound_directory': hb_root,
         'specification_files': [],
         'include_regex': '',

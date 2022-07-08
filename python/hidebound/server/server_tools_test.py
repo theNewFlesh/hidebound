@@ -15,7 +15,7 @@ class ServerToolsTests(DatabaseTestBase):
         with TemporaryDirectory() as root:
             config, config_path = hst.setup_hidebound_directory(root)
             expected_config = {
-                'root_directory': Path(root, 'projects').as_posix(),
+                'root_directory': Path(root, 'ingress').as_posix(),
                 'hidebound_directory': Path(root, 'hidebound').as_posix(),
                 'specification_files': [],
                 'include_regex': '',
