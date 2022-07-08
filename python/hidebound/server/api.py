@@ -13,7 +13,7 @@ from werkzeug.exceptions import BadRequest
 from hidebound.core.database import Database
 from hidebound.core.logging import ProgressLogger, PROGRESS_LOG_PATH
 import hidebound.server.extensions as ext
-import hidebound.server.server_tools as server_tools
+import hidebound.server.server_tools as hst
 # ------------------------------------------------------------------------------
 
 
@@ -77,9 +77,9 @@ def initialize():
         config = flask.request.get_json()  # type: Any
         config = json.loads(config)
     except (BadRequest, JSONDecodeError, TypeError):
-        return server_tools.get_config_error()
+        return hst.get_config_error()
     if not isinstance(config, dict):
-        return server_tools.get_config_error()
+        return hst.get_config_error()
 
     ext.hidebound.database = Database.from_config(config)
 
@@ -113,7 +113,7 @@ def create():
     try:
         ext.hidebound.database.create()
     except RuntimeError:
-        return server_tools.get_update_error()
+        return hst.get_update_error()
 
     return flask.Response(
         response=json.dumps(dict(message='Hidebound data created.')),
@@ -158,15 +158,15 @@ def read():
             group_by_asset = params['group_by_asset']
             assert(isinstance(group_by_asset, bool))
         except (JSONDecodeError, TypeError, KeyError, AssertionError):
-            return server_tools.get_read_error()
+            return hst.get_read_error()
 
     response = {}  # type: Any
     try:
         response = ext.hidebound.database.read(group_by_asset=group_by_asset)
     except Exception as error:
         if isinstance(error, RuntimeError):
-            return server_tools.get_update_error()
-        return server_tools.error_to_response(error)
+            return hst.get_update_error()
+        return hst.error_to_response(error)
 
     response = response.replace({np.nan: None}).to_dict(orient='records')
     response = {'response': response}
@@ -256,7 +256,7 @@ def export():
     try:
         ext.hidebound.database.export()
     except Exception as error:
-        return server_tools.error_to_response(error)
+        return hst.error_to_response(error)
 
     return flask.Response(
         response=json.dumps(dict(message='Hidebound data exported.')),
@@ -308,17 +308,17 @@ def search():
             group_by_asset = params['group_by_asset']
             assert(isinstance(group_by_asset, bool))
     except (JSONDecodeError, TypeError, KeyError, AssertionError):
-        return server_tools.get_search_error()
+        return hst.get_search_error()
 
     if ext.hidebound.database.data is None:
-        return server_tools.get_update_error()
+        return hst.get_update_error()
 
     response = None
     try:
         response = ext.hidebound.database \
             .search(query, group_by_asset=group_by_asset)
     except Exception as e:
-        return server_tools.error_to_response(e)
+        return hst.error_to_response(e)
 
     response.asset_valid = response.asset_valid.astype(bool)
     response = response.replace({np.nan: None}).to_dict(orient='records')
@@ -366,14 +366,14 @@ def workflow():
     diff = sorted(list(set(workflow).difference(legal)))
     if len(diff) > 0:
         msg = f'Found illegal workflow steps: {diff}. Legal steps: {legal}.'
-        return server_tools.error_to_response(ValueError(msg))
+        return hst.error_to_response(ValueError(msg))
 
     # run through workflow
     for step in workflow:
         try:
             getattr(ext.hidebound.database, step)()
         except Exception as error:  # pragma: no cover
-            return server_tools.error_to_response(error)  # pragma: no cover
+            return hst.error_to_response(error)  # pragma: no cover
 
     return flask.Response(
         response=json.dumps(dict(
@@ -425,7 +425,7 @@ def handle_data_error(error):
     Returns:
         Response: DataError response.
     '''
-    return server_tools.error_to_response(error)
+    return hst.error_to_response(error)
 
 
 @API.errorhandler(KeyError)
@@ -440,7 +440,7 @@ def handle_key_error(error):
     Returns:
         Response: KeyError response.
     '''
-    return server_tools.error_to_response(error)
+    return hst.error_to_response(error)
 
 
 @API.errorhandler(TypeError)
@@ -455,7 +455,7 @@ def handle_type_error(error):
     Returns:
         Response: TypeError response.
     '''
-    return server_tools.error_to_response(error)
+    return hst.error_to_response(error)
 
 
 @API.errorhandler(JSONDecodeError)
@@ -470,7 +470,7 @@ def handle_json_decode_error(error):
     Returns:
         Response: JSONDecodeError response.
     '''
-    return server_tools.error_to_response(error)
+    return hst.error_to_response(error)
 # ------------------------------------------------------------------------------
 
 

@@ -9,7 +9,7 @@ import pytest
 from hidebound.core.database_test_base import DatabaseTestBase
 import hidebound.server.app as application
 import hidebound.server.components as components
-import hidebound.server.server_tools as server_tools
+import hidebound.server.server_tools as hst
 # ------------------------------------------------------------------------------
 
 
@@ -62,6 +62,6 @@ class AppTests(DatabaseTestBase):
             COLOR_SCHEME=components.COLOR_SCHEME,
             FONT_FAMILY=components.FONT_FAMILY,
         )
-        expected = server_tools.render_template('style.css.j2', params)
+        expected = hst.render_template('style.css.j2', params)
         result = next(self.client.get('/static/style.css').response)
         self.assertEqual(result, expected)
