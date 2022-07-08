@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 from collections import namedtuple
 from pathlib import Path
@@ -91,7 +91,7 @@ def get_app(testing=False):
     fmdb.config.git = 'https://theNewFlesh.github.io/hidebound/'
     fmdb.bind(app)
 
-    app = components.get_dash_app(app)
+    app = components.get_dash_app(app, seconds=0.2)
     return app
 
 
@@ -148,23 +148,49 @@ def get_progress(
 
 
 def search(store, query, group_by_asset):
+    # type: (dict, str, bool) -> dict
+    '''
+    Execute search against database and update store with response.
+
+    Args:
+        store (dict): Dash store.
+        query (str): Query string.
+        group_by_asset (bool): Whether to group the search by asset.
+
+    Returns:
+        dict: Store.
+    '''
     params = {
         'query': query,
         'group_by_asset': group_by_asset,
     }
-    store['/api/read'] = request(store, EP.search, params)
+    store['content'] = request(store, EP.search, params)
     store['query'] = query
     return store
 
 
-def request(store, endpoint, params=None):
+def request(store, url, params=None):
+    # type: (dict, str, Optional[dict]) -> dict
+    '''
+    Execute search against database and update store with response.
+    Sets store['content'] to response if there is an error.
+
+    Args:
+        store (dict): Dash store.
+        url (str): API endpoint.
+        params (dict, optional): Request paramaters. Default: None.
+
+    Returns:
+        dict: Store.
+    '''
     if params is not None:
         params = json.dumps(params)
-    response = requests.post(endpoint, json=params)
+    response = requests.post(url, json=params)
     code = response.status_code
+    response = response.json()
     if code < 200 or code >= 300:
-        store['/api/read'] = response.json
-    return response.json()
+        store['content'] = response
+    return response
 
 
 # EVENTS------------------------------------------------------------------------
@@ -272,7 +298,7 @@ def on_datatable_update(store):
 
     if store in [{}, None]:
         raise PreventUpdate
-    data = store.get('/api/read', None)
+    data = store.get('content', None)
     if data is None:
         raise PreventUpdate
 
@@ -310,7 +336,7 @@ def on_get_tab(tab, store):
         return components.get_data_tab(query)
 
     elif tab == 'graph':
-        data = store.get('/api/read', None)
+        data = store.get('content', None)
         if data is None:
             return None
 
