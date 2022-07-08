@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.22.0
+                0.23.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -96,8 +96,9 @@
 <span class="kn">from</span> <span class="nn">werkzeug.exceptions</span> <span class="kn">import</span> <span class="n">BadRequest</span>
 
 <span class="kn">from</span> <span class="nn">hidebound.core.database</span> <span class="kn">import</span> <span class="n">Database</span>
+<span class="kn">import</span> <span class="nn">hidebound.core.logging</span> <span class="k">as</span> <span class="nn">hblog</span>
 <span class="kn">import</span> <span class="nn">hidebound.server.extensions</span> <span class="k">as</span> <span class="nn">ext</span>
-<span class="kn">import</span> <span class="nn">hidebound.server.server_tools</span> <span class="k">as</span> <span class="nn">server_tools</span>
+<span class="kn">import</span> <span class="nn">hidebound.server.server_tools</span> <span class="k">as</span> <span class="nn">hst</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
@@ -161,9 +162,9 @@
         <span class="n">config</span> <span class="o">=</span> <span class="n">flask</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>  <span class="c1"># type: Any</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
     <span class="k">except</span> <span class="p">(</span><span class="n">BadRequest</span><span class="p">,</span> <span class="n">JSONDecodeError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">get_config_error</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">hst</span><span class="o">.</span><span class="n">get_config_error</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">get_config_error</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">hst</span><span class="o">.</span><span class="n">get_config_error</span><span class="p">()</span>
 
     <span class="n">ext</span><span class="o">.</span><span class="n">hidebound</span><span class="o">.</span><span class="n">database</span> <span class="o">=</span> <span class="n">Database</span><span class="o">.</span><span class="n">from_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
@@ -197,7 +198,7 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="n">ext</span><span class="o">.</span><span class="n">hidebound</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
     <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">get_update_error</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">hst</span><span class="o">.</span><span class="n">get_update_error</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="n">flask</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span>
         <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;Hidebound data created.&#39;</span><span class="p">)),</span>
@@ -242,15 +243,15 @@
             <span class="n">group_by_asset</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;group_by_asset&#39;</span><span class="p">]</span>
             <span class="k">assert</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">group_by_asset</span><span class="p">,</span> <span class="nb">bool</span><span class="p">))</span>
         <span class="k">except</span> <span class="p">(</span><span class="n">JSONDecodeError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">,</span> <span class="ne">AssertionError</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">get_read_error</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">hst</span><span class="o">.</span><span class="n">get_read_error</span><span class="p">()</span>
 
     <span class="n">response</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: Any</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">ext</span><span class="o">.</span><span class="n">hidebound</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">group_by_asset</span><span class="o">=</span><span class="n">group_by_asset</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="ne">RuntimeError</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">get_update_error</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">hst</span><span class="o">.</span><span class="n">get_update_error</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">hst</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
 
     <span class="n">response</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s1">&#39;records&#39;</span><span class="p">)</span>
     <span class="n">response</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="n">response</span><span class="p">}</span>
@@ -340,7 +341,7 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="n">ext</span><span class="o">.</span><span class="n">hidebound</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">export</span><span class="p">()</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">hst</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">flask</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span>
         <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;Hidebound data exported.&#39;</span><span class="p">)),</span>
@@ -392,17 +393,17 @@
             <span class="n">group_by_asset</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;group_by_asset&#39;</span><span class="p">]</span>
             <span class="k">assert</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">group_by_asset</span><span class="p">,</span> <span class="nb">bool</span><span class="p">))</span>
     <span class="k">except</span> <span class="p">(</span><span class="n">JSONDecodeError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">,</span> <span class="ne">AssertionError</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">get_search_error</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">hst</span><span class="o">.</span><span class="n">get_search_error</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">ext</span><span class="o">.</span><span class="n">hidebound</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">get_update_error</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">hst</span><span class="o">.</span><span class="n">get_update_error</span><span class="p">()</span>
 
     <span class="n">response</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">ext</span><span class="o">.</span><span class="n">hidebound</span><span class="o">.</span><span class="n">database</span> \
             <span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">group_by_asset</span><span class="o">=</span><span class="n">group_by_asset</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">hst</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
     <span class="n">response</span><span class="o">.</span><span class="n">asset_valid</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">asset_valid</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s1">&#39;records&#39;</span><span class="p">)</span>
@@ -420,12 +421,6 @@
             <span class="n">name</span><span class="o">=</span><span class="s1">&#39;workflow&#39;</span><span class="p">,</span>
             <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;list&#39;</span><span class="p">,</span>
             <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Ordered list of API calls.&#39;</span><span class="p">,</span>
-            <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="nb">dict</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;config&#39;</span><span class="p">,</span>
-            <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;dict&#39;</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Hidebound configuration.&#39;</span><span class="p">,</span>
             <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="p">],</span>
@@ -456,18 +451,45 @@
     <span class="n">diff</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">workflow</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">legal</span><span class="p">)))</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Found illegal workflow steps: </span><span class="si">{</span><span class="n">diff</span><span class="si">}</span><span class="s1">. Legal steps: </span><span class="si">{</span><span class="n">legal</span><span class="si">}</span><span class="s1">.&#39;</span>
-        <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">hst</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">))</span>
 
     <span class="c1"># run through workflow</span>
     <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">workflow</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="nb">getattr</span><span class="p">(</span><span class="n">ext</span><span class="o">.</span><span class="n">hidebound</span><span class="o">.</span><span class="n">database</span><span class="p">,</span> <span class="n">step</span><span class="p">)()</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-            <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span>
+            <span class="k">return</span> <span class="n">hst</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span>
 
     <span class="k">return</span> <span class="n">flask</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span>
         <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
             <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Workflow completed.&#39;</span><span class="p">,</span> <span class="n">workflow</span><span class="o">=</span><span class="n">workflow</span><span class="p">)),</span>
+        <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="progress"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.progress">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/progress&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="nd">@swg</span><span class="o">.</span><span class="n">swag_from</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
+    <span class="n">parameters</span><span class="o">=</span><span class="p">[],</span>
+    <span class="n">responses</span><span class="o">=</span><span class="p">{</span>
+        <span class="mi">200</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Current progress of Hidebound.&#39;</span><span class="p">,</span>
+            <span class="n">content</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="mi">500</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Internal server error.&#39;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">))</span>
+<span class="k">def</span> <span class="nf">progress</span><span class="p">():</span>
+    <span class="c1"># type: () -&gt; flask.Response</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Get hidebound app progress.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Response: Flask Response instance.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">flask</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span>
+        <span class="n">response</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">hblog</span><span class="o">.</span><span class="n">get_progress</span><span class="p">()),</span>
         <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;application/json&#39;</span>
     <span class="p">)</span></div>
 
@@ -484,7 +506,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Response: DataError response.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">hst</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="handle_key_error"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.handle_key_error">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">errorhandler</span><span class="p">(</span><span class="ne">KeyError</span><span class="p">)</span>
@@ -499,7 +521,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Response: KeyError response.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">hst</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="handle_type_error"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.handle_type_error">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">errorhandler</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">)</span>
@@ -514,7 +536,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Response: TypeError response.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">hst</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="handle_json_decode_error"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.handle_json_decode_error">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">errorhandler</span><span class="p">(</span><span class="n">JSONDecodeError</span><span class="p">)</span>
@@ -529,7 +551,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Response: JSONDecodeError response.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">return</span> <span class="n">server_tools</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">hst</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 

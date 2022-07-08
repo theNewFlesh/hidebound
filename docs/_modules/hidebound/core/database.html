@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.22.2
+                0.23.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -260,8 +260,7 @@
             <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
         <span class="c1"># setup logger</span>
-        <span class="n">logpath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">hb_root</span><span class="p">,</span> <span class="s1">&#39;logs&#39;</span><span class="p">,</span> <span class="s1">&#39;progress&#39;</span><span class="p">,</span> <span class="s1">&#39;hidebound-progress.log&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="n">ProgressLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">logpath</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="n">ProgressLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
         <span class="c1"># validate spec classes</span>
         <span class="n">bad_specs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span>
@@ -303,7 +302,7 @@
         <span class="c1"># needed for testing</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__exporter_lut</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Database initialized&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Database initialized&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Database.create"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; &quot;Database&quot;</span>
@@ -602,7 +601,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">__exporter_lut</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">exporter</span>
 
         <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">call_webhooks</span><span class="p">())</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;export: complete&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;export: complete&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="Database.search"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">group_by_asset</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>

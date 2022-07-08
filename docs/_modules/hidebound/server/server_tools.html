@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.22.0
+                0.23.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -84,8 +84,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for hidebound.server.server_tools</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pformat</span>
 <span class="kn">import</span> <span class="nn">base64</span>
@@ -93,10 +94,36 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
 
+<span class="kn">from</span> <span class="nn">flask.testing</span> <span class="kn">import</span> <span class="n">FlaskClient</span>
 <span class="kn">import</span> <span class="nn">flask</span>
 <span class="kn">import</span> <span class="nn">jinja2</span>
-<span class="kn">import</span> <span class="nn">jsoncomment</span> <span class="k">as</span> <span class="nn">jsonc</span>
 <span class="kn">import</span> <span class="nn">lunchbox.tools</span> <span class="k">as</span> <span class="nn">lbt</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="kn">import</span> <span class="nn">hidebound.core.logging</span> <span class="k">as</span> <span class="nn">hblog</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+
+
+<span class="n">HOST</span> <span class="o">=</span> <span class="s1">&#39;0.0.0.0&#39;</span>
+<span class="n">PORT</span> <span class="o">=</span> <span class="mi">8080</span>
+
+
+<div class="viewcode-block" id="EndPoints"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.EndPoints">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">EndPoints</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    A convenience class for API endpoints.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">host</span> <span class="o">=</span> <span class="n">HOST</span>
+    <span class="n">port</span> <span class="o">=</span> <span class="n">PORT</span>
+    <span class="n">api</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;http://</span><span class="si">{</span><span class="n">HOST</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">PORT</span><span class="si">}</span><span class="s1">/api&#39;</span>
+    <span class="n">init</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;http://</span><span class="si">{</span><span class="n">HOST</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">PORT</span><span class="si">}</span><span class="s1">/api/initialize&#39;</span>
+    <span class="n">update</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;http://</span><span class="si">{</span><span class="n">HOST</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">PORT</span><span class="si">}</span><span class="s1">/api/update&#39;</span>
+    <span class="n">create</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;http://</span><span class="si">{</span><span class="n">HOST</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">PORT</span><span class="si">}</span><span class="s1">/api/create&#39;</span>
+    <span class="n">export</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;http://</span><span class="si">{</span><span class="n">HOST</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">PORT</span><span class="si">}</span><span class="s1">/api/export&#39;</span>
+    <span class="n">delete</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;http://</span><span class="si">{</span><span class="n">HOST</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">PORT</span><span class="si">}</span><span class="s1">/api/delete&#39;</span>
+    <span class="n">read</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;http://</span><span class="si">{</span><span class="n">HOST</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">PORT</span><span class="si">}</span><span class="s1">/api/read&#39;</span>
+    <span class="n">search</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;http://</span><span class="si">{</span><span class="n">HOST</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">PORT</span><span class="si">}</span><span class="s1">/api/search&#39;</span>
+    <span class="n">progress</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;http://</span><span class="si">{</span><span class="n">HOST</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">PORT</span><span class="si">}</span><span class="s1">/api/progress&#39;</span></div>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
@@ -116,7 +143,7 @@
     <span class="n">tempdir</span> <span class="o">=</span> <span class="n">lbt</span><span class="o">.</span><span class="n">relative_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s1">&#39;../templates&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
 
     <span class="c1"># path to templates inside repo</span>
-    <span class="k">if</span> <span class="s1">&#39;REPO_ENV&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;REPO_ENV&#39;</span><span class="p">,</span> <span class="s1">&#39;False&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;true&#39;</span><span class="p">:</span>
         <span class="n">tempdir</span> <span class="o">=</span> <span class="n">lbt</span><span class="o">.</span><span class="n">relative_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s1">&#39;../../../templates&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
 
     <span class="n">env</span> <span class="o">=</span> <span class="n">jinja2</span><span class="o">.</span><span class="n">Environment</span><span class="p">(</span>
@@ -188,44 +215,16 @@
 
 
 <span class="c1"># SETUP-------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="setup_hidebound_directory"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.setup_hidebound_directory">[docs]</a><span class="k">def</span> <span class="nf">setup_hidebound_directory</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">config_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="c1"># type: (Union[str, Path], Union[str, Path, None]) -&gt; Tuple[Dict, str]</span>
+<div class="viewcode-block" id="setup_hidebound_directories"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.setup_hidebound_directories">[docs]</a><span class="k">def</span> <span class="nf">setup_hidebound_directories</span><span class="p">(</span><span class="n">root</span><span class="p">):</span>
+    <span class="c1"># type: (Union[str, Path]) -&gt; None</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Creates [root]/hidebound and [root]/hidebound/config directories.</span>
-<span class="sd">    Writes a default hidebound config to</span>
-<span class="sd">    [root]/hidebound/config/hidebound_config.json if one does not exist.</span>
+<span class="sd">    Creates [root]/ingress, [root]/hidebound and [root]/archive directories.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        root (str or Path): Root directory of hidebound data.</span>
-<span class="sd">        config_path (str or Path, optional): Filepath of config data to be</span>
-<span class="sd">            written to [root]/hidebound/config/hidebound_config.json.</span>
-<span class="sd">            Default: None.</span>
-
-<span class="sd">    Return:</span>
-<span class="sd">        tuple[dict, str]: Config data and filepath.</span>
+<span class="sd">        root (str or Path): Root directory.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-    <span class="n">hb_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s1">&#39;hidebound&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
-    <span class="n">config_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">hb_root</span><span class="p">,</span> <span class="s1">&#39;config&#39;</span><span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">config_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">target</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">config_dir</span><span class="p">,</span> <span class="s1">&#39;hidebound_config.json&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
-
-    <span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;root_directory&#39;</span><span class="p">:</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s1">&#39;projects&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">(),</span>
-        <span class="s1">&#39;hidebound_directory&#39;</span><span class="p">:</span> <span class="n">hb_root</span><span class="p">,</span>
-        <span class="s1">&#39;specification_files&#39;</span><span class="p">:</span> <span class="p">[],</span>
-        <span class="s1">&#39;include_regex&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;exclude_regex&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;\.DS_Store&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;write_mode&#39;</span><span class="p">:</span> <span class="s1">&#39;copy&#39;</span>
-    <span class="p">}</span>
-    <span class="k">if</span> <span class="n">config_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">config</span> <span class="o">=</span> <span class="n">jsonc</span><span class="o">.</span><span class="n">JsonComment</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">config</span><span class="p">,</span> <span class="n">target</span></div>
+    <span class="k">for</span> <span class="n">folder</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ingress&#39;</span><span class="p">,</span> <span class="s1">&#39;hidebound&#39;</span><span class="p">,</span> <span class="s1">&#39;archive&#39;</span><span class="p">]:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">folder</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
 <span class="c1"># ERRORS------------------------------------------------------------------------</span>
@@ -306,6 +305,73 @@
     <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Database not connected.&#39;</span>
     <span class="n">error</span> <span class="o">=</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
+
+
+<span class="c1"># DASH-TOOLS--------------------------------------------------------------------</span>
+<div class="viewcode-block" id="get_progress"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.get_progress">[docs]</a><span class="k">def</span> <span class="nf">get_progress</span><span class="p">(</span><span class="n">logpath</span><span class="o">=</span><span class="n">hblog</span><span class="o">.</span><span class="n">PROGRESS_LOG_PATH</span><span class="p">):</span>
+    <span class="c1"># type: (Union[str, Path]) -&gt; dict</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Gets current progress state.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        logpath (str or Path, optional): Filepath of progress log.</span>
+<span class="sd">            Default: PROGRESS_LOG_PATH.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Progess.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">progress</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;unknown state&#39;</span><span class="p">)</span>
+    <span class="n">state</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">hblog</span><span class="o">.</span><span class="n">get_progress</span><span class="p">(</span><span class="n">logpath</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">state</span></div>
+
+
+<div class="viewcode-block" id="request"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.request">[docs]</a><span class="k">def</span> <span class="nf">request</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">client</span><span class="o">=</span><span class="n">requests</span><span class="p">):</span>
+    <span class="c1"># type: (dict, str, Optional[dict], Any) -&gt; dict</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Execute search against database and update store with response.</span>
+<span class="sd">    Sets store[&#39;content&#39;] to response if there is an error.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        store (dict): Dash store.</span>
+<span class="sd">        url (str): API endpoint.</span>
+<span class="sd">        params (dict, optional): Request paramaters. Default: None.</span>
+<span class="sd">        client (object, optional): Client. Default: requests module.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Store.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">params_</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">params_</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">params_</span><span class="p">)</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">FlaskClient</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>  <span class="c1"># pragma: no cover</span>
+    <span class="k">if</span> <span class="n">code</span> <span class="o">&lt;</span> <span class="mi">200</span> <span class="ow">or</span> <span class="n">code</span> <span class="o">&gt;=</span> <span class="mi">300</span><span class="p">:</span>
+        <span class="n">store</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span>
+    <span class="k">return</span> <span class="n">response</span></div>
+
+
+<div class="viewcode-block" id="search"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.search">[docs]</a><span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">group_by_asset</span><span class="p">,</span> <span class="n">client</span><span class="o">=</span><span class="n">requests</span><span class="p">):</span>
+    <span class="c1"># type: (dict, str, bool, Any) -&gt; dict</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Execute search against database and update given store with response.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        store (dict): Dash store.</span>
+<span class="sd">        query (str): Query string.</span>
+<span class="sd">        group_by_asset (bool): Whether to group the search by asset.</span>
+<span class="sd">        client (object, optional): Client. Default: requests module.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Store.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span> <span class="n">group_by_asset</span><span class="o">=</span><span class="n">group_by_asset</span><span class="p">)</span>
+    <span class="n">store</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">request</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">EndPoints</span><span class="p">()</span><span class="o">.</span><span class="n">search</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">client</span><span class="p">)</span>
+    <span class="n">store</span><span class="p">[</span><span class="s1">&#39;query&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">query</span>
+    <span class="k">return</span> <span class="n">store</span></div>
 </pre></div>
 
            </div>

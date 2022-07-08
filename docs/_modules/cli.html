@@ -28,7 +28,7 @@
             <a href="../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.22.2
+                0.23.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -149,7 +149,6 @@
 <span class="s1">    lint         - Run linting and type checking on </span><span class="si">{repo}</span><span class="s1"></span>
 <span class="s1">    package      - Build </span><span class="si">{repo}</span><span class="s1"> pip package</span>
 <span class="s1">    prod         - Start </span><span class="si">{repo}</span><span class="s1"> production container</span>
-<span class="s1">    progress     - Run progress app inside </span><span class="si">{repo}</span><span class="s1"> container</span>
 <span class="s1">    publish      - Publish </span><span class="si">{repo}</span><span class="s1"> repository to python package index</span>
 <span class="s1">    push         - Push </span><span class="si">{repo}</span><span class="s1"> production image to Dockerhub</span>
 <span class="s1">    python       - Run python interpreter session inside </span><span class="si">{repo}</span><span class="s1"> container</span>
@@ -787,26 +786,6 @@
     <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="progress_command"><a class="viewcode-back" href="../cli.html#cli.progress_command">[docs]</a><span class="k">def</span> <span class="nf">progress_command</span><span class="p">():</span>
-    <span class="c1"># type: () -&gt; str</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Returns:</span>
-<span class="sd">        str: Command to start progress app.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cmds</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">enter_repo</span><span class="p">(),</span>
-        <span class="n">start</span><span class="p">(),</span>
-        <span class="n">line</span><span class="p">(</span>
-            <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">                -e DEBUG_MODE=True</span>
-<span class="s1">                -e REPO_ENV=True </span><span class="si">{repo}</span><span class="s1"></span>
-<span class="s1">                python3.7 /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/python/</span><span class="si">{repo}</span><span class="s1">/server/progress.py&#39;&#39;&#39;</span>
-        <span class="p">),</span>
-        <span class="n">exit_repo</span><span class="p">(),</span>
-    <span class="p">]</span>
-    <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span></div>
-
-
 <div class="viewcode-block" id="publish_command"><a class="viewcode-back" href="../cli.html#cli.publish_command">[docs]</a><span class="k">def</span> <span class="nf">publish_command</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; str</span>
     <span class="sd">&#39;&#39;&#39;</span>
@@ -1152,7 +1131,6 @@
         <span class="s1">&#39;lint&#39;</span><span class="p">:</span> <span class="n">lint_command</span><span class="p">(),</span>
         <span class="s1">&#39;package&#39;</span><span class="p">:</span> <span class="n">package_command</span><span class="p">(),</span>
         <span class="s1">&#39;prod&#39;</span><span class="p">:</span> <span class="n">prod_command</span><span class="p">(</span><span class="n">args</span><span class="p">),</span>
-        <span class="s1">&#39;progress&#39;</span><span class="p">:</span> <span class="n">progress_command</span><span class="p">(),</span>
         <span class="s1">&#39;publish&#39;</span><span class="p">:</span> <span class="n">publish_command</span><span class="p">(),</span>
         <span class="s1">&#39;push&#39;</span><span class="p">:</span> <span class="n">push_command</span><span class="p">(),</span>
         <span class="s1">&#39;python&#39;</span><span class="p">:</span> <span class="n">python_command</span><span class="p">(),</span>

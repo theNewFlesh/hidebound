@@ -31,7 +31,7 @@
             <a href="index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.22.4
+                0.23.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -64,7 +64,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-hidebound.server.components">components</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-hidebound.server.extension">extension</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-hidebound.server.extensions">extensions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-hidebound.server.progress">progress</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-hidebound.server.server_tools">server_tools</a></li>
 </ul>
 </li>
@@ -239,6 +238,20 @@
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="hidebound.server.api.progress">
+<span class="sig-prename descclassname"><span class="pre">hidebound.server.api.</span></span><span class="sig-name descname"><span class="pre">progress</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">flask.wrappers.Response</span></span></span><a class="reference internal" href="_modules/hidebound/server/api.html#progress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.server.api.progress" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get hidebound app progress.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Flask Response instance.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="hidebound.server.api.read">
 <span class="sig-prename descclassname"><span class="pre">hidebound.server.api.</span></span><span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">flask.wrappers.Response</span></span></span><a class="reference internal" href="_modules/hidebound/server/api.html#read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.server.api.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read database.</p>
@@ -297,93 +310,6 @@
 </section>
 <section id="module-hidebound.server.app">
 <span id="app"></span><h2>app<a class="headerlink" href="#module-hidebound.server.app" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="hidebound.server.app.Endpoints">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hidebound.server.app.</span></span><span class="sig-name descname"><span class="pre">Endpoints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delete</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hidebound.server.app.Endpoints" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="hidebound.server.app.Endpoints._asdict">
-<span class="sig-name descname"><span class="pre">_asdict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hidebound.server.app.Endpoints._asdict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a new OrderedDict which maps field names to their values.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="hidebound.server.app.Endpoints._field_defaults">
-<span class="sig-name descname"><span class="pre">_field_defaults</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#hidebound.server.app.Endpoints._field_defaults" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="hidebound.server.app.Endpoints._fields">
-<span class="sig-name descname"><span class="pre">_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('api',</span> <span class="pre">'init',</span> <span class="pre">'update',</span> <span class="pre">'create',</span> <span class="pre">'export',</span> <span class="pre">'delete',</span> <span class="pre">'read',</span> <span class="pre">'search')</span></em><a class="headerlink" href="#hidebound.server.app.Endpoints._fields" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="hidebound.server.app.Endpoints._fields_defaults">
-<span class="sig-name descname"><span class="pre">_fields_defaults</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#hidebound.server.app.Endpoints._fields_defaults" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="hidebound.server.app.Endpoints._make">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_make</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hidebound.server.app.Endpoints._make" title="Permalink to this definition">¶</a></dt>
-<dd><p>Make a new Endpoints object from a sequence or iterable</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="hidebound.server.app.Endpoints._replace">
-<span class="sig-name descname"><span class="pre">_replace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hidebound.server.app.Endpoints._replace" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a new Endpoints object replacing specified fields with new values</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="hidebound.server.app.Endpoints.api">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">api</span></span><a class="headerlink" href="#hidebound.server.app.Endpoints.api" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 0</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="hidebound.server.app.Endpoints.create">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create</span></span><a class="headerlink" href="#hidebound.server.app.Endpoints.create" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 3</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="hidebound.server.app.Endpoints.delete">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete</span></span><a class="headerlink" href="#hidebound.server.app.Endpoints.delete" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 5</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="hidebound.server.app.Endpoints.export">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">export</span></span><a class="headerlink" href="#hidebound.server.app.Endpoints.export" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 4</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="hidebound.server.app.Endpoints.init">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">init</span></span><a class="headerlink" href="#hidebound.server.app.Endpoints.init" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 1</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="hidebound.server.app.Endpoints.read">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read</span></span><a class="headerlink" href="#hidebound.server.app.Endpoints.read" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 6</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="hidebound.server.app.Endpoints.search">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">search</span></span><a class="headerlink" href="#hidebound.server.app.Endpoints.search" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 7</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="hidebound.server.app.Endpoints.update">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update</span></span><a class="headerlink" href="#hidebound.server.app.Endpoints.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 2</p>
-</dd></dl>
-
-</dd></dl>
-
 <dl class="py function">
 <dt class="sig sig-object py" id="hidebound.server.app.get_app">
 <span class="sig-prename descclassname"><span class="pre">hidebound.server.app.</span></span><span class="sig-name descname"><span class="pre">get_app</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">testing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dash.dash.Dash</span></span></span><a class="reference internal" href="_modules/hidebound/server/app.html#get_app"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.server.app.get_app" title="Permalink to this definition">¶</a></dt>
@@ -468,6 +394,23 @@
 <li><p><strong>tab</strong> (<em>str</em>) – Name of tab to render.</p></li>
 <li><p><strong>store</strong> (<em>dict</em>) – Store.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Response.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>flask.Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hidebound.server.app.on_progress">
+<span class="sig-prename descclassname"><span class="pre">hidebound.server.app.</span></span><span class="sig-name descname"><span class="pre">on_progress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">flask.wrappers.Response</span></span></span><a class="reference internal" href="_modules/hidebound/server/app.html#on_progress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.server.app.on_progress" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates progressbar.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>timestamp</strong> (<em>int</em>) – Store modification timestamp.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Response.</p>
@@ -580,13 +523,14 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="hidebound.server.components.get_dash_app">
-<span class="sig-prename descclassname"><span class="pre">hidebound.server.components.</span></span><span class="sig-name descname"><span class="pre">get_dash_app</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">server</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">flask.app.Flask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'memory'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dash.dash.Dash</span></span></span><a class="reference internal" href="_modules/hidebound/server/components.html#get_dash_app"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.server.components.get_dash_app" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">hidebound.server.components.</span></span><span class="sig-name descname"><span class="pre">get_dash_app</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">server</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">flask.app.Flask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'session'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dash.dash.Dash</span></span></span><a class="reference internal" href="_modules/hidebound/server/components.html#get_dash_app"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.server.components.get_dash_app" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate Dash Flask app instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>server</strong> (<em>Flask</em>) – Flask instance.</p></li>
-<li><p><strong>storage_type</strong> (<em>str</em>) – Storage type (used for testing). Default: memory.</p></li>
+<li><p><strong>seconds</strong> (<em>float</em><em>, </em><em>optional</em>) – Time between progress updates. Default: 5.</p></li>
+<li><p><strong>storage_type</strong> (<em>str</em>) – Storage type (used for testing). Default: session.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -686,6 +630,23 @@ One key-value pair per row.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Card with key-value child elements.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Div</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hidebound.server.components.get_progressbar">
+<span class="sig-prename descclassname"><span class="pre">hidebound.server.components.</span></span><span class="sig-name descname"><span class="pre">get_progressbar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dash.html.Div.Div</span></span></span><a class="reference internal" href="_modules/hidebound/server/components.html#get_progressbar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.server.components.get_progressbar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a progress bar given progress data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>dict</em>) – Progress dictionary.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Progress bar.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>Div</p>
@@ -800,39 +761,70 @@ One key-value pair per row.</p>
 <section id="module-hidebound.server.extensions">
 <span id="extensions"></span><h2>extensions<a class="headerlink" href="#module-hidebound.server.extensions" title="Permalink to this headline">¶</a></h2>
 </section>
-<section id="module-hidebound.server.progress">
-<span id="progress"></span><h2>progress<a class="headerlink" href="#module-hidebound.server.progress" title="Permalink to this headline">¶</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="hidebound.server.progress.create">
-<span class="sig-prename descclassname"><span class="pre">hidebound.server.progress.</span></span><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">flask.wrappers.Response</span></span></span><a class="reference internal" href="_modules/hidebound/server/progress.html#create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.server.progress.create" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get hidebound app progress.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Flask Response instance.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>Response</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="hidebound.server.progress.get_app">
-<span class="sig-prename descclassname"><span class="pre">hidebound.server.progress.</span></span><span class="sig-name descname"><span class="pre">get_app</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">flask.app.Flask</span></span></span><a class="reference internal" href="_modules/hidebound/server/progress.html#get_app"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.server.progress.get_app" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a Hidebound progress app.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Flask app.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>Flask</p>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
 <section id="module-hidebound.server.server_tools">
 <span id="server-tools"></span><h2>server_tools<a class="headerlink" href="#module-hidebound.server.server_tools" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="hidebound.server.server_tools.EndPoints">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hidebound.server.server_tools.</span></span><span class="sig-name descname"><span class="pre">EndPoints</span></span><a class="reference internal" href="_modules/hidebound/server/server_tools.html#EndPoints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.server.server_tools.EndPoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A convenience class for API endpoints.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidebound.server.server_tools.EndPoints.api">
+<span class="sig-name descname"><span class="pre">api</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'http://0.0.0.0:8080/api'</span></em><a class="headerlink" href="#hidebound.server.server_tools.EndPoints.api" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidebound.server.server_tools.EndPoints.create">
+<span class="sig-name descname"><span class="pre">create</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'http://0.0.0.0:8080/api/create'</span></em><a class="headerlink" href="#hidebound.server.server_tools.EndPoints.create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidebound.server.server_tools.EndPoints.delete">
+<span class="sig-name descname"><span class="pre">delete</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'http://0.0.0.0:8080/api/delete'</span></em><a class="headerlink" href="#hidebound.server.server_tools.EndPoints.delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidebound.server.server_tools.EndPoints.export">
+<span class="sig-name descname"><span class="pre">export</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'http://0.0.0.0:8080/api/export'</span></em><a class="headerlink" href="#hidebound.server.server_tools.EndPoints.export" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidebound.server.server_tools.EndPoints.host">
+<span class="sig-name descname"><span class="pre">host</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'0.0.0.0'</span></em><a class="headerlink" href="#hidebound.server.server_tools.EndPoints.host" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidebound.server.server_tools.EndPoints.init">
+<span class="sig-name descname"><span class="pre">init</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'http://0.0.0.0:8080/api/initialize'</span></em><a class="headerlink" href="#hidebound.server.server_tools.EndPoints.init" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidebound.server.server_tools.EndPoints.port">
+<span class="sig-name descname"><span class="pre">port</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">8080</span></em><a class="headerlink" href="#hidebound.server.server_tools.EndPoints.port" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidebound.server.server_tools.EndPoints.progress">
+<span class="sig-name descname"><span class="pre">progress</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'http://0.0.0.0:8080/api/progress'</span></em><a class="headerlink" href="#hidebound.server.server_tools.EndPoints.progress" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidebound.server.server_tools.EndPoints.read">
+<span class="sig-name descname"><span class="pre">read</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'http://0.0.0.0:8080/api/read'</span></em><a class="headerlink" href="#hidebound.server.server_tools.EndPoints.read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidebound.server.server_tools.EndPoints.search">
+<span class="sig-name descname"><span class="pre">search</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'http://0.0.0.0:8080/api/search'</span></em><a class="headerlink" href="#hidebound.server.server_tools.EndPoints.search" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidebound.server.server_tools.EndPoints.update">
+<span class="sig-name descname"><span class="pre">update</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'http://0.0.0.0:8080/api/update'</span></em><a class="headerlink" href="#hidebound.server.server_tools.EndPoints.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="hidebound.server.server_tools.error_to_response">
 <span class="sig-prename descclassname"><span class="pre">hidebound.server.server_tools.</span></span><span class="sig-name descname"><span class="pre">error_to_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Exception</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">flask.wrappers.Response</span></span></span><a class="reference internal" href="_modules/hidebound/server/server_tools.html#error_to_response"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.server.server_tools.error_to_response" title="Permalink to this definition">¶</a></dt>
@@ -888,6 +880,24 @@ One key-value pair per row.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hidebound.server.server_tools.get_progress">
+<span class="sig-prename descclassname"><span class="pre">hidebound.server.server_tools.</span></span><span class="sig-name descname"><span class="pre">get_progress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logpath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/var/log/hidebound/hidebound-progress.log'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/hidebound/server/server_tools.html#get_progress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.server.server_tools.get_progress" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets current progress state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>logpath</strong> (<em>str</em><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Filepath of progress log.
+Default: PROGRESS_LOG_PATH.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Progess.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
@@ -978,25 +988,57 @@ One key-value pair per row.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="hidebound.server.server_tools.setup_hidebound_directory">
-<span class="sig-prename descclassname"><span class="pre">hidebound.server.server_tools.</span></span><span class="sig-name descname"><span class="pre">setup_hidebound_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/hidebound/server/server_tools.html#setup_hidebound_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.server.server_tools.setup_hidebound_directory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates [root]/hidebound and [root]/hidebound/config directories.
-Writes a default hidebound config to
-[root]/hidebound/config/hidebound_config.json if one does not exist.</p>
+<dt class="sig sig-object py" id="hidebound.server.server_tools.request">
+<span class="sig-prename descclassname"><span class="pre">hidebound.server.server_tools.</span></span><span class="sig-name descname"><span class="pre">request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">store:</span> <span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params:</span> <span class="pre">Optional[dict]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client:</span> <span class="pre">Any</span> <span class="pre">=</span> <span class="pre">&lt;module</span> <span class="pre">'requests'</span> <span class="pre">from</span> <span class="pre">'/home/ubuntu/.local/lib/python3.7/site-packages/requests/__init__.py'&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/hidebound/server/server_tools.html#request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.server.server_tools.request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute search against database and update store with response.
+Sets store[‘content’] to response if there is an error.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>root</strong> (<em>str</em><em> or </em><em>Path</em>) – Root directory of hidebound data.</p></li>
-<li><p><strong>config_path</strong> (<em>str</em><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Filepath of config data to be
-written to [root]/hidebound/config/hidebound_config.json.
-Default: None.</p></li>
+<li><p><strong>store</strong> (<em>dict</em>) – Dash store.</p></li>
+<li><p><strong>url</strong> (<em>str</em>) – API endpoint.</p></li>
+<li><p><strong>params</strong> (<em>dict</em><em>, </em><em>optional</em>) – Request paramaters. Default: None.</p></li>
+<li><p><strong>client</strong> (<em>object</em><em>, </em><em>optional</em>) – Client. Default: requests module.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Config data and filepath.</p>
+<dd class="field-even"><p>Store.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tuple[dict, str]</p>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hidebound.server.server_tools.search">
+<span class="sig-prename descclassname"><span class="pre">hidebound.server.server_tools.</span></span><span class="sig-name descname"><span class="pre">search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">store:</span> <span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_by_asset:</span> <span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client:</span> <span class="pre">Any</span> <span class="pre">=</span> <span class="pre">&lt;module</span> <span class="pre">'requests'</span> <span class="pre">from</span> <span class="pre">'/home/ubuntu/.local/lib/python3.7/site-packages/requests/__init__.py'&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/hidebound/server/server_tools.html#search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.server.server_tools.search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute search against database and update given store with response.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>store</strong> (<em>dict</em>) – Dash store.</p></li>
+<li><p><strong>query</strong> (<em>str</em>) – Query string.</p></li>
+<li><p><strong>group_by_asset</strong> (<em>bool</em>) – Whether to group the search by asset.</p></li>
+<li><p><strong>client</strong> (<em>object</em><em>, </em><em>optional</em>) – Client. Default: requests module.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Store.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hidebound.server.server_tools.setup_hidebound_directories">
+<span class="sig-prename descclassname"><span class="pre">hidebound.server.server_tools.</span></span><span class="sig-name descname"><span class="pre">setup_hidebound_directories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hidebound/server/server_tools.html#setup_hidebound_directories"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.server.server_tools.setup_hidebound_directories" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates [root]/ingress, [root]/hidebound and [root]/archive directories.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>root</strong> (<em>str</em><em> or </em><em>Path</em>) – Root directory.</p>
 </dd>
 </dl>
 </dd></dl>

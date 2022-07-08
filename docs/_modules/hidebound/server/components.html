@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.22.0
+                0.23.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -85,14 +85,14 @@
              
   <h1>Source code for hidebound.server.components</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
-<span class="kn">import</span> <span class="nn">flask</span>
 
 <span class="kn">import</span> <span class="nn">re</span>
 
+<span class="kn">from</span> <span class="nn">dash</span> <span class="kn">import</span> <span class="n">dash_table</span><span class="p">,</span> <span class="n">dcc</span><span class="p">,</span> <span class="n">html</span>
 <span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
 <span class="kn">import</span> <span class="nn">dash</span>
-<span class="kn">from</span> <span class="nn">dash</span> <span class="kn">import</span> <span class="n">dash_table</span><span class="p">,</span> <span class="n">dcc</span><span class="p">,</span> <span class="n">html</span>
 <span class="kn">import</span> <span class="nn">dash_cytoscape</span> <span class="k">as</span> <span class="nn">cyto</span>
+<span class="kn">import</span> <span class="nn">flask</span>
 <span class="kn">import</span> <span class="nn">rolling_pin.blob_etl</span> <span class="k">as</span> <span class="nn">blob_etl</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
@@ -140,14 +140,15 @@
 
 
 <span class="c1"># APP---------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="get_dash_app"><a class="viewcode-back" href="../../../server.html#hidebound.server.components.get_dash_app">[docs]</a><span class="k">def</span> <span class="nf">get_dash_app</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="n">storage_type</span><span class="o">=</span><span class="s1">&#39;memory&#39;</span><span class="p">):</span>
-    <span class="c1"># type: (flask.Flask, str) -&gt; dash.Dash</span>
+<div class="viewcode-block" id="get_dash_app"><a class="viewcode-back" href="../../../server.html#hidebound.server.components.get_dash_app">[docs]</a><span class="k">def</span> <span class="nf">get_dash_app</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="n">seconds</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">storage_type</span><span class="o">=</span><span class="s1">&#39;session&#39;</span><span class="p">):</span>
+    <span class="c1"># type: (flask.Flask, float, str) -&gt; dash.Dash</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Generate Dash Flask app instance.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        server (Flask): Flask instance.</span>
-<span class="sd">        storage_type (str): Storage type (used for testing). Default: memory.</span>
+<span class="sd">        seconds (float, optional): Time between progress updates. Default: 5.</span>
+<span class="sd">        storage_type (str): Storage type (used for testing). Default: session.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Dash: Dash app instance.</span>
@@ -216,27 +217,27 @@
             <span class="p">)</span>
         <span class="p">],</span>
     <span class="p">)</span>
-    <span class="n">content</span> <span class="o">=</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Loading</span><span class="p">(</span>
-        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;content&quot;</span><span class="p">,</span>
-        <span class="n">className</span><span class="o">=</span><span class="s1">&#39;content&#39;</span><span class="p">,</span>
-        <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;dot&quot;</span><span class="p">,</span>
-        <span class="n">style</span><span class="o">=</span><span class="p">{</span>
-            <span class="s1">&#39;align-items&#39;</span><span class="p">:</span> <span class="s1">&#39;center&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;opacity&#39;</span><span class="p">:</span> <span class="s1">&#39;50%&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;background&#39;</span><span class="p">:</span> <span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;bg&#39;</span><span class="p">],</span>
-        <span class="p">},</span>
-        <span class="n">fullscreen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">color</span><span class="o">=</span><span class="n">COLOR_SCHEME</span><span class="p">[</span><span class="s1">&#39;cyan2&#39;</span><span class="p">],</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;content-container&quot;</span><span class="p">,</span>
+        <span class="n">className</span><span class="o">=</span><span class="s1">&#39;content-container&#39;</span><span class="p">,</span>
+        <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+                <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;progressbar-container&quot;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;progressbar-container&#39;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;content&quot;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;content&#39;</span><span class="p">)</span>
+        <span class="p">],</span>
     <span class="p">)</span>
+    <span class="n">clock</span> <span class="o">=</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Interval</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;clock&#39;</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">seconds</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span>
 
     <span class="n">app</span> <span class="o">=</span> <span class="n">dash</span><span class="o">.</span><span class="n">Dash</span><span class="p">(</span>
+        <span class="n">server</span><span class="o">=</span><span class="n">server</span><span class="p">,</span>
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;hidebound&#39;</span><span class="p">,</span>
         <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Hidebound&#39;</span><span class="p">,</span>
-        <span class="n">server</span><span class="o">=</span><span class="n">server</span><span class="p">,</span>
+        <span class="n">update_title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">external_stylesheets</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;/static/style.css&#39;</span><span class="p">],</span>
+        <span class="n">suppress_callback_exceptions</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;layout&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">store</span><span class="p">,</span> <span class="n">tabs</span><span class="p">,</span> <span class="n">content</span><span class="p">])</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;suppress_callback_exceptions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;layout&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">store</span><span class="p">,</span> <span class="n">clock</span><span class="p">,</span> <span class="n">tabs</span><span class="p">,</span> <span class="n">content</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="n">app</span></div>
 
@@ -383,12 +384,45 @@
             <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">expander</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">upload</span><span class="p">,</span> <span class="n">spacer</span><span class="p">,</span> <span class="n">write</span><span class="p">],</span>
         <span class="p">),</span>
         <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s1">&#39;row-spacer&#39;</span><span class="p">),</span>
-        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;config-content&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span>
             <span class="n">get_key_value_card</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="n">id_</span><span class="o">=</span><span class="s1">&#39;config-card&#39;</span><span class="p">)</span>
         <span class="p">])</span>
     <span class="p">]</span>
     <span class="n">configbar</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;configbar&#39;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s1">&#39;menubar&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="n">rows</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">configbar</span></div>
+
+
+<div class="viewcode-block" id="get_progressbar"><a class="viewcode-back" href="../../../server.html#hidebound.server.components.get_progressbar">[docs]</a><span class="k">def</span> <span class="nf">get_progressbar</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="c1"># type: (dict) -&gt; html.Div</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Creates a progress bar given progress data.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (dict): Progress dictionary.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Div: Progress bar.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>  <span class="c1"># type: dict</span>
+    <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">temp</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="n">pct</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="s1">&#39;progress&#39;</span><span class="p">]</span>  <span class="c1"># type: float</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pct</span> <span class="o">*</span> <span class="mi">100</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="s1">%&#39;</span>
+
+    <span class="n">title</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;progressbar-title&#39;</span><span class="p">,</span>
+        <span class="n">className</span><span class="o">=</span><span class="s1">&#39;progressbar-title&#39;</span><span class="p">,</span>
+        <span class="n">children</span><span class="o">=</span><span class="n">temp</span><span class="p">[</span><span class="s1">&#39;message&#39;</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;progressbar-body&#39;</span><span class="p">,</span>
+        <span class="n">className</span><span class="o">=</span><span class="s1">&#39;progressbar-body&#39;</span><span class="p">,</span>
+        <span class="n">style</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">progressbar</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;progressbar&#39;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">title</span><span class="p">,</span> <span class="n">body</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">progressbar</span></div>
 
 
 <span class="c1"># ELEMENTS----------------------------------------------------------------------</span>
