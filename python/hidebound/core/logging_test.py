@@ -5,10 +5,11 @@ from tempfile import TemporaryDirectory
 from pathlib import Path
 
 from hidebound.core.logging import ProgressLogger
+import hidebound.core.logging as hblog
 # ------------------------------------------------------------------------------
 
 
-class ProgressLoggerTests(unittest.TestCase):
+class LoggingTests(unittest.TestCase):
     def test_init(self):
         with TemporaryDirectory() as root:
             filepath = Path(root, 'test.log').as_posix()
@@ -208,3 +209,17 @@ class ProgressLoggerTests(unittest.TestCase):
             # message
             expected = 'Progress: 4.00% (4 of 100) - foobar'
             self.assertEqual(result['message'], expected)
+
+    def test_get_progress(self):
+        with TemporaryDirectory() as root:
+            log = Path(root, 'test.log')
+
+            result = hblog.get_progress(log)
+            self.assertEqual(result, {})
+
+            with open(log, 'w') as f:
+                f.write(
+                    '{"line": "first"}\n{"line": "middle"}\n{"line": "last"}'
+                )
+            result = hblog.get_progress(log)
+            self.assertEqual(result, {'line': 'last'})

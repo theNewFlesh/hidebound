@@ -227,6 +227,25 @@ class ProgressLogger:
 # ------------------------------------------------------------------------------
 
 
+def get_progress(logpath=PROGRESS_LOG_PATH):
+    # type: (Union[str, Path]) -> dict
+    '''
+    Get last line of given progress file.
+    Returns {} if logpath is not a file.
+
+    Args:
+        logpath (str or Path, optional): Path to log file.
+
+    Returns:
+        dict: Progress dictionary.
+    '''
+    logpath = Path(logpath)
+    output = {}
+    if logpath.is_file():
+        output = ProgressLogger.read(logpath)[-1]
+    return output
+
+
 class DummyLogger:
     '''Dummy class for logging.'''
     def info(self, *args, **kwargs):
