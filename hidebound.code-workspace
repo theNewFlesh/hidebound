@@ -175,13 +175,6 @@
                 "type": "shell"
             },
             {
-                "label": "progress",
-                "command": [
-                    "python3.7 python/$REPO/server/progress.py"
-                ],
-                "type": "shell"
-            },
-            {
                 "label": "publish",
                 "command": "unset REPO_ENV && cd /tmp/$REPO && twine upload dist/* && rm -rf /tmp/$REPO",
                 "dependsOrder": "sequence",
