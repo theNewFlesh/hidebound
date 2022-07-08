@@ -268,7 +268,6 @@ def get_dummy_elements():
         html.Div(className='dummy', id='delete-button', n_clicks=None),
         dcc.Upload(className='dummy', id='upload', contents=None),
         html.Div(className='dummy', id='write-button', n_clicks=None),
-        dcc.Input(className='dummy', id='progressbar-static', style=None),
     ]
 
 
