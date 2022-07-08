@@ -113,6 +113,9 @@ RUN echo "\n${CYAN}INSTALL OPENEXR${CLEAR}"; \
         openexr \
         zlib1g-dev
 
+RUN echo "\n${CYAN}CHOWN /VAR/LOG${CLEAR}"; \
+    chown ubuntu:ubuntu /var/log
+
 USER ubuntu
 
 # install python dependencies

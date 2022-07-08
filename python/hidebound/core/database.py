@@ -174,8 +174,7 @@ class Database:
             raise NameError(msg)
 
         # setup logger
-        logpath = Path(hb_root, 'logs', 'progress', 'hidebound-progress.log')
-        self._logger = ProgressLogger(__name__, logpath)
+        self._logger = ProgressLogger(__name__)
 
         # validate spec classes
         bad_specs = list(filter(

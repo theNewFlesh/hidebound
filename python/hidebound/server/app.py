@@ -15,7 +15,7 @@ import flask_monitoringdashboard as fmdb
 import requests
 
 from hidebound.core.config import Config
-from hidebound.core.logging import ProgressLogger
+from hidebound.core.logging import ProgressLogger, PROGRESS_LOG_PATH
 import hidebound.server.components as components
 import hidebound.server.extensions as ext
 import hidebound.server.server_tools as server_tools
@@ -119,9 +119,7 @@ def serve_stylesheet(stylesheet):
 
 
 # TOOLS-------------------------------------------------------------------------
-def get_progress(
-    log_file='/tmp/mnt/hidebound/logs/progress/hidebound-progress.log'
-):
+def get_progress(log_file=PROGRESS_LOG_PATH):
     # type: (Union[str, Path]) -> dict
     '''
     Gets current progress state.

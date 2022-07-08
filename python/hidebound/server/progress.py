@@ -3,7 +3,7 @@ from pathlib import Path
 import json
 
 import flask
-from hidebound.core.logging import ProgressLogger
+from hidebound.core.logging import ProgressLogger, PROGRESS_LOG_PATH
 # ------------------------------------------------------------------------------
 
 
@@ -37,7 +37,7 @@ def create():
     Returns:
         Response: Flask Response instance.
     '''
-    filepath = Path('/mnt/storage/hidebound/logs/progress/hidebound-progress.log')
+    filepath = Path(PROGRESS_LOG_PATH)
     state = {}
     if filepath.is_file():
         state = ProgressLogger.read(filepath)[-1]

@@ -11,18 +11,22 @@ import json_logging
 # ------------------------------------------------------------------------------
 
 
+PROGRESS_LOG_PATH = '/var/log/hidebound/hidebound-progress.log'
+
+
 class ProgressLogger:
     '''
     Logs progress to quasi-JSON files.
     '''
-    def __init__(self, name, filepath, level=logging.INFO):
+    def __init__(self, name, filepath=PROGRESS_LOG_PATH, level=logging.INFO):
         # type: (str, Union[str, Path], int) -> None
         '''
         Create ProgressLogger instance.
 
         Args:
             name (str): Logger name.
-            filepath (str or Path): Log filepath.
+            filepath (str or Path, optional): Log filepath.
+                Default: /var/logs/hidebound/hidebound-progress.log.
             level (int, optional): Log level. Default: INFO.
         '''
         filepath = Path(filepath)
