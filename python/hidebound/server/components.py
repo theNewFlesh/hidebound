@@ -144,13 +144,14 @@ def get_dash_app(server, seconds=5.0, storage_type='memory'):
     clock = dcc.Interval(id='clock', interval=int(seconds * 1000))
 
     app = dash.Dash(
+        server=server,
         name='hidebound',
         title='Hidebound',
-        server=server,
+        update_title=None,
         external_stylesheets=['/static/style.css'],
+        suppress_callback_exceptions=True,
     )
     app.layout = html.Div(id='layout', children=[store, clock, tabs, content])
-    app.config['suppress_callback_exceptions'] = True
 
     return app
 
