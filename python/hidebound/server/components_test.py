@@ -10,8 +10,9 @@ class ComponentsTests(unittest.TestCase):
     def test_get_dash_app(self):
         result = components.get_dash_app(flask.Flask('foo'))._layout
         self.assertEqual(result.children[0].id, 'store')
-        self.assertEqual(result.children[1].id, 'tabs')
-        self.assertEqual(result.children[2].id, 'content')
+        self.assertEqual(result.children[1].id, 'clock')
+        self.assertEqual(result.children[2].id, 'tabs')
+        self.assertEqual(result.children[3].id, 'content-container')
 
     def test_get_dropdown(self):
         expected = 'foo is not a list.'
@@ -149,7 +150,7 @@ class ComponentsTests(unittest.TestCase):
         self.assertEqual(row_spacer.className, 'row-spacer')
 
         card = configbar.children[2]
-        self.assertEqual(card.id, 'config-content')
+        self.assertEqual(card.id, 'config')
 
         buttons = configbar.children[0].children
 
