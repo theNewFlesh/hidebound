@@ -1,7 +1,6 @@
 from typing import Any
 
 from json import JSONDecodeError
-from pathlib import Path
 import json
 
 import numpy as np
@@ -11,7 +10,7 @@ from schematics.exceptions import DataError
 from werkzeug.exceptions import BadRequest
 
 from hidebound.core.database import Database
-from hidebound.core.logging import ProgressLogger, PROGRESS_LOG_PATH
+import hidebound.core.logging as hblog
 import hidebound.server.extensions as ext
 import hidebound.server.server_tools as hst
 # ------------------------------------------------------------------------------
@@ -403,12 +402,8 @@ def progress():
     Returns:
         Response: Flask Response instance.
     '''
-    filepath = Path(PROGRESS_LOG_PATH)
-    state = {}
-    if filepath.is_file():
-        state = ProgressLogger.read(filepath)[-1]
     return flask.Response(
-        response=json.dumps(state),
+        response=json.dumps(hblog.get_progress()),
         mimetype='application/json'
     )
 
