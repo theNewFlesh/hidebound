@@ -36,7 +36,10 @@ HOST = '0.0.0.0'
 PORT = 8080
 Endpoints = namedtuple(
     'Endpoints',
-    ['api', 'init', 'update', 'create', 'export', 'delete', 'read', 'search'],
+    [
+        'api', 'init', 'update', 'create', 'export', 'delete', 'read', 'search',
+        'progress'
+    ]
 )
 EP = Endpoints(
     api=f'http://{HOST}:{PORT}/api',
@@ -47,6 +50,7 @@ EP = Endpoints(
     delete=f'http://{HOST}:{PORT}/api/delete',
     read=f'http://{HOST}:{PORT}/api/read',
     search=f'http://{HOST}:{PORT}/api/search',
+    progress=f'http://{HOST}:{PORT}/api/progress',
 )
 
 

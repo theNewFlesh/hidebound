@@ -1,6 +1,7 @@
 from typing import Any
 
 from json import JSONDecodeError
+from pathlib import Path
 import json
 
 import numpy as np
@@ -10,6 +11,7 @@ from schematics.exceptions import DataError
 from werkzeug.exceptions import BadRequest
 
 from hidebound.core.database import Database
+from hidebound.core.logging import ProgressLogger, PROGRESS_LOG_PATH
 import hidebound.server.extensions as ext
 import hidebound.server.server_tools as server_tools
 # ------------------------------------------------------------------------------
@@ -335,12 +337,6 @@ def search():
             type='list',
             description='Ordered list of API calls.',
             required=True,
-        ),
-        dict(
-            name='config',
-            type='dict',
-            description='Hidebound configuration.',
-            required=True,
         )
     ],
     responses={
@@ -382,6 +378,37 @@ def workflow():
     return flask.Response(
         response=json.dumps(dict(
             message='Workflow completed.', workflow=workflow)),
+        mimetype='application/json'
+    )
+
+
+@API.route('/api/progress', methods=['GET', 'POST'])
+@swg.swag_from(dict(
+    parameters=[],
+    responses={
+        200: dict(
+            description='Current progress of Hidebound.',
+            content='application/json',
+        ),
+        500: dict(
+            description='Internal server error.',
+        )
+    }
+))
+def progress():
+    # type: () -> flask.Response
+    '''
+    Get hidebound app progress.
+
+    Returns:
+        Response: Flask Response instance.
+    '''
+    filepath = Path(PROGRESS_LOG_PATH)
+    state = {}
+    if filepath.is_file():
+        state = ProgressLogger.read(filepath)[-1]
+    return flask.Response(
+        response=json.dumps(state),
         mimetype='application/json'
     )
 
