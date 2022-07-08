@@ -244,3 +244,25 @@ class ComponentsTests(unittest.TestCase):
         # edges with bad target references
         diff = set(target).difference(nodes)
         self.assertEqual(diff, set())
+
+    def test_get_progressbar(self):
+        # empty data
+        for data in [{}, None]:
+            result = components.get_progressbar(data)
+            title, body = result.children
+            self.assertEqual(title.children, '')
+            self.assertEqual(body.style['width'], '100%')
+
+        # expected data
+        data = dict(progress=0.509, message='foobar')
+        result = components.get_progressbar(data)
+        title, body = result.children
+        self.assertEqual(title.children, 'foobar')
+        self.assertEqual(body.style['width'], '51%')
+
+        # no progress
+        data = dict(message='foobar')
+        result = components.get_progressbar(data)
+        title, body = result.children
+        self.assertEqual(title.children, 'foobar')
+        self.assertEqual(body.style['width'], '100%')

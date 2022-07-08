@@ -317,22 +317,18 @@ def get_progressbar(data):
     Returns:
         Div: Progress bar.
     '''
-    if data in [{}, None]:
-        data = dict(
-            message='Application initialized',
-            progress=1.0,
-        )
+    temp = dict(message='', progress=1.0)
+    if data is None:
+        data = {}
+    temp.update(data)
 
-    pct = data.get('progress', 1.0)
-    if pct is None:
-        pct = 1.0
-    pct = round(pct * 100, 2)
-    width = str(int(pct)) + '%'
+    pct = temp['progress']  # type: float
+    width = f'{pct * 100:.0f}%'
 
     title = html.Div(
         id='progressbar-title',
         className='progressbar-title',
-        children=data['message'],
+        children=temp['message'],
     )
     body = html.Div(
         id='progressbar-body',
