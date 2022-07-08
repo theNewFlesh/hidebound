@@ -11,9 +11,9 @@ import traceback
 from flask.testing import FlaskClient
 import flask
 import jinja2
-import jsoncomment as jsonc
 import lunchbox.tools as lbt
 import requests
+import yaml
 
 import hidebound.core.logging as hblog
 # ------------------------------------------------------------------------------
@@ -130,44 +130,16 @@ def error_to_response(error):
 
 
 # SETUP-------------------------------------------------------------------------
-def setup_hidebound_directory(root, config_path=None):
-    # type: (Union[str, Path], Union[str, Path, None]) -> Tuple[Dict, str]
+def setup_hidebound_directories(root):
+    # type: (Union[str, Path]) -> None
     '''
-    Creates [root]/hidebound and [root]/hidebound/config directories.
-    Writes a default hidebound config to
-    [root]/hidebound/config/hidebound_config.json if one does not exist.
+    Creates [root]/ingress, [root]/hidebound and [root]/archive directories.
 
     Args:
-        root (str or Path): Root directory of hidebound data.
-        config_path (str or Path, optional): Filepath of config data to be
-            written to [root]/hidebound/config/hidebound_config.json.
-            Default: None.
-
-    Return:
-        tuple[dict, str]: Config data and filepath.
+        root (str or Path): Root directory.
     '''
-    root = Path(root)
-    hb_root = Path(root, 'hidebound').as_posix()
-    config_dir = Path(hb_root, 'config')
-    os.makedirs(config_dir, exist_ok=True)
-    target = Path(config_dir, 'hidebound_config.json').as_posix()
-
-    config = {
-        'root_directory': Path(root, 'ingress').as_posix(),
-        'hidebound_directory': hb_root,
-        'specification_files': [],
-        'include_regex': '',
-        'exclude_regex': r'\.DS_Store',
-        'write_mode': 'copy'
-    }
-    if config_path is not None:
-        with open(config_path) as f:
-            config = jsonc.JsonComment().load(f)
-
-    with open(target, 'w') as f:
-        json.dump(config, f, indent=4, sort_keys=True)
-
-    return config, target
+    for folder in ['ingress', 'hidebound', 'archive']:
+        os.makedirs(Path(root, folder), exist_ok=True)
 
 
 # ERRORS------------------------------------------------------------------------

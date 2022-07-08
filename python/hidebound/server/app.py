@@ -11,6 +11,7 @@ from flask import current_app
 import flask_monitoringdashboard as fmdb
 
 from hidebound.core.config import Config
+import hidebound.core.tools as hbt
 import hidebound.server.components as components
 import hidebound.server.extensions as ext
 import hidebound.server.server_tools as hst
@@ -19,6 +20,10 @@ import hidebound.server.server_tools as hst
 TESTING = True
 if __name__ == '__main__':
     TESTING = False  # pragma: no cover
+
+# setup directories in /tmp/mnt
+if hbt.str_to_bool(os.environ.get('CREATE_TMP_DIRS', 'False')):
+    hst.setup_hidebound_directories('/tmp/mnt')
 # ------------------------------------------------------------------------------
 
 

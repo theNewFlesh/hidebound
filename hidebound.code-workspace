@@ -59,6 +59,7 @@
                 "label": "app",
                 "command": [
                     "export DEBUG_MODE=True &&",
+                    "export CREATE_TMP_DIRS=True &&",
                     "export HIDEBOUND_CONFIG_FILEPATH=/home/ubuntu/hidebound/resources/test_config.yaml &&",
                     "python3.7 python/$REPO/server/app.py"
                 ],

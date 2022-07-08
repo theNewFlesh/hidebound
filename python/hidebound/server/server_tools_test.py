@@ -1,9 +1,6 @@
 from pathlib import Path
 from tempfile import TemporaryDirectory
-import json
 import re
-
-import jsoncomment as jsonc
 
 from hidebound.core.database_test_base import DatabaseTestBase
 import hidebound.server.server_tools as hst
@@ -11,51 +8,11 @@ import hidebound.server.server_tools as hst
 
 
 class ServerToolsTests(DatabaseTestBase):
-    def test_setup_hidebound_directory(self):
+    def test_setup_hidebound_directories(self):
         with TemporaryDirectory() as root:
-            config, config_path = hst.setup_hidebound_directory(root)
-            expected_config = {
-                'root_directory': Path(root, 'ingress').as_posix(),
-                'hidebound_directory': Path(root, 'hidebound').as_posix(),
-                'specification_files': [],
-                'include_regex': '',
-                'exclude_regex': r'\.DS_Store',
-                'write_mode': 'copy'
-            }
-            self.assertEqual(config, expected_config)
-
-            hb_dir = Path(root, 'hidebound')
-            self.assertTrue(hb_dir.is_dir())
-
-            config_dir = Path(hb_dir, 'config')
-            self.assertTrue(config_dir.is_dir())
-
-            expected_path = Path(config_dir, 'hidebound_config.json')
-            self.assertEqual(config_path, expected_path.as_posix())
-            self.assertTrue(expected_path.is_file())
-
-            with open(config_path) as f:
-                result = jsonc.JsonComment().load(f)
-            self.assertEqual(result, expected_config)
-
-    def test_setup_hidebound_directory_config_path(self):
-        with TemporaryDirectory() as root:
-            fake_config = Path(root, 'fake-config.json')
-            with open(fake_config, 'w') as f:
-                json.dump({}, f)
-
-            config, config_path = hst\
-                .setup_hidebound_directory(root, config_path=fake_config)
-            expected_config = {}
-            self.assertEqual(config, expected_config)
-
-            config_path = Path(
-                root, 'hidebound', 'config', 'hidebound_config.json'
-            )
-
-            with open(config_path) as f:
-                result = jsonc.JsonComment().load(f)
-            self.assertEqual(result, expected_config)
+            hst.setup_hidebound_directories(root)
+            for folder in ['ingress', 'hidebound', 'archive']:
+                self.assertTrue(Path(root, folder).is_dir())
 
     # ERRORS--------------------------------------------------------------------
     def test_get_config_error(self):
