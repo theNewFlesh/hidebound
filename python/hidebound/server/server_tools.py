@@ -1,4 +1,4 @@
-from typing import Any, Dict, Tuple, Union
+from typing import Any, Dict, Optional, Tuple, Union
 
 from pathlib import Path
 from pprint import pformat
@@ -11,6 +11,10 @@ import flask
 import jinja2
 import jsoncomment as jsonc
 import lunchbox.tools as lbt
+import requests
+
+from hidebound.core.logging import ProgressLogger
+import hidebound.core.logging as hblog
 # ------------------------------------------------------------------------------
 
 
@@ -220,3 +224,21 @@ def get_connection_error():
     msg = 'Database not connected.'
     error = RuntimeError(msg)
     return error_to_response(error)
+
+
+# DASH-TOOLS--------------------------------------------------------------------
+def get_progress(logpath=hblog.PROGRESS_LOG_PATH):
+    # type: (Union[str, Path]) -> dict
+    '''
+    Gets current progress state.
+
+    Args:
+        logpath (str or Path, optional): Filepath of progress log.
+            Default: PROGRESS_LOG_PATH.
+
+    Returns:
+        dict: Progess.
+    '''
+    state = dict(progress=1.0, message='unknown state')
+    state.update(hblog.get_progress(logpath))
+    return state

@@ -6,14 +6,14 @@ import re
 import jsoncomment as jsonc
 
 from hidebound.core.database_test_base import DatabaseTestBase
-import hidebound.server.server_tools as server_tools
+import hidebound.server.server_tools as hst
 # ------------------------------------------------------------------------------
 
 
 class ServerToolsTests(DatabaseTestBase):
     def test_setup_hidebound_directory(self):
         with TemporaryDirectory() as root:
-            config, config_path = server_tools.setup_hidebound_directory(root)
+            config, config_path = hst.setup_hidebound_directory(root)
             expected_config = {
                 'root_directory': Path(root, 'projects').as_posix(),
                 'hidebound_directory': Path(root, 'hidebound').as_posix(),
@@ -44,7 +44,7 @@ class ServerToolsTests(DatabaseTestBase):
             with open(fake_config, 'w') as f:
                 json.dump({}, f)
 
-            config, config_path = server_tools\
+            config, config_path = hst\
                 .setup_hidebound_directory(root, config_path=fake_config)
             expected_config = {}
             self.assertEqual(config, expected_config)
@@ -59,40 +59,40 @@ class ServerToolsTests(DatabaseTestBase):
 
     # ERRORS--------------------------------------------------------------------
     def test_get_config_error(self):
-        result = server_tools.get_config_error().json['message']
+        result = hst.get_config_error().json['message']
         expected = 'Please supply a config dictionary.'
         self.assertRegex(result, expected)
 
     def test_get_initialization_error(self):
-        result = server_tools.get_initialization_error().json['message']
+        result = hst.get_initialization_error().json['message']
         expected = 'Database not initialized. Please call initialize.'
         self.assertRegex(result, expected)
 
     def test_get_update_error(self):
-        result = server_tools.get_update_error().json['message']
+        result = hst.get_update_error().json['message']
         expected = 'Database not updated. Please call update.'
         self.assertRegex(result, expected)
 
     def test_get_read_error(self):
-        result = server_tools.get_read_error().json['message']
+        result = hst.get_read_error().json['message']
         expected = 'Please supply valid read params in the form '
         expected += r'\{"group_by_asset": BOOL\}\.'
         self.assertRegex(result, expected)
 
     def test_get_search_error(self):
-        result = server_tools.get_search_error().json['message']
+        result = hst.get_search_error().json['message']
         expected = 'Please supply valid search params in the form '
         expected += r'\{"query": SQL query, "group_by_asset": BOOL\}\.'
         self.assertRegex(result, expected)
 
     def test_get_connection_error(self):
-        result = server_tools.get_connection_error().json['message']
+        result = hst.get_connection_error().json['message']
         expected = 'Database not connected.'
         self.assertRegex(result, expected)
 
     def test_error_to_response(self):
         error = TypeError('foo')
-        result = server_tools.error_to_response(error)
+        result = hst.error_to_response(error)
         self.assertEqual(result.mimetype, 'application/json')
         self.assertEqual(result.json['error'], 'TypeError')
         self.assertEqual(result.json['args'], ['foo'])
@@ -109,7 +109,7 @@ class ServerToolsTests(DatabaseTestBase):
             'foos': [['pizza'] * 3] * 3,
         }
         error = TypeError(arg, arg, 'arg2')
-        result = server_tools.error_to_response(error)
+        result = hst.error_to_response(error)
 
         expected = r'''
 TypeError(
@@ -145,10 +145,26 @@ VzIjogWwogICAgICAgICIvcm9vdC9oaWRlYm91bmQvcHl0aG9uL2hpZGVib3VuZC9hd2Vzb21lX3NwZ\
 WNpZmljYXRpb25zLnB5IgogICAgXSwKICAgICJpbmNsdWRlX3JlZ2V4IjogIiIsCiAgICAiZXhjbHVk\
 ZV9yZWdleCI6ICJcXC5EU19TdG9yZXx5b3VyLW1vbSIsCiAgICAid3JpdGVfbW9kZSI6ICJjb3B5Igp\
 9Cg=='''
-        server_tools.parse_json_file_content(content)
+        hst.parse_json_file_content(content)
 
         expected = 'File header is not JSON. Header: '
         expected += 'data:application/text;base64.'
         content = re.sub('json', 'text', content)
         with self.assertRaisesRegexp(ValueError, expected):
-            server_tools.parse_json_file_content(content)
+            hst.parse_json_file_content(content)
+
+    def test_get_progress(self):
+        with TemporaryDirectory() as root:
+            log = Path(root, 'test.log')
+
+            result = hst.get_progress(log)
+            expected = dict(progress=1.0, message='unknown state')
+            self.assertEqual(result, expected)
+
+            with open(log, 'w') as f:
+                f.write(
+                    '{"line": "first"}\n{"line": "middle"}\n{"line": "last"}'
+                )
+            result = hst.get_progress(log)
+            expected['line'] = 'last'
+            self.assertEqual(result, expected)
