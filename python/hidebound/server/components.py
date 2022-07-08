@@ -307,7 +307,7 @@ def get_configbar(config):
 
 
 def get_progressbar(data):
-    # type: (Dict) -> html.Div
+    # type: (dict) -> html.Div
     '''
     Creates a progress bar given progress data.
 
@@ -317,7 +317,7 @@ def get_progressbar(data):
     Returns:
         Div: Progress bar.
     '''
-    temp = dict(message='', progress=1.0)
+    temp = dict(message='', progress=1.0)  # type: dict
     if data is None:
         data = {}
     temp.update(data)

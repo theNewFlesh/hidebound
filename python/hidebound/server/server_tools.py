@@ -283,9 +283,10 @@ def request(store, url, params=None, client=requests):
     Returns:
         dict: Store.
     '''
+    params_ = None
     if params is not None:
-        params = json.dumps(params)
-    response = client.post(url, json=params)
+        params_ = json.dumps(params)
+    response = client.post(url, json=params_)
     code = response.status_code
     if isinstance(client, FlaskClient):
         response = response.json

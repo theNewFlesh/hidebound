@@ -133,7 +133,7 @@ def on_event(*inputs):
 
     # get context values
     context = dash.callback_context
-    store = context.states['store.data'] or {}  # type: Any
+    store = context.states['store.data'] or {}  # type: dict
     trigger = context.triggered_id
     value = context.triggered[0]['value']
     query = context.inputs['query.value']
@@ -167,7 +167,7 @@ def on_event(*inputs):
             store['config_error'] = None
         except Exception as error:
             store['config'] = temp
-            store['config_error'] = hst.error_to_response(error).json()
+            store['config_error'] = hst.error_to_response(error).json()  # type: ignore
 
     # elif input_id == 'write-button':
     #     try:
