@@ -54,14 +54,14 @@ FONT_FAMILY = 'sans-serif, "sans serif"'  # type: str
 
 
 # APP---------------------------------------------------------------------------
-def get_dash_app(server, seconds=5, storage_type='memory'):
-    # type: (flask.Flask, int, str) -> dash.Dash
+def get_dash_app(server, seconds=5.0, storage_type='memory'):
+    # type: (flask.Flask, float, str) -> dash.Dash
     '''
     Generate Dash Flask app instance.
 
     Args:
         server (Flask): Flask instance.
-        seconds (int, optional): Time between progress updates. Default: 5.
+        seconds (float, optional): Time between progress updates. Default: 5.
         storage_type (str): Storage type (used for testing). Default: memory.
 
     Returns:
@@ -141,7 +141,7 @@ def get_dash_app(server, seconds=5, storage_type='memory'):
             html.Div(id="content", className='content')
         ],
     )
-    clock = dcc.Interval(id='clock', interval=seconds * 1000)
+    clock = dcc.Interval(id='clock', interval=int(seconds * 1000))
 
     app = dash.Dash(
         name='hidebound',
