@@ -7,6 +7,7 @@ import json
 import os
 import traceback
 
+from flask.testing import FlaskClient
 import flask
 import jinja2
 import jsoncomment as jsonc
@@ -242,3 +243,31 @@ def get_progress(logpath=hblog.PROGRESS_LOG_PATH):
     state = dict(progress=1.0, message='unknown state')
     state.update(hblog.get_progress(logpath))
     return state
+
+
+def request(store, url, params=None, client=requests):
+    # type: (dict, str, Optional[dict], Any) -> dict
+    '''
+    Execute search against database and update store with response.
+    Sets store['content'] to response if there is an error.
+
+    Args:
+        store (dict): Dash store.
+        url (str): API endpoint.
+        params (dict, optional): Request paramaters. Default: None.
+        client (object, optional): Client. Default: requests module.
+
+    Returns:
+        dict: Store.
+    '''
+    if params is not None:
+        params = json.dumps(params)
+    response = client.post(url, json=params)
+    code = response.status_code
+    if isinstance(client, FlaskClient):
+        response = response.json
+    else:
+        response = response.json()  # pragma: no cover
+    if code < 200 or code >= 300:
+        store['content'] = response
+    return response

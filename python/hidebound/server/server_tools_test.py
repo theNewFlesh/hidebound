@@ -169,3 +169,25 @@ ZV9yZWdleCI6ICJcXC5EU19TdG9yZXx5b3VyLW1vbSIsCiAgICAid3JpdGVfbW9kZSI6ICJjb3B5Igp\
             result = hst.get_progress(log)
             expected['line'] = 'last'
             self.assertEqual(result, expected)
+
+
+def test_request(env, extension, config, client):
+    store = {}
+    url = 'http://127.0.0.1/api/initialize'
+    params = dict(
+        root_directory=config['root_directory'],
+        hidebound_directory=config['hidebound_directory'],
+        specification_files=config['specification_files'],
+    )
+    result = hst.request(store, url, params, client)
+    assert result == {'message': 'Database initialized.'}
+    assert store == {}
+
+
+def test_request_error(env, extension, config, client):
+    store = {}
+    url = 'http://127.0.0.1/api/initialize'
+    params = dict(foo='bar')
+    result = hst.request(store, url, params, client)
+    assert store['content'] == result
+    assert store['content']['code'] == 500
