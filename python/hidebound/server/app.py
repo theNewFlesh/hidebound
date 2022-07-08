@@ -1,8 +1,5 @@
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Tuple, Union
 
-from collections import namedtuple
-from pathlib import Path
-import json
 import os
 
 from dash import dash_table, dcc, html
@@ -12,13 +9,11 @@ import dash
 import flask
 from flask import current_app
 import flask_monitoringdashboard as fmdb
-import requests
 
 from hidebound.core.config import Config
-from hidebound.core.logging import ProgressLogger, PROGRESS_LOG_PATH
 import hidebound.server.components as components
 import hidebound.server.extensions as ext
-import hidebound.server.server_tools as server_tools
+import hidebound.server.server_tools as hst
 
 
 TESTING = True
@@ -32,26 +27,7 @@ Hidebound service used for displaying and interacting with Hidebound database.
 '''
 
 
-HOST = '0.0.0.0'
-PORT = 8080
-Endpoints = namedtuple(
-    'Endpoints',
-    [
-        'api', 'init', 'update', 'create', 'export', 'delete', 'read', 'search',
-        'progress'
-    ]
-)
-EP = Endpoints(
-    api=f'http://{HOST}:{PORT}/api',
-    init=f'http://{HOST}:{PORT}/api/initialize',
-    update=f'http://{HOST}:{PORT}/api/update',
-    create=f'http://{HOST}:{PORT}/api/create',
-    export=f'http://{HOST}:{PORT}/api/export',
-    delete=f'http://{HOST}:{PORT}/api/delete',
-    read=f'http://{HOST}:{PORT}/api/read',
-    search=f'http://{HOST}:{PORT}/api/search',
-    progress=f'http://{HOST}:{PORT}/api/progress',
-)
+EP = hst.EndPoints()
 
 
 def liveness():
@@ -118,81 +94,8 @@ def serve_stylesheet(stylesheet):
         COLOR_SCHEME=components.COLOR_SCHEME,
         FONT_FAMILY=components.FONT_FAMILY,
     )
-    content = server_tools.render_template(stylesheet + '.j2', params)
+    content = hst.render_template(stylesheet + '.j2', params)
     return flask.Response(content, mimetype='text/css')
-
-
-# TOOLS-------------------------------------------------------------------------
-def get_progress(log_file=PROGRESS_LOG_PATH):
-    # type: (Union[str, Path]) -> dict
-    '''
-    Gets current progress state.
-
-    Args:
-        log_file (str or Path): Progress log filepath.
-
-    Returns:
-        dict: Progess.
-    '''
-    filepath = Path(log_file)
-    temp = dict(progress=1.0, message='unknown state')
-    if filepath.is_file():
-        temp.update(ProgressLogger.read(filepath)[-1])
-
-    keys = [
-        'message', 'original_message', 'timestamp', 'progress', 'step', 'total'
-    ]
-    progress = {}
-    for key in keys:
-        if key in temp:
-            progress[key] = temp[key]
-    return progress
-
-
-def search(store, query, group_by_asset):
-    # type: (dict, str, bool) -> dict
-    '''
-    Execute search against database and update store with response.
-
-    Args:
-        store (dict): Dash store.
-        query (str): Query string.
-        group_by_asset (bool): Whether to group the search by asset.
-
-    Returns:
-        dict: Store.
-    '''
-    params = {
-        'query': query,
-        'group_by_asset': group_by_asset,
-    }
-    store['content'] = request(store, EP.search, params)
-    store['query'] = query
-    return store
-
-
-def request(store, url, params=None):
-    # type: (dict, str, Optional[dict]) -> dict
-    '''
-    Execute search against database and update store with response.
-    Sets store['content'] to response if there is an error.
-
-    Args:
-        store (dict): Dash store.
-        url (str): API endpoint.
-        params (dict, optional): Request paramaters. Default: None.
-
-    Returns:
-        dict: Store.
-    '''
-    if params is not None:
-        params = json.dumps(params)
-    response = requests.post(url, json=params)
-    code = response.status_code
-    response = response.json()
-    if code < 200 or code >= 300:
-        store['content'] = response
-    return response
 
 
 # EVENTS------------------------------------------------------------------------
@@ -237,34 +140,34 @@ def on_event(*inputs):
     group_by_asset = context.inputs['dropdown.value'] == 'asset'
 
     if trigger == 'init-button':
-        request(store, EP.update, store.get('config', hb.config))
+        hst.request(store, EP.update, store.get('config', hb.config))
 
     elif trigger == 'update-button':
-        request(store, EP.update)
-        store = search(store, query, group_by_asset)
+        hst.request(store, EP.update)
+        store = hst.search(store, query, group_by_asset)
 
     elif trigger == 'create-button':
-        request(store, EP.create)
+        hst.request(store, EP.create)
 
     elif trigger == 'export-button':
-        request(store, EP.export)
+        hst.request(store, EP.export)
 
     elif trigger == 'delete-button':
-        request(store, EP.delete)
+        hst.request(store, EP.delete)
 
     elif trigger == 'search-button':
-        store = search(store, query, group_by_asset)
+        store = hst.search(store, query, group_by_asset)
 
     elif trigger == 'upload':
         temp = 'invalid'  # type: Any
         try:
-            temp = server_tools.parse_json_file_content(value)
+            temp = hst.parse_json_file_content(value)
             Config(temp).validate()
             store['config'] = temp
             store['config_error'] = None
         except Exception as error:
             store['config'] = temp
-            store['config_error'] = server_tools.error_to_response(error).json()
+            store['config_error'] = hst.error_to_response(error).json()
 
     # elif input_id == 'write-button':
     #     try:
@@ -274,7 +177,7 @@ def on_event(*inputs):
     #             json.dump(config, f, indent=4, sort_keys=True)
     #         store['config_error'] = None
     #     except Exception as error:
-    #         store['config_error'] = server_tools.error_to_response(error).json
+    #         store['config_error'] = hst.error_to_response(error).json
 
     return store
 
@@ -420,10 +323,10 @@ def on_progress(timestamp):
     Returns:
         flask.Response: Response.
     '''
-    return components.get_progressbar(get_progress())
+    return components.get_progressbar(hst.get_progress())
 # ------------------------------------------------------------------------------
 
 
 if __name__ == '__main__':
     debug = 'DEBUG_MODE' in os.environ.keys()
-    APP.run_server(debug=debug, host=HOST, port=PORT)
+    APP.run_server(debug=debug, host=EP.host, port=EP.port)

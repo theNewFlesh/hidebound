@@ -191,3 +191,11 @@ def test_request_error(env, extension, config, client):
     result = hst.request(store, url, params, client)
     assert store['content'] == result
     assert store['content']['code'] == 500
+
+
+def test_search(env, extension, config, client):
+    store = {}
+    query = 'SELECT * FROM data'
+    result = hst.search(store, query, False, client)
+    assert 'content' in result.keys()
+    assert result['query'] == query

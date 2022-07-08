@@ -1,5 +1,6 @@
 from typing import Any, Dict, Optional, Tuple, Union
 
+from dataclasses import dataclass
 from pathlib import Path
 from pprint import pformat
 import base64
@@ -14,8 +15,30 @@ import jsoncomment as jsonc
 import lunchbox.tools as lbt
 import requests
 
-from hidebound.core.logging import ProgressLogger
 import hidebound.core.logging as hblog
+# ------------------------------------------------------------------------------
+
+
+HOST = '0.0.0.0'
+PORT = 8080
+
+
+@dataclass
+class EndPoints:
+    '''
+    A convenience class for API endpoints.
+    '''
+    host = HOST
+    port = PORT
+    api = f'http://{HOST}:{PORT}/api'
+    init = f'http://{HOST}:{PORT}/api/initialize'
+    update = f'http://{HOST}:{PORT}/api/update'
+    create = f'http://{HOST}:{PORT}/api/create'
+    export = f'http://{HOST}:{PORT}/api/export'
+    delete = f'http://{HOST}:{PORT}/api/delete'
+    read = f'http://{HOST}:{PORT}/api/read'
+    search = f'http://{HOST}:{PORT}/api/search'
+    progress = f'http://{HOST}:{PORT}/api/progress'
 # ------------------------------------------------------------------------------
 
 
@@ -271,3 +294,23 @@ def request(store, url, params=None, client=requests):
     if code < 200 or code >= 300:
         store['content'] = response
     return response
+
+
+def search(store, query, group_by_asset, client=requests):
+    # type: (dict, str, bool, Any) -> dict
+    '''
+    Execute search against database and update given store with response.
+
+    Args:
+        store (dict): Dash store.
+        query (str): Query string.
+        group_by_asset (bool): Whether to group the search by asset.
+        client (object, optional): Client. Default: requests module.
+
+    Returns:
+        dict: Store.
+    '''
+    params = dict(query=query, group_by_asset=group_by_asset)
+    store['content'] = request(store, EndPoints().search, params, client)
+    store['query'] = query
+    return store
