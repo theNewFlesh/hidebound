@@ -91,8 +91,8 @@ class Config(Model):
 
     Attributes:
         root_directory (str or Path): Root directory to recurse.
-        staging_directory (str or Path): Directory where hidebound data will
-            be staged.
+        staging_directory (str or Path): Directory where hidebound data will be
+            staged.
         specification_files (list[str], optional): List of asset specification
             files. Default: [].
         include_regex (str, optional): Include filenames that match this regex.
