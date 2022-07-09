@@ -570,7 +570,7 @@ Base
 
 -  root\_directory - the directory hidebound parses for assets that
    comprise its database
--  hidebound\_directory - the staging directory valid assets are created
+-  staging\_directory - the staging directory valid assets are created
    in
 -  specification\_files - a list of python specification files
 -  include\_regex - filepaths in the root that match this are included
@@ -604,31 +604,31 @@ If ``HIDEBOUND_CONFIG_FILEPATH`` is set, Hidebound will ignore all other
 environment variables and read the given filepath in as a yaml or json
 config file.
 
-+-----------------------------------+----------+--------------------------------------------+
-| Variable                          | Format   | Portion                                    |
-+===================================+==========+============================================+
-| HIDEBOUND\_CONFIG\_FILEPATH       | str      | Entire Hidebound config file               |
-+-----------------------------------+----------+--------------------------------------------+
-| HIDEBOUND\_ROOT\_DIRECTORY        | str      | root\_directory parameter of config        |
-+-----------------------------------+----------+--------------------------------------------+
-| HIDEBOUND\_HIDEBOUND\_DIRECTORY   | str      | hidebound\_directory parameter of config   |
-+-----------------------------------+----------+--------------------------------------------+
-| HIDEBOUND\_SPECIFICATION\_FILES   | yaml     | specification\_files section of config     |
-+-----------------------------------+----------+--------------------------------------------+
-| HIDEBOUND\_INCLUDE\_REGEX         | str      | include\_regex parameter of config         |
-+-----------------------------------+----------+--------------------------------------------+
-| HIDEBOUND\_EXCLUDE\_REGEX         | str      | exclude\_regex parameter of config         |
-+-----------------------------------+----------+--------------------------------------------+
-| HIDEBOUND\_WRITE\_MODE            | str      | write\_mode parameter of config            |
-+-----------------------------------+----------+--------------------------------------------+
-| HIDEBOUND\_DASK\_ENABLED          | str      | dask\_enabled parameter of config          |
-+-----------------------------------+----------+--------------------------------------------+
-| HIDEBOUND\_DASK\_WORKERS          | int      | dask\_workers parameter of config          |
-+-----------------------------------+----------+--------------------------------------------+
-| HIDEBOUND\_EXPORTERS              | yaml     | exporters section of config                |
-+-----------------------------------+----------+--------------------------------------------+
-| HIDEBOUND\_WEBHOOKS               | yaml     | webhooks section of config                 |
-+-----------------------------------+----------+--------------------------------------------+
++-----------------------------------+----------+------------------------------------------+
+| Variable                          | Format   | Portion                                  |
++===================================+==========+==========================================+
+| HIDEBOUND\_CONFIG\_FILEPATH       | str      | Entire Hidebound config file             |
++-----------------------------------+----------+------------------------------------------+
+| HIDEBOUND\_ROOT\_DIRECTORY        | str      | root\_directory parameter of config      |
++-----------------------------------+----------+------------------------------------------+
+| HIDEBOUND\_STAGING\_DIRECTORY     | str      | staging\_directory parameter of config   |
++-----------------------------------+----------+------------------------------------------+
+| HIDEBOUND\_SPECIFICATION\_FILES   | yaml     | specification\_files section of config   |
++-----------------------------------+----------+------------------------------------------+
+| HIDEBOUND\_INCLUDE\_REGEX         | str      | include\_regex parameter of config       |
++-----------------------------------+----------+------------------------------------------+
+| HIDEBOUND\_EXCLUDE\_REGEX         | str      | exclude\_regex parameter of config       |
++-----------------------------------+----------+------------------------------------------+
+| HIDEBOUND\_WRITE\_MODE            | str      | write\_mode parameter of config          |
++-----------------------------------+----------+------------------------------------------+
+| HIDEBOUND\_DASK\_ENABLED          | str      | dask\_enabled parameter of config        |
++-----------------------------------+----------+------------------------------------------+
+| HIDEBOUND\_DASK\_WORKERS          | int      | dask\_workers parameter of config        |
++-----------------------------------+----------+------------------------------------------+
+| HIDEBOUND\_EXPORTERS              | yaml     | exporters section of config              |
++-----------------------------------+----------+------------------------------------------+
+| HIDEBOUND\_WEBHOOKS               | yaml     | webhooks section of config               |
++-----------------------------------+----------+------------------------------------------+
 
 --------------
 

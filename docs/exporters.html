@@ -31,7 +31,7 @@
             <a href="index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.23.1
+                0.23.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -115,7 +115,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hidebound.exporters.exporter_base.ExporterBase._enforce_directory_structure">
-<span class="sig-name descname"><span class="pre">_enforce_directory_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hidebound_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hidebound/exporters/exporter_base.html#ExporterBase._enforce_directory_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.exporter_base.ExporterBase._enforce_directory_structure" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_enforce_directory_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">staging_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hidebound/exporters/exporter_base.html#ExporterBase._enforce_directory_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.exporter_base.ExporterBase._enforce_directory_structure" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Ensure the following directory exist under given hidebound directory.</dt><dd><ul class="simple">
 <li><p>content</p></li>
@@ -129,7 +129,7 @@
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>hidebound_dir</strong> (<em>Path</em><em> or </em><em>str</em>) – Hidebound directory.</p>
+<dd class="field-odd"><p><strong>staging_dir</strong> (<em>Path</em><em> or </em><em>str</em>) – Hidebound directory.</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p><strong>FileNotFoundError</strong> – If any of the directories have not been found.</p>
@@ -212,12 +212,12 @@ hidebound/metadata/file-chunk.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="hidebound.exporters.exporter_base.ExporterBase.export">
-<span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hidebound_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="core.html#hidebound.core.logging.DummyLogger" title="hidebound.core.logging.DummyLogger"><span class="pre">hidebound.core.logging.DummyLogger</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="core.html#hidebound.core.logging.ProgressLogger" title="hidebound.core.logging.ProgressLogger"><span class="pre">hidebound.core.logging.ProgressLogger</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hidebound/exporters/exporter_base.html#ExporterBase.export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.exporter_base.ExporterBase.export" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">staging_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="core.html#hidebound.core.logging.DummyLogger" title="hidebound.core.logging.DummyLogger"><span class="pre">hidebound.core.logging.DummyLogger</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="core.html#hidebound.core.logging.ProgressLogger" title="hidebound.core.logging.ProgressLogger"><span class="pre">hidebound.core.logging.ProgressLogger</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hidebound/exporters/exporter_base.html#ExporterBase.export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.exporters.exporter_base.ExporterBase.export" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exports data within given hidebound directory.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>hidebound_dir</strong> (<em>Path</em><em> or </em><em>str</em>) – Hidebound directory.</p></li>
+<li><p><strong>staging_dir</strong> (<em>Path</em><em> or </em><em>str</em>) – Hidebound directory.</p></li>
 <li><p><strong>logger</strong> (<em>object</em><em>, </em><em>optional</em>) – Progress logger. Default: None.</p></li>
 </ul>
 </dd>

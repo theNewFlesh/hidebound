@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.19.0
+                0.23.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -48,6 +48,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#naming-convention">Naming Convention</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#project-structure">Project Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#application">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#configuration">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#specification">Specification</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
@@ -127,7 +129,7 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_metadata_types</span> <span class="o">=</span> <span class="n">metadata_types</span></div>
 
-<div class="viewcode-block" id="ExporterBase._enforce_directory_structure"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.exporter_base.ExporterBase._enforce_directory_structure">[docs]</a>    <span class="k">def</span> <span class="nf">_enforce_directory_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hidebound_dir</span><span class="p">):</span>
+<div class="viewcode-block" id="ExporterBase._enforce_directory_structure"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.exporter_base.ExporterBase._enforce_directory_structure">[docs]</a>    <span class="k">def</span> <span class="nf">_enforce_directory_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">staging_dir</span><span class="p">):</span>
         <span class="c1"># type: (Union[str, Path]) -&gt; None</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Ensure the following directory exist under given hidebound directory.</span>
@@ -139,13 +141,13 @@
 <span class="sd">            * metadata/file-chunk</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            hidebound_dir (Path or str): Hidebound directory.</span>
+<span class="sd">            staging_dir (Path or str): Hidebound directory.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            FileNotFoundError: If any of the directories have not been found.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">hidebound_dir</span><span class="p">,</span> <span class="s1">&#39;content&#39;</span><span class="p">)</span>
-        <span class="n">meta</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">hidebound_dir</span><span class="p">,</span> <span class="s1">&#39;metadata&#39;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">staging_dir</span><span class="p">,</span> <span class="s1">&#39;content&#39;</span><span class="p">)</span>
+        <span class="n">meta</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">staging_dir</span><span class="p">,</span> <span class="s1">&#39;metadata&#39;</span><span class="p">)</span>
         <span class="n">asset_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="s1">&#39;asset&#39;</span><span class="p">)</span>
         <span class="n">file_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">)</span>
         <span class="n">asset_chunk</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="s1">&#39;asset-chunk&#39;</span><span class="p">)</span>
@@ -159,7 +161,7 @@
 
 <div class="viewcode-block" id="ExporterBase.export"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.exporter_base.ExporterBase.export">[docs]</a>    <span class="k">def</span> <span class="nf">export</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">hidebound_dir</span><span class="p">,</span>  <span class="c1"># type: Union[str, Path]</span>
+        <span class="n">staging_dir</span><span class="p">,</span>  <span class="c1"># type: Union[str, Path]</span>
         <span class="n">logger</span><span class="o">=</span><span class="kc">None</span>  <span class="c1"># type: Optional[Union[DummyLogger, ProgressLogger]]</span>
     <span class="p">):</span>
         <span class="c1"># type: (...) -&gt; None</span>
@@ -167,23 +169,23 @@
 <span class="sd">        Exports data within given hidebound directory.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            hidebound_dir (Path or str): Hidebound directory.</span>
+<span class="sd">            staging_dir (Path or str): Hidebound directory.</span>
 <span class="sd">            logger (object, optional): Progress logger. Default: None.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># set logger</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">ProgressLogger</span><span class="p">):</span>
             <span class="n">logger</span> <span class="o">=</span> <span class="n">DummyLogger</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_enforce_directory_structure</span><span class="p">(</span><span class="n">hidebound_dir</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_enforce_directory_structure</span><span class="p">(</span><span class="n">staging_dir</span><span class="p">)</span>
 
-        <span class="n">hidebound_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">hidebound_dir</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">directory_to_dataframe</span><span class="p">(</span><span class="n">hidebound_dir</span><span class="p">)</span>
+        <span class="n">staging_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">staging_dir</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">directory_to_dataframe</span><span class="p">(</span><span class="n">staging_dir</span><span class="p">)</span>
         <span class="n">data</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="n">total</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_metadata_types</span><span class="p">)</span>
 
         <span class="c1"># export content</span>
-        <span class="n">regex</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hidebound_dir</span><span class="si">}</span><span class="s1">/metadata/file/&#39;</span>
+        <span class="n">regex</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">staging_dir</span><span class="si">}</span><span class="s1">/metadata/file/&#39;</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
         <span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">hbt</span><span class="o">.</span><span class="n">read_json</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_export_content</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;exporter: export content&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>
@@ -196,7 +198,7 @@
             <span class="s1">&#39;file-chunk&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_export_file_chunk</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">mtype</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_metadata_types</span><span class="p">):</span>
-            <span class="n">regex</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hidebound_dir</span><span class="si">}</span><span class="s1">/metadata/</span><span class="si">{</span><span class="n">mtype</span><span class="si">}</span><span class="s1">/&#39;</span>
+            <span class="n">regex</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">staging_dir</span><span class="si">}</span><span class="s1">/metadata/</span><span class="si">{</span><span class="n">mtype</span><span class="si">}</span><span class="s1">/&#39;</span>
             <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
             <span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">hbt</span><span class="o">.</span><span class="n">read_json</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">lut</span><span class="p">[</span><span class="n">mtype</span><span class="p">])</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;exporter: export </span><span class="si">{</span><span class="n">mtype</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span></div>

@@ -31,7 +31,7 @@
             <a href="index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.23.1
+                0.23.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -740,7 +740,7 @@ variables.</p>
 <ul class="simple">
 <li><p>root_directory - the directory hidebound parses for assets that
 comprise its database</p></li>
-<li><p>hidebound_directory - the staging directory valid assets are created
+<li><p>staging_directory - the staging directory valid assets are created
 in</p></li>
 <li><p>specification_files - a list of python specification files</p></li>
 <li><p>include_regex - filepaths in the root that match this are included
@@ -773,9 +773,9 @@ environment variables and read the given filepath in as a yaml or json
 config file.</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 39%" />
+<col style="width: 40%" />
 <col style="width: 11%" />
-<col style="width: 49%" />
+<col style="width: 48%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Variable</p></th>
@@ -792,9 +792,9 @@ config file.</p>
 <td><p>str</p></td>
 <td><p>root_directory parameter of config</p></td>
 </tr>
-<tr class="row-even"><td><p>HIDEBOUND_HIDEBOUND_DIRECTORY</p></td>
+<tr class="row-even"><td><p>HIDEBOUND_STAGING_DIRECTORY</p></td>
 <td><p>str</p></td>
-<td><p>hidebound_directory parameter of config</p></td>
+<td><p>staging_directory parameter of config</p></td>
 </tr>
 <tr class="row-odd"><td><p>HIDEBOUND_SPECIFICATION_FILES</p></td>
 <td><p>yaml</p></td>
@@ -833,7 +833,7 @@ config file.</p>
 <hr class="docutils" />
 <p>Here is a full example config with comments:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">root_directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/storage/projects</span><span class="w">                        </span><span class="c1"># where hb looks for assets</span><span class="w"></span>
-<span class="nt">hidebound_directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/storage/hidebound</span><span class="w">                  </span><span class="c1"># hb staging directory</span><span class="w"></span>
+<span class="nt">staging_directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/storage/hidebound</span><span class="w">                  </span><span class="c1"># hb staging directory</span><span class="w"></span>
 <span class="nt">specification_files</span><span class="p">:</span><span class="w">                                         </span><span class="c1"># list of spec files</span><span class="w"></span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/storage/specs/image_specs.py</span><span class="w"></span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/storage/specs/video_specs.py</span><span class="w"></span>

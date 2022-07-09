@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.22.3
+                0.23.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -177,8 +177,8 @@
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        root_directory (str or Path): Root directory to recurse.</span>
-<span class="sd">        hidebound_directory (str or Path): Directory where hidebound data will</span>
-<span class="sd">            be saved.</span>
+<span class="sd">        staging_directory (str or Path): Directory where hidebound data will be</span>
+<span class="sd">            staged.</span>
 <span class="sd">        specification_files (list[str], optional): List of asset specification</span>
 <span class="sd">            files. Default: [].</span>
 <span class="sd">        include_regex (str, optional): Include filenames that match this regex.</span>
@@ -193,7 +193,7 @@
     <span class="n">root_directory</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_directory</span><span class="p">]</span>
     <span class="p">)</span>  <span class="c1"># type: StringType</span>
-    <span class="n">hidebound_directory</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
+    <span class="n">staging_directory</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_directory</span><span class="p">,</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_hidebound_directory</span><span class="p">]</span>
     <span class="p">)</span>  <span class="c1"># type: StringType</span>
     <span class="n">specification_files</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>

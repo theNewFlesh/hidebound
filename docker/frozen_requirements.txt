@@ -5,15 +5,15 @@ APScheduler==3.9.1
 argon2-cffi==21.3.0
 argon2-cffi-bindings==21.2.0
 async-generator==1.10
-atomicwrites==1.4.1
+atomicwrites==1.4.0
 attrs==21.4.0
 Babel==2.10.3
 backcall==0.2.0
 beautifulsoup4==4.11.1
 bleach==5.0.1
 bokeh==2.4.3
-boto3==1.24.26
-botocore==1.27.26
+boto3==1.24.25
+botocore==1.27.25
 Brotli==1.0.9
 certifi==2022.6.15
 cffi==1.15.1
@@ -67,7 +67,7 @@ imageio==2.19.3
 imagesize==1.4.1
 importlib-metadata==4.2.0
 importlib-resources==5.8.0
-ipykernel==6.15.1
+ipykernel==6.15.0
 ipysheet==0.5.0
 ipython==7.34.0
 ipython-genutils==0.2.0
@@ -83,7 +83,7 @@ json5==0.9.8
 jsoncomment==0.4.2
 jsonschema==4.6.2
 jupyter-client==7.3.4
-jupyter-core==4.11.1
+jupyter-core==4.11.0
 jupyter-server==1.18.1
 jupyter-server-mathjax==0.2.5
 jupyterlab==3.4.3
