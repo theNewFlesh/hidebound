@@ -132,7 +132,7 @@ class Database:
         Args:
             root_dir (str or Path): Root directory to recurse.
             staging_dir (str or Path): Directory where hidebound data will be
-                saved.
+                staged.
             specifications (list[SpecificationBase], optional): List of asset
                 specifications. Default: [].
             include_regex (str, optional): Include filenames that match this
