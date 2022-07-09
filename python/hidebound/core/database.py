@@ -69,7 +69,7 @@ class Database:
 
         return Database(
             config['root_directory'],
-            config['hidebound_directory'],
+            config['staging_directory'],
             specifications=specs,
             include_regex=config['include_regex'],
             exclude_regex=config['exclude_regex'],
@@ -115,7 +115,7 @@ class Database:
     def __init__(
         self,
         root_dir,                     # type: Union[str, Path]
-        hidebound_dir,                # type: Union[str, Path]
+        staging_dir,                # type: Union[str, Path]
         specifications=[],            # type: List[SpecificationBase]
         include_regex='',             # type: str
         exclude_regex=r'\.DS_Store',  # type: str
@@ -131,7 +131,7 @@ class Database:
 
         Args:
             root_dir (str or Path): Root directory to recurse.
-            hidebound_dir (str or Path): Directory where hidebound data will be
+            staging_dir (str or Path): Directory where hidebound data will be
                 saved.
             specifications (list[SpecificationBase], optional): List of asset
                 specifications. Default: [].
@@ -156,21 +156,21 @@ class Database:
                 object.
             ValueError: If write_mode not is not "copy" or "move".
             FileNotFoundError: If root is not a directory or does not exist.
-            FileNotFoundError: If hidebound_dir is not directory or does not
+            FileNotFoundError: If staging_dir is not directory or does not
                 exist.
-            NameError: If hidebound_dir is not named "hidebound".
+            NameError: If staging_dir is not named "hidebound".
 
         Returns:
             Database: Database instance.
         '''
         # validate hidebound dir
-        hb_root = Path(hidebound_dir)
-        if not hb_root.is_dir():
-            msg = f'{hb_root} is not a directory or does not exist.'
+        staging = Path(staging_dir)
+        if not staging.is_dir():
+            msg = f'{staging} is not a directory or does not exist.'
             raise FileNotFoundError(msg)
 
-        if Path(hb_root).name != 'hidebound':
-            msg = f'{hb_root} directory is not named hidebound.'
+        if Path(staging).name != 'hidebound':
+            msg = f'{staging} directory is not named hidebound.'
             raise NameError(msg)
 
         # setup logger
@@ -201,7 +201,7 @@ class Database:
             raise ValueError(msg)
 
         self._root = root
-        self._hb_root = hb_root
+        self._staging = staging
         self._include_regex = include_regex
         self._exclude_regex = exclude_regex
         self._write_mode = write_mode
@@ -245,7 +245,7 @@ class Database:
             raise RuntimeError(msg)
 
         temp = db_tools.get_data_for_write(
-            self.data, self._root, self._hb_root
+            self.data, self._root, self._staging
         )
         self._logger.info('create: get data', step=1, total=total)
         if temp is None:
@@ -431,12 +431,12 @@ class Database:
             Database: self.
         '''
         total = 2
-        data_dir = Path(self._hb_root, 'content')
+        data_dir = Path(self._staging, 'content')
         if data_dir.exists():
             shutil.rmtree(data_dir)
         self._logger.info('delete: data directory', step=1, total=total)
 
-        meta_dir = Path(self._hb_root, 'metadata')
+        meta_dir = Path(self._staging, 'metadata')
         if meta_dir.exists():
             shutil.rmtree(meta_dir)
         self._logger.info('delete: metadata directory', step=2, total=total)
@@ -507,7 +507,7 @@ class Database:
         total = len(items)
         for i, (key, config) in enumerate(items):
             exporter = lut[key].from_config(config)
-            exporter.export(self._hb_root, logger=self._logger)
+            exporter.export(self._staging, logger=self._logger)
             self._logger.info(f'export: {key}', step=i + 1, total=total)
 
             # assign instance to exporter_lut for testing

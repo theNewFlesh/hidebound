@@ -153,11 +153,11 @@ class ConfigTests(unittest.TestCase):
 
     def set_data(self, temp):
         self.root = Path(temp, 'root').as_posix()
-        self.hb_root = Path(temp, 'hidebound').as_posix()
+        self.staging = Path(temp, 'hidebound').as_posix()
         self.target_dir = Path(temp, 'target').as_posix()
         self.config = dict(
             root_directory=self.root,
-            hidebound_directory=self.hb_root,
+            staging_directory=self.staging,
             specification_files=[],
             include_regex='foo',
             exclude_regex='bar',
@@ -171,24 +171,24 @@ class ConfigTests(unittest.TestCase):
         with TemporaryDirectory() as temp:
             self.set_data(temp)
             os.makedirs(self.root)
-            os.makedirs(self.hb_root)
+            os.makedirs(self.staging)
             cfg.Config(self.config).validate()
 
     def test_config_root(self):
         with TemporaryDirectory() as temp:
             self.set_data(temp)
-            os.makedirs(self.hb_root)
+            os.makedirs(self.staging)
 
             expected = 'root_directory.*is not a directory or does not exist'
             with self.assertRaisesRegex(DataError, expected):
                 cfg.Config(self.config).validate()
 
-    def test_config_hb_root(self):
+    def test_config_staging(self):
         with TemporaryDirectory() as temp:
             self.set_data(temp)
             os.makedirs(self.root)
 
-            expected = 'hidebound_directory.*is not a directory or does '
+            expected = 'staging_directory.*is not a directory or does '
             expected += 'not exist'
             with self.assertRaisesRegex(DataError, expected):
                 cfg.Config(self.config).validate()
@@ -197,7 +197,7 @@ class ConfigTests(unittest.TestCase):
         with TemporaryDirectory() as temp:
             self.set_data(temp)
             os.makedirs(self.root)
-            os.makedirs(self.hb_root)
+            os.makedirs(self.staging)
 
             self.config['write_mode'] = 'copy'
             cfg.Config(self.config).validate()
@@ -214,7 +214,7 @@ class ConfigTests(unittest.TestCase):
         with TemporaryDirectory() as temp:
             self.set_data(temp)
             os.makedirs(self.root)
-            os.makedirs(self.hb_root)
+            os.makedirs(self.staging)
 
             spec = self.write_good_spec(temp)
             self.config['specification_files'] = [spec]
@@ -225,7 +225,7 @@ class ConfigTests(unittest.TestCase):
         with TemporaryDirectory() as temp:
             self.set_data(temp)
             os.makedirs(self.root)
-            os.makedirs(self.hb_root)
+            os.makedirs(self.staging)
 
             good = self.write_good_spec(temp)
             bad = self.write_bad_spec(temp)
@@ -239,7 +239,7 @@ class ConfigTests(unittest.TestCase):
     def add_exporters_to_config(self, root):
         self.set_data(root)
         os.makedirs(self.root)
-        os.makedirs(self.hb_root)
+        os.makedirs(self.staging)
         self.config['exporters'] = dict(
             girder=dict(
                 api_key='api_key',
@@ -343,7 +343,7 @@ class ConfigTests(unittest.TestCase):
     def add_webhooks_to_config(self, root):
         self.set_data(root)
         os.makedirs(self.root)
-        os.makedirs(self.hb_root)
+        os.makedirs(self.staging)
         self.config['webhooks'] = [
             dict(
                 url='http://foobar.com/api/user?',
@@ -400,7 +400,7 @@ class ConfigTests(unittest.TestCase):
         with TemporaryDirectory() as temp:
             self.set_data(temp)
             os.makedirs(self.root)
-            os.makedirs(self.hb_root)
+            os.makedirs(self.staging)
 
             result = cfg.Config(self.config)
             result.validate()
@@ -432,7 +432,7 @@ class ConfigTests(unittest.TestCase):
         with TemporaryDirectory() as temp:
             self.set_data(temp)
             os.makedirs(self.root)
-            os.makedirs(self.hb_root)
+            os.makedirs(self.staging)
             self.config['dask_workers'] = 0
             expected = '0 !> 0'
             with self.assertRaisesRegexp(DataError, expected):

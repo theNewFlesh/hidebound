@@ -95,7 +95,7 @@ def config(temp_dir):
 
     config = dict(
         root_directory=Path(temp_dir, 'ingress').as_posix(),
-        hidebound_directory=Path(temp_dir, 'hidebound').as_posix(),
+        staging_directory=Path(temp_dir, 'hidebound').as_posix(),
         include_regex='',
         exclude_regex=r'\.DS_Store',
         write_mode='copy',

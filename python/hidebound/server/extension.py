@@ -85,7 +85,7 @@ class HideboundExtension:
         '''
         return dict(
             root_directory=app.config.get('ROOT_DIRECTORY'),
-            hidebound_directory=app.config.get('HIDEBOUND_DIRECTORY'),
+            staging_directory=app.config.get('STAGING_DIRECTORY'),
             include_regex=app.config.get('INCLUDE_REGEX', ''),
             exclude_regex=app.config.get('EXCLUDE_REGEX', r'\.DS_Store'),
             write_mode=app.config.get('WRITE_MODE', 'copy'),

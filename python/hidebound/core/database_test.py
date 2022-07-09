@@ -45,13 +45,13 @@ class DatabaseTests(DatabaseTestBase):
     def test_from_config(self):
         with TemporaryDirectory() as root:
             # create hb root dir
-            hb_root = Path(root, 'hidebound').as_posix()
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound').as_posix()
+            os.makedirs(staging)
             spec_file = self.write_spec_file(root)
 
             config = dict(
                 root_directory=root,
-                hidebound_directory=hb_root,
+                staging_directory=staging,
                 specification_files=[spec_file],
                 include_regex='foo',
                 exclude_regex='bar',
@@ -68,13 +68,13 @@ class DatabaseTests(DatabaseTestBase):
     def test_from_json(self):
         with TemporaryDirectory() as root:
             # create hb root dir
-            hb_root = Path(root, 'hidebound').as_posix()
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound').as_posix()
+            os.makedirs(staging)
             spec_file = self.write_spec_file(root)
 
             config = dict(
                 root_directory=root,
-                hidebound_directory=hb_root,
+                staging_directory=staging,
                 specification_files=[spec_file],
                 include_regex='foo',
                 exclude_regex='bar',
@@ -89,13 +89,13 @@ class DatabaseTests(DatabaseTestBase):
     def test_from_yaml(self):
         with TemporaryDirectory() as root:
             # create hb root dir
-            hb_root = Path(root, 'hidebound').as_posix()
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound').as_posix()
+            os.makedirs(staging)
             spec_file = self.write_spec_file(root)
 
             config = dict(
                 root_directory=root,
-                hidebound_directory=hb_root,
+                staging_directory=staging,
                 specification_files=[spec_file],
                 include_regex='foo',
                 exclude_regex='bar',
@@ -113,30 +113,30 @@ class DatabaseTests(DatabaseTestBase):
             root = Path(root, 'projects')
             os.makedirs(root)
 
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound')
+            os.makedirs(staging)
 
             self.create_files(root)
-            Database(root, hb_root)
-            Database(root, hb_root, [Spec001])
-            Database(root, hb_root, [Spec001, Spec002])
+            Database(root, staging)
+            Database(root, staging, [Spec001])
+            Database(root, staging, [Spec001, Spec002])
 
     def test_init_bad_root(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound')
+            os.makedirs(staging)
             expected = '/foo is not a directory or does not exist'
             with self.assertRaisesRegexp(FileNotFoundError, expected):
-                Database('/foo', hb_root, [Spec001])
+                Database('/foo', staging, [Spec001])
 
-    def test_init_bad_hb_root(self):
+    def test_init_bad_staging(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
+            staging = Path(root, 'hidebound')
             expected = '/hidebound is not a directory or does not exist'
             with self.assertRaisesRegexp(FileNotFoundError, expected):
-                Database(root, hb_root)
+                Database(root, staging)
 
             temp = Path(root, 'Hidebound')
             os.makedirs(temp)
@@ -147,38 +147,38 @@ class DatabaseTests(DatabaseTestBase):
     def test_init_bad_specifications(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound')
+            os.makedirs(staging)
 
             self.create_files(root)
             expected = 'SpecificationBase may only contain subclasses of'
             expected += ' SpecificationBase. Found: .*.'
 
             with self.assertRaisesRegexp(TypeError, expected):
-                Database(root, hb_root, [BadSpec])
+                Database(root, staging, [BadSpec])
 
             with self.assertRaisesRegexp(TypeError, expected):
-                Database(root, hb_root, [Spec001, BadSpec])
+                Database(root, staging, [Spec001, BadSpec])
 
     def test_init_bad_write_mode(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound')
+            os.makedirs(staging)
 
             expected = r"Invalid write mode: foo not in \['copy', 'move'\]\."
             with self.assertRaisesRegexp(ValueError, expected):
-                Database(root, hb_root, [Spec001], write_mode='foo')
+                Database(root, staging, [Spec001], write_mode='foo')
 
     # CREATE--------------------------------------------------------------------
     def test_create(self):
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound')
+            os.makedirs(staging)
             Spec001, Spec002, BadSpec = self.get_specifications()
             self.create_files(root)
 
-            db = Database(root, hb_root, [Spec001, Spec002])
+            db = Database(root, staging, [Spec001, Spec002])
 
             # test data initiliazation error
             expected = 'Data not initialized. Please call update.'
@@ -192,7 +192,7 @@ class DatabaseTests(DatabaseTestBase):
             data = data[data.asset_valid]
 
             # ensure files are written
-            result = Path(hb_root, 'content')
+            result = Path(staging, 'content')
             result = hbt.directory_to_dataframe(result)
             result = sorted(result.filename.tolist())
             self.assertGreater(len(result), 0)
@@ -200,51 +200,51 @@ class DatabaseTests(DatabaseTestBase):
             self.assertEqual(result, expected)
 
             # ensure file metadata is written
-            result = len(os.listdir(Path(hb_root, 'metadata', 'file')))
+            result = len(os.listdir(Path(staging, 'metadata', 'file')))
             self.assertGreater(result, 0)
             expected = data.filepath.nunique()
             self.assertEqual(result, expected)
 
             # ensure asset metadata is written
-            result = len(os.listdir(Path(hb_root, 'metadata', 'asset')))
+            result = len(os.listdir(Path(staging, 'metadata', 'asset')))
             self.assertGreater(result, 0)
             expected = data.asset_path.nunique()
             self.assertEqual(result, expected)
 
             # ensure asset chunk is written
-            result = len(os.listdir(Path(hb_root, 'metadata', 'asset-chunk')))
+            result = len(os.listdir(Path(staging, 'metadata', 'asset-chunk')))
             self.assertEqual(result, 1)
 
             # ensure file chunk is written
-            result = len(os.listdir(Path(hb_root, 'metadata', 'file-chunk')))
+            result = len(os.listdir(Path(staging, 'metadata', 'file-chunk')))
             self.assertEqual(result, 1)
 
     def test_create_all_invalid(self):
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound')
+            os.makedirs(staging)
             Spec001, Spec002, BadSpec = self.get_specifications()
             self.create_files(root)
 
-            db = Database(root, hb_root, [Spec001, Spec002])
+            db = Database(root, staging, [Spec001, Spec002])
             db.update()
             data = db.data
             data['asset_valid'] = False
             db.create()
 
-            result = Path(hb_root, 'content')
+            result = Path(staging, 'content')
             self.assertFalse(result.exists())
 
-            result = Path(hb_root, 'metadata', 'file')
+            result = Path(staging, 'metadata', 'file')
             self.assertFalse(result.exists())
 
-            result = Path(hb_root, 'metadata', 'asset')
+            result = Path(staging, 'metadata', 'asset')
             self.assertFalse(result.exists())
 
     def test_create_copy(self):
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound')
+            os.makedirs(staging)
 
             root = Path(root, 'projects').as_posix()
             os.makedirs(root)
@@ -255,7 +255,7 @@ class DatabaseTests(DatabaseTestBase):
                 .apply(lambda x: x.as_posix()).tolist()
             expected = sorted(expected)
 
-            db = Database(root, hb_root, [Spec001, Spec002], write_mode='copy')
+            db = Database(root, staging, [Spec001, Spec002], write_mode='copy')
             db.update()
             db.create()
 
@@ -265,15 +265,15 @@ class DatabaseTests(DatabaseTestBase):
 
     def test_create_move(self):
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound')
+            os.makedirs(staging)
 
             root = Path(root, 'projects').as_posix()
             os.makedirs(root)
 
             self.create_files(root)
             Spec001, Spec002, BadSpec = self.get_specifications()
-            db = Database(root, hb_root, [Spec001, Spec002], write_mode='move')
+            db = Database(root, staging, [Spec001, Spec002], write_mode='move')
             db.update()
             data = db.data
             db.create()
@@ -284,7 +284,7 @@ class DatabaseTests(DatabaseTestBase):
             self.assertEqual(result, [False])
 
             # ensure files are written
-            result = Path(hb_root, 'content')
+            result = Path(staging, 'content')
             result = hbt.directory_to_dataframe(result)
             result = sorted(result.filename.tolist())
             self.assertGreater(len(result), 0)
@@ -292,13 +292,13 @@ class DatabaseTests(DatabaseTestBase):
             self.assertEqual(result, expected)
 
             # ensure file metadata is written
-            result = len(os.listdir(Path(hb_root, 'metadata', 'file')))
+            result = len(os.listdir(Path(staging, 'metadata', 'file')))
             self.assertGreater(result, 0)
             expected = data.filepath.nunique()
             self.assertEqual(result, expected)
 
             # ensure asset metadata is written
-            result = len(os.listdir(Path(hb_root, 'metadata', 'asset')))
+            result = len(os.listdir(Path(staging, 'metadata', 'asset')))
             self.assertGreater(result, 0)
             expected = data.asset_path.nunique()
             self.assertEqual(result, expected)
@@ -307,14 +307,14 @@ class DatabaseTests(DatabaseTestBase):
     def test_read_legal_types(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound')
+            os.makedirs(staging)
 
             root = Path(root, 'projects')
             os.makedirs(root)
 
             self.create_files(root)
-            db = Database(root, hb_root, [Spec001, Spec002])
+            db = Database(root, staging, [Spec001, Spec002])
 
             # test data initiliazation error
             expected = 'Data not initialized. Please call update.'
@@ -349,14 +349,14 @@ class DatabaseTests(DatabaseTestBase):
     def test_read_traits(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound')
+            os.makedirs(staging)
 
             root = Path(root, 'projects')
             os.makedirs(root)
 
             self.create_files(root)
-            db = Database(root, hb_root, [Spec001, Spec002])
+            db = Database(root, staging, [Spec001, Spec002])
             db.update()
 
             # test file traits
@@ -382,14 +382,14 @@ class DatabaseTests(DatabaseTestBase):
     def test_read_coordinates(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound')
+            os.makedirs(staging)
 
             root = Path(root, 'projects')
             os.makedirs(root)
 
             self.create_files(root)
-            db = Database(root, hb_root, [Spec001, Spec002])
+            db = Database(root, staging, [Spec001, Spec002])
             db.update()
 
             db.data.file_traits = db.data.file_traits\
@@ -418,14 +418,14 @@ class DatabaseTests(DatabaseTestBase):
     def test_read_column_order(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound')
+            os.makedirs(staging)
 
             root = Path(root, 'projects')
             os.makedirs(root)
 
             self.create_files(root)
-            db = Database(root, hb_root, [Spec001, Spec002])
+            db = Database(root, staging, [Spec001, Spec002])
             db.update()
 
             result = db.read().columns.tolist()
@@ -455,13 +455,13 @@ class DatabaseTests(DatabaseTestBase):
     def test_read_no_files(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound')
+            os.makedirs(staging)
 
             root = Path(root, 'projects')
             os.makedirs(root)
 
-            db = Database(root, hb_root, [Spec001, Spec002])
+            db = Database(root, staging, [Spec001, Spec002])
 
             db.update()
             result = db.read()
@@ -470,15 +470,15 @@ class DatabaseTests(DatabaseTestBase):
         # UPDATE--------------------------------------------------------------------
     def test_update(self):
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound')
+            os.makedirs(staging)
             Spec001, Spec002, _ = self.get_specifications()
 
             expected = self.create_files(root).filepath\
                 .apply(lambda x: x.as_posix()).tolist()
             expected = sorted(expected)
 
-            data = Database(root, hb_root, [Spec001, Spec002]).update().data
+            data = Database(root, staging, [Spec001, Spec002]).update().data
             result = data.filepath.tolist()
             result = list(filter(lambda x: 'progress' not in x, result))
             result = sorted(result)
@@ -505,8 +505,8 @@ class DatabaseTests(DatabaseTestBase):
 
     def test_update_exclude(self):
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound')
+            os.makedirs(staging)
             Spec001, Spec002, BadSpec = self.get_specifications()
 
             expected = self.create_files(root).filepath\
@@ -515,7 +515,7 @@ class DatabaseTests(DatabaseTestBase):
             expected = list(filter(lambda x: not re.search(regex, x), expected))
             expected = sorted(expected)
 
-            result = Database(root, hb_root, [Spec001, Spec002], exclude_regex=regex)\
+            result = Database(root, staging, [Spec001, Spec002], exclude_regex=regex)\
                 .update().data.filepath.tolist()
             result = list(filter(lambda x: 'progress' not in x, result))
             result = sorted(result)
@@ -523,8 +523,8 @@ class DatabaseTests(DatabaseTestBase):
 
     def test_update_include(self):
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound')
+            os.makedirs(staging)
             Spec001, Spec002, BadSpec = self.get_specifications()
 
             expected = self.create_files(root).filepath\
@@ -533,7 +533,7 @@ class DatabaseTests(DatabaseTestBase):
             expected = list(filter(lambda x: re.search(regex, x), expected))
             expected = sorted(expected)
 
-            result = Database(root, hb_root, [Spec001, Spec002], include_regex=regex)\
+            result = Database(root, staging, [Spec001, Spec002], include_regex=regex)\
                 .update().data.filepath.tolist()
             result = sorted(result)
             self.assertEqual(result, expected)
@@ -542,8 +542,8 @@ class DatabaseTests(DatabaseTestBase):
         Spec001, Spec002, BadSpec = self.get_specifications()
 
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound')
+            os.makedirs(staging)
 
             expected = self.create_files(root).filepath\
                 .apply(lambda x: x.as_posix()).tolist()
@@ -555,7 +555,7 @@ class DatabaseTests(DatabaseTestBase):
 
             result = Database(
                 root,
-                hb_root,
+                staging,
                 [Spec001, Spec002],
                 include_regex=i_regex,
                 exclude_regex=e_regex,
@@ -568,9 +568,9 @@ class DatabaseTests(DatabaseTestBase):
         Spec001, Spec002, BadSpec = self.get_specifications()
 
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
-            result = Database(root, hb_root, [Spec001]).update().data
+            staging = Path(root, 'hidebound')
+            os.makedirs(staging)
+            result = Database(root, staging, [Spec001]).update().data
             self.assertEqual(len(result), 0)
             self.assertEqual(result.columns.tolist(), self.columns)
 
@@ -578,10 +578,10 @@ class DatabaseTests(DatabaseTestBase):
         Spec001, Spec002, BadSpec = self.get_specifications()
 
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound')
+            os.makedirs(staging)
             files = self.create_files(root)
-            data = Database(root, hb_root, [Spec001, Spec002]).update().data
+            data = Database(root, staging, [Spec001, Spec002]).update().data
 
             keys = files.filepath.tolist()
             lut = dict(zip(keys, files.file_error.tolist()))
@@ -596,13 +596,13 @@ class DatabaseTests(DatabaseTestBase):
     # DELETE--------------------------------------------------------------------
     def test_delete(self):
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound')
+            os.makedirs(staging)
 
-            data_dir = Path(hb_root, 'content')
+            data_dir = Path(staging, 'content')
             os.makedirs(data_dir)
 
-            meta_dir = Path(hb_root, 'metadata')
+            meta_dir = Path(staging, 'metadata')
             os.makedirs(meta_dir)
 
             root = Path(root, 'projects')
@@ -612,7 +612,7 @@ class DatabaseTests(DatabaseTestBase):
             expected = hbt.directory_to_dataframe(root).filepath.tolist()
             expected = sorted(expected)
 
-            db = Database(root, hb_root, [])
+            db = Database(root, staging, [])
             db.delete()
 
             self.assertFalse(data_dir.exists())
@@ -625,14 +625,14 @@ class DatabaseTests(DatabaseTestBase):
     # EXPORT--------------------------------------------------------------------
     def test_export_girder(self):
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound')
+            os.makedirs(staging)
             Spec001, Spec002, _ = self.get_specifications()
             self.create_files(root)
 
             exporters = dict(girder=dict(api_key='api_key', root_id='root_id'))
             db = Database(
-                root, hb_root, [Spec001, Spec002], exporters=exporters
+                root, staging, [Spec001, Spec002], exporters=exporters
             )
             db._Database__exporter_lut = dict(girder=MockGirderExporter)
 
@@ -651,8 +651,8 @@ class DatabaseTests(DatabaseTestBase):
     @mock_s3
     def test_export_s3(self):
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound')
+            os.makedirs(staging)
             Spec001, Spec002, _ = self.get_specifications()
             data = self.create_files(root)
 
@@ -665,7 +665,7 @@ class DatabaseTests(DatabaseTestBase):
                 )
             )
             db = Database(
-                root, hb_root, [Spec001, Spec002], exporters=exporters
+                root, staging, [Spec001, Spec002], exporters=exporters
             )
 
             db.update().create().export()
@@ -717,8 +717,8 @@ class DatabaseTests(DatabaseTestBase):
 
     def test_export_local_disk(self):
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound')
+            os.makedirs(staging)
             Spec001, Spec002, _ = self.get_specifications()
             self.create_files(root)
 
@@ -727,14 +727,14 @@ class DatabaseTests(DatabaseTestBase):
             exporters = dict(local_disk=dict(target_directory=target))
 
             db = Database(
-                root, hb_root, [Spec001, Spec002], exporters=exporters
+                root, staging, [Spec001, Spec002], exporters=exporters
             )
 
             db.update().create()
             self.assertEqual(len(os.listdir(target)), 0)
             db.export()
 
-            expected = hbt.directory_to_dataframe(hb_root).filepath
+            expected = hbt.directory_to_dataframe(staging).filepath
             mask = expected \
                 .apply(lambda x: re.search('/(asset|file|content)', x)) \
                 .astype(bool)
@@ -754,28 +754,28 @@ class DatabaseTests(DatabaseTestBase):
     def test_search(self):
         Spec001, Spec002, BadSpec = self.get_specifications()
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound')
+            os.makedirs(staging)
 
             root = Path(root, 'projects')
             os.makedirs(root)
 
             self.create_files(root)
-            db = Database(root, hb_root, [Spec001, Spec002])
+            db = Database(root, staging, [Spec001, Spec002])
             db.update()
             db.search('SELECT * FROM data WHERE version == 3')
 
     # WEBHOOKS
     def test_call_webhooks(self):
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound').as_posix()
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound').as_posix()
+            os.makedirs(staging)
             spec_file = self.write_spec_file(root)
             self.create_files(root)
 
             config = dict(
                 root_directory=root,
-                hidebound_directory=hb_root,
+                staging_directory=staging,
                 specification_files=[spec_file],
                 include_regex='foo',
                 exclude_regex='bar',
@@ -820,8 +820,8 @@ class DatabaseTests(DatabaseTestBase):
 class DatabaseDaskTests(DatabaseTestBase):
     def test_update_dask(self):
         with TemporaryDirectory() as root:
-            hb_root = Path(root, 'hidebound')
-            os.makedirs(hb_root)
+            staging = Path(root, 'hidebound')
+            os.makedirs(staging)
             Spec001, Spec002, BadSpec = self.get_specifications()
 
             expected = self.create_files(root).filepath\
@@ -829,7 +829,7 @@ class DatabaseDaskTests(DatabaseTestBase):
             expected = sorted(expected)
 
             data = Database(
-                root, hb_root, [Spec001, Spec002],
+                root, staging, [Spec001, Spec002],
                 dask_enabled=True, dask_workers=2,
             ).update().data
             result = data.filepath.tolist()

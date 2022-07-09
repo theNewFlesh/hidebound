@@ -45,13 +45,13 @@ class LocalDiskExporterTests(unittest.TestCase):
             self.assertIsInstance(result, LocalDiskExporter)
             self.assertTrue(Path(config['target_directory']).is_dir())
 
-    def setup_hidebound_directory(self, root):
+    def setup_staging_directory(self, root):
         now = hbt.time_string()
 
         # create paths
-        hb_root = Path(root, 'hidebound')
-        content = Path(hb_root, 'content')
-        meta_root = Path(hb_root, 'metadata')
+        staging = Path(root, 'hidebound')
+        content = Path(staging, 'content')
+        meta_root = Path(staging, 'metadata')
         file_meta = Path(meta_root, 'file')
         asset_meta = Path(meta_root, 'asset')
         asset_chunk = Path(
@@ -62,7 +62,7 @@ class LocalDiskExporterTests(unittest.TestCase):
         )
 
         # add dummy config
-        config = Path(hb_root, 'config')
+        config = Path(staging, 'config')
         os.makedirs(config)
         with open(Path(config, 'hidbound_config.json'), 'w') as f:
             json.dump({'foo': 'bar'}, f)
@@ -151,20 +151,20 @@ class LocalDiskExporterTests(unittest.TestCase):
         # write content
         data.apply(lambda x: hbt.write_json({}, x['filepath']), axis=1)
 
-        return hb_root
+        return staging
 
     def test_export(self):
         with TemporaryDirectory() as root:
             config = self.get_config(root)
-            hb_root = self.setup_hidebound_directory(root)
+            staging = self.setup_staging_directory(root)
             exp = LocalDiskExporter.from_config(config)
 
             target = config['target_directory']
             self.assertEqual(len(os.listdir(target)), 0)
 
-            exp.export(hb_root)
+            exp.export(staging)
 
-            expected = hbt.directory_to_dataframe(hb_root)
+            expected = hbt.directory_to_dataframe(staging)
             mask = expected.filepath \
                 .apply(lambda x: re.search('/(content|metadata)', x)) \
                 .astype(bool)
@@ -182,7 +182,7 @@ class LocalDiskExporterTests(unittest.TestCase):
             self.assertEqual(result, expected)
 
             # idempotency
-            LocalDiskExporter.from_config(config).export(hb_root)
+            LocalDiskExporter.from_config(config).export(staging)
             result = hbt.directory_to_dataframe(target).filepath \
                 .apply(lambda x: re.sub('.*/target/', '', x)) \
                 .tolist()

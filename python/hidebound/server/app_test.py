@@ -18,8 +18,8 @@ class AppTests(DatabaseTestBase):
         # setup files and dirs
         self.tempdir = TemporaryDirectory()
         temp = self.tempdir.name
-        self.hb_root = Path(temp, 'hidebound').as_posix()
-        os.makedirs(self.hb_root)
+        self.staging = Path(temp, 'hidebound').as_posix()
+        os.makedirs(self.staging)
 
         self.root = Path(temp, 'projects').as_posix()
         os.makedirs(self.root)

@@ -1,5 +1,5 @@
 root_directory: /tmp/mnt/ingress
-hidebound_directory: /tmp/mnt/hidebound
+staging_directory: /tmp/mnt/hidebound
 include_regex: ""
 exclude_regex: "\\.DS_Store"
 write_mode: copy

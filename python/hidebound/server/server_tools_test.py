@@ -133,7 +133,7 @@ def test_request(env, extension, config, client):
     url = 'http://127.0.0.1/api/initialize'
     params = dict(
         root_directory=config['root_directory'],
-        hidebound_directory=config['hidebound_directory'],
+        staging_directory=config['staging_directory'],
         specification_files=config['specification_files'],
     )
     result = hst.request(store, url, params, client)

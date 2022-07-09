@@ -33,7 +33,7 @@ base:
     FLASK_RUN_HOST: 0.0.0.0
     REPO_ENV:
     HIDEBOUND_ROOT_DIRECTORY: /mnt/storage/ingress
-    HIDEBOUND_HIDEBOUND_DIRECTORY: /mnt/storage/hidebound
+    HIDEBOUND_STAGING_DIRECTORY: /mnt/storage/hidebound
     HIDEBOUND_INCLUDE_REGEX: ""
     HIDEBOUND_EXCLUDE_REGEX: "\\\\.DS_Store"
     HIDEBOUND_WRITE_MODE: move

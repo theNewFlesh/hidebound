@@ -637,7 +637,7 @@ Here is a full example config with comments:
 .. code:: yaml
 
     root_directory: /mnt/storage/projects                        # where hb looks for assets
-    hidebound_directory: /mnt/storage/hidebound                  # hb staging directory
+    staging_directory: /mnt/storage/hidebound                  # hb staging directory
     specification_files:                                         # list of spec files
       - /mnt/storage/specs/image_specs.py
       - /mnt/storage/specs/video_specs.py

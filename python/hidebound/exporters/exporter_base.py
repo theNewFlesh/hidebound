@@ -43,7 +43,7 @@ class ExporterBase:
         '''
         self._metadata_types = metadata_types
 
-    def _enforce_directory_structure(self, hidebound_dir):
+    def _enforce_directory_structure(self, staging_dir):
         # type: (Union[str, Path]) -> None
         '''
         Ensure the following directory exist under given hidebound directory.
@@ -55,13 +55,13 @@ class ExporterBase:
             * metadata/file-chunk
 
         Args:
-            hidebound_dir (Path or str): Hidebound directory.
+            staging_dir (Path or str): Hidebound directory.
 
         Raises:
             FileNotFoundError: If any of the directories have not been found.
         '''
-        data = Path(hidebound_dir, 'content')
-        meta = Path(hidebound_dir, 'metadata')
+        data = Path(staging_dir, 'content')
+        meta = Path(staging_dir, 'metadata')
         asset_dir = Path(meta, 'asset')
         file_dir = Path(meta, 'file')
         asset_chunk = Path(meta, 'asset-chunk')
@@ -75,7 +75,7 @@ class ExporterBase:
 
     def export(
         self,
-        hidebound_dir,  # type: Union[str, Path]
+        staging_dir,  # type: Union[str, Path]
         logger=None  # type: Optional[Union[DummyLogger, ProgressLogger]]
     ):
         # type: (...) -> None
@@ -83,23 +83,23 @@ class ExporterBase:
         Exports data within given hidebound directory.
 
         Args:
-            hidebound_dir (Path or str): Hidebound directory.
+            staging_dir (Path or str): Hidebound directory.
             logger (object, optional): Progress logger. Default: None.
         '''
         # set logger
         if not isinstance(logger, ProgressLogger):
             logger = DummyLogger()
 
-        self._enforce_directory_structure(hidebound_dir)
+        self._enforce_directory_structure(staging_dir)
 
-        hidebound_dir = Path(hidebound_dir).as_posix()
-        data = hbt.directory_to_dataframe(hidebound_dir)
+        staging_dir = Path(staging_dir).as_posix()
+        data = hbt.directory_to_dataframe(staging_dir)
         data['metadata'] = None
 
         total = 1 + len(self._metadata_types)
 
         # export content
-        regex = f'{hidebound_dir}/metadata/file/'
+        regex = f'{staging_dir}/metadata/file/'
         mask = data.filepath.apply(lambda x: re.search(regex, x)).astype(bool)
         data[mask].filepath.apply(hbt.read_json).apply(self._export_content)
         logger.info('exporter: export content', step=1, total=total)
@@ -112,7 +112,7 @@ class ExporterBase:
             'file-chunk': self._export_file_chunk,
         }
         for i, mtype in enumerate(self._metadata_types):
-            regex = f'{hidebound_dir}/metadata/{mtype}/'
+            regex = f'{staging_dir}/metadata/{mtype}/'
             mask = data.filepath.apply(lambda x: re.search(regex, x)).astype(bool)
             data[mask].filepath.apply(hbt.read_json).apply(lut[mtype])
             logger.info(f'exporter: export {mtype}', step=i + 1, total=total)

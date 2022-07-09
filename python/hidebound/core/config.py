@@ -91,8 +91,8 @@ class Config(Model):
 
     Attributes:
         root_directory (str or Path): Root directory to recurse.
-        hidebound_directory (str or Path): Directory where hidebound data will
-            be saved.
+        staging_directory (str or Path): Directory where hidebound data will
+            be staged.
         specification_files (list[str], optional): List of asset specification
             files. Default: [].
         include_regex (str, optional): Include filenames that match this regex.
@@ -107,7 +107,7 @@ class Config(Model):
     root_directory = StringType(
         required=True, validators=[vd.is_directory]
     )  # type: StringType
-    hidebound_directory = StringType(
+    staging_directory = StringType(
         required=True, validators=[vd.is_directory, vd.is_hidebound_directory]
     )  # type: StringType
     specification_files = ListType(

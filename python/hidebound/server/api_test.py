@@ -11,7 +11,7 @@ import numpy as np
 def test_initialize(env, extension, config, client):
     conf = dict(
         root_directory=config['root_directory'],
-        hidebound_directory=config['hidebound_directory'],
+        staging_directory=config['staging_directory'],
         specification_files=config['specification_files'],
     )
     result = client.post('/api/initialize', json=json.dumps(conf))
@@ -37,7 +37,7 @@ def test_initialize_bad_config_type(env, extension, config, client):
 def test_initialize_bad_config(env, extension, config, client):
     conf = dict(
         root_directory='/foo/bar',
-        hidebound_directory=config['hidebound_directory'],
+        staging_directory=config['staging_directory'],
         specification_files=config['specification_files'],
     )
     result = client.post('/api/initialize', json=json.dumps(conf))
@@ -50,8 +50,8 @@ def test_initialize_bad_config(env, extension, config, client):
 def test_create(env, extension, config, client, make_files):
     client.post('/api/update')
 
-    content = Path(config['hidebound_directory'], 'content')
-    meta = Path(config['hidebound_directory'], 'metadata')
+    content = Path(config['staging_directory'], 'content')
+    meta = Path(config['staging_directory'], 'metadata')
     assert os.path.exists(content) is False
     assert os.path.exists(meta) is False
 
@@ -128,8 +128,8 @@ def test_delete(env, extension, client, config, make_files):
     client.post('/api/update')
     client.post('/api/create')
 
-    content = Path(config['hidebound_directory'], 'content')
-    meta = Path(config['hidebound_directory'], 'metadata')
+    content = Path(config['staging_directory'], 'content')
+    meta = Path(config['staging_directory'], 'metadata')
     assert os.path.exists(content)
     assert os.path.exists(meta)
 
@@ -145,8 +145,8 @@ def test_delete_no_create(env, extension, client, config, make_files):
     expected = 'Hidebound data deleted.'
     assert result == expected
 
-    data = Path(config['hidebound_directory'], 'content')
-    meta = Path(config['hidebound_directory'], 'metadata')
+    data = Path(config['staging_directory'], 'content')
+    meta = Path(config['staging_directory'], 'metadata')
     assert os.path.exists(data) is False
     assert os.path.exists(meta) is False
 
@@ -259,10 +259,10 @@ def test_workflow(env, extension, client, config, make_files):
     assert result['message'] == 'Workflow completed.'
     assert result['workflow'] == expected
 
-    data = Path(config['hidebound_directory'], 'content')
+    data = Path(config['staging_directory'], 'content')
     assert os.path.exists(data) is False
 
-    meta = Path(config['hidebound_directory'], 'metadata')
+    meta = Path(config['staging_directory'], 'metadata')
     assert os.path.exists(meta) is False
 
 
@@ -276,10 +276,10 @@ def test_workflow_create(env, extension, client, config, make_files):
     assert result['message'] == 'Workflow completed.'
     assert result['workflow'] == expected
 
-    data = Path(config['hidebound_directory'], 'content')
+    data = Path(config['staging_directory'], 'content')
     assert os.path.exists(data)
 
-    meta = Path(config['hidebound_directory'], 'metadata')
+    meta = Path(config['staging_directory'], 'metadata')
     assert os.path.exists(meta)
 
 
