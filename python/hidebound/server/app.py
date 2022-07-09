@@ -76,7 +76,7 @@ def get_app(testing=False):
     fmdb.config.git = 'https://theNewFlesh.github.io/hidebound/'
     fmdb.bind(app)
 
-    app = components.get_dash_app(app, seconds=0.2)
+    app = components.get_dash_app(app, seconds=0.8)
     return app
 
 

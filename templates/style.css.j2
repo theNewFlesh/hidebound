@@ -175,6 +175,7 @@ button:active {
     z-index: 0;
     display: flex;
     flex-direction: column;
+    position: fixed;
     padding-top: 26px;
 }
 
@@ -212,8 +213,10 @@ button:active {
 }
 
 /* Content */
-.content {
+#content {
     z-index: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
     justify-content: space-evenly;
     flex-wrap: wrap;
@@ -221,7 +224,7 @@ button:active {
     color: {{ COLOR_SCHEME['cyan2'] }};
     font-family: {{ FONT_FAMILY }};
     text-align: center;
-    overflow-x: hidden
+    overflow-x: hidden;
 }
 
 #layout {
@@ -701,10 +704,11 @@ button:active {
 #asset-graph canvas[data-id="layer0-selectbox"],
 #asset-graph canvas[data-id="layer1-drag"],
 #asset-graph canvas[data-id="layer2-node"] {
-    width: 98% !important;
-    height: 98% !important;
+    width: 100vw !important;
+    height: 100vh !important;
 }
 
 #asset-graph canvas[data-id="layer2-node"] {
     position: relative !important;
+    height: calc(100% - 36px) !important;
 }
