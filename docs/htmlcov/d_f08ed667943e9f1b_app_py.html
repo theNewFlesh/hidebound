@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Coverage for python/hidebound/server/app.py: 42%</title>
+    <title>Coverage for python/hidebound/server/app.py: 36%</title>
     <link rel="icon" sizes="32x32" href="favicon_32.png">
     <link rel="stylesheet" href="style.css" type="text/css">
     <script type="text/javascript" src="coverage_html.js" defer></script>
@@ -12,7 +12,7 @@
     <div class="content">
         <h1>
             <span class="text">Coverage for </span><b>python/hidebound/server/app.py</b>:
-            <span class="pc_cov">42%</span>
+            <span class="pc_cov">36%</span>
         </h1>
         <aside id="help_panel_wrapper">
             <input id="help_panel_state" type="checkbox">
@@ -55,8 +55,8 @@
         </aside>
         <h2>
             <span class="text">125 statements &nbsp;</span>
-            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">53<span class="text"> run</span></button>
-            <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">72<span class="text"> missing</span></button>
+            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">45<span class="text"> run</span></button>
+            <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">80<span class="text"> missing</span></button>
             <button type="button" class="exc show_exc button_toggle_exc" value="exc" data-shortcut="x" title="Toggle lines excluded">1<span class="text"> excluded</span></button>
         </h2>
         <p class="text">
@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="d_f08ed667943e9f1b_components_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io">coverage.py v6.4.1</a>,
-            created at 2022-07-08 22:45 +0000
+            created at 2022-07-09 01:09 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"/>
@@ -158,7 +158,7 @@
     <p class="run"><span class="n"><a id="t76" href="#t76">76</a></span><span class="t">    <span class="nam">fmdb</span><span class="op">.</span><span class="nam">config</span><span class="op">.</span><span class="nam">git</span> <span class="op">=</span> <span class="str">'https://theNewFlesh.github.io/hidebound/'</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t77" href="#t77">77</a></span><span class="t">    <span class="nam">fmdb</span><span class="op">.</span><span class="nam">bind</span><span class="op">(</span><span class="nam">app</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t78" href="#t78">78</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t79" href="#t79">79</a></span><span class="t">    <span class="nam">app</span> <span class="op">=</span> <span class="nam">components</span><span class="op">.</span><span class="nam">get_dash_app</span><span class="op">(</span><span class="nam">app</span><span class="op">,</span> <span class="nam">seconds</span><span class="op">=</span><span class="num">0.2</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t79" href="#t79">79</a></span><span class="t">    <span class="nam">app</span> <span class="op">=</span> <span class="nam">components</span><span class="op">.</span><span class="nam">get_dash_app</span><span class="op">(</span><span class="nam">app</span><span class="op">,</span> <span class="nam">seconds</span><span class="op">=</span><span class="num">0.8</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t80" href="#t80">80</a></span><span class="t">    <span class="key">return</span> <span class="nam">app</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t81" href="#t81">81</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t82" href="#t82">82</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
@@ -266,7 +266,7 @@
     <p class="pln"><span class="n"><a id="t184" href="#t184">184</a></span><span class="t">    <span class="com">#     except Exception as error:</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t185" href="#t185">185</a></span><span class="t">    <span class="com">#         store['config_error'] = hst.error_to_response(error).json</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t186" href="#t186">186</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t187" href="#t187">187</a></span><span class="t">    <span class="key">return</span> <span class="nam">store</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t187" href="#t187">187</a></span><span class="t">    <span class="key">return</span> <span class="nam">store</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t188" href="#t188">188</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t189" href="#t189">189</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t190" href="#t190">190</a></span><span class="t"><span class="op">@</span><span class="nam">APP</span><span class="op">.</span><span class="nam">callback</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
@@ -294,9 +294,9 @@
     <p class="mis show_mis"><span class="n"><a id="t212" href="#t212">212</a></span><span class="t">    <span class="key">if</span> <span class="nam">data</span> <span class="key">is</span> <span class="key">None</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t213" href="#t213">213</a></span><span class="t">        <span class="key">raise</span> <span class="nam">PreventUpdate</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t214" href="#t214">214</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t215" href="#t215">215</a></span><span class="t">    <span class="key">if</span> <span class="str">'error'</span> <span class="key">in</span> <span class="nam">data</span><span class="op">.</span><span class="nam">keys</span><span class="op">(</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t216" href="#t216">216</a></span><span class="t">        <span class="key">return</span> <span class="nam">components</span><span class="op">.</span><span class="nam">get_key_value_card</span><span class="op">(</span><span class="nam">data</span><span class="op">,</span> <span class="nam">header</span><span class="op">=</span><span class="str">'error'</span><span class="op">,</span> <span class="nam">id_</span><span class="op">=</span><span class="str">'error'</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t217" href="#t217">217</a></span><span class="t">    <span class="key">return</span> <span class="nam">components</span><span class="op">.</span><span class="nam">get_datatable</span><span class="op">(</span><span class="nam">data</span><span class="op">[</span><span class="str">'response'</span><span class="op">]</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t215" href="#t215">215</a></span><span class="t">    <span class="key">if</span> <span class="str">'error'</span> <span class="key">in</span> <span class="nam">data</span><span class="op">.</span><span class="nam">keys</span><span class="op">(</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t216" href="#t216">216</a></span><span class="t">        <span class="key">return</span> <span class="nam">components</span><span class="op">.</span><span class="nam">get_key_value_card</span><span class="op">(</span><span class="nam">data</span><span class="op">,</span> <span class="nam">header</span><span class="op">=</span><span class="str">'error'</span><span class="op">,</span> <span class="nam">id_</span><span class="op">=</span><span class="str">'error'</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t217" href="#t217">217</a></span><span class="t">    <span class="key">return</span> <span class="nam">components</span><span class="op">.</span><span class="nam">get_datatable</span><span class="op">(</span><span class="nam">data</span><span class="op">[</span><span class="str">'response'</span><span class="op">]</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t218" href="#t218">218</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t219" href="#t219">219</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t220" href="#t220">220</a></span><span class="t"><span class="op">@</span><span class="nam">APP</span><span class="op">.</span><span class="nam">callback</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
@@ -346,7 +346,7 @@
     <p class="mis show_mis"><span class="n"><a id="t264" href="#t264">264</a></span><span class="t">        <span class="key">return</span> <span class="nam">dcc</span><span class="op">.</span><span class="nam">Location</span><span class="op">(</span><span class="nam">id</span><span class="op">=</span><span class="str">'api'</span><span class="op">,</span> <span class="nam">pathname</span><span class="op">=</span><span class="str">'/api'</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t265" href="#t265">265</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t266" href="#t266">266</a></span><span class="t">    <span class="key">elif</span> <span class="nam">tab</span> <span class="op">==</span> <span class="str">'docs'</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t267" href="#t267">267</a></span><span class="t">        <span class="key">return</span> <span class="nam">dcc</span><span class="op">.</span><span class="nam">Location</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t267" href="#t267">267</a></span><span class="t">        <span class="key">return</span> <span class="nam">dcc</span><span class="op">.</span><span class="nam">Location</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t268" href="#t268">268</a></span><span class="t">            <span class="nam">id</span><span class="op">=</span><span class="str">'docs'</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t269" href="#t269">269</a></span><span class="t">            <span class="nam">href</span><span class="op">=</span><span class="str">'https://thenewflesh.github.io/hidebound'</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t270" href="#t270">270</a></span><span class="t">        <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -390,9 +390,9 @@
     <p class="pln"><span class="n"><a id="t308" href="#t308">308</a></span><span class="t">        <span class="op">]</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t309" href="#t309">309</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t310" href="#t310">310</a></span><span class="t">    <span class="nam">msg</span> <span class="op">=</span> <span class="str">'on_config_card_update called with'</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t311" href="#t311">311</a></span><span class="t">    <span class="nam">msg</span> <span class="op">+=</span> <span class="str">f'config: {config} and error: {str(error)[:50]}'</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t312" href="#t312">312</a></span><span class="t">    <span class="nam">APP</span><span class="op">.</span><span class="nam">logger</span><span class="op">.</span><span class="nam">debug</span><span class="op">(</span><span class="nam">msg</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t313" href="#t313">313</a></span><span class="t">    <span class="key">return</span> <span class="nam">output</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t311" href="#t311">311</a></span><span class="t">    <span class="nam">msg</span> <span class="op">+=</span> <span class="str">f'config: {config} and error: {str(error)[:50]}'</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t312" href="#t312">312</a></span><span class="t">    <span class="nam">APP</span><span class="op">.</span><span class="nam">logger</span><span class="op">.</span><span class="nam">debug</span><span class="op">(</span><span class="nam">msg</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t313" href="#t313">313</a></span><span class="t">    <span class="key">return</span> <span class="nam">output</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t314" href="#t314">314</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t315" href="#t315">315</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t316" href="#t316">316</a></span><span class="t"><span class="op">@</span><span class="nam">APP</span><span class="op">.</span><span class="nam">callback</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
@@ -426,7 +426,7 @@
             <a id="nextFileLink" class="nav" href="d_f08ed667943e9f1b_components_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io">coverage.py v6.4.1</a>,
-            created at 2022-07-08 22:45 +0000
+            created at 2022-07-09 01:09 +0000
         </p>
     </div>
 </footer>
