@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="d_a39d598ee019e26d_database_tools_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io">coverage.py v6.4.1</a>,
-            created at 2022-07-09 18:32 +0000
+            created at 2022-07-11 20:32 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"/>
@@ -150,7 +150,7 @@
     <p class="run"><span class="n"><a id="t68" href="#t68">68</a></span><span class="t">        <span class="nam">config</span><span class="op">[</span><span class="str">'specifications'</span><span class="op">]</span> <span class="op">=</span> <span class="nam">specs</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t69" href="#t69">69</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t70" href="#t70">70</a></span><span class="t">        <span class="key">return</span> <span class="nam">Database</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t71" href="#t71">71</a></span><span class="t">            <span class="nam">config</span><span class="op">[</span><span class="str">'root_directory'</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t71" href="#t71">71</a></span><span class="t">            <span class="nam">config</span><span class="op">[</span><span class="str">'ingress_directory'</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t72" href="#t72">72</a></span><span class="t">            <span class="nam">config</span><span class="op">[</span><span class="str">'staging_directory'</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t73" href="#t73">73</a></span><span class="t">            <span class="nam">specifications</span><span class="op">=</span><span class="nam">specs</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t74" href="#t74">74</a></span><span class="t">            <span class="nam">include_regex</span><span class="op">=</span><span class="nam">config</span><span class="op">[</span><span class="str">'include_regex'</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
@@ -196,23 +196,23 @@
     <p class="pln"><span class="n"><a id="t114" href="#t114">114</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t115" href="#t115">115</a></span><span class="t">    <span class="key">def</span> <span class="nam">__init__</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t116" href="#t116">116</a></span><span class="t">        <span class="nam">self</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t117" href="#t117">117</a></span><span class="t">        <span class="nam">root_dir</span><span class="op">,</span>                     <span class="com"># type: Union[str, Path]</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t118" href="#t118">118</a></span><span class="t">        <span class="nam">staging_dir</span><span class="op">,</span>                <span class="com"># type: Union[str, Path]</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t117" href="#t117">117</a></span><span class="t">        <span class="nam">ingress_dir</span><span class="op">,</span>                  <span class="com"># type: Union[str, Path]</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t118" href="#t118">118</a></span><span class="t">        <span class="nam">staging_dir</span><span class="op">,</span>                  <span class="com"># type: Union[str, Path]</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t119" href="#t119">119</a></span><span class="t">        <span class="nam">specifications</span><span class="op">=</span><span class="op">[</span><span class="op">]</span><span class="op">,</span>            <span class="com"># type: List[SpecificationBase]</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t120" href="#t120">120</a></span><span class="t">        <span class="nam">include_regex</span><span class="op">=</span><span class="str">''</span><span class="op">,</span>             <span class="com"># type: str</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t121" href="#t121">121</a></span><span class="t">        <span class="nam">exclude_regex</span><span class="op">=</span><span class="str">r'\.DS_Store'</span><span class="op">,</span>  <span class="com"># type: str</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t122" href="#t122">122</a></span><span class="t">        <span class="nam">write_mode</span><span class="op">=</span><span class="str">'copy'</span><span class="op">,</span>            <span class="com"># type: str</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t123" href="#t123">123</a></span><span class="t">        <span class="nam">exporters</span><span class="op">=</span><span class="op">{</span><span class="op">}</span><span class="op">,</span>                 <span class="com"># type: Dict[str, Any]</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t124" href="#t124">124</a></span><span class="t">        <span class="nam">webhooks</span><span class="op">=</span><span class="op">[</span><span class="op">]</span><span class="op">,</span>                  <span class="com"># type: List[Dict]</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t125" href="#t125">125</a></span><span class="t">        <span class="nam">dask_enabled</span><span class="op">=</span><span class="key">False</span><span class="op">,</span>            <span class="com"># type: bool</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t126" href="#t126">126</a></span><span class="t">        <span class="nam">dask_workers</span><span class="op">=</span><span class="num">8</span><span class="op">,</span>             <span class="com"># type: int</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t125" href="#t125">125</a></span><span class="t">        <span class="nam">dask_enabled</span><span class="op">=</span><span class="key">False</span><span class="op">,</span>           <span class="com"># type: bool</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t126" href="#t126">126</a></span><span class="t">        <span class="nam">dask_workers</span><span class="op">=</span><span class="num">8</span><span class="op">,</span>               <span class="com"># type: int</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t127" href="#t127">127</a></span><span class="t">    <span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t128" href="#t128">128</a></span><span class="t">        <span class="com"># type: (...) -> None</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t129" href="#t129">129</a></span><span class="t">        <span class="str">r'''</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t130" href="#t130">130</a></span><span class="t"><span class="str">        Creates an instance of Database but does not populate it with data.</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t131" href="#t131">131</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t132" href="#t132">132</a></span><span class="t"><span class="str">        Args:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t133" href="#t133">133</a></span><span class="t"><span class="str">            root_dir (str or Path): Root directory to recurse.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t133" href="#t133">133</a></span><span class="t"><span class="str">            ingress_dir (str or Path): Root directory to recurse.</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t134" href="#t134">134</a></span><span class="t"><span class="str">            staging_dir (str or Path): Directory where hidebound data will be</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t135" href="#t135">135</a></span><span class="t"><span class="str">                staged.</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t136" href="#t136">136</a></span><span class="t"><span class="str">            specifications (list[SpecificationBase], optional): List of asset</span>&nbsp;</span><span class="r"></span></p>
@@ -269,7 +269,7 @@
     <p class="run"><span class="n"><a id="t187" href="#t187">187</a></span><span class="t">            <span class="key">raise</span> <span class="nam">TypeError</span><span class="op">(</span><span class="nam">msg</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t188" href="#t188">188</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t189" href="#t189">189</a></span><span class="t">        <span class="com"># validate root dir</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t190" href="#t190">190</a></span><span class="t">        <span class="nam">root</span> <span class="op">=</span> <span class="nam">Path</span><span class="op">(</span><span class="nam">root_dir</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t190" href="#t190">190</a></span><span class="t">        <span class="nam">root</span> <span class="op">=</span> <span class="nam">Path</span><span class="op">(</span><span class="nam">ingress_dir</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t191" href="#t191">191</a></span><span class="t">        <span class="key">if</span> <span class="key">not</span> <span class="nam">root</span><span class="op">.</span><span class="nam">is_dir</span><span class="op">(</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t192" href="#t192">192</a></span><span class="t">            <span class="nam">msg</span> <span class="op">=</span> <span class="str">f'{root} is not a directory or does not exist.'</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t193" href="#t193">193</a></span><span class="t">            <span class="nam">self</span><span class="op">.</span><span class="nam">_logger</span><span class="op">.</span><span class="nam">error</span><span class="op">(</span><span class="nam">msg</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -629,7 +629,7 @@
             <a id="nextFileLink" class="nav" href="d_a39d598ee019e26d_database_tools_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io">coverage.py v6.4.1</a>,
-            created at 2022-07-09 18:32 +0000
+            created at 2022-07-11 20:32 +0000
         </p>
     </div>
 </footer>

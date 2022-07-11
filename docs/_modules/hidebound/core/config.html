@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.23.2
+                0.23.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -176,7 +176,7 @@
 <span class="sd">    A class for validating configurations supplied to Database.</span>
 
 <span class="sd">    Attributes:</span>
-<span class="sd">        root_directory (str or Path): Root directory to recurse.</span>
+<span class="sd">        ingress_directory (str or Path): Root directory to recurse.</span>
 <span class="sd">        staging_directory (str or Path): Directory where hidebound data will be</span>
 <span class="sd">            staged.</span>
 <span class="sd">        specification_files (list[str], optional): List of asset specification</span>
@@ -190,7 +190,7 @@
 <span class="sd">        exporters (dict, optional): Dictionary of exporter configs, where the</span>
 <span class="sd">            key is the exporter name and the value is its config. Default: {}.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">root_directory</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
+    <span class="n">ingress_directory</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_directory</span><span class="p">]</span>
     <span class="p">)</span>  <span class="c1"># type: StringType</span>
     <span class="n">staging_directory</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>

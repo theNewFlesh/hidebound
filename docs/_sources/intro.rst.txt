@@ -568,7 +568,7 @@ Hidebound configs consist of three main sections:
 Base
 ~~~~
 
--  root\_directory - the directory hidebound parses for assets that
+-  ingress\_directory - the directory hidebound parses for assets that
    comprise its database
 -  staging\_directory - the staging directory valid assets are created
    in
@@ -609,7 +609,7 @@ config file.
 +===================================+==========+==========================================+
 | HIDEBOUND\_CONFIG\_FILEPATH       | str      | Entire Hidebound config file             |
 +-----------------------------------+----------+------------------------------------------+
-| HIDEBOUND\_ROOT\_DIRECTORY        | str      | root\_directory parameter of config      |
+| HIDEBOUND\_INGRESS\_DIRECTORY     | str      | ingress\_directory parameter of config   |
 +-----------------------------------+----------+------------------------------------------+
 | HIDEBOUND\_STAGING\_DIRECTORY     | str      | staging\_directory parameter of config   |
 +-----------------------------------+----------+------------------------------------------+
@@ -636,8 +636,8 @@ Here is a full example config with comments:
 
 .. code:: yaml
 
-    root_directory: /mnt/storage/projects                        # where hb looks for assets
-    staging_directory: /mnt/storage/hidebound                  # hb staging directory
+    ingress_directory: /mnt/storage/projects                     # where hb looks for assets
+    staging_directory: /mnt/storage/hidebound                    # hb staging directory
     specification_files:                                         # list of spec files
       - /mnt/storage/specs/image_specs.py
       - /mnt/storage/specs/video_specs.py
