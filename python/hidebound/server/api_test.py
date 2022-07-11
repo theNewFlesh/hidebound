@@ -42,7 +42,7 @@ def test_initialize_bad_config(env, extension, config, client):
     )
     result = client.post('/api/initialize', json=json.dumps(conf))
     result = result.json['message']
-    expected = '/foo/bar is not a directory(.|\n)*or does not exist.'
+    expected = '/foo/bar is not a (.|\n)*directory or does not exist.'
     assert re.search(expected, result) is not None
 
 
