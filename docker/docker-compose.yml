@@ -16,7 +16,6 @@ services:
     userns_mode: "host"
     user: ubuntu
     env_file:
-      - env
       - dev-env
     volumes:
       - ../:/home/ubuntu/hidebound
