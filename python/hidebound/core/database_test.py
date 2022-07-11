@@ -50,7 +50,7 @@ class DatabaseTests(DatabaseTestBase):
             spec_file = self.write_spec_file(root)
 
             config = dict(
-                root_directory=root,
+                ingress_directory=root,
                 staging_directory=staging,
                 specification_files=[spec_file],
                 include_regex='foo',
@@ -73,7 +73,7 @@ class DatabaseTests(DatabaseTestBase):
             spec_file = self.write_spec_file(root)
 
             config = dict(
-                root_directory=root,
+                ingress_directory=root,
                 staging_directory=staging,
                 specification_files=[spec_file],
                 include_regex='foo',
@@ -94,7 +94,7 @@ class DatabaseTests(DatabaseTestBase):
             spec_file = self.write_spec_file(root)
 
             config = dict(
-                root_directory=root,
+                ingress_directory=root,
                 staging_directory=staging,
                 specification_files=[spec_file],
                 include_regex='foo',
@@ -774,7 +774,7 @@ class DatabaseTests(DatabaseTestBase):
             self.create_files(root)
 
             config = dict(
-                root_directory=root,
+                ingress_directory=root,
                 staging_directory=staging,
                 specification_files=[spec_file],
                 include_regex='foo',

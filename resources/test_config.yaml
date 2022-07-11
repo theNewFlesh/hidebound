@@ -1,4 +1,4 @@
-root_directory: /tmp/mnt/ingress
+ingress_directory: /tmp/mnt/ingress
 staging_directory: /tmp/mnt/hidebound
 include_regex: ""
 exclude_regex: "\\.DS_Store"

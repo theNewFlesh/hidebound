@@ -90,7 +90,7 @@ class Config(Model):
     A class for validating configurations supplied to Database.
 
     Attributes:
-        root_directory (str or Path): Root directory to recurse.
+        ingress_directory (str or Path): Root directory to recurse.
         staging_directory (str or Path): Directory where hidebound data will be
             staged.
         specification_files (list[str], optional): List of asset specification
@@ -104,7 +104,7 @@ class Config(Model):
         exporters (dict, optional): Dictionary of exporter configs, where the
             key is the exporter name and the value is its config. Default: {}.
     '''
-    root_directory = StringType(
+    ingress_directory = StringType(
         required=True, validators=[vd.is_directory]
     )  # type: StringType
     staging_directory = StringType(

@@ -77,11 +77,11 @@ def test_get_config_env_vars_empty_lists(env, app, config):
 
 
 def test_get_config_filepath(env, app, config, config_yaml_file):
-    os.environ['HIDEBOUND_ROOT_DIRECTORY'] = 'foobar'
+    os.environ['HIDEBOUND_INGRESS_DIRECTORY'] = 'foobar'
     app.config.from_prefixed_env('HIDEBOUND')
     result = HideboundExtension()._get_config(app)
 
-    assert result['root_directory'] != 'foobar'
+    assert result['ingress_directory'] != 'foobar'
 
     for key, val in config.items():
         assert result[key] == val

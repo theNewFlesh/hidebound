@@ -68,7 +68,7 @@ class Database:
         config['specifications'] = specs
 
         return Database(
-            config['root_directory'],
+            config['ingress_directory'],
             config['staging_directory'],
             specifications=specs,
             include_regex=config['include_regex'],
@@ -114,23 +114,23 @@ class Database:
 
     def __init__(
         self,
-        root_dir,                     # type: Union[str, Path]
-        staging_dir,                # type: Union[str, Path]
+        ingress_dir,                  # type: Union[str, Path]
+        staging_dir,                  # type: Union[str, Path]
         specifications=[],            # type: List[SpecificationBase]
         include_regex='',             # type: str
         exclude_regex=r'\.DS_Store',  # type: str
         write_mode='copy',            # type: str
         exporters={},                 # type: Dict[str, Any]
         webhooks=[],                  # type: List[Dict]
-        dask_enabled=False,            # type: bool
-        dask_workers=8,             # type: int
+        dask_enabled=False,           # type: bool
+        dask_workers=8,               # type: int
     ):
         # type: (...) -> None
         r'''
         Creates an instance of Database but does not populate it with data.
 
         Args:
-            root_dir (str or Path): Root directory to recurse.
+            ingress_dir (str or Path): Root directory to recurse.
             staging_dir (str or Path): Directory where hidebound data will be
                 staged.
             specifications (list[SpecificationBase], optional): List of asset
@@ -187,7 +187,7 @@ class Database:
             raise TypeError(msg)
 
         # validate root dir
-        root = Path(root_dir)
+        root = Path(ingress_dir)
         if not root.is_dir():
             msg = f'{root} is not a directory or does not exist.'
             self._logger.error(msg)

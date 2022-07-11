@@ -10,7 +10,7 @@ import numpy as np
 # INITIALIZE--------------------------------------------------------------------
 def test_initialize(env, extension, config, client):
     conf = dict(
-        root_directory=config['root_directory'],
+        ingress_directory=config['ingress_directory'],
         staging_directory=config['staging_directory'],
         specification_files=config['specification_files'],
     )
@@ -36,7 +36,7 @@ def test_initialize_bad_config_type(env, extension, config, client):
 
 def test_initialize_bad_config(env, extension, config, client):
     conf = dict(
-        root_directory='/foo/bar',
+        ingress_directory='/foo/bar',
         staging_directory=config['staging_directory'],
         specification_files=config['specification_files'],
     )

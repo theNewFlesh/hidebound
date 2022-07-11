@@ -156,7 +156,7 @@ class ConfigTests(unittest.TestCase):
         self.staging = Path(temp, 'hidebound').as_posix()
         self.target_dir = Path(temp, 'target').as_posix()
         self.config = dict(
-            root_directory=self.root,
+            ingress_directory=self.root,
             staging_directory=self.staging,
             specification_files=[],
             include_regex='foo',
@@ -179,7 +179,7 @@ class ConfigTests(unittest.TestCase):
             self.set_data(temp)
             os.makedirs(self.staging)
 
-            expected = 'root_directory.*is not a directory or does not exist'
+            expected = 'ingress_directory.*is not a directory or does not exist'
             with self.assertRaisesRegex(DataError, expected):
                 cfg.Config(self.config).validate()
 

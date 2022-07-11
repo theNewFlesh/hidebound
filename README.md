@@ -431,7 +431,7 @@ Hidebound is configured via a configuration file or environment variables.
 Hidebound configs consist of three main sections:
 
 ### Base
-* root_directory - the directory hidebound parses for assets that comprise its database
+* ingress_directory - the directory hidebound parses for assets that comprise its database
 * staging_directory - the staging directory valid assets are created in
 * specification_files - a list of python specification files
 * include_regex - filepaths in the root that match this are included in the database
@@ -461,8 +461,8 @@ file.
 | Variable                      | Format | Portion                                 |
 | ----------------------------- | ------ | --------------------------------------- |
 | HIDEBOUND_CONFIG_FILEPATH     | str    | Entire Hidebound config file            |
-| HIDEBOUND_ROOT_DIRECTORY      | str    | root_directory parameter of config      |
-| HIDEBOUND_STAGING_DIRECTORY | str    | staging_directory parameter of config |
+| HIDEBOUND_INGRESS_DIRECTORY   | str    | ingress_directory parameter of config   |
+| HIDEBOUND_STAGING_DIRECTORY   | str    | staging_directory parameter of config   |
 | HIDEBOUND_SPECIFICATION_FILES | yaml   | specification_files section of config   |
 | HIDEBOUND_INCLUDE_REGEX       | str    | include_regex parameter of config       |
 | HIDEBOUND_EXCLUDE_REGEX       | str    | exclude_regex parameter of config       |
@@ -476,8 +476,8 @@ file.
 
 Here is a full example config with comments:
 ```yaml
-root_directory: /mnt/storage/projects                        # where hb looks for assets
-staging_directory: /mnt/storage/hidebound                  # hb staging directory
+ingress_directory: /mnt/storage/projects                     # where hb looks for assets
+staging_directory: /mnt/storage/hidebound                    # hb staging directory
 specification_files:                                         # list of spec files
   - /mnt/storage/specs/image_specs.py
   - /mnt/storage/specs/video_specs.py

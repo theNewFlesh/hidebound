@@ -84,7 +84,7 @@ class HideboundExtension:
             dict: Database config.
         '''
         return dict(
-            root_directory=app.config.get('ROOT_DIRECTORY'),
+            ingress_directory=app.config.get('INGRESS_DIRECTORY'),
             staging_directory=app.config.get('STAGING_DIRECTORY'),
             include_regex=app.config.get('INCLUDE_REGEX', ''),
             exclude_regex=app.config.get('EXCLUDE_REGEX', r'\.DS_Store'),

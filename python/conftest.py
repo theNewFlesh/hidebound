@@ -83,7 +83,7 @@ def make_dirs(temp_dir):
 
 @pytest.fixture()
 def make_files(temp_dir, config, make_dirs):
-    DatabaseTestBase().create_files(config['root_directory'])
+    DatabaseTestBase().create_files(config['ingress_directory'])
 
 
 @pytest.fixture()
@@ -94,7 +94,7 @@ def config(temp_dir):
     spec = lbt.relative_path(__file__, spec).absolute().as_posix()
 
     config = dict(
-        root_directory=Path(temp_dir, 'ingress').as_posix(),
+        ingress_directory=Path(temp_dir, 'ingress').as_posix(),
         staging_directory=Path(temp_dir, 'hidebound').as_posix(),
         include_regex='',
         exclude_regex=r'\.DS_Store',
