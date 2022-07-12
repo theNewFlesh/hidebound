@@ -210,7 +210,8 @@ def get_searchbar(query=None):
         placeholder='SQL query that uses "FROM data"',
         type='text',
         autoFocus=True,
-        debounce=True
+        debounce=True,
+        n_submit=0,
     )
     dropdown = get_dropdown(['asset', 'file'])
 

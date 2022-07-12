@@ -116,6 +116,7 @@ def serve_stylesheet(stylesheet):
         Input('search-button', 'n_clicks'),
         Input('dropdown', 'value'),
         Input('query', 'value'),
+        Input('query', 'n_submit'),
     ],
     state=[State('store', 'data')],
     prevent_initial_call=True,
@@ -141,6 +142,12 @@ def on_event(*inputs):
     query = context.inputs['query.value']
     group_by_asset = context.inputs['dropdown.value'] == 'asset'
 
+    initial_query = context.inputs['query.n_submit'] == 0
+    search_ready = getattr(APP, 'search_ready', False)
+    if initial_query and not search_ready:
+        APP.search_ready = True
+        raise PreventUpdate
+
     if trigger == 'init-button':
         hst.request(store, EP.update, store.get('config', hb.config))
 
@@ -158,7 +165,8 @@ def on_event(*inputs):
         hst.request(store, EP.delete)
 
     elif trigger in ['search-button', 'query']:
-        store = hst.search(store, query, group_by_asset)
+        if APP.search_ready:
+            store = hst.search(store, query, group_by_asset)
 
     return store
 
@@ -196,7 +204,7 @@ def on_datatable_update(store):
 @APP.callback(
     Output('content', 'children'),
     [Input('tabs', 'value')],
-    [State('store', 'data')]
+    [State('store', 'data')],
 )
 def on_get_tab(tab, store):
     # type: (str, Dict) -> Union[flask.Response, List, None]
