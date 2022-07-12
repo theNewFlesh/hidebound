@@ -386,8 +386,8 @@ def get_button(title):
     return html.Button(id=f'{title}-button', children=[title], n_clicks=0)
 
 
-def get_key_value_card(data, header=None, id_='key-value-card'):
-    # type: (Union[Dict, OrderedDict], Optional[str], str) -> html.Div
+def get_key_value_card(data, header=None, id_='key-value-card', sorting=False):
+    # type: (Union[Dict, OrderedDict], Optional[str], str, bool) -> html.Div
     '''
     Creates a key-value card using the keys and values from the given data.
     One key-value pair per row.
@@ -396,6 +396,8 @@ def get_key_value_card(data, header=None, id_='key-value-card'):
         data (dict): Dictionary to be represented.
         header (str, optional): Name of header. Default: None.
         id_ (str): Name of id property. Default: "key-value-card".
+        sorting (bool, optional): Whether to sort the output by key.
+            Default: False.
 
     Returns:
         Div: Card with key-value child elements.
@@ -415,7 +417,10 @@ def get_key_value_card(data, header=None, id_='key-value-card'):
         )
         children.append(header)
 
-    for i, (k, v) in enumerate(data.items()):
+    items = data.items()  # type: Any
+    if sorting:
+        items = sorted(items)
+    for i, (k, v) in enumerate(items):
         even = i % 2 == 0
         klass = 'odd'
         if even:
