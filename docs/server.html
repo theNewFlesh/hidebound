@@ -31,7 +31,7 @@
             <a href="index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.23.3
+                0.24.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -617,7 +617,7 @@ throw errors in each tab.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="hidebound.server.components.get_key_value_card">
-<span class="sig-prename descclassname"><span class="pre">hidebound.server.components.</span></span><span class="sig-name descname"><span class="pre">get_key_value_card</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'key-value-card'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dash.html.Div.Div</span></span></span><a class="reference internal" href="_modules/hidebound/server/components.html#get_key_value_card"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.server.components.get_key_value_card" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">hidebound.server.components.</span></span><span class="sig-name descname"><span class="pre">get_key_value_card</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">collections.OrderedDict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'key-value-card'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sorting</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dash.html.Div.Div</span></span></span><a class="reference internal" href="_modules/hidebound/server/components.html#get_key_value_card"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.server.components.get_key_value_card" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a key-value card using the keys and values from the given data.
 One key-value pair per row.</p>
 <dl class="field-list simple">
@@ -626,6 +626,8 @@ One key-value pair per row.</p>
 <li><p><strong>data</strong> (<em>dict</em>) – Dictionary to be represented.</p></li>
 <li><p><strong>header</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of header. Default: None.</p></li>
 <li><p><strong>id</strong> (<em>str</em>) – Name of id property. Default: “key-value-card”.</p></li>
+<li><p><strong>sorting</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to sort the output by key.
+Default: False.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -838,6 +840,23 @@ One key-value pair per row.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>flask.Response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hidebound.server.server_tools.format_config">
+<span class="sig-prename descclassname"><span class="pre">hidebound.server.server_tools.</span></span><span class="sig-name descname"><span class="pre">format_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OrderedDict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/hidebound/server/server_tools.html#format_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.server.server_tools.format_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Redacts credentials of config and formats it for display in component.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>dict</em>) – Configuration dictionary.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Formatted config.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>OrderedDict</p>
 </dd>
 </dl>
 </dd></dl>

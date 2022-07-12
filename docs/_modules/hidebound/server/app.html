@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.23.1
+                0.24.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -96,7 +96,6 @@
 <span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">current_app</span>
 <span class="kn">import</span> <span class="nn">flask_monitoringdashboard</span> <span class="k">as</span> <span class="nn">fmdb</span>
 
-<span class="kn">from</span> <span class="nn">hidebound.core.config</span> <span class="kn">import</span> <span class="n">Config</span>
 <span class="kn">import</span> <span class="nn">hidebound.core.tools</span> <span class="k">as</span> <span class="nn">hbt</span>
 <span class="kn">import</span> <span class="nn">hidebound.server.components</span> <span class="k">as</span> <span class="nn">components</span>
 <span class="kn">import</span> <span class="nn">hidebound.server.extensions</span> <span class="k">as</span> <span class="nn">ext</span>
@@ -202,8 +201,7 @@
         <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;search-button&#39;</span><span class="p">,</span> <span class="s1">&#39;n_clicks&#39;</span><span class="p">),</span>
         <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;dropdown&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">),</span>
         <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">),</span>
-        <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;upload&#39;</span><span class="p">,</span> <span class="s1">&#39;contents&#39;</span><span class="p">),</span>
-        <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;write-button&#39;</span><span class="p">,</span> <span class="s1">&#39;n_clicks&#39;</span><span class="p">),</span>
+        <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="s1">&#39;n_submit&#39;</span><span class="p">),</span>
     <span class="p">],</span>
     <span class="n">state</span><span class="o">=</span><span class="p">[</span><span class="n">State</span><span class="p">(</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)],</span>
     <span class="n">prevent_initial_call</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -226,9 +224,14 @@
     <span class="n">context</span> <span class="o">=</span> <span class="n">dash</span><span class="o">.</span><span class="n">callback_context</span>
     <span class="n">store</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">states</span><span class="p">[</span><span class="s1">&#39;store.data&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="p">{}</span>  <span class="c1"># type: dict</span>
     <span class="n">trigger</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">triggered_id</span>
-    <span class="n">value</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">triggered</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
     <span class="n">query</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;query.value&#39;</span><span class="p">]</span>
     <span class="n">group_by_asset</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;dropdown.value&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;asset&#39;</span>
+
+    <span class="n">initial_query</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;query.n_submit&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="n">search_ready</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">APP</span><span class="p">,</span> <span class="s1">&#39;search_ready&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">initial_query</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">search_ready</span><span class="p">:</span>
+        <span class="n">APP</span><span class="o">.</span><span class="n">search_ready</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">raise</span> <span class="n">PreventUpdate</span>
 
     <span class="k">if</span> <span class="n">trigger</span> <span class="o">==</span> <span class="s1">&#39;init-button&#39;</span><span class="p">:</span>
         <span class="n">hst</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">EP</span><span class="o">.</span><span class="n">update</span><span class="p">,</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="n">hb</span><span class="o">.</span><span class="n">config</span><span class="p">))</span>
@@ -246,29 +249,9 @@
     <span class="k">elif</span> <span class="n">trigger</span> <span class="o">==</span> <span class="s1">&#39;delete-button&#39;</span><span class="p">:</span>
         <span class="n">hst</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">EP</span><span class="o">.</span><span class="n">delete</span><span class="p">)</span>
 
-    <span class="k">elif</span> <span class="n">trigger</span> <span class="o">==</span> <span class="s1">&#39;search-button&#39;</span><span class="p">:</span>
-        <span class="n">store</span> <span class="o">=</span> <span class="n">hst</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">group_by_asset</span><span class="p">)</span>
-
-    <span class="k">elif</span> <span class="n">trigger</span> <span class="o">==</span> <span class="s1">&#39;upload&#39;</span><span class="p">:</span>
-        <span class="n">temp</span> <span class="o">=</span> <span class="s1">&#39;invalid&#39;</span>  <span class="c1"># type: Any</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">temp</span> <span class="o">=</span> <span class="n">hst</span><span class="o">.</span><span class="n">parse_json_file_content</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-            <span class="n">Config</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
-            <span class="n">store</span><span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span>
-            <span class="n">store</span><span class="p">[</span><span class="s1">&#39;config_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
-            <span class="n">store</span><span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span>
-            <span class="n">store</span><span class="p">[</span><span class="s1">&#39;config_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hst</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>  <span class="c1"># type: ignore</span>
-
-    <span class="c1"># elif input_id == &#39;write-button&#39;:</span>
-    <span class="c1">#     try:</span>
-    <span class="c1">#         config = store[&#39;config&#39;]</span>
-    <span class="c1">#         Config(config).validate()</span>
-    <span class="c1">#         with open(CONFIG_PATH, &#39;w&#39;) as f:  # type: ignore</span>
-    <span class="c1">#             json.dump(config, f, indent=4, sort_keys=True)</span>
-    <span class="c1">#         store[&#39;config_error&#39;] = None</span>
-    <span class="c1">#     except Exception as error:</span>
-    <span class="c1">#         store[&#39;config_error&#39;] = hst.error_to_response(error).json</span>
+    <span class="k">elif</span> <span class="n">trigger</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;search-button&#39;</span><span class="p">,</span> <span class="s1">&#39;query&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">APP</span><span class="o">.</span><span class="n">search_ready</span><span class="p">:</span>
+            <span class="n">store</span> <span class="o">=</span> <span class="n">hst</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">group_by_asset</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">store</span></div>
 
@@ -306,7 +289,7 @@
 <div class="viewcode-block" id="on_get_tab"><a class="viewcode-back" href="../../../server.html#hidebound.server.app.on_get_tab">[docs]</a><span class="nd">@APP</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span>
     <span class="n">Output</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">,</span> <span class="s1">&#39;children&#39;</span><span class="p">),</span>
     <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s1">&#39;tabs&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">)],</span>
-    <span class="p">[</span><span class="n">State</span><span class="p">(</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)]</span>
+    <span class="p">[</span><span class="n">State</span><span class="p">(</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)],</span>
 <span class="p">)</span>
 <span class="k">def</span> <span class="nf">on_get_tab</span><span class="p">(</span><span class="n">tab</span><span class="p">,</span> <span class="n">store</span><span class="p">):</span>
     <span class="c1"># type: (str, Dict) -&gt; Union[flask.Response, List, None]</span>
@@ -340,10 +323,14 @@
             <span class="k">return</span> <span class="n">components</span><span class="o">.</span><span class="n">get_key_value_card</span><span class="p">(</span>
                 <span class="n">data</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="n">id_</span><span class="o">=</span><span class="s1">&#39;error&#39;</span>
             <span class="p">)</span>
-        <span class="k">return</span> <span class="n">components</span><span class="o">.</span><span class="n">get_asset_graph</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;response&#39;</span><span class="p">])</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;response&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">components</span><span class="o">.</span><span class="n">get_asset_graph</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">tab</span> <span class="o">==</span> <span class="s1">&#39;config&#39;</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="n">hb</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">hst</span><span class="o">.</span><span class="n">format_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">components</span><span class="o">.</span><span class="n">get_config_tab</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">tab</span> <span class="o">==</span> <span class="s1">&#39;api&#39;</span><span class="p">:</span>

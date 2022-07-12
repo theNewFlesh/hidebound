@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.23.0
+                0.24.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -86,12 +86,14 @@
   <h1>Source code for hidebound.server.server_tools</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pformat</span>
 <span class="kn">import</span> <span class="nn">base64</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
 
 <span class="kn">from</span> <span class="nn">flask.testing</span> <span class="kn">import</span> <span class="n">FlaskClient</span>
@@ -99,6 +101,8 @@
 <span class="kn">import</span> <span class="nn">jinja2</span>
 <span class="kn">import</span> <span class="nn">lunchbox.tools</span> <span class="k">as</span> <span class="nn">lbt</span>
 <span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">rolling_pin.blob_etl</span> <span class="k">as</span> <span class="nn">rpb</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
 
 <span class="kn">import</span> <span class="nn">hidebound.core.logging</span> <span class="k">as</span> <span class="nn">hblog</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
@@ -372,6 +376,49 @@
     <span class="n">store</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">request</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">EndPoints</span><span class="p">()</span><span class="o">.</span><span class="n">search</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">client</span><span class="p">)</span>
     <span class="n">store</span><span class="p">[</span><span class="s1">&#39;query&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">query</span>
     <span class="k">return</span> <span class="n">store</span></div>
+
+
+<div class="viewcode-block" id="format_config"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.format_config">[docs]</a><span class="k">def</span> <span class="nf">format_config</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="c1"># type: (Dict[str, Any]) -&gt; OrderedDict[str, Any]</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Redacts credentials of config and formats it for display in component.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config (dict): Configuration dictionary.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        OrderedDict: Formatted config.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">redact</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;REDACTED&#39;</span>
+
+    <span class="k">def</span> <span class="nf">predicate</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;(_key|_id|url)$&#39;</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="n">config</span> <span class="o">=</span> <span class="n">rpb</span><span class="o">.</span><span class="n">BlobETL</span><span class="p">(</span><span class="n">config</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">value_setter</span><span class="o">=</span><span class="n">redact</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;ingress_directory&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;staging_directory&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;include_regex&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;exclude_regex&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;write_mode&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;dask_enabled&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;dask_workers&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;specification_files&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;exporters&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;webhooks&#39;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">all_</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">cross</span> <span class="o">=</span> <span class="n">all_</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">all_</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">cross</span><span class="p">)))</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">cross</span><span class="p">,</span> <span class="n">keys</span><span class="p">))</span> <span class="o">+</span> <span class="n">diff</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\.\.\.$&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_dump</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">output</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="k">return</span> <span class="n">output</span></div>
 </pre></div>
 
            </div>
