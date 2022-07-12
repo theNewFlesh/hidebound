@@ -39,6 +39,11 @@ base:
     HIDEBOUND_WRITE_MODE: move
     HIDEBOUND_DASK_ENABLED: "False"
     HIDEBOUND_DASK_WORKERS: "16"
+    HIDEBOUND_WORKFLOW:
+      - delete
+      - update
+      - create
+      - export
     HIDEBOUND_SPECIFICATION_FILES: []
 
   env_secret:
