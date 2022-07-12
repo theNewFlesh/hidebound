@@ -148,8 +148,7 @@ def on_event(*inputs):
         raise PreventUpdate
 
     if trigger == 'workflow-button':
-        config = store.get('config', hb.config)
-        hst.request(store, EP.workflow, dict(steps=config['workflow']))
+        hst.request(store, EP.workflow, dict(steps=hb.config['workflow']))
         store = hst.search(store, query, group_by_asset)
 
     elif trigger == 'update-button':
@@ -245,8 +244,7 @@ def on_get_tab(tab, store):
         return components.get_asset_graph(graph)
 
     elif tab == 'config':
-        config = store.get('config', hb.config)
-        config = hst.format_config(config)
+        config = hst.format_config(hb.config)
         return components.get_config_tab(config)
 
     elif tab == 'api':
