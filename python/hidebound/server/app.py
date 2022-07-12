@@ -142,9 +142,9 @@ def on_event(*inputs):
     group_by_asset = context.inputs['dropdown.value'] == 'asset'
 
     initial_query = context.inputs['query.n_submit'] == 0
-    search_ready = getattr(APP, 'search_ready', False)
-    if initial_query and not search_ready:
-        APP.search_ready = True
+    ready = getattr(APP, 'ready', False)
+    if initial_query and not ready:
+        APP.ready = True
         raise PreventUpdate
 
     if trigger == 'workflow-button':
