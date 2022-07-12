@@ -260,49 +260,6 @@ def on_get_tab(tab, store):
 
 
 @APP.callback(
-    Output('config-content', 'children'),
-    [Input('store', 'modified_timestamp')],
-    [State('store', 'data')]
-)
-def on_config_card_update(timestamp, store):
-    # type: (int, Dict[str, Any]) -> flask.Response
-    '''
-    Updates config card with config information from store.
-
-    Args:
-        timestamp (int): Store modification timestamp.
-        store (dict): Store data.
-
-    Returns:
-        flask.Response: Response.
-    '''
-    if store in [{}, None]:
-        raise PreventUpdate
-
-    config = store.get('config', None)
-    if config is None:
-        raise PreventUpdate
-
-    if config == 'invalid':
-        config = {}
-
-    error = store.get('config_error', None)
-
-    output = components.get_key_value_card(config, 'config', 'config-card')
-    if error is not None:
-        output = [
-            output,
-            html.Div(className='row-spacer'),
-            components.get_key_value_card(error, 'error', 'error')
-        ]
-
-    msg = 'on_config_card_update called with'
-    msg += f'config: {config} and error: {str(error)[:50]}'
-    APP.logger.debug(msg)
-    return output
-
-
-@APP.callback(
     Output('progressbar-container', 'children'),
     [Input('clock', 'n_intervals')],
 )
