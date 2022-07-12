@@ -164,6 +164,7 @@ class ConfigTests(unittest.TestCase):
             write_mode='copy',
             dask_enabled=True,
             dask_workers=99,
+            workflow=['update', 'create', 'export', 'delete'],
         )
     # --------------------------------------------------------------------------
 
@@ -233,6 +234,17 @@ class ConfigTests(unittest.TestCase):
 
             expected = 'Foobar.* are not subclasses of SpecificationBase'
             with self.assertRaisesRegexp(DataError, expected):
+                cfg.Config(self.config).validate()
+
+    def test_workflow(self):
+        with TemporaryDirectory() as temp:
+            self.set_data(temp)
+            os.makedirs(self.ingress)
+            os.makedirs(self.staging)
+
+            expected = 'bar.*foo.*are not legal workflow steps'
+            self.config['workflow'] = ['create', 'foo', 'update', 'bar']
+            with self.assertRaisesRegex(DataError, expected):
                 cfg.Config(self.config).validate()
 
     # EXPORTERS-----------------------------------------------------------------
@@ -342,7 +354,7 @@ class ConfigTests(unittest.TestCase):
     # WEBHOOKS------------------------------------------------------------------
     def add_webhooks_to_config(self, root):
         self.set_data(root)
-        os.makedirs(self.root)
+        os.makedirs(self.ingress)
         os.makedirs(self.staging)
         self.config['webhooks'] = [
             dict(

@@ -126,6 +126,12 @@ class Config(Model):
     dask_workers = IntType(
         default=8, required=True, validators=[lambda x: vd.is_gt(x, 0)]
     )  # type: IntType
+    workflow = ListType(
+        StringType(),
+        required=True,
+        validators=[vd.is_workflow],
+        default=['delete', 'update', 'create', 'export']
+    )  # type: ListType
 
     class ExportersConfig(Model):
         girder = ModelType(
