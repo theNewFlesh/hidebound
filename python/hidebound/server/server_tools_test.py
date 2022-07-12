@@ -140,7 +140,7 @@ def test_request(env, extension, config, client):
     )
     result = hst.request(store, url, params, client)
     assert result == {'message': 'Database initialized.'}
-    assert store == {}
+    assert store == dict(ready=True)
 
 
 def test_request_error(env, extension, config, client):

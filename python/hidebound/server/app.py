@@ -2,7 +2,7 @@ from typing import Any, Dict, List, Tuple, Union
 
 import os
 
-from dash import dash_table, dcc, html
+from dash import dash_table, dcc
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 import dash
@@ -165,7 +165,7 @@ def on_event(*inputs):
         hst.request(store, EP.delete)
 
     elif trigger in ['search-button', 'query']:
-        if APP.search_ready:
+        if store.get('ready', False):
             store = hst.search(store, query, group_by_asset)
 
     return store

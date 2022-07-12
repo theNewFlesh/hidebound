@@ -270,6 +270,7 @@ def request(store, url, params=None, client=requests):
         response = response.json()  # pragma: no cover
     if code < 200 or code >= 300:
         store['content'] = response
+    store['ready'] = True
     return response
 
 
@@ -290,6 +291,7 @@ def search(store, query, group_by_asset, client=requests):
     params = dict(query=query, group_by_asset=group_by_asset)
     store['content'] = request(store, EndPoints().search, params, client)
     store['query'] = query
+    store['ready'] = True
     return store
 
 
