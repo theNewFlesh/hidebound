@@ -41,6 +41,7 @@ class EndPoints:
     delete = f'http://{HOST}:{PORT}/api/delete'
     read = f'http://{HOST}:{PORT}/api/read'
     search = f'http://{HOST}:{PORT}/api/search'
+    workflow = f'http://{HOST}:{PORT}/api/workflow'
     progress = f'http://{HOST}:{PORT}/api/progress'
 # ------------------------------------------------------------------------------
 

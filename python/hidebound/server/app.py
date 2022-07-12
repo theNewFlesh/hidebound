@@ -107,7 +107,7 @@ def serve_stylesheet(stylesheet):
 @APP.callback(
     output=Output('store', 'data'),
     inputs=[
-        Input('init-button', 'n_clicks'),
+        Input('workflow-button', 'n_clicks'),
         Input('update-button', 'n_clicks'),
         Input('create-button', 'n_clicks'),
         Input('export-button', 'n_clicks'),
@@ -147,8 +147,10 @@ def on_event(*inputs):
         APP.search_ready = True
         raise PreventUpdate
 
-    if trigger == 'init-button':
-        hst.request(store, EP.update, store.get('config', hb.config))
+    if trigger == 'workflow-button':
+        config = store.get('config', hb.config)
+        hst.request(store, EP.workflow, dict(steps=config['workflow']))
+        store = hst.search(store, query, group_by_asset)
 
     elif trigger == 'update-button':
         hst.request(store, EP.update)
