@@ -157,7 +157,7 @@ def on_event(*inputs):
     elif trigger == 'delete-button':
         hst.request(store, EP.delete)
 
-    elif trigger == 'search-button':
+    elif trigger in ['search-button', 'query']:
         store = hst.search(store, query, group_by_asset)
 
     return store
