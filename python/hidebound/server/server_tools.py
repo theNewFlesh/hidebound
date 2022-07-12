@@ -324,5 +324,6 @@ def format_config(config):
         'webhooks',
     ]
     for key in keys:
-        output[key] = re.sub(r'\n\.\.\.', '', yaml.safe_dump(config[key]))
+        val = re.sub(r'\.\.\.$', '', yaml.safe_dump(config[key])).rstrip('\n')
+        output[key] = val
     return output

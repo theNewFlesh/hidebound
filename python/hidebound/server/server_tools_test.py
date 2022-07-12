@@ -2,6 +2,8 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 import re
 
+import yaml
+
 from hidebound.core.database_test_base import DatabaseTestBase
 import hidebound.server.server_tools as hst
 # ------------------------------------------------------------------------------
@@ -156,3 +158,60 @@ def test_search(env, extension, config, client):
     result = hst.search(store, query, False, client)
     assert 'content' in result.keys()
     assert result['query'] == query
+
+
+def test_format_config_exporters(config):
+    expected = dict(
+        local_disk=dict(
+            target_directory='/tmp/mnt/archive',
+            metadata_types=['asset', 'file']
+        ),
+        s3=dict(
+            access_key='access_key',
+            secret_key='secret_key',
+            bucket='bucket',
+            region='region',
+            metadata_types=['asset', 'file']
+        ),
+        girder=dict(
+            api_key='api_key',
+            root_id='root_id',
+            root_type='root_type',
+            host='host',
+            port=80,
+            metadata_types=['asset', 'file']
+        )
+    )
+    config['exporters'] = expected
+    result = hst.format_config(config)
+    result = yaml.safe_load(result['exporters'])
+
+    expected['s3']['access_key'] = 'REDACTED'
+    expected['s3']['secret_key'] = 'REDACTED'
+    expected['girder']['api_key'] = 'REDACTED'
+    expected['girder']['root_id'] = 'REDACTED'
+    assert result == expected
+
+
+def test_format_config_specs(config):
+    key = 'specification_files'
+    config[key] = ['/tmp/foo.py', '/tmp/bar.py']
+    result = hst.format_config(config)[key]
+
+    expected = '''
+- /tmp/foo.py
+- /tmp/bar.py
+'''[1:-1]
+    assert result == expected
+
+
+def test_format_config_webhooks(config):
+    result = hst.format_config(config)
+    result = yaml.safe_load(result['webhooks'])[0]['url']
+    assert result == 'REDACTED'
+
+
+def test_format_config_ellipsis(config):
+    result = hst.format_config(config)
+    for val in result.values():
+        assert re.search(r'\.\.\.', val) is None
