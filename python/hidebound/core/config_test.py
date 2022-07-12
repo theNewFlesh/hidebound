@@ -152,11 +152,11 @@ class ConfigTests(unittest.TestCase):
         return filepath.as_posix()
 
     def set_data(self, temp):
-        self.root = Path(temp, 'root').as_posix()
+        self.ingress = Path(temp, 'root').as_posix()
         self.staging = Path(temp, 'hidebound').as_posix()
         self.target_dir = Path(temp, 'target').as_posix()
         self.config = dict(
-            ingress_directory=self.root,
+            ingress_directory=self.ingress,
             staging_directory=self.staging,
             specification_files=[],
             include_regex='foo',
@@ -171,7 +171,7 @@ class ConfigTests(unittest.TestCase):
     def test_config(self):
         with TemporaryDirectory() as temp:
             self.set_data(temp)
-            os.makedirs(self.root)
+            os.makedirs(self.ingress)
             os.makedirs(self.staging)
             cfg.Config(self.config).validate()
 
@@ -187,7 +187,7 @@ class ConfigTests(unittest.TestCase):
     def test_config_staging(self):
         with TemporaryDirectory() as temp:
             self.set_data(temp)
-            os.makedirs(self.root)
+            os.makedirs(self.ingress)
 
             expected = 'staging_directory.*is not a directory or does '
             expected += 'not exist'
@@ -197,7 +197,7 @@ class ConfigTests(unittest.TestCase):
     def test_write_mode(self):
         with TemporaryDirectory() as temp:
             self.set_data(temp)
-            os.makedirs(self.root)
+            os.makedirs(self.ingress)
             os.makedirs(self.staging)
 
             self.config['write_mode'] = 'copy'
@@ -214,7 +214,7 @@ class ConfigTests(unittest.TestCase):
     def test_specification_files_good(self):
         with TemporaryDirectory() as temp:
             self.set_data(temp)
-            os.makedirs(self.root)
+            os.makedirs(self.ingress)
             os.makedirs(self.staging)
 
             spec = self.write_good_spec(temp)
@@ -225,7 +225,7 @@ class ConfigTests(unittest.TestCase):
     def test_specification_files_bad(self):
         with TemporaryDirectory() as temp:
             self.set_data(temp)
-            os.makedirs(self.root)
+            os.makedirs(self.ingress)
             os.makedirs(self.staging)
 
             good = self.write_good_spec(temp)
@@ -250,7 +250,7 @@ class ConfigTests(unittest.TestCase):
     # EXPORTERS-----------------------------------------------------------------
     def add_exporters_to_config(self, root):
         self.set_data(root)
-        os.makedirs(self.root)
+        os.makedirs(self.ingress)
         os.makedirs(self.staging)
         self.config['exporters'] = dict(
             girder=dict(
@@ -411,7 +411,7 @@ class ConfigTests(unittest.TestCase):
     def test_webhooks_empty(self):
         with TemporaryDirectory() as temp:
             self.set_data(temp)
-            os.makedirs(self.root)
+            os.makedirs(self.ingress)
             os.makedirs(self.staging)
 
             result = cfg.Config(self.config)
@@ -443,7 +443,7 @@ class ConfigTests(unittest.TestCase):
     def test_dask_partitons(self):
         with TemporaryDirectory() as temp:
             self.set_data(temp)
-            os.makedirs(self.root)
+            os.makedirs(self.ingress)
             os.makedirs(self.staging)
             self.config['dask_workers'] = 0
             expected = '0 !> 0'
