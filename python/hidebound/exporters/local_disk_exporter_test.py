@@ -8,6 +8,7 @@ import unittest
 
 from pandas import DataFrame
 from schematics.exceptions import DataError
+import pytest
 
 from hidebound.exporters.local_disk_exporter import LocalDiskConfig, LocalDiskExporter
 import hidebound.core.tools as hbt
@@ -153,6 +154,7 @@ class LocalDiskExporterTests(unittest.TestCase):
 
         return staging
 
+    @pytest.mark.flakey
     def test_export(self):
         with TemporaryDirectory() as root:
             config = self.get_config(root)
