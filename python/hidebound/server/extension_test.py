@@ -65,15 +65,15 @@ def test_get_config_env_vars(env, app, config):
 
 
 def test_get_config_env_vars_empty_lists(env, app, config):
+    os.environ['HIDEBOUND_WORKFLOW'] = '[]'
     os.environ['HIDEBOUND_SPECIFICATION_FILES'] = '[]'
     os.environ['HIDEBOUND_WEBHOOKS'] = '[]'
     app.config.from_prefixed_env('HIDEBOUND')
 
-    result = HideboundExtension()._get_config(app)['specification_files']
-    assert result == []
-
-    result = HideboundExtension()._get_config(app)['webhooks']
-    assert result == []
+    keys = ['workflow', 'specification_files', 'webhooks']
+    for key in keys:
+        result = HideboundExtension()._get_config(app)[key]
+        assert result == []
 
 
 def test_get_config_filepath(env, app, config, config_yaml_file):

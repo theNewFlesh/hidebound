@@ -101,6 +101,7 @@ def config(temp_dir):
         write_mode='copy',
         dask_enabled=False,
         dask_workers=3,
+        workflow=['update', 'create', 'export', 'delete'],
         specification_files=[spec],
         exporters=dict(
             local_disk=dict(
