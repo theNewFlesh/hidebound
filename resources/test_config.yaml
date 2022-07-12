@@ -3,6 +3,11 @@ staging_directory: /tmp/mnt/hidebound
 include_regex: ""
 exclude_regex: "\\.DS_Store"
 write_mode: copy
+workflow:
+  - update
+  - create
+  - export
+  - delete
 specification_files:
   - /home/ubuntu/hidebound/python/hidebound/core/test_specifications.py
 exporters:
