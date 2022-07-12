@@ -480,3 +480,13 @@ class ValidatorsTests(unittest.TestCase):
         expected = 'trace is not a legal HTTP method.'
         with self.assertRaisesRegexp(ValidationError, expected):
             vd.is_http_method('trace')
+
+    def test_is_workflow(self):
+        steps = ['delete', 'update', 'create', 'export']
+        vd.is_workflow(steps)
+
+        steps = ['delete', 'update', 'create', 'export', 'foo', 'bar']
+        expected = 'bar.*foo.*are not legal workflow steps. '
+        expected += r"Legal steps: \['delete', 'update', 'create', 'export'\]\."
+        with self.assertRaisesRegexp(ValidationError, expected):
+            vd.is_workflow(steps)

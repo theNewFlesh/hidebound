@@ -702,3 +702,27 @@ def is_http_method(method):
     if method not in methods:
         msg = f'{method} is not a legal HTTP method. Legal methods: {methods}.'
         raise ValidationError(msg)
+
+
+def is_workflow(steps):
+    # type: (List[str]) -> None
+    '''
+    Ensures given workflow steps are legal.
+    Legal workflows steps include:
+
+        * delete
+        * update
+        * create
+        * export
+
+    Args:
+        steps (list[str]): List of workflow steps:
+
+    Raises:
+        ValidationError: If method is not a legal workflow.
+    '''
+    legal = ['delete', 'update', 'create', 'export']
+    diff = sorted(list(set(steps).difference(legal)))
+    if len(diff) > 0:
+        msg = f'{diff} are not legal workflow steps. Legal steps: {legal}.'
+        raise ValidationError(msg)
