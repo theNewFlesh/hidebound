@@ -319,10 +319,16 @@ def format_config(config):
         'include_regex',
         'exclude_regex',
         'write_mode',
+        'dask_enabled',
+        'dask_workers',
         'specification_files',
         'exporters',
         'webhooks',
     ]
+    all_ = set(config.keys())
+    cross = all_.intersection(keys)
+    diff = sorted(list(all_.difference(cross)))
+    keys = list(filter(lambda x: x in cross, keys)) + diff
     for key in keys:
         val = re.sub(r'\.\.\.$', '', yaml.safe_dump(config[key])).rstrip('\n')
         output[key] = val

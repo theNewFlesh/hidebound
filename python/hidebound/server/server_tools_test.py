@@ -215,3 +215,17 @@ def test_format_config_ellipsis(config):
     result = hst.format_config(config)
     for val in result.values():
         assert re.search(r'\.\.\.', val) is None
+
+
+def test_format_config_extra_keys(config):
+    config['2'] = 'bar'
+    config['1'] = 'foo'
+    result = hst.format_config(config)
+
+    key, val = result.popitem()
+    assert key == '2'
+    assert val == 'bar'
+
+    key, val = result.popitem()
+    assert key == '1'
+    assert val == 'foo'
