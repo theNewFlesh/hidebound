@@ -9,6 +9,7 @@ import yaml
 
 from hidebound.core.database import Database
 from hidebound.server.api import API
+import hidebound.core.config as hbc
 import hidebound.core.tools as hbt
 # ------------------------------------------------------------------------------
 
@@ -39,10 +40,14 @@ class HideboundExtension:
         '''
         config_path = os.environ.get('HIDEBOUND_CONFIG_FILEPATH', None)
         if config_path is not None:
-            return self._get_config_from_file(config_path)
+            config = self._get_config_from_file(config_path)
 
-        app.config.from_prefixed_env('HIDEBOUND')
-        return self._get_config_from_env(app)
+        else:
+            app.config.from_prefixed_env('HIDEBOUND')
+            config = self._get_config_from_env(app)
+
+        config = hbc.Config(config).to_native()
+        return config
 
     def _get_config_from_file(self, filepath):
         # type: (Union[str, Path]) -> dict

@@ -64,6 +64,14 @@ def test_get_config_env_vars(env, app, config):
         assert result[key] == val
 
 
+def test_get_config_mising_env_var(env, app, config):
+    os.environ.pop('HIDEBOUND_WORKFLOW')
+    app.config.from_prefixed_env('HIDEBOUND')
+    result = HideboundExtension()._get_config(app)['workflow']
+    expected = ['delete', 'update', 'create', 'export']
+    assert result == expected
+
+
 def test_get_config_env_vars_empty_lists(env, app, config):
     os.environ['HIDEBOUND_WORKFLOW'] = '[]'
     os.environ['HIDEBOUND_SPECIFICATION_FILES'] = '[]'
