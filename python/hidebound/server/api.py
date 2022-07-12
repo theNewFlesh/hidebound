@@ -6,11 +6,12 @@ import json
 import numpy as np
 import flask
 import flasgger as swg
-from schematics.exceptions import DataError
+from schematics.exceptions import DataError, ValidationError
 from werkzeug.exceptions import BadRequest
 
 from hidebound.core.database import Database
 import hidebound.core.logging as hblog
+import hidebound.core.validators as vd
 import hidebound.server.extensions as ext
 import hidebound.server.server_tools as hst
 # ------------------------------------------------------------------------------
@@ -332,7 +333,7 @@ def search():
 @swg.swag_from(dict(
     parameters=[
         dict(
-            name='workflow',
+            name='steps',
             type='list',
             description='Ordered list of API calls.',
             required=True,
@@ -358,17 +359,16 @@ def workflow():
     '''
     params = flask.request.get_json()  # type: Any
     params = json.loads(params)
-    workflow = params['workflow']
+    steps = params['steps']
 
     # get and validate workflow steps
-    legal = ['update', 'create', 'export', 'delete']
-    diff = sorted(list(set(workflow).difference(legal)))
-    if len(diff) > 0:
-        msg = f'Found illegal workflow steps: {diff}. Legal steps: {legal}.'
-        return hst.error_to_response(ValueError(msg))
+    try:
+        vd.is_workflow(steps)
+    except ValidationError as e:
+        return hst.error_to_response(e)
 
     # run through workflow
-    for step in workflow:
+    for step in steps:
         try:
             getattr(ext.hidebound.database, step)()
         except Exception as error:  # pragma: no cover
@@ -376,7 +376,7 @@ def workflow():
 
     return flask.Response(
         response=json.dumps(dict(
-            message='Workflow completed.', workflow=workflow)),
+            message='Workflow completed.', steps=steps)),
         mimetype='application/json'
     )
 

@@ -252,12 +252,12 @@ def test_search_no_update(env, extension, client, make_files):
 def test_workflow(env, extension, client, config, make_files):
     expected = ['update', 'create', 'export', 'delete']
 
-    data = dict(workflow=expected)
+    data = dict(steps=expected)
     data = json.dumps(data)
     result = client.post('/api/workflow', json=data).json
 
     assert result['message'] == 'Workflow completed.'
-    assert result['workflow'] == expected
+    assert result['steps'] == expected
 
     data = Path(config['staging_directory'], 'content')
     assert os.path.exists(data) is False
@@ -269,12 +269,12 @@ def test_workflow(env, extension, client, config, make_files):
 def test_workflow_create(env, extension, client, config, make_files):
     expected = ['update', 'create']
 
-    data = dict(workflow=expected)
+    data = dict(steps=expected)
     data = json.dumps(data)
     result = client.post('/api/workflow', json=data).json
 
     assert result['message'] == 'Workflow completed.'
-    assert result['workflow'] == expected
+    assert result['steps'] == expected
 
     data = Path(config['staging_directory'], 'content')
     assert os.path.exists(data)
@@ -291,21 +291,21 @@ def test_workflow_bad_params(env, extension, client, make_files):
 
 def test_workflow_illegal_step(env, extension, client, make_files):
     expected = ['update', 'create', 'foo', 'bar']
-    data = dict(workflow=expected, config={})
+    data = dict(steps=expected)
     data = json.dumps(data)
     result = client.post('/api/workflow', json=data).json
-    assert result['error'] == 'ValueError'
+    assert result['error'] == 'ValidationError'
 
-    expected = "Found illegal workflow steps: ['bar', 'foo']. "
-    expected += "Legal steps: ['update', 'create', 'export', 'delete']."
-    assert result['args'][0] == expected
+    expected = r'bar.*foo.*are not legal workflow steps\. '
+    expected += 'Legal steps: .*delete.*update.*create.*export'
+    assert re.search(expected, result['args'][0]) is not None
 
 
 # ERROR-HANDLERS----------------------------------------------------------------
 def test_key_error_handler(env, extension, client, make_files):
     result = client.post(
         '/api/workflow',
-        json=json.dumps(dict(config={})),
+        json=json.dumps(dict()),
     ).json
     assert result['error'] == 'KeyError'
 
