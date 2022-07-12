@@ -267,8 +267,6 @@ def get_dummy_elements():
         html.Div(className='dummy', id='create-button', n_clicks=None),
         html.Div(className='dummy', id='export-button', n_clicks=None),
         html.Div(className='dummy', id='delete-button', n_clicks=None),
-        dcc.Upload(className='dummy', id='upload', contents=None),
-        html.Div(className='dummy', id='write-button', n_clicks=None),
     ]
 
 
@@ -283,21 +281,7 @@ def get_configbar(config):
     Returns:
         Div: Div with buttons and JSON editor.
     '''
-    expander = html.Div(className='col expander')
-    spacer = html.Div(className='col spacer')
-
-    upload = dcc.Upload(
-        id='upload',
-        children=[get_button('upload')]
-    )
-    write = get_button('write')
-
     rows = [
-        html.Div(
-            className='row',
-            children=[expander, spacer, upload, spacer, write],
-        ),
-        html.Div(className='row-spacer'),
         html.Div(id='config', children=[
             get_key_value_card(config, header='config', id_='config-card')
         ])

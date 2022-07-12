@@ -116,8 +116,6 @@ def serve_stylesheet(stylesheet):
         Input('search-button', 'n_clicks'),
         Input('dropdown', 'value'),
         Input('query', 'value'),
-        Input('upload', 'contents'),
-        Input('write-button', 'n_clicks'),
     ],
     state=[State('store', 'data')],
     prevent_initial_call=True,
@@ -140,7 +138,6 @@ def on_event(*inputs):
     context = dash.callback_context
     store = context.states['store.data'] or {}  # type: dict
     trigger = context.triggered_id
-    value = context.triggered[0]['value']
     query = context.inputs['query.value']
     group_by_asset = context.inputs['dropdown.value'] == 'asset'
 
@@ -162,27 +159,6 @@ def on_event(*inputs):
 
     elif trigger == 'search-button':
         store = hst.search(store, query, group_by_asset)
-
-    elif trigger == 'upload':
-        temp = 'invalid'  # type: Any
-        try:
-            temp = hst.parse_json_file_content(value)
-            Config(temp).validate()
-            store['config'] = temp
-            store['config_error'] = None
-        except Exception as error:
-            store['config'] = temp
-            store['config_error'] = hst.error_to_response(error).json()  # type: ignore
-
-    # elif input_id == 'write-button':
-    #     try:
-    #         config = store['config']
-    #         Config(config).validate()
-    #         with open(CONFIG_PATH, 'w') as f:  # type: ignore
-    #             json.dump(config, f, indent=4, sort_keys=True)
-    #         store['config_error'] = None
-    #     except Exception as error:
-    #         store['config_error'] = hst.error_to_response(error).json
 
     return store
 
@@ -254,7 +230,10 @@ def on_get_tab(tab, store):
             return components.get_key_value_card(
                 data, header='error', id_='error'
             )
-        return components.get_asset_graph(data['response'])
+        graph = data['response']
+        if len(graph) == 0:
+            return None
+        return components.get_asset_graph(graph)
 
     elif tab == 'config':
         config = store.get('config', hb.config)
