@@ -1,6 +1,7 @@
 from typing import Any, Dict, List, Tuple, Union
 
 import os
+import re
 
 from dash import dash_table, dcc, html
 from dash.dependencies import Input, Output, State
@@ -9,6 +10,7 @@ import dash
 import flask
 from flask import current_app
 import flask_monitoringdashboard as fmdb
+import yaml
 
 from hidebound.core.config import Config
 import hidebound.core.tools as hbt
@@ -245,6 +247,8 @@ def on_get_tab(tab, store):
 
     elif tab == 'config':
         config = store.get('config', hb.config)
+        config = {k: yaml.safe_dump(v) for k, v in config.items()}
+        config = {k: re.sub(r'\n\.\.\.', '', v) for k, v in config.items()}
         return components.get_config_tab(config)
 
     elif tab == 'api':
