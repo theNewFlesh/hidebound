@@ -146,24 +146,8 @@ class ComponentsTests(unittest.TestCase):
         configbar = components.get_configbar({'foo': 'bar'})
         self.assertEqual(configbar.id, 'configbar')
 
-        row_spacer = configbar.children[1]
-        self.assertEqual(row_spacer.className, 'row-spacer')
-
-        card = configbar.children[2]
+        card = configbar.children[0]
         self.assertEqual(card.id, 'config')
-
-        buttons = configbar.children[0].children
-
-        button = buttons[0]
-        self.assertEqual(button.className, 'col expander')
-
-        button = buttons[2]
-        self.assertEqual(button.id, 'upload')
-        self.assertEqual(button.children[0].id, 'upload-button')
-
-        button = buttons[4]
-        self.assertEqual(button.id, 'write-button')
-        self.assertEqual(button.children[0], 'write')
 
     def test_get_data_tab(self):
         tab = components.get_data_tab()
