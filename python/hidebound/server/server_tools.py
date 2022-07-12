@@ -321,6 +321,7 @@ def format_config(config):
         'write_mode',
         'dask_enabled',
         'dask_workers',
+        'workflow',
         'specification_files',
         'exporters',
         'webhooks',
