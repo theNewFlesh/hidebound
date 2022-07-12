@@ -125,8 +125,8 @@ class ComponentsTests(unittest.TestCase):
         self.assertEqual(dropdown.options[1]['label'], 'file')
 
         button = searchbar.children[0].children[6]
-        self.assertEqual(button.id, 'init-button')
-        self.assertEqual(button.children[0], 'init')
+        self.assertEqual(button.id, 'workflow-button')
+        self.assertEqual(button.children[0], 'workflow')
 
         button = searchbar.children[0].children[8]
         self.assertEqual(button.id, 'update-button')

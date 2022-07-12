@@ -217,7 +217,7 @@ def get_searchbar(query=None):
     dropdown = get_dropdown(['asset', 'file'])
 
     search = get_button('search')
-    init = get_button('init')
+    workflow = get_button('workflow')
     update = get_button('update')
     create = get_button('create')
     export = get_button('export')
@@ -232,7 +232,7 @@ def get_searchbar(query=None):
             spacer,
             dropdown,
             spacer,
-            init,
+            workflow,
             spacer,
             update,
             spacer,
@@ -264,7 +264,7 @@ def get_dummy_elements():
         dcc.Input(className='dummy', id='query', value=None),
         dcc.Dropdown(className='dummy', id='dropdown', value=None),
         html.Div(className='dummy', id='search-button', n_clicks=None),
-        html.Div(className='dummy', id='init-button', n_clicks=None),
+        html.Div(className='dummy', id='workflow-button', n_clicks=None),
         html.Div(className='dummy', id='update-button', n_clicks=None),
         html.Div(className='dummy', id='create-button', n_clicks=None),
         html.Div(className='dummy', id='export-button', n_clicks=None),
