@@ -247,8 +247,7 @@ def on_get_tab(tab, store):
 
     elif tab == 'config':
         config = store.get('config', hb.config)
-        config = {k: yaml.safe_dump(v) for k, v in config.items()}
-        config = {k: re.sub(r'\n\.\.\.', '', v) for k, v in config.items()}
+        config = hst.format_config(config)
         return components.get_config_tab(config)
 
     elif tab == 'api':

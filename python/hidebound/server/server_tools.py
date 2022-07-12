@@ -1,11 +1,13 @@
 from typing import Any, Dict, Optional, Union
 
+from collections import OrderedDict
 from dataclasses import dataclass
 from pathlib import Path
 from pprint import pformat
 import base64
 import json
 import os
+import re
 import traceback
 
 from flask.testing import FlaskClient
@@ -13,6 +15,8 @@ import flask
 import jinja2
 import lunchbox.tools as lbt
 import requests
+import rolling_pin.blob_etl as rpb
+import yaml
 
 import hidebound.core.logging as hblog
 # ------------------------------------------------------------------------------
@@ -286,3 +290,39 @@ def search(store, query, group_by_asset, client=requests):
     store['content'] = request(store, EndPoints().search, params, client)
     store['query'] = query
     return store
+
+
+def format_config(config):
+    # type: (Dict[str, Any]) -> OrderedDict[str, Any]
+    '''
+    Redacts credentials of config and formats it for display in component.
+
+    Args:
+        config (dict): Configuration dictionary.
+
+    Returns:
+        OrderedDict: Formatted config.
+    '''
+    def redact(key, value):
+        return 'REDACTED'
+
+    def predicate(key, value):
+        if re.search('(_key|_id|url)$', key):
+            return True
+        return False
+
+    config = rpb.BlobETL(config).set(predicate, value_setter=redact).to_dict()
+    output = OrderedDict()
+    keys = [
+        'ingress_directory',
+        'staging_directory',
+        'include_regex',
+        'exclude_regex',
+        'write_mode',
+        'specification_files',
+        'exporters',
+        'webhooks',
+    ]
+    for key in keys:
+        output[key] = re.sub(r'\n\.\.\.', '', yaml.safe_dump(config[key]))
+    return output

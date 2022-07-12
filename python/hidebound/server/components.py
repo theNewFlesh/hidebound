@@ -1,5 +1,6 @@
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
+from collections import OrderedDict
 import re
 
 from dash import dash_table, dcc, html
@@ -386,7 +387,7 @@ def get_button(title):
 
 
 def get_key_value_card(data, header=None, id_='key-value-card'):
-    # type: (Dict, Optional[str], str) -> html.Div
+    # type: (Union[Dict, OrderedDict], Optional[str], str) -> html.Div
     '''
     Creates a key-value card using the keys and values from the given data.
     One key-value pair per row.
@@ -414,7 +415,7 @@ def get_key_value_card(data, header=None, id_='key-value-card'):
         )
         children.append(header)
 
-    for i, (k, v) in enumerate(sorted(data.items())):
+    for i, (k, v) in enumerate(data.items()):
         even = i % 2 == 0
         klass = 'odd'
         if even:
