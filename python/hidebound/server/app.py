@@ -1,7 +1,6 @@
 from typing import Any, Dict, List, Tuple, Union
 
 import os
-import re
 
 from dash import dash_table, dcc, html
 from dash.dependencies import Input, Output, State
@@ -10,9 +9,7 @@ import dash
 import flask
 from flask import current_app
 import flask_monitoringdashboard as fmdb
-import yaml
 
-from hidebound.core.config import Config
 import hidebound.core.tools as hbt
 import hidebound.server.components as components
 import hidebound.server.extensions as ext
