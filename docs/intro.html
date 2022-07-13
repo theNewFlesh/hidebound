@@ -796,35 +796,39 @@ config file.</p>
 <td><p>str</p></td>
 <td><p>staging_directory parameter of config</p></td>
 </tr>
+<tr class="row-odd"><td><p>HIDEBOUND_INCLUDE_REGEX</p></td>
+<td><p>str</p></td>
+<td><p>include_regex parameter of config</p></td>
+</tr>
+<tr class="row-even"><td><p>HIDEBOUND_EXCLUDE_REGEX</p></td>
+<td><p>str</p></td>
+<td><p>exclude_regex parameter of config</p></td>
+</tr>
+<tr class="row-odd"><td><p>HIDEBOUND_WRITE_MODE</p></td>
+<td><p>str</p></td>
+<td><p>write_mode parameter of config</p></td>
+</tr>
+<tr class="row-even"><td><p>HIDEBOUND_DASK_ENABLED</p></td>
+<td><p>str</p></td>
+<td><p>dask_enabled parameter of config</p></td>
+</tr>
+<tr class="row-odd"><td><p>HIDEBOUND_DASK_WORKERS</p></td>
+<td><p>int</p></td>
+<td><p>dask_workers parameter of config</p></td>
+</tr>
+<tr class="row-even"><td><p>HIDEBOUND_WORKFLOW</p></td>
+<td><p>yaml</p></td>
+<td><p>order list of steps in workflow</p></td>
+</tr>
 <tr class="row-odd"><td><p>HIDEBOUND_SPECIFICATION_FILES</p></td>
 <td><p>yaml</p></td>
 <td><p>specification_files section of config</p></td>
 </tr>
-<tr class="row-even"><td><p>HIDEBOUND_INCLUDE_REGEX</p></td>
-<td><p>str</p></td>
-<td><p>include_regex parameter of config</p></td>
-</tr>
-<tr class="row-odd"><td><p>HIDEBOUND_EXCLUDE_REGEX</p></td>
-<td><p>str</p></td>
-<td><p>exclude_regex parameter of config</p></td>
-</tr>
-<tr class="row-even"><td><p>HIDEBOUND_WRITE_MODE</p></td>
-<td><p>str</p></td>
-<td><p>write_mode parameter of config</p></td>
-</tr>
-<tr class="row-odd"><td><p>HIDEBOUND_DASK_ENABLED</p></td>
-<td><p>str</p></td>
-<td><p>dask_enabled parameter of config</p></td>
-</tr>
-<tr class="row-even"><td><p>HIDEBOUND_DASK_WORKERS</p></td>
-<td><p>int</p></td>
-<td><p>dask_workers parameter of config</p></td>
-</tr>
-<tr class="row-odd"><td><p>HIDEBOUND_EXPORTERS</p></td>
+<tr class="row-even"><td><p>HIDEBOUND_EXPORTERS</p></td>
 <td><p>yaml</p></td>
 <td><p>exporters section of config</p></td>
 </tr>
-<tr class="row-even"><td><p>HIDEBOUND_WEBHOOKS</p></td>
+<tr class="row-odd"><td><p>HIDEBOUND_WEBHOOKS</p></td>
 <td><p>yaml</p></td>
 <td><p>webhooks section of config</p></td>
 </tr>
@@ -834,15 +838,20 @@ config file.</p>
 <p>Here is a full example config with comments:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">ingress_directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/storage/projects</span><span class="w">                     </span><span class="c1"># where hb looks for assets</span><span class="w"></span>
 <span class="nt">staging_directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/storage/hidebound</span><span class="w">                    </span><span class="c1"># hb staging directory</span><span class="w"></span>
-<span class="nt">specification_files</span><span class="p">:</span><span class="w">                                         </span><span class="c1"># list of spec files</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/storage/specs/image_specs.py</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/storage/specs/video_specs.py</span><span class="w"></span>
 <span class="nt">include_regex</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w">                                            </span><span class="c1"># include files that match</span><span class="w"></span>
 <span class="nt">exclude_regex</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;\\.DS_Store&quot;</span><span class="w">                                 </span><span class="c1"># exclude files that match</span><span class="w"></span>
 <span class="nt">write_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">copy</span><span class="w">                                             </span><span class="c1"># copy files from root to staging</span><span class="w"></span>
 <span class="w">                                                             </span><span class="c1"># options: copy, move</span><span class="w"></span>
 <span class="nt">dask_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                                           </span><span class="c1"># enable Dask distributed computing</span><span class="w"></span>
 <span class="nt">dask_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span><span class="w">                                             </span><span class="c1"># number of Dask partitions to use</span><span class="w"></span>
+<span class="nt">workflow</span><span class="p">:</span><span class="w">                                                    </span><span class="c1"># workflow steps</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">delete</span><span class="w">                                                   </span><span class="c1"># clear staging directory</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">update</span><span class="w">                                                   </span><span class="c1"># create database from ingress files</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">create</span><span class="w">                                                   </span><span class="c1"># stage valid assets</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">export</span><span class="w">                                                   </span><span class="c1"># export assets in staging</span><span class="w"></span>
+<span class="nt">specification_files</span><span class="p">:</span><span class="w">                                         </span><span class="c1"># list of spec files</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/storage/specs/image_specs.py</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/storage/specs/video_specs.py</span><span class="w"></span>
 <span class="nt">exporters</span><span class="p">:</span><span class="w">                                                   </span><span class="c1"># dict of exporter configs</span><span class="w"></span>
 <span class="w">  </span><span class="nt">s3</span><span class="p">:</span><span class="w">                                                        </span><span class="c1"># export to s3</span><span class="w"></span>
 <span class="w">    </span><span class="nt">access_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ABCDEFGHIJKLMNOPQRST</span><span class="w">                         </span><span class="c1"># aws access key</span><span class="w"></span>
