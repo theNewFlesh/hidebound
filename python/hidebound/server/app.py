@@ -22,7 +22,7 @@ if __name__ == '__main__':
 
 # setup directories in /tmp/mnt
 if hbt.str_to_bool(os.environ.get('CREATE_TMP_DIRS', 'False')):
-    hst.setup_hidebound_directories('/tmp/mnt')
+    hst.setup_hidebound_directories('/tmp/mnt')  # pragma: no cover
 # ------------------------------------------------------------------------------
 
 
