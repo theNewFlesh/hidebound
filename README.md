@@ -463,12 +463,13 @@ file.
 | HIDEBOUND_CONFIG_FILEPATH     | str    | Entire Hidebound config file            |
 | HIDEBOUND_INGRESS_DIRECTORY   | str    | ingress_directory parameter of config   |
 | HIDEBOUND_STAGING_DIRECTORY   | str    | staging_directory parameter of config   |
-| HIDEBOUND_SPECIFICATION_FILES | yaml   | specification_files section of config   |
 | HIDEBOUND_INCLUDE_REGEX       | str    | include_regex parameter of config       |
 | HIDEBOUND_EXCLUDE_REGEX       | str    | exclude_regex parameter of config       |
 | HIDEBOUND_WRITE_MODE          | str    | write_mode parameter of config          |
 | HIDEBOUND_DASK_ENABLED        | str    | dask_enabled parameter of config        |
 | HIDEBOUND_DASK_WORKERS        | int    | dask_workers parameter of config        |
+| HIDEBOUND_WORKFLOW            | yaml   | order list of steps in workflow         |
+| HIDEBOUND_SPECIFICATION_FILES | yaml   | specification_files section of config   |
 | HIDEBOUND_EXPORTERS           | yaml   | exporters section of config             |
 | HIDEBOUND_WEBHOOKS            | yaml   | webhooks section of config              |
 
@@ -478,15 +479,20 @@ Here is a full example config with comments:
 ```yaml
 ingress_directory: /mnt/storage/projects                     # where hb looks for assets
 staging_directory: /mnt/storage/hidebound                    # hb staging directory
-specification_files:                                         # list of spec files
-  - /mnt/storage/specs/image_specs.py
-  - /mnt/storage/specs/video_specs.py
 include_regex: ""                                            # include files that match
 exclude_regex: "\\.DS_Store"                                 # exclude files that match
 write_mode: copy                                             # copy files from root to staging
                                                              # options: copy, move
 dask_enabled: true                                           # enable Dask distributed computing
 dask_workers: 16                                             # number of Dask partitions to use
+workflow:                                                    # workflow steps
+  - delete                                                   # clear staging directory
+  - update                                                   # create database from ingress files
+  - create                                                   # stage valid assets
+  - export                                                   # export assets in staging
+specification_files:                                         # list of spec files
+  - /mnt/storage/specs/image_specs.py
+  - /mnt/storage/specs/video_specs.py
 exporters:                                                   # dict of exporter configs
   s3:                                                        # export to s3
     access_key: ABCDEFGHIJKLMNOPQRST                         # aws access key
