@@ -31,7 +31,7 @@
             <a href="index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.24.0
+                0.25.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -311,6 +311,11 @@ key is the exporter name and the value is its config. Default: {}.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="hidebound.core.config.Config.webhooks">
 <span class="sig-name descname"><span class="pre">webhooks</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">schematics.types.compound.ListType</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ListType(ModelType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Config</span> <span class="pre">as</span> <span class="pre">'webhooks'&gt;</span></em><a class="headerlink" href="#hidebound.core.config.Config.webhooks" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidebound.core.config.Config.workflow">
+<span class="sig-name descname"><span class="pre">workflow</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">schematics.types.compound.ListType</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ListType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Config</span> <span class="pre">as</span> <span class="pre">'workflow'&gt;</span></em><a class="headerlink" href="#hidebound.core.config.Config.workflow" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -3050,6 +3055,29 @@ Legal types include:</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hidebound.core.validators.is_workflow">
+<span class="sig-prename descclassname"><span class="pre">hidebound.core.validators.</span></span><span class="sig-name descname"><span class="pre">is_workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hidebound/core/validators.html#is_workflow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.core.validators.is_workflow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensures given workflow steps are legal.
+Legal workflows steps include:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>delete</p></li>
+<li><p>update</p></li>
+<li><p>create</p></li>
+<li><p>export</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>steps</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – List of workflow steps:</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValidationError</strong> – If method is not a legal workflow.</p>
 </dd>
 </dl>
 </dd></dl>

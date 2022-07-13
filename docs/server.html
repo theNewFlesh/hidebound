@@ -31,7 +31,7 @@
             <a href="index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.24.0
+                0.25.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -328,26 +328,6 @@
 <dt class="sig sig-object py" id="hidebound.server.app.liveness">
 <span class="sig-prename descclassname"><span class="pre">hidebound.server.app.</span></span><span class="sig-name descname"><span class="pre">liveness</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/hidebound/server/app.html#liveness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.server.app.liveness" title="Permalink to this definition">¶</a></dt>
 <dd><p>Liveness probe for kubernetes.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="hidebound.server.app.on_config_card_update">
-<span class="sig-prename descclassname"><span class="pre">hidebound.server.app.</span></span><span class="sig-name descname"><span class="pre">on_config_card_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">flask.wrappers.Response</span></span></span><a class="reference internal" href="_modules/hidebound/server/app.html#on_config_card_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.server.app.on_config_card_update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates config card with config information from store.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>timestamp</strong> (<em>int</em>) – Store modification timestamp.</p></li>
-<li><p><strong>store</strong> (<em>dict</em>) – Store data.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Response.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>flask.Response</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -823,6 +803,11 @@ Default: False.</p></li>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="hidebound.server.server_tools.EndPoints.update">
 <span class="sig-name descname"><span class="pre">update</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'http://0.0.0.0:8080/api/update'</span></em><a class="headerlink" href="#hidebound.server.server_tools.EndPoints.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidebound.server.server_tools.EndPoints.workflow">
+<span class="sig-name descname"><span class="pre">workflow</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'http://0.0.0.0:8080/api/workflow'</span></em><a class="headerlink" href="#hidebound.server.server_tools.EndPoints.workflow" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

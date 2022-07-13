@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.23.3
+                0.25.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -95,6 +95,7 @@
 
 <span class="kn">from</span> <span class="nn">hidebound.core.database</span> <span class="kn">import</span> <span class="n">Database</span>
 <span class="kn">from</span> <span class="nn">hidebound.server.api</span> <span class="kn">import</span> <span class="n">API</span>
+<span class="kn">import</span> <span class="nn">hidebound.core.config</span> <span class="k">as</span> <span class="nn">hbc</span>
 <span class="kn">import</span> <span class="nn">hidebound.core.tools</span> <span class="k">as</span> <span class="nn">hbt</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
@@ -125,10 +126,14 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;HIDEBOUND_CONFIG_FILEPATH&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">config_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_config_from_file</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_config_from_file</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span>
 
-        <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">from_prefixed_env</span><span class="p">(</span><span class="s1">&#39;HIDEBOUND&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_config_from_env</span><span class="p">(</span><span class="n">app</span><span class="p">)</span></div>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">from_prefixed_env</span><span class="p">(</span><span class="s1">&#39;HIDEBOUND&#39;</span><span class="p">)</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_config_from_env</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="n">hbc</span><span class="o">.</span><span class="n">Config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span><span class="o">.</span><span class="n">to_native</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">config</span></div>
 
 <div class="viewcode-block" id="HideboundExtension._get_config_from_file"><a class="viewcode-back" href="../../../server.html#hidebound.server.extension.HideboundExtension._get_config_from_file">[docs]</a>    <span class="k">def</span> <span class="nf">_get_config_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
         <span class="c1"># type: (Union[str, Path]) -&gt; dict</span>
@@ -177,6 +182,10 @@
             <span class="n">write_mode</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;WRITE_MODE&#39;</span><span class="p">,</span> <span class="s1">&#39;copy&#39;</span><span class="p">),</span>
             <span class="n">dask_enabled</span><span class="o">=</span><span class="n">hbt</span><span class="o">.</span><span class="n">str_to_bool</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DASK_ENABLED&#39;</span><span class="p">,</span> <span class="s1">&#39;False&#39;</span><span class="p">)),</span>
             <span class="n">dask_workers</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DASK_WORKERS&#39;</span><span class="p">,</span> <span class="mi">8</span><span class="p">)),</span>
+            <span class="n">workflow</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="s1">&#39;WORKFLOW&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;[&quot;delete&quot;, &quot;update&quot;, &quot;create&quot;, &quot;export&quot;]&#39;</span><span class="p">,</span>
+            <span class="p">))),</span>
             <span class="n">specification_files</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span>
                 <span class="nb">str</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;SPECIFICATION_FILES&#39;</span><span class="p">,</span> <span class="s1">&#39;[]&#39;</span><span class="p">))</span>
             <span class="p">),</span>
