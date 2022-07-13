@@ -158,7 +158,7 @@ def test_search(env, extension, config, client):
     result = hst.search(store, query, False, client)
     assert 'content' in result.keys()
     assert result['query'] == query
-    assert result['ready'] == True
+    assert result['ready'] is True
 
 
 def test_format_config_exporters(config):
