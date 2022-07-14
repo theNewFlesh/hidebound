@@ -230,3 +230,19 @@ def test_format_config_extra_keys(config):
     key, val = result.popitem()
     assert key == '1'
     assert val == 'foo'
+
+
+def test_format_config_redact_regex(config):
+    config['foo_bar'] = 'not-redacted'
+    config['bar_foo'] = 'not-redacted'
+    result = hst.format_config(config, redact_regex='bar$')
+    assert result['foo_bar'] == 'REDACTED'
+    assert result['bar_foo'] == 'not-redacted'
+
+
+def test_format_result_redact_with_hash(config):
+    config['foo'] = 'bar'
+    result = hst.format_config(
+        config, redact_regex='foo', redact_with_hash=True
+    )
+    assert result['foo'] == str(hash('bar'))

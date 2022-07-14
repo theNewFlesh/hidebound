@@ -295,26 +295,36 @@ def search(store, query, group_by_asset, client=requests):
     return store
 
 
-def format_config(config):
-    # type: (Dict[str, Any]) -> OrderedDict[str, Any]
+def format_config(
+    config, redact_regex='(_key|_id|url)$', redact_with_hash=False
+):
+    # type: (Dict[str, Any], str, bool) -> OrderedDict[str, Any]
     '''
     Redacts credentials of config and formats it for display in component.
 
     Args:
         config (dict): Configuration dictionary.
+        redact_regex (str, optional): Regular expression that matches keys,
+            whose values are to be redacted. Default: "(_key|_id|url)$".
+        redact_with_hash (bool, optional): Whether to redact values with the string
+            "REDACTED" or a hash of the value. Default: False.
 
     Returns:
         OrderedDict: Formatted config.
     '''
-    def redact(key, value):
+    def redact(key, value, as_hash):
+        if as_hash:
+            return hash(value)
         return 'REDACTED'
 
     def predicate(key, value):
-        if re.search('(_key|_id|url)$', key):
+        if re.search(redact_regex, key):
             return True
         return False
 
-    config = rpb.BlobETL(config).set(predicate, value_setter=redact).to_dict()
+    config = rpb.BlobETL(config) \
+        .set(predicate, value_setter=lambda k, v: redact(k, v, redact_with_hash)) \
+        .to_dict()
     output = OrderedDict()
     keys = [
         'ingress_directory',
