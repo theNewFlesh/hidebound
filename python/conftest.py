@@ -101,6 +101,8 @@ def config(temp_dir):
         write_mode='copy',
         dask_enabled=False,
         dask_workers=3,
+        redact_regex='(_key|_id|url)$',
+        redact_hash=True,
         workflow=['update', 'create', 'export', 'delete'],
         specification_files=[spec],
         exporters=dict(

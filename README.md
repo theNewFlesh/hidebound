@@ -402,13 +402,6 @@ The config tab is used for uploading and writing Hidebound's configuration file.
 
 ![](resources/screenshots/config.png)
 
-Its functions are as follows:
-
-| Name   | Function                                        |
-| ------ | ----------------------------------------------- |
-| Upload | Upload a config YAML file                       |
-| Write  | Write config to hidebound/hidebound_config.yaml |
-
 ### API
 The API tab is really a link to Hidebound's REST API documentation.
 
@@ -439,6 +432,9 @@ Hidebound configs consist of three main sections:
 * write_mode - whether to copy or move files from root to staging
 * dask_enabled - whether to enable Dask distributed computing
 * dask_workers - number of Dask partitions to use
+* redact_regex - regular expression which matches config keys whose valuse are to be redacted
+* redact_hash - whether to redact config values with "REDACTED" or a hash of the value
+* workflow - order list of steps to be followed in workflow
 
 ### Exporters
 Which exporters to us in the workflow.
@@ -458,20 +454,22 @@ If `HIDEBOUND_CONFIG_FILEPATH` is set, Hidebound will ignore all other
 environment variables and read the given filepath in as a yaml or json config
 file.
 
-| Variable                      | Format | Portion                                 |
-| ----------------------------- | ------ | --------------------------------------- |
-| HIDEBOUND_CONFIG_FILEPATH     | str    | Entire Hidebound config file            |
-| HIDEBOUND_INGRESS_DIRECTORY   | str    | ingress_directory parameter of config   |
-| HIDEBOUND_STAGING_DIRECTORY   | str    | staging_directory parameter of config   |
-| HIDEBOUND_INCLUDE_REGEX       | str    | include_regex parameter of config       |
-| HIDEBOUND_EXCLUDE_REGEX       | str    | exclude_regex parameter of config       |
-| HIDEBOUND_WRITE_MODE          | str    | write_mode parameter of config          |
-| HIDEBOUND_DASK_ENABLED        | str    | dask_enabled parameter of config        |
-| HIDEBOUND_DASK_WORKERS        | int    | dask_workers parameter of config        |
-| HIDEBOUND_WORKFLOW            | yaml   | order list of steps in workflow         |
-| HIDEBOUND_SPECIFICATION_FILES | yaml   | specification_files section of config   |
-| HIDEBOUND_EXPORTERS           | yaml   | exporters section of config             |
-| HIDEBOUND_WEBHOOKS            | yaml   | webhooks section of config              |
+| Variable                      | Format | Portion                               |
+| ----------------------------- | ------ | ------------------------------------- |
+| HIDEBOUND_CONFIG_FILEPATH     | str    | Entire Hidebound config file          |
+| HIDEBOUND_INGRESS_DIRECTORY   | str    | ingress_directory parameter of config |
+| HIDEBOUND_STAGING_DIRECTORY   | str    | staging_directory parameter of config |
+| HIDEBOUND_INCLUDE_REGEX       | str    | include_regex parameter of config     |
+| HIDEBOUND_EXCLUDE_REGEX       | str    | exclude_regex parameter of config     |
+| HIDEBOUND_WRITE_MODE          | str    | write_mode parameter of config        |
+| HIDEBOUND_DASK_ENABLED        | str    | dask_enabled parameter of config      |
+| HIDEBOUND_DASK_WORKERS        | int    | dask_workers parameter of config      |
+| HIDEBOUND_REDACT_REGEX        | str    | redact_regex parameter of config      |
+| HIDEBOUND_REDACT_HASH         | str    | redact_hash parameter of config       |
+| HIDEBOUND_WORKFLOW            | yaml   | workflow paramater of config          |
+| HIDEBOUND_SPECIFICATION_FILES | yaml   | specification_files section of config |
+| HIDEBOUND_EXPORTERS           | yaml   | exporters section of config           |
+| HIDEBOUND_WEBHOOKS            | yaml   | webhooks section of config            |
 
 ---
 
@@ -485,6 +483,8 @@ write_mode: copy                                             # copy files from r
                                                              # options: copy, move
 dask_enabled: true                                           # enable Dask distributed computing
 dask_workers: 16                                             # number of Dask partitions to use
+redact_regex: "(_key|_id|url)$"                              # regex matched config keys to redact
+redact_hash: true                                            # hash redacted values
 workflow:                                                    # workflow steps
   - delete                                                   # clear staging directory
   - update                                                   # create database from ingress files

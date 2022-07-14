@@ -39,6 +39,8 @@ base:
     HIDEBOUND_WRITE_MODE: move
     HIDEBOUND_DASK_ENABLED: "False"
     HIDEBOUND_DASK_WORKERS: "16"
+    HIDEBOUND_REDACT_REGEX: "(_key|_id|url)$"
+    HIDEBOUND_REDACT_HASH: true
     HIDEBOUND_WORKFLOW:
       - delete
       - update
