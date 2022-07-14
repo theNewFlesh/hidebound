@@ -93,16 +93,27 @@ class Config(Model):
         ingress_directory (str or Path): Root directory to recurse.
         staging_directory (str or Path): Directory where hidebound data will be
             staged.
-        specification_files (list[str], optional): List of asset specification
-            files. Default: [].
         include_regex (str, optional): Include filenames that match this regex.
             Default: ''.
         exclude_regex (str, optional): Exclude filenames that match this regex.
             Default: '\.DS_Store'.
         write_mode (str, optional): How assets will be extracted to
             hidebound/content directory. Default: copy.
+        dask_enabled (bool, optional): Whether Dask is enabled. Default: False.
+        dask_workers (int, optional): Number of Dask worker to use if enabled.
+            Default: 8.
+        workflow (list[str], optional): Ordered steps of workflow.  Default:
+            ['delete', 'update', 'create', 'export'].
+        redact_regex (str, optional): Regex pattern matched to config keys.
+            Values of matching keys will be redacted. Default: "(_key|_id|url)$".
+        redact_with_hash (bool, optional): Whether to replace redacted values
+            with "REDACTED" or a hash of the value. Default: True.
+        specification_files (list[str], optional): List of asset specification
+            files. Default: [].
         exporters (dict, optional): Dictionary of exporter configs, where the
             key is the exporter name and the value is its config. Default: {}.
+        webhooks (list[dict], optional): List of webhooks to be called after
+            export. Default: [].
     '''
     ingress_directory = StringType(
         required=True, validators=[vd.is_directory]
@@ -110,11 +121,6 @@ class Config(Model):
     staging_directory = StringType(
         required=True, validators=[vd.is_directory, vd.is_hidebound_directory]
     )  # type: StringType
-    specification_files = ListType(
-        StringType(validators=[is_specification_file, vd.is_file]),
-        default=[],
-        required=True
-    )  # type: ListType
     include_regex = StringType(default='', required=True)  # type: StringType
     exclude_regex = StringType(default=r'\.DS_Store', required=True)  # type: StringType
     write_mode = StringType(
@@ -131,6 +137,13 @@ class Config(Model):
         required=True,
         validators=[vd.is_workflow],
         default=['delete', 'update', 'create', 'export']
+    )  # type: ListType
+    redact_regex = StringType(required=True, default='(_key|_id|url)$')  # type: StringType
+    redact_with_hash = BooleanType(required=True, default=True)  # type: BooleanType
+    specification_files = ListType(
+        StringType(validators=[is_specification_file, vd.is_file]),
+        default=[],
+        required=True
     )  # type: ListType
 
     class ExportersConfig(Model):
