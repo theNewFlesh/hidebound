@@ -245,4 +245,4 @@ def test_format_result_redact_with_hash(config):
     result = hst.format_config(
         config, redact_regex='foo', redact_with_hash=True
     )
-    assert result['foo'] == str(hash('bar'))
+    assert result['foo'] == 'hash-' + str(hash('bar')).lstrip('-')
