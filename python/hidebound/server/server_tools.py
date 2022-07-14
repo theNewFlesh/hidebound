@@ -336,8 +336,8 @@ def format_config(
         'dask_workers',
         'redact_regex',
         'redact_hash',
-        'workflow',
         'specification_files',
+        'workflow',
         'exporters',
         'webhooks',
     ]
