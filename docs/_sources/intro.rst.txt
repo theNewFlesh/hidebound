@@ -522,16 +522,6 @@ configuration file.
 .. figure:: resources/screenshots/config.png
    :alt: 
 
-Its functions are as follows:
-
-+----------+----------------------------------------------------+
-| Name     | Function                                           |
-+==========+====================================================+
-| Upload   | Upload a config YAML file                          |
-+----------+----------------------------------------------------+
-| Write    | Write config to hidebound/hidebound\_config.yaml   |
-+----------+----------------------------------------------------+
-
 API
 ~~~
 
@@ -580,6 +570,11 @@ Base
 -  write\_mode - whether to copy or move files from root to staging
 -  dask\_enabled - whether to enable Dask distributed computing
 -  dask\_workers - number of Dask partitions to use
+-  redact\_regex - regular expression which matches config keys whose
+   valuse are to be redacted
+-  redact\_hash - whether to redact config values with "REDACTED" or a
+   hash of the value
+-  workflow - order list of steps to be followed in workflow
 
 Exporters
 ~~~~~~~~~
@@ -623,7 +618,11 @@ config file.
 +-----------------------------------+----------+------------------------------------------+
 | HIDEBOUND\_DASK\_WORKERS          | int      | dask\_workers parameter of config        |
 +-----------------------------------+----------+------------------------------------------+
-| HIDEBOUND\_WORKFLOW               | yaml     | order list of steps in workflow          |
+| HIDEBOUND\_REDACT\_REGEX          | str      | redact\_regex parameter of config        |
++-----------------------------------+----------+------------------------------------------+
+| HIDEBOUND\_REDACT\_HASH           | str      | redact\_hash parameter of config         |
++-----------------------------------+----------+------------------------------------------+
+| HIDEBOUND\_WORKFLOW               | yaml     | workflow paramater of config             |
 +-----------------------------------+----------+------------------------------------------+
 | HIDEBOUND\_SPECIFICATION\_FILES   | yaml     | specification\_files section of config   |
 +-----------------------------------+----------+------------------------------------------+
@@ -646,6 +645,8 @@ Here is a full example config with comments:
                                                                  # options: copy, move
     dask_enabled: true                                           # enable Dask distributed computing
     dask_workers: 16                                             # number of Dask partitions to use
+    redact_regex: "(_key|_id|url)$"                              # regex matched config keys to redact
+    redact_hash: true                                            # hash redacted values
     workflow:                                                    # workflow steps
       - delete                                                   # clear staging directory
       - update                                                   # create database from ingress files
