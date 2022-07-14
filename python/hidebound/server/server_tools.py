@@ -334,6 +334,8 @@ def format_config(
         'write_mode',
         'dask_enabled',
         'dask_workers',
+        'redact_regex',
+        'redact_hash',
         'workflow',
         'specification_files',
         'exporters',
