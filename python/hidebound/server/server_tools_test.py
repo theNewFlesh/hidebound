@@ -240,9 +240,9 @@ def test_format_config_redact_regex(config):
     assert result['bar_foo'] == 'not-redacted'
 
 
-def test_format_result_redact_with_hash(config):
+def test_format_redact_hash(config):
     config['foo'] = 'bar'
     result = hst.format_config(
-        config, redact_regex='foo', redact_with_hash=True
+        config, redact_regex='foo', redact_hash=True
     )
     assert result['foo'] == 'hash-' + str(hash('bar')).lstrip('-')

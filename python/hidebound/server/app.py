@@ -244,7 +244,11 @@ def on_get_tab(tab, store):
         return components.get_asset_graph(graph)
 
     elif tab == 'config':
-        config = hst.format_config(hb.config)
+        config = hst.format_config(
+            hb.config,
+            redact_regex=hb.config['redact_regex'],
+            redact_hash=hb.config['redact_hash'],
+        )
         return components.get_config_tab(config)
 
     elif tab == 'api':

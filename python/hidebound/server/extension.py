@@ -96,13 +96,15 @@ class HideboundExtension:
             write_mode=app.config.get('WRITE_MODE', 'copy'),
             dask_enabled=hbt.str_to_bool(app.config.get('DASK_ENABLED', 'False')),
             dask_workers=int(app.config.get('DASK_WORKERS', 8)),
+            redact_regex=app.config.get('REDACT_REGEX', '(_key|_id|url)$'),
+            redact_hash=hbt.str_to_bool(app.config.get('REDACT_HASH', 'False')),
+            specification_files=yaml.safe_load(
+                str(app.config.get('SPECIFICATION_FILES', '[]'))
+            ),
             workflow=yaml.safe_load(str(app.config.get(
                 'WORKFLOW',
                 '["delete", "update", "create", "export"]',
             ))),
-            specification_files=yaml.safe_load(
-                str(app.config.get('SPECIFICATION_FILES', '[]'))
-            ),
             exporters=yaml.safe_load(str(app.config.get('EXPORTERS', '{}'))),
             webhooks=yaml.safe_load(str(app.config.get('WEBHOOKS', '[]'))),
         )

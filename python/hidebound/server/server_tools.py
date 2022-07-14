@@ -296,7 +296,7 @@ def search(store, query, group_by_asset, client=requests):
 
 
 def format_config(
-    config, redact_regex='(_key|_id|url)$', redact_with_hash=False
+    config, redact_regex='(_key|_id|url)$', redact_hash=False
 ):
     # type: (Dict[str, Any], str, bool) -> OrderedDict[str, Any]
     '''
@@ -306,7 +306,7 @@ def format_config(
         config (dict): Configuration dictionary.
         redact_regex (str, optional): Regular expression that matches keys,
             whose values are to be redacted. Default: "(_key|_id|url)$".
-        redact_with_hash (bool, optional): Whether to redact values with the string
+        redact_hash (bool, optional): Whether to redact values with the string
             "REDACTED" or a hash of the value. Default: False.
 
     Returns:
@@ -323,7 +323,7 @@ def format_config(
         return False
 
     config = rpb.BlobETL(config) \
-        .set(predicate, value_setter=lambda k, v: redact(k, v, redact_with_hash)) \
+        .set(predicate, value_setter=lambda k, v: redact(k, v, redact_hash)) \
         .to_dict()
     output = OrderedDict()
     keys = [

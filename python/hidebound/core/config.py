@@ -106,8 +106,8 @@ class Config(Model):
             ['delete', 'update', 'create', 'export'].
         redact_regex (str, optional): Regex pattern matched to config keys.
             Values of matching keys will be redacted. Default: "(_key|_id|url)$".
-        redact_with_hash (bool, optional): Whether to replace redacted values
-            with "REDACTED" or a hash of the value. Default: True.
+        redact_hash (bool, optional): Whether to replace redacted values with
+            "REDACTED" or a hash of the value. Default: True.
         specification_files (list[str], optional): List of asset specification
             files. Default: [].
         exporters (dict, optional): Dictionary of exporter configs, where the
@@ -139,7 +139,7 @@ class Config(Model):
         default=['delete', 'update', 'create', 'export']
     )  # type: ListType
     redact_regex = StringType(required=True, default='(_key|_id|url)$')  # type: StringType
-    redact_with_hash = BooleanType(required=True, default=True)  # type: BooleanType
+    redact_hash = BooleanType(required=True, default=True)  # type: BooleanType
     specification_files = ListType(
         StringType(validators=[is_specification_file, vd.is_file]),
         default=[],
