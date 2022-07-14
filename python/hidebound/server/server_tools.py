@@ -314,7 +314,7 @@ def format_config(
     '''
     def redact(key, value, as_hash):
         if as_hash:
-            return 'hash-' + str(hash(value))
+            return 'hash-' + str(hash(value)).lstrip('-')
         return 'REDACTED'
 
     def predicate(key, value):
