@@ -254,7 +254,7 @@ class ConfigTests(unittest.TestCase):
         os.makedirs(self.staging)
         self.config['exporters'] = [
             dict(
-                # name='girder',
+                name='girder',
                 api_key='api_key',
                 root_id='root_id',
                 root_type='collection',
@@ -263,7 +263,7 @@ class ConfigTests(unittest.TestCase):
                 metadata_types=['asset', 'file'],
             ),
             dict(
-                # name='s3',
+                name='s3',
                 access_key='foo',
                 secret_key='bar',
                 bucket='bucket',
@@ -271,7 +271,7 @@ class ConfigTests(unittest.TestCase):
                 metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk'],
             ),
             dict(
-                # name='local_disk',
+                name='local_disk',
                 target_directory=self.target_dir,
                 metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk'],
             )
