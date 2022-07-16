@@ -105,12 +105,13 @@ def config(temp_dir):
         redact_hash=True,
         workflow=['update', 'create', 'export', 'delete'],
         specification_files=[spec],
-        exporters=dict(
-            local_disk=dict(
+        exporters=[
+            dict(
+                name='local_disk',
                 target_directory=Path(temp_dir, 'archive').as_posix(),
                 metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk']
             )
-        ),
+        ],
         webhooks=[
             dict(
                 url='http://foobar.com/api/user?',

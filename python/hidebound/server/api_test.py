@@ -153,7 +153,7 @@ def test_delete_no_create(env, extension, client, config, make_files):
 
 # EXPORT------------------------------------------------------------------------
 def test_export(env, extension, client, config, make_files):
-    target_dir = config['exporters']['local_disk']['target_directory']
+    target_dir = config['exporters'][0]['target_directory']
     result = os.listdir(target_dir)
     assert result == []
 
