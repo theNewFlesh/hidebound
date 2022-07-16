@@ -716,7 +716,7 @@ class DatabaseTests(DatabaseTestBase):
             )))
             self.assertEqual(result, 1)
 
-    def test_export_local_disk(self):
+    def test_export_disk(self):
         with TemporaryDirectory() as root:
             staging = Path(root, 'hidebound')
             os.makedirs(staging)
@@ -725,7 +725,7 @@ class DatabaseTests(DatabaseTestBase):
 
             target = Path(root, 'target').as_posix()
             os.makedirs(target)
-            exporters = [dict(name='local_disk', target_directory=target)]
+            exporters = [dict(name='disk', target_directory=target)]
 
             db = Database(
                 root, staging, [Spec001, Spec002], exporters=exporters

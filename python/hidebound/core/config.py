@@ -16,7 +16,7 @@ from schematics import Model
 
 from hidebound.core.specification_base import SpecificationBase
 from hidebound.exporters.girder_exporter import GirderConfig
-from hidebound.exporters.local_disk_exporter import LocalDiskConfig
+from hidebound.exporters.disk_exporter import DiskConfig
 from hidebound.exporters.s3_exporter import S3Config
 import hidebound.core.validators as vd
 # ------------------------------------------------------------------------------
@@ -148,7 +148,7 @@ class Config(Model):
     exporters = ListType(
         BaseType(
             validators=[lambda x: vd.is_one_of(
-                x, [LocalDiskConfig, S3Config, GirderConfig]
+                x, [DiskConfig, S3Config, GirderConfig]
             )]
         ),
         required=False,

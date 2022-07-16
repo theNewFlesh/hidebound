@@ -20,7 +20,7 @@ import yaml
 from hidebound.core.config import Config
 from hidebound.core.specification_base import SpecificationBase
 from hidebound.exporters.girder_exporter import GirderExporter
-from hidebound.exporters.local_disk_exporter import LocalDiskExporter
+from hidebound.exporters.disk_exporter import DiskExporter
 from hidebound.exporters.s3_exporter import S3Exporter
 import hidebound.core.database_tools as db_tools
 import hidebound.core.tools as hbt
@@ -491,7 +491,7 @@ class Database:
         # TODO: Find a nicer pattern for injecting exporters.
         lut = dict(
             girder=GirderExporter,
-            local_disk=LocalDiskExporter,
+            disk=DiskExporter,
             s3=S3Exporter,
         )  # type: Dict[str, Any]
 

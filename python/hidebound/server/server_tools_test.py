@@ -163,7 +163,7 @@ def test_search(env, extension, config, client):
 
 def test_format_config_exporters(config):
     expected = dict(
-        local_disk=dict(
+        disk=dict(
             target_directory='/tmp/mnt/archive',
             metadata_types=['asset', 'file']
         ),

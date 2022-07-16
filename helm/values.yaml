@@ -123,7 +123,7 @@ overlays:
 
     env_secret:
       HIDEBOUND_EXPORTERS:
-        - name: local_disk
+        - name: disk
           target_directory: /mnt/storage/archive
           metadata_types:
             - asset-chunk

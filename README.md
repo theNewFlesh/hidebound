@@ -441,7 +441,7 @@ Which exporters to us in the workflow.
 Options include:
 
 * s3
-* local_disk
+* disk
 * girder
 
 ### Webhooks
@@ -503,7 +503,7 @@ exporters:                                                   # dict of exporter 
       - asset                                                # drop file metadata
       - asset-chunk
       - file-chunk
-  local_disk:                                                # export to local disk
+  disk:                                                      # export to disk
     target_directory: /mnt/storage/archive                   # target location
     metadata_types:                                          # options: asset, file, asset-chunk, file-chunk
       - asset                                                # only asset and file metadata

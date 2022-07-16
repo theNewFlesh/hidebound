@@ -10,49 +10,49 @@ from pandas import DataFrame
 from schematics.exceptions import DataError
 import pytest
 
-from hidebound.exporters.local_disk_exporter import LocalDiskConfig, LocalDiskExporter
+from hidebound.exporters.disk_exporter import DiskConfig, DiskExporter
 import hidebound.core.tools as hbt
 # ------------------------------------------------------------------------------
 
 
-class LocalDiskConfigTests(unittest.TestCase):
+class DiskConfigTests(unittest.TestCase):
     def test_validate(self):
-        config = dict(name='local_disk', target_directory='/foo/bar')
-        LocalDiskConfig(config).validate()
+        config = dict(name='disk', target_directory='/foo/bar')
+        DiskConfig(config).validate()
 
     def test_name(self):
         config = dict(target_directory='/foo/bar')
         with self.assertRaises(DataError):
-            LocalDiskConfig(config).validate()
+            DiskConfig(config).validate()
 
         config = dict(name='foobar', target_directory='/foo/bar')
         with self.assertRaises(DataError):
-            LocalDiskConfig(config).validate()
+            DiskConfig(config).validate()
 
     def test_validate_errors(self):
         expected = 'is not a legal directory path'
         for path in ['foo/bar', '\foo\bar', '/foo/bar/', '/foo.bar/baz']:
             with self.assertRaisesRegexp(DataError, expected):
-                config = dict(name='local_disk', target_directory=path)
-                LocalDiskConfig(config).validate()
+                config = dict(name='disk', target_directory=path)
+                DiskConfig(config).validate()
 # ------------------------------------------------------------------------------
 
 
-class LocalDiskExporterTests(unittest.TestCase):
+class DiskExporterTests(unittest.TestCase):
     def get_config(self, root):
         return dict(target_directory=Path(root, 'target').as_posix())
 
     def test_from_config(self):
         with TemporaryDirectory() as root:
             config = self.get_config(root)
-            result = LocalDiskExporter.from_config(config)
-            self.assertIsInstance(result, LocalDiskExporter)
+            result = DiskExporter.from_config(config)
+            self.assertIsInstance(result, DiskExporter)
 
     def test_init(self):
         with TemporaryDirectory() as root:
             config = self.get_config(root)
-            result = LocalDiskExporter(**config)
-            self.assertIsInstance(result, LocalDiskExporter)
+            result = DiskExporter(**config)
+            self.assertIsInstance(result, DiskExporter)
             self.assertTrue(Path(config['target_directory']).is_dir())
 
     def setup_staging_directory(self, root):
@@ -168,7 +168,7 @@ class LocalDiskExporterTests(unittest.TestCase):
         with TemporaryDirectory() as root:
             config = self.get_config(root)
             staging = self.setup_staging_directory(root)
-            exp = LocalDiskExporter.from_config(config)
+            exp = DiskExporter.from_config(config)
 
             target = config['target_directory']
             self.assertEqual(len(os.listdir(target)), 0)
@@ -193,7 +193,7 @@ class LocalDiskExporterTests(unittest.TestCase):
             self.assertEqual(result, expected)
 
             # idempotency
-            LocalDiskExporter.from_config(config).export(staging)
+            DiskExporter.from_config(config).export(staging)
             result = hbt.directory_to_dataframe(target).filepath \
                 .apply(lambda x: re.sub('.*/target/', '', x)) \
                 .tolist()
@@ -204,7 +204,7 @@ class LocalDiskExporterTests(unittest.TestCase):
     def test_export_content(self):
         with TemporaryDirectory() as root:
             config = self.get_config(root)
-            exp = LocalDiskExporter.from_config(config)
+            exp = DiskExporter.from_config(config)
 
             src = Path(root, 'source', 'content.json')
             src_rel = Path('content.json')
@@ -227,7 +227,7 @@ class LocalDiskExporterTests(unittest.TestCase):
     def test_export_asset(self):
         with TemporaryDirectory() as root:
             config = self.get_config(root)
-            exp = LocalDiskExporter.from_config(config)
+            exp = DiskExporter.from_config(config)
 
             result = Path(
                 exp._target_directory, 'metadata', 'asset', '1234.json'
@@ -243,7 +243,7 @@ class LocalDiskExporterTests(unittest.TestCase):
     def test_export_file(self):
         with TemporaryDirectory() as root:
             config = self.get_config(root)
-            exp = LocalDiskExporter.from_config(config)
+            exp = DiskExporter.from_config(config)
 
             result = Path(
                 exp._target_directory, 'metadata', 'file', '1234.json'
@@ -259,7 +259,7 @@ class LocalDiskExporterTests(unittest.TestCase):
     def test_export_asset_chunk(self):
         with TemporaryDirectory() as root:
             config = self.get_config(root)
-            exp = LocalDiskExporter.from_config(config)
+            exp = DiskExporter.from_config(config)
 
             result = Path(exp._target_directory, 'metadata', 'asset-chunk')
             os.makedirs(result.parent)
@@ -274,7 +274,7 @@ class LocalDiskExporterTests(unittest.TestCase):
     def test_export_file_chunk(self):
         with TemporaryDirectory() as root:
             config = self.get_config(root)
-            exp = LocalDiskExporter.from_config(config)
+            exp = DiskExporter.from_config(config)
 
             result = Path(exp._target_directory, 'metadata', 'file-chunk')
             os.makedirs(result.parent)

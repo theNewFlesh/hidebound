@@ -63,7 +63,7 @@ Dataflow
 ========
 
 .. figure:: resources/screenshots/data_flow.png
-   :alt: 
+   :alt:
 
 Data begins as files on disk. Hidebound creates a JSON-compatible dict
 from their name traits and file traits and then constructs an internal
@@ -100,7 +100,7 @@ directory.
 ~~~~~~~~
 
 .. figure:: resources/screenshots/update.png
-   :alt: 
+   :alt:
 
 We call the update function via Hidebound's web app. Hidebound creates a
 new database based upon the recursive listing of all the files within
@@ -192,7 +192,7 @@ Below we can see the results of an export to Girder in the Girder web
 app.
 
 .. figure:: resources/screenshots/girder.png
-   :alt: 
+   :alt:
 
 *Delete*
 ~~~~~~~~
@@ -475,7 +475,7 @@ Data
 The data tab is the workhorse of the Hidebound app.
 
 .. figure:: resources/screenshots/update.png
-   :alt: 
+   :alt:
 
 Its functions are as follows:
 
@@ -490,7 +490,7 @@ Its functions are as follows:
 Prior to calling update, the application will look like this:
 
 .. figure:: resources/screenshots/pre_update.png
-   :alt: 
+   :alt:
 
 Graph
 ~~~~~
@@ -499,7 +499,7 @@ The graph tab is used for visualizing the state of all the assets within
 a root directory.
 
 .. figure:: resources/screenshots/graph.png
-   :alt: 
+   :alt:
 
 It's color code is as follows:
 
@@ -520,7 +520,7 @@ The config tab is used for uploading and writing Hidebound's
 configuration file.
 
 .. figure:: resources/screenshots/config.png
-   :alt: 
+   :alt:
 
 API
 ~~~
@@ -528,7 +528,7 @@ API
 The API tab is really a link to Hidebound's REST API documentation.
 
 .. figure:: resources/screenshots/api.png
-   :alt: 
+   :alt:
 
 Docs
 ~~~~
@@ -536,7 +536,7 @@ Docs
 The API tab is really a link to Hidebound's github documentation.
 
 .. figure:: resources/screenshots/docs.png
-   :alt: 
+   :alt:
 
 Errors
 ~~~~~~
@@ -545,7 +545,7 @@ Hidebound is oriented towards developers and technically proficient
 users. It displays errors in their entirety within the application.
 
 .. figure:: resources/screenshots/error.png
-   :alt: 
+   :alt:
 
 Configuration
 =============
@@ -665,7 +665,7 @@ Here is a full example config with comments:
           - asset                                                # drop file metadata
           - asset-chunk
           - file-chunk
-      local_disk:                                                # export to local disk
+      disk:                                                # export to local disk
         target_directory: /mnt/storage/archive                   # target location
         metadata_types:                                          # options: asset, file, asset-chunk, file-chunk
           - asset                                                # only asset and file metadata

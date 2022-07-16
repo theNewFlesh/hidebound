@@ -15,7 +15,7 @@ workflow:
 specification_files:
   - /home/ubuntu/hidebound/python/hidebound/core/test_specifications.py
 exporters:
-  local_disk:
+  disk:
     target_directory: /tmp/mnt/archive
     metadata_types:
       - asset

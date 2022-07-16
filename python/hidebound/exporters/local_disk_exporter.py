@@ -12,28 +12,28 @@ import hidebound.core.validators as vd
 # ------------------------------------------------------------------------------
 
 
-class LocalDiskConfig(ExporterConfigBase):
+class DiskConfig(ExporterConfigBase):
     '''
-    A class for validating configurations supplied to LocalDiskExporter.
+    A class for validating configurations supplied to DiskExporter.
 
     Attributes:
-        name (str): Name of exporter. Must be 'local_disk'.
+        name (str): Name of exporter. Must be 'disk'.
         target_directory (str): Target directory.
     '''
     name = StringType(
-        required=True, validators=[lambda x: vd.is_eq(x, 'local_disk')]
+        required=True, validators=[lambda x: vd.is_eq(x, 'disk')]
     )  # type: StringType
     target_directory = StringType(
         required=True, validators=[vd.is_legal_directory]
     )  # type: StringType
 
 
-class LocalDiskExporter(ExporterBase):
+class DiskExporter(ExporterBase):
     @staticmethod
     def from_config(config):
-        # type: (Dict) -> LocalDiskExporter
+        # type: (Dict) -> DiskExporter
         '''
-        Construct a LocalDiskExporter from a given config.
+        Construct a DiskExporter from a given config.
 
         Args:
             config (dict): Config dictionary.
@@ -42,9 +42,9 @@ class LocalDiskExporter(ExporterBase):
             DataError: If config is invalid.
 
         Returns:
-            LocalDiskExporter: LocalDiskExporter instance.
+            DiskExporter: DiskExporter instance.
         '''
-        return LocalDiskExporter(**config)
+        return DiskExporter(**config)
 
     def __init__(
         self,
@@ -54,7 +54,7 @@ class LocalDiskExporter(ExporterBase):
     ):
         # type: (str, List[str], Any) -> None
         '''
-        Constructs a LocalDiskExporter instance.
+        Constructs a DiskExporter instance.
         Creates target directory if it does not exist.
 
         Args:
@@ -68,11 +68,11 @@ class LocalDiskExporter(ExporterBase):
         super().__init__(metadata_types=metadata_types)
 
         config = dict(
-            name='local_disk',
+            name='disk',
             target_directory=target_directory,
             metadata_types=metadata_types,
         )
-        LocalDiskConfig(config).validate()
+        DiskConfig(config).validate()
         # ----------------------------------------------------------------------
 
         self._target_directory = str(config['target_directory'])  # type: str

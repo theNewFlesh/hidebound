@@ -107,7 +107,7 @@ def config(temp_dir):
         specification_files=[spec],
         exporters=[
             dict(
-                name='local_disk',
+                name='disk',
                 target_directory=Path(temp_dir, 'archive').as_posix(),
                 metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk']
             )

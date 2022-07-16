@@ -271,7 +271,7 @@ class ConfigTests(unittest.TestCase):
                 metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk'],
             ),
             dict(
-                name='local_disk',
+                name='disk',
                 target_directory=self.target_dir,
                 metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk'],
             )
@@ -299,7 +299,7 @@ class ConfigTests(unittest.TestCase):
             with self.assertRaisesRegexp(DataError, expected):
                 cfg.Config(self.config).validate()
 
-    def test_exporters_bad_local_disk(self):
+    def test_exporters_bad_disk(self):
         with TemporaryDirectory() as root:
             self.add_exporters_to_config(root)
             self.config['exporters'][2]['target_directory'] = 'bad/dir'
@@ -335,7 +335,7 @@ class ConfigTests(unittest.TestCase):
             result = result.to_primitive()['exporters']
             self.assertEqual(result, expected)
 
-    def test_exporters_no_local_disk(self):
+    def test_exporters_no_disk(self):
         with TemporaryDirectory() as root:
             self.add_exporters_to_config(root)
             del self.config['exporters'][2]
