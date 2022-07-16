@@ -162,19 +162,22 @@ def test_search(env, extension, config, client):
 
 
 def test_format_config_exporters(config):
-    expected = dict(
-        disk=dict(
+    expected = [
+        dict(
+            name='disk',
             target_directory='/tmp/mnt/archive',
             metadata_types=['asset', 'file']
         ),
-        s3=dict(
+        dict(
+            name='s3',
             access_key='access_key',
             secret_key='secret_key',
             bucket='bucket',
             region='region',
             metadata_types=['asset', 'file']
         ),
-        girder=dict(
+        dict(
+            name='girder',
             api_key='api_key',
             root_id='root_id',
             root_type='root_type',
@@ -182,15 +185,15 @@ def test_format_config_exporters(config):
             port=80,
             metadata_types=['asset', 'file']
         )
-    )
+    ]
     config['exporters'] = expected
     result = hst.format_config(config)
     result = yaml.safe_load(result['exporters'])
 
-    expected['s3']['access_key'] = 'REDACTED'
-    expected['s3']['secret_key'] = 'REDACTED'
-    expected['girder']['api_key'] = 'REDACTED'
-    expected['girder']['root_id'] = 'REDACTED'
+    expected[1]['access_key'] = 'REDACTED'
+    expected[1]['secret_key'] = 'REDACTED'
+    expected[2]['api_key'] = 'REDACTED'
+    expected[2]['root_id'] = 'REDACTED'
     assert result == expected
 
 
