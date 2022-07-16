@@ -17,14 +17,23 @@ import hidebound.core.tools as hbt
 
 class LocalDiskConfigTests(unittest.TestCase):
     def test_validate(self):
-        config = dict(target_directory='/foo/bar')
+        config = dict(name='local_disk', target_directory='/foo/bar')
         LocalDiskConfig(config).validate()
+
+    def test_name(self):
+        config = dict(target_directory='/foo/bar')
+        with self.assertRaises(DataError):
+            LocalDiskConfig(config).validate()
+
+        config = dict(name='foobar', target_directory='/foo/bar')
+        with self.assertRaises(DataError):
+            LocalDiskConfig(config).validate()
 
     def test_validate_errors(self):
         expected = 'is not a legal directory path'
         for path in ['foo/bar', '\foo\bar', '/foo/bar/', '/foo.bar/baz']:
             with self.assertRaisesRegexp(DataError, expected):
-                config = dict(target_directory=path)
+                config = dict(name='local_disk', target_directory=path)
                 LocalDiskConfig(config).validate()
 # ------------------------------------------------------------------------------
 

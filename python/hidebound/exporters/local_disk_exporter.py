@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Any, Dict, List
 
 from pathlib import Path
 import os
@@ -17,8 +17,12 @@ class LocalDiskConfig(ExporterConfigBase):
     A class for validating configurations supplied to LocalDiskExporter.
 
     Attributes:
+        name (str): Name of exporter. Must be 'local_disk'.
         target_directory (str): Target directory.
     '''
+    name = StringType(
+        required=True, validators=[lambda x: vd.is_eq(x, 'local_disk')]
+    )  # type: StringType
     target_directory = StringType(
         required=True, validators=[vd.is_legal_directory]
     )  # type: StringType
@@ -46,14 +50,17 @@ class LocalDiskExporter(ExporterBase):
         self,
         target_directory,
         metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk'],
+        **kwargs,
     ):
-        # type: (str, List[str]) -> None
+        # type: (str, List[str], Any) -> None
         '''
         Constructs a LocalDiskExporter instance.
         Creates target directory if it does not exist.
 
         Args:
             target_directory (str): Target directory.
+            metadata_types (list, optional): List of metadata types for export.
+                Default: [asset, file, asset-chunk, file-chunk].
 
         Raises:
             DataError: If config is invalid.
@@ -61,6 +68,7 @@ class LocalDiskExporter(ExporterBase):
         super().__init__(metadata_types=metadata_types)
 
         config = dict(
+            name='local_disk',
             target_directory=target_directory,
             metadata_types=metadata_types,
         )
