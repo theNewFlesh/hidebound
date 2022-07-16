@@ -1,4 +1,4 @@
-from typing import List
+from typing import Any, List
 
 from io import BytesIO
 import json
@@ -18,11 +18,13 @@ class S3Config(ExporterConfigBase):
     A class for validating configurations supplied to S3Exporter.
 
     Attributes:
+        name (str): Name of exporter. Must be 's3'.
         access_key (str): AWS access key.
         secret_key (str): AWS secret key.
         bucket (str): AWS bucket name.
         region (str): AWS region name. Default: us-east-1.
     '''
+    name = StringType(required=True, validators=[lambda x: vd.is_eq(x, 's3')])  # type: StringType
     access_key = StringType(required=True)  # type: StringType
     secret_key = StringType(required=True)  # type: StringType
     bucket = StringType(
@@ -58,8 +60,9 @@ class S3Exporter(ExporterBase):
         bucket,
         region,
         metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk'],
+        **kwargs,
     ):
-        # type: (str, str, str, str, List[str]) -> None
+        # type: (str, str, str, str, List[str], Any) -> None
         '''
         Constructs a S3Exporter instances and creates a bucket with given name
         if it does not exist.
@@ -78,6 +81,7 @@ class S3Exporter(ExporterBase):
         super().__init__(metadata_types=metadata_types)
 
         config = dict(
+            name='s3',
             access_key=access_key,
             secret_key=secret_key,
             bucket=bucket,

@@ -15,6 +15,7 @@ from hidebound.exporters.s3_exporter import S3Config, S3Exporter
 class S3ConfigTests(unittest.TestCase):
     def setUp(self):
         self.config = dict(
+            name='s3',
             access_key='foo',
             secret_key='bar',
             bucket='bucket',
@@ -23,6 +24,11 @@ class S3ConfigTests(unittest.TestCase):
 
     def test_validate(self):
         S3Config(self.config).validate()
+
+    def test_name(self):
+        self.config['name'] = 'foobar'
+        with self.assertRaises(DataError):
+            S3Config(self.config).validate()
 
     def test_bucket(self):
         self.config['bucket'] = 'BadBucket'
@@ -40,6 +46,7 @@ class S3ExporterTests(unittest.TestCase):
     @mock_s3
     def setUp(self):
         self.config = dict(
+            name='s3',
             access_key='foo',
             secret_key='bar',
             bucket='bucket',
