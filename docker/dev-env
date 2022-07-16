@@ -11,7 +11,7 @@ HIDEBOUND_SPECIFICATION_FILES='
 - /home/ubuntu/hidebound/python/hidebound/core/test_specifications.py
 '
 HIDEBOUND_EXPORTERS='
-disk:
+- name: disk
   target_directory: /tmp/archive
   metadata_types:
     - asset

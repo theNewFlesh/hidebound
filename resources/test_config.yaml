@@ -15,11 +15,16 @@ workflow:
 specification_files:
   - /home/ubuntu/hidebound/python/hidebound/core/test_specifications.py
 exporters:
-  disk:
+  - name: disk
     target_directory: /tmp/mnt/archive
     metadata_types:
       - asset
       - file
+      - asset-chunk
+      - file-chunk
+  - name: disk
+    target_directory: /tmp/foo
+    metadata_types:
       - asset-chunk
       - file-chunk
 webhooks:

@@ -494,7 +494,7 @@ specification_files:                                         # list of spec file
   - /mnt/storage/specs/image_specs.py
   - /mnt/storage/specs/video_specs.py
 exporters:                                                   # dict of exporter configs
-  s3:                                                        # export to s3
+  - name: s3                                                 # export to s3
     access_key: ABCDEFGHIJKLMNOPQRST                         # aws access key
     secret_key: abcdefghijklmnopqrstuvwxyz1234567890abcd     # aws secret key
     bucket: prod-data                                        # s3 bucket
@@ -503,12 +503,12 @@ exporters:                                                   # dict of exporter 
       - asset                                                # drop file metadata
       - asset-chunk
       - file-chunk
-  disk:                                                      # export to disk
+  - name: disk                                               # export to disk
     target_directory: /mnt/storage/archive                   # target location
     metadata_types:                                          # options: asset, file, asset-chunk, file-chunk
       - asset                                                # only asset and file metadata
       - file
-  girder:                                                    # export to girder
+  - name: girder                                             # export to girder
     api_key: eyS0nj9qPC5E7yK5l7nhGVPqDOBKPdA3EC60Rs9h        # girder api key
     root_id: 5ed735c8d8dd6242642406e5                        # root resource id
     root_type: collection                                    # root resource type
