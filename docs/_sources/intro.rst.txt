@@ -187,9 +187,8 @@ MongoDB, and Girder. Exporters are are defined within the exporters
 subpackage. They expect a populated hidebound directory and use the
 files and metadata therein to export hidebound data. Exporter
 configurations are stored in the hidebound config, under the "exporters"
-key. Currently supported exporters include, local disk, s3 and girder.
-Below we can see the results of an export to Girder in the Girder web
-app.
+key. Currently supported exporters include, disk, s3 and girder. Below
+we can see the results of an export to Girder in the Girder web app.
 
 .. figure:: resources/screenshots/girder.png
    :alt: 
@@ -582,7 +581,7 @@ Exporters
 Which exporters to us in the workflow. Options include:
 
 -  s3
--  local\_disk
+-  disk
 -  girder
 
 Webhooks
@@ -656,7 +655,12 @@ Here is a full example config with comments:
       - /mnt/storage/specs/image_specs.py
       - /mnt/storage/specs/video_specs.py
     exporters:                                                   # dict of exporter configs
-      s3:                                                        # export to s3
+      - name: disk                                               # export to disk
+        target_directory: /mnt/storage/archive                   # target location
+        metadata_types:                                          # options: asset, file, asset-chunk, file-chunk
+          - asset                                                # only asset and file metadata
+          - file
+      - name: s3                                                 # export to s3
         access_key: ABCDEFGHIJKLMNOPQRST                         # aws access key
         secret_key: abcdefghijklmnopqrstuvwxyz1234567890abcd     # aws secret key
         bucket: prod-data                                        # s3 bucket
@@ -665,12 +669,7 @@ Here is a full example config with comments:
           - asset                                                # drop file metadata
           - asset-chunk
           - file-chunk
-      local_disk:                                                # export to local disk
-        target_directory: /mnt/storage/archive                   # target location
-        metadata_types:                                          # options: asset, file, asset-chunk, file-chunk
-          - asset                                                # only asset and file metadata
-          - file
-      girder:                                                    # export to girder
+      - name: girder                                             # export to girder
         api_key: eyS0nj9qPC5E7yK5l7nhGVPqDOBKPdA3EC60Rs9h        # girder api key
         root_id: 5ed735c8d8dd6242642406e5                        # root resource id
         root_type: collection                                    # root resource type

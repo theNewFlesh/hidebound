@@ -17,9 +17,9 @@ girder_exporter
     :undoc-members:
     :show-inheritance:
 
-local_disk_exporter
--------------------
-.. automodule:: hidebound.exporters.local_disk_exporter
+disk_exporter
+-------------
+.. automodule:: hidebound.exporters.disk_exporter
     :members:
     :private-members:
     :undoc-members:

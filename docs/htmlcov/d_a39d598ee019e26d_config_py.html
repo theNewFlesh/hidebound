@@ -64,8 +64,8 @@
             <a id="indexLink" class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a id="nextFileLink" class="nav" href="d_a39d598ee019e26d_database_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io">coverage.py v6.4.1</a>,
-            created at 2022-07-16 02:40 +0000
+            <a class="nav" href="https://coverage.readthedocs.io">coverage.py v6.4.2</a>,
+            created at 2022-07-16 03:58 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"/>
@@ -98,7 +98,7 @@
     <p class="pln"><span class="n"><a id="t16" href="#t16">16</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t17" href="#t17">17</a></span><span class="t"><span class="key">from</span> <span class="nam">hidebound</span><span class="op">.</span><span class="nam">core</span><span class="op">.</span><span class="nam">specification_base</span> <span class="key">import</span> <span class="nam">SpecificationBase</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t18" href="#t18">18</a></span><span class="t"><span class="key">from</span> <span class="nam">hidebound</span><span class="op">.</span><span class="nam">exporters</span><span class="op">.</span><span class="nam">girder_exporter</span> <span class="key">import</span> <span class="nam">GirderConfig</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t19" href="#t19">19</a></span><span class="t"><span class="key">from</span> <span class="nam">hidebound</span><span class="op">.</span><span class="nam">exporters</span><span class="op">.</span><span class="nam">local_disk_exporter</span> <span class="key">import</span> <span class="nam">LocalDiskConfig</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t19" href="#t19">19</a></span><span class="t"><span class="key">from</span> <span class="nam">hidebound</span><span class="op">.</span><span class="nam">exporters</span><span class="op">.</span><span class="nam">disk_exporter</span> <span class="key">import</span> <span class="nam">DiskConfig</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t20" href="#t20">20</a></span><span class="t"><span class="key">from</span> <span class="nam">hidebound</span><span class="op">.</span><span class="nam">exporters</span><span class="op">.</span><span class="nam">s3_exporter</span> <span class="key">import</span> <span class="nam">S3Config</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t21" href="#t21">21</a></span><span class="t"><span class="key">import</span> <span class="nam">hidebound</span><span class="op">.</span><span class="nam">core</span><span class="op">.</span><span class="nam">validators</span> <span class="key">as</span> <span class="nam">vd</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t22" href="#t22">22</a></span><span class="t"><span class="com"># ------------------------------------------------------------------------------</span>&nbsp;</span><span class="r"></span></p>
@@ -230,7 +230,7 @@
     <p class="run"><span class="n"><a id="t148" href="#t148">148</a></span><span class="t">    <span class="nam">exporters</span> <span class="op">=</span> <span class="nam">ListType</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t149" href="#t149">149</a></span><span class="t">        <span class="nam">BaseType</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t150" href="#t150">150</a></span><span class="t">            <span class="nam">validators</span><span class="op">=</span><span class="op">[</span><span class="key">lambda</span> <span class="nam">x</span><span class="op">:</span> <span class="nam">vd</span><span class="op">.</span><span class="nam">is_one_of</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t151" href="#t151">151</a></span><span class="t">                <span class="nam">x</span><span class="op">,</span> <span class="op">[</span><span class="nam">LocalDiskConfig</span><span class="op">,</span> <span class="nam">S3Config</span><span class="op">,</span> <span class="nam">GirderConfig</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t151" href="#t151">151</a></span><span class="t">                <span class="nam">x</span><span class="op">,</span> <span class="op">[</span><span class="nam">DiskConfig</span><span class="op">,</span> <span class="nam">S3Config</span><span class="op">,</span> <span class="nam">GirderConfig</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t152" href="#t152">152</a></span><span class="t">            <span class="op">)</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t153" href="#t153">153</a></span><span class="t">        <span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t154" href="#t154">154</a></span><span class="t">        <span class="nam">required</span><span class="op">=</span><span class="key">False</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
@@ -254,8 +254,8 @@
             <a id="indexLink" class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a id="nextFileLink" class="nav" href="d_a39d598ee019e26d_database_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io">coverage.py v6.4.1</a>,
-            created at 2022-07-16 02:40 +0000
+            <a class="nav" href="https://coverage.readthedocs.io">coverage.py v6.4.2</a>,
+            created at 2022-07-16 03:58 +0000
         </p>
     </div>
 </footer>

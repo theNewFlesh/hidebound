@@ -31,7 +31,7 @@
             <a href="index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.26.0
+                0.26.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -301,9 +301,8 @@ MongoDB, and Girder. Exporters are are defined within the exporters
 subpackage. They expect a populated hidebound directory and use the
 files and metadata therein to export hidebound data. Exporter
 configurations are stored in the hidebound config, under the “exporters”
-key. Currently supported exporters include, local disk, s3 and girder.
-Below we can see the results of an export to Girder in the Girder web
-app.</p>
+key. Currently supported exporters include, disk, s3 and girder. Below
+we can see the results of an export to Girder in the Girder web app.</p>
 <figure class="align-default">
 <img alt="" src="resources/screenshots/girder.png" />
 </figure>
@@ -742,7 +741,7 @@ hash of the value</p></li>
 <p>Which exporters to us in the workflow. Options include:</p>
 <ul class="simple">
 <li><p>s3</p></li>
-<li><p>local_disk</p></li>
+<li><p>disk</p></li>
 <li><p>girder</p></li>
 </ul>
 </section>
@@ -848,7 +847,12 @@ config file.</p>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/storage/specs/image_specs.py</span><span class="w"></span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/storage/specs/video_specs.py</span><span class="w"></span>
 <span class="nt">exporters</span><span class="p">:</span><span class="w">                                                   </span><span class="c1"># dict of exporter configs</span><span class="w"></span>
-<span class="w">  </span><span class="nt">s3</span><span class="p">:</span><span class="w">                                                        </span><span class="c1"># export to s3</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">disk</span><span class="w">                                               </span><span class="c1"># export to disk</span><span class="w"></span>
+<span class="w">    </span><span class="nt">target_directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/storage/archive</span><span class="w">                   </span><span class="c1"># target location</span><span class="w"></span>
+<span class="w">    </span><span class="nt">metadata_types</span><span class="p">:</span><span class="w">                                          </span><span class="c1"># options: asset, file, asset-chunk, file-chunk</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">asset</span><span class="w">                                                </span><span class="c1"># only asset and file metadata</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3</span><span class="w">                                                 </span><span class="c1"># export to s3</span><span class="w"></span>
 <span class="w">    </span><span class="nt">access_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ABCDEFGHIJKLMNOPQRST</span><span class="w">                         </span><span class="c1"># aws access key</span><span class="w"></span>
 <span class="w">    </span><span class="nt">secret_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">abcdefghijklmnopqrstuvwxyz1234567890abcd</span><span class="w">     </span><span class="c1"># aws secret key</span><span class="w"></span>
 <span class="w">    </span><span class="nt">bucket</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prod-data</span><span class="w">                                        </span><span class="c1"># s3 bucket</span><span class="w"></span>
@@ -857,12 +861,7 @@ config file.</p>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">asset</span><span class="w">                                                </span><span class="c1"># drop file metadata</span><span class="w"></span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">asset-chunk</span><span class="w"></span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file-chunk</span><span class="w"></span>
-<span class="w">  </span><span class="nt">local_disk</span><span class="p">:</span><span class="w">                                                </span><span class="c1"># export to local disk</span><span class="w"></span>
-<span class="w">    </span><span class="nt">target_directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/storage/archive</span><span class="w">                   </span><span class="c1"># target location</span><span class="w"></span>
-<span class="w">    </span><span class="nt">metadata_types</span><span class="p">:</span><span class="w">                                          </span><span class="c1"># options: asset, file, asset-chunk, file-chunk</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">asset</span><span class="w">                                                </span><span class="c1"># only asset and file metadata</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file</span><span class="w"></span>
-<span class="w">  </span><span class="nt">girder</span><span class="p">:</span><span class="w">                                                    </span><span class="c1"># export to girder</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">girder</span><span class="w">                                             </span><span class="c1"># export to girder</span><span class="w"></span>
 <span class="w">    </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eyS0nj9qPC5E7yK5l7nhGVPqDOBKPdA3EC60Rs9h</span><span class="w">        </span><span class="c1"># girder api key</span><span class="w"></span>
 <span class="w">    </span><span class="nt">root_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5ed735c8d8dd6242642406e5</span><span class="w">                        </span><span class="c1"># root resource id</span><span class="w"></span>
 <span class="w">    </span><span class="nt">root_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">collection</span><span class="w">                                    </span><span class="c1"># root resource type</span><span class="w"></span>
