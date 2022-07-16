@@ -744,11 +744,12 @@ def is_one_of(item, models):
     if len(models) == 0:
         return
 
-    error = {}
+    errors = set()
     for model in models:
         try:
             model(item).validate()
             return
         except DataError as e:
-            error.update(e.args[0])
-    raise ValidationError(str(error))
+            errors.add(str(e))
+    error = '\n'.join(list(errors))
+    raise ValidationError(error)
