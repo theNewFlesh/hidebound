@@ -252,8 +252,9 @@ class ConfigTests(unittest.TestCase):
         self.set_data(root)
         os.makedirs(self.ingress)
         os.makedirs(self.staging)
-        self.config['exporters'] = dict(
-            girder=dict(
+        self.config['exporters'] = [
+            dict(
+                # name='girder',
                 api_key='api_key',
                 root_id='root_id',
                 root_type='collection',
@@ -261,18 +262,20 @@ class ConfigTests(unittest.TestCase):
                 port=2020,
                 metadata_types=['asset', 'file'],
             ),
-            s3=dict(
+            dict(
+                # name='s3',
                 access_key='foo',
                 secret_key='bar',
                 bucket='bucket',
                 region='us-west-2',
                 metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk'],
             ),
-            local_disk=dict(
+            dict(
+                # name='local_disk',
                 target_directory=self.target_dir,
                 metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk'],
             )
-        )
+        ]
 
     def test_exporters(self):
         with TemporaryDirectory() as root:
@@ -282,16 +285,16 @@ class ConfigTests(unittest.TestCase):
     def test_exporters_bad_girder(self):
         with TemporaryDirectory() as root:
             self.add_exporters_to_config(root)
-            self.config['exporters']['girder']['root_type'] = 'pizza'
+            self.config['exporters'][0]['root_type'] = 'pizza'
             expected = r"pizza is not in \[\'collection\', \'folder\'\]"
             with self.assertRaisesRegexp(DataError, expected):
                 cfg.Config(self.config).validate()
-            self.config['exporters']['girder']['root_type'] = 'collection'
+            self.config['exporters'][0]['root_type'] = 'collection'
 
     def test_exporters_bad_s3(self):
         with TemporaryDirectory() as root:
             self.add_exporters_to_config(root)
-            self.config['exporters']['s3']['bucket'] = 'BadBucket'
+            self.config['exporters'][1]['bucket'] = 'BadBucket'
             expected = 'is not a valid bucket name'
             with self.assertRaisesRegexp(DataError, expected):
                 cfg.Config(self.config).validate()
@@ -299,7 +302,7 @@ class ConfigTests(unittest.TestCase):
     def test_exporters_bad_local_disk(self):
         with TemporaryDirectory() as root:
             self.add_exporters_to_config(root)
-            self.config['exporters']['local_disk']['target_directory'] = 'bad/dir'
+            self.config['exporters'][2]['target_directory'] = 'bad/dir'
             expected = 'is not a legal directory path.'
             with self.assertRaisesRegexp(DataError, expected):
                 cfg.Config(self.config).validate()
@@ -307,7 +310,7 @@ class ConfigTests(unittest.TestCase):
     def test_exporters_bad_config(self):
         with TemporaryDirectory() as root:
             self.add_exporters_to_config(root)
-            self.config['exporters'] = dict(bagel='lox')
+            self.config['exporters'] = [dict(bagel='lox')]
             expected = 'Rogue field'
             with self.assertRaisesRegexp(DataError, expected):
                 cfg.Config(self.config).validate()
@@ -315,7 +318,7 @@ class ConfigTests(unittest.TestCase):
     def test_exporters_no_girder(self):
         with TemporaryDirectory() as root:
             self.add_exporters_to_config(root)
-            del self.config['exporters']['girder']
+            del self.config['exporters'][0]
             expected = self.config['exporters']
             result = cfg.Config(self.config)
             result.validate()
@@ -325,7 +328,7 @@ class ConfigTests(unittest.TestCase):
     def test_exporters_no_s3(self):
         with TemporaryDirectory() as root:
             self.add_exporters_to_config(root)
-            del self.config['exporters']['s3']
+            del self.config['exporters'][1]
             expected = self.config['exporters']
             result = cfg.Config(self.config)
             result.validate()
@@ -335,7 +338,7 @@ class ConfigTests(unittest.TestCase):
     def test_exporters_no_local_disk(self):
         with TemporaryDirectory() as root:
             self.add_exporters_to_config(root)
-            del self.config['exporters']['local_disk']
+            del self.config['exporters'][2]
             expected = self.config['exporters']
             result = cfg.Config(self.config)
             result.validate()
@@ -349,7 +352,7 @@ class ConfigTests(unittest.TestCase):
             result = cfg.Config(self.config)
             result.validate()
             result = result.to_primitive()['exporters']
-            self.assertEqual(result, {})
+            self.assertEqual(result, [])
 
     # WEBHOOKS------------------------------------------------------------------
     def add_webhooks_to_config(self, root):

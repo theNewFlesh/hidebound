@@ -145,18 +145,15 @@ class Config(Model):
         default=[],
         required=True
     )  # type: ListType
-
-    class ExportersConfig(Model):
-        girder = ModelType(
-            GirderConfig, required=False, serialize_when_none=False
-        )  # type: ModelType
-        s3 = ModelType(
-            S3Config, required=False, serialize_when_none=False
-        )  # type: ModelType
-        local_disk = ModelType(
-            LocalDiskConfig, required=False, serialize_when_none=False
-        )  # type: ModelType
-    exporters = ModelType(ExportersConfig, required=False, default={})  # type: ModelType
+    exporters = ListType(
+        BaseType(
+            validators=[lambda x: vd.is_one_of(
+                x, [LocalDiskConfig, S3Config, GirderConfig]
+            )]
+        ),
+        required=False,
+        default=[],
+    )  # type: ListType
 
     class WebhookConfig(Model):
         url = URLType(required=True, fqdn=False)  # type: URLType
