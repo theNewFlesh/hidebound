@@ -8,7 +8,8 @@ import re
 
 from pandas import DataFrame
 from pyparsing import ParseException
-from schematics.exceptions import ValidationError
+from schematics.exceptions import DataError, ValidationError
+from schematics.models import Model
 import wrapt
 
 from hidebound.core.parser import AssetNameParser
@@ -726,3 +727,25 @@ def is_workflow(steps):
     if len(diff) > 0:
         msg = f'{diff} are not legal workflow steps. Legal steps: {legal}.'
         raise ValidationError(msg)
+
+
+def is_one_of(item, models):
+    # type: (List[dict], List[Model]) -> None
+    '''
+    Validates whether given item matches at least one given model.
+
+    Args:
+        item (dict): Item to be validated.
+        models (list[Model]): List schematics Models.
+
+    Raises:
+        ValidationError: If no valid model could be found for given item.
+    '''
+    error = {}
+    for model in models:
+        try:
+            model(item).validate()
+            return
+        except DataError as e:
+            error.update(e.args[0])
+    raise ValidationError(str(error))

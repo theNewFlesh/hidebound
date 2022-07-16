@@ -4,6 +4,8 @@ from tempfile import TemporaryDirectory
 import unittest
 
 from schematics.exceptions import ValidationError
+from schematics.models import Model
+from schematics.types import StringType
 import numpy as np
 import pytest
 
@@ -490,3 +492,17 @@ class ValidatorsTests(unittest.TestCase):
         expected += r"Legal steps: \['delete', 'update', 'create', 'export'\]\."
         with self.assertRaisesRegexp(ValidationError, expected):
             vd.is_workflow(steps)
+
+    def test_is_one_of(self):
+        class Foo(Model):
+            foo = StringType(required=True)
+
+        class Bar(Model):
+            bar = StringType(required=True)
+
+        models = [Foo, Bar]
+        vd.is_one_of(dict(bar='bar'), models)
+
+        expected = 'taco.*Rogue field'
+        with self.assertRaisesRegexp(ValidationError, expected):
+            vd.is_one_of(dict(taco='taco'), models)
