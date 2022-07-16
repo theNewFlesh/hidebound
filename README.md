@@ -145,9 +145,9 @@ export this data to various data stores, such as AWS S3, MongoDB, and Girder.
 Exporters are are defined within the exporters subpackage. They expect a
 populated hidebound directory and use the files and metadata therein to export
 hidebound data. Exporter configurations are stored in the hidebound config,
-under the "exporters" key. Currently supported exporters include, local disk, s3
-and girder. Below we can see the results of an export to Girder in the Girder
-web app.
+under the "exporters" key. Currently supported exporters include, disk, s3 and
+girder. Below we can see the results of an export to Girder in the Girder web
+app.
 
 ![](resources/screenshots/girder.png)
 
