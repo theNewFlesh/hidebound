@@ -16,6 +16,7 @@ class GirderConfig(Model):
     A class for validating configurations supplied to GirderExporter.
 
     Attributes:
+        name (str): Name of exporter. Must be 'girder'.
         api_key (str): Girder API key.
         root_id (str): ID of folder or collection under which all data will
             be exported.
@@ -26,6 +27,9 @@ class GirderConfig(Model):
         metadata_types (list, optional): List of metadata types for export.
             Default: [asset, file].
     '''
+    name = StringType(
+        required=True, validators=[lambda x: vd.is_eq(x, 'girder')]
+    )  # type: StringType
     api_key = StringType(required=True)  # type: StringType
     root_id = StringType(required=True)  # type: StringType
     root_type = StringType(
@@ -81,8 +85,9 @@ class GirderExporter(ExporterBase):
         port=8180,
         client=None,
         metadata_types=['asset', 'file'],
+        **kwargs,
     ):
-        # type: (str, str, str, str, int, Any, List[str]) -> None
+        # type: (str, str, str, str, int, Any, List[str], Any) -> None
         '''
         Constructs a GirderExporter instances and creates a Girder client.
 
@@ -114,6 +119,7 @@ class GirderExporter(ExporterBase):
         super().__init__(metadata_types=metadata_types)
 
         config = dict(
+            name='girder',
             api_key=api_key,
             root_id=root_id,
             root_type=root_type,
@@ -121,9 +127,7 @@ class GirderExporter(ExporterBase):
             port=port,
             metadata_types=metadata_types,
         )
-        config = GirderConfig(config)
-        config.validate()
-        config = config.to_primitive()
+        GirderConfig(config).validate()
 
         self._url = f'{host}:{port}/api/v1'  # type: str
 

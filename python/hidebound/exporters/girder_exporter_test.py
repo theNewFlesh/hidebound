@@ -15,6 +15,7 @@ from hidebound.exporters.mock_girder import MockGirderClient
 class GirderConfigTests(unittest.TestCase):
     def setUp(self):
         self.config = dict(
+            name='girder',
             api_key='api_key',
             root_id='root_id',
             root_type='collection',
@@ -27,6 +28,15 @@ class GirderConfigTests(unittest.TestCase):
         GirderConfig(config).validate()
         config['root_type'] = 'folder'
         GirderConfig(config).validate()
+
+    def test_name(self):
+        del self.config['name']
+        with self.assertRaises(DataError):
+            GirderConfig(self.config).validate()
+
+        self.config['name'] = 'foobar'
+        with self.assertRaises(DataError):
+            GirderConfig(self.config).validate()
 
     def test_root_type(self):
         config = self.config
@@ -69,6 +79,7 @@ class GirderExporterTests(unittest.TestCase):
     def setUp(self):
         self.client = MockGirderClient()
         self.config = dict(
+            name='girder',
             api_key='api_key',
             root_id='root_id',
             root_type='collection',
