@@ -120,8 +120,8 @@ class Database:
         include_regex='',             # type: str
         exclude_regex=r'\.DS_Store',  # type: str
         write_mode='copy',            # type: str
-        exporters={},                 # type: Dict[str, Any]
-        webhooks=[],                  # type: List[Dict]
+        exporters=[],                 # type: List[Dict[str, Any]]
+        webhooks=[],                  # type: List[Dict[str, Any]]
         dask_enabled=False,           # type: bool
         dask_workers=8,               # type: int
     ):
@@ -141,9 +141,8 @@ class Database:
                 regex. Default: '\.DS_Store'.
             write_mode (str, optional): How assets will be extracted to
                 hidebound/content directory. Default: copy.
-            exporters (dict, optional): Dictionary of exporter configs, where
-                the key is the exporter name and the value is its config.
-                Default: {}.
+            exporters (list[dict], optional): List of exporter configs.
+                Default: [].
             webhooks (list[dict], optional): List of webhooks to call.
                 Default: [].
             dask_enabled (bool, optional): Whether to enable Dask.
@@ -500,12 +499,9 @@ class Database:
         if self.__exporter_lut is not None:
             lut = self.__exporter_lut
 
-        # always run exporters in this order
-        order = ['local_disk', 's3', 'girder']
-        items = sorted(self._exporters.items(), key=lambda x: order.index(x[0]))
-
-        total = len(items)
-        for i, (key, config) in enumerate(items):
+        total = len(self._exporters)
+        for i, config in enumerate(self._exporters):
+            key = config['name']
             exporter = lut[key].from_config(config)
             exporter.export(self._staging, logger=self._logger)
             self._logger.info(f'export: {key}', step=i + 1, total=total)

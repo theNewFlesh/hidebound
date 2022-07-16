@@ -630,7 +630,7 @@ class DatabaseTests(DatabaseTestBase):
             Spec001, Spec002, _ = self.get_specifications()
             self.create_files(root)
 
-            exporters = dict(girder=dict(api_key='api_key', root_id='root_id'))
+            exporters = [dict(name='girder', api_key='api_key', root_id='root_id')]
             db = Database(
                 root, staging, [Spec001, Spec002], exporters=exporters
             )
@@ -656,14 +656,15 @@ class DatabaseTests(DatabaseTestBase):
             Spec001, Spec002, _ = self.get_specifications()
             data = self.create_files(root)
 
-            exporters = dict(
-                s3=dict(
+            exporters = [
+                dict(
+                    name='s3',
                     access_key='foo',
                     secret_key='bar',
                     bucket='bucket',
                     region='us-west-2',
                 )
-            )
+            ]
             db = Database(
                 root, staging, [Spec001, Spec002], exporters=exporters
             )
@@ -724,7 +725,7 @@ class DatabaseTests(DatabaseTestBase):
 
             target = Path(root, 'target').as_posix()
             os.makedirs(target)
-            exporters = dict(local_disk=dict(target_directory=target))
+            exporters = [dict(name='local_disk', target_directory=target)]
 
             db = Database(
                 root, staging, [Spec001, Spec002], exporters=exporters
