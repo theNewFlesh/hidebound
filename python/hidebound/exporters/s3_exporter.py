@@ -24,7 +24,9 @@ class S3Config(ExporterConfigBase):
         bucket (str): AWS bucket name.
         region (str): AWS region name. Default: us-east-1.
     '''
-    name = StringType(required=True, validators=[lambda x: vd.is_eq(x, 's3')])  # type: StringType
+    name = StringType(
+        required=True, validators=[lambda x: vd.is_eq(x, 's3')]
+    )  # type: StringType
     access_key = StringType(required=True)  # type: StringType
     secret_key = StringType(required=True)  # type: StringType
     bucket = StringType(
