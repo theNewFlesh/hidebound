@@ -22,11 +22,6 @@ exporters:
       - file
       - asset-chunk
       - file-chunk
-  - name: disk
-    target_directory: /tmp/foo
-    metadata_types:
-      - asset-chunk
-      - file-chunk
 webhooks:
   - url: "http://foobar.com/api/user?"
     method: get
