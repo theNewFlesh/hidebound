@@ -500,6 +500,8 @@ class ValidatorsTests(unittest.TestCase):
         class Bar(Model):
             bar = StringType(required=True)
 
+        vd.is_one_of(dict(bar='bar'), [])
+
         models = [Foo, Bar]
         vd.is_one_of(dict(bar='bar'), models)
 

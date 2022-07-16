@@ -730,7 +730,7 @@ def is_workflow(steps):
 
 
 def is_one_of(item, models):
-    # type: (List[dict], List[Model]) -> None
+    # type: (dict, List[Model]) -> None
     '''
     Validates whether given item matches at least one given model.
 
@@ -741,6 +741,9 @@ def is_one_of(item, models):
     Raises:
         ValidationError: If no valid model could be found for given item.
     '''
+    if len(models) == 0:
+        return
+
     error = {}
     for model in models:
         try:
