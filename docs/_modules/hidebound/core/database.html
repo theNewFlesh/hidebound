@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.23.3
+                0.26.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -206,8 +206,8 @@
         <span class="n">include_regex</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>             <span class="c1"># type: str</span>
         <span class="n">exclude_regex</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;\.DS_Store&#39;</span><span class="p">,</span>  <span class="c1"># type: str</span>
         <span class="n">write_mode</span><span class="o">=</span><span class="s1">&#39;copy&#39;</span><span class="p">,</span>            <span class="c1"># type: str</span>
-        <span class="n">exporters</span><span class="o">=</span><span class="p">{},</span>                 <span class="c1"># type: Dict[str, Any]</span>
-        <span class="n">webhooks</span><span class="o">=</span><span class="p">[],</span>                  <span class="c1"># type: List[Dict]</span>
+        <span class="n">exporters</span><span class="o">=</span><span class="p">[],</span>                 <span class="c1"># type: List[Dict[str, Any]]</span>
+        <span class="n">webhooks</span><span class="o">=</span><span class="p">[],</span>                  <span class="c1"># type: List[Dict[str, Any]]</span>
         <span class="n">dask_enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>           <span class="c1"># type: bool</span>
         <span class="n">dask_workers</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>               <span class="c1"># type: int</span>
     <span class="p">):</span>
@@ -227,9 +227,8 @@
 <span class="sd">                regex. Default: &#39;\.DS_Store&#39;.</span>
 <span class="sd">            write_mode (str, optional): How assets will be extracted to</span>
 <span class="sd">                hidebound/content directory. Default: copy.</span>
-<span class="sd">            exporters (dict, optional): Dictionary of exporter configs, where</span>
-<span class="sd">                the key is the exporter name and the value is its config.</span>
-<span class="sd">                Default: {}.</span>
+<span class="sd">            exporters (list[dict], optional): List of exporter configs.</span>
+<span class="sd">                Default: [].</span>
 <span class="sd">            webhooks (list[dict], optional): List of webhooks to call.</span>
 <span class="sd">                Default: [].</span>
 <span class="sd">            dask_enabled (bool, optional): Whether to enable Dask.</span>
@@ -586,12 +585,9 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__exporter_lut</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">lut</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__exporter_lut</span>
 
-        <span class="c1"># always run exporters in this order</span>
-        <span class="n">order</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;local_disk&#39;</span><span class="p">,</span> <span class="s1">&#39;s3&#39;</span><span class="p">,</span> <span class="s1">&#39;girder&#39;</span><span class="p">]</span>
-        <span class="n">items</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_exporters</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">order</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
-
-        <span class="n">total</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_exporters</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">config</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_exporters</span><span class="p">):</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
             <span class="n">exporter</span> <span class="o">=</span> <span class="n">lut</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">from_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
             <span class="n">exporter</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_staging</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;export: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>

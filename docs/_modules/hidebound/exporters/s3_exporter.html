@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.19.1
+                0.26.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -84,7 +84,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for hidebound.exporters.s3_exporter</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span>
 
 <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
 <span class="kn">import</span> <span class="nn">json</span>
@@ -104,11 +104,15 @@
 <span class="sd">    A class for validating configurations supplied to S3Exporter.</span>
 
 <span class="sd">    Attributes:</span>
+<span class="sd">        name (str): Name of exporter. Must be &#39;s3&#39;.</span>
 <span class="sd">        access_key (str): AWS access key.</span>
 <span class="sd">        secret_key (str): AWS secret key.</span>
 <span class="sd">        bucket (str): AWS bucket name.</span>
 <span class="sd">        region (str): AWS region name. Default: us-east-1.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_eq</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;s3&#39;</span><span class="p">)]</span>
+    <span class="p">)</span>  <span class="c1"># type: StringType</span>
     <span class="n">access_key</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: StringType</span>
     <span class="n">secret_key</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: StringType</span>
     <span class="n">bucket</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
@@ -144,8 +148,9 @@
         <span class="n">bucket</span><span class="p">,</span>
         <span class="n">region</span><span class="p">,</span>
         <span class="n">metadata_types</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asset&#39;</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;asset-chunk&#39;</span><span class="p">,</span> <span class="s1">&#39;file-chunk&#39;</span><span class="p">],</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="c1"># type: (str, str, str, str, List[str]) -&gt; None</span>
+        <span class="c1"># type: (str, str, str, str, List[str], Any) -&gt; None</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Constructs a S3Exporter instances and creates a bucket with given name</span>
 <span class="sd">        if it does not exist.</span>
@@ -164,6 +169,7 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">metadata_types</span><span class="o">=</span><span class="n">metadata_types</span><span class="p">)</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;s3&#39;</span><span class="p">,</span>
             <span class="n">access_key</span><span class="o">=</span><span class="n">access_key</span><span class="p">,</span>
             <span class="n">secret_key</span><span class="o">=</span><span class="n">secret_key</span><span class="p">,</span>
             <span class="n">bucket</span><span class="o">=</span><span class="n">bucket</span><span class="p">,</span>

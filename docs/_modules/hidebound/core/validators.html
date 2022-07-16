@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.25.0
+                0.26.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -94,7 +94,8 @@
 
 <span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
 <span class="kn">from</span> <span class="nn">pyparsing</span> <span class="kn">import</span> <span class="n">ParseException</span>
-<span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">ValidationError</span>
+<span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">DataError</span><span class="p">,</span> <span class="n">ValidationError</span>
+<span class="kn">from</span> <span class="nn">schematics.models</span> <span class="kn">import</span> <span class="n">Model</span>
 <span class="kn">import</span> <span class="nn">wrapt</span>
 
 <span class="kn">from</span> <span class="nn">hidebound.core.parser</span> <span class="kn">import</span> <span class="n">AssetNameParser</span>
@@ -812,6 +813,32 @@
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">diff</span><span class="si">}</span><span class="s1"> are not legal workflow steps. Legal steps: </span><span class="si">{</span><span class="n">legal</span><span class="si">}</span><span class="s1">.&#39;</span>
         <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="is_one_of"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_one_of">[docs]</a><span class="k">def</span> <span class="nf">is_one_of</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">models</span><span class="p">):</span>
+    <span class="c1"># type: (dict, List[Model]) -&gt; None</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Validates whether given item matches at least one given model.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        item (dict): Item to be validated.</span>
+<span class="sd">        models (list[Model]): List schematics Models.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValidationError: If no valid model could be found for given item.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">models</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="n">errors</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">model</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+            <span class="k">return</span>
+        <span class="k">except</span> <span class="n">DataError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">errors</span><span class="p">))</span>
+    <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

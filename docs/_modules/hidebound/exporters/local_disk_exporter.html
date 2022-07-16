@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.19.0
+                0.26.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -48,6 +48,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#naming-convention">Naming Convention</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#project-structure">Project Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#application">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#configuration">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#specification">Specification</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
@@ -82,7 +84,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for hidebound.exporters.local_disk_exporter</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
 
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -101,8 +103,12 @@
 <span class="sd">    A class for validating configurations supplied to LocalDiskExporter.</span>
 
 <span class="sd">    Attributes:</span>
+<span class="sd">        name (str): Name of exporter. Must be &#39;local_disk&#39;.</span>
 <span class="sd">        target_directory (str): Target directory.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_eq</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;local_disk&#39;</span><span class="p">)]</span>
+    <span class="p">)</span>  <span class="c1"># type: StringType</span>
     <span class="n">target_directory</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_legal_directory</span><span class="p">]</span>
     <span class="p">)</span>  <span class="c1"># type: StringType</span></div>
@@ -130,14 +136,17 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">target_directory</span><span class="p">,</span>
         <span class="n">metadata_types</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asset&#39;</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;asset-chunk&#39;</span><span class="p">,</span> <span class="s1">&#39;file-chunk&#39;</span><span class="p">],</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="c1"># type: (str, List[str]) -&gt; None</span>
+        <span class="c1"># type: (str, List[str], Any) -&gt; None</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Constructs a LocalDiskExporter instance.</span>
 <span class="sd">        Creates target directory if it does not exist.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            target_directory (str): Target directory.</span>
+<span class="sd">            metadata_types (list, optional): List of metadata types for export.</span>
+<span class="sd">                Default: [asset, file, asset-chunk, file-chunk].</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            DataError: If config is invalid.</span>
@@ -145,6 +154,7 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">metadata_types</span><span class="o">=</span><span class="n">metadata_types</span><span class="p">)</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;local_disk&#39;</span><span class="p">,</span>
             <span class="n">target_directory</span><span class="o">=</span><span class="n">target_directory</span><span class="p">,</span>
             <span class="n">metadata_types</span><span class="o">=</span><span class="n">metadata_types</span><span class="p">,</span>
         <span class="p">)</span>
