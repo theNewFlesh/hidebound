@@ -212,6 +212,10 @@ class Database:
         self._dask_workers = dask_workers
         self.data = None
 
+        # setup dask
+        cluster = dist.LocalCluster(n_workers=self._dask_workers)
+        dist.Client(cluster)
+
         # needed for testing
         self.__exporter_lut = None
 
@@ -243,42 +247,83 @@ class Database:
             msg = 'Data not initialized. Please call update.'
             raise RuntimeError(msg)
 
-        temp = db_tools.get_data_for_write(
-            self.data, self._root, self._staging
-        )
+        temp = db_tools.get_data_for_write(self.data, self._root, self._staging)
         self._logger.info('create: get data', step=1, total=total)
         if temp is None:
             return self
 
+        # convert to dask dataframes
         file_data, asset_meta, file_meta, asset_chunk, file_chunk = temp
+        nparts = self._dask_workers
+        file_data = dd.from_pandas(file_data, npartitions=nparts)
+        asset_meta = dd.from_pandas(asset_meta, npartitions=nparts)
+        file_meta = dd.from_pandas(file_meta, npartitions=nparts)
+        asset_chunk = dd.from_pandas(asset_chunk, npartitions=nparts)
+        file_chunk = dd.from_pandas(file_chunk, npartitions=nparts)
+        temp = [file_data, asset_meta, file_meta, asset_chunk, file_chunk]
 
         # make directories
         for item in temp:
-            item.target.apply(lambda x: os.makedirs(Path(x).parent, exist_ok=True))
+            item.target \
+                .apply(
+                    lambda x: os.makedirs(Path(x).parent, exist_ok=True),
+                    meta='__no_default__'
+                ) \
+                .compute()
         self._logger.info('create: make directories', step=2, total=total)
 
         # write file data
         if self._write_mode == 'move':
-            file_data.apply(lambda x: shutil.move(x.source, x.target), axis=1)
+            file_data \
+                .apply(
+                    lambda x: shutil.move(x.source, x.target),
+                    axis=1, meta='__no_default__'
+                ) \
+                .compute()
             hbt.delete_empty_directories(self._root)
         else:
-            file_data.apply(lambda x: shutil.copy2(x.source, x.target), axis=1)
+            file_data \
+                .apply(
+                    lambda x: shutil.copy2(x.source, x.target),
+                    axis=1, meta='__no_default__'
+                ) \
+                .compute()
         self._logger.info('create: write file data', step=3, total=total)
 
         # write asset metadata
-        asset_meta.apply(lambda x: hbt.write_json(x.metadata, x.target), axis=1)
+        asset_meta \
+            .apply(
+                lambda x: hbt.write_json(x.metadata, x.target),
+                axis=1, meta='__no_default__'
+            ) \
+            .compute()
         self._logger.info('create: write asset metadata', step=4, total=total)
 
         # write file metadata
-        file_meta.apply(lambda x: hbt.write_json(x.metadata, x.target), axis=1)
+        file_meta \
+            .apply(
+                lambda x: hbt.write_json(x.metadata, x.target),
+                axis=1, meta='__no_default__'
+            ) \
+            .compute()
         self._logger.info('create: write file metadata', step=5, total=total)
 
         # write asset chunk
-        asset_chunk.apply(lambda x: hbt.write_json(x.metadata, x.target), axis=1)
+        asset_chunk \
+            .apply(
+                lambda x: hbt.write_json(x.metadata, x.target),
+                axis=1, meta='__no_default__'
+            ) \
+            .compute()
         self._logger.info('create: write asset chunk', step=6, total=total)
 
         # write file chunk
-        file_chunk.apply(lambda x: hbt.write_json(x.metadata, x.target), axis=1)
+        file_chunk \
+            .apply(
+                lambda x: hbt.write_json(x.metadata, x.target),
+                axis=1, meta='__no_default__'
+            ) \
+            .compute()
         self._logger.info('create: write file chunk', step=7, total=total)
 
         self._logger.info('create: complete', step=7, total=total)
@@ -394,11 +439,7 @@ class Database:
         self._logger.info(f'update: parsed {self._root}', step=1, total=total)
 
         if len(data) > 0:
-            if self._dask_enabled:
-                cluster = dist.LocalCluster(n_workers=self._dask_workers)
-                dist.Client(cluster)
-                data = dd.from_pandas(data, npartitions=self._dask_workers)
-
+            data = dd.from_pandas(data, npartitions=self._dask_workers)
             data = db_tools.add_specification(data, self._specifications)
             data = db_tools.validate_filepath(data)
             data = db_tools.add_file_traits(data)
@@ -409,8 +450,7 @@ class Database:
             data = db_tools.add_asset_type(data)
             data = db_tools.add_asset_traits(data)
             data = db_tools.validate_assets(data)
-            if self._dask_enabled:
-                data = data.compute()
+            data = data.compute()
         self._logger.info('update: generate', step=2, total=total)
 
         data = db_tools.cleanup(data)
