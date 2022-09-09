@@ -262,7 +262,7 @@ def test_read_legal_types(make_dirs, make_files, specs, dask_client):
         assert re.search(expected, str(e))
 
     db.update()
-    # time.sleep(3)
+    time.sleep(3)
     data = db.read()
 
     # test types by file
