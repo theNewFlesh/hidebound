@@ -1,4 +1,4 @@
-from typing import Any, List, Tuple, Union
+from typing import Any, List, Tuple
 
 from pathlib import Path
 from tempfile import TemporaryDirectory
