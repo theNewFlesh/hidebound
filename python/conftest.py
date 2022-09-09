@@ -257,21 +257,6 @@ def db_data(temp_dir):
 
 
 @pytest.fixture()
-def db_data_nans(db_data):
-    # type: (DataFrame) -> DataFrame
-    '''
-    Converts Nones to nans in db_data DataFrame.
-
-    Args:
-        db_data (DataFrame): Fake db data.
-
-    Returns:
-        DataFrame: DB data.
-    '''
-    return db_data.applymap(lambda x: np.nan if x is None else x)
-
-
-@pytest.fixture()
 def make_files(db_data):
     # type: (DataFrame) -> List[str]
     '''
