@@ -262,6 +262,7 @@ def test_read_legal_types(make_dirs, make_files, specs, dask_client):
         assert re.search(expected, str(e))
 
     db.update()
+    # time.sleep(3)
     data = db.read()
 
     # test types by file
@@ -350,6 +351,7 @@ def test_read_column_order(make_dirs, make_files, specs, dask_client):
     ingress, staging, _ = make_dirs
     db = Database(ingress, staging, [Spec001, Spec002])
     db.update()
+    time.sleep(3)
 
     result = db.read().columns.tolist()
     expected = [
