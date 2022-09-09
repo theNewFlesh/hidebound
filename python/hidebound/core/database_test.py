@@ -1,20 +1,18 @@
 from copy import copy
-import json
 from itertools import chain
 from pathlib import Path
-from tempfile import TemporaryDirectory
+import json
 import os
 import re
+import time
 
 from moto import mock_s3
 from schematics.exceptions import DataError
 import boto3 as boto
-import dask.distributed as ddist
 import pytest
 import yaml
 
 from hidebound.core.database import Database
-from hidebound.core.database_test_base import DatabaseTestBase
 from hidebound.exporters.mock_girder import MockGirderExporter
 import hidebound.core.tools as hbt
 # ------------------------------------------------------------------------------
@@ -134,7 +132,7 @@ def test_init_bad_write_mode(make_dirs, specs):
         assert re.search(str(e), expected)
 
 
-# CREATE--------------------------------------------------------------------
+# CREATE------------------------------------------------------------------------
 def test_create(make_dirs, make_files, specs, dask_client):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
@@ -250,7 +248,7 @@ def test_create_move(make_dirs, make_files, specs, dask_client):
     assert result == expected
 
 
-# READ----------------------------------------------------------------------
+# READ--------------------------------------------------------------------------
 def test_read_legal_types(make_dirs, make_files, specs, dask_client):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
@@ -389,7 +387,7 @@ def test_read_no_files(make_dirs, specs, dask_client):
     assert len(result) == 0
 
 
-# UPDATE--------------------------------------------------------------------
+# UPDATE------------------------------------------------------------------------
 def test_update(make_dirs, make_files, specs, dask_client):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
@@ -480,7 +478,7 @@ def test_update_error(make_dirs, make_files, specs, db_data, dask_client):
         assert re.search(regex, result)
 
 
-# DELETE--------------------------------------------------------------------
+# DELETE------------------------------------------------------------------------
 def test_delete(make_dirs, make_files, specs, dask_client):
     ingress, staging, _ = make_dirs
 
@@ -501,7 +499,7 @@ def test_delete(make_dirs, make_files, specs, dask_client):
     assert result == expected
 
 
-# EXPORT--------------------------------------------------------------------
+# EXPORT------------------------------------------------------------------------
 def test_export_girder(make_dirs, make_files, specs, dask_client):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
@@ -523,73 +521,63 @@ def test_export_girder(make_dirs, make_files, specs, dask_client):
         assert expected in result
 
 
-    @mock_s3
-    def test_export_s3(self):
-        with TemporaryDirectory() as root:
-            staging = Path(root, 'hidebound')
-            os.makedirs(staging)
-            Spec001, Spec002, _ = self.get_specifications()
-            data = self.create_files(root)
+@mock_s3
+def test_export_s3(make_dirs, make_files, specs, db_data, dask_client):
+    Spec001, Spec002, _ = specs
+    ingress, staging, _ = make_dirs
 
-            exporters = [
-                dict(
-                    name='s3',
-                    access_key='foo',
-                    secret_key='bar',
-                    bucket='bucket',
-                    region='us-west-2',
-                )
-            ]
-            db = Database(
-                root, staging, [Spec001, Spec002], exporters=exporters
-            )
+    exporters = [dict(
+        name='s3',
+        access_key='foo',
+        secret_key='bar',
+        bucket='bucket',
+        region='us-west-2',
+    )]
+    db = Database(ingress, staging, [Spec001, Spec002], exporters=exporters)
 
-            db.update().create().export()
+    db.update().create().export()
 
-            results = boto.session \
-                .Session(
-                    aws_access_key_id='foo',
-                    aws_secret_access_key='bar',
-                    region_name='us-west-2',
-                ) \
-                .resource('s3') \
-                .Bucket('bucket') \
-                .objects.all()
-            results = [x.key for x in results]
+    results = boto.session \
+        .Session(
+            aws_access_key_id='foo',
+            aws_secret_access_key='bar',
+            region_name='us-west-2',
+        ) \
+        .resource('s3') \
+        .Bucket('bucket') \
+        .objects.all()
+    results = [x.key for x in results]
 
-            # content
-            data = data[data.asset_valid]
-            expected = data.filepath.apply(lambda x: Path(*x.parts[3:])).tolist()
-            expected = sorted([f'hidebound/content/{x}' for x in expected])
-            content = sorted(list(filter(
-                lambda x: re.search('content', x), results
-            )))
-            self.assertEqual(content, expected)
+    # content
+    data = db_data
+    data = data[data.asset_valid]
+    expected = data.filepath.apply(lambda x: Path(*x.parts[4:])).tolist()
+    expected = sorted([f'hidebound/content/{x}' for x in expected])
+    content = sorted(list(filter(lambda x: re.search('content', x), results)))
+    assert content == expected
 
-            # asset metadata
-            expected = data.asset_path.nunique()
-            result = len(list(filter(
-                lambda x: re.search('metadata/asset/', x), results
-            )))
-            self.assertEqual(result, expected)
+    # asset metadata
+    expected = data.asset_path.nunique()
+    result = len(list(filter(
+        lambda x: re.search('metadata/asset/', x), results
+    )))
+    assert result == expected
 
-            # file metadata
-            result = len(list(filter(
-                lambda x: re.search('metadata/file/', x), results
-            )))
-            self.assertEqual(result, len(content))
+    # file metadata
+    result = len(list(filter(lambda x: re.search('metadata/file/', x), results)))
+    assert result == len(content)
 
-            # asset chunk
-            result = len(list(filter(
-                lambda x: re.search('metadata/asset-chunk/', x), results
-            )))
-            self.assertEqual(result, 1)
+    # asset chunk
+    result = len(list(filter(
+        lambda x: re.search('metadata/asset-chunk/', x), results
+    )))
+    assert result == 1
 
-            # file chunk
-            result = len(list(filter(
-                lambda x: re.search('metadata/file-chunk/', x), results
-            )))
-            self.assertEqual(result, 1)
+    # file chunk
+    result = len(list(filter(
+        lambda x: re.search('metadata/file-chunk/', x), results
+    )))
+    assert result == 1
 
     def test_export_disk(self):
         with TemporaryDirectory() as root:
@@ -626,68 +614,62 @@ def test_export_girder(make_dirs, make_files, specs, dask_client):
 
             self.assertEqual(result, expected)
 
-    # SEARCH--------------------------------------------------------------------
-    def test_search(self):
-        Spec001, Spec002, BadSpec = self.get_specifications()
-        with TemporaryDirectory() as root:
-            staging = Path(root, 'hidebound')
-            os.makedirs(staging)
 
-            root = Path(root, 'projects')
-            os.makedirs(root)
+# SEARCH------------------------------------------------------------------------
+def test_search(make_dirs, make_files, specs, dask_client):
+    Spec001, Spec002, _ = specs
+    ingress, staging, _ = make_dirs
 
-            self.create_files(root)
-            db = Database(root, staging, [Spec001, Spec002])
-            db.update()
-            db.search('SELECT * FROM data WHERE version == 3')
+    db = Database(ingress, staging, [Spec001, Spec002])
+    db.update()
+    time.sleep(3)
+    db.search('SELECT * FROM data WHERE version == 3')
 
-    # WEBHOOKS
-    def test_call_webhooks(self):
-        with TemporaryDirectory() as root:
-            staging = Path(root, 'hidebound').as_posix()
-            os.makedirs(staging)
-            spec_file = self.write_spec_file(root)
-            self.create_files(root)
 
-            config = dict(
-                ingress_directory=root,
-                staging_directory=staging,
-                specification_files=[spec_file],
-                include_regex='foo',
-                exclude_regex='bar',
-                write_mode='copy',
-                webhooks=[
-                    {
-                        'url': 'http://foobar.com/api/user?',
-                        'method': 'get',
-                        'headers': {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json',
-                        },
-                        'timeout': 10,
-                        'params': {
-                            'foo': 'bar'
-                        }
-                    },
-                    {
-                        'url': 'http://foobar.com/api/user?',
-                        'method': 'post',
-                        'headers': {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json',
-                        },
-                        'data': {
-                            'id': '123',
-                            'name': 'john',
-                            'other': {'stuff': 'things'}
-                        },
-                        'json': {
-                            'foo': 'bar'
-                        }
-                    }
-                ]
-            )
+# WEBHOOKS----------------------------------------------------------------------
+def test_call_webhooks(make_dirs, make_files, specs, spec_file, dask_client):
+    Spec001, Spec002, _ = specs
+    ingress, staging, _ = make_dirs
 
-            db = Database.from_config(config)
-            for response in db.call_webhooks():
-                self.assertEqual(response.status_code, 403)
+    config = dict(
+        ingress_directory=ingress,
+        staging_directory=staging,
+        specification_files=[spec_file],
+        include_regex='foo',
+        exclude_regex='bar',
+        write_mode='copy',
+        webhooks=[
+            {
+                'url': 'http://foobar.com/api/user?',
+                'method': 'get',
+                'headers': {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                'timeout': 10,
+                'params': {
+                    'foo': 'bar'
+                }
+            },
+            {
+                'url': 'http://foobar.com/api/user?',
+                'method': 'post',
+                'headers': {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                'data': {
+                    'id': '123',
+                    'name': 'john',
+                    'other': {'stuff': 'things'}
+                },
+                'json': {
+                    'foo': 'bar'
+                }
+            }
+        ]
+    )
+
+    db = Database.from_config(config)
+    for response in db.call_webhooks():
+        assert response.status_code == 403
