@@ -171,7 +171,7 @@ class DatabaseTests(DatabaseTestBase):
                 Database(root, staging, [Spec001], write_mode='foo')
 
     # CREATE--------------------------------------------------------------------
-    def xtest_create(self):
+    def test_create(self):
         with TemporaryDirectory() as root:
             staging = Path(root, 'hidebound')
             os.makedirs(staging)
