@@ -17,11 +17,11 @@ import pytest
 import skimage.io
 import yaml
 
-from hidebound.core.database_test_base import DatabaseTestBase
 from hidebound.core.specification_base import SpecificationBase
 import hidebound.core.traits as tr
 import hidebound.core.validators as vd
 import hidebound.server.extensions as ext
+# ------------------------------------------------------------------------------
 
 
 # APP---------------------------------------------------------------------------
