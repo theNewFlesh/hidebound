@@ -579,40 +579,34 @@ def test_export_s3(make_dirs, make_files, specs, db_data, dask_client):
     )))
     assert result == 1
 
-    def test_export_disk(self):
-        with TemporaryDirectory() as root:
-            staging = Path(root, 'hidebound')
-            os.makedirs(staging)
-            Spec001, Spec002, _ = self.get_specifications()
-            self.create_files(root)
 
-            target = Path(root, 'target').as_posix()
-            os.makedirs(target)
-            exporters = [dict(name='disk', target_directory=target)]
+def test_export_disk(make_dirs, make_files, specs, db_data, dask_client):
+    Spec001, Spec002, _ = specs
+    ingress, staging, archive = make_dirs
 
-            db = Database(
-                root, staging, [Spec001, Spec002], exporters=exporters
-            )
+    exporters = [dict(name='disk', target_directory=archive)]
+    db = Database(ingress, staging, [Spec001, Spec002], exporters=exporters)
 
-            db.update().create()
-            self.assertEqual(len(os.listdir(target)), 0)
-            db.export()
+    db.update()
+    db.create()
+    assert len(os.listdir(archive)) == 0
+    db.export()
 
-            expected = hbt.directory_to_dataframe(staging).filepath
-            mask = expected \
-                .apply(lambda x: re.search('/(asset|file|content)', x)) \
-                .astype(bool)
-            expected = expected[mask] \
-                .apply(lambda x: re.sub('.*/hidebound/', '', x)) \
-                .tolist()
-            expected = sorted(expected)
+    expected = hbt.directory_to_dataframe(staging).filepath
+    mask = expected \
+        .apply(lambda x: re.search('/(asset|file|content)', x)) \
+        .astype(bool)
+    expected = expected[mask] \
+        .apply(lambda x: re.sub('.*/hidebound/', '', x)) \
+        .tolist()
+    expected = sorted(expected)
 
-            result = hbt.directory_to_dataframe(target).filepath \
-                .apply(lambda x: re.sub('.*/target/', '', x)) \
-                .tolist()
-            result = sorted(result)
+    result = hbt.directory_to_dataframe(archive).filepath \
+        .apply(lambda x: re.sub('.*/archive/', '', x)) \
+        .tolist()
+    result = sorted(result)
 
-            self.assertEqual(result, expected)
+    assert result == expected
 
 
 # SEARCH------------------------------------------------------------------------
