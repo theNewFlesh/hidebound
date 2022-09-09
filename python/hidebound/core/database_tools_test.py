@@ -6,7 +6,7 @@ import re
 
 from pandas import DataFrame
 import dask.dataframe as dd
-import dask.distributed as dist
+import dask.distributed as ddist
 import lunchbox.tools as lbt
 import numpy as np
 import pandas as pd
@@ -40,8 +40,8 @@ class DatabaseToolsTests(DatabaseTestBase):
     def setUp(self):
         self.dask_workers = 2
         if ENABLE_DASK_CLUSTER:
-            self.dask_cluster = dist.LocalCluster(n_workers=self.dask_workers)
-            self.dask_client = dist.Client(self.dask_cluster)
+            self.dask_cluster = ddist.LocalCluster(n_workers=self.dask_workers)
+            self.dask_client = ddist.Client(self.dask_cluster)
 
     def tearDown(self):
         if ENABLE_DASK_CLUSTER:

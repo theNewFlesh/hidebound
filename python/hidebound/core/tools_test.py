@@ -10,7 +10,7 @@ from schematics.exceptions import DataError, ValidationError
 from schematics.models import Model
 from schematics.types import StringType
 import dask.dataframe as dd
-import dask.distributed as dist
+import dask.distributed as ddist
 import numpy as np
 import OpenEXR as openexr
 import pandas as pd
@@ -355,8 +355,8 @@ class ToolsDaskTests(unittest.TestCase):
     def setUp(self):
         self.dask_workers = 2
         if ENABLE_DASK_CLUSTER:
-            self.dask_cluster = dist.LocalCluster(n_workers=self.dask_workers)
-            self.dask_client = dist.Client(self.dask_cluster)
+            self.dask_cluster = ddist.LocalCluster(n_workers=self.dask_workers)
+            self.dask_client = ddist.Client(self.dask_cluster)
 
     def tearDown(self):
         if ENABLE_DASK_CLUSTER:
