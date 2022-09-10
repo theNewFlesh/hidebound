@@ -249,6 +249,7 @@ def test_create_move(make_dirs, make_files, specs, dask_client):
 
 
 # READ--------------------------------------------------------------------------
+@pytest.mark.flakey
 def test_read_legal_types(make_dirs, make_files, specs, dask_client):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
@@ -346,6 +347,7 @@ def test_read_coordinates(make_dirs, make_files, specs, dask_client):
         assert col in result
 
 
+@pytest.mark.flakey
 def test_read_column_order(make_dirs, make_files, specs, dask_client):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
@@ -617,6 +619,7 @@ def test_export_disk(make_dirs, make_files, specs, db_data, dask_client):
 
 
 # SEARCH------------------------------------------------------------------------
+@pytest.mark.flakey
 def test_search(make_dirs, make_files, specs, dask_client):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
