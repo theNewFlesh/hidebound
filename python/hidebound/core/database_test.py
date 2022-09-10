@@ -19,6 +19,7 @@ import hidebound.core.tools as hbt
 
 
 GEN_KWARGS = dict(cluster_dump_directory='/tmp/cluster_dump')
+DASK_WORKERS = 2
 
 
 @gen_cluster(**GEN_KWARGS)
@@ -31,6 +32,7 @@ async def test_from_config(s, w0, w1, make_dirs, spec_file):
         include_regex='foo',
         exclude_regex='bar',
         write_mode='copy',
+        dask_workers=DASK_WORKERS,
     )
     expected = copy(config)
     Database.from_config(config)
@@ -52,6 +54,7 @@ async def test_from_json(s, w0, w1, temp_dir, make_dirs, spec_file):
         include_regex='foo',
         exclude_regex='bar',
         write_mode='copy',
+        dask_workers=DASK_WORKERS,
     )
     config_file = Path(temp_dir, 'config.json')
     with open(config_file, 'w') as f:
@@ -71,6 +74,7 @@ async def test_from_yaml(s, w0, w1, temp_dir, make_dirs, spec_file):
         include_regex='foo',
         exclude_regex='bar',
         write_mode='copy',
+        dask_workers=DASK_WORKERS,
     )
     config_file = Path(temp_dir, 'config.yaml')
     with open(config_file, 'w') as f:
@@ -83,9 +87,9 @@ async def test_from_yaml(s, w0, w1, temp_dir, make_dirs, spec_file):
 async def test_init(s, w0, w1, make_dirs, make_files, specs):
     ingress, staging, _ = make_dirs
     Spec001, Spec002, _ = specs
-    Database(ingress, staging)
-    Database(ingress, staging, [Spec001])
-    Database(ingress, staging, [Spec001, Spec002])
+    Database(ingress, staging, dask_workers=DASK_WORKERS)
+    Database(ingress, staging, [Spec001], dask_workers=DASK_WORKERS)
+    Database(ingress, staging, [Spec001, Spec002], dask_workers=DASK_WORKERS)
 
 
 @gen_cluster(**GEN_KWARGS)
@@ -94,7 +98,7 @@ async def test_init_bad_ingress(s, w0, w1, make_dirs, specs):
     Spec001, _, _ = specs
     expected = '/foo is not a directory or does not exist'
     with pytest.raises(FileNotFoundError) as e:
-        Database('/foo', staging, [Spec001])
+        Database('/foo', staging, [Spec001], dask_workers=DASK_WORKERS)
         assert re.search(expected, str(e))
 
 
@@ -104,14 +108,14 @@ async def test_init_bad_staging(s, w0, w1, temp_dir):
 
     expected = '/hidebound is not a directory or does not exist'
     with pytest.raises(FileNotFoundError) as e:
-        Database(temp_dir, staging)
+        Database(temp_dir, staging, dask_workers=DASK_WORKERS)
         assert re.search(expected, str(e))
 
     temp = Path(temp_dir, 'Hidebound')
     os.makedirs(temp)
     expected = r'Hidebound directory is not named hidebound\.$'
     with pytest.raises(NameError) as e:
-        Database(temp_dir, temp)
+        Database(temp_dir, temp, dask_workers=DASK_WORKERS)
         assert re.search(expected, str(e))
 
 
@@ -124,11 +128,13 @@ async def test_init_bad_specifications(s, w0, w1, make_dirs, make_files, specs):
     expected += ' SpecificationBase. Found: .*.'
 
     with pytest.raises(TypeError) as e:
-        Database(ingress, staging, [BadSpec])
+        Database(ingress, staging, [BadSpec], dask_workers=DASK_WORKERS)
         assert re.search(str(e), expected)
 
     with pytest.raises(TypeError) as e:
-        Database(ingress, staging, [Spec001, BadSpec])
+        Database(
+            ingress, staging, [Spec001, BadSpec], dask_workers=DASK_WORKERS
+        )
         assert re.search(str(e), expected)
 
 
@@ -139,16 +145,25 @@ async def test_init_bad_write_mode(s, w0, w1, make_dirs, specs):
 
     expected = r"Invalid write mode: foo not in \['copy', 'move'\]\."
     with pytest.raises(ValueError) as e:
-        Database(ingress, staging, [Spec001], write_mode='foo')
+        Database(
+            ingress,
+            staging,
+            [Spec001],
+            write_mode='foo',
+            dask_workers=DASK_WORKERS,
+        )
         assert re.search(str(e), expected)
 
 
 # CREATE------------------------------------------------------------------------
-def test_create(make_dirs, make_files, specs, dask_client):
+@gen_cluster(**GEN_KWARGS)
+async def test_create(s, w0, w1, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
-    db = Database(ingress, staging, [Spec001, Spec002])
+    db = Database(
+        ingress, staging, [Spec001, Spec002], dask_workers=DASK_WORKERS
+    )
 
     # test data initiliazation error
     expected = 'Data not initialized. Please call update.'
@@ -191,11 +206,14 @@ def test_create(make_dirs, make_files, specs, dask_client):
     assert result == 1
 
 
-def test_create_all_invalid(make_dirs, make_files, specs, dask_client):
+@gen_cluster(**GEN_KWARGS)
+async def test_create_all_invalid(s, w0, w1, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
-    db = Database(ingress, staging, [Spec001, Spec002])
+    db = Database(
+        ingress, staging, [Spec001, Spec002], dask_workers=DASK_WORKERS
+    )
     db.update()
     data = db.data
     data['asset_valid'] = False
@@ -216,7 +234,13 @@ async def test_create_copy(s, w0, w1, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
-    db = Database(ingress, staging, [Spec001, Spec002], write_mode='copy')
+    db = Database(
+        ingress,
+        staging,
+        [Spec001, Spec002],
+        write_mode='copy',
+        dask_workers=DASK_WORKERS,
+    )
     db.update()
     db.create()
 
@@ -230,7 +254,13 @@ async def test_create_move(s, w0, w1, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
-    db = Database(ingress, staging, [Spec001, Spec002], write_mode='move')
+    db = Database(
+        ingress,
+        staging,
+        [Spec001, Spec002],
+        write_mode='move',
+        dask_workers=DASK_WORKERS,
+    )
     db.update()
     data = db.data
     db.create()
@@ -268,7 +298,9 @@ async def test_read_legal_types(s, w0, w1, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
-    db = Database(ingress, staging, [Spec001, Spec002])
+    db = Database(
+        ingress, staging, [Spec001, Spec002], dask_workers=DASK_WORKERS
+    )
 
     # test data initiliazation error
     expected = 'Data not initialized. Please call update.'
@@ -306,7 +338,9 @@ async def test_read_legal_types(s, w0, w1, make_dirs, make_files, specs):
 async def test_read_traits(s, w0, w1, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
-    db = Database(ingress, staging, [Spec001, Spec002])
+    db = Database(
+        ingress, staging, [Spec001, Spec002], dask_workers=DASK_WORKERS
+    )
     db.update()
 
     # test file traits
@@ -335,7 +369,9 @@ async def test_read_coordinates(s, w0, w1, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
-    db = Database(ingress, staging, [Spec001, Spec002])
+    db = Database(
+        ingress, staging, [Spec001, Spec002], dask_workers=DASK_WORKERS
+    )
     db.update()
 
     db.data.file_traits = db.data.file_traits\
@@ -363,10 +399,13 @@ async def test_read_coordinates(s, w0, w1, make_dirs, make_files, specs):
 
 
 @pytest.mark.flakey
-def test_read_column_order(make_dirs, make_files, specs, dask_client):
+@gen_cluster(**GEN_KWARGS)
+async def test_read_column_order(s, w0, w1, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
-    db = Database(ingress, staging, [Spec001, Spec002])
+    db = Database(
+        ingress, staging, [Spec001, Spec002], dask_workers=DASK_WORKERS
+    )
     db.update()
 
     result = db.read()
@@ -400,7 +439,9 @@ async def test_read_no_files(s, w0, w1, make_dirs, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
-    db = Database(ingress, staging, [Spec001, Spec002])
+    db = Database(
+        ingress, staging, [Spec001, Spec002], dask_workers=DASK_WORKERS
+    )
 
     db.update()
     result = db.read()
@@ -413,7 +454,10 @@ async def test_update(s, w0, w1, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
-    data = Database(ingress, staging, [Spec001, Spec002]).update().data
+    data = Database(
+        ingress, staging, [Spec001, Spec002], dask_workers=DASK_WORKERS
+    )
+    data = data.update().data
     result = data.filepath.tolist()
     result = list(filter(lambda x: 'progress' not in x, result))
     result = sorted(result)
@@ -433,8 +477,14 @@ async def test_update_exclude(s, w0, w1, make_dirs, make_files, specs):
     expected = list(filter(lambda x: not re.search(regex, x), make_files))
     expected = sorted(expected)
 
-    result = Database(ingress, staging, [Spec001, Spec002], exclude_regex=regex)\
-        .update().data.filepath.tolist()
+    result = Database(
+        ingress,
+        staging,
+        [Spec001, Spec002],
+        exclude_regex=regex,
+        dask_workers=DASK_WORKERS,
+    )
+    result = result.update().data.filepath.tolist()
     result = list(filter(lambda x: 'progress' not in x, result))
     result = sorted(result)
     assert result == expected
@@ -449,8 +499,14 @@ async def test_update_include(s, w0, w1, make_dirs, make_files, specs):
     expected = list(filter(lambda x: re.search(regex, x), make_files))
     expected = sorted(expected)
 
-    result = Database(ingress, staging, [Spec001, Spec002], include_regex=regex)\
-        .update().data.filepath.tolist()
+    result = Database(
+        ingress,
+        staging,
+        [Spec001, Spec002],
+        include_regex=regex,
+        dask_workers=DASK_WORKERS,
+    )
+    result = result.update().data.filepath.tolist()
     result = sorted(result)
     assert result == expected
 
@@ -472,6 +528,7 @@ async def test_update_include_exclude(s, w0, w1, make_dirs, make_files, specs):
         [Spec001, Spec002],
         include_regex=i_regex,
         exclude_regex=e_regex,
+        dask_workers=DASK_WORKERS,
     )
     result = result.update().data.filepath.tolist()
     result = sorted(result)
@@ -483,7 +540,8 @@ async def test_update_no_files(s, w0, w1, make_dirs, specs, db_columns):
     Spec001, _, _ = specs
     ingress, staging, _ = make_dirs
 
-    result = Database(ingress, staging, [Spec001]).update().data
+    result = Database(ingress, staging, [Spec001], dask_workers=DASK_WORKERS)
+    result = result.update().data
     assert len(result) == 0
     assert result.columns.tolist() == db_columns
 
@@ -493,7 +551,10 @@ async def test_update_error(s, w0, w1, make_dirs, make_files, specs, db_data):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
-    data = Database(ingress, staging, [Spec001, Spec002]).update().data
+    data = Database(
+        ingress, staging, [Spec001, Spec002], dask_workers=DASK_WORKERS
+    )
+    data = data.update().data
     keys = db_data.filepath.tolist()
     lut = dict(zip(keys, db_data.file_error.tolist()))
     data = data[data.filepath.apply(lambda x: x in keys)]
@@ -515,7 +576,7 @@ async def test_delete(s, w0, w1, make_dirs, make_files, specs):
     expected = hbt.directory_to_dataframe(ingress).filepath.tolist()
     expected = sorted(expected)
 
-    db = Database(ingress, staging, [])
+    db = Database(ingress, staging, [], dask_workers=DASK_WORKERS)
     db.delete()
 
     assert data_dir.exists() is False
@@ -533,7 +594,13 @@ async def test_export_girder(s, w0, w1, make_dirs, make_files, specs):
     ingress, staging, _ = make_dirs
 
     exporters = [dict(name='girder', api_key='api_key', root_id='root_id')]
-    db = Database(ingress, staging, [Spec001, Spec002], exporters=exporters)
+    db = Database(
+        ingress,
+        staging,
+        [Spec001, Spec002],
+        exporters=exporters,
+        dask_workers=DASK_WORKERS,
+    )
     db._Database__exporter_lut = dict(girder=MockGirderExporter)
 
     db.update().create().export()
@@ -562,7 +629,13 @@ async def test_export_s3(s, w0, w1, make_dirs, make_files, specs, db_data):
         bucket='bucket',
         region='us-west-2',
     )]
-    db = Database(ingress, staging, [Spec001, Spec002], exporters=exporters)
+    db = Database(
+        ingress,
+        staging,
+        [Spec001, Spec002],
+        exporters=exporters,
+        dask_workers=DASK_WORKERS,
+    )
 
     db.update().create().export()
 
@@ -593,7 +666,9 @@ async def test_export_s3(s, w0, w1, make_dirs, make_files, specs, db_data):
     assert result == expected
 
     # file metadata
-    result = len(list(filter(lambda x: re.search('metadata/file/', x), results)))
+    result = len(list(filter(
+        lambda x: re.search('metadata/file/', x), results
+    )))
     assert result == len(content)
 
     # asset chunk
@@ -615,7 +690,13 @@ async def test_export_disk(s, w0, w1, make_dirs, make_files, specs, db_data):
     ingress, staging, archive = make_dirs
 
     exporters = [dict(name='disk', target_directory=archive)]
-    db = Database(ingress, staging, [Spec001, Spec002], exporters=exporters)
+    db = Database(
+        ingress,
+        staging,
+        [Spec001, Spec002],
+        exporters=exporters,
+        dask_workers=DASK_WORKERS,
+    )
 
     db.update()
     db.create()
@@ -650,7 +731,9 @@ def test_search(make_dirs, make_files, specs, dask_client):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
-    db = Database(ingress, staging, [Spec001, Spec002])
+    db = Database(
+        ingress, staging, [Spec001, Spec002], dask_workers=DASK_WORKERS
+    )
     db.update()
     db.search('SELECT * FROM data WHERE version == 1')
 
@@ -667,6 +750,7 @@ async def test_call_webhooks(s, w0, w1, make_dirs, make_files, spec_file):
         include_regex='foo',
         exclude_regex='bar',
         write_mode='copy',
+        dask_workers=DASK_WORKERS,
         webhooks=[
             {
                 'url': 'http://foobar.com/api/user?',
