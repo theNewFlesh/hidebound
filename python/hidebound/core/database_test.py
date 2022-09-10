@@ -608,6 +608,11 @@ def test_export_disk(make_dirs, make_files, specs, db_data, dask_client):
         .tolist()
     result = sorted(result)
 
+    # time string in metadata chunk files screws up tests
+    regex = re.compile(r'(.*-chunk.*)(\d\d\d\d-\d\d-\d\d).*.json')
+    result = [regex.sub('\\1\\2.json', x) for x in result]
+    expected = [regex.sub('\\1\\2.json', x) for x in expected]
+
     assert result == expected
 
 
