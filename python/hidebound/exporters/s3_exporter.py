@@ -8,7 +8,6 @@ from schematics.types import StringType
 import boto3 as boto
 
 from hidebound.exporters.exporter_base import ExporterBase, ExporterConfigBase
-import hidebound.core.tools as tools
 import hidebound.core.validators as vd
 # ------------------------------------------------------------------------------
 
@@ -155,10 +154,9 @@ class S3Exporter(ExporterBase):
         Args:
             metadata (list[dict]): Asset metadata.
         '''
-        now = tools.time_string()
         self._bucket.upload_fileobj(
             BytesIO(json.dumps(metadata).encode('utf-8')),
-            f'hidebound/metadata/asset-chunk/hidebound-asset-chunk_{now}.json',
+            f'hidebound/metadata/asset-chunk/hidebound-asset-chunk_{self._time}.json',
         )
 
     def _export_file_chunk(self, metadata):
@@ -170,8 +168,7 @@ class S3Exporter(ExporterBase):
         Args:
             metadata (list[dict]): File metadata.
         '''
-        now = tools.time_string()
         self._bucket.upload_fileobj(
             BytesIO(json.dumps(metadata).encode('utf-8')),
-            f'hidebound/metadata/file-chunk/hidebound-file-chunk_{now}.json',
+            f'hidebound/metadata/file-chunk/hidebound-file-chunk_{self._time}.json',
         )

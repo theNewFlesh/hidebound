@@ -1,3 +1,4 @@
+from datetime import datetime
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import os
@@ -128,6 +129,10 @@ class ExporterBaseTests(unittest.TestCase):
     def test_init(self):
         result = Foo(metadata_types=['file'])
         self.assertEqual(result._metadata_types, ['file'])
+
+        result = datetime.strptime(result._time, '%Y-%m-%dT-%H-%M-%S')
+        expected = datetime.now()
+        self.assertGreaterEqual(expected, result)
 
     def test_enforce_directory_structure(self):
         with TemporaryDirectory() as root:

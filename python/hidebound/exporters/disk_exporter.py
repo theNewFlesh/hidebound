@@ -137,12 +137,11 @@ class DiskExporter(ExporterBase):
         Args:
             metadata (list[dict]): Asset metadata.
         '''
-        now = hbt.time_string()
         target = Path(
             self._target_directory,
             'metadata',
             'asset-chunk',
-            f'hidebound-asset-chunk_{now}.json',
+            f'hidebound-asset-chunk_{self._time}.json',
         )
         os.makedirs(Path(target).parent, exist_ok=True)
         hbt.write_json(metadata, target)
@@ -155,12 +154,11 @@ class DiskExporter(ExporterBase):
         Args:
             metadata (list[dict]): File metadata.
         '''
-        now = hbt.time_string()
         target = Path(
             self._target_directory,
             'metadata',
             'file-chunk',
-            f'hidebound-file-chunk_{now}.json',
+            f'hidebound-file-chunk_{self._time}.json',
         )
         os.makedirs(Path(target).parent, exist_ok=True)
         hbt.write_json(metadata, target)
