@@ -17,6 +17,8 @@ from hidebound.exporters.mock_girder import MockGirderExporter
 import hidebound.core.tools as hbt
 # ------------------------------------------------------------------------------
 
+# TODO: fix flakey tests and remove time.sleeps
+
 
 def test_from_config(make_dirs, spec_file):
     ingress, staging, _ = make_dirs
@@ -353,9 +355,10 @@ def test_read_column_order(make_dirs, make_files, specs, dask_client):
     ingress, staging, _ = make_dirs
     db = Database(ingress, staging, [Spec001, Spec002])
     db.update()
-    time.sleep(3)
+    time.sleep(5)
 
-    result = db.read().columns.tolist()
+    result = db.read()
+    result = result.columns.tolist()
     expected = [
         'project',
         'specification',
@@ -373,7 +376,7 @@ def test_read_column_order(make_dirs, make_files, specs, dask_client):
         'asset_path',
         'asset_type',
         'asset_error',
-        'asset_valid'
+        'asset_valid',
     ]
     expected = list(filter(lambda x: x in result, expected))
     result = result[:len(expected)]
