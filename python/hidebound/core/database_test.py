@@ -18,12 +18,15 @@ import hidebound.core.tools as hbt
 # ------------------------------------------------------------------------------
 
 
-GEN_KWARGS = dict(cluster_dump_directory='/tmp/cluster_dump')
 DASK_WORKERS = 2
+GEN_KWARGS = dict(
+    nthreads=[('127.0.0.1', i) for i in range(1, DASK_WORKERS + 1)],
+    cluster_dump_directory='/tmp/cluster_dump',
+)
 
 
 @gen_cluster(**GEN_KWARGS)
-async def test_from_config(s, w0, w1, make_dirs, spec_file):
+async def test_from_config(scheduler, *workers, make_dirs, spec_file):
     ingress, staging, _ = make_dirs
     config = dict(
         ingress_directory=ingress,
@@ -44,7 +47,7 @@ async def test_from_config(s, w0, w1, make_dirs, spec_file):
 
 
 @gen_cluster(**GEN_KWARGS)
-async def test_from_json(s, w0, w1, temp_dir, make_dirs, spec_file):
+async def test_from_json(scheduler, *workers, temp_dir, make_dirs, spec_file):
     ingress, staging, _ = make_dirs
 
     config = dict(
@@ -64,7 +67,7 @@ async def test_from_json(s, w0, w1, temp_dir, make_dirs, spec_file):
 
 
 @gen_cluster(**GEN_KWARGS)
-async def test_from_yaml(s, w0, w1, temp_dir, make_dirs, spec_file):
+async def test_from_yaml(scheduler, *workers, temp_dir, make_dirs, spec_file):
     ingress, staging, _ = make_dirs
 
     config = dict(
@@ -84,7 +87,7 @@ async def test_from_yaml(s, w0, w1, temp_dir, make_dirs, spec_file):
 
 
 @gen_cluster(**GEN_KWARGS)
-async def test_init(s, w0, w1, make_dirs, make_files, specs):
+async def test_init(scheduler, *workers, make_dirs, make_files, specs):
     ingress, staging, _ = make_dirs
     Spec001, Spec002, _ = specs
     Database(ingress, staging, dask_workers=DASK_WORKERS)
@@ -93,7 +96,7 @@ async def test_init(s, w0, w1, make_dirs, make_files, specs):
 
 
 @gen_cluster(**GEN_KWARGS)
-async def test_init_bad_ingress(s, w0, w1, make_dirs, specs):
+async def test_init_bad_ingress(scheduler, *workers, make_dirs, specs):
     _, staging, _ = make_dirs
     Spec001, _, _ = specs
     expected = '/foo is not a directory or does not exist'
@@ -103,7 +106,7 @@ async def test_init_bad_ingress(s, w0, w1, make_dirs, specs):
 
 
 @gen_cluster(**GEN_KWARGS)
-async def test_init_bad_staging(s, w0, w1, temp_dir):
+async def test_init_bad_staging(scheduler, *workers, temp_dir):
     staging = Path(temp_dir, 'hidebound')
 
     expected = '/hidebound is not a directory or does not exist'
@@ -120,7 +123,7 @@ async def test_init_bad_staging(s, w0, w1, temp_dir):
 
 
 @gen_cluster(**GEN_KWARGS)
-async def test_init_bad_specifications(s, w0, w1, make_dirs, make_files, specs):
+async def test_init_bad_specifications(scheduler, *workers, make_dirs, make_files, specs):
     Spec001, _, BadSpec = specs
     ingress, staging, _ = make_dirs
 
@@ -139,7 +142,7 @@ async def test_init_bad_specifications(s, w0, w1, make_dirs, make_files, specs):
 
 
 @gen_cluster(**GEN_KWARGS)
-async def test_init_bad_write_mode(s, w0, w1, make_dirs, specs):
+async def test_init_bad_write_mode(scheduler, *workers, make_dirs, specs):
     Spec001, _, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -157,7 +160,7 @@ async def test_init_bad_write_mode(s, w0, w1, make_dirs, specs):
 
 # CREATE------------------------------------------------------------------------
 @gen_cluster(**GEN_KWARGS)
-async def test_create(s, w0, w1, make_dirs, make_files, specs):
+async def test_create(scheduler, *workers, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -207,7 +210,7 @@ async def test_create(s, w0, w1, make_dirs, make_files, specs):
 
 
 @gen_cluster(**GEN_KWARGS)
-async def test_create_all_invalid(s, w0, w1, make_dirs, make_files, specs):
+async def test_create_all_invalid(scheduler, *workers, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -230,7 +233,7 @@ async def test_create_all_invalid(s, w0, w1, make_dirs, make_files, specs):
 
 
 @gen_cluster(**GEN_KWARGS)
-async def test_create_copy(s, w0, w1, make_dirs, make_files, specs):
+async def test_create_copy(scheduler, *workers, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -250,7 +253,7 @@ async def test_create_copy(s, w0, w1, make_dirs, make_files, specs):
 
 
 @gen_cluster(**GEN_KWARGS)
-async def test_create_move(s, w0, w1, make_dirs, make_files, specs):
+async def test_create_move(scheduler, *workers, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -294,7 +297,7 @@ async def test_create_move(s, w0, w1, make_dirs, make_files, specs):
 # READ--------------------------------------------------------------------------
 @pytest.mark.flakey
 @gen_cluster(**GEN_KWARGS)
-async def test_read_legal_types(s, w0, w1, make_dirs, make_files, specs):
+async def test_read_legal_types(scheduler, *workers, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -335,7 +338,7 @@ async def test_read_legal_types(s, w0, w1, make_dirs, make_files, specs):
 
 
 @gen_cluster(**GEN_KWARGS)
-async def test_read_traits(s, w0, w1, make_dirs, make_files, specs):
+async def test_read_traits(scheduler, *workers, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
     db = Database(
@@ -365,7 +368,7 @@ async def test_read_traits(s, w0, w1, make_dirs, make_files, specs):
 
 
 @gen_cluster(**GEN_KWARGS)
-async def test_read_coordinates(s, w0, w1, make_dirs, make_files, specs):
+async def test_read_coordinates(scheduler, *workers, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -400,7 +403,7 @@ async def test_read_coordinates(s, w0, w1, make_dirs, make_files, specs):
 
 @pytest.mark.flakey
 @gen_cluster(**GEN_KWARGS)
-async def test_read_column_order(s, w0, w1, make_dirs, make_files, specs):
+async def test_read_column_order(scheduler, *workers, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
     db = Database(
@@ -435,7 +438,7 @@ async def test_read_column_order(s, w0, w1, make_dirs, make_files, specs):
 
 
 @gen_cluster(**GEN_KWARGS)
-async def test_read_no_files(s, w0, w1, make_dirs, specs):
+async def test_read_no_files(scheduler, *workers, make_dirs, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -450,7 +453,7 @@ async def test_read_no_files(s, w0, w1, make_dirs, specs):
 
 # UPDATE------------------------------------------------------------------------
 @gen_cluster(**GEN_KWARGS)
-async def test_update(s, w0, w1, make_dirs, make_files, specs):
+async def test_update(scheduler, *workers, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -469,7 +472,7 @@ async def test_update(s, w0, w1, make_dirs, make_files, specs):
 
 
 @gen_cluster(**GEN_KWARGS)
-async def test_update_exclude(s, w0, w1, make_dirs, make_files, specs):
+async def test_update_exclude(scheduler, *workers, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -491,7 +494,7 @@ async def test_update_exclude(s, w0, w1, make_dirs, make_files, specs):
 
 
 @gen_cluster(**GEN_KWARGS)
-async def test_update_include(s, w0, w1, make_dirs, make_files, specs):
+async def test_update_include(scheduler, *workers, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -512,7 +515,7 @@ async def test_update_include(s, w0, w1, make_dirs, make_files, specs):
 
 
 @gen_cluster(**GEN_KWARGS)
-async def test_update_include_exclude(s, w0, w1, make_dirs, make_files, specs):
+async def test_update_include_exclude(scheduler, *workers, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -536,7 +539,7 @@ async def test_update_include_exclude(s, w0, w1, make_dirs, make_files, specs):
 
 
 @gen_cluster(**GEN_KWARGS)
-async def test_update_no_files(s, w0, w1, make_dirs, specs, db_columns):
+async def test_update_no_files(scheduler, *workers, make_dirs, specs, db_columns):
     Spec001, _, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -547,7 +550,7 @@ async def test_update_no_files(s, w0, w1, make_dirs, specs, db_columns):
 
 
 @gen_cluster(**GEN_KWARGS)
-async def test_update_error(s, w0, w1, make_dirs, make_files, specs, db_data):
+async def test_update_error(scheduler, *workers, make_dirs, make_files, specs, db_data):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -567,7 +570,7 @@ async def test_update_error(s, w0, w1, make_dirs, make_files, specs, db_data):
 
 # DELETE------------------------------------------------------------------------
 @gen_cluster(**GEN_KWARGS)
-async def test_delete(s, w0, w1, make_dirs, make_files, specs):
+async def test_delete(scheduler, *workers, make_dirs, make_files, specs):
     ingress, staging, _ = make_dirs
 
     data_dir = Path(staging, 'content')
@@ -589,7 +592,7 @@ async def test_delete(s, w0, w1, make_dirs, make_files, specs):
 
 # EXPORT------------------------------------------------------------------------
 @gen_cluster(**GEN_KWARGS)
-async def test_export_girder(s, w0, w1, make_dirs, make_files, specs):
+async def test_export_girder(scheduler, *workers, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -618,7 +621,7 @@ async def test_export_girder(s, w0, w1, make_dirs, make_files, specs):
 
 @mock_s3
 @gen_cluster(**GEN_KWARGS)
-async def test_export_s3(s, w0, w1, make_dirs, make_files, specs, db_data):
+async def test_export_s3(scheduler, *workers, make_dirs, make_files, specs, db_data):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -685,7 +688,7 @@ async def test_export_s3(s, w0, w1, make_dirs, make_files, specs, db_data):
 
 
 @gen_cluster(**GEN_KWARGS)
-async def test_export_disk(s, w0, w1, make_dirs, make_files, specs, db_data):
+async def test_export_disk(scheduler, *workers, make_dirs, make_files, specs, db_data):
     Spec001, Spec002, _ = specs
     ingress, staging, archive = make_dirs
 
@@ -727,7 +730,8 @@ async def test_export_disk(s, w0, w1, make_dirs, make_files, specs, db_data):
 
 # SEARCH------------------------------------------------------------------------
 @pytest.mark.flakey
-def test_search(make_dirs, make_files, specs, dask_client):
+@gen_cluster(**GEN_KWARGS)
+async def test_search(scheduler, *workers, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -740,7 +744,7 @@ def test_search(make_dirs, make_files, specs, dask_client):
 
 # WEBHOOKS----------------------------------------------------------------------
 @gen_cluster(**GEN_KWARGS)
-async def test_call_webhooks(s, w0, w1, make_dirs, make_files, spec_file):
+async def test_call_webhooks(scheduler, *workers, make_dirs, make_files, spec_file):
     ingress, staging, _ = make_dirs
 
     config = dict(
