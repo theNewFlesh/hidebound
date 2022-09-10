@@ -355,7 +355,7 @@ def test_read_column_order(make_dirs, make_files, specs, dask_client):
     ingress, staging, _ = make_dirs
     db = Database(ingress, staging, [Spec001, Spec002])
     db.update()
-    time.sleep(5)
+    time.sleep(3)
 
     result = db.read()
     result = result.columns.tolist()
