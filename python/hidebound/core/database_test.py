@@ -159,6 +159,7 @@ async def test_init_bad_write_mode(scheduler, *workers, make_dirs, specs):
 
 
 # CREATE------------------------------------------------------------------------
+@pytest.mark.flakey
 @gen_cluster(**GEN_KWARGS)
 async def test_create(scheduler, *workers, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
