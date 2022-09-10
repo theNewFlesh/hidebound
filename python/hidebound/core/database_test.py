@@ -191,9 +191,7 @@ def test_create(make_dirs, make_files, specs, dask_client):
     assert result == 1
 
 
-# def test_create_all_invalid(make_dirs, make_files, specs, dask_client):
-@gen_cluster(**GEN_KWARGS)
-async def test_create_all_invalid(s, w0, w1, make_dirs, make_files, specs):
+def test_create_all_invalid(make_dirs, make_files, specs, dask_client):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -365,8 +363,7 @@ async def test_read_coordinates(s, w0, w1, make_dirs, make_files, specs):
 
 
 @pytest.mark.flakey
-@gen_cluster(**GEN_KWARGS)
-async def test_read_column_order(s, w0, w1, make_dirs, make_files, specs):
+def test_read_column_order(make_dirs, make_files, specs, dask_client):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
     db = Database(ingress, staging, [Spec001, Spec002])
@@ -660,8 +657,7 @@ def test_search(make_dirs, make_files, specs, dask_client):
 
 # WEBHOOKS----------------------------------------------------------------------
 @gen_cluster(**GEN_KWARGS)
-async def test_call_webhooks(s, w0, w1, make_dirs, make_files, specs, spec_file):
-    Spec001, Spec002, _ = specs
+async def test_call_webhooks(s, w0, w1, make_dirs, make_files, spec_file):
     ingress, staging, _ = make_dirs
 
     config = dict(
