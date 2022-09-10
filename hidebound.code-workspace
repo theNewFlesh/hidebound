@@ -41,7 +41,8 @@
             "*/*/**/node_modules": true,
             "**/.vscode": true,
             "**/flask_monitoringdashboard.db": true,
-            "**/dask-worker-space": true
+            "**/dask-worker-space": true,
+            "**/test_cluster_dump": true
         }
     },
     "tasks": {

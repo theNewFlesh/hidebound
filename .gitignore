@@ -7,6 +7,8 @@ devops/ansible/**/*.retry
 # dask
 dask-worker-space
 dask-worker-space/*
+test_cluster_dump
+test_cluster_dump/*
 
 # flask
 flask_monitoringdashboard*
