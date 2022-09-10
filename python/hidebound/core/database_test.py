@@ -4,8 +4,8 @@ from pathlib import Path
 import json
 import os
 import re
-import time
 
+from distributed.utils_test import gen_cluster
 from moto import mock_s3
 from schematics.exceptions import DataError
 import boto3 as boto
@@ -17,10 +17,12 @@ from hidebound.exporters.mock_girder import MockGirderExporter
 import hidebound.core.tools as hbt
 # ------------------------------------------------------------------------------
 
-# TODO: fix flakey tests and remove time.sleeps
+
+GEN_KWARGS = dict(cluster_dump_directory='/tmp/cluster_dump')
 
 
-def test_from_config(make_dirs, spec_file):
+@gen_cluster(**GEN_KWARGS)
+async def test_from_config(s, w0, w1, make_dirs, spec_file):
     ingress, staging, _ = make_dirs
     config = dict(
         ingress_directory=ingress,
@@ -39,7 +41,8 @@ def test_from_config(make_dirs, spec_file):
         Database.from_config(config)
 
 
-def test_from_json(temp_dir, make_dirs, spec_file):
+@gen_cluster(**GEN_KWARGS)
+async def test_from_json(s, w0, w1, temp_dir, make_dirs, spec_file):
     ingress, staging, _ = make_dirs
 
     config = dict(
@@ -57,7 +60,8 @@ def test_from_json(temp_dir, make_dirs, spec_file):
     Database.from_json(config_file)
 
 
-def test_from_yaml(temp_dir, make_dirs, spec_file):
+@gen_cluster(**GEN_KWARGS)
+async def test_from_yaml(s, w0, w1, temp_dir, make_dirs, spec_file):
     ingress, staging, _ = make_dirs
 
     config = dict(
@@ -75,7 +79,8 @@ def test_from_yaml(temp_dir, make_dirs, spec_file):
     Database.from_yaml(config_file)
 
 
-def test_init(make_dirs, make_files, specs):
+@gen_cluster(**GEN_KWARGS)
+async def test_init(s, w0, w1, make_dirs, make_files, specs):
     ingress, staging, _ = make_dirs
     Spec001, Spec002, _ = specs
     Database(ingress, staging)
@@ -83,7 +88,8 @@ def test_init(make_dirs, make_files, specs):
     Database(ingress, staging, [Spec001, Spec002])
 
 
-def test_init_bad_ingress(make_dirs, specs):
+@gen_cluster(**GEN_KWARGS)
+async def test_init_bad_ingress(s, w0, w1, make_dirs, specs):
     _, staging, _ = make_dirs
     Spec001, _, _ = specs
     expected = '/foo is not a directory or does not exist'
@@ -92,7 +98,8 @@ def test_init_bad_ingress(make_dirs, specs):
         assert re.search(expected, str(e))
 
 
-def test_init_bad_staging(temp_dir):
+@gen_cluster(**GEN_KWARGS)
+async def test_init_bad_staging(s, w0, w1, temp_dir):
     staging = Path(temp_dir, 'hidebound')
 
     expected = '/hidebound is not a directory or does not exist'
@@ -108,7 +115,8 @@ def test_init_bad_staging(temp_dir):
         assert re.search(expected, str(e))
 
 
-def test_init_bad_specifications(make_dirs, make_files, specs):
+@gen_cluster(**GEN_KWARGS)
+async def test_init_bad_specifications(s, w0, w1, make_dirs, make_files, specs):
     Spec001, _, BadSpec = specs
     ingress, staging, _ = make_dirs
 
@@ -124,7 +132,8 @@ def test_init_bad_specifications(make_dirs, make_files, specs):
         assert re.search(str(e), expected)
 
 
-def test_init_bad_write_mode(make_dirs, specs):
+@gen_cluster(**GEN_KWARGS)
+async def test_init_bad_write_mode(s, w0, w1, make_dirs, specs):
     Spec001, _, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -182,7 +191,9 @@ def test_create(make_dirs, make_files, specs, dask_client):
     assert result == 1
 
 
-def test_create_all_invalid(make_dirs, make_files, specs, dask_client):
+# def test_create_all_invalid(make_dirs, make_files, specs, dask_client):
+@gen_cluster(**GEN_KWARGS)
+async def test_create_all_invalid(s, w0, w1, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -202,7 +213,8 @@ def test_create_all_invalid(make_dirs, make_files, specs, dask_client):
     assert result.exists() is False
 
 
-def test_create_copy(make_dirs, make_files, specs, dask_client):
+@gen_cluster(**GEN_KWARGS)
+async def test_create_copy(s, w0, w1, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -215,7 +227,8 @@ def test_create_copy(make_dirs, make_files, specs, dask_client):
     assert result == make_files
 
 
-def test_create_move(make_dirs, make_files, specs, dask_client):
+@gen_cluster(**GEN_KWARGS)
+async def test_create_move(s, w0, w1, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -252,7 +265,8 @@ def test_create_move(make_dirs, make_files, specs, dask_client):
 
 # READ--------------------------------------------------------------------------
 @pytest.mark.flakey
-def test_read_legal_types(make_dirs, make_files, specs, dask_client):
+@gen_cluster(**GEN_KWARGS)
+async def test_read_legal_types(s, w0, w1, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -265,7 +279,6 @@ def test_read_legal_types(make_dirs, make_files, specs, dask_client):
         assert re.search(expected, str(e))
 
     db.update()
-    time.sleep(3)
     data = db.read()
 
     # test types by file
@@ -291,7 +304,8 @@ def test_read_legal_types(make_dirs, make_files, specs, dask_client):
     assert len(result) == 0
 
 
-def test_read_traits(make_dirs, make_files, specs, dask_client):
+@gen_cluster(**GEN_KWARGS)
+async def test_read_traits(s, w0, w1, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
     db = Database(ingress, staging, [Spec001, Spec002])
@@ -318,7 +332,8 @@ def test_read_traits(make_dirs, make_files, specs, dask_client):
     assert 'illegal' not in result
 
 
-def test_read_coordinates(make_dirs, make_files, specs, dask_client):
+@gen_cluster(**GEN_KWARGS)
+async def test_read_coordinates(s, w0, w1, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -350,12 +365,12 @@ def test_read_coordinates(make_dirs, make_files, specs, dask_client):
 
 
 @pytest.mark.flakey
-def test_read_column_order(make_dirs, make_files, specs, dask_client):
+@gen_cluster(**GEN_KWARGS)
+async def test_read_column_order(s, w0, w1, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
     db = Database(ingress, staging, [Spec001, Spec002])
     db.update()
-    time.sleep(3)
 
     result = db.read()
     result = result.columns.tolist()
@@ -383,7 +398,8 @@ def test_read_column_order(make_dirs, make_files, specs, dask_client):
     assert result == expected
 
 
-def test_read_no_files(make_dirs, specs, dask_client):
+@gen_cluster(**GEN_KWARGS)
+async def test_read_no_files(s, w0, w1, make_dirs, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -395,7 +411,8 @@ def test_read_no_files(make_dirs, specs, dask_client):
 
 
 # UPDATE------------------------------------------------------------------------
-def test_update(make_dirs, make_files, specs, dask_client):
+@gen_cluster(**GEN_KWARGS)
+async def test_update(s, w0, w1, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -410,7 +427,8 @@ def test_update(make_dirs, make_files, specs, dask_client):
     assert result == expected
 
 
-def test_update_exclude(make_dirs, make_files, specs, dask_client):
+@gen_cluster(**GEN_KWARGS)
+async def test_update_exclude(s, w0, w1, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -425,7 +443,8 @@ def test_update_exclude(make_dirs, make_files, specs, dask_client):
     assert result == expected
 
 
-def test_update_include(make_dirs, make_files, specs, dask_client):
+@gen_cluster(**GEN_KWARGS)
+async def test_update_include(s, w0, w1, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -439,7 +458,8 @@ def test_update_include(make_dirs, make_files, specs, dask_client):
     assert result == expected
 
 
-def test_update_include_exclude(make_dirs, make_files, specs, dask_client):
+@gen_cluster(**GEN_KWARGS)
+async def test_update_include_exclude(s, w0, w1, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -461,7 +481,8 @@ def test_update_include_exclude(make_dirs, make_files, specs, dask_client):
     assert result == expected
 
 
-def test_update_no_files(make_dirs, specs, dask_client, db_columns):
+@gen_cluster(**GEN_KWARGS)
+async def test_update_no_files(s, w0, w1, make_dirs, specs, db_columns):
     Spec001, _, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -470,7 +491,8 @@ def test_update_no_files(make_dirs, specs, dask_client, db_columns):
     assert result.columns.tolist() == db_columns
 
 
-def test_update_error(make_dirs, make_files, specs, db_data, dask_client):
+@gen_cluster(**GEN_KWARGS)
+async def test_update_error(s, w0, w1, make_dirs, make_files, specs, db_data):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -486,7 +508,8 @@ def test_update_error(make_dirs, make_files, specs, db_data, dask_client):
 
 
 # DELETE------------------------------------------------------------------------
-def test_delete(make_dirs, make_files, specs, dask_client):
+@gen_cluster(**GEN_KWARGS)
+async def test_delete(s, w0, w1, make_dirs, make_files, specs):
     ingress, staging, _ = make_dirs
 
     data_dir = Path(staging, 'content')
@@ -507,7 +530,8 @@ def test_delete(make_dirs, make_files, specs, dask_client):
 
 
 # EXPORT------------------------------------------------------------------------
-def test_export_girder(make_dirs, make_files, specs, dask_client):
+@gen_cluster(**GEN_KWARGS)
+async def test_export_girder(s, w0, w1, make_dirs, make_files, specs):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -529,7 +553,8 @@ def test_export_girder(make_dirs, make_files, specs, dask_client):
 
 
 @mock_s3
-def test_export_s3(make_dirs, make_files, specs, db_data, dask_client):
+@gen_cluster(**GEN_KWARGS)
+async def test_export_s3(s, w0, w1, make_dirs, make_files, specs, db_data):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -587,7 +612,8 @@ def test_export_s3(make_dirs, make_files, specs, db_data, dask_client):
     assert result == 1
 
 
-def test_export_disk(make_dirs, make_files, specs, db_data, dask_client):
+@gen_cluster(**GEN_KWARGS)
+async def test_export_disk(s, w0, w1, make_dirs, make_files, specs, db_data):
     Spec001, Spec002, _ = specs
     ingress, staging, archive = make_dirs
 
@@ -629,12 +655,12 @@ def test_search(make_dirs, make_files, specs, dask_client):
 
     db = Database(ingress, staging, [Spec001, Spec002])
     db.update()
-    time.sleep(3)
     db.search('SELECT * FROM data WHERE version == 3')
 
 
 # WEBHOOKS----------------------------------------------------------------------
-def test_call_webhooks(make_dirs, make_files, specs, spec_file, dask_client):
+@gen_cluster(**GEN_KWARGS)
+async def test_call_webhooks(s, w0, w1, make_dirs, make_files, specs, spec_file):
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 

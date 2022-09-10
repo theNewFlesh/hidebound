@@ -157,7 +157,7 @@ def config_json_file(temp_dir, config):
 
 
 # DATABASE----------------------------------------------------------------------
-@pytest.fixture(scope='module')
+@pytest.fixture()
 def dask_client():
     cluster = ddist.LocalCluster(n_workers=2, threads_per_worker=1)
     client = ddist.Client(cluster)
