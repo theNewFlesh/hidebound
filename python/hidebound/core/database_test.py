@@ -652,7 +652,7 @@ def test_search(make_dirs, make_files, specs, dask_client):
 
     db = Database(ingress, staging, [Spec001, Spec002])
     db.update()
-    db.search('SELECT * FROM data WHERE version == 3')
+    db.search('SELECT * FROM data WHERE version == 1')
 
 
 # WEBHOOKS----------------------------------------------------------------------
