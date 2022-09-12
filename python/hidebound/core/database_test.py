@@ -22,6 +22,10 @@ DASK_WORKERS = 2
 GEN_KWARGS = dict(
     nthreads=[('127.0.0.1', i) for i in range(1, DASK_WORKERS + 1)],
     cluster_dump_directory='/tmp/cluster_dump',
+    scheduler_kwargs=dict(
+        dashboard=True,
+        dashboard_address=':8087',
+    ),
 )
 
 
