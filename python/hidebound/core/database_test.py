@@ -172,17 +172,9 @@ async def test_create(scheduler, *workers, make_dirs, make_files, specs):
     db = Database(
         ingress, staging, [Spec001, Spec002], dask_workers=DASK_WORKERS
     )
-
-    # test data initiliazation error
-    expected = 'Data not initialized. Please call update.'
-    with pytest.raises(RuntimeError) as e:
-        db.create()
-        assert re.search(str(e), expected)
-
     db.update()
     data = db.data
     db.create()
-
     data = data[data.asset_valid]
 
     # ensure files are written
@@ -212,6 +204,21 @@ async def test_create(scheduler, *workers, make_dirs, make_files, specs):
     # ensure file chunk is written
     result = len(os.listdir(Path(staging, 'metadata', 'file-chunk')))
     assert result == 1
+
+
+@pytest.mark.flakey
+@gen_cluster(**GEN_KWARGS)
+async def test_create_no_init(scheduler, *workers, make_dirs, make_files, specs):
+    Spec001, Spec002, _ = specs
+    ingress, staging, _ = make_dirs
+
+    db = Database(
+        ingress, staging, [Spec001, Spec002], dask_workers=DASK_WORKERS
+    )
+    expected = 'Data not initialized. Please call update.'
+    with pytest.raises(RuntimeError) as e:
+        db.create()
+        assert re.search(str(e), expected)
 
 
 @gen_cluster(**GEN_KWARGS)
