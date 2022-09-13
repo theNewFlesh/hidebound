@@ -68,7 +68,7 @@ class ProgressLogger:
                     message += f' - {orig}'
 
                 log = dict(
-                    args=record.args,
+                    args=list(map(str, record.args)),
                     created=record.created,
                     exc_info=record.exc_info,
                     exc_text=record.exc_text,
