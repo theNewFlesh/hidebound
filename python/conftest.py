@@ -97,6 +97,7 @@ def config(temp_dir):
         exclude_regex=r'\.DS_Store',
         write_mode='copy',
         dask_workers=3,
+        dask_cluster_type='local',
         redact_regex='(_key|_id|url)$',
         redact_hash=True,
         workflow=['update', 'create', 'export', 'delete'],

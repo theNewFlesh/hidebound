@@ -101,6 +101,7 @@ class Config(Model):
             hidebound/content directory. Default: copy.
         dask_workers (int, optional): Number of Dask worker to use if enabled.
             Default: 8.
+        dask_cluster_type (str, optional): Dask cluster type. Default: local.
         workflow (list[str], optional): Ordered steps of workflow.  Default:
             ['delete', 'update', 'create', 'export'].
         redact_regex (str, optional): Regex pattern matched to config keys.
@@ -129,6 +130,11 @@ class Config(Model):
     )  # type: StringType
     dask_workers = IntType(
         default=8, required=True, validators=[lambda x: vd.is_gt(x, 0)]
+    )  # type: IntType
+    dask_cluster_type = StringType(
+        default='local',
+        required=True,
+        validators=[lambda x: vd.is_in(x, ['local'])],
     )  # type: IntType
     workflow = ListType(
         StringType(),

@@ -1,6 +1,7 @@
 apispec
 bokeh>=2.1.1
 boto3
+dask-gateway
 dash-cytoscape>=0.2.0
 dash>=2.0.0
 dask[distributed]

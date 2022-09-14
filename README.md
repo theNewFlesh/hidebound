@@ -431,6 +431,7 @@ Hidebound configs consist of three main sections:
 * exclude_regex - filepaths in the root that match this are excluded from the database
 * write_mode - whether to copy or move files from root to staging
 * dask_workers - number of Dask partitions to use
+* dask_cluster_type - type of Dask cluster to use
 * redact_regex - regular expression which matches config keys whose valuse are to be redacted
 * redact_hash - whether to redact config values with "REDACTED" or a hash of the value
 * workflow - order list of steps to be followed in workflow
@@ -462,6 +463,7 @@ file.
 | HIDEBOUND_EXCLUDE_REGEX       | str    | exclude_regex parameter of config     |
 | HIDEBOUND_WRITE_MODE          | str    | write_mode parameter of config        |
 | HIDEBOUND_DASK_WORKERS        | int    | dask_workers parameter of config      |
+| HIDEBOUND_DASK_CLUSTER_TYPE   | str    | dask_cluster_type parameter of config |
 | HIDEBOUND_REDACT_REGEX        | str    | redact_regex parameter of config      |
 | HIDEBOUND_REDACT_HASH         | str    | redact_hash parameter of config       |
 | HIDEBOUND_WORKFLOW            | yaml   | workflow paramater of config          |
@@ -480,6 +482,7 @@ exclude_regex: "\\.DS_Store"                                 # exclude files tha
 write_mode: copy                                             # copy files from root to staging
                                                              # options: copy, move
 dask_workers: 16                                             # number of Dask partitions to use
+dask_cluster_type: local                                     # type of Dask cluster
 redact_regex: "(_key|_id|url)$"                              # regex matched config keys to redact
 redact_hash: true                                            # hash redacted values
 workflow:                                                    # workflow steps

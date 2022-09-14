@@ -163,6 +163,7 @@ class ConfigTests(unittest.TestCase):
             exclude_regex='bar',
             write_mode='copy',
             dask_workers=99,
+            dask_cluster_type='local',
             workflow=['update', 'create', 'export', 'delete'],
         )
     # --------------------------------------------------------------------------
