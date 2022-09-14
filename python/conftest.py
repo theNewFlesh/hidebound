@@ -9,7 +9,6 @@ import re
 from pandas import DataFrame
 from schematics.types import ListType, IntType, StringType
 import dask.dataframe as dd
-import dask.distributed as ddist
 import flask
 import lunchbox.tools as lbt
 import numpy as np
@@ -157,16 +156,6 @@ def config_json_file(temp_dir, config):
 
 
 # DATABASE----------------------------------------------------------------------
-@pytest.fixture()
-def dask_client():
-    cluster = ddist.LocalCluster(n_workers=2, threads_per_worker=1)
-    client = ddist.Client(cluster)
-    yield client
-
-    client.close()
-    cluster.close()
-
-
 @pytest.fixture()
 def db_columns():
     # type: () -> List[str]
