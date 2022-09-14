@@ -10,6 +10,7 @@ import sys
 
 from pandas import DataFrame
 import dask.dataframe as dd
+import dask.distributed as ddist
 import jsoncomment as jsonc
 import numpy as np
 import pandasql
@@ -75,7 +76,6 @@ class Database:
             write_mode=config['write_mode'],
             exporters=config['exporters'],
             webhooks=config['webhooks'],
-            dask_enabled=config['dask_enabled'],
             dask_workers=config['dask_workers'],
         )
 
@@ -121,7 +121,6 @@ class Database:
         write_mode='copy',            # type: str
         exporters=[],                 # type: List[Dict[str, Any]]
         webhooks=[],                  # type: List[Dict[str, Any]]
-        dask_enabled=False,           # type: bool
         dask_workers=8,               # type: int
     ):
         # type: (...) -> None
@@ -144,7 +143,6 @@ class Database:
                 Default: [].
             webhooks (list[dict], optional): List of webhooks to call.
                 Default: [].
-            dask_enabled (bool, optional): Whether to enable Dask.
                 Default: False.
             dask_workers (int, optional): Number of partitions to use for
                 Dask. Must be 1 or greater. Default: 8.
@@ -207,7 +205,6 @@ class Database:
             # type: Dict[str, SpecificationBase]
         self._exporters = exporters
         self._webhooks = webhooks
-        self._dask_enabled = dask_enabled
         self._dask_workers = dask_workers
         self.data = None
 
@@ -242,63 +239,42 @@ class Database:
             msg = 'Data not initialized. Please call update.'
             raise RuntimeError(msg)
 
-        temp = db_tools.get_data_for_write(self.data, self._root, self._staging)
+        temp = db_tools.get_data_for_write(
+            self.data, self._root, self._staging
+        )
         self._logger.info('create: get data', step=1, total=total)
         if temp is None:
             return self
 
-        # convert to dask dataframes
         file_data, asset_meta, file_meta, asset_chunk, file_chunk = temp
-        nparts = self._dask_workers
-        file_data = dd.from_pandas(file_data, npartitions=nparts)
-        asset_meta = dd.from_pandas(asset_meta, npartitions=nparts)
-        file_meta = dd.from_pandas(file_meta, npartitions=nparts)
-        asset_chunk = dd.from_pandas(asset_chunk, npartitions=nparts)
-        file_chunk = dd.from_pandas(file_chunk, npartitions=nparts)
-        temp = [file_data, asset_meta, file_meta, asset_chunk, file_chunk]
 
         # make directories
         for item in temp:
-            item.target.apply(
-                lambda x: os.makedirs(Path(x).parent, exist_ok=True),
-                meta=np.nan
-            ).compute()
+            item.target.apply(lambda x: os.makedirs(Path(x).parent, exist_ok=True))
         self._logger.info('create: make directories', step=2, total=total)
 
         # write file data
         if self._write_mode == 'move':
-            file_data.apply(
-                lambda x: shutil.move(x.source, x.target), axis=1, meta=np.nan
-            ).compute()
+            file_data.apply(lambda x: shutil.move(x.source, x.target), axis=1)
             hbt.delete_empty_directories(self._root)
         else:
-            file_data.apply(
-                lambda x: shutil.copy2(x.source, x.target), axis=1, meta=np.nan
-            ).compute()
+            file_data.apply(lambda x: shutil.copy2(x.source, x.target), axis=1)
         self._logger.info('create: write file data', step=3, total=total)
 
         # write asset metadata
-        asset_meta.apply(
-            lambda x: hbt.write_json(x.metadata, x.target), axis=1, meta=np.nan
-        ).compute()
+        asset_meta.apply(lambda x: hbt.write_json(x.metadata, x.target), axis=1)
         self._logger.info('create: write asset metadata', step=4, total=total)
 
         # write file metadata
-        file_meta.apply(
-            lambda x: hbt.write_json(x.metadata, x.target), axis=1, meta=np.nan
-        ).compute()
+        file_meta.apply(lambda x: hbt.write_json(x.metadata, x.target), axis=1)
         self._logger.info('create: write file metadata', step=5, total=total)
 
         # write asset chunk
-        asset_chunk.apply(
-            lambda x: hbt.write_json(x.metadata, x.target), axis=1, meta=np.nan
-        ).compute()
+        asset_chunk.apply(lambda x: hbt.write_json(x.metadata, x.target), axis=1)
         self._logger.info('create: write asset chunk', step=6, total=total)
 
         # write file chunk
-        file_chunk.apply(
-            lambda x: hbt.write_json(x.metadata, x.target), axis=1, meta=np.nan
-        ).compute()
+        file_chunk.apply(lambda x: hbt.write_json(x.metadata, x.target), axis=1)
         self._logger.info('create: write file chunk', step=7, total=total)
 
         self._logger.info('create: complete', step=7, total=total)

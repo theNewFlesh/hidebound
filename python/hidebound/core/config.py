@@ -99,7 +99,6 @@ class Config(Model):
             Default: '\.DS_Store'.
         write_mode (str, optional): How assets will be extracted to
             hidebound/content directory. Default: copy.
-        dask_enabled (bool, optional): Whether Dask is enabled. Default: False.
         dask_workers (int, optional): Number of Dask worker to use if enabled.
             Default: 8.
         workflow (list[str], optional): Ordered steps of workflow.  Default:
@@ -128,7 +127,6 @@ class Config(Model):
         validators=[lambda x: vd.is_in(x, ['copy', 'move'])],
         default="copy",
     )  # type: StringType
-    dask_enabled = BooleanType(default=False, required=True)  # type: BooleanType
     dask_workers = IntType(
         default=8, required=True, validators=[lambda x: vd.is_gt(x, 0)]
     )  # type: IntType

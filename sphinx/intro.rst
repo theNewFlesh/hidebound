@@ -642,7 +642,6 @@ Here is a full example config with comments:
     exclude_regex: "\\.DS_Store"                                 # exclude files that match
     write_mode: copy                                             # copy files from root to staging
                                                                  # options: copy, move
-    dask_enabled: true                                           # enable Dask distributed computing
     dask_workers: 16                                             # number of Dask partitions to use
     redact_regex: "(_key|_id|url)$"                              # regex matched config keys to redact
     redact_hash: true                                            # hash redacted values

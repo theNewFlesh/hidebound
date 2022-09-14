@@ -94,7 +94,6 @@ class HideboundExtension:
             include_regex=app.config.get('INCLUDE_REGEX', ''),
             exclude_regex=app.config.get('EXCLUDE_REGEX', r'\.DS_Store'),
             write_mode=app.config.get('WRITE_MODE', 'copy'),
-            dask_enabled=hbt.str_to_bool(app.config.get('DASK_ENABLED', 'False')),
             dask_workers=int(app.config.get('DASK_WORKERS', 8)),
             redact_regex=app.config.get('REDACT_REGEX', '(_key|_id|url)$'),
             redact_hash=hbt.str_to_bool(app.config.get('REDACT_HASH', 'False')),

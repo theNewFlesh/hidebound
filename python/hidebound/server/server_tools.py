@@ -332,7 +332,6 @@ def format_config(
         'include_regex',
         'exclude_regex',
         'write_mode',
-        'dask_enabled',
         'dask_workers',
         'redact_regex',
         'redact_hash',
