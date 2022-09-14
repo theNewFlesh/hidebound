@@ -42,6 +42,7 @@ class ExporterBase:
                 Default: [asset, file, asset-chunk, file-chunk].
         '''
         self._metadata_types = metadata_types
+        self._time = hbt.time_string()
 
     def _enforce_directory_structure(self, staging_dir):
         # type: (Union[str, Path]) -> None
