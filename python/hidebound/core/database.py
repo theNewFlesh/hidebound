@@ -9,7 +9,6 @@ import shutil
 import sys
 
 from pandas import DataFrame
-import dask_gateway as dgate
 import dask.dataframe as dd
 import dask.distributed as ddist
 import jsoncomment as jsonc
@@ -124,10 +123,6 @@ class Database:
         webhooks=[],                  # type: List[Dict[str, Any]]
         dask_workers=8,               # type: int
         dask_cluster_type='local',    # type: str
-        dask_gateway='',              # type: str
-        dask_proxy='',                # type: str
-        dask_public='',               # type: str
-        dask_auth='jupyter',          # type: str
     ):
         # type: (...) -> None
         r'''
@@ -154,10 +149,6 @@ class Database:
                 Dask. Must be 1 or greater. Default: 8.
             dask_cluster_type: (str, optional): Dask cluster type:
                 Default: local.
-            dask_gateway: (str, optional):
-            dask_proxy: (str, optional):
-            dask_public: (str, optional):
-            dask_auth: (str, optional):
 
         Raises:
             TypeError: If specifications contains a non-SpecificationBase
@@ -227,14 +218,8 @@ class Database:
         # setup dask cluster
         if dask_cluster_type == 'local':
             self._dask_cluster = ddist.LocalCluster(
-                n_workers=dask_workers, dashboard_address='0.0.0.0:8087'
-            )
-        elif dask_cluster_type == 'gateway':
-            self._dask_cluster = dgate.Gateway(
-                address=dask_gateway,
-                proxy_address=dask_proxy,
-                public_address=dask_public,
-                auth=dask_auth,
+                n_workers=dask_workers,
+                dashboard_address='0.0.0.0:8087',
             )
 
         self._logger.info('Database initialized', step=1, total=1)
