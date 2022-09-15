@@ -8,7 +8,7 @@ import lunchbox.tools as lbt
 import pytest
 import yaml
 
-from hidebound.core.database_test_base import DatabaseTestBase
+from hidebound.core.database_test_base import *  # noqa: F403 F401
 import hidebound.server.extensions as ext
 # ------------------------------------------------------------------------------
 
@@ -72,18 +72,15 @@ def temp_dir():
 @pytest.fixture()
 def make_dirs(temp_dir):
     ingress = Path(temp_dir, 'ingress').as_posix()
-    hidebound = Path(temp_dir, 'hidebound').as_posix()
+    staging = Path(temp_dir, 'hidebound').as_posix()
     archive = Path(temp_dir, 'archive').as_posix()
 
     # creates dirs
     os.makedirs(ingress)
-    os.makedirs(hidebound)
+    os.makedirs(staging)
     os.makedirs(archive)
 
-
-@pytest.fixture()
-def make_files(temp_dir, config, make_dirs):
-    DatabaseTestBase().create_files(config['ingress_directory'])
+    yield ingress, staging, archive
 
 
 @pytest.fixture()
@@ -99,8 +96,8 @@ def config(temp_dir):
         include_regex='',
         exclude_regex=r'\.DS_Store',
         write_mode='copy',
-        dask_enabled=False,
         dask_workers=3,
+        dask_cluster_type='local',
         redact_regex='(_key|_id|url)$',
         redact_hash=True,
         workflow=['update', 'create', 'export', 'delete'],

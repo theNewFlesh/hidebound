@@ -29,8 +29,8 @@ def test_get_config_from_env(env, app, config):
 
 
 def test_get_config_from_env_bool(env, app, config):
-    config['dask_enabled'] = True
-    os.environ['HIDEBOUND_DASK_ENABLED'] = 'True'
+    config['redact_hash'] = False
+    os.environ['HIDEBOUND_REDACT_HASH'] = 'False'
     app.config.from_prefixed_env('HIDEBOUND')
     result = HideboundExtension()._get_config_from_env(app)
     for key, val in config.items():
