@@ -644,6 +644,7 @@ Here is a full example config with comments:
                                                                  # options: copy, move
     dask_workers: 16                                             # number of Dask partitions to use
     dask_cluster_type: local                                     # Dask cluster type
+                                                                 # options: local
     redact_regex: "(_key|_id|url)$"                              # regex matched config keys to redact
     redact_hash: true                                            # hash redacted values
     workflow:                                                    # workflow steps
