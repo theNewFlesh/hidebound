@@ -156,7 +156,7 @@ def read():
         try:
             params = json.loads(params)
             group_by_asset = params['group_by_asset']
-            assert(isinstance(group_by_asset, bool))
+            assert isinstance(group_by_asset, bool)
         except (JSONDecodeError, TypeError, KeyError, AssertionError):
             return hst.get_read_error()
 
@@ -306,7 +306,7 @@ def search():
         query = params['query']
         if 'group_by_asset' in params.keys():
             group_by_asset = params['group_by_asset']
-            assert(isinstance(group_by_asset, bool))
+            assert isinstance(group_by_asset, bool)
     except (JSONDecodeError, TypeError, KeyError, AssertionError):
         return hst.get_search_error()
 
