@@ -65,7 +65,8 @@ RUN echo "\n${CYAN}SETUP PYTHON3.7${CLEAR}"; \
         python3.7 && \
     wget https://bootstrap.pypa.io/get-pip.py && \
     python3.7 get-pip.py && \
-    chown -R ubuntu:ubuntu get-pip.py
+    chown -R ubuntu:ubuntu get-pip.py && \
+    pip3.7 install --upgrade pip
 
 # install node.js, needed by jupyterlab
 RUN echo "\n${CYAN}INSTALL NODE.JS${CLEAR}"; \
