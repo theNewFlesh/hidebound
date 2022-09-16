@@ -5,8 +5,6 @@ import json
 import os
 import re
 
-from distributed.utils_test import client as dask_client  # noqa: F401
-from distributed.utils_test import loop, cluster_fixture, cluster  # noqa: F401
 from moto import mock_s3
 from schematics.exceptions import DataError
 import boto3 as boto
@@ -22,7 +20,7 @@ import hidebound.core.tools as hbt
 DASK_WORKERS = 2
 
 
-def test_from_config(dask_client, make_dirs, spec_file):  # noqa: F811
+def test_from_config(db_client, make_dirs, spec_file):  # noqa: F811
     ingress, staging, _ = make_dirs
     config = dict(
         ingress_directory=ingress,
@@ -43,7 +41,7 @@ def test_from_config(dask_client, make_dirs, spec_file):  # noqa: F811
         Database.from_config(config)
 
 
-def test_from_json(dask_client, temp_dir, make_dirs, spec_file):  # noqa: F811
+def test_from_json(db_client, temp_dir, make_dirs, spec_file):  # noqa: F811
     ingress, staging, _ = make_dirs
 
     config = dict(
@@ -63,7 +61,7 @@ def test_from_json(dask_client, temp_dir, make_dirs, spec_file):  # noqa: F811
     Database.from_json(config_file)
 
 
-def test_from_yaml(dask_client, temp_dir, make_dirs, spec_file):  # noqa: F811
+def test_from_yaml(db_client, temp_dir, make_dirs, spec_file):  # noqa: F811
     ingress, staging, _ = make_dirs
 
     config = dict(
@@ -83,7 +81,7 @@ def test_from_yaml(dask_client, temp_dir, make_dirs, spec_file):  # noqa: F811
     Database.from_yaml(config_file)
 
 
-def test_init(dask_client, make_dirs, make_files, specs):  # noqa: F811
+def test_init(db_client, make_dirs, make_files, specs):  # noqa: F811
     ingress, staging, _ = make_dirs
     Spec001, Spec002, _ = specs
     Database(
@@ -98,7 +96,7 @@ def test_init(dask_client, make_dirs, make_files, specs):  # noqa: F811
     )
 
 
-def test_init_bad_ingress(dask_client, make_dirs, specs):  # noqa: F811
+def test_init_bad_ingress(db_client, make_dirs, specs):  # noqa: F811
     _, staging, _ = make_dirs
     Spec001, _, _ = specs
     expected = '/foo is not a directory or does not exist'
@@ -110,7 +108,7 @@ def test_init_bad_ingress(dask_client, make_dirs, specs):  # noqa: F811
         assert re.search(expected, str(e))
 
 
-def test_init_bad_staging(dask_client, temp_dir):  # noqa: F811
+def test_init_bad_staging(db_client, temp_dir):  # noqa: F811
     staging = Path(temp_dir, 'hidebound')
 
     expected = '/hidebound is not a directory or does not exist'
@@ -126,7 +124,7 @@ def test_init_bad_staging(dask_client, temp_dir):  # noqa: F811
         assert re.search(expected, str(e))
 
 
-def test_init_bad_specifications(dask_client, make_dirs, make_files, specs):  # noqa: F811
+def test_init_bad_specifications(db_client, make_dirs, make_files, specs):  # noqa: F811
     Spec001, _, BadSpec = specs
     ingress, staging, _ = make_dirs
 
@@ -148,7 +146,7 @@ def test_init_bad_specifications(dask_client, make_dirs, make_files, specs):  # 
         assert re.search(str(e), expected)
 
 
-def test_init_bad_write_mode(dask_client, make_dirs, specs):  # noqa: F811
+def test_init_bad_write_mode(db_client, make_dirs, specs):  # noqa: F811
     Spec001, _, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -179,7 +177,7 @@ def test_init_testing(make_dirs):
 
 
 # CREATE------------------------------------------------------------------------
-def test_create(dask_client, make_dirs, make_files, specs):  # noqa: F811
+def test_create(db_client, make_dirs, make_files, specs):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -221,7 +219,7 @@ def test_create(dask_client, make_dirs, make_files, specs):  # noqa: F811
     assert result == 1
 
 
-def test_create_no_init(dask_client, make_dirs, make_files, specs):  # noqa: F811
+def test_create_no_init(db_client, make_dirs, make_files, specs):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -235,7 +233,7 @@ def test_create_no_init(dask_client, make_dirs, make_files, specs):  # noqa: F81
         assert re.search(str(e), expected)
 
 
-def test_create_all_invalid(dask_client, make_dirs, make_files, specs):  # noqa: F811
+def test_create_all_invalid(db_client, make_dirs, make_files, specs):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -258,7 +256,7 @@ def test_create_all_invalid(dask_client, make_dirs, make_files, specs):  # noqa:
     assert result.exists() is False
 
 
-def test_create_copy(dask_client, make_dirs, make_files, specs):  # noqa: F811
+def test_create_copy(db_client, make_dirs, make_files, specs):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -278,7 +276,7 @@ def test_create_copy(dask_client, make_dirs, make_files, specs):  # noqa: F811
     assert result == make_files
 
 
-def test_create_move(dask_client, make_dirs, make_files, specs):  # noqa: F811
+def test_create_move(db_client, make_dirs, make_files, specs):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -321,7 +319,7 @@ def test_create_move(dask_client, make_dirs, make_files, specs):  # noqa: F811
 
 
 # READ--------------------------------------------------------------------------
-def test_read_legal_types(dask_client, make_dirs, make_files, specs):  # noqa: F811
+def test_read_legal_types(db_client, make_dirs, make_files, specs):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -362,7 +360,7 @@ def test_read_legal_types(dask_client, make_dirs, make_files, specs):  # noqa: F
     assert len(result) == 0
 
 
-def test_read_traits(dask_client, make_dirs, make_files, specs):  # noqa: F811
+def test_read_traits(db_client, make_dirs, make_files, specs):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
     db = Database(
@@ -392,7 +390,7 @@ def test_read_traits(dask_client, make_dirs, make_files, specs):  # noqa: F811
     assert 'illegal' not in result
 
 
-def test_read_coordinates(dask_client, make_dirs, make_files, specs):  # noqa: F811
+def test_read_coordinates(db_client, make_dirs, make_files, specs):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -426,7 +424,7 @@ def test_read_coordinates(dask_client, make_dirs, make_files, specs):  # noqa: F
         assert col in result
 
 
-def test_read_column_order(dask_client, make_dirs, make_files, specs):  # noqa: F811
+def test_read_column_order(db_client, make_dirs, make_files, specs):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
     db = Database(
@@ -461,7 +459,7 @@ def test_read_column_order(dask_client, make_dirs, make_files, specs):  # noqa: 
     assert result == expected
 
 
-def test_read_no_files(dask_client, make_dirs, specs):  # noqa: F811
+def test_read_no_files(db_client, make_dirs, specs):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -476,7 +474,7 @@ def test_read_no_files(dask_client, make_dirs, specs):  # noqa: F811
 
 
 # UPDATE------------------------------------------------------------------------
-def test_update(dask_client, make_dirs, make_files, specs):  # noqa: F811
+def test_update(db_client, make_dirs, make_files, specs):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -495,7 +493,7 @@ def test_update(dask_client, make_dirs, make_files, specs):  # noqa: F811
     assert result == expected
 
 
-def test_update_exclude(dask_client, make_dirs, make_files, specs):  # noqa: F811
+def test_update_exclude(db_client, make_dirs, make_files, specs):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -517,7 +515,7 @@ def test_update_exclude(dask_client, make_dirs, make_files, specs):  # noqa: F81
     assert result == expected
 
 
-def test_update_include(dask_client, make_dirs, make_files, specs):  # noqa: F811
+def test_update_include(db_client, make_dirs, make_files, specs):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -538,7 +536,7 @@ def test_update_include(dask_client, make_dirs, make_files, specs):  # noqa: F81
     assert result == expected
 
 
-def test_update_include_exclude(dask_client, make_dirs, make_files, specs):  # noqa: F811
+def test_update_include_exclude(db_client, make_dirs, make_files, specs):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -562,7 +560,7 @@ def test_update_include_exclude(dask_client, make_dirs, make_files, specs):  # n
     assert result == expected
 
 
-def test_update_no_files(dask_client, make_dirs, specs, db_columns):  # noqa: F811
+def test_update_no_files(db_client, make_dirs, specs, db_columns):  # noqa: F811
     Spec001, _, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -574,7 +572,7 @@ def test_update_no_files(dask_client, make_dirs, specs, db_columns):  # noqa: F8
     assert result.columns.tolist() == db_columns
 
 
-def test_update_error(dask_client, make_dirs, make_files, specs, db_data):  # noqa: F811
+def test_update_error(db_client, make_dirs, make_files, specs, db_data):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -594,7 +592,7 @@ def test_update_error(dask_client, make_dirs, make_files, specs, db_data):  # no
 
 
 # DELETE------------------------------------------------------------------------
-def test_delete(dask_client, make_dirs, make_files, specs):  # noqa: F811
+def test_delete(db_client, make_dirs, make_files, specs):  # noqa: F811
     ingress, staging, _ = make_dirs
 
     data_dir = Path(staging, 'content')
@@ -617,7 +615,7 @@ def test_delete(dask_client, make_dirs, make_files, specs):  # noqa: F811
 
 
 # EXPORT------------------------------------------------------------------------
-def test_export_girder(dask_client, make_dirs, make_files, specs):  # noqa: F811
+def test_export_girder(db_client, make_dirs, make_files, specs):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -646,7 +644,7 @@ def test_export_girder(dask_client, make_dirs, make_files, specs):  # noqa: F811
 
 
 @mock_s3
-def test_export_s3(dask_client, make_dirs, make_files, specs, db_data):  # noqa: F811
+def test_export_s3(db_client, make_dirs, make_files, specs, db_data):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -713,7 +711,7 @@ def test_export_s3(dask_client, make_dirs, make_files, specs, db_data):  # noqa:
     assert result == 1
 
 
-def test_export_disk(dask_client, make_dirs, make_files, specs, db_data):  # noqa: F811
+def test_export_disk(db_client, make_dirs, make_files, specs, db_data):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, archive = make_dirs
 
@@ -755,7 +753,7 @@ def test_export_disk(dask_client, make_dirs, make_files, specs, db_data):  # noq
 
 
 # SEARCH------------------------------------------------------------------------
-def test_search(dask_client, make_dirs, make_files, specs):  # noqa: F811
+def test_search(db_client, make_dirs, make_files, specs):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -768,7 +766,7 @@ def test_search(dask_client, make_dirs, make_files, specs):  # noqa: F811
 
 
 # WEBHOOKS----------------------------------------------------------------------
-def test_call_webhooks(dask_client, make_dirs, make_files, spec_file):  # noqa: F811
+def test_call_webhooks(db_client, make_dirs, make_files, spec_file):  # noqa: F811
     ingress, staging, _ = make_dirs
 
     config = dict(

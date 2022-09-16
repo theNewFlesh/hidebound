@@ -8,6 +8,7 @@ import unittest
 from pandas import DataFrame
 from schematics.types import ListType, IntType, StringType
 import dask.dataframe as dd
+import dask.distributed as ddist
 import numpy as np
 import pytest
 import skimage.io
@@ -19,6 +20,15 @@ import hidebound.core.validators as vd
 
 
 # FIXTURES----------------------------------------------------------------------
+@pytest.fixture(scope='module')
+def db_client():
+    cluster = ddist.LocalCluster(n_workers=2, dashboard_address='0.0.0.0:8087')
+    client = ddist.Client(cluster)
+    yield client, cluster
+
+    client.shutdown()
+
+
 @pytest.fixture()
 def db_columns():
     return _db_columns()
