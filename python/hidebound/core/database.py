@@ -256,9 +256,7 @@ class Database:
             msg = 'Data not initialized. Please call update.'
             raise RuntimeError(msg)
 
-        temp = db_tools.get_data_for_write(
-            self.data, self._root, self._staging
-        )
+        temp = db_tools.get_data_for_write(self.data, self._root, self._staging)
         self._logger.info('create: get data', step=1, total=total)
         if temp is None:
             return self
