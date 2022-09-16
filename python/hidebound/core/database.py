@@ -49,8 +49,8 @@ class Database:
         '''
         # validate config and populate with default values
         config = deepcopy(config)
-        test_mode = config.get('test_mode', False)
-        config.pop('test_mode', None)
+        testing = config.get('testing', False)
+        config.pop('testing', None)
         config = Config(config)
         config.validate()
         config = config.to_primitive()
@@ -79,7 +79,7 @@ class Database:
             exporters=config['exporters'],
             webhooks=config['webhooks'],
             dask_workers=config['dask_workers'],
-            test_mode=test_mode,
+            testing=testing,
         )
 
     @staticmethod
@@ -126,7 +126,7 @@ class Database:
         webhooks=[],                  # type: List[Dict[str, Any]]
         dask_workers=8,               # type: int
         dask_cluster_type='local',    # type: str
-        test_mode=False,              # type: bool
+        testing=False,              # type: bool
     ):
         # type: (...) -> None
         r'''
@@ -153,7 +153,7 @@ class Database:
                 Dask. Must be 1 or greater. Default: 8.
             dask_cluster_type: (str, optional): Dask cluster type:
                 Default: local.
-            test_mode: (bool, optional): Used for testing. Default: False.
+            testing: (bool, optional): Used for testing. Default: False.
 
         Raises:
             TypeError: If specifications contains a non-SpecificationBase
@@ -221,7 +221,7 @@ class Database:
         self.__exporter_lut = None
 
         # setup dask cluster
-        if not test_mode:
+        if not testing:
             if dask_cluster_type == 'local':
                 self._dask_cluster = ddist.LocalCluster(
                     n_workers=dask_workers,
