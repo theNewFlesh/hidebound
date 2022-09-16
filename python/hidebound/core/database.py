@@ -10,6 +10,7 @@ import sys
 
 from pandas import DataFrame
 import dask.dataframe as dd
+import dask.distributed as ddist
 import jsoncomment as jsonc
 import numpy as np
 import pandasql
@@ -48,6 +49,8 @@ class Database:
         '''
         # validate config and populate with default values
         config = deepcopy(config)
+        test_mode = config.get('test_mode', False)
+        config.pop('test_mode', None)
         config = Config(config)
         config.validate()
         config = config.to_primitive()
@@ -75,8 +78,8 @@ class Database:
             write_mode=config['write_mode'],
             exporters=config['exporters'],
             webhooks=config['webhooks'],
-            dask_enabled=config['dask_enabled'],
             dask_workers=config['dask_workers'],
+            test_mode=test_mode,
         )
 
     @staticmethod
@@ -121,8 +124,9 @@ class Database:
         write_mode='copy',            # type: str
         exporters=[],                 # type: List[Dict[str, Any]]
         webhooks=[],                  # type: List[Dict[str, Any]]
-        dask_enabled=False,           # type: bool
         dask_workers=8,               # type: int
+        dask_cluster_type='local',    # type: str
+        test_mode=False,              # type: bool
     ):
         # type: (...) -> None
         r'''
@@ -144,10 +148,12 @@ class Database:
                 Default: [].
             webhooks (list[dict], optional): List of webhooks to call.
                 Default: [].
-            dask_enabled (bool, optional): Whether to enable Dask.
                 Default: False.
             dask_workers (int, optional): Number of partitions to use for
                 Dask. Must be 1 or greater. Default: 8.
+            dask_cluster_type: (str, optional): Dask cluster type:
+                Default: local.
+            test_mode: (bool, optional): Used for testing. Default: False.
 
         Raises:
             TypeError: If specifications contains a non-SpecificationBase
@@ -207,12 +213,20 @@ class Database:
             # type: Dict[str, SpecificationBase]
         self._exporters = exporters
         self._webhooks = webhooks
-        self._dask_enabled = dask_enabled
         self._dask_workers = dask_workers
+        self._dask_cluster_type = dask_cluster_type
         self.data = None
 
         # needed for testing
         self.__exporter_lut = None
+
+        # setup dask cluster
+        if not test_mode:
+            if dask_cluster_type == 'local':
+                self._dask_cluster = ddist.LocalCluster(
+                    n_workers=dask_workers,
+                    dashboard_address='0.0.0.0:8087',
+                )
 
         self._logger.info('Database initialized', step=1, total=1)
 

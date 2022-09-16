@@ -3,8 +3,8 @@ staging_directory: /tmp/mnt/hidebound
 include_regex: ""
 exclude_regex: "\\.DS_Store"
 write_mode: copy
-dask_enabled: False
 dask_workers: 3
+dask_cluster_type: local
 redact_regex: "(_key|_id|url)$"
 redact_hash: True
 workflow:
