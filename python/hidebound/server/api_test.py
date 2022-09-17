@@ -2,8 +2,10 @@ from pathlib import Path
 import json
 import os
 import re
+import time
 
 import numpy as np
+import pytest
 # ------------------------------------------------------------------------------
 
 
@@ -70,7 +72,7 @@ def test_create_no_update(api_test, client):
 
 # READ--------------------------------------------------------------------------
 def test_read(api_test, client):
-    ext = api_test
+    ext = api_test['extension']
     client.post('/api/update')
 
     # call read
@@ -80,14 +82,18 @@ def test_read(api_test, client):
         .to_dict(orient='records')
     assert result == expected
 
-    # test general exceptions
+
+def test_read_error(api_test, client):
+    ext = api_test['extension']
+    db = ext.database
     ext.database = 'foo'
     result = client.post('/api/read', json={}).json['error']
     assert result == 'AttributeError'
+    ext.database = db
 
 
 def test_read_group_by_asset(api_test, client):
-    ext = api_test
+    ext = api_test['extension']
     client.post('/api/update')
 
     # good params
@@ -177,7 +183,7 @@ def test_export_error(api_test, client, config):
 
 # SEARCH------------------------------------------------------------------------
 def test_search(api_test, client):
-    ext = api_test
+    ext = api_test['extension']
     client.post('/api/update')
 
     # call search
@@ -193,7 +199,7 @@ def test_search(api_test, client):
 
 
 def test_search_group_by_asset(api_test, client):
-    ext = api_test
+    ext = api_test['extension']
     client.post('/api/update')
 
     # call search
@@ -235,8 +241,10 @@ def test_search_bad_group_by_asset(api_test, client):
     assert re.search(expected, result) is not None
 
 
+@pytest.mark.flaky(reruns=1)
 def test_search_bad_query(api_test, client):
     client.post('/api/update', json={})
+    time.sleep(1)
     query = {'query': 'SELECT * FROM data WHERE foo == "bar"'}
     query = json.dumps(query)
     result = client.post('/api/search', json=query).json['error']

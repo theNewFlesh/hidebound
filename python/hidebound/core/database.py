@@ -215,6 +215,7 @@ class Database:
         self._webhooks = webhooks
         self._dask_workers = dask_workers
         self._dask_cluster_type = dask_cluster_type
+        self._dask_cluster = None
         self.data = None
 
         # needed for testing
@@ -222,13 +223,20 @@ class Database:
 
         # setup dask cluster
         if not testing:
-            if dask_cluster_type == 'local':
-                self._dask_cluster = ddist.LocalCluster(
-                    n_workers=dask_workers,
-                    dashboard_address='0.0.0.0:8087',
-                )
+            self._start_cluster()
 
         self._logger.info('Database initialized', step=1, total=1)
+
+    def _start_cluster(self):
+        if self._dask_cluster_type == 'local':
+            self._dask_cluster = ddist.LocalCluster(
+                n_workers=self._dask_workers,
+                dashboard_address='0.0.0.0:8087',
+            )
+
+    def _stop_cluster(self):
+        if self._dask_cluster is not None:
+            self._dask_cluster.close()
 
     def create(self):
         # type: () -> "Database"

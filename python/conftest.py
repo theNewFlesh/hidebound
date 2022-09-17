@@ -60,6 +60,7 @@ def extension(app, make_dirs):
     ext.swagger.init_app(app)
     ext.hidebound.init_app(app)
     yield ext.hidebound
+    ext.hidebound.database._stop_cluster()
 
 
 @pytest.fixture()
