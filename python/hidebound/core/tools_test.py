@@ -10,7 +10,6 @@ from schematics.exceptions import DataError, ValidationError
 from schematics.models import Model
 from schematics.types import StringType
 import dask.dataframe as dd
-import dask.distributed as ddist
 import numpy as np
 import OpenEXR as openexr
 import pandas as pd
@@ -351,186 +350,181 @@ class ToolsTests(unittest.TestCase):
         assert hbt.str_to_bool('any-string') is False
 
 
-class ToolsDaskTests(unittest.TestCase):
-    def setUp(self):
-        self.dask_workers = 2
-        if ENABLE_DASK_CLUSTER:
-            self.dask_cluster = ddist.LocalCluster(n_workers=self.dask_workers)
-            self.dask_client = ddist.Client(self.dask_cluster)
+# PRED_COMBINATOR-----------------------------------------------------------
+def test_pred_combinator_dd_dataframe(db_client):
+    data = DataFrame()
+    data['foo'] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    data['bar'] = [1, 2, 3, 4, 5, 6, 2, 1, 2]
+    data = dd.from_pandas(data, chunksize=3)
+    result = hbt.pred_combinator(
+        data,
+        lambda x: (x.foo + x.bar) % 2 == 0,
+        lambda x: 'even',
+        lambda x: 'odd',
+        meta=str,
+    )
+    assert isinstance(result, dd.Series)
 
-    def tearDown(self):
-        if ENABLE_DASK_CLUSTER:
-            try:
-                self.dask_client.shutdown()
-            except Exception:
-                pass
+    result = result.compute().tolist()
+    expected = ['even'] * 6 + ['odd'] * 3
+    assert result == expected
 
-    # PRED_COMBINATOR-----------------------------------------------------------
-    def test_pred_combinator_dd_dataframe(self):
-        data = DataFrame()
-        data['foo'] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        data['bar'] = [1, 2, 3, 4, 5, 6, 2, 1, 2]
-        data = dd.from_pandas(data, chunksize=3)
-        result = hbt.pred_combinator(
-            data,
-            lambda x: (x.foo + x.bar) % 2 == 0,
-            lambda x: 'even',
-            lambda x: 'odd',
-            meta=str,
-        )
-        self.assertIsInstance(result, dd.Series)
 
-        result = result.compute().tolist()
-        expected = ['even'] * 6 + ['odd'] * 3
-        self.assertEqual(result, expected)
+def test_pred_combinator_dd_dataframe_nan(db_client):
+    # no meta
+    data = DataFrame()
+    data['foo'] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    data['bar'] = [1, 2, 3, 4, 5, 6, 2, 1, 2]
 
-    def test_pred_combinator_dd_dataframe_nan(self):
-        # no meta
-        data = DataFrame()
-        data['foo'] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        data['bar'] = [1, 2, 3, 4, 5, 6, 2, 1, 2]
+    expected = ['even'] * 6 + [np.nan] * 3
+    expected = Series(expected).fillna('null').tolist()
 
-        expected = ['even'] * 6 + [np.nan] * 3
-        expected = Series(expected).fillna('null').tolist()
+    temp = dd.from_pandas(data, chunksize=3)
+    result = hbt.pred_combinator(
+        temp,
+        lambda x: (x.foo + x.bar) % 2 == 0,
+        lambda x: 'even',
+        lambda x: np.nan,
+    )
+    result = result.compute().tolist()
+    result = Series(result).fillna('null').tolist()
+    assert result == expected
 
-        temp = dd.from_pandas(data, chunksize=3)
-        result = hbt.pred_combinator(
-            temp,
-            lambda x: (x.foo + x.bar) % 2 == 0,
-            lambda x: 'even',
-            lambda x: np.nan,
-        )
-        result = result.compute().tolist()
-        result = Series(result).fillna('null').tolist()
-        self.assertEqual(result, expected)
+    # meta = str
+    temp = dd.from_pandas(data, chunksize=3)
+    result = hbt.pred_combinator(
+        temp,
+        lambda x: (x.foo + x.bar) % 2 == 0,
+        lambda x: 'even',
+        lambda x: np.nan,
+        meta=str,
+    )
+    assert isinstance(result, dd.Series)
 
-        # meta = str
-        temp = dd.from_pandas(data, chunksize=3)
-        result = hbt.pred_combinator(
-            temp,
-            lambda x: (x.foo + x.bar) % 2 == 0,
-            lambda x: 'even',
-            lambda x: np.nan,
-            meta=str,
-        )
-        self.assertIsInstance(result, dd.Series)
+    result = result.compute().tolist()
+    result = Series(result).fillna('null').tolist()
+    assert result == expected
 
-        result = result.compute().tolist()
-        result = Series(result).fillna('null').tolist()
-        self.assertEqual(result, expected)
 
-    def test_pred_combinator_series(self):
-        data = Series([2, 2, 2, 2, 3, 3, 3, 3])
-        data = dd.from_pandas(data, chunksize=3)
-        result = hbt.pred_combinator(
-            data,
-            lambda x: x % 2 == 0,
-            lambda x: 'even',
-            lambda x: 'odd',
-            meta=str,
-        )
-        self.assertIsInstance(result, dd.Series)
+def test_pred_combinator_series(db_client):
+    data = Series([2, 2, 2, 2, 3, 3, 3, 3])
+    data = dd.from_pandas(data, chunksize=3)
+    result = hbt.pred_combinator(
+        data,
+        lambda x: x % 2 == 0,
+        lambda x: 'even',
+        lambda x: 'odd',
+        meta=str,
+    )
+    assert isinstance(result, dd.Series)
 
-        result = result.compute().tolist()
-        expected = ['even'] * 4 + ['odd'] * 4
-        self.assertEqual(result, expected)
+    result = result.compute().tolist()
+    expected = ['even'] * 4 + ['odd'] * 4
+    assert result == expected
 
-    def test_pred_combinator_pd_dataframe(self):
-        data = pd.DataFrame()
-        data['x'] = [1, 1, 1, 2, 2, 3]
-        data['y'] = [1, 1, 1, 2, 2, 3]
-        expected = [10, 10, 10, 20, 20, 20]
 
-        result = hbt.pred_combinator(
-            data, lambda x: x.x + x.y == 2, lambda x: 10, lambda x: 20,
-        )
-        self.assertEqual(result.tolist(), expected)
-        self.assertIsInstance(result, pd.Series)
+def test_pred_combinator_pd_dataframe(db_client):
+    data = pd.DataFrame()
+    data['x'] = [1, 1, 1, 2, 2, 3]
+    data['y'] = [1, 1, 1, 2, 2, 3]
+    expected = [10, 10, 10, 20, 20, 20]
 
-    def test_pred_combinator_pd_series(self):
-        data = pd.Series([1, 1, 1, 2, 2, 3])
-        expected = [10, 10, 10, 20, 20, 20]
+    result = hbt.pred_combinator(
+        data, lambda x: x.x + x.y == 2, lambda x: 10, lambda x: 20,
+    )
+    assert result.tolist() == expected
+    assert isinstance(result, pd.Series)
 
-        result = hbt.pred_combinator(
-            data, lambda x: x == 1, lambda x: 10, lambda x: 20,
-        )
-        self.assertEqual(result.tolist(), expected)
-        self.assertIsInstance(result, pd.Series)
 
-    # GET_LUT-------------------------------------------------------------------
-    def test_get_lut_empty(self):
-        data = pd.DataFrame()
-        data['grp'] = [np.nan] * 6
-        data['val'] = [1, 1, 1, 2, 2, 'foo']
+def test_pred_combinator_pd_series(db_client):
+    data = pd.Series([1, 1, 1, 2, 2, 3])
+    expected = [10, 10, 10, 20, 20, 20]
 
-        result = hbt.get_lut(data, 'grp', lambda x: x.val.tolist())
-        self.assertIsInstance(result, pd.DataFrame)
-        self.assertEqual(result.shape, (0, 2))
-        self.assertEqual(result.columns.tolist(), ['key', 'value'])
+    result = hbt.pred_combinator(
+        data, lambda x: x == 1, lambda x: 10, lambda x: 20,
+    )
+    assert result.tolist() == expected
+    assert isinstance(result, pd.Series)
 
-    def test_get_lut_pd_dataframe(self):
-        data = pd.DataFrame()
-        data['grp'] = [1, 1, 1, 2, 2, 3]
-        data['val'] = [1, 1, 1, 2, 2, 'foo']
 
-        result = hbt.get_lut(data, 'grp', lambda x: x.val.tolist())
-        self.assertIsInstance(result, pd.DataFrame)
+# GET_LUT-------------------------------------------------------------------
+def test_get_lut_empty(db_client):
+    data = pd.DataFrame()
+    data['grp'] = [np.nan] * 6
+    data['val'] = [1, 1, 1, 2, 2, 'foo']
 
-        self.assertEqual(result.key.tolist(), [1, 2, 3])
-        self.assertEqual(result.value.tolist(), [[1, 1, 1], [2, 2], ['foo']])
+    result = hbt.get_lut(data, 'grp', lambda x: x.val.tolist())
+    assert isinstance(result, pd.DataFrame)
+    assert result.shape == (0, 2)
+    assert result.columns.tolist() == ['key', 'value']
 
-    def test_get_lut_dd_dataframe(self):
-        data = pd.DataFrame()
-        data['grp'] = [1, 1, 1, 2, 2, 3]
-        data['val'] = [1, 1, 1, 2, 2, 'foo']
-        data = dd.from_pandas(data, chunksize=1)
 
-        result = hbt.get_lut(data, 'grp', lambda x: str(x.val.tolist()), meta=str)
-        self.assertIsInstance(result, dd.DataFrame)
+def test_get_lut_pd_dataframe(db_client):
+    data = pd.DataFrame()
+    data['grp'] = [1, 1, 1, 2, 2, 3]
+    data['val'] = [1, 1, 1, 2, 2, 'foo']
 
-        result = result.compute()
-        self.assertEqual(result.key.tolist(), [1, 2, 3])
-        self.assertEqual(result.value.tolist(), ['[1, 1, 1]', '[2, 2]', "['foo']"])
+    result = hbt.get_lut(data, 'grp', lambda x: x.val.tolist())
+    assert isinstance(result, pd.DataFrame)
 
-    # LUT_COMBINATOR------------------------------------------------------------
-    def test_lut_combinator_pd_dataframe(self):
-        data = pd.DataFrame()
-        data['grp'] = [1, 1, 1, 2, 2, 3]
-        data['val'] = [1, 1, 1, 2, 2, 'foo']
+    assert result.key.tolist() == [1, 2, 3]
+    assert result.value.tolist() == [[1, 1, 1], [2, 2], ['foo']]
 
-        result = hbt.lut_combinator(data, 'grp', 'vals', lambda x: x.val.tolist())
-        self.assertIsInstance(result, pd.DataFrame)
 
-        self.assertIn('vals', result.columns)
-        expected = [
-            [1, 1, 1],
-            [1, 1, 1],
-            [1, 1, 1],
-            [2, 2],
-            [2, 2],
-            ['foo'],
-        ]
-        self.assertEqual(result.vals.tolist(), expected)
+def test_get_lut_dd_dataframe(db_client):
+    data = pd.DataFrame()
+    data['grp'] = [1, 1, 1, 2, 2, 3]
+    data['val'] = [1, 1, 1, 2, 2, 'foo']
+    data = dd.from_pandas(data, chunksize=1)
 
-    def test_lut_combinator_dd_dataframe(self):
-        data = pd.DataFrame()
-        data['grp'] = [1, 1, 1, 2, 2, 3]
-        data['val'] = [1, 1, 1, 2, 2, 'foo']
-        data = dd.from_pandas(data, chunksize=1)
+    result = hbt.get_lut(data, 'grp', lambda x: str(x.val.tolist()), meta=str)
+    assert isinstance(result, dd.DataFrame)
 
-        result = hbt.lut_combinator(
-            data, 'grp', 'vals', lambda x: str(x.val.tolist()), meta=str
-        )
-        self.assertIsInstance(result, dd.DataFrame)
+    result = result.compute()
+    assert result.key.tolist() == [1, 2, 3]
+    assert result.value.tolist() == ['[1, 1, 1]', '[2, 2]', "['foo']"]
 
-        result = result.compute()
-        self.assertIn('vals', result.columns)
-        expected = [
-            '[1, 1, 1]',
-            '[1, 1, 1]',
-            '[1, 1, 1]',
-            '[2, 2]',
-            '[2, 2]',
-            "['foo']",
-        ]
-        self.assertEqual(result.vals.tolist(), expected)
+
+# LUT_COMBINATOR------------------------------------------------------------
+def test_lut_combinator_pd_dataframe(db_client):
+    data = pd.DataFrame()
+    data['grp'] = [1, 1, 1, 2, 2, 3]
+    data['val'] = [1, 1, 1, 2, 2, 'foo']
+
+    result = hbt.lut_combinator(data, 'grp', 'vals', lambda x: x.val.tolist())
+    assert isinstance(result, pd.DataFrame)
+
+    assert 'vals' in result.columns
+    expected = [
+        [1, 1, 1],
+        [1, 1, 1],
+        [1, 1, 1],
+        [2, 2],
+        [2, 2],
+        ['foo'],
+    ]
+    assert result.vals.tolist() == expected
+
+
+def test_lut_combinator_dd_dataframe(db_client):
+    data = pd.DataFrame()
+    data['grp'] = [1, 1, 1, 2, 2, 3]
+    data['val'] = [1, 1, 1, 2, 2, 'foo']
+    data = dd.from_pandas(data, chunksize=1)
+
+    result = hbt.lut_combinator(
+        data, 'grp', 'vals', lambda x: str(x.val.tolist()), meta=str
+    )
+    assert isinstance(result, dd.DataFrame)
+
+    result = result.compute()
+    assert 'vals' in result.columns
+    expected = [
+        '[1, 1, 1]',
+        '[1, 1, 1]',
+        '[1, 1, 1]',
+        '[2, 2]',
+        '[2, 2]',
+        "['foo']",
+    ]
+    assert result.vals.tolist() == expected

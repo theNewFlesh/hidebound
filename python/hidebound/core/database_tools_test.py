@@ -17,7 +17,7 @@ from hidebound.core.specification_base import FileSpecificationBase
 from hidebound.core.specification_base import SequenceSpecificationBase
 import hidebound.core.database_tools as db_tools
 
-ENABLE_DASK_CLUSTER = False
+ENABLE_DASK_CLUSTER = True
 # ------------------------------------------------------------------------------
 
 
