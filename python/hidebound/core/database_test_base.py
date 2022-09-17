@@ -65,6 +65,11 @@ def db_data(temp_dir):
     return _db_data(temp_dir)
 
 
+@pytest.fixture()
+def db_data_nans(db_data):
+    return db_data.applymap(lambda x: np.nan if x is None else x)
+
+
 def _db_data(temp_dir):
     # type: (str) -> DataFrame
     '''
