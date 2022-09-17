@@ -8,7 +8,7 @@ import numpy as np
 
 
 # INITIALIZE--------------------------------------------------------------------
-def test_initialize(env, extension, config, client):
+def test_initialize(api_test, config, client):
     conf = dict(
         ingress_directory=config['ingress_directory'],
         staging_directory=config['staging_directory'],
@@ -20,13 +20,13 @@ def test_initialize(env, extension, config, client):
     assert result == expected
 
 
-def test_initialize_no_config(env, extension, config, client):
+def test_initialize_no_config(api_test, config, client):
     result = client.post('/api/initialize').json['message']
     expected = 'Please supply a config dictionary.'
     assert re.search(expected, result) is not None
 
 
-def test_initialize_bad_config_type(env, extension, config, client):
+def test_initialize_bad_config_type(api_test, config, client):
     bad_config = '["a", "b"]'
     result = client.post('/api/initialize', json=bad_config)
     result = result.json['message']
@@ -34,7 +34,7 @@ def test_initialize_bad_config_type(env, extension, config, client):
     assert re.search(expected, result) is not None
 
 
-def test_initialize_bad_config(env, extension, config, client):
+def test_initialize_bad_config(api_test, config, client):
     conf = dict(
         ingress_directory='/foo/bar',
         staging_directory=config['staging_directory'],
@@ -47,7 +47,7 @@ def test_initialize_bad_config(env, extension, config, client):
 
 
 # CREATE------------------------------------------------------------------------
-def test_create(env, extension, config, client, make_files):
+def test_create(api_test, config, client):
     client.post('/api/update')
 
     content = Path(config['staging_directory'], 'content')
@@ -62,36 +62,38 @@ def test_create(env, extension, config, client, make_files):
     assert os.path.exists(meta)
 
 
-def test_create_no_update(env, extension, client):
+def test_create_no_update(api_test, client):
     result = client.post('/api/create').json['message']
     expected = 'Database not updated. Please call update.'
     assert re.search(expected, result) is not None
 
 
 # READ--------------------------------------------------------------------------
-def test_read(env, extension, client, make_files):
+def test_read(api_test, client):
+    ext = api_test
     client.post('/api/update')
 
     # call read
     result = client.post('/api/read', json={}).json['response']
-    expected = extension.database.read()\
+    expected = ext.database.read()\
         .replace({np.nan: None})\
         .to_dict(orient='records')
     assert result == expected
 
     # test general exceptions
-    extension.database = 'foo'
+    ext.database = 'foo'
     result = client.post('/api/read', json={}).json['error']
     assert result == 'AttributeError'
 
 
-def test_read_group_by_asset(env, extension, client, make_files):
+def test_read_group_by_asset(api_test, client):
+    ext = api_test
     client.post('/api/update')
 
     # good params
     params = json.dumps({'group_by_asset': True})
     result = client.post('/api/read', json=params).json['response']
-    expected = extension.database.read(group_by_asset=True)\
+    expected = ext.database.read(group_by_asset=True)\
         .replace({np.nan: None})\
         .to_dict(orient='records')
     assert result == expected
@@ -110,21 +112,21 @@ def test_read_group_by_asset(env, extension, client, make_files):
     assert re.search(expected, result) is not None
 
 
-def test_read_no_update(env, extension, client):
+def test_read_no_update(api_test, client):
     result = client.post('/api/read', json={}).json['message']
     expected = 'Database not updated. Please call update.'
     assert re.search(expected, result) is not None
 
 
 # UPDATE------------------------------------------------------------------------
-def test_update(env, extension, client, make_files):
+def test_update(api_test, client):
     result = client.post('/api/update').json['message']
     expected = 'Database updated.'
     assert result == expected
 
 
 # DELETE------------------------------------------------------------------------
-def test_delete(env, extension, client, config, make_files):
+def test_delete(api_test, client, config):
     client.post('/api/update')
     client.post('/api/create')
 
@@ -140,7 +142,7 @@ def test_delete(env, extension, client, config, make_files):
     assert os.path.exists(meta) is False
 
 
-def test_delete_no_create(env, extension, client, config, make_files):
+def test_delete_no_create(api_test, client, config):
     result = client.post('/api/delete').json['message']
     expected = 'Hidebound data deleted.'
     assert result == expected
@@ -152,7 +154,7 @@ def test_delete_no_create(env, extension, client, config, make_files):
 
 
 # EXPORT------------------------------------------------------------------------
-def test_export(env, extension, client, config, make_files):
+def test_export(api_test, client, config):
     target_dir = config['exporters'][0]['target_directory']
     result = os.listdir(target_dir)
     assert result == []
@@ -166,7 +168,7 @@ def test_export(env, extension, client, config, make_files):
     assert 'metadata' in result
 
 
-def test_export_error(env, extension, client, config, make_files):
+def test_export_error(api_test, client, config):
     client.post('/api/update')
     result = client.post('/api/export').json['message']
     expected = 'hidebound/content directory does not exist'
@@ -174,7 +176,8 @@ def test_export_error(env, extension, client, config, make_files):
 
 
 # SEARCH------------------------------------------------------------------------
-def test_search(env, extension, client, make_files):
+def test_search(api_test, client):
+    ext = api_test
     client.post('/api/update')
 
     # call search
@@ -183,13 +186,14 @@ def test_search(env, extension, client, make_files):
     temp = json.dumps(temp)
     result = client.post('/api/search', json=temp)
     result = result.json['response']
-    expected = extension.database.search(query)\
+    expected = ext.database.search(query)\
         .replace({np.nan: None})\
         .to_dict(orient='records')
     assert result == expected
 
 
-def test_search_group_by_asset(env, extension, client, make_files):
+def test_search_group_by_asset(api_test, client):
+    ext = api_test
     client.post('/api/update')
 
     # call search
@@ -197,20 +201,20 @@ def test_search_group_by_asset(env, extension, client, make_files):
     temp = {'query': query, 'group_by_asset': True}
     temp = json.dumps(temp)
     result = client.post('/api/search', json=temp).json['response']
-    expected = extension.database.search(query, group_by_asset=True)\
+    expected = ext.database.search(query, group_by_asset=True)\
         .replace({np.nan: None})\
         .to_dict(orient='records')
     assert result == expected
 
 
-def test_search_no_query(env, extension, client, make_files):
+def test_search_no_query(api_test, client):
     result = client.post('/api/search', json={}).json['message']
     expected = 'Please supply valid search params in the form '
     expected += r'\{"query": SQL query, "group_by_asset": BOOL\}\.'
     assert re.search(expected, result) is not None
 
 
-def test_search_bad_json(env, extension, client, make_files):
+def test_search_bad_json(api_test, client):
     query = {'foo': 'bar'}
     query = json.dumps(query)
     result = client.post('/api/search', json=query).json['message']
@@ -219,7 +223,7 @@ def test_search_bad_json(env, extension, client, make_files):
     assert re.search(expected, result) is not None
 
 
-def test_search_bad_group_by_asset(env, extension, client, make_files):
+def test_search_bad_group_by_asset(api_test, client):
     params = dict(
         query='SELECT * FROM data WHERE asset_type == "sequence"',
         group_by_asset='foo'
@@ -231,7 +235,7 @@ def test_search_bad_group_by_asset(env, extension, client, make_files):
     assert re.search(expected, result) is not None
 
 
-def test_search_bad_query(env, extension, client, make_files):
+def test_search_bad_query(api_test, client):
     client.post('/api/update', json={})
     query = {'query': 'SELECT * FROM data WHERE foo == "bar"'}
     query = json.dumps(query)
@@ -240,7 +244,7 @@ def test_search_bad_query(env, extension, client, make_files):
     assert result == expected
 
 
-def test_search_no_update(env, extension, client, make_files):
+def test_search_no_update(api_test, client):
     query = {'query': 'SELECT * FROM data WHERE specification == "spec001"'}
     query = json.dumps(query)
     result = client.post('/api/search', json=query).json['message']
@@ -249,7 +253,7 @@ def test_search_no_update(env, extension, client, make_files):
 
 
 # WORKFLOW----------------------------------------------------------------------
-def test_workflow(env, extension, client, config, make_files):
+def test_workflow(api_test, client, config):
     expected = ['update', 'create', 'export', 'delete']
 
     data = dict(steps=expected)
@@ -266,7 +270,7 @@ def test_workflow(env, extension, client, config, make_files):
     assert os.path.exists(meta) is False
 
 
-def test_workflow_create(env, extension, client, config, make_files):
+def test_workflow_create(api_test, client, config):
     expected = ['update', 'create']
 
     data = dict(steps=expected)
@@ -283,13 +287,13 @@ def test_workflow_create(env, extension, client, config, make_files):
     assert os.path.exists(meta)
 
 
-def test_workflow_bad_params(env, extension, client, make_files):
+def test_workflow_bad_params(api_test, client):
     workflow = json.dumps({})
     result = client.post('/api/workflow', json=workflow).json
     assert result['error'] == 'KeyError'
 
 
-def test_workflow_illegal_step(env, extension, client, make_files):
+def test_workflow_illegal_step(api_test, client):
     expected = ['update', 'create', 'foo', 'bar']
     data = dict(steps=expected)
     data = json.dumps(data)
@@ -302,7 +306,7 @@ def test_workflow_illegal_step(env, extension, client, make_files):
 
 
 # ERROR-HANDLERS----------------------------------------------------------------
-def test_key_error_handler(env, extension, client, make_files):
+def test_key_error_handler(api_test, client):
     result = client.post(
         '/api/workflow',
         json=json.dumps(dict()),
@@ -310,11 +314,11 @@ def test_key_error_handler(env, extension, client, make_files):
     assert result['error'] == 'KeyError'
 
 
-def test_type_error_handler(env, extension, client, make_files):
+def test_type_error_handler(api_test, client):
     result = client.post('/api/workflow', json=json.dumps([])).json
     assert result['error'] == 'TypeError'
 
 
-def test_json_decode_error_handler(env, extension, client, make_files):
+def test_json_decode_error_handler(api_test, client):
     result = client.post('/api/workflow', json='bad json').json
     assert result['error'] == 'JSONDecodeError'

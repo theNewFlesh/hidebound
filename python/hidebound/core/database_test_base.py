@@ -237,6 +237,11 @@ def _spec_file(temp_dir):
     return spec_file
 
 
+@pytest.fixture()
+def api_test(db_client, make_dirs, make_files, spec_file, env, extension):
+    yield extension
+
+
 # SPECS-------------------------------------------------------------------------
 class Spec001(SpecificationBase):
     name = 'spec001'
