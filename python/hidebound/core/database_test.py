@@ -319,6 +319,7 @@ def test_create_move(db_client, make_dirs, make_files, specs):  # noqa: F811
 
 
 # READ--------------------------------------------------------------------------
+@pytest.mark.flaky(reruns=1)
 def test_read_legal_types(db_client, make_dirs, make_files, specs):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
