@@ -173,7 +173,7 @@ def test_init_testing(make_dirs):
     result = Database(
         ingress, staging, dask_workers=DASK_WORKERS, testing=True
     )
-    assert hasattr(result, '_dask_cluster') is False
+    assert result._dask_cluster is None
 
 
 # CREATE------------------------------------------------------------------------
