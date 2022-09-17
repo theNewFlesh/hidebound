@@ -424,6 +424,7 @@ def test_read_coordinates(db_client, make_dirs, make_files, specs):  # noqa: F81
         assert col in result
 
 
+@pytest.mark.flaky(reruns=1)
 def test_read_column_order(db_client, make_dirs, make_files, specs):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
@@ -753,6 +754,7 @@ def test_export_disk(db_client, make_dirs, make_files, specs, db_data):  # noqa:
 
 
 # SEARCH------------------------------------------------------------------------
+@pytest.mark.flaky(reruns=1)
 def test_search(db_client, make_dirs, make_files, specs):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs

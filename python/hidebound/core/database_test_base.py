@@ -22,7 +22,11 @@ import hidebound.core.validators as vd
 # FIXTURES----------------------------------------------------------------------
 @pytest.fixture(scope='module')
 def db_client():
-    cluster = ddist.LocalCluster(n_workers=2, dashboard_address='0.0.0.0:8087')
+    cluster = ddist.LocalCluster(
+        n_workers=1,
+        threads_per_worker=2,
+        dashboard_address='0.0.0.0:8087',
+    )
     client = ddist.Client(cluster)
     yield client, cluster
 
