@@ -143,3 +143,14 @@ def config_json_file(temp_dir, config):
 
     os.environ['HIDEBOUND_CONFIG_FILEPATH'] = filepath
     return filepath
+
+
+@pytest.fixture()
+def api_test(make_dirs, make_files, spec_file, env, extension):
+    yield dict(
+        make_dirs=make_dirs,
+        make_files=make_files,
+        spec_file=spec_file,
+        env=env,
+        extension=extension
+    )
