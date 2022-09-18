@@ -9,6 +9,7 @@ import pytest
 import yaml
 
 from hidebound.core.database_test_base import *  # noqa: F403 F401
+import hidebound.server.app as application
 import hidebound.server.extensions as ext
 # ------------------------------------------------------------------------------
 
@@ -37,7 +38,7 @@ def env(config):
 
 @pytest.fixture()
 def app():
-    context = flask.Flask(__name__).app_context()
+    context = application.APP.server.app_context()
     context.push()
     app = context.app
     app.config['TESTING'] = True
@@ -152,4 +153,14 @@ def api_test(make_dirs, make_files, spec_file, env, extension):
         spec_file=spec_file,
         env=env,
         extension=extension
+    )
+
+
+@pytest.fixture()
+def app_setup(make_dirs, make_files, spec_file, env):
+    yield dict(
+        make_dirs=make_dirs,
+        make_files=make_files,
+        spec_file=spec_file,
+        env=env,
     )
