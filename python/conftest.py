@@ -152,11 +152,10 @@ def config_json_file(temp_dir, config):
 
 
 @pytest.fixture()
-def api_setup(env, extension, flask_client):
+def api_setup(env, extension):
     return dict(
         env=env,
         extension=extension,
-        client=flask_client,
     )
 
 
