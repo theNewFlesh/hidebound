@@ -145,3 +145,12 @@ def config_json_file(temp_dir, config):
 
     os.environ['HIDEBOUND_CONFIG_FILEPATH'] = filepath
     return filepath
+
+
+@pytest.fixture()
+def api_test(env, extension, client):
+    return dict(
+        env=env,
+        extension=extension,
+        client=client,
+    )
