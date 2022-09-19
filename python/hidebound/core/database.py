@@ -64,6 +64,7 @@ class DaskConnection:
         '''
         if self.cluster_type == 'local':
             self.cluster = ddist.LocalCluster(
+                processes=True,
                 n_workers=self.num_workers,
                 dashboard_address='0.0.0.0:8087',
             )
