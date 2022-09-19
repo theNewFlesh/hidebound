@@ -271,7 +271,6 @@ class Database:
         self._webhooks = webhooks
         self._dask_workers = dask_workers
         self._dask_cluster_type = dask_cluster_type
-        self._dask_cluster = None
         self._testing = testing
         self.data = None
 
