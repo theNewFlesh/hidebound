@@ -10,7 +10,7 @@ import sys
 
 from pandas import DataFrame
 import dask.dataframe as dd
-import dask.distributed as dist
+import dask.distributed as ddist
 import jsoncomment as jsonc
 import numpy as np
 import pandasql
@@ -28,6 +28,25 @@ from hidebound.core.logging import ProgressLogger
 # ------------------------------------------------------------------------------
 
 
+class DaskConnection:
+    def __init__(self, cluster_type, num_workers):
+        self.cluster_type = cluster_type
+        self.num_workers = num_workers
+        self.cluster = None
+
+    def __enter__(self):
+        if self.cluster_type == 'local':
+            self.cluster = ddist.LocalCluster(
+                n_workers=self.num_workers,
+                dashboard_address='0.0.0.0:8087',
+            )
+            return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.cluster.close()
+
+
+# ------------------------------------------------------------------------------
 class Database:
     '''
     Generates a DataFrame using the files within a given directory as rows.
@@ -49,6 +68,8 @@ class Database:
         '''
         # validate config and populate with default values
         config = deepcopy(config)
+        testing = config.get('testing', False)
+        config.pop('testing', None)
         config = Config(config)
         config.validate()
         config = config.to_primitive()
@@ -76,8 +97,8 @@ class Database:
             write_mode=config['write_mode'],
             exporters=config['exporters'],
             webhooks=config['webhooks'],
-            dask_enabled=config['dask_enabled'],
             dask_workers=config['dask_workers'],
+            testing=testing,
         )
 
     @staticmethod
@@ -122,8 +143,9 @@ class Database:
         write_mode='copy',            # type: str
         exporters=[],                 # type: List[Dict[str, Any]]
         webhooks=[],                  # type: List[Dict[str, Any]]
-        dask_enabled=False,           # type: bool
         dask_workers=8,               # type: int
+        dask_cluster_type='local',    # type: str
+        testing=False,              # type: bool
     ):
         # type: (...) -> None
         r'''
@@ -145,10 +167,12 @@ class Database:
                 Default: [].
             webhooks (list[dict], optional): List of webhooks to call.
                 Default: [].
-            dask_enabled (bool, optional): Whether to enable Dask.
                 Default: False.
             dask_workers (int, optional): Number of partitions to use for
                 Dask. Must be 1 or greater. Default: 8.
+            dask_cluster_type: (str, optional): Dask cluster type:
+                Default: local.
+            testing: (bool, optional): Used for testing. Default: False.
 
         Raises:
             TypeError: If specifications contains a non-SpecificationBase
@@ -208,8 +232,10 @@ class Database:
             # type: Dict[str, SpecificationBase]
         self._exporters = exporters
         self._webhooks = webhooks
-        self._dask_enabled = dask_enabled
         self._dask_workers = dask_workers
+        self._dask_cluster_type = dask_cluster_type
+        self._dask_cluster = None
+        self._testing = testing
         self.data = None
 
         # needed for testing
@@ -243,9 +269,7 @@ class Database:
             msg = 'Data not initialized. Please call update.'
             raise RuntimeError(msg)
 
-        temp = db_tools.get_data_for_write(
-            self.data, self._root, self._staging
-        )
+        temp = db_tools.get_data_for_write(self.data, self._root, self._staging)
         self._logger.info('create: get data', step=1, total=total)
         if temp is None:
             return self
@@ -382,42 +406,38 @@ class Database:
         Returns:
             Database: self.
         '''
-        total = 3
-        self._logger.info('update', step=0, total=total)
+        with DaskConnection(self._dask_cluster_type, self._dask_workers):
+            total = 3
+            self._logger.info('update', step=0, total=total)
 
-        exclude_re = '|'.join([self._exclude_regex, 'hidebound/logs'])
-        data = hbt.directory_to_dataframe(
-            self._root,
-            include_regex=self._include_regex,
-            exclude_regex=exclude_re
-        )
-        self._logger.info(f'update: parsed {self._root}', step=1, total=total)
+            exclude_re = '|'.join([self._exclude_regex, 'hidebound/logs'])
+            data = hbt.directory_to_dataframe(
+                self._root,
+                include_regex=self._include_regex,
+                exclude_regex=exclude_re
+            )
+            self._logger.info(f'update: parsed {self._root}', step=1, total=total)
 
-        if len(data) > 0:
-            if self._dask_enabled:
-                cluster = dist.LocalCluster(n_workers=self._dask_workers)
-                dist.Client(cluster)
+            if len(data) > 0:
                 data = dd.from_pandas(data, npartitions=self._dask_workers)
-
-            data = db_tools.add_specification(data, self._specifications)
-            data = db_tools.validate_filepath(data)
-            data = db_tools.add_file_traits(data)
-            data = db_tools.add_relative_path(data, 'filepath', self._root)
-            data = db_tools.add_asset_name(data)
-            data = db_tools.add_asset_path(data)
-            data = db_tools.add_relative_path(data, 'asset_path', self._root)
-            data = db_tools.add_asset_type(data)
-            data = db_tools.add_asset_traits(data)
-            data = db_tools.validate_assets(data)
-            if self._dask_enabled:
+                data = db_tools.add_specification(data, self._specifications)
+                data = db_tools.validate_filepath(data)
+                data = db_tools.add_file_traits(data)
+                data = db_tools.add_relative_path(data, 'filepath', self._root)
+                data = db_tools.add_asset_name(data)
+                data = db_tools.add_asset_path(data)
+                data = db_tools.add_relative_path(data, 'asset_path', self._root)
+                data = db_tools.add_asset_type(data)
+                data = db_tools.add_asset_traits(data)
+                data = db_tools.validate_assets(data)
                 data = data.compute()
-        self._logger.info('update: generate', step=2, total=total)
+            self._logger.info('update: generate', step=2, total=total)
 
-        data = db_tools.cleanup(data)
-        self.data = data
+            data = db_tools.cleanup(data)
+            self.data = data
 
-        self._logger.info('update: cleanup', step=3, total=total)
-        self._logger.info('update: complete', step=3, total=total)
+            self._logger.info('update: cleanup', step=3, total=total)
+            self._logger.info('update: complete', step=3, total=total)
         return self
 
     def delete(self):
