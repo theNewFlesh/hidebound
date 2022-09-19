@@ -442,19 +442,19 @@ class Database:
         Returns:
             Database: self.
         '''
-        with DaskConnection(self._dask_cluster_type, self._dask_workers):
-            total = 3
-            self._logger.info('update', step=0, total=total)
+        total = 3
+        self._logger.info('update', step=0, total=total)
 
-            exclude_re = '|'.join([self._exclude_regex, 'hidebound/logs'])
-            data = hbt.directory_to_dataframe(
-                self._root,
-                include_regex=self._include_regex,
-                exclude_regex=exclude_re
-            )
-            self._logger.info(f'update: parsed {self._root}', step=1, total=total)
+        exclude_re = '|'.join([self._exclude_regex, 'hidebound/logs'])
+        data = hbt.directory_to_dataframe(
+            self._root,
+            include_regex=self._include_regex,
+            exclude_regex=exclude_re
+        )
+        self._logger.info(f'update: parsed {self._root}', step=1, total=total)
 
-            if len(data) > 0:
+        if len(data) > 0:
+            with DaskConnection(self._dask_cluster_type, self._dask_workers) as conn:
                 data = dd.from_pandas(data, npartitions=self._dask_workers)
                 data = db_tools.add_specification(data, self._specifications)
                 data = db_tools.validate_filepath(data)
@@ -467,13 +467,13 @@ class Database:
                 data = db_tools.add_asset_traits(data)
                 data = db_tools.validate_assets(data)
                 data = data.compute()
-            self._logger.info('update: generate', step=2, total=total)
+        self._logger.info('update: generate', step=2, total=total)
 
-            data = db_tools.cleanup(data)
-            self.data = data
+        data = db_tools.cleanup(data)
+        self.data = data
 
-            self._logger.info('update: cleanup', step=3, total=total)
-            self._logger.info('update: complete', step=3, total=total)
+        self._logger.info('update: cleanup', step=3, total=total)
+        self._logger.info('update: complete', step=3, total=total)
         return self
 
     def delete(self):
