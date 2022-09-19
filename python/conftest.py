@@ -160,12 +160,11 @@ def api_setup(env, extension):
 
 
 @pytest.fixture()
-def app_setup(make_dirs, make_files, spec_file, env, app, app_client):
+def app_setup(make_dirs, make_files, spec_file, env, app):
     yield dict(
         make_dirs=make_dirs,
         make_files=make_files,
         spec_file=spec_file,
         env=env,
         app=app,
-        client=app_client,
     )

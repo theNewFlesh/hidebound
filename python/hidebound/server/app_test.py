@@ -9,15 +9,13 @@ import hidebound.server.server_tools as hst
 # ------------------------------------------------------------------------------
 
 
-def test_liveness(app_setup):
-    client = app_setup['client']
-    result = client.get('/healthz/live').status_code
+def test_liveness(app_setup, app_client):
+    result = app_client.get('/healthz/live').status_code
     assert result == 200
 
 
-def test_readiness(app_setup):
-    client = app_setup['client']
-    result = client.get('/healthz/ready').status_code
+def test_readiness(app_setup, app_client):
+    result = app_client.get('/healthz/ready').status_code
     assert result == 200
 
 
@@ -27,12 +25,11 @@ def test_get_app(app_setup):
     assert isinstance(result, dash.Dash)
 
 
-def test_serve_stylesheet(app_setup):
-    client = app_setup['client']
+def test_serve_stylesheet(app_setup, app_client):
     params = dict(
         COLOR_SCHEME=components.COLOR_SCHEME,
         FONT_FAMILY=components.FONT_FAMILY,
     )
     expected = hst.render_template('style.css.j2', params)
-    result = next(client.get('/static/style.css').response)
+    result = next(app_client.get('/static/style.css').response)
     assert result == expected
