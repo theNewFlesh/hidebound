@@ -68,18 +68,15 @@ def temp_dir():
 @pytest.fixture()
 def make_dirs(temp_dir):
     ingress = Path(temp_dir, 'ingress').as_posix()
-    hidebound = Path(temp_dir, 'hidebound').as_posix()
+    staging = Path(temp_dir, 'hidebound').as_posix()
     archive = Path(temp_dir, 'archive').as_posix()
 
     # creates dirs
     os.makedirs(ingress)
-    os.makedirs(hidebound)
+    os.makedirs(staging)
     os.makedirs(archive)
 
-
-@pytest.fixture()
-def make_files(temp_dir, config, make_dirs):
-    DatabaseTestBase().create_files(config['ingress_directory'])
+    yield ingress, staging, archive
 
 
 @pytest.fixture()
