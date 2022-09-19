@@ -454,7 +454,7 @@ class Database:
         self._logger.info(f'update: parsed {self._root}', step=1, total=total)
 
         if len(data) > 0:
-            with DaskConnection(self._dask_cluster_type, self._dask_workers) as conn:
+            with DaskConnection(self._dask_cluster_type, self._dask_workers):
                 data = dd.from_pandas(data, npartitions=self._dask_workers)
                 data = db_tools.add_specification(data, self._specifications)
                 data = db_tools.validate_filepath(data)
