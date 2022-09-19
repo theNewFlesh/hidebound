@@ -8,7 +8,7 @@ import lunchbox.tools as lbt
 import pytest
 import yaml
 
-from hidebound.core.database_test_base import DatabaseTestBase
+from hidebound.core.database_test_base import *
 import hidebound.server.extensions as ext
 # ------------------------------------------------------------------------------
 
@@ -46,7 +46,7 @@ def app():
 
 
 @pytest.fixture()
-def client(app):
+def flask_client(app):
     yield app.test_client()
 
 
@@ -144,20 +144,20 @@ def config_json_file(temp_dir, config):
 
 
 @pytest.fixture()
-def api_setup(env, extension, client):
+def api_setup(env, extension, flask_client):
     return dict(
         env=env,
         extension=extension,
-        client=client,
+        client=flask_client,
     )
 
 
 @pytest.fixture()
-def app_setup(make_dirs, make_files, spec_file, env, client):
+def app_setup(make_dirs, make_files, spec_file, env, flask_client):
     yield dict(
         make_dirs=make_dirs,
         make_files=make_files,
         spec_file=spec_file,
         env=env,
-        client=client,
+        client=flask_client,
     )
