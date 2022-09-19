@@ -8,7 +8,7 @@ import os
 import shutil
 import sys
 
-from lunchboc.enforce import Enforce
+from lunchbox.enforce import Enforce
 from pandas import DataFrame
 import dask.dataframe as dd
 import dask.distributed as ddist
