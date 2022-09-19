@@ -8,7 +8,8 @@ import lunchbox.tools as lbt
 import pytest
 import yaml
 
-from hidebound.core.database_test_base import *
+from hidebound.core.database_test_base import *  # noqa: F403 F401
+import hidebound.server.app as application
 import hidebound.server.extensions as ext
 # ------------------------------------------------------------------------------
 
@@ -37,6 +38,16 @@ def env(config):
 
 @pytest.fixture()
 def app():
+    yield application.APP
+
+
+@pytest.fixture()
+def app_client(app):
+    yield app.server.test_client()
+
+
+@pytest.fixture()
+def flask_app():
     context = flask.Flask(__name__).app_context()
     context.push()
     app = context.app
@@ -46,15 +57,15 @@ def app():
 
 
 @pytest.fixture()
-def flask_client(app):
-    yield app.test_client()
+def flask_client(flask_app):
+    yield flask_app.test_client()
 
 
 @pytest.fixture()
-def extension(app, make_dirs):
-    app.config['TESTING'] = False
-    ext.swagger.init_app(app)
-    ext.hidebound.init_app(app)
+def extension(flask_app, make_dirs):
+    flask_app.config['TESTING'] = False
+    ext.swagger.init_app(flask_app)
+    ext.hidebound.init_app(flask_app)
     yield ext.hidebound
 
 
@@ -150,11 +161,12 @@ def api_setup(env, extension, flask_client):
 
 
 @pytest.fixture()
-def app_setup(make_dirs, make_files, spec_file, env, flask_client):
+def app_setup(make_dirs, make_files, spec_file, env, app, app_client):
     yield dict(
         make_dirs=make_dirs,
         make_files=make_files,
         spec_file=spec_file,
         env=env,
-        client=flask_client,
+        app=app,
+        client=app_client,
     )
