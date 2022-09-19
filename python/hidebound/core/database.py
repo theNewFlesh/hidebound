@@ -8,6 +8,7 @@ import os
 import shutil
 import sys
 
+from lunchbox.enforce import Enforce
 from pandas import DataFrame
 import dask.dataframe as dd
 import dask.distributed as ddist
@@ -30,19 +31,55 @@ from hidebound.core.logging import ProgressLogger
 
 class DaskConnection:
     def __init__(self, cluster_type, num_workers):
+        # type: (str, int) -> None
+        '''
+        Instantiates a DaskConnection.
+
+        Args:
+            cluster_type (str): Dask cluster type. Options include: local.
+            num_workers (int): Number of Dask workers.
+
+        Raises:
+            EnforceError: If cluster_type is illegal.
+            EnforceError: If num_workers is less than 1.
+        '''
+        msg = 'Illegal cluster type: {a}. Legal cluster types: {b}.'
+        Enforce(cluster_type, 'in', ['local'], message=msg)
+
+        msg = 'num_workers must be greater than 0. Given value: {a}.'
+        Enforce(num_workers, '>=', 1, message=msg)
+        # ----------------------------------------------------------------------
+
         self.cluster_type = cluster_type
         self.num_workers = num_workers
         self.cluster = None
 
     def __enter__(self):
+        # type: () -> DaskConnection
+        '''
+        Creates Dask cluster and assigns it to self.cluster.
+
+        Returns:
+            DaskConnection: self.
+        '''
         if self.cluster_type == 'local':
             self.cluster = ddist.LocalCluster(
+                processes=True,
                 n_workers=self.num_workers,
                 dashboard_address='0.0.0.0:8087',
             )
-            return self
+        return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        # type: (Any, Any, Any, Any) -> None
+        '''
+        Closes Dask cluster.
+
+        Args:
+            exc_type (object): Required by python.
+            exc_val (object): Required by python.
+            exc_tb (object): Required by python.
+        '''
         self.cluster.close()
 
 
@@ -406,19 +443,19 @@ class Database:
         Returns:
             Database: self.
         '''
-        with DaskConnection(self._dask_cluster_type, self._dask_workers):
-            total = 3
-            self._logger.info('update', step=0, total=total)
+        total = 3
+        self._logger.info('update', step=0, total=total)
 
-            exclude_re = '|'.join([self._exclude_regex, 'hidebound/logs'])
-            data = hbt.directory_to_dataframe(
-                self._root,
-                include_regex=self._include_regex,
-                exclude_regex=exclude_re
-            )
-            self._logger.info(f'update: parsed {self._root}', step=1, total=total)
+        exclude_re = '|'.join([self._exclude_regex, 'hidebound/logs'])
+        data = hbt.directory_to_dataframe(
+            self._root,
+            include_regex=self._include_regex,
+            exclude_regex=exclude_re
+        )
+        self._logger.info(f'update: parsed {self._root}', step=1, total=total)
 
-            if len(data) > 0:
+        if len(data) > 0:
+            with DaskConnection(self._dask_cluster_type, self._dask_workers):
                 data = dd.from_pandas(data, npartitions=self._dask_workers)
                 data = db_tools.add_specification(data, self._specifications)
                 data = db_tools.validate_filepath(data)
@@ -433,11 +470,11 @@ class Database:
                 data = data.compute()
             self._logger.info('update: generate', step=2, total=total)
 
-            data = db_tools.cleanup(data)
-            self.data = data
+        data = db_tools.cleanup(data)
+        self._logger.info('update: cleanup', step=3, total=total)
+        self.data = data
 
-            self._logger.info('update: cleanup', step=3, total=total)
-            self._logger.info('update: complete', step=3, total=total)
+        self._logger.info('update: complete', step=3, total=total)
         return self
 
     def delete(self):
