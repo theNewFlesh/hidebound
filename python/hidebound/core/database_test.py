@@ -316,7 +316,7 @@ def test_create_move(make_dirs, make_files, specs):  # noqa: F811
 
 
 # READ--------------------------------------------------------------------------
-@pytest.mark.flaky(reruns=1)
+@pytest.mark.flaky(reruns=2)
 def test_read_legal_types(make_dirs, make_files, specs):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
@@ -422,7 +422,7 @@ def test_read_coordinates(make_dirs, make_files, specs):  # noqa: F811
         assert col in result
 
 
-@pytest.mark.flaky(reruns=1)
+@pytest.mark.flaky(reruns=2)
 def test_read_column_order(make_dirs, make_files, specs):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
@@ -754,7 +754,7 @@ def test_export_disk(make_dirs, make_files, specs, db_data):  # noqa: F811
 
 
 # SEARCH------------------------------------------------------------------------
-@pytest.mark.flaky(reruns=1)
+@pytest.mark.flaky(reruns=2)
 def test_search(make_dirs, make_files, specs):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
