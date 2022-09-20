@@ -4,7 +4,11 @@ import os
 import re
 
 import numpy as np
+import pytest
 # ------------------------------------------------------------------------------
+
+
+RERUNS = 3
 
 
 # INITIALIZE--------------------------------------------------------------------
@@ -47,6 +51,7 @@ def test_initialize_bad_config(api_setup, flask_client, config):
 
 
 # CREATE------------------------------------------------------------------------
+@pytest.mark.flaky(reruns=RERUNS)
 def test_create(api_setup, flask_client, config, make_files):
     flask_client.post('/api/update')
 
@@ -69,6 +74,7 @@ def test_create_no_update(api_setup, flask_client):
 
 
 # READ--------------------------------------------------------------------------
+@pytest.mark.flaky(reruns=RERUNS)
 def test_read(api_setup, flask_client, make_files):
     extension = api_setup['extension']
     flask_client.post('/api/update')
@@ -95,6 +101,7 @@ def test_read_error(api_setup, flask_client):
     ext.database = db
 
 
+@pytest.mark.flaky(reruns=RERUNS)
 def test_read_group_by_asset(api_setup, flask_client, make_files):
     extension = api_setup['extension']
     flask_client.post('/api/update')
@@ -128,6 +135,7 @@ def test_read_no_update(api_setup, flask_client):
 
 
 # UPDATE------------------------------------------------------------------------
+@pytest.mark.flaky(reruns=RERUNS)
 def test_update(api_setup, flask_client, make_files):
     result = flask_client.post('/api/update').json['message']
     expected = 'Database updated.'

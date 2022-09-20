@@ -20,6 +20,7 @@ import hidebound.core.tools as hbt
 
 
 DASK_WORKERS = 2
+RERUNS = 3
 
 
 # DASK-CONNECTION---------------------------------------------------------------
@@ -209,7 +210,7 @@ def test_init_testing(make_dirs):
 
 
 # CREATE------------------------------------------------------------------------
-@pytest.mark.flaky(rerun=1)
+@pytest.mark.flaky(rerun=3)
 def test_create(make_dirs, make_files, specs):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
@@ -352,8 +353,7 @@ def test_create_move(make_dirs, make_files, specs):  # noqa: F811
 
 
 # READ--------------------------------------------------------------------------
-@pytest.mark.order(1)
-@pytest.mark.flaky(reruns=2)
+@pytest.mark.flaky(reruns=RERUNS)
 def test_read_legal_types(make_dirs, make_files, specs):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
@@ -459,8 +459,7 @@ def test_read_coordinates(make_dirs, make_files, specs):  # noqa: F811
         assert col in result
 
 
-@pytest.mark.order(2)
-@pytest.mark.flaky(reruns=2)
+@pytest.mark.flaky(reruns=RERUNS)
 def test_read_column_order(make_dirs, make_files, specs):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
@@ -652,7 +651,7 @@ def test_delete(make_dirs, make_files, specs):  # noqa: F811
 
 
 # EXPORT------------------------------------------------------------------------
-@pytest.mark.flaky(reruns=1)
+@pytest.mark.flaky(reruns=RERUNS)
 def test_export_girder(make_dirs, make_files, specs):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
@@ -791,8 +790,7 @@ def test_export_disk(make_dirs, make_files, specs, db_data):  # noqa: F811
 
 
 # SEARCH------------------------------------------------------------------------
-@pytest.mark.order(3)
-@pytest.mark.flaky(reruns=2)
+@pytest.mark.flaky(reruns=RERUNS)
 def test_search(make_dirs, make_files, specs):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
