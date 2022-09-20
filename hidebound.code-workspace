@@ -52,7 +52,8 @@
             "env": {
                 "REPO": "${workspaceFolderBasename}",
                 "PYTHONPATH": "${PYTHONPATH}:/home/ubuntu/${workspaceFolderBasename}/python",
-                "REPO_ENV": "True"
+                "REPO_ENV": "True",
+                "NUM_CORES": "`python3.7 -c 'import os; print(os.cpu_count())'`"
             }
         },
         "tasks": [
@@ -97,7 +98,7 @@
             },
             {
                 "label": "fast-test",
-                "command": "SKIP_SLOW_TESTS=true pytest python -c docker/pytest.ini --headless",
+                "command": "SKIP_SLOW_TESTS=true pytest python -c docker/pytest.ini --headless --numprocesses $NUM_CORES",
                 "type": "shell"
             },
             {
@@ -201,7 +202,7 @@
             },
             {
                 "label": "test",
-                "command": "pytest python -c docker/pytest.ini --headless",
+                "command": "pytest python -c docker/pytest.ini --headless --numprocesses $NUM_CORES",
                 "type": "shell"
             },
             {
