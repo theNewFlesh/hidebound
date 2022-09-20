@@ -12,6 +12,7 @@ RERUNS = 3
 
 
 # INITIALIZE--------------------------------------------------------------------
+@pytest.mark.flaky(reruns=RERUNS)
 def test_initialize(api_setup, flask_client, config):
     conf = dict(
         ingress_directory=config['ingress_directory'],
@@ -24,12 +25,14 @@ def test_initialize(api_setup, flask_client, config):
     assert result == expected
 
 
+@pytest.mark.flaky(reruns=RERUNS)
 def test_initialize_no_config(api_setup, flask_client, config):
     result = flask_client.post('/api/initialize').json['message']
     expected = 'Please supply a config dictionary.'
     assert re.search(expected, result) is not None
 
 
+@pytest.mark.flaky(reruns=RERUNS)
 def test_initialize_bad_config_type(api_setup, flask_client, config):
     bad_config = '["a", "b"]'
     result = flask_client.post('/api/initialize', json=bad_config)
@@ -38,6 +41,7 @@ def test_initialize_bad_config_type(api_setup, flask_client, config):
     assert re.search(expected, result) is not None
 
 
+@pytest.mark.flaky(reruns=RERUNS)
 def test_initialize_bad_config(api_setup, flask_client, config):
     conf = dict(
         ingress_directory='/foo/bar',
@@ -67,6 +71,7 @@ def test_create(api_setup, flask_client, config, make_files):
     assert os.path.exists(meta)
 
 
+@pytest.mark.flaky(reruns=RERUNS)
 def test_create_no_update(api_setup, flask_client):
     result = flask_client.post('/api/create').json['message']
     expected = 'Database not updated. Please call update.'
@@ -92,6 +97,7 @@ def test_read(api_setup, flask_client, make_files):
     assert result == 'AttributeError'
 
 
+@pytest.mark.flaky(reruns=RERUNS)
 def test_read_error(api_setup, flask_client):
     ext = api_setup['extension']
     db = ext.database
@@ -128,6 +134,7 @@ def test_read_group_by_asset(api_setup, flask_client, make_files):
     assert re.search(expected, result) is not None
 
 
+@pytest.mark.flaky(reruns=RERUNS)
 def test_read_no_update(api_setup, flask_client):
     result = flask_client.post('/api/read', json={}).json['message']
     expected = 'Database not updated. Please call update.'
@@ -143,6 +150,7 @@ def test_update(api_setup, flask_client, make_files):
 
 
 # DELETE------------------------------------------------------------------------
+@pytest.mark.flaky(reruns=RERUNS)
 def test_delete(api_setup, flask_client, config, make_files):
     flask_client.post('/api/update')
     flask_client.post('/api/create')
@@ -159,6 +167,7 @@ def test_delete(api_setup, flask_client, config, make_files):
     assert os.path.exists(meta) is False
 
 
+@pytest.mark.flaky(reruns=RERUNS)
 def test_delete_no_create(api_setup, flask_client, config, make_files):
     result = flask_client.post('/api/delete').json['message']
     expected = 'Hidebound data deleted.'
@@ -171,6 +180,7 @@ def test_delete_no_create(api_setup, flask_client, config, make_files):
 
 
 # EXPORT------------------------------------------------------------------------
+@pytest.mark.flaky(reruns=RERUNS)
 def test_export(api_setup, flask_client, config, make_files):
     target_dir = config['exporters'][0]['target_directory']
     result = os.listdir(target_dir)
@@ -185,6 +195,7 @@ def test_export(api_setup, flask_client, config, make_files):
     assert 'metadata' in result
 
 
+@pytest.mark.flaky(reruns=RERUNS)
 def test_export_error(api_setup, flask_client, config, make_files):
     flask_client.post('/api/update')
     result = flask_client.post('/api/export').json['message']
@@ -193,6 +204,7 @@ def test_export_error(api_setup, flask_client, config, make_files):
 
 
 # SEARCH------------------------------------------------------------------------
+@pytest.mark.flaky(reruns=RERUNS)
 def test_search(api_setup, flask_client, make_files):
     extension = api_setup['extension']
     flask_client.post('/api/update')
@@ -209,6 +221,7 @@ def test_search(api_setup, flask_client, make_files):
     assert result == expected
 
 
+@pytest.mark.flaky(reruns=RERUNS)
 def test_search_group_by_asset(api_setup, flask_client, make_files):
     extension = api_setup['extension']
     flask_client.post('/api/update')
@@ -224,6 +237,7 @@ def test_search_group_by_asset(api_setup, flask_client, make_files):
     assert result == expected
 
 
+@pytest.mark.flaky(reruns=RERUNS)
 def test_search_no_query(api_setup, flask_client, make_files):
     result = flask_client.post('/api/search', json={}).json['message']
     expected = 'Please supply valid search params in the form '
@@ -231,6 +245,7 @@ def test_search_no_query(api_setup, flask_client, make_files):
     assert re.search(expected, result) is not None
 
 
+@pytest.mark.flaky(reruns=RERUNS)
 def test_search_bad_json(api_setup, flask_client, make_files):
     query = {'foo': 'bar'}
     query = json.dumps(query)
@@ -240,6 +255,7 @@ def test_search_bad_json(api_setup, flask_client, make_files):
     assert re.search(expected, result) is not None
 
 
+@pytest.mark.flaky(reruns=RERUNS)
 def test_search_bad_group_by_asset(api_setup, flask_client, make_files):
     params = dict(
         query='SELECT * FROM data WHERE asset_type == "sequence"',
@@ -252,6 +268,7 @@ def test_search_bad_group_by_asset(api_setup, flask_client, make_files):
     assert re.search(expected, result) is not None
 
 
+@pytest.mark.flaky(reruns=RERUNS)
 def test_search_bad_query(api_setup, flask_client, make_files):
     flask_client.post('/api/update', json={})
     query = {'query': 'SELECT * FROM data WHERE foo == "bar"'}
@@ -261,6 +278,7 @@ def test_search_bad_query(api_setup, flask_client, make_files):
     assert result == expected
 
 
+@pytest.mark.flaky(reruns=RERUNS)
 def test_search_no_update(api_setup, flask_client, make_files):
     query = {'query': 'SELECT * FROM data WHERE specification == "spec001"'}
     query = json.dumps(query)
@@ -270,6 +288,7 @@ def test_search_no_update(api_setup, flask_client, make_files):
 
 
 # WORKFLOW----------------------------------------------------------------------
+@pytest.mark.flaky(reruns=RERUNS)
 def test_workflow(api_setup, flask_client, config, make_files):
     expected = ['update', 'create', 'export', 'delete']
 
@@ -287,6 +306,7 @@ def test_workflow(api_setup, flask_client, config, make_files):
     assert os.path.exists(meta) is False
 
 
+@pytest.mark.flaky(reruns=RERUNS)
 def test_workflow_create(api_setup, flask_client, config, make_files):
     expected = ['update', 'create']
 
@@ -304,12 +324,14 @@ def test_workflow_create(api_setup, flask_client, config, make_files):
     assert os.path.exists(meta)
 
 
+@pytest.mark.flaky(reruns=RERUNS)
 def test_workflow_bad_params(api_setup, flask_client, make_files):
     workflow = json.dumps({})
     result = flask_client.post('/api/workflow', json=workflow).json
     assert result['error'] == 'KeyError'
 
 
+@pytest.mark.flaky(reruns=RERUNS)
 def test_workflow_illegal_step(api_setup, flask_client, make_files):
     expected = ['update', 'create', 'foo', 'bar']
     data = dict(steps=expected)
@@ -323,6 +345,7 @@ def test_workflow_illegal_step(api_setup, flask_client, make_files):
 
 
 # ERROR-HANDLERS----------------------------------------------------------------
+@pytest.mark.flaky(reruns=RERUNS)
 def test_key_error_handler(api_setup, flask_client, make_files):
     result = flask_client.post(
         '/api/workflow',
@@ -331,11 +354,13 @@ def test_key_error_handler(api_setup, flask_client, make_files):
     assert result['error'] == 'KeyError'
 
 
+@pytest.mark.flaky(reruns=RERUNS)
 def test_type_error_handler(api_setup, flask_client, make_files):
     result = flask_client.post('/api/workflow', json=json.dumps([])).json
     assert result['error'] == 'TypeError'
 
 
+@pytest.mark.flaky(reruns=RERUNS)
 def test_json_decode_error_handler(api_setup, flask_client, make_files):
     result = flask_client.post('/api/workflow', json='bad json').json
     assert result['error'] == 'JSONDecodeError'
