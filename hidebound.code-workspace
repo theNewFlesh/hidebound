@@ -98,7 +98,7 @@
             },
             {
                 "label": "fast-test",
-                "command": "SKIP_SLOW_TESTS=true pytest python -c docker/pytest.ini --headless --numprocesses $NUM_CORES",
+                "command": "SKIP_SLOW_TESTS=true pytest python -c docker/pytest.ini --headless --numprocesses `python3.7 -c 'import os; print(os.cpu_count())'`",
                 "type": "shell"
             },
             {
@@ -202,7 +202,7 @@
             },
             {
                 "label": "test",
-                "command": "pytest python -c docker/pytest.ini --headless --numprocesses $NUM_CORES",
+                "command": "pytest python -c docker/pytest.ini --headless --numprocesses `python3.7 -c 'import os; print(os.cpu_count())'`",
                 "type": "shell"
             },
             {
