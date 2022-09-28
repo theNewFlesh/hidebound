@@ -78,8 +78,25 @@
                 "label": "coverage",
                 "command": [
                     "mkdir -p docs &&",
-                    "pytest -c docker/pytest.ini --headless --numprocesses `python3.7 -c 'import os; print(os.cpu_count())'` --cov=python --cov-config=docker/pytest.ini --cov-report=html:docs/htmlcov --ignore python/hidebound/server/api_test.py python &&",
-                    "pytest -c docker/pytest.ini --headless --numprocesses `python3.7 -c 'import os; print(os.cpu_count())'` --cov=python --cov-config=docker/pytest.ini --cov-report=html:docs/htmlcov --last-failed --cov-append python/hidebound/server/api_test.py"
+                    "pytest",
+                        "-c docker/pytest.ini",
+                        "--headless",
+                        "--numprocesses `python3.7 -c 'import os; print(os.cpu_count())'`",
+                        "--cov=python",
+                        "--cov-config=docker/pytest.ini",
+                        "--cov-report=html:docs/htmlcov",
+                        "--ignore python/hidebound/server/api_test.py",
+                        "python &&",
+                    "pytest",
+                        "-c docker/pytest.ini",
+                        "--headless",
+                        "--numprocesses `python3.7 -c 'import os; print(os.cpu_count())'`",
+                        "--cov=python",
+                        "--cov-config=docker/pytest.ini",
+                        "--cov-report=html:docs/htmlcov",
+                        "--ignore python/hidebound/server/api_test.py",
+                        "--cov-append",
+                        "python/hidebound/server/api_test.py"
                 ],
                 "type": "shell"
             },
