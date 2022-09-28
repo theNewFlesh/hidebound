@@ -10,6 +10,8 @@ import sys
 
 from lunchbox.enforce import Enforce
 from pandas import DataFrame
+from requests.exceptions import ConnectionError
+from requests.models import Response
 import dask.dataframe as dd
 import dask.distributed as ddist
 import jsoncomment as jsonc
@@ -526,8 +528,20 @@ class Database:
             if 'timeout' in hook:
                 kwargs['timeout'] = hook['timeout']
 
-            method = getattr(requests, method)
-            response = method(url, headers=headers, **kwargs)
+            # test response
+            response = Response()
+            response.status_code = 200
+            response._content = b'Webhook called.'
+
+            if not self._testing:
+                method = getattr(requests, method)
+                try:
+                    response = method(url, headers=headers, **kwargs)
+                except ConnectionError as e:
+                    response = Response()
+                    response.status_code = 403
+                    response._content = str(e).encode('utf-8')
+
             self._logger.info(
                 f'call_webhooks: {url} {response.text}',
                 step=i + 1,

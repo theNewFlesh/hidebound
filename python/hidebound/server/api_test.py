@@ -2,6 +2,7 @@ from pathlib import Path
 import json
 import os
 import re
+import time
 
 import numpy as np
 import pytest
@@ -9,6 +10,27 @@ import pytest
 
 
 RERUNS = 3
+DELAY = 0.1
+
+
+def try_post_json(
+    client, url, json=None, status=None, attempts=10, delay=DELAY
+):
+    error = 'try_post_json failed.'
+    response = None
+    for _ in range(attempts):
+        try:
+            response = client.post(url, json=json)
+        except Exception as error:  # noqa: F841
+            error = error.args[0]
+        time.sleep(delay)
+
+        if status is not None and response.status_code != status:
+            error = response.text
+            continue
+        return response.json
+
+    raise RuntimeError(error)
 
 
 # INITIALIZE--------------------------------------------------------------------
@@ -56,15 +78,13 @@ def test_initialize_bad_config(api_setup, flask_client, config):
 
 # CREATE------------------------------------------------------------------------
 @pytest.mark.flaky(reruns=RERUNS)
-def test_create(api_setup, flask_client, config, make_files):
-    flask_client.post('/api/update')
-
+def test_create(api_setup, flask_client, config, make_files, api_update):
     content = Path(config['staging_directory'], 'content')
     meta = Path(config['staging_directory'], 'metadata')
     assert os.path.exists(content) is False
     assert os.path.exists(meta) is False
 
-    result = flask_client.post('/api/create').json['message']
+    result = try_post_json(flask_client, '/api/create')['message']
     expected = 'Hidebound data created.'
     assert result == expected
     assert os.path.exists(content)
@@ -74,18 +94,20 @@ def test_create(api_setup, flask_client, config, make_files):
 @pytest.mark.flaky(reruns=RERUNS)
 def test_create_no_update(api_setup, flask_client):
     result = flask_client.post('/api/create').json['message']
+    time.sleep(DELAY)
     expected = 'Database not updated. Please call update.'
     assert re.search(expected, result) is not None
 
 
 # READ--------------------------------------------------------------------------
 @pytest.mark.flaky(reruns=RERUNS)
-def test_read(api_setup, flask_client, make_files):
+def test_read(api_setup, flask_client, make_files, api_update):
     extension = api_setup['extension']
-    flask_client.post('/api/update')
 
     # call read
-    result = flask_client.post('/api/read', json={}).json['response']
+    result = try_post_json(
+        flask_client, '/api/read', json={}, status=200
+    )['response']
     expected = extension.database.read()\
         .replace({np.nan: None})\
         .to_dict(orient='records')
@@ -93,7 +115,7 @@ def test_read(api_setup, flask_client, make_files):
 
     # test general exceptions
     extension.database = 'foo'
-    result = flask_client.post('/api/read', json={}).json['error']
+    result = try_post_json(flask_client, '/api/read', json={})['error']
     assert result == 'AttributeError'
 
 
@@ -108,9 +130,8 @@ def test_read_error(api_setup, flask_client):
 
 
 @pytest.mark.flaky(reruns=RERUNS)
-def test_read_group_by_asset(api_setup, flask_client, make_files):
+def test_read_group_by_asset(api_setup, flask_client, make_files, api_update):
     extension = api_setup['extension']
-    flask_client.post('/api/update')
 
     # good params
     params = json.dumps({'group_by_asset': True})
@@ -144,16 +165,16 @@ def test_read_no_update(api_setup, flask_client):
 # UPDATE------------------------------------------------------------------------
 @pytest.mark.flaky(reruns=RERUNS)
 def test_update(api_setup, flask_client, make_files):
-    result = flask_client.post('/api/update').json['message']
+    result = try_post_json(flask_client, '/api/update')['message']
     expected = 'Database updated.'
     assert result == expected
 
 
 # DELETE------------------------------------------------------------------------
 @pytest.mark.flaky(reruns=RERUNS)
-def test_delete(api_setup, flask_client, config, make_files):
-    flask_client.post('/api/update')
+def test_delete(api_setup, flask_client, config, make_files, api_update):
     flask_client.post('/api/create')
+    time.sleep(DELAY)
 
     content = Path(config['staging_directory'], 'content')
     meta = Path(config['staging_directory'], 'metadata')
@@ -186,9 +207,9 @@ def test_export(api_setup, flask_client, config, make_files):
     result = os.listdir(target_dir)
     assert result == []
 
-    flask_client.post('/api/update')
-    flask_client.post('/api/create')
-    flask_client.post('/api/export')
+    try_post_json(flask_client, '/api/update')
+    try_post_json(flask_client, '/api/create')
+    try_post_json(flask_client, '/api/export')
 
     result = os.listdir(target_dir)
     assert 'content' in result
@@ -196,8 +217,7 @@ def test_export(api_setup, flask_client, config, make_files):
 
 
 @pytest.mark.flaky(reruns=RERUNS)
-def test_export_error(api_setup, flask_client, config, make_files):
-    flask_client.post('/api/update')
+def test_export_error(api_setup, flask_client, config, make_files, api_update):
     result = flask_client.post('/api/export').json['message']
     expected = 'hidebound/content directory does not exist'
     assert re.search(expected, result) is not None
@@ -205,16 +225,14 @@ def test_export_error(api_setup, flask_client, config, make_files):
 
 # SEARCH------------------------------------------------------------------------
 @pytest.mark.flaky(reruns=RERUNS)
-def test_search(api_setup, flask_client, make_files):
+def test_search(api_setup, flask_client, make_files, api_update):
     extension = api_setup['extension']
-    flask_client.post('/api/update')
 
     # call search
     query = 'SELECT * FROM data WHERE specification == "spec001"'
     temp = {'query': query}
     temp = json.dumps(temp)
-    result = flask_client.post('/api/search', json=temp)
-    result = result.json['response']
+    result = try_post_json(flask_client, '/api/search', json=temp)['response']
     expected = extension.database.search(query)\
         .replace({np.nan: None})\
         .to_dict(orient='records')
@@ -222,15 +240,14 @@ def test_search(api_setup, flask_client, make_files):
 
 
 @pytest.mark.flaky(reruns=RERUNS)
-def test_search_group_by_asset(api_setup, flask_client, make_files):
+def test_search_group_by_asset(api_setup, flask_client, make_files, api_update):
     extension = api_setup['extension']
-    flask_client.post('/api/update')
 
     # call search
     query = 'SELECT * FROM data WHERE asset_type == "sequence"'
     temp = {'query': query, 'group_by_asset': True}
     temp = json.dumps(temp)
-    result = flask_client.post('/api/search', json=temp).json['response']
+    result = try_post_json(flask_client, '/api/search', json=temp)['response']
     expected = extension.database.search(query, group_by_asset=True)\
         .replace({np.nan: None})\
         .to_dict(orient='records')

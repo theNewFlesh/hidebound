@@ -2,6 +2,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 import json
 import os
+import time
 
 import flask
 import lunchbox.tools as lbt
@@ -12,6 +13,9 @@ from hidebound.core.database_test_base import *  # noqa: F403 F401
 import hidebound.server.app as application
 import hidebound.server.extensions as ext
 # ------------------------------------------------------------------------------
+
+
+DELAY = 1
 
 
 @pytest.fixture()
@@ -66,6 +70,7 @@ def extension(flask_app, make_dirs):
     flask_app.config['TESTING'] = False
     ext.swagger.init_app(flask_app)
     ext.hidebound.init_app(flask_app)
+    ext.hidebound.database._testing = True
     yield ext.hidebound
 
 
@@ -157,6 +162,13 @@ def api_setup(env, extension):
         env=env,
         extension=extension,
     )
+
+
+@pytest.fixture()
+def api_update(flask_client):
+    response = flask_client.post('/api/update')
+    time.sleep(DELAY)
+    yield response
 
 
 @pytest.fixture()

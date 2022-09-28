@@ -4,6 +4,7 @@ from pathlib import Path
 import json
 import os
 import re
+import time
 
 from lunchbox.enforce import EnforceError
 from moto import mock_s3
@@ -21,6 +22,7 @@ import hidebound.core.tools as hbt
 
 DASK_WORKERS = 2
 RERUNS = 3
+DELAY = 1
 
 
 # DASK-CONNECTION---------------------------------------------------------------
@@ -220,6 +222,7 @@ def test_create(make_dirs, make_files, specs):  # noqa: F811
         testing=False
     )
     db.update()
+    time.sleep(DELAY)
     data = db.data
     db.create()
     data = data[data.asset_valid]
@@ -276,6 +279,7 @@ def test_create_all_invalid(make_dirs, make_files, specs):  # noqa: F811
         testing=False
     )
     db.update()
+    time.sleep(DELAY)
     data = db.data
     data['asset_valid'] = False
     db.create()
@@ -303,6 +307,7 @@ def test_create_copy(make_dirs, make_files, specs):  # noqa: F811
         testing=False,
     )
     db.update()
+    time.sleep(DELAY)
     db.create()
 
     result = hbt.directory_to_dataframe(ingress).filepath.tolist()
@@ -323,6 +328,7 @@ def test_create_move(make_dirs, make_files, specs):  # noqa: F811
         testing=False,
     )
     db.update()
+    time.sleep(DELAY)
     data = db.data
     db.create()
     data = data[data.asset_valid]
@@ -370,6 +376,7 @@ def test_read_legal_types(make_dirs, make_files, specs):  # noqa: F811
         assert re.search(expected, str(e))
 
     db.update()
+    time.sleep(DELAY)
     data = db.read()
 
     # test types by file
@@ -403,6 +410,7 @@ def test_read_traits(make_dirs, make_files, specs):  # noqa: F811
         testing=False
     )
     db.update()
+    time.sleep(DELAY)
 
     # test file traits
     db.data.file_traits = db.data.file_traits\
@@ -415,6 +423,7 @@ def test_read_traits(make_dirs, make_files, specs):  # noqa: F811
 
     # test asset traits
     db.update()
+    time.sleep(DELAY)
 
     db.data.asset_traits = db.data.asset_traits\
         .apply(lambda x: {'foo': 'bar', 'illegal': set()})
@@ -434,6 +443,7 @@ def test_read_coordinates(make_dirs, make_files, specs):  # noqa: F811
         testing=False
     )
     db.update()
+    time.sleep(DELAY)
 
     db.data.file_traits = db.data.file_traits\
         .apply(lambda x: {'coordinate': [0, 1]})
@@ -448,6 +458,7 @@ def test_read_coordinates(make_dirs, make_files, specs):  # noqa: F811
 
     # xyz
     db.update()
+    time.sleep(DELAY)
 
     db.data.file_traits = db.data.file_traits\
         .apply(lambda x: {'coordinate': [0, 1, 0]})
@@ -468,6 +479,7 @@ def test_read_column_order(make_dirs, make_files, specs):  # noqa: F811
         testing=False
     )
     db.update()
+    time.sleep(DELAY)
 
     result = db.read()
     result = result.columns.tolist()
@@ -505,6 +517,7 @@ def test_read_no_files(make_dirs, specs):  # noqa: F811
     )
 
     db.update()
+    time.sleep(DELAY)
     result = db.read()
     assert len(result) == 0
 
@@ -702,6 +715,7 @@ def test_export_s3(make_dirs, make_files, specs, db_data):  # noqa: F811
     )
 
     db.update().create().export()
+    time.sleep(DELAY)
 
     results = boto.session \
         .Session(
@@ -763,6 +777,7 @@ def test_export_disk(make_dirs, make_files, specs, db_data):  # noqa: F811
     )
 
     db.update()
+    time.sleep(DELAY)
     db.create()
     assert len(os.listdir(archive)) == 0
     db.export()
@@ -800,6 +815,7 @@ def test_search(make_dirs, make_files, specs):  # noqa: F811
         testing=False
     )
     db.update()
+    time.sleep(DELAY)
     db.search('SELECT * FROM data WHERE version == 1')
 
 
