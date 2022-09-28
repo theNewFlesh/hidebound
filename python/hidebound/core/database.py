@@ -182,7 +182,7 @@ class Database:
         webhooks=[],                  # type: List[Dict[str, Any]]
         dask_workers=8,               # type: int
         dask_cluster_type='local',    # type: str
-        testing=False,              # type: bool
+        testing=False,                # type: bool
     ):
         # type: (...) -> None
         r'''
