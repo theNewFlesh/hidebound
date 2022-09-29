@@ -560,10 +560,10 @@ class Database:
                 method = getattr(requests, method)
                 try:
                     response = method(url, headers=headers, **kwargs)
-                except ConnectionError as e:
-                    response = Response()
-                    response.status_code = 403
-                    response._content = str(e).encode('utf-8')
+                except ConnectionError as e:  # pragma: no cover
+                    response = Response()  # pragma: no cover
+                    response.status_code = 403  # pragma: no cover
+                    response._content = str(e).encode('utf-8')  # pragma: no cover
 
             self._logger.info(
                 f'call_webhooks: {url} {response.text}',
