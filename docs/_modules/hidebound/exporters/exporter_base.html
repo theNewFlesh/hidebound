@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.23.2
+                0.27.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -127,7 +127,8 @@
 <span class="sd">            metadata_types (list[st], optional). Metadata types to be exported.</span>
 <span class="sd">                Default: [asset, file, asset-chunk, file-chunk].</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_metadata_types</span> <span class="o">=</span> <span class="n">metadata_types</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_metadata_types</span> <span class="o">=</span> <span class="n">metadata_types</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_time</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">time_string</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="ExporterBase._enforce_directory_structure"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.exporter_base.ExporterBase._enforce_directory_structure">[docs]</a>    <span class="k">def</span> <span class="nf">_enforce_directory_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">staging_dir</span><span class="p">):</span>
         <span class="c1"># type: (Union[str, Path]) -&gt; None</span>

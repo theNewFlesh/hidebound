@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.25.0
+                0.27.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -330,7 +330,11 @@
         <span class="k">return</span> <span class="n">components</span><span class="o">.</span><span class="n">get_asset_graph</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">tab</span> <span class="o">==</span> <span class="s1">&#39;config&#39;</span><span class="p">:</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="n">hst</span><span class="o">.</span><span class="n">format_config</span><span class="p">(</span><span class="n">hb</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">hst</span><span class="o">.</span><span class="n">format_config</span><span class="p">(</span>
+            <span class="n">hb</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">redact_regex</span><span class="o">=</span><span class="n">hb</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;redact_regex&#39;</span><span class="p">],</span>
+            <span class="n">redact_hash</span><span class="o">=</span><span class="n">hb</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;redact_hash&#39;</span><span class="p">],</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">components</span><span class="o">.</span><span class="n">get_config_tab</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">tab</span> <span class="o">==</span> <span class="s1">&#39;api&#39;</span><span class="p">:</span>
