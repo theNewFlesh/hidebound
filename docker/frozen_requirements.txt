@@ -12,8 +12,8 @@ backcall==0.2.0
 beautifulsoup4==4.11.1
 bleach==5.0.1
 bokeh==2.4.3
-boto3==1.24.77
-botocore==1.27.77
+boto3==1.24.76
+botocore==1.27.76
 Brotli==1.0.9
 certifi==2022.9.14
 cffi==1.15.1
