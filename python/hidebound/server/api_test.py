@@ -26,7 +26,7 @@ def try_post_json(
         time.sleep(delay)
 
         if status is not None and response.status_code != status:
-            error = response.text
+            error = response.text  # type: ignore
             continue
         return response.json
 
