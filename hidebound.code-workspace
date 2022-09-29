@@ -131,7 +131,14 @@
                         "-c docker/pytest.ini",
                         "--headless",
                         "--numprocesses `python3.7 -c 'import os; print(os.cpu_count())'`",
-                        "python"
+                        "--ignore python/hidebound/server/api_test.py",
+                        "python &&",
+                    "SKIP_SLOW_TESTS=true",
+                    "pytest",
+                        "-c docker/pytest.ini",
+                        "--headless",
+                        "--numprocesses `python3.7 -c 'import os; print(os.cpu_count())'`",
+                        "python/hidebound/server/api_test.py"
                 ],
                 "type": "shell"
             },
@@ -250,11 +257,17 @@
             {
                 "label": "test",
                 "command": [
-                    "pytest", 
+                    "pytest",
                         "-c docker/pytest.ini",
                         "--headless",
                         "--numprocesses `python3.7 -c 'import os; print(os.cpu_count())'`",
-                        "python"
+                        "--ignore python/hidebound/server/api_test.py",
+                        "python &&",
+                    "pytest",
+                        "-c docker/pytest.ini",
+                        "--headless",
+                        "--numprocesses `python3.7 -c 'import os; print(os.cpu_count())'`",
+                        "python/hidebound/server/api_test.py"
                 ],
                 "type": "shell"
             },
