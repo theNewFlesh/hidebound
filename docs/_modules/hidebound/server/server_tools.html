@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.25.0
+                0.27.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -381,26 +381,36 @@
     <span class="k">return</span> <span class="n">store</span></div>
 
 
-<div class="viewcode-block" id="format_config"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.format_config">[docs]</a><span class="k">def</span> <span class="nf">format_config</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
-    <span class="c1"># type: (Dict[str, Any]) -&gt; OrderedDict[str, Any]</span>
+<div class="viewcode-block" id="format_config"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.format_config">[docs]</a><span class="k">def</span> <span class="nf">format_config</span><span class="p">(</span>
+    <span class="n">config</span><span class="p">,</span> <span class="n">redact_regex</span><span class="o">=</span><span class="s1">&#39;(_key|_id|url)$&#39;</span><span class="p">,</span> <span class="n">redact_hash</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">):</span>
+    <span class="c1"># type: (Dict[str, Any], str, bool) -&gt; OrderedDict[str, Any]</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Redacts credentials of config and formats it for display in component.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        config (dict): Configuration dictionary.</span>
+<span class="sd">        redact_regex (str, optional): Regular expression that matches keys,</span>
+<span class="sd">            whose values are to be redacted. Default: &quot;(_key|_id|url)$&quot;.</span>
+<span class="sd">        redact_hash (bool, optional): Whether to redact values with the string</span>
+<span class="sd">            &quot;REDACTED&quot; or a hash of the value. Default: False.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        OrderedDict: Formatted config.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">def</span> <span class="nf">redact</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">redact</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">as_hash</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">as_hash</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;hash-&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">hash</span><span class="p">(</span><span class="n">value</span><span class="p">))</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="s1">&#39;REDACTED&#39;</span>
 
     <span class="k">def</span> <span class="nf">predicate</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;(_key|_id|url)$&#39;</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">redact_regex</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="n">config</span> <span class="o">=</span> <span class="n">rpb</span><span class="o">.</span><span class="n">BlobETL</span><span class="p">(</span><span class="n">config</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">value_setter</span><span class="o">=</span><span class="n">redact</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">rpb</span><span class="o">.</span><span class="n">BlobETL</span><span class="p">(</span><span class="n">config</span><span class="p">)</span> \
+        <span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">value_setter</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">redact</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">redact_hash</span><span class="p">))</span> \
+        <span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
     <span class="n">output</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
     <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s1">&#39;ingress_directory&#39;</span><span class="p">,</span>
@@ -408,10 +418,12 @@
         <span class="s1">&#39;include_regex&#39;</span><span class="p">,</span>
         <span class="s1">&#39;exclude_regex&#39;</span><span class="p">,</span>
         <span class="s1">&#39;write_mode&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;dask_enabled&#39;</span><span class="p">,</span>
         <span class="s1">&#39;dask_workers&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;workflow&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;dask_cluster_type&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;redact_regex&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;redact_hash&#39;</span><span class="p">,</span>
         <span class="s1">&#39;specification_files&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;workflow&#39;</span><span class="p">,</span>
         <span class="s1">&#39;exporters&#39;</span><span class="p">,</span>
         <span class="s1">&#39;webhooks&#39;</span><span class="p">,</span>
     <span class="p">]</span>

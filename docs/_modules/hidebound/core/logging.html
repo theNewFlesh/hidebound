@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.23.0
+                0.27.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -154,7 +154,7 @@
                     <span class="n">message</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39; - </span><span class="si">{</span><span class="n">orig</span><span class="si">}</span><span class="s1">&#39;</span>
 
                 <span class="n">log</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-                    <span class="n">args</span><span class="o">=</span><span class="n">record</span><span class="o">.</span><span class="n">args</span><span class="p">,</span>
+                    <span class="n">args</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">record</span><span class="o">.</span><span class="n">args</span><span class="p">)),</span>
                     <span class="n">created</span><span class="o">=</span><span class="n">record</span><span class="o">.</span><span class="n">created</span><span class="p">,</span>
                     <span class="n">exc_info</span><span class="o">=</span><span class="n">record</span><span class="o">.</span><span class="n">exc_info</span><span class="p">,</span>
                     <span class="n">exc_text</span><span class="o">=</span><span class="n">record</span><span class="o">.</span><span class="n">exc_text</span><span class="p">,</span>

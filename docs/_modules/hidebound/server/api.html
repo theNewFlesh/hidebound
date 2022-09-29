@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.25.0
+                0.27.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -242,7 +242,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">params</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
             <span class="n">group_by_asset</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;group_by_asset&#39;</span><span class="p">]</span>
-            <span class="k">assert</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">group_by_asset</span><span class="p">,</span> <span class="nb">bool</span><span class="p">))</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">group_by_asset</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span>
         <span class="k">except</span> <span class="p">(</span><span class="n">JSONDecodeError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">,</span> <span class="ne">AssertionError</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">hst</span><span class="o">.</span><span class="n">get_read_error</span><span class="p">()</span>
 
@@ -392,7 +392,7 @@
         <span class="n">query</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;query&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="s1">&#39;group_by_asset&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="n">group_by_asset</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;group_by_asset&#39;</span><span class="p">]</span>
-            <span class="k">assert</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">group_by_asset</span><span class="p">,</span> <span class="nb">bool</span><span class="p">))</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">group_by_asset</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span>
     <span class="k">except</span> <span class="p">(</span><span class="n">JSONDecodeError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">,</span> <span class="ne">AssertionError</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">hst</span><span class="o">.</span><span class="n">get_search_error</span><span class="p">()</span>
 

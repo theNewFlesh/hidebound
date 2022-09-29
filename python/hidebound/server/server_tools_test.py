@@ -130,7 +130,7 @@ ZV9yZWdleCI6ICJcXC5EU19TdG9yZXx5b3VyLW1vbSIsCiAgICAid3JpdGVfbW9kZSI6ICJjb3B5Igp\
             self.assertEqual(result, expected)
 
 
-def test_request(env, extension, config, client):
+def test_request(env, extension, config, flask_client):
     store = {}
     url = 'http://127.0.0.1/api/initialize'
     params = dict(
@@ -138,24 +138,24 @@ def test_request(env, extension, config, client):
         staging_directory=config['staging_directory'],
         specification_files=config['specification_files'],
     )
-    result = hst.request(store, url, params, client)
+    result = hst.request(store, url, params, flask_client)
     assert result == {'message': 'Database initialized.'}
     assert store == dict(ready=True)
 
 
-def test_request_error(env, extension, config, client):
+def test_request_error(env, extension, config, flask_client):
     store = {}
     url = 'http://127.0.0.1/api/initialize'
     params = dict(foo='bar')
-    result = hst.request(store, url, params, client)
+    result = hst.request(store, url, params, flask_client)
     assert store['content'] == result
     assert store['content']['code'] == 500
 
 
-def test_search(env, extension, config, client):
+def test_search(env, extension, config, flask_client):
     store = {}
     query = 'SELECT * FROM data'
-    result = hst.search(store, query, False, client)
+    result = hst.search(store, query, False, flask_client)
     assert 'content' in result.keys()
     assert result['query'] == query
     assert result['ready'] is True

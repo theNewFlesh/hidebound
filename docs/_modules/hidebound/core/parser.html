@@ -1,76 +1,35 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>hidebound.core.parser &mdash; hidebound  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
-    
+    <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../../index.html" class="icon icon-home"> hidebound
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                0.10.5
+                0.27.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -78,19 +37,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption"><span class="caption-text">Documentation</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#installation">Installation</a></li>
@@ -100,8 +48,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#naming-convention">Naming Convention</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#project-structure">Project Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#application">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#configuration">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#specification">Specification</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Python API</span></p>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../core.html">core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../exporters.html">exporters</a></li>
@@ -109,69 +59,30 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">hidebound</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="../../index.html">Module code</a> &raquo;</li>
-        
       <li>hidebound.core.parser</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <h1>Source code for hidebound.core.parser</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
 
@@ -289,59 +200,60 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            dict: Grammar.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">project</span> <span class="o">=</span> <span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[a-z]{3,4}\d\d?\d?\d?&#39;</span><span class="p">)</span>\
-            <span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;project&#39;</span><span class="p">)</span>\
+        <span class="n">project</span> <span class="o">=</span> <span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[a-z]{3,4}\d\d?\d?\d?&#39;</span><span class="p">)</span> \
+            <span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;project&#39;</span><span class="p">)</span> \
             <span class="o">.</span><span class="n">setFailAction</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">_raise_field_error</span><span class="p">(</span><span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="s1">&#39;token&#39;</span><span class="p">))</span>
 
-        <span class="n">specification</span> <span class="o">=</span> <span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[a-z]{3,4}\d\d\d&#39;</span><span class="p">)</span>\
-            <span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;specification&#39;</span><span class="p">)</span>\
+        <span class="n">specification</span> <span class="o">=</span> <span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[a-z]{3,4}\d\d\d&#39;</span><span class="p">)</span> \
+            <span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;specification&#39;</span><span class="p">)</span> \
             <span class="o">.</span><span class="n">setFailAction</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">_raise_field_error</span><span class="p">(</span><span class="s1">&#39;specification&#39;</span><span class="p">,</span> <span class="s1">&#39;token&#39;</span><span class="p">))</span>
 
-        <span class="n">descriptor</span> <span class="o">=</span> <span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[a-z0-9][a-z0-9-]*&#39;</span><span class="p">)</span>\
-            <span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;descriptor&#39;</span><span class="p">)</span>\
+        <span class="n">descriptor</span> <span class="o">=</span> <span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[a-z0-9][a-z0-9-]*&#39;</span><span class="p">)</span> \
+            <span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;descriptor&#39;</span><span class="p">)</span> \
             <span class="o">.</span><span class="n">setFailAction</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">_raise_field_error</span><span class="p">(</span><span class="s1">&#39;descriptor&#39;</span><span class="p">,</span> <span class="s1">&#39;token&#39;</span><span class="p">))</span>
 
-        <span class="n">version</span> <span class="o">=</span> <span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\d{&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">VERSION_PADDING</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span><span class="p">)</span>\
-            <span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>\
-            <span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;version&#39;</span><span class="p">)</span>\
+        <span class="n">version</span> <span class="o">=</span> <span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\d{&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">VERSION_PADDING</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span><span class="p">)</span> \
+            <span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> \
+            <span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;version&#39;</span><span class="p">)</span> \
             <span class="o">.</span><span class="n">setFailAction</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">_raise_field_error</span><span class="p">(</span><span class="s1">&#39;version&#39;</span><span class="p">,</span> <span class="s1">&#39;token&#39;</span><span class="p">))</span>
 
-        <span class="n">coord</span> <span class="o">=</span> <span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\d{&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">COORDINATE_PADDING</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span><span class="p">)</span>\
+        <span class="n">coord</span> <span class="o">=</span> <span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\d{&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">COORDINATE_PADDING</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span><span class="p">)</span> \
             <span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
         <span class="n">t_sep</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">TOKEN_SEPARATOR</span><span class="p">)</span>
-        <span class="n">coordinate</span> <span class="o">=</span> <span class="n">Group</span><span class="p">(</span><span class="n">coord</span> <span class="o">+</span> <span class="n">Optional</span><span class="p">(</span><span class="n">t_sep</span> <span class="o">+</span> <span class="n">coord</span><span class="p">)</span> <span class="o">+</span> <span class="n">Optional</span><span class="p">(</span><span class="n">t_sep</span> <span class="o">+</span> <span class="n">coord</span><span class="p">))</span>\
-            <span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;coordinate&#39;</span><span class="p">)</span>\
+        <span class="n">opt_coord</span> <span class="o">=</span> <span class="n">Optional</span><span class="p">(</span><span class="n">t_sep</span> <span class="o">+</span> <span class="n">coord</span><span class="p">)</span>
+        <span class="n">coordinate</span> <span class="o">=</span> <span class="n">Group</span><span class="p">(</span><span class="n">coord</span> <span class="o">+</span> <span class="n">opt_coord</span> <span class="o">+</span> <span class="n">opt_coord</span><span class="p">)</span> \
+            <span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;coordinate&#39;</span><span class="p">)</span> \
             <span class="o">.</span><span class="n">setFailAction</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">_raise_field_error</span><span class="p">(</span><span class="s1">&#39;coordinate&#39;</span><span class="p">,</span> <span class="s1">&#39;token&#39;</span><span class="p">))</span>
 
-        <span class="n">frame</span> <span class="o">=</span> <span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\d{&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">FRAME_PADDING</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span><span class="p">)</span>\
-            <span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>\
-            <span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;frame&#39;</span><span class="p">)</span>\
+        <span class="n">frame</span> <span class="o">=</span> <span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\d{&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">FRAME_PADDING</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span><span class="p">)</span> \
+            <span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> \
+            <span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;frame&#39;</span><span class="p">)</span> \
             <span class="o">.</span><span class="n">setFailAction</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">_raise_field_error</span><span class="p">(</span><span class="s1">&#39;frame&#39;</span><span class="p">,</span> <span class="s1">&#39;token&#39;</span><span class="p">))</span>
 
-        <span class="n">extension</span> <span class="o">=</span> <span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[a-zA-Z0-9]+$&#39;</span><span class="p">)</span>\
-            <span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;extension&#39;</span><span class="p">)</span>\
+        <span class="n">extension</span> <span class="o">=</span> <span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[a-zA-Z0-9]+$&#39;</span><span class="p">)</span> \
+            <span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;extension&#39;</span><span class="p">)</span> \
             <span class="o">.</span><span class="n">setFailAction</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">_raise_field_error</span><span class="p">(</span><span class="s1">&#39;extension&#39;</span><span class="p">,</span> <span class="s1">&#39;token&#39;</span><span class="p">))</span>
         <span class="c1"># ----------------------------------------------------------------------</span>
 
-        <span class="n">project_indicator</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">PROJECT_INDICATOR</span><span class="p">)</span>\
+        <span class="n">project_indicator</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">PROJECT_INDICATOR</span><span class="p">)</span> \
             <span class="o">.</span><span class="n">setFailAction</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">_raise_field_error</span><span class="p">(</span><span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="s1">&#39;indicator&#39;</span><span class="p">))</span>
 
-        <span class="n">specification_indicator</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">SPECIFICATION_INDICATOR</span><span class="p">)</span>\
+        <span class="n">specification_indicator</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">SPECIFICATION_INDICATOR</span><span class="p">)</span> \
             <span class="o">.</span><span class="n">setFailAction</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">_raise_field_error</span><span class="p">(</span><span class="s1">&#39;specification&#39;</span><span class="p">,</span> <span class="s1">&#39;indicator&#39;</span><span class="p">))</span>
 
-        <span class="n">descriptor_indicator</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">DESCRIPTOR_INDICATOR</span><span class="p">)</span>\
+        <span class="n">descriptor_indicator</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">DESCRIPTOR_INDICATOR</span><span class="p">)</span> \
             <span class="o">.</span><span class="n">setFailAction</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">_raise_field_error</span><span class="p">(</span><span class="s1">&#39;descriptor&#39;</span><span class="p">,</span> <span class="s1">&#39;indicator&#39;</span><span class="p">))</span>
 
-        <span class="n">version_indicator</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">VERSION_INDICATOR</span><span class="p">)</span>\
+        <span class="n">version_indicator</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">VERSION_INDICATOR</span><span class="p">)</span> \
             <span class="o">.</span><span class="n">setFailAction</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">_raise_field_error</span><span class="p">(</span><span class="s1">&#39;version&#39;</span><span class="p">,</span> <span class="s1">&#39;indicator&#39;</span><span class="p">))</span>
 
-        <span class="n">coordinate_indicator</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">COORDINATE_INDICATOR</span><span class="p">)</span>\
+        <span class="n">coordinate_indicator</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">COORDINATE_INDICATOR</span><span class="p">)</span> \
             <span class="o">.</span><span class="n">setFailAction</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">_raise_field_error</span><span class="p">(</span><span class="s1">&#39;coordinate&#39;</span><span class="p">,</span> <span class="s1">&#39;indicator&#39;</span><span class="p">))</span>
 
-        <span class="n">frame_indicator</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">FRAME_INDICATOR</span><span class="p">)</span>\
+        <span class="n">frame_indicator</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">FRAME_INDICATOR</span><span class="p">)</span> \
             <span class="o">.</span><span class="n">setFailAction</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">_raise_field_error</span><span class="p">(</span><span class="s1">&#39;frame&#39;</span><span class="p">,</span> <span class="s1">&#39;indicator&#39;</span><span class="p">))</span>
 
-        <span class="n">extension_indicator</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">EXTENSION_INDICATOR</span><span class="p">)</span>\
+        <span class="n">extension_indicator</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">EXTENSION_INDICATOR</span><span class="p">)</span> \
             <span class="o">.</span><span class="n">setFailAction</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">_raise_field_error</span><span class="p">(</span><span class="s1">&#39;extension&#39;</span><span class="p">,</span> <span class="s1">&#39;indicator&#39;</span><span class="p">))</span>
         <span class="c1"># ----------------------------------------------------------------------</span>
 
@@ -373,8 +285,8 @@
 <span class="sd">            Group: Parser.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">parser</span> <span class="o">=</span> <span class="n">Optional</span><span class="p">(</span><span class="n">Suppress</span><span class="p">(</span><span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;.*\.|.*?&#39;</span><span class="p">)))</span> <span class="o">+</span> <span class="n">grammar</span><span class="p">[</span><span class="s1">&#39;extension_token&#39;</span><span class="p">]</span>
-        <span class="n">parser</span> <span class="o">=</span> <span class="n">Group</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">parser</span></div>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">Group</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span></div>
 
 <div class="viewcode-block" id="AssetNameParser._get_parser"><a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser._get_parser">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_parser</span><span class="p">(</span><span class="n">grammar</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
@@ -389,15 +301,15 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Group: Parser.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">parser</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;^&#39;</span><span class="p">))</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;^&#39;</span><span class="p">))</span>  <span class="c1"># type: Any</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">field</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fields</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
             <span class="n">parser</span> <span class="o">+=</span> <span class="n">grammar</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">fields</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;extension&#39;</span><span class="p">:</span>
                 <span class="n">parser</span> <span class="o">+=</span> <span class="n">grammar</span><span class="p">[</span><span class="s1">&#39;field_separator&#39;</span><span class="p">]</span>
         <span class="n">parser</span> <span class="o">+=</span> <span class="n">grammar</span><span class="p">[</span><span class="n">fields</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
         <span class="n">parser</span> <span class="o">+=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;$&#39;</span><span class="p">))</span>
-        <span class="n">parser</span> <span class="o">=</span> <span class="n">Group</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">parser</span></div>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">Group</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span></div>
 
 <div class="viewcode-block" id="AssetNameParser._get_specification_parser"><a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser._get_specification_parser">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_specification_parser</span><span class="p">():</span>
@@ -410,7 +322,7 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">grammar</span> <span class="o">=</span> <span class="n">AssetNameParser</span><span class="o">.</span><span class="n">_get_grammar</span><span class="p">()</span>
         <span class="n">indicator</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;.*?&#39;</span> <span class="o">+</span> <span class="n">AssetNameParser</span><span class="o">.</span><span class="n">SPECIFICATION_INDICATOR</span><span class="p">))</span>
-        <span class="n">parser</span> <span class="o">=</span> <span class="n">indicator</span> <span class="o">+</span> <span class="n">grammar</span><span class="p">[</span><span class="s1">&#39;specification_token&#39;</span><span class="p">]</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">indicator</span> <span class="o">+</span> <span class="n">grammar</span><span class="p">[</span><span class="s1">&#39;specification_token&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$|\D&#39;</span><span class="p">))</span>
         <span class="n">parser</span> <span class="o">=</span> <span class="n">Group</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">parser</span></div>
 
@@ -439,7 +351,7 @@
             <span class="k">raise</span> <span class="n">ParseException</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AssetNameParser.parse"><a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
-        <span class="c1"># type: (str) -&gt; Group</span>
+        <span class="c1"># type: (str) -&gt; dict</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Parse a given string.</span>
 
@@ -450,14 +362,14 @@
 <span class="sd">            ParseException: If parse fails.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Group: parser.</span>
+<span class="sd">            dict: parser.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;extension&#39;</span><span class="p">]:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extension_parser</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">text</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">asDict</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">text</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">asDict</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="AssetNameParser.to_string"><a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser.to_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dict_</span><span class="p">):</span>
-        <span class="c1"># type: (Dict) -&gt; Any</span>
+        <span class="c1"># type: (Dict) -&gt; str</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Converts a given dictionary to a string.</span>
 
@@ -498,46 +410,30 @@
 </pre></div>
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2020, Alex Braun &lt;TheNewFlesh@github.com&gt;.
-
-    </p>
+    <p>&#169; Copyright 2020, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

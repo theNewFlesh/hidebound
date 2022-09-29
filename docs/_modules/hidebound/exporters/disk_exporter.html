@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.26.1
+                0.27.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -223,12 +223,11 @@
 <span class="sd">        Args:</span>
 <span class="sd">            metadata (list[dict]): Asset metadata.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">now</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">time_string</span><span class="p">()</span>
         <span class="n">target</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_target_directory</span><span class="p">,</span>
             <span class="s1">&#39;metadata&#39;</span><span class="p">,</span>
             <span class="s1">&#39;asset-chunk&#39;</span><span class="p">,</span>
-            <span class="sa">f</span><span class="s1">&#39;hidebound-asset-chunk_</span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s1">.json&#39;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s1">&#39;hidebound-asset-chunk_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_time</span><span class="si">}</span><span class="s1">.json&#39;</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">target</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">hbt</span><span class="o">.</span><span class="n">write_json</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span></div>
@@ -241,12 +240,11 @@
 <span class="sd">        Args:</span>
 <span class="sd">            metadata (list[dict]): File metadata.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">now</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">time_string</span><span class="p">()</span>
         <span class="n">target</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_target_directory</span><span class="p">,</span>
             <span class="s1">&#39;metadata&#39;</span><span class="p">,</span>
             <span class="s1">&#39;file-chunk&#39;</span><span class="p">,</span>
-            <span class="sa">f</span><span class="s1">&#39;hidebound-file-chunk_</span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s1">.json&#39;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s1">&#39;hidebound-file-chunk_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_time</span><span class="si">}</span><span class="s1">.json&#39;</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">target</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">hbt</span><span class="o">.</span><span class="n">write_json</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span></div></div>

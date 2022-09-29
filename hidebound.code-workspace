@@ -52,7 +52,8 @@
             "env": {
                 "REPO": "${workspaceFolderBasename}",
                 "PYTHONPATH": "${PYTHONPATH}:/home/ubuntu/${workspaceFolderBasename}/python",
-                "REPO_ENV": "True"
+                "REPO_ENV": "True",
+                "NUM_CORES": "`python3.7 -c 'import os; print(os.cpu_count())'`"
             }
         },
         "tasks": [
@@ -69,7 +70,14 @@
             {
                 "label": "architecture",
                 "command": [
-                    "python3.7 -c \"import rolling_pin.repo_etl as rpo; rpo.write_repo_architecture('/home/ubuntu/$REPO/python', 'docs/architecture.svg', exclude_regex='test|mock', orient='lr')\""
+                    "python3.7 -c ",
+                        "\"import rolling_pin.repo_etl as rpo;",
+                        "rpo.write_repo_architecture(",
+                            "'/home/ubuntu/$REPO/python',",
+                            "'docs/architecture.svg',",
+                            "exclude_regex='test|mock',",
+                            "orient='lr'",
+                        ")\""
                 ],
                 "type": "shell"
             },
@@ -77,7 +85,25 @@
                 "label": "coverage",
                 "command": [
                     "mkdir -p docs &&",
-                    "pytest python -c docker/pytest.ini --cov=python --cov-config=docker/pytest.ini --cov-report=html:docs/htmlcov --headless"
+                    "pytest",
+                        "-c docker/pytest.ini",
+                        "--headless",
+                        "--numprocesses `python3.7 -c 'import os; print(os.cpu_count())'`",
+                        "--cov=python",
+                        "--cov-config=docker/pytest.ini",
+                        "--cov-report=html:docs/htmlcov",
+                        "--ignore python/hidebound/server/api_test.py",
+                        "python &&",
+                    "pytest",
+                        "-c docker/pytest.ini",
+                        "--headless",
+                        "--numprocesses `python3.7 -c 'import os; print(os.cpu_count())'`",
+                        "--cov=python",
+                        "--cov-config=docker/pytest.ini",
+                        "--cov-report=html:docs/htmlcov",
+                        "--ignore python/hidebound/server/api_test.py",
+                        "--cov-append",
+                        "python/hidebound/server/api_test.py"
                 ],
                 "type": "shell"
             },
@@ -85,7 +111,9 @@
                 "label": "docs",
                 "command": [
                     "mkdir -p docs &&",
-                    "pandoc README.md -o sphinx/intro.rst --from markdown-yaml_metadata_block &&",
+                    "pandoc README.md ",
+                        "-o sphinx/intro.rst",
+                        "--from markdown-yaml_metadata_block &&",
                     "sphinx-build sphinx docs &&",
                     "cp sphinx/style.css docs/_static/style.css &&",
                     "touch docs/.nojekyll &&",
@@ -97,7 +125,14 @@
             },
             {
                 "label": "fast-test",
-                "command": "SKIP_SLOW_TESTS=true pytest python -c docker/pytest.ini --headless",
+                "command": [
+                    "SKIP_SLOW_TESTS=true",
+                    "pytest",
+                        "-c docker/pytest.ini",
+                        "--headless",
+                        "--numprocesses `python3.7 -c 'import os; print(os.cpu_count())'`",
+                        "python"
+                ],
                 "type": "shell"
             },
             {
@@ -129,7 +164,11 @@
             {
                 "label": "metrics",
                 "command": [
-                    "python3.7 -c \"import rolling_pin.repo_etl as rpo; rpo.write_repo_plots_and_tables('python', 'docs/plots.html', 'docs')\""
+                    "python3.7 -c ",
+                        "\"import rolling_pin.repo_etl as rpo;",
+                        "rpo.write_repo_plots_and_tables(",
+                            "'python', 'docs/plots.html', 'docs'",
+                        ")\""
                 ],
                 "type": "shell"
             },
@@ -146,8 +185,12 @@
                     "cp docker/prod_requirements.txt /tmp/$REPO/ &&",
                     "cp -R pip/* /tmp/$REPO/ &&",
                     "cp -R templates /tmp/$REPO/$REPO &&",
-                    "find /tmp/$REPO | grep -E '__pycache__|flask_monitor|cli.py' | parallel 'rm -rf {}' &&",
-                    "find /tmp/$REPO -type f | grep __init__.py | parallel 'rm -rf {}; touch {}'"
+                    "find /tmp/$REPO",
+                        "| grep -E '__pycache__|flask_monitor|cli.py'",
+                        "| parallel 'rm -rf {}' &&",
+                    "find /tmp/$REPO -type f",
+                        "| grep __init__.py",
+                        "| parallel 'rm -rf {}; touch {}'"
                 ],
                 "type": "shell"
             },
@@ -155,7 +198,9 @@
                 "label": "package-repo",
                 "command": [
                     "cd /tmp/$REPO &&",
-                    "find /tmp/$REPO | grep -E '.*test.*\\.py$|mock.*\\.py$|__pycache__' | parallel 'rm -rf {}'",
+                    "find /tmp/$REPO",
+                        "| grep -E '.*test.*\\.py$|mock.*\\.py$|__pycache__'",
+                        "| parallel 'rm -rf {}'",
                 ],
                 "dependsOrder": "sequence",
                 "dependsOn": [
@@ -178,7 +223,10 @@
             },
             {
                 "label": "publish",
-                "command": "unset REPO_ENV && cd /tmp/$REPO && twine upload dist/* && rm -rf /tmp/$REPO",
+                "command": [
+                    "unset REPO_ENV &&",
+                    "cd /tmp/$REPO && twine upload dist/* && rm -rf /tmp/$REPO"
+                ],
                 "dependsOrder": "sequence",
                 "dependsOn": [
                     "tox",
@@ -201,7 +249,13 @@
             },
             {
                 "label": "test",
-                "command": "pytest python -c docker/pytest.ini --headless",
+                "command": [
+                    "pytest", 
+                        "-c docker/pytest.ini",
+                        "--headless",
+                        "--numprocesses `python3.7 -c 'import os; print(os.cpu_count())'`",
+                        "python"
+                ],
                 "type": "shell"
             },
             {

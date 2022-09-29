@@ -31,7 +31,7 @@
             <a href="index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.26.1
+                0.27.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -727,8 +727,8 @@ in the database</p></li>
 <li><p>exclude_regex - filepaths in the root that match this are excluded
 from the database</p></li>
 <li><p>write_mode - whether to copy or move files from root to staging</p></li>
-<li><p>dask_enabled - whether to enable Dask distributed computing</p></li>
 <li><p>dask_workers - number of Dask partitions to use</p></li>
+<li><p>dask_cluster_type - type of Dask cluster to use</p></li>
 <li><p>redact_regex - regular expression which matches config keys whose
 valuse are to be redacted</p></li>
 <li><p>redact_hash - whether to redact config values with “REDACTED” or a
@@ -759,7 +759,7 @@ config file.</p>
 <colgroup>
 <col style="width: 40%" />
 <col style="width: 11%" />
-<col style="width: 48%" />
+<col style="width: 49%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Variable</p></th>
@@ -792,13 +792,13 @@ config file.</p>
 <td><p>str</p></td>
 <td><p>write_mode parameter of config</p></td>
 </tr>
-<tr class="row-even"><td><p>HIDEBOUND_DASK_ENABLED</p></td>
-<td><p>str</p></td>
-<td><p>dask_enabled parameter of config</p></td>
-</tr>
-<tr class="row-odd"><td><p>HIDEBOUND_DASK_WORKERS</p></td>
+<tr class="row-even"><td><p>HIDEBOUND_DASK_WORKERS</p></td>
 <td><p>int</p></td>
 <td><p>dask_workers parameter of config</p></td>
+</tr>
+<tr class="row-odd"><td><p>HIDEBOUND_DASK_CLUSTER_TYPE</p></td>
+<td><p>str</p></td>
+<td><p>dask_cluster_type parameter of config</p></td>
 </tr>
 <tr class="row-even"><td><p>HIDEBOUND_REDACT_REGEX</p></td>
 <td><p>str</p></td>
@@ -834,8 +834,9 @@ config file.</p>
 <span class="nt">exclude_regex</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;\\.DS_Store&quot;</span><span class="w">                                 </span><span class="c1"># exclude files that match</span><span class="w"></span>
 <span class="nt">write_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">copy</span><span class="w">                                             </span><span class="c1"># copy files from root to staging</span><span class="w"></span>
 <span class="w">                                                             </span><span class="c1"># options: copy, move</span><span class="w"></span>
-<span class="nt">dask_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                                           </span><span class="c1"># enable Dask distributed computing</span><span class="w"></span>
 <span class="nt">dask_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span><span class="w">                                             </span><span class="c1"># number of Dask partitions to use</span><span class="w"></span>
+<span class="nt">dask_cluster_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">local</span><span class="w">                                     </span><span class="c1"># type of Dask cluster</span><span class="w"></span>
+<span class="w">                                                             </span><span class="c1"># options: local</span><span class="w"></span>
 <span class="nt">redact_regex</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;(_key|_id|url)$&quot;</span><span class="w">                              </span><span class="c1"># regex matched config keys to redact</span><span class="w"></span>
 <span class="nt">redact_hash</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                                            </span><span class="c1"># hash redacted values</span><span class="w"></span>
 <span class="nt">workflow</span><span class="p">:</span><span class="w">                                                    </span><span class="c1"># workflow steps</span><span class="w"></span>

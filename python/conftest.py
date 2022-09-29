@@ -2,6 +2,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 import json
 import os
+import time
 
 import flask
 import lunchbox.tools as lbt
@@ -9,8 +10,12 @@ import pytest
 import yaml
 
 from hidebound.core.database_test_base import *  # noqa: F403 F401
+import hidebound.server.app as application
 import hidebound.server.extensions as ext
 # ------------------------------------------------------------------------------
+
+
+DELAY = 1
 
 
 @pytest.fixture()
@@ -37,28 +42,35 @@ def env(config):
 
 @pytest.fixture()
 def app():
+    yield application.APP
+
+
+@pytest.fixture()
+def app_client(app):
+    yield app.server.test_client()
+
+
+@pytest.fixture()
+def flask_app():
     context = flask.Flask(__name__).app_context()
     context.push()
     app = context.app
     app.config['TESTING'] = True
-
     yield app
-
     context.pop()
 
 
 @pytest.fixture()
-def client(app):
-    # set instance members
-    client = app.test_client()
-    yield client
+def flask_client(flask_app):
+    yield flask_app.test_client()
 
 
 @pytest.fixture()
-def extension(app, make_dirs):
-    app.config['TESTING'] = False
-    ext.swagger.init_app(app)
-    ext.hidebound.init_app(app)
+def extension(flask_app, make_dirs):
+    flask_app.config['TESTING'] = False
+    ext.swagger.init_app(flask_app)
+    ext.hidebound.init_app(flask_app)
+    ext.hidebound.database._testing = True
     yield ext.hidebound
 
 
@@ -96,7 +108,7 @@ def config(temp_dir):
         include_regex='',
         exclude_regex=r'\.DS_Store',
         write_mode='copy',
-        dask_workers=3,
+        dask_workers=2,
         dask_cluster_type='local',
         redact_regex='(_key|_id|url)$',
         redact_hash=True,
@@ -142,3 +154,29 @@ def config_json_file(temp_dir, config):
 
     os.environ['HIDEBOUND_CONFIG_FILEPATH'] = filepath
     return filepath
+
+
+@pytest.fixture()
+def api_setup(env, extension):
+    return dict(
+        env=env,
+        extension=extension,
+    )
+
+
+@pytest.fixture()
+def api_update(flask_client):
+    response = flask_client.post('/api/update')
+    time.sleep(DELAY)
+    yield response
+
+
+@pytest.fixture()
+def app_setup(make_dirs, make_files, spec_file, env, app):
+    yield dict(
+        make_dirs=make_dirs,
+        make_files=make_files,
+        spec_file=spec_file,
+        env=env,
+        app=app,
+    )

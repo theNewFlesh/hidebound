@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.26.1
+                0.27.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -185,9 +185,9 @@
 <span class="sd">            Default: &#39;\.DS_Store&#39;.</span>
 <span class="sd">        write_mode (str, optional): How assets will be extracted to</span>
 <span class="sd">            hidebound/content directory. Default: copy.</span>
-<span class="sd">        dask_enabled (bool, optional): Whether Dask is enabled. Default: False.</span>
 <span class="sd">        dask_workers (int, optional): Number of Dask worker to use if enabled.</span>
 <span class="sd">            Default: 8.</span>
+<span class="sd">        dask_cluster_type (str, optional): Dask cluster type. Default: local.</span>
 <span class="sd">        workflow (list[str], optional): Ordered steps of workflow.  Default:</span>
 <span class="sd">            [&#39;delete&#39;, &#39;update&#39;, &#39;create&#39;, &#39;export&#39;].</span>
 <span class="sd">        redact_regex (str, optional): Regex pattern matched to config keys.</span>
@@ -214,9 +214,13 @@
         <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_in</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;copy&#39;</span><span class="p">,</span> <span class="s1">&#39;move&#39;</span><span class="p">])],</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;copy&quot;</span><span class="p">,</span>
     <span class="p">)</span>  <span class="c1"># type: StringType</span>
-    <span class="n">dask_enabled</span> <span class="o">=</span> <span class="n">BooleanType</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: BooleanType</span>
     <span class="n">dask_workers</span> <span class="o">=</span> <span class="n">IntType</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_gt</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span>
+    <span class="p">)</span>  <span class="c1"># type: IntType</span>
+    <span class="n">dask_cluster_type</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;local&#39;</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_in</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;local&#39;</span><span class="p">])],</span>
     <span class="p">)</span>  <span class="c1"># type: IntType</span>
     <span class="n">workflow</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
         <span class="n">StringType</span><span class="p">(),</span>

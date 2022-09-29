@@ -8,7 +8,10 @@ import os
 import shutil
 import sys
 
+from lunchbox.enforce import Enforce
 from pandas import DataFrame
+from requests.exceptions import ConnectionError
+from requests.models import Response
 import dask.dataframe as dd
 import dask.distributed as ddist
 import jsoncomment as jsonc
@@ -28,6 +31,61 @@ from hidebound.core.logging import ProgressLogger
 # ------------------------------------------------------------------------------
 
 
+class DaskConnection:
+    def __init__(self, cluster_type, num_workers):
+        # type: (str, int) -> None
+        '''
+        Instantiates a DaskConnection.
+
+        Args:
+            cluster_type (str): Dask cluster type. Options include: local.
+            num_workers (int): Number of Dask workers.
+
+        Raises:
+            EnforceError: If cluster_type is illegal.
+            EnforceError: If num_workers is less than 1.
+        '''
+        msg = 'Illegal cluster type: {a}. Legal cluster types: {b}.'
+        Enforce(cluster_type, 'in', ['local'], message=msg)
+
+        msg = 'num_workers must be greater than 0. Given value: {a}.'
+        Enforce(num_workers, '>=', 1, message=msg)
+        # ----------------------------------------------------------------------
+
+        self.cluster_type = cluster_type
+        self.num_workers = num_workers
+        self.cluster = None
+
+    def __enter__(self):
+        # type: () -> DaskConnection
+        '''
+        Creates Dask cluster and assigns it to self.cluster.
+
+        Returns:
+            DaskConnection: self.
+        '''
+        if self.cluster_type == 'local':
+            self.cluster = ddist.LocalCluster(
+                processes=True,
+                n_workers=self.num_workers,
+                dashboard_address='0.0.0.0:8087',
+            )
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        # type: (Any, Any, Any, Any) -> None
+        '''
+        Closes Dask cluster.
+
+        Args:
+            exc_type (object): Required by python.
+            exc_val (object): Required by python.
+            exc_tb (object): Required by python.
+        '''
+        self.cluster.close()
+
+
+# ------------------------------------------------------------------------------
 class Database:
     '''
     Generates a DataFrame using the files within a given directory as rows.
@@ -126,7 +184,7 @@ class Database:
         webhooks=[],                  # type: List[Dict[str, Any]]
         dask_workers=8,               # type: int
         dask_cluster_type='local',    # type: str
-        testing=False,              # type: bool
+        testing=False,                # type: bool
     ):
         # type: (...) -> None
         r'''
@@ -215,18 +273,11 @@ class Database:
         self._webhooks = webhooks
         self._dask_workers = dask_workers
         self._dask_cluster_type = dask_cluster_type
+        self._testing = testing
         self.data = None
 
         # needed for testing
         self.__exporter_lut = None
-
-        # setup dask cluster
-        if not testing:
-            if dask_cluster_type == 'local':
-                self._dask_cluster = ddist.LocalCluster(
-                    n_workers=dask_workers,
-                    dashboard_address='0.0.0.0:8087',
-                )
 
         self._logger.info('Database initialized', step=1, total=1)
 
@@ -428,24 +479,25 @@ class Database:
         self._logger.info(f'update: parsed {self._root}', step=1, total=total)
 
         if len(data) > 0:
-            data = dd.from_pandas(data, npartitions=self._dask_workers)
-            data = db_tools.add_specification(data, self._specifications)
-            data = db_tools.validate_filepath(data)
-            data = db_tools.add_file_traits(data)
-            data = db_tools.add_relative_path(data, 'filepath', self._root)
-            data = db_tools.add_asset_name(data)
-            data = db_tools.add_asset_path(data)
-            data = db_tools.add_relative_path(data, 'asset_path', self._root)
-            data = db_tools.add_asset_type(data)
-            data = db_tools.add_asset_traits(data)
-            data = db_tools.validate_assets(data)
-            data = data.compute()
-        self._logger.info('update: generate', step=2, total=total)
+            with DaskConnection(self._dask_cluster_type, self._dask_workers):
+                data = dd.from_pandas(data, npartitions=self._dask_workers)
+                data = db_tools.add_specification(data, self._specifications)
+                data = db_tools.validate_filepath(data)
+                data = db_tools.add_file_traits(data)
+                data = db_tools.add_relative_path(data, 'filepath', self._root)
+                data = db_tools.add_asset_name(data)
+                data = db_tools.add_asset_path(data)
+                data = db_tools.add_relative_path(data, 'asset_path', self._root)
+                data = db_tools.add_asset_type(data)
+                data = db_tools.add_asset_traits(data)
+                data = db_tools.validate_assets(data)
+                data = data.compute()
+            self._logger.info('update: generate', step=2, total=total)
 
         data = db_tools.cleanup(data)
+        self._logger.info('update: cleanup', step=3, total=total)
         self.data = data
 
-        self._logger.info('update: cleanup', step=3, total=total)
         self._logger.info('update: complete', step=3, total=total)
         return self
 
@@ -499,8 +551,20 @@ class Database:
             if 'timeout' in hook:
                 kwargs['timeout'] = hook['timeout']
 
-            method = getattr(requests, method)
-            response = method(url, headers=headers, **kwargs)
+            # test response
+            response = Response()
+            response.status_code = 200
+            response._content = b'Webhook called.'
+
+            if not self._testing:
+                method = getattr(requests, method)
+                try:
+                    response = method(url, headers=headers, **kwargs)
+                except ConnectionError as e:
+                    response = Response()
+                    response.status_code = 403
+                    response._content = str(e).encode('utf-8')
+
             self._logger.info(
                 f'call_webhooks: {url} {response.text}',
                 step=i + 1,

@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.26.1
+                0.27.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -94,9 +94,12 @@
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
+<span class="kn">from</span> <span class="nn">lunchbox.enforce</span> <span class="kn">import</span> <span class="n">Enforce</span>
 <span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
+<span class="kn">from</span> <span class="nn">requests.exceptions</span> <span class="kn">import</span> <span class="ne">ConnectionError</span>
+<span class="kn">from</span> <span class="nn">requests.models</span> <span class="kn">import</span> <span class="n">Response</span>
 <span class="kn">import</span> <span class="nn">dask.dataframe</span> <span class="k">as</span> <span class="nn">dd</span>
-<span class="kn">import</span> <span class="nn">dask.distributed</span> <span class="k">as</span> <span class="nn">dist</span>
+<span class="kn">import</span> <span class="nn">dask.distributed</span> <span class="k">as</span> <span class="nn">ddist</span>
 <span class="kn">import</span> <span class="nn">jsoncomment</span> <span class="k">as</span> <span class="nn">jsonc</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandasql</span>
@@ -114,6 +117,61 @@
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
+<div class="viewcode-block" id="DaskConnection"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.DaskConnection">[docs]</a><span class="k">class</span> <span class="nc">DaskConnection</span><span class="p">:</span>
+<div class="viewcode-block" id="DaskConnection.__init__"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.DaskConnection.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cluster_type</span><span class="p">,</span> <span class="n">num_workers</span><span class="p">):</span>
+        <span class="c1"># type: (str, int) -&gt; None</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Instantiates a DaskConnection.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            cluster_type (str): Dask cluster type. Options include: local.</span>
+<span class="sd">            num_workers (int): Number of Dask workers.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            EnforceError: If cluster_type is illegal.</span>
+<span class="sd">            EnforceError: If num_workers is less than 1.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Illegal cluster type: </span><span class="si">{a}</span><span class="s1">. Legal cluster types: </span><span class="si">{b}</span><span class="s1">.&#39;</span>
+        <span class="n">Enforce</span><span class="p">(</span><span class="n">cluster_type</span><span class="p">,</span> <span class="s1">&#39;in&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;local&#39;</span><span class="p">],</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;num_workers must be greater than 0. Given value: </span><span class="si">{a}</span><span class="s1">.&#39;</span>
+        <span class="n">Enforce</span><span class="p">(</span><span class="n">num_workers</span><span class="p">,</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+        <span class="c1"># ----------------------------------------------------------------------</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cluster_type</span> <span class="o">=</span> <span class="n">cluster_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_workers</span> <span class="o">=</span> <span class="n">num_workers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cluster</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; DaskConnection</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Creates Dask cluster and assigns it to self.cluster.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            DaskConnection: self.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cluster_type</span> <span class="o">==</span> <span class="s1">&#39;local&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cluster</span> <span class="o">=</span> <span class="n">ddist</span><span class="o">.</span><span class="n">LocalCluster</span><span class="p">(</span>
+                <span class="n">processes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">n_workers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_workers</span><span class="p">,</span>
+                <span class="n">dashboard_address</span><span class="o">=</span><span class="s1">&#39;0.0.0.0:8087&#39;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
+        <span class="c1"># type: (Any, Any, Any, Any) -&gt; None</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Closes Dask cluster.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            exc_type (object): Required by python.</span>
+<span class="sd">            exc_val (object): Required by python.</span>
+<span class="sd">            exc_tb (object): Required by python.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<span class="c1"># ------------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="Database"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database">[docs]</a><span class="k">class</span> <span class="nc">Database</span><span class="p">:</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Generates a DataFrame using the files within a given directory as rows.</span>
@@ -135,6 +193,8 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># validate config and populate with default values</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">testing</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;testing&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;testing&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">to_primitive</span><span class="p">()</span>
@@ -162,8 +222,8 @@
             <span class="n">write_mode</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;write_mode&#39;</span><span class="p">],</span>
             <span class="n">exporters</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;exporters&#39;</span><span class="p">],</span>
             <span class="n">webhooks</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;webhooks&#39;</span><span class="p">],</span>
-            <span class="n">dask_enabled</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;dask_enabled&#39;</span><span class="p">],</span>
             <span class="n">dask_workers</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;dask_workers&#39;</span><span class="p">],</span>
+            <span class="n">testing</span><span class="o">=</span><span class="n">testing</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Database.from_json"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.from_json">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -208,8 +268,9 @@
         <span class="n">write_mode</span><span class="o">=</span><span class="s1">&#39;copy&#39;</span><span class="p">,</span>            <span class="c1"># type: str</span>
         <span class="n">exporters</span><span class="o">=</span><span class="p">[],</span>                 <span class="c1"># type: List[Dict[str, Any]]</span>
         <span class="n">webhooks</span><span class="o">=</span><span class="p">[],</span>                  <span class="c1"># type: List[Dict[str, Any]]</span>
-        <span class="n">dask_enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>           <span class="c1"># type: bool</span>
         <span class="n">dask_workers</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>               <span class="c1"># type: int</span>
+        <span class="n">dask_cluster_type</span><span class="o">=</span><span class="s1">&#39;local&#39;</span><span class="p">,</span>    <span class="c1"># type: str</span>
+        <span class="n">testing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>                <span class="c1"># type: bool</span>
     <span class="p">):</span>
         <span class="c1"># type: (...) -&gt; None</span>
         <span class="sa">r</span><span class="sd">&#39;&#39;&#39;</span>
@@ -231,10 +292,12 @@
 <span class="sd">                Default: [].</span>
 <span class="sd">            webhooks (list[dict], optional): List of webhooks to call.</span>
 <span class="sd">                Default: [].</span>
-<span class="sd">            dask_enabled (bool, optional): Whether to enable Dask.</span>
 <span class="sd">                Default: False.</span>
 <span class="sd">            dask_workers (int, optional): Number of partitions to use for</span>
 <span class="sd">                Dask. Must be 1 or greater. Default: 8.</span>
+<span class="sd">            dask_cluster_type: (str, optional): Dask cluster type:</span>
+<span class="sd">                Default: local.</span>
+<span class="sd">            testing: (bool, optional): Used for testing. Default: False.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            TypeError: If specifications contains a non-SpecificationBase</span>
@@ -294,8 +357,9 @@
             <span class="c1"># type: Dict[str, SpecificationBase]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_exporters</span> <span class="o">=</span> <span class="n">exporters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_webhooks</span> <span class="o">=</span> <span class="n">webhooks</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_dask_enabled</span> <span class="o">=</span> <span class="n">dask_enabled</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dask_workers</span> <span class="o">=</span> <span class="n">dask_workers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dask_cluster_type</span> <span class="o">=</span> <span class="n">dask_cluster_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_testing</span> <span class="o">=</span> <span class="n">testing</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="c1"># needed for testing</span>
@@ -329,9 +393,7 @@
             <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Data not initialized. Please call update.&#39;</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
-        <span class="n">temp</span> <span class="o">=</span> <span class="n">db_tools</span><span class="o">.</span><span class="n">get_data_for_write</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_staging</span>
-        <span class="p">)</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">db_tools</span><span class="o">.</span><span class="n">get_data_for_write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_staging</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;create: get data&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">temp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span>
@@ -480,29 +542,25 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;update: parsed </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dask_enabled</span><span class="p">:</span>
-                <span class="n">cluster</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">LocalCluster</span><span class="p">(</span><span class="n">n_workers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_dask_workers</span><span class="p">)</span>
-                <span class="n">dist</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">DaskConnection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dask_cluster_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dask_workers</span><span class="p">):</span>
                 <span class="n">data</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">npartitions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_dask_workers</span><span class="p">)</span>
-
-            <span class="n">data</span> <span class="o">=</span> <span class="n">db_tools</span><span class="o">.</span><span class="n">add_specification</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_specifications</span><span class="p">)</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">db_tools</span><span class="o">.</span><span class="n">validate_filepath</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">db_tools</span><span class="o">.</span><span class="n">add_file_traits</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">db_tools</span><span class="o">.</span><span class="n">add_relative_path</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;filepath&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">db_tools</span><span class="o">.</span><span class="n">add_asset_name</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">db_tools</span><span class="o">.</span><span class="n">add_asset_path</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">db_tools</span><span class="o">.</span><span class="n">add_relative_path</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;asset_path&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">db_tools</span><span class="o">.</span><span class="n">add_asset_type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">db_tools</span><span class="o">.</span><span class="n">add_asset_traits</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">db_tools</span><span class="o">.</span><span class="n">validate_assets</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dask_enabled</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">db_tools</span><span class="o">.</span><span class="n">add_specification</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_specifications</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">db_tools</span><span class="o">.</span><span class="n">validate_filepath</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">db_tools</span><span class="o">.</span><span class="n">add_file_traits</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">db_tools</span><span class="o">.</span><span class="n">add_relative_path</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;filepath&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">db_tools</span><span class="o">.</span><span class="n">add_asset_name</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">db_tools</span><span class="o">.</span><span class="n">add_asset_path</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">db_tools</span><span class="o">.</span><span class="n">add_relative_path</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;asset_path&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">db_tools</span><span class="o">.</span><span class="n">add_asset_type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">db_tools</span><span class="o">.</span><span class="n">add_asset_traits</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">db_tools</span><span class="o">.</span><span class="n">validate_assets</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
                 <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;update: generate&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;update: generate&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="n">db_tools</span><span class="o">.</span><span class="n">cleanup</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;update: cleanup&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;update: cleanup&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;update: complete&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
@@ -556,8 +614,20 @@
             <span class="k">if</span> <span class="s1">&#39;timeout&#39;</span> <span class="ow">in</span> <span class="n">hook</span><span class="p">:</span>
                 <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;timeout&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hook</span><span class="p">[</span><span class="s1">&#39;timeout&#39;</span><span class="p">]</span>
 
-            <span class="n">method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">requests</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="n">method</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="c1"># test response</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">Response</span><span class="p">()</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">=</span> <span class="mi">200</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">_content</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;Webhook called.&#39;</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testing</span><span class="p">:</span>
+                <span class="n">method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">requests</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">response</span> <span class="o">=</span> <span class="n">method</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">ConnectionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">response</span> <span class="o">=</span> <span class="n">Response</span><span class="p">()</span>
+                    <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">=</span> <span class="mi">403</span>
+                    <span class="n">response</span><span class="o">.</span><span class="n">_content</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+
             <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s1">&#39;call_webhooks: </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
                 <span class="n">step</span><span class="o">=</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>

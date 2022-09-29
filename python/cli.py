@@ -130,6 +130,7 @@ def resolve(commands):
         repo=REPO,
         repo_=re.sub('-', '_', REPO),
         user=USER,
+        num_cores="`python3 -c 'import os; print(os.cpu_count())'`",
     )
     args = {}
     for k, v in all_.items():
@@ -266,6 +267,7 @@ def coverage():
                 --cov-config /home/ubuntu/{repo}/docker/pytest.ini
                 --cov-report html:/home/ubuntu/{repo}/docs/htmlcov
                 --headless
+                --numprocesses {num_cores}
     ''')
     return cmd
 
@@ -525,6 +527,7 @@ def fast_test_command():
                     /home/ubuntu/{repo}/python
                     -c /home/ubuntu/{repo}/docker/pytest.ini
                     --headless
+                    --numprocesses {num_cores}
         '''),
         exit_repo(),
     ]
@@ -896,6 +899,7 @@ def test_command():
                     /home/ubuntu/{repo}/python
                     -c /home/ubuntu/{repo}/docker/pytest.ini
                     --headless
+                    --numprocesses {num_cores}
         '''),
         exit_repo(),
     ]
