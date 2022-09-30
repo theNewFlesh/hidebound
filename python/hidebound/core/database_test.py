@@ -87,9 +87,7 @@ def test_from_yaml(temp_dir, make_dirs, spec_file):  # noqa: F811
 def test_init(make_dirs, make_files, specs):  # noqa: F811
     ingress, staging, _ = make_dirs
     Spec001, Spec002, _ = specs
-    Database(
-        ingress, staging, dask_workers=DASK_WORKERS, testing=False
-    )
+    Database(ingress, staging, dask_workers=DASK_WORKERS, testing=False)
     Database(
         ingress, staging, [Spec001], dask_workers=DASK_WORKERS, testing=False
     )
@@ -97,6 +95,28 @@ def test_init(make_dirs, make_files, specs):  # noqa: F811
         ingress, staging, [Spec001, Spec002], dask_workers=DASK_WORKERS,
         testing=False
     )
+
+
+def test_init_exporters(make_dirs, make_files, specs):  # noqa: F811
+    ingress, staging, _ = make_dirs
+    Spec001, _, _ = specs
+    db = Database(
+        ingress, staging, [Spec001], dask_workers=DASK_WORKERS, testing=True,
+        exporters=[
+            dict(
+                name='disk', target_directory='/tmp/foo',
+                dask_cluster_type='local', dask_workers=99
+            ),
+            dict(name='girder', api_key='api_key', root_id='root_id'),
+        ]
+    )
+    result = db._exporters[0]
+    assert result['dask_cluster_type'] == db._dask_cluster_type
+    assert result['dask_workers'] == 99
+
+    result = db._exporters[1]
+    assert result['dask_cluster_type'] == db._dask_cluster_type
+    assert result['dask_workers'] == db._dask_workers
 
 
 def test_init_bad_ingress(make_dirs, specs):  # noqa: F811

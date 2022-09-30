@@ -213,7 +213,15 @@ class Database:
         self._write_mode = write_mode
         self._specifications = {x.__name__.lower(): x for x in specifications} \
             # type: Dict[str, SpecificationBase]
+
+        # setup exporters
+        for exp in exporters:
+            exp['dask_workers'] = exp.get('dask_workers', dask_workers)
+            exp['dask_cluster_type'] = exp.get(
+                'dask_cluster_type', dask_cluster_type
+            )
         self._exporters = exporters
+
         self._webhooks = webhooks
         self._dask_workers = dask_workers
         self._dask_cluster_type = dask_cluster_type
