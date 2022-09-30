@@ -1,10 +1,13 @@
 from typing import Dict, List, Optional, Union
 
 from pathlib import Path
-from schematics import Model
-from schematics.types import ListType, StringType
 import re
 
+from schematics import Model
+from schematics.types import IntType, ListType, StringType
+import dask.dataframe as dd
+
+from hidebound.core.connection import DaskConnection
 from hidebound.core.logging import DummyLogger, ProgressLogger
 import hidebound.core.tools as hbt
 import hidebound.core.validators as vd
@@ -18,12 +21,25 @@ class ExporterConfigBase(Model):
     Attributes:
         metadata_types (list, optional): List of metadata types for export.
             Default: [asset, file, asset-chunk, file-chunk].
+        dask_workers (int, optional): Number of Dask worker to use if enabled.
+            Default: 8.
+        dask_cluster_type (str, optional): Dask cluster type. Default: local.
     '''
     metadata_types = ListType(
         StringType(validators=[vd.is_metadata_type]),
         required=True,
         default=['asset', 'file', 'asset-chunk', 'file-chunk']
     )
+    dask_workers = IntType(
+        required=False,
+        serialize_when_none=False,
+        validators=[lambda x: vd.is_gt(x, 0)]
+    )  # type: IntType
+    dask_cluster_type = StringType(
+        required=False,
+        serialize_when_none=False,
+        validators=[lambda x: vd.is_in(x, ['local'])],
+    )  # type: IntType
 
 
 class ExporterBase:

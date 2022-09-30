@@ -60,6 +60,22 @@ class ExporterConfigBaseTests(unittest.TestCase):
         with self.assertRaisesRegexp(DataError, expected):
             ExporterConfigBase(config).validate()
 
+    def test_dask_workers(self):
+        config = dict(metadata_types=['asset'], dask_workers=9)
+        ExporterConfigBase(config).validate()
+
+        config['dask_workers'] = 0
+        with self.assertRaises(DataError):
+            ExporterConfigBase(config).validate()
+
+    def test_dask_cluster_type(self):
+        config = dict(metadata_types=['asset'], dask_cluster_type='local')
+        ExporterConfigBase(config).validate()
+
+        config['dask_cluster_type'] = 'foobar'
+        with self.assertRaises(DataError):
+            ExporterConfigBase(config).validate()
+
 
 class ExporterBaseTests(unittest.TestCase):
     def create_data(self, root):
