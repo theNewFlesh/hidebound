@@ -18,3 +18,72 @@ source $ZSH/oh-my-zsh.sh
 echo 'will cite' | parallel --citation >> /dev/null 2>&1
 alias ll='ls -hlA'
 alias tree='tree -Ca'
+get_num_cores () {
+    python3.7 -c 'import os; print(os.cpu_count())';
+}
+get_test_dirs () {
+    find ~/$REPO/python -maxdepth 2 -mindepth 2 -type d \
+    | grep -vE '\/(\.|_)' \
+    | sort;
+}
+get_test_command () {
+    echo "
+        echo \"$CYAN$1$CLEAR\" &&
+        pytest \
+            -c docker/pytest.ini \
+            --headless \
+            --numprocesses `get_num_cores` \
+            $2 \
+            $1 &&
+        echo &&
+    " | sed -E 's/^ +//g' | sed -E 's/  +/ /g';
+}
+get_test_cov_command () {
+    get_test_command $1 "\
+        --cov=python \
+        --cov-config=docker/pytest.ini \
+        --cov-report=html:docs/htmlcov \
+    ";
+}
+get_test_cov_append_command () {
+    get_test_command $1 "\
+        --cov=python \
+        --cov-config=docker/pytest.ini \
+        --cov-report=html:docs/htmlcov \
+        --cov-append \
+    ";
+}
+run_tests () {
+    rm -rf /tmp/run-tests.sh;
+    touch /tmp/run-tests.sh;
+    for TEST_DIR in $(get_test_dirs)
+    do
+        get_test_command $TEST_DIR '' >> /tmp/run-tests.sh
+    done;
+    echo 'echo' >> /tmp/run-tests.sh;
+    zsh /tmp/run-tests.sh;
+}
+run_tests_fast () {
+    rm -rf /tmp/run-tests.sh;
+    touch /tmp/run-tests.sh;
+    echo 'export SKIP_SLOW_TESTS=true' >> /tmp/run-tests.sh;
+    for TEST_DIR in $(get_test_dirs)
+    do
+        get_test_command $TEST_DIR '' >> /tmp/run-tests.sh
+    done;
+    echo 'echo' >> /tmp/run-tests.sh;
+    zsh /tmp/run-tests.sh;
+}
+run_tests_coverage () {
+    rm -rf /tmp/run-tests.sh;
+    touch /tmp/run-tests.sh;
+    local FIRST=`get_test_dirs | head -n 1`;
+    local REST=`get_test_dirs | nl | grep -v 1 | awk '{print $2}'`;
+    get_test_cov_command $FIRST >> /tmp/run-tests.sh;
+    for TEST_DIR in $(echo $REST)
+    do
+        get_test_cov_append_command $TEST_DIR >> /tmp/run-tests.sh
+    done;
+    echo 'echo' >> /tmp/run-tests.sh;
+    zsh /tmp/run-tests.sh;
+}

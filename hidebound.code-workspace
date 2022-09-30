@@ -53,7 +53,6 @@
                 "REPO": "${workspaceFolderBasename}",
                 "PYTHONPATH": "${PYTHONPATH}:/home/ubuntu/${workspaceFolderBasename}/python",
                 "REPO_ENV": "True",
-                "NUM_CORES": "`python3.7 -c 'import os; print(os.cpu_count())'`"
             }
         },
         "tasks": [
@@ -83,39 +82,7 @@
             },
             {
                 "label": "coverage",
-                "command": [
-                    "mkdir -p docs &&",
-                    "export PROCS=`",
-                        "python3 -c 'import os; print(os.cpu_count())'` &&",
-                    "pytest",
-                        "-c docker/pytest.ini",
-                        "--headless",
-                        "--numprocesses $PROCS",
-                        "--cov=python",
-                        "--cov-config=docker/pytest.ini",
-                        "--cov-report=html:docs/htmlcov",
-                        "--ignore python/hidebound/server/api_test.py",
-                        "--ignore python/hidebound/exporters",
-                        "python &&",
-                    "pytest",
-                        "-c docker/pytest.ini",
-                        "--headless",
-                        "--numprocesses $PROCS",
-                        "--cov=python",
-                        "--cov-config=docker/pytest.ini",
-                        "--cov-report=html:docs/htmlcov",
-                        "--cov-append",
-                        "python/hidebound/server/api_test.py &&",
-                    "pytest",
-                        "-c docker/pytest.ini",
-                        "--headless",
-                        "--numprocesses $PROCS",
-                        "--cov=python",
-                        "--cov-config=docker/pytest.ini",
-                        "--cov-report=html:docs/htmlcov",
-                        "--cov-append",
-                        "python/hidebound/exporters"
-                ],
+                "command": "source ~/.zshrc && run_tests_coverage",
                 "type": "shell"
             },
             {
@@ -129,35 +96,13 @@
                     "cp sphinx/style.css docs/_static/style.css &&",
                     "touch docs/.nojekyll &&",
                     "mkdir -p docs/resources &&",
-
                     "cp -R resources/screenshots docs/resources/"
                 ],
                 "type": "shell"
             },
             {
                 "label": "fast-test",
-                "command": [
-                    "export PROCS=`",
-                        "python3 -c 'import os; print(os.cpu_count())'` &&",
-                    "export SKIP_SLOW_TESTS=true &&",
-                    "pytest",
-                        "-c docker/pytest.ini",
-                        "--headless",
-                        "--numprocesses $PROCS",
-                        "--ignore python/hidebound/server/api_test.py",
-                        "--ignore python/hidebound/exporters",
-                        "python &&",
-                    "pytest",
-                        "-c docker/pytest.ini",
-                        "--headless",
-                        "--numprocesses $PROCS",
-                        "python/hidebound/server/api_test.py &&",
-                    "pytest",
-                        "-c docker/pytest.ini",
-                        "--headless",
-                        "--numprocesses $PROCS",
-                        "python/hidebound/exporters"
-                ],
+                "command": "source ~/.zshrc && run_tests_fast",
                 "type": "shell"
             },
             {
@@ -274,27 +219,7 @@
             },
             {
                 "label": "test",
-                "command": [
-                    "export PROCS=`",
-                        "python3 -c 'import os; print(os.cpu_count())'` &&",
-                    "pytest",
-                        "-c docker/pytest.ini",
-                        "--headless",
-                        "--numprocesses $PROCS",
-                        "--ignore python/hidebound/server/api_test.py",
-                        "--ignore python/hidebound/exporters",
-                        "python &&",
-                    "pytest",
-                        "-c docker/pytest.ini",
-                        "--headless",
-                        "--numprocesses $PROCS",
-                        "python/hidebound/server/api_test.py &&",
-                    "pytest",
-                        "-c docker/pytest.ini",
-                        "--headless",
-                        "--numprocesses $PROCS",
-                        "python/hidebound/exporters"
-                ],
+                "command": "source ~/.zshrc && run_tests",
                 "type": "shell"
             },
             {
