@@ -31,18 +31,27 @@ class ExporterBase:
     Abstract base class for hidebound exporters.
     '''
     def __init__(
-        self, metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk']
+        self,
+        metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk'],
+        dask_workers=8,
+        dask_cluster_type='local',
     ):
-        # type: (List[str]) -> None
+        # type: (List[str], int, str) -> None
         '''
         Constructs a ExporterBase instance.
 
         Args:
             metadata_types (list[st], optional). Metadata types to be exported.
                 Default: [asset, file, asset-chunk, file-chunk].
+            dask_workers (int, optional): Number of Dask worker to use if
+                enabled. Default: 8.
+            dask_cluster_type (str, optional): Dask cluster type.
+                Default: local.
         '''
         self._metadata_types = metadata_types
         self._time = hbt.time_string()
+        self._dask_cluster_type = dask_cluster_type
+        self._dask_workers = dask_workers
 
     def _enforce_directory_structure(self, staging_dir):
         # type: (Union[str, Path]) -> None
