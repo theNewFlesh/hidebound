@@ -111,7 +111,10 @@ class ExporterBase:
         # export content
         regex = f'{staging_dir}/metadata/file/'
         mask = data.filepath.apply(lambda x: re.search(regex, x)).astype(bool)
-        data[mask].filepath.apply(hbt.read_json).apply(self._export_content)
+        content = data[mask].filepath.apply(hbt.read_json)
+        with DaskConnection(self._dask_cluster_type, self._dask_workers):
+            content = dd.from_pandas(content, npartitions=self._dask_workers)
+            content.apply(self._export_content, meta=object).compute()
         logger.info('exporter: export content', step=1, total=total)
 
         # export metadata
@@ -123,9 +126,13 @@ class ExporterBase:
         }
         for i, mtype in enumerate(self._metadata_types):
             regex = f'{staging_dir}/metadata/{mtype}/'
-            mask = data.filepath.apply(lambda x: re.search(regex, x)).astype(bool)
-            data[mask].filepath.apply(hbt.read_json).apply(lut[mtype])
-            logger.info(f'exporter: export {mtype}', step=i + 1, total=total)
+            mask = data.filepath.apply(lambda x: bool(re.search(regex, x)))
+            meta = data[mask].filepath.apply(hbt.read_json)
+            with DaskConnection(self._dask_cluster_type, self._dask_workers):
+                meta = dd.from_pandas(meta, npartitions=self._dask_workers)
+                meta.apply(lut[mtype], meta=object).compute()
+
+        logger.info(f'exporter: export {mtype}', step=i + 1, total=total)
 
     def _export_content(self, metadata):
         # type: (Dict) -> None
