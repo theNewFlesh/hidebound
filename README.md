@@ -500,6 +500,8 @@ exporters:                                                   # dict of exporter 
     metadata_types:                                          # options: asset, file, asset-chunk, file-chunk
       - asset                                                # only asset and file metadata
       - file
+    dask_workers: 8                                          # number of dask workers
+    dask_cluster_type: local                                 # dask cluster type
   - name: s3                                                 # export to s3
     access_key: ABCDEFGHIJKLMNOPQRST                         # aws access key
     secret_key: abcdefghijklmnopqrstuvwxyz1234567890abcd     # aws secret key
@@ -509,6 +511,8 @@ exporters:                                                   # dict of exporter 
       - asset                                                # drop file metadata
       - asset-chunk
       - file-chunk
+    dask_workers: 8                                          # number of dask workers
+    dask_cluster_type: local                                 # dask cluster type
   - name: girder                                             # export to girder
     api_key: eyS0nj9qPC5E7yK5l7nhGVPqDOBKPdA3EC60Rs9h        # girder api key
     root_id: 5ed735c8d8dd6242642406e5                        # root resource id
@@ -517,6 +521,8 @@ exporters:                                                   # dict of exporter 
     port: 8180                                               # girder server port
     metadata_types:                                          # options: asset, file
       - asset                                                # only asset metadata
+    dask_workers: 8                                          # number of dask workers
+    dask_cluster_type: local                                 # dask cluster type
 webhooks:                                                    # call these after export
   - url: https://hooks.slack.com/services/ABCDEFGHI/JKLMNO   # slack URL
     method: post                                             # post this to slack
