@@ -1,4 +1,5 @@
 import hidebound.core.config  # noqa F401
+import hidebound.core.connection  # noqa F401
 import hidebound.core.database  # noqa F401
 import hidebound.core.database_test_base  # noqa F401
 import hidebound.core.database_tools  # noqa F401

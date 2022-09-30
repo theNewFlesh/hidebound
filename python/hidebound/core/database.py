@@ -8,12 +8,10 @@ import os
 import shutil
 import sys
 
-from lunchbox.enforce import Enforce
 from pandas import DataFrame
 from requests.exceptions import ConnectionError
 from requests.models import Response
 import dask.dataframe as dd
-import dask.distributed as ddist
 import jsoncomment as jsonc
 import numpy as np
 import pandasql
@@ -21,71 +19,17 @@ import requests
 import yaml
 
 from hidebound.core.config import Config
+from hidebound.core.connection import DaskConnection
+from hidebound.core.logging import ProgressLogger
 from hidebound.core.specification_base import SpecificationBase
-from hidebound.exporters.girder_exporter import GirderExporter
 from hidebound.exporters.disk_exporter import DiskExporter
+from hidebound.exporters.girder_exporter import GirderExporter
 from hidebound.exporters.s3_exporter import S3Exporter
 import hidebound.core.database_tools as db_tools
 import hidebound.core.tools as hbt
-from hidebound.core.logging import ProgressLogger
 # ------------------------------------------------------------------------------
 
 
-class DaskConnection:
-    def __init__(self, cluster_type, num_workers):
-        # type: (str, int) -> None
-        '''
-        Instantiates a DaskConnection.
-
-        Args:
-            cluster_type (str): Dask cluster type. Options include: local.
-            num_workers (int): Number of Dask workers.
-
-        Raises:
-            EnforceError: If cluster_type is illegal.
-            EnforceError: If num_workers is less than 1.
-        '''
-        msg = 'Illegal cluster type: {a}. Legal cluster types: {b}.'
-        Enforce(cluster_type, 'in', ['local'], message=msg)
-
-        msg = 'num_workers must be greater than 0. Given value: {a}.'
-        Enforce(num_workers, '>=', 1, message=msg)
-        # ----------------------------------------------------------------------
-
-        self.cluster_type = cluster_type
-        self.num_workers = num_workers
-        self.cluster = None
-
-    def __enter__(self):
-        # type: () -> DaskConnection
-        '''
-        Creates Dask cluster and assigns it to self.cluster.
-
-        Returns:
-            DaskConnection: self.
-        '''
-        if self.cluster_type == 'local':
-            self.cluster = ddist.LocalCluster(
-                processes=True,
-                n_workers=self.num_workers,
-                dashboard_address='0.0.0.0:8087',
-            )
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        # type: (Any, Any, Any, Any) -> None
-        '''
-        Closes Dask cluster.
-
-        Args:
-            exc_type (object): Required by python.
-            exc_val (object): Required by python.
-            exc_tb (object): Required by python.
-        '''
-        self.cluster.close()
-
-
-# ------------------------------------------------------------------------------
 class Database:
     '''
     Generates a DataFrame using the files within a given directory as rows.
