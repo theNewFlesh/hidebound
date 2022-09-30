@@ -193,7 +193,7 @@ class DiskExporterTests(unittest.TestCase):
             self.assertEqual(result, expected)
 
             # idempotency
-            DiskExporter.from_config(config).export(staging)
+            exp.export(staging)
             result = hbt.directory_to_dataframe(target).filepath \
                 .apply(lambda x: re.sub('.*/target/', '', x)) \
                 .tolist()
