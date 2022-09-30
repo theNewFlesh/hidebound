@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.27.1
+                0.28.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -94,12 +94,10 @@
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
-<span class="kn">from</span> <span class="nn">lunchbox.enforce</span> <span class="kn">import</span> <span class="n">Enforce</span>
 <span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
 <span class="kn">from</span> <span class="nn">requests.exceptions</span> <span class="kn">import</span> <span class="ne">ConnectionError</span>
 <span class="kn">from</span> <span class="nn">requests.models</span> <span class="kn">import</span> <span class="n">Response</span>
 <span class="kn">import</span> <span class="nn">dask.dataframe</span> <span class="k">as</span> <span class="nn">dd</span>
-<span class="kn">import</span> <span class="nn">dask.distributed</span> <span class="k">as</span> <span class="nn">ddist</span>
 <span class="kn">import</span> <span class="nn">jsoncomment</span> <span class="k">as</span> <span class="nn">jsonc</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandasql</span>
@@ -107,71 +105,17 @@
 <span class="kn">import</span> <span class="nn">yaml</span>
 
 <span class="kn">from</span> <span class="nn">hidebound.core.config</span> <span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span> <span class="nn">hidebound.core.connection</span> <span class="kn">import</span> <span class="n">DaskConnection</span>
+<span class="kn">from</span> <span class="nn">hidebound.core.logging</span> <span class="kn">import</span> <span class="n">ProgressLogger</span>
 <span class="kn">from</span> <span class="nn">hidebound.core.specification_base</span> <span class="kn">import</span> <span class="n">SpecificationBase</span>
-<span class="kn">from</span> <span class="nn">hidebound.exporters.girder_exporter</span> <span class="kn">import</span> <span class="n">GirderExporter</span>
 <span class="kn">from</span> <span class="nn">hidebound.exporters.disk_exporter</span> <span class="kn">import</span> <span class="n">DiskExporter</span>
+<span class="kn">from</span> <span class="nn">hidebound.exporters.girder_exporter</span> <span class="kn">import</span> <span class="n">GirderExporter</span>
 <span class="kn">from</span> <span class="nn">hidebound.exporters.s3_exporter</span> <span class="kn">import</span> <span class="n">S3Exporter</span>
 <span class="kn">import</span> <span class="nn">hidebound.core.database_tools</span> <span class="k">as</span> <span class="nn">db_tools</span>
 <span class="kn">import</span> <span class="nn">hidebound.core.tools</span> <span class="k">as</span> <span class="nn">hbt</span>
-<span class="kn">from</span> <span class="nn">hidebound.core.logging</span> <span class="kn">import</span> <span class="n">ProgressLogger</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
-<div class="viewcode-block" id="DaskConnection"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.DaskConnection">[docs]</a><span class="k">class</span> <span class="nc">DaskConnection</span><span class="p">:</span>
-<div class="viewcode-block" id="DaskConnection.__init__"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.DaskConnection.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cluster_type</span><span class="p">,</span> <span class="n">num_workers</span><span class="p">):</span>
-        <span class="c1"># type: (str, int) -&gt; None</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Instantiates a DaskConnection.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            cluster_type (str): Dask cluster type. Options include: local.</span>
-<span class="sd">            num_workers (int): Number of Dask workers.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            EnforceError: If cluster_type is illegal.</span>
-<span class="sd">            EnforceError: If num_workers is less than 1.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Illegal cluster type: </span><span class="si">{a}</span><span class="s1">. Legal cluster types: </span><span class="si">{b}</span><span class="s1">.&#39;</span>
-        <span class="n">Enforce</span><span class="p">(</span><span class="n">cluster_type</span><span class="p">,</span> <span class="s1">&#39;in&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;local&#39;</span><span class="p">],</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
-
-        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;num_workers must be greater than 0. Given value: </span><span class="si">{a}</span><span class="s1">.&#39;</span>
-        <span class="n">Enforce</span><span class="p">(</span><span class="n">num_workers</span><span class="p">,</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
-        <span class="c1"># ----------------------------------------------------------------------</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">cluster_type</span> <span class="o">=</span> <span class="n">cluster_type</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_workers</span> <span class="o">=</span> <span class="n">num_workers</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cluster</span> <span class="o">=</span> <span class="kc">None</span></div>
-
-    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># type: () -&gt; DaskConnection</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Creates Dask cluster and assigns it to self.cluster.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            DaskConnection: self.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cluster_type</span> <span class="o">==</span> <span class="s1">&#39;local&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">cluster</span> <span class="o">=</span> <span class="n">ddist</span><span class="o">.</span><span class="n">LocalCluster</span><span class="p">(</span>
-                <span class="n">processes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">n_workers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_workers</span><span class="p">,</span>
-                <span class="n">dashboard_address</span><span class="o">=</span><span class="s1">&#39;0.0.0.0:8087&#39;</span><span class="p">,</span>
-            <span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span>
-
-    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
-        <span class="c1"># type: (Any, Any, Any, Any) -&gt; None</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Closes Dask cluster.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            exc_type (object): Required by python.</span>
-<span class="sd">            exc_val (object): Required by python.</span>
-<span class="sd">            exc_tb (object): Required by python.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
-
-
-<span class="c1"># ------------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="Database"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database">[docs]</a><span class="k">class</span> <span class="nc">Database</span><span class="p">:</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Generates a DataFrame using the files within a given directory as rows.</span>
@@ -355,7 +299,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_write_mode</span> <span class="o">=</span> <span class="n">write_mode</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_specifications</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">specifications</span><span class="p">}</span> \
             <span class="c1"># type: Dict[str, SpecificationBase]</span>
+
+        <span class="c1"># setup exporters</span>
+        <span class="k">for</span> <span class="n">exp</span> <span class="ow">in</span> <span class="n">exporters</span><span class="p">:</span>
+            <span class="n">exp</span><span class="p">[</span><span class="s1">&#39;dask_workers&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;dask_workers&#39;</span><span class="p">,</span> <span class="n">dask_workers</span><span class="p">)</span>
+            <span class="n">exp</span><span class="p">[</span><span class="s1">&#39;dask_cluster_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="s1">&#39;dask_cluster_type&#39;</span><span class="p">,</span> <span class="n">dask_cluster_type</span>
+            <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_exporters</span> <span class="o">=</span> <span class="n">exporters</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_webhooks</span> <span class="o">=</span> <span class="n">webhooks</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dask_workers</span> <span class="o">=</span> <span class="n">dask_workers</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dask_cluster_type</span> <span class="o">=</span> <span class="n">dask_cluster_type</span>

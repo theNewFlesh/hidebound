@@ -31,7 +31,7 @@
             <a href="index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.27.1
+                0.28.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -853,6 +853,8 @@ config file.</p>
 <span class="w">    </span><span class="nt">metadata_types</span><span class="p">:</span><span class="w">                                          </span><span class="c1"># options: asset, file, asset-chunk, file-chunk</span><span class="w"></span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">asset</span><span class="w">                                                </span><span class="c1"># only asset and file metadata</span><span class="w"></span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file</span><span class="w"></span>
+<span class="w">    </span><span class="nt">dask_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span><span class="w">                                          </span><span class="c1"># number of dask workers</span><span class="w"></span>
+<span class="w">    </span><span class="nt">dask_cluster_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">local</span><span class="w">                                 </span><span class="c1"># dask cluster type</span><span class="w"></span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3</span><span class="w">                                                 </span><span class="c1"># export to s3</span><span class="w"></span>
 <span class="w">    </span><span class="nt">access_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ABCDEFGHIJKLMNOPQRST</span><span class="w">                         </span><span class="c1"># aws access key</span><span class="w"></span>
 <span class="w">    </span><span class="nt">secret_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">abcdefghijklmnopqrstuvwxyz1234567890abcd</span><span class="w">     </span><span class="c1"># aws secret key</span><span class="w"></span>
@@ -862,6 +864,8 @@ config file.</p>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">asset</span><span class="w">                                                </span><span class="c1"># drop file metadata</span><span class="w"></span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">asset-chunk</span><span class="w"></span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file-chunk</span><span class="w"></span>
+<span class="w">    </span><span class="nt">dask_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span><span class="w">                                          </span><span class="c1"># number of dask workers</span><span class="w"></span>
+<span class="w">    </span><span class="nt">dask_cluster_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">local</span><span class="w">                                 </span><span class="c1"># dask cluster type</span><span class="w"></span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">girder</span><span class="w">                                             </span><span class="c1"># export to girder</span><span class="w"></span>
 <span class="w">    </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eyS0nj9qPC5E7yK5l7nhGVPqDOBKPdA3EC60Rs9h</span><span class="w">        </span><span class="c1"># girder api key</span><span class="w"></span>
 <span class="w">    </span><span class="nt">root_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5ed735c8d8dd6242642406e5</span><span class="w">                        </span><span class="c1"># root resource id</span><span class="w"></span>
@@ -870,6 +874,8 @@ config file.</p>
 <span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8180</span><span class="w">                                               </span><span class="c1"># girder server port</span><span class="w"></span>
 <span class="w">    </span><span class="nt">metadata_types</span><span class="p">:</span><span class="w">                                          </span><span class="c1"># options: asset, file</span><span class="w"></span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">asset</span><span class="w">                                                </span><span class="c1"># only asset metadata</span><span class="w"></span>
+<span class="w">    </span><span class="nt">dask_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span><span class="w">                                          </span><span class="c1"># number of dask workers</span><span class="w"></span>
+<span class="w">    </span><span class="nt">dask_cluster_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">local</span><span class="w">                                 </span><span class="c1"># dask cluster type</span><span class="w"></span>
 <span class="nt">webhooks</span><span class="p">:</span><span class="w">                                                    </span><span class="c1"># call these after export</span><span class="w"></span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://hooks.slack.com/services/ABCDEFGHI/JKLMNO</span><span class="w">   </span><span class="c1"># slack URL</span><span class="w"></span>
 <span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">post</span><span class="w">                                             </span><span class="c1"># post this to slack</span><span class="w"></span>

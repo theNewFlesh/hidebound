@@ -9,6 +9,14 @@ config
     :undoc-members:
     :show-inheritance:
 
+connection
+----------
+.. automodule:: hidebound.core.connection
+    :members:
+    :private-members:
+    :undoc-members:
+    :show-inheritance:
+
 database
 --------
 .. automodule:: hidebound.core.database
