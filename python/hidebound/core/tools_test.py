@@ -300,14 +300,9 @@ class ToolsTests(unittest.TestCase):
         with TemporaryDirectory() as root:
             filepath = Path(root, 'test.json')
             with open(filepath, 'w') as f:
-                f.write('''
-{
-    "a": "b",  // encoding error
-    "c": "d",
-}''')
+                f.write('// encoding error')
 
-            expected = 'No JSON data could be decoded from .*/test.json. '
-            expected += 'Please remove any inline comments.'
+            expected = 'No JSON data could be decoded from .*/test.json.'
             with self.assertRaisesRegexp(json.JSONDecodeError, expected):
                 hbt.read_json(filepath)
 

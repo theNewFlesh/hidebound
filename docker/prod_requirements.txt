@@ -5,14 +5,13 @@ dash-cytoscape>=0.2.0
 dash>=2.0.0
 dask[distributed]
 flasgger
-flask>=2.1.2
 flask_monitoringdashboard
 flask-healthz
+flask>=2.1.2
 girder-client
 humanfriendly
 jinja2>=3.0
 json_logging
-jsoncomment
 lunchbox
 MarkupSafe==2.0.1
 marshmallow
@@ -20,6 +19,7 @@ numpy
 OpenEXR
 pandas
 pandasql
+pyjson5
 pyparsing>=3.0.1
 pyyaml
 requests>=2.22.0

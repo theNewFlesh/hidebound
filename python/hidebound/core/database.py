@@ -12,7 +12,7 @@ from pandas import DataFrame
 from requests.exceptions import ConnectionError
 from requests.models import Response
 import dask.dataframe as dd
-import jsoncomment as jsonc
+import pyjson5 as jsonc
 import numpy as np
 import pandasql
 import requests
@@ -97,7 +97,7 @@ class Database:
             Database: Database instance.
         '''
         with open(filepath) as f:
-            config = jsonc.JsonComment().load(f)
+            config = jsonc.load(f)
         return Database.from_config(config)
 
     @staticmethod

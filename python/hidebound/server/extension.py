@@ -4,7 +4,7 @@ from pathlib import Path
 import os
 
 import flask
-import jsoncomment as jsonc
+import pyjson5 as jsonc
 import yaml
 
 from hidebound.core.database import Database
@@ -75,7 +75,7 @@ class HideboundExtension:
         with open(filepath) as f:
             if ext in ['yml', 'yaml']:
                 return yaml.safe_load(f)
-            return jsonc.JsonComment().load(f)
+            return jsonc.load(f)
 
     def _get_config_from_env(self, app):
         # type: (flask.Flask) -> dict

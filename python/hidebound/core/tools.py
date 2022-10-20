@@ -12,7 +12,7 @@ import shutil
 import pandas as pd
 from schematics.exceptions import DataError, ValidationError
 import dask.dataframe as dd
-import jsoncomment as jsonc
+import pyjson5 as jsonc
 import OpenEXR as openexr
 
 FilePath = Union[str, Path]
@@ -248,11 +248,12 @@ def read_json(filepath):
     Returns:
         object: JSON object.
     '''
-    output = jsonc.JsonComment().loadf(filepath)
-    if output is None:
-        msg = f'No JSON data could be decoded from {filepath}. '
-        msg += 'Please remove any inline comments.'
-        raise json.JSONDecodeError(msg, '', 0)
+    with open(filepath) as f:
+        try:
+            output = jsonc.load(f)
+        except Exception as e:
+            msg = f'No JSON data could be decoded from {filepath}. {str(e)}'
+            raise json.JSONDecodeError(msg, '', 0)
     return output
 
 
