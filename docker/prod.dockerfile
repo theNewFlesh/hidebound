@@ -48,20 +48,6 @@ RUN echo "\n${CYAN}INSTALL TINI${CLEAR}"; \
     chown ubuntu:ubuntu /usr/bin/tini && \
     chmod +x /usr/bin/tini
 
-# install OpenEXR
-ENV CC=gcc
-ENV CXX=g++
-ENV LD_LIBRARY_PATH='/usr/include/python3.7m/dist-packages'
-RUN echo "\n${CYAN}INSTALL OPENEXR${CLEAR}"; \
-    apt update && \
-    apt install -y \
-        build-essential \
-        g++ \
-        gcc \
-        libopenexr-dev \
-        openexr \
-        zlib1g-dev
-
 # chown /var/log
 RUN echo "\n${CYAN}CHOWN /VAR/LOG${CLEAR}"; \
     chown ubuntu:ubuntu /var/log

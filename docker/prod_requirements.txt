@@ -16,7 +16,6 @@ lunchbox
 MarkupSafe==2.0.1
 marshmallow
 numpy
-OpenEXR
 pandas
 pandasql
 pyjson5

@@ -29,17 +29,17 @@
 {'filename_error': 'Rogue field'}
 )",False,,,proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v003/p-proj001_s-spec001_d-pizza_v003_c0000-0001_f0004.png,proj001/spec001/pizza/p-proj001_s-spec001_d-pizza_v003
 17,proj001,spec002,taco,1,,0,jpg,p-proj001_s-spec002_d-taco_v001_f0000.jpg,/tmp/projects/proj001/spec002/taco/p-proj001_s-spec002_d-taco_v001/p-proj001_s-spec002_d-taco_v001_f0000.jpg,,"{'project': 'proj001', 'specification': 'spec002', 'descriptor': 'taco', 'version': 1, 'frame': 0, 'extension': 'jpg', 'width': 4}",p-proj001_s-spec002_d-taco_v001,/tmp/projects/proj001/spec002/taco/p-proj001_s-spec002_d-taco_v001,sequence,"{'project': ['proj001', 'proj001', 'proj001'], 'specification': ['spec002', 'spec002', 'spec002'], 'descriptor': ['taco', 'taco', 'taco'], 'version': [1, 1, 1], 'frame': [0, 1, 2], 'extension': ['jpg', 'jpg', 'jpg'], 'width': [4, 4, 4]}","DataError(
-{'extension': ValidationError([ErrorMessage('jpg != exr.', None)]),
+{'extension': ValidationError([ErrorMessage('jpg != png.', None)]),
  'height': ConversionError([ErrorMessage('This field is required.', None)]),
  'width': ValidationError([ErrorMessage('4 != 1024.', None)])}
 )",False,4,,proj001/spec002/taco/p-proj001_s-spec002_d-taco_v001/p-proj001_s-spec002_d-taco_v001_f0000.jpg,proj001/spec002/taco/p-proj001_s-spec002_d-taco_v001
 18,proj001,spec002,taco,1,,1,jpg,p-proj001_s-spec002_d-taco_v001_f0001.jpg,/tmp/projects/proj001/spec002/taco/p-proj001_s-spec002_d-taco_v001/p-proj001_s-spec002_d-taco_v001_f0001.jpg,,"{'project': 'proj001', 'specification': 'spec002', 'descriptor': 'taco', 'version': 1, 'frame': 1, 'extension': 'jpg', 'width': 4}",p-proj001_s-spec002_d-taco_v001,/tmp/projects/proj001/spec002/taco/p-proj001_s-spec002_d-taco_v001,sequence,"{'project': ['proj001', 'proj001', 'proj001'], 'specification': ['spec002', 'spec002', 'spec002'], 'descriptor': ['taco', 'taco', 'taco'], 'version': [1, 1, 1], 'frame': [0, 1, 2], 'extension': ['jpg', 'jpg', 'jpg'], 'width': [4, 4, 4]}","DataError(
-{'extension': ValidationError([ErrorMessage('jpg != exr.', None)]),
+{'extension': ValidationError([ErrorMessage('jpg != png.', None)]),
  'height': ConversionError([ErrorMessage('This field is required.', None)]),
  'width': ValidationError([ErrorMessage('4 != 1024.', None)])}
 )",False,4,,proj001/spec002/taco/p-proj001_s-spec002_d-taco_v001/p-proj001_s-spec002_d-taco_v001_f0001.jpg,proj001/spec002/taco/p-proj001_s-spec002_d-taco_v001
 19,proj001,spec002,taco,1,,2,jpg,p-proj001_s-spec002_d-taco_v001_f0002.jpg,/tmp/projects/proj001/spec002/taco/p-proj001_s-spec002_d-taco_v001/p-proj001_s-spec002_d-taco_v001_f0002.jpg,,"{'project': 'proj001', 'specification': 'spec002', 'descriptor': 'taco', 'version': 1, 'frame': 2, 'extension': 'jpg', 'width': 4}",p-proj001_s-spec002_d-taco_v001,/tmp/projects/proj001/spec002/taco/p-proj001_s-spec002_d-taco_v001,sequence,"{'project': ['proj001', 'proj001', 'proj001'], 'specification': ['spec002', 'spec002', 'spec002'], 'descriptor': ['taco', 'taco', 'taco'], 'version': [1, 1, 1], 'frame': [0, 1, 2], 'extension': ['jpg', 'jpg', 'jpg'], 'width': [4, 4, 4]}","DataError(
-{'extension': ValidationError([ErrorMessage('jpg != exr.', None)]),
+{'extension': ValidationError([ErrorMessage('jpg != png.', None)]),
  'height': ConversionError([ErrorMessage('This field is required.', None)]),
  'width': ValidationError([ErrorMessage('4 != 1024.', None)])}
 )",False,4,,proj001/spec002/taco/p-proj001_s-spec002_d-taco_v001/p-proj001_s-spec002_d-taco_v001_f0002.jpg,proj001/spec002/taco/p-proj001_s-spec002_d-taco_v001

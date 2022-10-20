@@ -1,12 +1,8 @@
 from typing import Union
 
-import os
 from pathlib import Path
-import re
 
 import skimage.io
-
-import hidebound.core.tools as hbt
 # ------------------------------------------------------------------------------
 
 
@@ -27,11 +23,6 @@ def get_image_width(filepath):
     Returns:
         int: Image width.
     '''
-    if re.search('exr', os.path.split(filepath)[-1], re.I):
-        metadata = hbt.read_exr_header(filepath)
-        win = metadata['dataWindow']
-        return (win.max.x - win.min.x) + 1
-
     img = skimage.io.imread(Path(filepath).as_posix())
     return img.shape[1]
 
@@ -47,11 +38,6 @@ def get_image_height(filepath):
     Returns:
         int: Image height.
     '''
-    if re.search('exr', os.path.split(filepath)[-1], re.I):
-        metadata = hbt.read_exr_header(filepath)
-        win = metadata['dataWindow']
-        return (win.max.y - win.min.y) + 1
-
     img = skimage.io.imread(Path(filepath).as_posix())
     return img.shape[0]
 
@@ -67,10 +53,6 @@ def get_num_image_channels(filepath):
     Returns:
         int: Number of channels.
     '''
-    if re.search('exr', os.path.split(filepath)[-1], re.I):
-        metadata = hbt.read_exr_header(filepath)
-        return len(metadata['channels'])
-
     img = skimage.io.imread(Path(filepath).as_posix())
     if len(img.shape) > 2:
         return img.shape[2]

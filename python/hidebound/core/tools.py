@@ -13,7 +13,6 @@ import pandas as pd
 from schematics.exceptions import DataError, ValidationError
 import dask.dataframe as dd
 import pyjson5 as jsonc
-import OpenEXR as openexr
 
 FilePath = Union[str, Path]
 DF = Union[pd.DataFrame, dd.DataFrame]
@@ -179,29 +178,6 @@ def to_prototype(dicts):
             output[key].append(val)
     output = dict(output)
     return output
-
-
-def read_exr_header(fullpath):
-    # type: (FilePath) -> dict
-    '''
-    Reads an OpenEXR image file header.
-
-    Args:
-        fullpath (str or Path): Image file path.
-
-    Raises:
-        IOError: If given filepath is not an EXR file.
-
-    Returns:
-        dict: EXR header.
-    '''
-    fullpath = Path(fullpath).absolute().as_posix()
-    if not openexr.isOpenExrFile(fullpath):
-        msg = f'{fullpath} is not an EXR file.'
-        raise IOError(msg)
-
-    img = openexr.InputFile(fullpath)
-    return img.header()
 
 
 def time_string():

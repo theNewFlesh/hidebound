@@ -11,7 +11,6 @@ from schematics.models import Model
 from schematics.types import StringType
 import dask.dataframe as dd
 import numpy as np
-import OpenEXR as openexr
 import pandas as pd
 
 import hidebound.core.tools as hbt
@@ -212,39 +211,6 @@ class ToolsTests(unittest.TestCase):
             cols = ['filepath', 'filename', 'extension']
             for col in cols:
                 self.assertEqual(result[col].tolist(), expected[col].tolist())
-
-    def test_read_exr_header(self):
-        with TemporaryDirectory() as root:
-            header = openexr.Header(5, 10)
-            exr = root + '/foo.exr'
-            output = openexr.OutputFile(exr, header)
-            data = dict(
-                R=np.ones((10, 5, 1), dtype=np.float32).tobytes(),
-                G=np.zeros((10, 5, 1), dtype=np.float32).tobytes(),
-                B=np.zeros((10, 5, 1), dtype=np.float32).tobytes(),
-            )
-            output = openexr.OutputFile(exr, header)
-            output.writePixels(data)
-
-            result = hbt.read_exr_header(exr)
-            win = result['dataWindow']
-            x = (win.max.x - win.min.x) + 1
-            y = (win.max.y - win.min.y) + 1
-            self.assertEqual(x, 5)
-            self.assertEqual(y, 10)
-
-            result = sorted(result['channels'].keys())
-            self.assertEqual(result, list('BGR'))
-
-    def test_read_exr_header_error(self):
-        with TemporaryDirectory() as root:
-            exr = root + '/foo.exr'
-            with open(exr, 'w') as f:
-                f.write('taco')
-
-            expected = f'{exr} is not an EXR file.'
-            with self.assertRaisesRegexp(IOError, expected):
-                hbt.read_exr_header(exr)
 
     def test_time_string(self):
         result = re.search(
