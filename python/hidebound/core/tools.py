@@ -9,9 +9,10 @@ import os
 import re
 import shutil
 
-import pandas as pd
+from lunchbox.enforce import Enforce
 from schematics.exceptions import DataError, ValidationError
 import dask.dataframe as dd
+import pandas as pd
 import pyjson5 as jsonc
 
 FilePath = Union[str, Path]
@@ -25,10 +26,12 @@ The tools module contains general functions useful to other hidebound modules.
 '''
 
 
-def list_all_files(directory, include_regex='', exclude_regex=''):
-    # type: (FilePath, str, str) -> Generator[Path, None, None]
+def traverse_directory(
+    directory, include_regex='', exclude_regex='', entry_type='file'
+):
+    # type: (FilePath, str, str, str) -> Generator[Path, None, None]
     '''
-    Recusively list all files within a given directory.
+    Recusively list all files or directories within a given directory.
 
     Args:
         directory (str or Path): Directory to walk.
@@ -36,24 +39,34 @@ def list_all_files(directory, include_regex='', exclude_regex=''):
             Default: ''.
         exclude_regex (str, optional): Exclude filenames that match this regex.
             Default: ''.
+        entry_type (str, optional): Kind of directory entry to return. Options
+            include: file, directory. Default: file.
 
     Raises:
         FileNotFoundError: If argument is not a directory or does not exist.
+        EnforceError: If entry_type is not file or directory.
 
     Yields:
         Path: File.
     '''
+    etypes = ['file', 'directory']
+    msg = 'Illegal entry type: {a}. Legal entry types: {b}.'
+    Enforce(entry_type, 'in', etypes, message=msg)
+
     directory = Path(directory)
     if not directory.is_dir():
         msg = f'{directory} is not a directory or does not exist.'
         raise FileNotFoundError(msg)
+    # --------------------------------------------------------------------------
 
     include_re = re.compile(include_regex)
     exclude_re = re.compile(exclude_regex)
 
-    for root, _, files in os.walk(directory):
-        for file_ in files:
-            filepath = Path(root, file_)
+    for root, dirs, items in os.walk(directory):
+        if entry_type == 'directory':
+            items = dirs
+        for item in items:
+            filepath = Path(root, item)
 
             output = True
             temp = filepath.absolute().as_posix()
@@ -63,7 +76,7 @@ def list_all_files(directory, include_regex='', exclude_regex=''):
                 output = False
 
             if output:
-                yield Path(root, file_)
+                yield filepath
 
 
 def delete_empty_directories(directory):
@@ -113,7 +126,7 @@ def directory_to_dataframe(directory, include_regex='', exclude_regex=r'\.DS_Sto
     Returns:
         pd.DataFrame: pd.DataFrame with one file per row.
     '''
-    files = list_all_files(
+    files = traverse_directory(
         directory,
         include_regex=include_regex,
         exclude_regex=exclude_regex

@@ -5,6 +5,7 @@ import os
 import re
 import unittest
 
+from lunchbox.enforce import EnforceError
 from pandas import DataFrame, Series
 from schematics.exceptions import DataError, ValidationError
 from schematics.models import Model
@@ -78,18 +79,35 @@ class ToolsTests(unittest.TestCase):
         self.assertEqual(result, expected)
 
     def test_list_all_files(self):
+        with TemporaryDirectory() as root:
+            expected = sorted(self.create_files(root))
+            result = sorted(list(hbt.traverse_directory(root)))
+            self.assertEqual(result, expected)
+
+    def test_list_all_files_directory(self):
+        with TemporaryDirectory() as root:
+            self.create_files(root)
+            expected = [
+                Path(root, 'a'),
+                Path(root, 'a/b'),
+                Path(root, 'a/b/c'),
+            ]
+            result = sorted(list(hbt.traverse_directory(root, entry_type='directory')))
+            self.assertEqual(result, expected)
+
+    def test_list_all_files_error(self):
         expected = '/foo/bar is not a directory or does not exist.'
         with self.assertRaisesRegexp(FileNotFoundError, expected):
-            next(hbt.list_all_files('/foo/bar'))
+            next(hbt.traverse_directory('/foo/bar'))
 
         expected = '/foo.bar is not a directory or does not exist.'
         with self.assertRaisesRegexp(FileNotFoundError, expected):
-            next(hbt.list_all_files('/foo.bar'))
+            next(hbt.traverse_directory('/foo.bar'))
 
-        with TemporaryDirectory() as root:
-            expected = sorted(self.create_files(root))
-            result = sorted(list(hbt.list_all_files(root)))
-            self.assertEqual(result, expected)
+        expected = 'Illegal entry type: foobar. Legal entry types: '
+        expected += r"\['file', 'directory'\]\."
+        with self.assertRaisesRegexp(EnforceError, expected):
+            next(hbt.traverse_directory('/tmp', entry_type='foobar'))
 
     def test_list_all_files_include(self):
         with TemporaryDirectory() as root:
@@ -101,7 +119,7 @@ class ToolsTests(unittest.TestCase):
                 Path(root, 'a/b/c/5.txt'),
             ]
 
-            result = hbt.list_all_files(root, include_regex=regex)
+            result = hbt.traverse_directory(root, include_regex=regex)
             result = sorted(list(result))
             self.assertEqual(result, expected)
 
@@ -116,7 +134,7 @@ class ToolsTests(unittest.TestCase):
                 Path(root, 'a/b/c/4.json'),
             ]
 
-            result = hbt.list_all_files(root, exclude_regex=regex)
+            result = hbt.traverse_directory(root, exclude_regex=regex)
             result = sorted(list(result))
             self.assertEqual(result, expected)
 
@@ -131,7 +149,7 @@ class ToolsTests(unittest.TestCase):
                 Path(root, 'a/b/c/5.txt'),
             ]
 
-            result = hbt.list_all_files(
+            result = hbt.traverse_directory(
                 root,
                 include_regex=i_regex,
                 exclude_regex=e_regex
