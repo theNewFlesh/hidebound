@@ -78,13 +78,13 @@ class ToolsTests(unittest.TestCase):
         result = hbt.to_prototype(dicts)
         self.assertEqual(result, expected)
 
-    def test_list_all_files(self):
+    def test_traverse_directory(self):
         with TemporaryDirectory() as root:
             expected = sorted(self.create_files(root))
             result = sorted(list(hbt.traverse_directory(root)))
             self.assertEqual(result, expected)
 
-    def test_list_all_files_directory(self):
+    def test_traverse_directory_directory(self):
         with TemporaryDirectory() as root:
             self.create_files(root)
             expected = [
@@ -95,7 +95,7 @@ class ToolsTests(unittest.TestCase):
             result = sorted(list(hbt.traverse_directory(root, entry_type='directory')))
             self.assertEqual(result, expected)
 
-    def test_list_all_files_error(self):
+    def test_traverse_directory_error(self):
         expected = '/foo/bar is not a directory or does not exist.'
         with self.assertRaisesRegexp(FileNotFoundError, expected):
             next(hbt.traverse_directory('/foo/bar'))
@@ -109,7 +109,7 @@ class ToolsTests(unittest.TestCase):
         with self.assertRaisesRegexp(EnforceError, expected):
             next(hbt.traverse_directory('/tmp', entry_type='foobar'))
 
-    def test_list_all_files_include(self):
+    def test_traverse_directory_include(self):
         with TemporaryDirectory() as root:
             regex = r'\.txt'
 
@@ -123,7 +123,7 @@ class ToolsTests(unittest.TestCase):
             result = sorted(list(result))
             self.assertEqual(result, expected)
 
-    def test_list_all_files_exclude(self):
+    def test_traverse_directory_exclude(self):
         with TemporaryDirectory() as root:
             regex = r'\.txt'
 
@@ -138,7 +138,7 @@ class ToolsTests(unittest.TestCase):
             result = sorted(list(result))
             self.assertEqual(result, expected)
 
-    def test_list_all_files_include_exclude(self):
+    def test_traverse_directory_include_exclude(self):
         with TemporaryDirectory() as root:
             i_regex = r'/a/b'
             e_regex = r'\.json'
