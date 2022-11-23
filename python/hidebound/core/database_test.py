@@ -104,18 +104,18 @@ def test_init_exporters(make_dirs, make_files, specs, dask_config):  # noqa: F81
         exporters=[
             dict(
                 name='disk', target_directory='/tmp/foo',
-                dask_cluster_type='local', dask_workers=99
+                dask=dict(cluster_type='gateway', local_num_workers=99)
             ),
             dict(name='girder', api_key='api_key', root_id='root_id'),
         ]
     )
     result = db._exporters[0]
-    assert result['dask_cluster_type'] == db._dask_cluster_type
-    assert result['dask_workers'] == 99
+    assert result['dask']['cluster_type'] == 'gateway'
+    assert result['dask']['local_num_workers'] == 99
 
     result = db._exporters[1]
-    assert result['dask_cluster_type'] == db._dask_cluster_type
-    assert result['dask_workers'] == db._dask_workers
+    assert result['dask']['cluster_type'] == dask_config['cluster_type']
+    assert result['dask']['local_num_workers'] == dask_config['local_num_workers']
 
 
 def test_init_bad_ingress(make_dirs, specs, dask_config):  # noqa: F811
