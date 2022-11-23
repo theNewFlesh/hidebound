@@ -1,7 +1,5 @@
 from typing import Any
 
-import os
-
 from schematics import Model
 from schematics.types import BooleanType, DictType, IntType, StringType, URLType
 import dask_gateway as dgw
