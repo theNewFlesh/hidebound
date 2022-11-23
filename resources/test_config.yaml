@@ -14,6 +14,19 @@ workflow:
   - delete
 specification_files:
   - /home/ubuntu/hidebound/python/hidebound/core/test_specifications.py
+dask:
+  cluster_type: "local"
+  num_partitions: 16
+  local_num_workers: 16
+  local_threads_per_worker: 1
+  local_multiprocessing: True
+  gateway_address: "http://proxy-public/services/dask-gateway"
+  gateway_proxy_address: "gateway://traefik-daskhub-dask-gateway.core:80"
+  gateway_public_address: "https://dask-gateway/services/dask-gateway/"
+  gateway_auth_type: "jupyterhub"
+  gateway_api_token: "token"
+  gateway_cluster_options: ""
+  gateway_shutdown_on_close: True
 exporters:
   - name: disk
     target_directory: /tmp/mnt/archive

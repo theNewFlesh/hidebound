@@ -88,14 +88,26 @@ class HideboundExtension:
         Returns:
             dict: Database config.
         '''
+        dask = dict(
+            cluster_type=app.config.get('DASK_CLUSTER_TYPE'),
+            num_partitions=app.config.get('DASK_NUM_PARTITIONS'),
+            local_num_workers=app.config.get('DASK_LOCAL_NUM_WORKERS'),
+            local_threads_per_worker=app.config.get('DASK_LOCAL_THREADS_PER_WORKER'),
+            local_multiprocessing=app.config.get('DASK_LOCAL_MULTIPROCESSING'),
+            gateway_address=app.config.get('DASK_GATEWAY_ADDRESS'),
+            gateway_proxy_address=app.config.get('DASK_GATEWAY_PROXY_ADDRESS'),
+            gateway_public_address=app.config.get('DASK_GATEWAY_PUBLIC_ADDRESS'),
+            gateway_auth_type=app.config.get('DASK_GATEWAY_AUTH_TYPE'),
+            gateway_api_token=app.config.get('DASK_GATEWAY_API_TOKEN'),
+            gateway_cluster_options=app.config.get('DASK_GATEWAY_CLUSTER_OPTIONS'),
+            gateway_shutdown_on_close=app.config.get('DASK_GATEWAY_SHUTDOWN_ON_CLOSE'),
+        )
         return dict(
             ingress_directory=app.config.get('INGRESS_DIRECTORY'),
             staging_directory=app.config.get('STAGING_DIRECTORY'),
             include_regex=app.config.get('INCLUDE_REGEX', ''),
             exclude_regex=app.config.get('EXCLUDE_REGEX', r'\.DS_Store'),
             write_mode=app.config.get('WRITE_MODE', 'copy'),
-            dask_workers=int(app.config.get('DASK_WORKERS', 8)),
-            dask_cluster_type=app.config.get('DASK_CLUSTER_TYPE', 'local'),
             redact_regex=app.config.get('REDACT_REGEX', '(_key|_id|url)$'),
             redact_hash=hbt.str_to_bool(app.config.get('REDACT_HASH', 'False')),
             specification_files=yaml.safe_load(
@@ -105,6 +117,7 @@ class HideboundExtension:
                 'WORKFLOW',
                 '["delete", "update", "create", "export"]',
             ))),
+            dask=dask,
             exporters=yaml.safe_load(str(app.config.get('EXPORTERS', '{}'))),
             webhooks=yaml.safe_load(str(app.config.get('WEBHOOKS', '[]'))),
         )

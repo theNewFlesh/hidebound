@@ -28,6 +28,9 @@ def env(config):
     for key, val in config.items():
         if key in yaml_keys:
             os.environ[f'HIDEBOUND_{key.upper()}'] = yaml.safe_dump(val)
+        elif key == 'dask':
+            for k, v in val.items():
+                os.environ[f'HIDEBOUND_DASK_{k.upper()}'] = str(v)
         else:
             os.environ[f'HIDEBOUND_{key.upper()}'] = str(val)
 
