@@ -18,7 +18,7 @@ def test_dask_connection_enter(dask_config):
     with DaskConnection(dask_config) as result:
         assert isinstance(result, DaskConnection)
         assert isinstance(result.cluster, ddist.LocalCluster)
-        assert len(result.cluster.workers) == 4
+        assert len(result.cluster.workers) == 2
         assert result.cluster.status.name == 'running'
 
 

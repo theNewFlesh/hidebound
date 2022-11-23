@@ -216,7 +216,7 @@ class Database:
         # dask
         config = DaskConnectionConfig(dask)
         config.validate()
-        self._dask_config = config.to_native()
+        self._dask_config = config.to_primitive()
 
         # setup exporters
         for exp in exporters:

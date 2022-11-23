@@ -14,9 +14,10 @@ from schematics.types import (
 )
 from schematics import Model
 
+from hidebound.core.connection import DaskConnectionConfig
 from hidebound.core.specification_base import SpecificationBase
-from hidebound.exporters.girder_exporter import GirderConfig
 from hidebound.exporters.disk_exporter import DiskConfig
+from hidebound.exporters.girder_exporter import GirderConfig
 from hidebound.exporters.s3_exporter import S3Config
 import hidebound.core.validators as vd
 # ------------------------------------------------------------------------------
@@ -114,6 +115,7 @@ class Config(Model):
             key is the exporter name and the value is its config. Default: {}.
         webhooks (list[dict], optional): List of webhooks to be called after
             export. Default: [].
+        dask (dict, optional). Dask configuration. Default: {}.
     '''
     ingress_directory = StringType(
         required=True, validators=[vd.is_directory]
@@ -128,14 +130,9 @@ class Config(Model):
         validators=[lambda x: vd.is_in(x, ['copy', 'move'])],
         default="copy",
     )  # type: StringType
-    dask_workers = IntType(
-        default=8, required=True, validators=[lambda x: vd.is_gt(x, 0)]
-    )  # type: IntType
-    dask_cluster_type = StringType(
-        default='local',
-        required=True,
-        validators=[lambda x: vd.is_in(x, ['local'])],
-    )  # type: IntType
+    dask = ModelType(
+        DaskConnectionConfig, default={}, required=True
+    )  # type: ModelType
     workflow = ListType(
         StringType(),
         required=True,

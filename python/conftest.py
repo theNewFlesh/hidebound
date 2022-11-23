@@ -185,8 +185,8 @@ def app_setup(make_dirs, make_files, spec_file, env, app):
 def dask_config():
     config = dict(
         cluster_type='local',
-        num_partitions=4,
-        local_num_workers=4,
+        num_partitions=2,
+        local_num_workers=2,
         local_threads_per_worker=1,
         local_multiprocessing=True,
         gateway_address='http://gateway-address.com',
