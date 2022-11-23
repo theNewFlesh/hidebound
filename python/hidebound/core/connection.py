@@ -2,7 +2,6 @@ from typing import Any
 
 import os
 
-from lunchbox.enforce import Enforce
 from schematics import Model
 from schematics.types import BooleanType, DictType, IntType, StringType, URLType
 import dask_gateway as dgw
@@ -25,7 +24,7 @@ class DaskConnectionConfig(Model):
             cluster. Default: 16.
         local_threads_per_worker (int, optional): Number of threads to run per
             worker local cluster. Default: 1.
-        local_multiprocessesing (bool, optional): Whether to use multiprocessing
+        local_multiprocessing (bool, optional): Whether to use multiprocessing
             for local cluster. Default: True.
         gateway_address (str, optional): Dask Gateway server address. Default:
             'http://proxy-public/services/dask-gateway'.
@@ -57,7 +56,7 @@ class DaskConnectionConfig(Model):
     local_threads_per_worker = IntType(
         required=True, default=1, validators=[lambda x: vd.is_gte(x, 1)]
     )  # type: IntType
-    local_multiprocessesing = BooleanType(
+    local_multiprocessing = BooleanType(
         required=True, default=True
     )  # type: BooleanType
     gateway_address = URLType(
@@ -65,11 +64,10 @@ class DaskConnectionConfig(Model):
         fqdn=False,
         default='http://proxy-public/services/dask-gateway',
     )  # type: URLType
-    gateway_proxy_address = URLType(
+    gateway_proxy_address = StringType(
         required=True,
-        fqdn=False,
         default='gateway://traefik-daskhub-dask-gateway.core:80',
-    )  # type: URLType
+    )  # type: StringType
     gateway_public_address = URLType(
         required=True,
         fqdn=False,
@@ -105,7 +103,6 @@ class DaskConnection:
         config = DaskConnectionConfig(config)
         config.validate()
         self.config = config.to_native()
-        self.cluster_type = self.config['cluster_type']
         self.cluster = None
 
     @property
@@ -145,14 +142,32 @@ class DaskConnection:
             )
 
         # set cluster options
-        opts = self.config['cluster_options']
+        opts = self.config['gateway_cluster_options']
         if opts != {}:
-            options = dgw.Gateway().cluster_options()
+            options = dgw.options.Options()
             for key, val in opts.items():
                 options[key] = val
-            output['cluster_options'] = options
+            output['gateway_cluster_options'] = options
 
         return output
+
+    @property
+    def cluster_type(self):
+        # type: () -> str
+        '''
+        Returns:
+            str: Cluster type.
+        '''
+        return self.config['cluster_type']
+
+    @property
+    def num_partitions(self):
+        # type: () -> int
+        '''
+        Returns:
+            int: Number of partitions.
+        '''
+        return self.config['num_partitions']
 
     def __enter__(self):
         # type: () -> DaskConnection
