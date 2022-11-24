@@ -332,12 +332,11 @@ def format_config(
         'include_regex',
         'exclude_regex',
         'write_mode',
-        'dask_workers',
-        'dask_cluster_type',
         'redact_regex',
         'redact_hash',
         'specification_files',
         'workflow',
+        'dask',
         'exporters',
         'webhooks',
     ]
