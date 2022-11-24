@@ -108,7 +108,7 @@ class HideboundExtension:
             include_regex=app.config.get('INCLUDE_REGEX', ''),
             exclude_regex=app.config.get('EXCLUDE_REGEX', r'\.DS_Store'),
             write_mode=app.config.get('WRITE_MODE', 'copy'),
-            redact_regex=app.config.get('REDACT_REGEX', '(_key|_id|url)$'),
+            redact_regex=app.config.get('REDACT_REGEX', '(_key|_id|_token|url)$'),
             redact_hash=hbt.str_to_bool(app.config.get('REDACT_HASH', 'False')),
             specification_files=yaml.safe_load(
                 str(app.config.get('SPECIFICATION_FILES', '[]'))

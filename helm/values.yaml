@@ -37,7 +37,7 @@ base:
     HIDEBOUND_INCLUDE_REGEX: ""
     HIDEBOUND_EXCLUDE_REGEX: "\\\\.DS_Store"
     HIDEBOUND_WRITE_MODE: move
-    HIDEBOUND_REDACT_REGEX: "(_key|_id|url)$"
+    HIDEBOUND_REDACT_REGEX: "(_key|_id|_token|url)$"
     HIDEBOUND_REDACT_HASH: true
     HIDEBOUND_WORKFLOW:
       - delete

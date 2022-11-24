@@ -4,7 +4,7 @@ HIDEBOUND_INCLUDE_REGEX=''
 HIDEBOUND_EXCLUDE_REGEX='\.DS_Store'
 HIDEBOUND_WRITE_MODE=copy
 HIDEBOUND_WORKERS=4
-HIDEBOUND_REDACT_REGEX='(_key|_id)$'
+HIDEBOUND_REDACT_REGEX='(_key|_id|_token)$'
 HIDEBOUND_REDACT_HASH=True
 HIDEBOUND_SPECIFICATION_FILES='
 - /home/ubuntu/hidebound/python/hidebound/core/test_specifications.py

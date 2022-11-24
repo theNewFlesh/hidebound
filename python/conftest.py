@@ -111,7 +111,7 @@ def config(temp_dir, dask_config):
         include_regex='',
         exclude_regex=r'\.DS_Store',
         write_mode='copy',
-        redact_regex='(_key|_id|url)$',
+        redact_regex='(_key|_id|_token|url)$',
         redact_hash=True,
         workflow=['update', 'create', 'export', 'delete'],
         specification_files=[spec],

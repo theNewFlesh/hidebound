@@ -504,7 +504,7 @@ include_regex: ""                                                        # inclu
 exclude_regex: "\\.DS_Store"                                             # exclude files that match
 write_mode: copy                                                         # copy files from root to staging
                                                                          # options: copy, move
-redact_regex: "(_key|_id|url)$"                                          # regex matched config keys to redact
+redact_regex: "(_key|_id|_token|url)$"                                   # regex matched config keys to redact
 redact_hash: true                                                        # hash redacted values
 workflow:                                                                # workflow steps
   - delete                                                               # clear staging directory

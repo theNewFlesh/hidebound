@@ -103,7 +103,8 @@ class Config(Model):
         workflow (list[str], optional): Ordered steps of workflow.  Default:
             ['delete', 'update', 'create', 'export'].
         redact_regex (str, optional): Regex pattern matched to config keys.
-            Values of matching keys will be redacted. Default: "(_key|_id|url)$".
+            Values of matching keys will be redacted.
+            Default: "(_key|_id|_token|url)$".
         redact_hash (bool, optional): Whether to replace redacted values with
             "REDACTED" or a hash of the value. Default: True.
         specification_files (list[str], optional): List of asset specification
@@ -136,7 +137,7 @@ class Config(Model):
         validators=[vd.is_workflow],
         default=['delete', 'update', 'create', 'export']
     )  # type: ListType
-    redact_regex = StringType(required=True, default='(_key|_id|url)$')  # type: StringType
+    redact_regex = StringType(required=True, default='(_key|_id|_token|url)$')  # type: StringType
     redact_hash = BooleanType(required=True, default=True)  # type: BooleanType
     specification_files = ListType(
         StringType(validators=[is_specification_file, vd.is_file]),

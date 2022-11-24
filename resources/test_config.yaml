@@ -3,7 +3,7 @@ staging_directory: /tmp/mnt/hidebound
 include_regex: ""
 exclude_regex: "\\.DS_Store"
 write_mode: copy
-redact_regex: "(_key|_id|url)$"
+redact_regex: "(_key|_id|_token|url)$"
 redact_hash: True
 workflow:
   - update
