@@ -3,13 +3,13 @@
 Welcome to hidebound' documentation!
 ====================================
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Documentation
 
    intro
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Python API
 
    modules
