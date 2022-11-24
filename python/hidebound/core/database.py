@@ -372,7 +372,7 @@ class Database:
             if col not in data.columns:
                 data[col] = np.nan
 
-            mask = traits[col].notnull()
+            mask = traits[col].notnull().tolist()
             data.loc[mask, col] = traits.loc[mask, col]
         self._logger.info('read: filter traits', step=3, total=total)
 
