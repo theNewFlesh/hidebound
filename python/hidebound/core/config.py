@@ -100,9 +100,6 @@ class Config(Model):
             Default: '\.DS_Store'.
         write_mode (str, optional): How assets will be extracted to
             hidebound/content directory. Default: copy.
-        dask_workers (int, optional): Number of Dask worker to use if enabled.
-            Default: 8.
-        dask_cluster_type (str, optional): Dask cluster type. Default: local.
         workflow (list[str], optional): Ordered steps of workflow.  Default:
             ['delete', 'update', 'create', 'export'].
         redact_regex (str, optional): Regex pattern matched to config keys.

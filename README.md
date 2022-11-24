@@ -421,7 +421,7 @@ displays errors in their entirety within the application.
 # Configuration
 Hidebound is configured via a configuration file or environment variables.
 
-Hidebound configs consist of three main sections:
+Hidebound configs consist of four main sections:
 
 ### Base
 * ingress_directory - the directory hidebound parses for assets that comprise its database
@@ -430,11 +430,24 @@ Hidebound configs consist of three main sections:
 * include_regex - filepaths in the root that match this are included in the database
 * exclude_regex - filepaths in the root that match this are excluded from the database
 * write_mode - whether to copy or move files from root to staging
-* dask_workers - number of Dask partitions to use
-* dask_cluster_type - type of Dask cluster to use
 * redact_regex - regular expression which matches config keys whose valuse are to be redacted
 * redact_hash - whether to redact config values with "REDACTED" or a hash of the value
 * workflow - order list of steps to be followed in workflow
+
+### Dask
+Default configuration of Dask distributed framework.
+cluster_type - dask cluster type
+num_partitions - number of partions for each dataframe
+local_num_workers - number of workers on local cluster
+local_threads_per_worker - number of threads per worker on local cluster
+local_multiprocessing - use multiprocessing for local cluster
+gateway_address - gateway server address
+gateway_proxy_address - scheduler proxy server address
+gateway_public_address - gateway server address, as accessible from a web browser
+gateway_auth_type - authentication type
+gateway_api_token - api token
+gateway_cluster_options - dict of dask gateway cluster options
+gateway_shutdown_on_close - whether to shudown cluster upon close
 
 ### Exporters
 Which exporters to us in the workflow.
@@ -454,86 +467,111 @@ If `HIDEBOUND_CONFIG_FILEPATH` is set, Hidebound will ignore all other
 environment variables and read the given filepath in as a yaml or json config
 file.
 
-| Variable                      | Format | Portion                               |
-| ----------------------------- | ------ | ------------------------------------- |
-| HIDEBOUND_CONFIG_FILEPATH     | str    | Entire Hidebound config file          |
-| HIDEBOUND_INGRESS_DIRECTORY   | str    | ingress_directory parameter of config |
-| HIDEBOUND_STAGING_DIRECTORY   | str    | staging_directory parameter of config |
-| HIDEBOUND_INCLUDE_REGEX       | str    | include_regex parameter of config     |
-| HIDEBOUND_EXCLUDE_REGEX       | str    | exclude_regex parameter of config     |
-| HIDEBOUND_WRITE_MODE          | str    | write_mode parameter of config        |
-| HIDEBOUND_DASK_WORKERS        | int    | dask_workers parameter of config      |
-| HIDEBOUND_DASK_CLUSTER_TYPE   | str    | dask_cluster_type parameter of config |
-| HIDEBOUND_REDACT_REGEX        | str    | redact_regex parameter of config      |
-| HIDEBOUND_REDACT_HASH         | str    | redact_hash parameter of config       |
-| HIDEBOUND_WORKFLOW            | yaml   | workflow paramater of config          |
-| HIDEBOUND_SPECIFICATION_FILES | yaml   | specification_files section of config |
-| HIDEBOUND_EXPORTERS           | yaml   | exporters section of config           |
-| HIDEBOUND_WEBHOOKS            | yaml   | webhooks section of config            |
+| Variable                                 | Format | Portion                                                  |
+| ---------------------------------------- | ------ | -------------------------------------------------------- |
+| HIDEBOUND_CONFIG_FILEPATH                | str    | Entire Hidebound config file                             |
+| HIDEBOUND_INGRESS_DIRECTORY              | str    | ingress_directory parameter of config                    |
+| HIDEBOUND_STAGING_DIRECTORY              | str    | staging_directory parameter of config                    |
+| HIDEBOUND_INCLUDE_REGEX                  | str    | include_regex parameter of config                        |
+| HIDEBOUND_EXCLUDE_REGEX                  | str    | exclude_regex parameter of config                        |
+| HIDEBOUND_WRITE_MODE                     | str    | write_mode parameter of config                           |
+| HIDEBOUND_REDACT_REGEX                   | str    | redact_regex parameter of config                         |
+| HIDEBOUND_REDACT_HASH                    | str    | redact_hash parameter of config                          |
+| HIDEBOUND_WORKFLOW                       | yaml   | workflow paramater of config                             |
+| HIDEBOUND_SPECIFICATION_FILES            | yaml   | specification_files section of config                    |
+| HIDEBOUND_DASK_CLUSTER_TYPE              | str    | dask cluster type                                        |
+| HIDEBOUND_DASK_NUM_PARTITIONS            | int    | number of partions for each dataframe                    |
+| HIDEBOUND_DASK_LOCAL_NUM_WORKERS         | int    | number of workers on local cluster                       |
+| HIDEBOUND_DASK_LOCAL_THREADS_PER_WORKER  | int    | number of threads per worker on local cluster            |
+| HIDEBOUND_DASK_LOCAL_MULTIPROCESSING     | str    | use multiprocessing for local cluster                    |
+| HIDEBOUND_DASK_GATEWAY_ADDRESS           | str    | gateway server address                                   |
+| HIDEBOUND_DASK_GATEWAY_PROXY_ADDRESS     | str    | scheduler proxy server address                           |
+| HIDEBOUND_DASK_GATEWAY_PUBLIC_ADDRESS    | str    | gateway server address, as accessible from a web browser |
+| HIDEBOUND_DASK_GATEWAY_AUTH_TYPE         | str    | authentication type                                      |
+| HIDEBOUND_DASK_GATEWAY_API_TOKEN         | str    | api token                                                |
+| HIDEBOUND_DASK_GATEWAY_CLUSTER_OPTIONS   | yaml   | dict of dask gateway cluster options                     |
+| HIDEBOUND_DASK_GATEWAY_SHUTDOWN_ON_CLOSE | str    | whether to shudown cluster upon close                    |
+| HIDEBOUND_EXPORTERS                      | yaml   | exporters section of config                              |
+| HIDEBOUND_WEBHOOKS                       | yaml   | webhooks section of config                               |
 
 ---
 
 Here is a full example config with comments:
 ```yaml
-ingress_directory: /mnt/storage/projects                     # where hb looks for assets
-staging_directory: /mnt/storage/hidebound                    # hb staging directory
-include_regex: ""                                            # include files that match
-exclude_regex: "\\.DS_Store"                                 # exclude files that match
-write_mode: copy                                             # copy files from root to staging
-                                                             # options: copy, move
-dask_workers: 16                                             # number of Dask partitions to use
-dask_cluster_type: local                                     # type of Dask cluster
-                                                             # options: local
-redact_regex: "(_key|_id|url)$"                              # regex matched config keys to redact
-redact_hash: true                                            # hash redacted values
-workflow:                                                    # workflow steps
-  - delete                                                   # clear staging directory
-  - update                                                   # create database from ingress files
-  - create                                                   # stage valid assets
-  - export                                                   # export assets in staging
-specification_files:                                         # list of spec files
+ingress_directory: /mnt/storage/projects                                 # where hb looks for assets
+staging_directory: /mnt/storage/hidebound                                # hb staging directory
+include_regex: ""                                                        # include files that match
+exclude_regex: "\\.DS_Store"                                             # exclude files that match
+write_mode: copy                                                         # copy files from root to staging
+                                                                         # options: copy, move
+redact_regex: "(_key|_id|url)$"                                          # regex matched config keys to redact
+redact_hash: true                                                        # hash redacted values
+workflow:                                                                # workflow steps
+  - delete                                                               # clear staging directory
+  - update                                                               # create database from ingress files
+  - create                                                               # stage valid assets
+  - export                                                               # export assets in staging
+specification_files:                                                     # list of spec files
   - /mnt/storage/specs/image_specs.py
   - /mnt/storage/specs/video_specs.py
-exporters:                                                   # dict of exporter configs
-  - name: disk                                               # export to disk
-    target_directory: /mnt/storage/archive                   # target location
-    metadata_types:                                          # options: asset, file, asset-chunk, file-chunk
-      - asset                                                # only asset and file metadata
+dask:
+  cluster_type: local                                                    # Dask cluster type
+                                                                         # options: local, gateway
+  num_partitions: 16                                                     # number of partions for each dataframe
+  local_num_workers: 16                                                  # number of workers on local cluster
+  local_threads_per_worker: 1                                            # number of threads per worker on local cluster
+  local_multiprocessing: true                                            # use multiprocessing for local cluster
+  gateway_address: http://proxy-public/services/dask-gateway             # gateway server address
+  gateway_proxy_address: gateway://traefik-daskhub-dask-gateway.core:80  # scheduler proxy server address
+  gateway_public_address: https://dask-gateway/services/dask-gateway/    # gateway server address, as accessible from a web browser
+  gateway_auth_type: jupyterhub                                          # authentication type
+  gateway_api_token: token123                                            # api token
+  gateway_cluster_options: {}                                            # dict of dask gateway cluster options
+  gateway_shutdown_on_close: true                                        # whether to shudown cluster upon close
+exporters:                                                               # dict of exporter configs
+  - name: disk                                                           # export to disk
+    target_directory: /mnt/storage/archive                               # target location
+    metadata_types:                                                      # options: asset, file, asset-chunk, file-chunk
+      - asset                                                            # only asset and file metadata
       - file
-    dask_workers: 8                                          # number of dask workers
-    dask_cluster_type: local                                 # dask cluster type
-  - name: s3                                                 # export to s3
-    access_key: ABCDEFGHIJKLMNOPQRST                         # aws access key
-    secret_key: abcdefghijklmnopqrstuvwxyz1234567890abcd     # aws secret key
-    bucket: prod-data                                        # s3 bucket
-    region: us-west-2                                        # bucket region
-    metadata_types:                                          # options: asset, file, asset-chunk, file-chunk
-      - asset                                                # drop file metadata
+    dask:                                                                # dask settings override
+      num_workers: 8
+      local_threads_per_worker: 2
+  - name: s3                                                             # export to s3
+    access_key: ABCDEFGHIJKLMNOPQRST                                     # aws access key
+    secret_key: abcdefghijklmnopqrstuvwxyz1234567890abcd                 # aws secret key
+    bucket: prod-data                                                    # s3 bucket
+    region: us-west-2                                                    # bucket region
+    metadata_types:                                                      # options: asset, file, asset-chunk, file-chunk
+      - asset                                                            # drop file metadata
       - asset-chunk
       - file-chunk
-    dask_workers: 8                                          # number of dask workers
-    dask_cluster_type: local                                 # dask cluster type
-  - name: girder                                             # export to girder
-    api_key: eyS0nj9qPC5E7yK5l7nhGVPqDOBKPdA3EC60Rs9h        # girder api key
-    root_id: 5ed735c8d8dd6242642406e5                        # root resource id
-    root_type: collection                                    # root resource type
-    host: http://prod.girder.com                             # girder server url
-    port: 8180                                               # girder server port
-    metadata_types:                                          # options: asset, file
-      - asset                                                # only asset metadata
-    dask_workers: 8                                          # number of dask workers
-    dask_cluster_type: local                                 # dask cluster type
-webhooks:                                                    # call these after export
-  - url: https://hooks.slack.com/services/ABCDEFGHI/JKLMNO   # slack URL
-    method: post                                             # post this to slack
-    timeout: 60                                              # timeout after 60 seconds
-    # params: {}                                             # params to post (NA here)
-    # json: {}                                               # json to post (NA here)
-    data:                                                    # data to post
-      channel: "#hidebound"                                  # slack data
-      text: export complete                                  # slack data
-      username: hidebound                                    # slack data
-    headers:                                                 # request headers
+    dask:                                                                # dask settings override
+      cluster_type: gateway
+      num_workers: 64
+  - name: girder                                                         # export to girder
+    api_key: eyS0nj9qPC5E7yK5l7nhGVPqDOBKPdA3EC60Rs9h                    # girder api key
+    root_id: 5ed735c8d8dd6242642406e5                                    # root resource id
+    root_type: collection                                                # root resource type
+    host: http://prod.girder.com                                         # girder server url
+    port: 8180                                                           # girder server port
+    metadata_types:                                                      # options: asset, file
+      - asset                                                            # only asset metadata
+    dask:                                                                # dask settings override
+      num_workers: 10
+    dask:                                                                # dask settings override
+      num_workers: 10
+webhooks:                                                                # call these after export
+  - url: https://hooks.slack.com/services/ABCDEFGHI/JKLMNO               # slack URL
+    method: post                                                         # post this to slack
+    timeout: 60                                                          # timeout after 60 seconds
+    # params: {}                                                         # params to post (NA here)
+    # json: {}                                                           # json to post (NA here)
+    data:                                                                # data to post
+      channel: "#hidebound"                                              # slack data
+      text: export complete                                              # slack data
+      username: hidebound                                                # slack data
+    headers:                                                             # request headers
       Content-type: application/json
 ```
 
