@@ -367,7 +367,7 @@ docs.
 ### Data
 The data tab is the workhorse of the Hidebound app.
 
-![](resources/screenshots/update.png)
+![](resources/screenshots/data.png)
 
 Its functions are as follows:
 
