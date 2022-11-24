@@ -23,7 +23,7 @@ dask:
   gateway_public_address: "https://dask-gateway/services/dask-gateway/"
   gateway_auth_type: jupyterhub
   gateway_api_token: token
-  gateway_cluster_options: ""
+  gateway_cluster_options: {}
   gateway_shutdown_on_close: True
 exporters:
   - name: disk
