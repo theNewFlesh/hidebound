@@ -93,14 +93,20 @@ class HideboundExtension:
             num_partitions=app.config.get('DASK_NUM_PARTITIONS'),
             local_num_workers=app.config.get('DASK_LOCAL_NUM_WORKERS'),
             local_threads_per_worker=app.config.get('DASK_LOCAL_THREADS_PER_WORKER'),
-            local_multiprocessing=app.config.get('DASK_LOCAL_MULTIPROCESSING'),
+            local_multiprocessing=hbt.str_to_bool(
+                app.config.get('DASK_LOCAL_MULTIPROCESSING', 'True')
+            ),
             gateway_address=app.config.get('DASK_GATEWAY_ADDRESS'),
             gateway_proxy_address=app.config.get('DASK_GATEWAY_PROXY_ADDRESS'),
             gateway_public_address=app.config.get('DASK_GATEWAY_PUBLIC_ADDRESS'),
             gateway_auth_type=app.config.get('DASK_GATEWAY_AUTH_TYPE'),
             gateway_api_token=app.config.get('DASK_GATEWAY_API_TOKEN'),
-            gateway_cluster_options=app.config.get('DASK_GATEWAY_CLUSTER_OPTIONS'),
-            gateway_shutdown_on_close=app.config.get('DASK_GATEWAY_SHUTDOWN_ON_CLOSE'),
+            gateway_cluster_options=yaml.safe_load(
+                str(app.config.get('DASK_GATEWAY_CLUSTER_OPTIONS', '{}'))
+            ),
+            gateway_shutdown_on_close=hbt.str_to_bool(
+                app.config.get('DASK_GATEWAY_SHUTDOWN_ON_CLOSE', 'True')
+            ),
         )
         return dict(
             ingress_directory=app.config.get('INGRESS_DIRECTORY'),
