@@ -184,9 +184,9 @@ class MockGirderClient:
         name,
         description='',
         reuseExisting=False,
-        metadata=None
+        metadata=None,
     ):
-        # type: (str, str, str, bool, bool) -> Dict[str, Any]
+        # type: (str, str, str, bool, Optional[str]) -> Dict[str, Any]
         '''
         Creates and returns an item.
 
