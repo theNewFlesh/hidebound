@@ -753,3 +753,30 @@ def is_one_of(item, models):
             errors.add(str(e))
     error = '\n'.join(list(errors))
     raise ValidationError(error)
+
+
+@validate('''{} is not a legal cluster option type.
+Legal cluster option types: [bool, float, int, mapping, select, string]''')
+def is_cluster_option_type(item):
+    # type: (str) -> bool
+    '''
+    Validates that a given cluster option type is legal.
+    Legal types include:
+
+        * bool
+        * float
+        * int
+        * mapping
+        * select
+        * string
+
+    Args:
+        item (str): Cluster option type.
+
+    Raises:
+        ValidationError: If cluster option type is illegal.
+
+    Returns:
+        bool: Validity of cluster option type.
+    '''
+    return item in ['bool', 'float', 'int', 'mapping', 'select', 'string']

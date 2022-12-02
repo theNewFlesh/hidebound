@@ -508,3 +508,17 @@ class ValidatorsTests(unittest.TestCase):
         expected = 'taco.*Rogue field'
         with self.assertRaisesRegexp(ValidationError, expected):
             vd.is_one_of(dict(taco='taco'), models)
+
+    def test_is_cluster_option_type(self):
+        vd.is_cluster_option_type('string')
+        vd.is_cluster_option_type('int')
+        vd.is_cluster_option_type('float')
+        vd.is_cluster_option_type('bool')
+        vd.is_cluster_option_type('mapping')
+        vd.is_cluster_option_type('select')
+
+        expected = r'foobar is not a legal cluster option type\.'
+        expected += r'\\nLegal cluster option types: '
+        expected += r'\[bool, float, int, mapping, select, string\]'
+        with self.assertRaisesRegexp(ValidationError, expected):
+            vd.is_cluster_option_type('foobar')
