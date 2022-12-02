@@ -18,12 +18,11 @@ import hidebound.core.tools as hbt
 # ------------------------------------------------------------------------------
 
 
-DASK_WORKERS = 2
 RERUNS = 3
 DELAY = 1
 
 
-def test_from_config(make_dirs, spec_file):  # noqa: F811
+def test_from_config(make_dirs, spec_file, dask_config):  # noqa: F811
     ingress, staging, _ = make_dirs
     config = dict(
         ingress_directory=ingress,
@@ -32,7 +31,7 @@ def test_from_config(make_dirs, spec_file):  # noqa: F811
         include_regex='foo',
         exclude_regex='bar',
         write_mode='copy',
-        dask_workers=DASK_WORKERS,
+        dask=dask_config,
         testing=False,
     )
     expected = copy(config)
@@ -44,7 +43,7 @@ def test_from_config(make_dirs, spec_file):  # noqa: F811
         Database.from_config(config)
 
 
-def test_from_json(temp_dir, make_dirs, spec_file):  # noqa: F811
+def test_from_json(temp_dir, make_dirs, spec_file, dask_config):  # noqa: F811
     ingress, staging, _ = make_dirs
 
     config = dict(
@@ -54,7 +53,7 @@ def test_from_json(temp_dir, make_dirs, spec_file):  # noqa: F811
         include_regex='foo',
         exclude_regex='bar',
         write_mode='copy',
-        dask_workers=DASK_WORKERS,
+        dask=dask_config,
         testing=False,
     )
     config_file = Path(temp_dir, 'config.json')
@@ -64,7 +63,7 @@ def test_from_json(temp_dir, make_dirs, spec_file):  # noqa: F811
     Database.from_json(config_file)
 
 
-def test_from_yaml(temp_dir, make_dirs, spec_file):  # noqa: F811
+def test_from_yaml(temp_dir, make_dirs, spec_file, dask_config):  # noqa: F811
     ingress, staging, _ = make_dirs
 
     config = dict(
@@ -74,7 +73,7 @@ def test_from_yaml(temp_dir, make_dirs, spec_file):  # noqa: F811
         include_regex='foo',
         exclude_regex='bar',
         write_mode='copy',
-        dask_workers=DASK_WORKERS,
+        dask=dask_config,
         testing=False,
     )
     config_file = Path(temp_dir, 'config.yaml')
@@ -84,70 +83,70 @@ def test_from_yaml(temp_dir, make_dirs, spec_file):  # noqa: F811
     Database.from_yaml(config_file)
 
 
-def test_init(make_dirs, make_files, specs):  # noqa: F811
+def test_init(make_dirs, make_files, specs, dask_config):  # noqa: F811
     ingress, staging, _ = make_dirs
     Spec001, Spec002, _ = specs
-    Database(ingress, staging, dask_workers=DASK_WORKERS, testing=False)
+    Database(ingress, staging, dask=dask_config, testing=False)
     Database(
-        ingress, staging, [Spec001], dask_workers=DASK_WORKERS, testing=False
+        ingress, staging, [Spec001], dask=dask_config, testing=False
     )
     Database(
-        ingress, staging, [Spec001, Spec002], dask_workers=DASK_WORKERS,
+        ingress, staging, [Spec001, Spec002], dask=dask_config,
         testing=False
     )
 
 
-def test_init_exporters(make_dirs, make_files, specs):  # noqa: F811
+def test_init_exporters(make_dirs, make_files, specs, dask_config):  # noqa: F811
     ingress, staging, _ = make_dirs
     Spec001, _, _ = specs
     db = Database(
-        ingress, staging, [Spec001], dask_workers=DASK_WORKERS, testing=True,
+        ingress, staging, [Spec001], dask=dask_config, testing=True,
         exporters=[
             dict(
                 name='disk', target_directory='/tmp/foo',
-                dask_cluster_type='local', dask_workers=99
+                dask=dict(cluster_type='gateway', local_num_workers=99)
             ),
             dict(name='girder', api_key='api_key', root_id='root_id'),
         ]
     )
     result = db._exporters[0]
-    assert result['dask_cluster_type'] == db._dask_cluster_type
-    assert result['dask_workers'] == 99
+    assert result['dask']['cluster_type'] == 'gateway'
+    assert result['dask']['local_num_workers'] == 99
 
     result = db._exporters[1]
-    assert result['dask_cluster_type'] == db._dask_cluster_type
-    assert result['dask_workers'] == db._dask_workers
+    assert result['dask']['cluster_type'] == dask_config['cluster_type']
+    assert result['dask']['local_num_workers'] == dask_config['local_num_workers']
 
 
-def test_init_bad_ingress(make_dirs, specs):  # noqa: F811
+def test_init_bad_ingress(make_dirs, specs, dask_config):  # noqa: F811
     _, staging, _ = make_dirs
     Spec001, _, _ = specs
     expected = '/foo is not a directory or does not exist'
     with pytest.raises(FileNotFoundError) as e:
         Database(
-            '/foo', staging, [Spec001], dask_workers=DASK_WORKERS,
+            '/foo', staging, [Spec001], dask=dask_config,
             testing=False
         )
         assert re.search(expected, str(e))
 
 
-def test_init_bad_staging(temp_dir):  # noqa: F811
+def test_init_bad_staging(temp_dir, dask_config):  # noqa: F811
     staging = Path(temp_dir, 'hidebound')
 
     expected = '/hidebound is not a directory or does not exist'
     with pytest.raises(FileNotFoundError) as e:
-        Database(temp_dir, staging, dask_workers=DASK_WORKERS, testing=False)
+        Database(temp_dir, staging, dask=dask_config, testing=False)
         assert re.search(expected, str(e))
 
     temp = Path(temp_dir, 'Hidebound')
     os.makedirs(temp)
     expected = r'Hidebound directory is not named hidebound\.$'
     with pytest.raises(NameError) as e:
-        Database(temp_dir, temp, dask_workers=DASK_WORKERS, testing=False)
+        Database(temp_dir, temp, dask=dask_config, testing=False)
         assert re.search(expected, str(e))
 
 
-def test_init_bad_specifications(make_dirs, make_files, specs):  # noqa: F811
+def test_init_bad_specifications(make_dirs, make_files, specs, dask_config):  # noqa: F811
     Spec001, _, BadSpec = specs
     ingress, staging, _ = make_dirs
 
@@ -156,20 +155,20 @@ def test_init_bad_specifications(make_dirs, make_files, specs):  # noqa: F811
 
     with pytest.raises(TypeError) as e:
         Database(
-            ingress, staging, [BadSpec], dask_workers=DASK_WORKERS,
+            ingress, staging, [BadSpec], dask=dask_config,
             testing=False
         )
         assert re.search(str(e), expected)
 
     with pytest.raises(TypeError) as e:
         Database(
-            ingress, staging, [Spec001, BadSpec], dask_workers=DASK_WORKERS,
+            ingress, staging, [Spec001, BadSpec], dask=dask_config,
             testing=False
         )
         assert re.search(str(e), expected)
 
 
-def test_init_bad_write_mode(make_dirs, specs):  # noqa: F811
+def test_init_bad_write_mode(make_dirs, specs, dask_config):  # noqa: F811
     Spec001, _, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -180,29 +179,29 @@ def test_init_bad_write_mode(make_dirs, specs):  # noqa: F811
             staging,
             [Spec001],
             write_mode='foo',
-            dask_workers=DASK_WORKERS,
+            dask=dask_config,
             testing=False,
         )
         assert re.search(str(e), expected)
 
 
-def test_init_testing(make_dirs):
+def test_init_testing(make_dirs, dask_config):
     ingress, staging, _ = make_dirs
-    result = Database(ingress, staging, dask_workers=DASK_WORKERS, testing=False)
+    result = Database(ingress, staging, dask=dask_config, testing=False)
     assert result._testing is False
 
-    result = Database(ingress, staging, dask_workers=DASK_WORKERS, testing=True)
+    result = Database(ingress, staging, dask=dask_config, testing=True)
     assert result._testing is True
 
 
 # CREATE------------------------------------------------------------------------
 @pytest.mark.flaky(rerun=3)
-def test_create(make_dirs, make_files, specs):  # noqa: F811
+def test_create(make_dirs, make_files, specs, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
     db = Database(
-        ingress, staging, [Spec001, Spec002], dask_workers=DASK_WORKERS,
+        ingress, staging, [Spec001, Spec002], dask=dask_config,
         testing=False
     )
     db.update()
@@ -240,12 +239,12 @@ def test_create(make_dirs, make_files, specs):  # noqa: F811
     assert result == 1
 
 
-def test_create_no_init(make_dirs, make_files, specs):  # noqa: F811
+def test_create_no_init(make_dirs, make_files, specs, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
     db = Database(
-        ingress, staging, [Spec001, Spec002], dask_workers=DASK_WORKERS,
+        ingress, staging, [Spec001, Spec002], dask=dask_config,
         testing=False
     )
     expected = 'Data not initialized. Please call update.'
@@ -254,12 +253,12 @@ def test_create_no_init(make_dirs, make_files, specs):  # noqa: F811
         assert re.search(str(e), expected)
 
 
-def test_create_all_invalid(make_dirs, make_files, specs):  # noqa: F811
+def test_create_all_invalid(make_dirs, make_files, specs, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
     db = Database(
-        ingress, staging, [Spec001, Spec002], dask_workers=DASK_WORKERS,
+        ingress, staging, [Spec001, Spec002], dask=dask_config,
         testing=False
     )
     db.update()
@@ -278,7 +277,7 @@ def test_create_all_invalid(make_dirs, make_files, specs):  # noqa: F811
     assert result.exists() is False
 
 
-def test_create_copy(make_dirs, make_files, specs):  # noqa: F811
+def test_create_copy(make_dirs, make_files, specs, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -287,7 +286,7 @@ def test_create_copy(make_dirs, make_files, specs):  # noqa: F811
         staging,
         [Spec001, Spec002],
         write_mode='copy',
-        dask_workers=DASK_WORKERS,
+        dask=dask_config,
         testing=False,
     )
     db.update()
@@ -299,7 +298,7 @@ def test_create_copy(make_dirs, make_files, specs):  # noqa: F811
     assert result == make_files
 
 
-def test_create_move(make_dirs, make_files, specs):  # noqa: F811
+def test_create_move(make_dirs, make_files, specs, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -308,7 +307,7 @@ def test_create_move(make_dirs, make_files, specs):  # noqa: F811
         staging,
         [Spec001, Spec002],
         write_mode='move',
-        dask_workers=DASK_WORKERS,
+        dask=dask_config,
         testing=False,
     )
     db.update()
@@ -344,12 +343,12 @@ def test_create_move(make_dirs, make_files, specs):  # noqa: F811
 
 # READ--------------------------------------------------------------------------
 @pytest.mark.flaky(reruns=RERUNS)
-def test_read_legal_types(make_dirs, make_files, specs):  # noqa: F811
+def test_read_legal_types(make_dirs, make_files, specs, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
     db = Database(
-        ingress, staging, [Spec001, Spec002], dask_workers=DASK_WORKERS,
+        ingress, staging, [Spec001, Spec002], dask=dask_config,
         testing=False
     )
 
@@ -386,11 +385,11 @@ def test_read_legal_types(make_dirs, make_files, specs):  # noqa: F811
     assert len(result) == 0
 
 
-def test_read_traits(make_dirs, make_files, specs):  # noqa: F811
+def test_read_traits(make_dirs, make_files, specs, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
     db = Database(
-        ingress, staging, [Spec001, Spec002], dask_workers=DASK_WORKERS,
+        ingress, staging, [Spec001, Spec002], dask=dask_config,
         testing=False
     )
     db.update()
@@ -418,12 +417,12 @@ def test_read_traits(make_dirs, make_files, specs):  # noqa: F811
     assert 'illegal' not in result
 
 
-def test_read_coordinates(make_dirs, make_files, specs):  # noqa: F811
+def test_read_coordinates(make_dirs, make_files, specs, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
     db = Database(
-        ingress, staging, [Spec001, Spec002], dask_workers=DASK_WORKERS,
+        ingress, staging, [Spec001, Spec002], dask=dask_config,
         testing=False
     )
     db.update()
@@ -455,11 +454,11 @@ def test_read_coordinates(make_dirs, make_files, specs):  # noqa: F811
 
 
 @pytest.mark.flaky(reruns=RERUNS)
-def test_read_column_order(make_dirs, make_files, specs):  # noqa: F811
+def test_read_column_order(make_dirs, make_files, specs, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
     db = Database(
-        ingress, staging, [Spec001, Spec002], dask_workers=DASK_WORKERS,
+        ingress, staging, [Spec001, Spec002], dask=dask_config,
         testing=False
     )
     db.update()
@@ -491,12 +490,12 @@ def test_read_column_order(make_dirs, make_files, specs):  # noqa: F811
     assert result == expected
 
 
-def test_read_no_files(make_dirs, specs):  # noqa: F811
+def test_read_no_files(make_dirs, specs, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
     db = Database(
-        ingress, staging, [Spec001, Spec002], dask_workers=DASK_WORKERS,
+        ingress, staging, [Spec001, Spec002], dask=dask_config,
         testing=False
     )
 
@@ -507,12 +506,12 @@ def test_read_no_files(make_dirs, specs):  # noqa: F811
 
 
 # UPDATE------------------------------------------------------------------------
-def test_update(make_dirs, make_files, specs):  # noqa: F811
+def test_update(make_dirs, make_files, specs, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
     data = Database(
-        ingress, staging, [Spec001, Spec002], dask_workers=DASK_WORKERS,
+        ingress, staging, [Spec001, Spec002], dask=dask_config,
         testing=False
     )
     data = data.update().data
@@ -526,7 +525,7 @@ def test_update(make_dirs, make_files, specs):  # noqa: F811
     assert result == expected
 
 
-def test_update_exclude(make_dirs, make_files, specs):  # noqa: F811
+def test_update_exclude(make_dirs, make_files, specs, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -539,7 +538,7 @@ def test_update_exclude(make_dirs, make_files, specs):  # noqa: F811
         staging,
         [Spec001, Spec002],
         exclude_regex=regex,
-        dask_workers=DASK_WORKERS,
+        dask=dask_config,
         testing=False,
     )
     result = result.update().data.filepath.tolist()
@@ -548,7 +547,7 @@ def test_update_exclude(make_dirs, make_files, specs):  # noqa: F811
     assert result == expected
 
 
-def test_update_include(make_dirs, make_files, specs):  # noqa: F811
+def test_update_include(make_dirs, make_files, specs, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -561,7 +560,7 @@ def test_update_include(make_dirs, make_files, specs):  # noqa: F811
         staging,
         [Spec001, Spec002],
         include_regex=regex,
-        dask_workers=DASK_WORKERS,
+        dask=dask_config,
         testing=False,
     )
     result = result.update().data.filepath.tolist()
@@ -569,7 +568,7 @@ def test_update_include(make_dirs, make_files, specs):  # noqa: F811
     assert result == expected
 
 
-def test_update_include_exclude(make_dirs, make_files, specs):  # noqa: F811
+def test_update_include_exclude(make_dirs, make_files, specs, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -585,7 +584,7 @@ def test_update_include_exclude(make_dirs, make_files, specs):  # noqa: F811
         [Spec001, Spec002],
         include_regex=i_regex,
         exclude_regex=e_regex,
-        dask_workers=DASK_WORKERS,
+        dask=dask_config,
         testing=False,
     )
     result = result.update().data.filepath.tolist()
@@ -593,24 +592,24 @@ def test_update_include_exclude(make_dirs, make_files, specs):  # noqa: F811
     assert result == expected
 
 
-def test_update_no_files(make_dirs, specs, db_columns):  # noqa: F811
+def test_update_no_files(make_dirs, specs, db_columns, dask_config):  # noqa: F811
     Spec001, _, _ = specs
     ingress, staging, _ = make_dirs
 
     result = Database(
-        ingress, staging, [Spec001], dask_workers=DASK_WORKERS, testing=False
+        ingress, staging, [Spec001], dask=dask_config, testing=False
     )
     result = result.update().data
     assert len(result) == 0
     assert result.columns.tolist() == db_columns
 
 
-def test_update_error(make_dirs, make_files, specs, db_data):  # noqa: F811
+def test_update_error(make_dirs, make_files, specs, db_data, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
     data = Database(
-        ingress, staging, [Spec001, Spec002], dask_workers=DASK_WORKERS,
+        ingress, staging, [Spec001, Spec002], dask=dask_config,
         testing=False
     )
     data = data.update().data
@@ -625,7 +624,7 @@ def test_update_error(make_dirs, make_files, specs, db_data):  # noqa: F811
 
 
 # DELETE------------------------------------------------------------------------
-def test_delete(make_dirs, make_files, specs):  # noqa: F811
+def test_delete(make_dirs, make_files, specs, dask_config):  # noqa: F811
     ingress, staging, _ = make_dirs
 
     data_dir = Path(staging, 'content')
@@ -635,7 +634,7 @@ def test_delete(make_dirs, make_files, specs):  # noqa: F811
     expected = sorted(expected)
 
     db = Database(
-        ingress, staging, [], dask_workers=DASK_WORKERS, testing=False
+        ingress, staging, [], dask=dask_config, testing=False
     )
     db.delete()
 
@@ -649,7 +648,7 @@ def test_delete(make_dirs, make_files, specs):  # noqa: F811
 
 # EXPORT------------------------------------------------------------------------
 @pytest.mark.flaky(reruns=RERUNS)
-def test_export_girder(make_dirs, make_files, specs):  # noqa: F811
+def test_export_girder(make_dirs, make_files, specs, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -659,7 +658,7 @@ def test_export_girder(make_dirs, make_files, specs):  # noqa: F811
         staging,
         [Spec001, Spec002],
         exporters=exporters,
-        dask_workers=DASK_WORKERS,
+        dask=dask_config,
         testing=False,
     )
     db._Database__exporter_lut = dict(girder=MockGirderExporter)
@@ -678,7 +677,7 @@ def test_export_girder(make_dirs, make_files, specs):  # noqa: F811
 
 
 @mock_s3
-def test_export_s3(make_dirs, make_files, specs, db_data):  # noqa: F811
+def test_export_s3(make_dirs, make_files, specs, db_data, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
@@ -694,7 +693,7 @@ def test_export_s3(make_dirs, make_files, specs, db_data):  # noqa: F811
         staging,
         [Spec001, Spec002],
         exporters=exporters,
-        dask_workers=DASK_WORKERS,
+        dask=dask_config,
         testing=False,
     )
 
@@ -746,7 +745,7 @@ def test_export_s3(make_dirs, make_files, specs, db_data):  # noqa: F811
     assert result == 1
 
 
-def test_export_disk(make_dirs, make_files, specs, db_data):  # noqa: F811
+def test_export_disk(make_dirs, make_files, specs, db_data, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, archive = make_dirs
 
@@ -756,7 +755,7 @@ def test_export_disk(make_dirs, make_files, specs, db_data):  # noqa: F811
         staging,
         [Spec001, Spec002],
         exporters=exporters,
-        dask_workers=DASK_WORKERS,
+        dask=dask_config,
         testing=False,
     )
 
@@ -790,12 +789,12 @@ def test_export_disk(make_dirs, make_files, specs, db_data):  # noqa: F811
 
 # SEARCH------------------------------------------------------------------------
 @pytest.mark.flaky(reruns=RERUNS)
-def test_search(make_dirs, make_files, specs):  # noqa: F811
+def test_search(make_dirs, make_files, specs, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
 
     db = Database(
-        ingress, staging, [Spec001, Spec002], dask_workers=DASK_WORKERS,
+        ingress, staging, [Spec001, Spec002], dask=dask_config,
         testing=False
     )
     db.update()
@@ -804,7 +803,7 @@ def test_search(make_dirs, make_files, specs):  # noqa: F811
 
 
 # WEBHOOKS----------------------------------------------------------------------
-def test_call_webhooks(make_dirs, make_files, spec_file):  # noqa: F811
+def test_call_webhooks(make_dirs, make_files, spec_file, dask_config):  # noqa: F811
     ingress, staging, _ = make_dirs
 
     config = dict(
@@ -814,7 +813,7 @@ def test_call_webhooks(make_dirs, make_files, spec_file):  # noqa: F811
         include_regex='foo',
         exclude_regex='bar',
         write_mode='copy',
-        dask_workers=DASK_WORKERS,
+        dask=dask_config,
         testing=False,
         webhooks=[
             {

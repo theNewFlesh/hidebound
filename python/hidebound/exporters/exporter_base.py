@@ -1,13 +1,13 @@
-from typing import Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from pathlib import Path
 import re
 
 from schematics import Model
-from schematics.types import IntType, ListType, StringType
+from schematics.types import ListType, ModelType, StringType
 import dask.dataframe as dd
 
-from hidebound.core.connection import DaskConnection
+from hidebound.core.connection import DaskConnection, DaskConnectionConfig
 from hidebound.core.logging import DummyLogger, ProgressLogger
 import hidebound.core.tools as hbt
 import hidebound.core.validators as vd
@@ -21,25 +21,16 @@ class ExporterConfigBase(Model):
     Attributes:
         metadata_types (list, optional): List of metadata types for export.
             Default: [asset, file, asset-chunk, file-chunk].
-        dask_workers (int, optional): Number of Dask worker to use if enabled.
-            Default: 8.
-        dask_cluster_type (str, optional): Dask cluster type. Default: local.
+        dask (dict, optional). Dask configuration. Default: {}.
     '''
     metadata_types = ListType(
         StringType(validators=[vd.is_metadata_type]),
         required=True,
         default=['asset', 'file', 'asset-chunk', 'file-chunk']
     )
-    dask_workers = IntType(
-        required=False,
-        serialize_when_none=False,
-        validators=[lambda x: vd.is_gt(x, 0)]
-    )  # type: IntType
-    dask_cluster_type = StringType(
-        required=False,
-        serialize_when_none=False,
-        validators=[lambda x: vd.is_in(x, ['local'])],
-    )  # type: IntType
+    dask = ModelType(
+        DaskConnectionConfig, default={}, required=True
+    )  # type: ModelType
 
 
 class ExporterBase:
@@ -49,25 +40,20 @@ class ExporterBase:
     def __init__(
         self,
         metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk'],
-        dask_workers=8,
-        dask_cluster_type='local',
+        dask={},
     ):
-        # type: (List[str], int, str) -> None
+        # type: (List[str], Dict[str, Any]) -> None
         '''
         Constructs a ExporterBase instance.
 
         Args:
             metadata_types (list[st], optional). Metadata types to be exported.
                 Default: [asset, file, asset-chunk, file-chunk].
-            dask_workers (int, optional): Number of Dask worker to use if
-                enabled. Default: 8.
-            dask_cluster_type (str, optional): Dask cluster type.
-                Default: local.
+            dask (dict, optional). Dask configuration. Default: {}.
         '''
         self._metadata_types = metadata_types
         self._time = hbt.time_string()
-        self._dask_cluster_type = dask_cluster_type
-        self._dask_workers = dask_workers
+        self._dask_config = dask
 
     def _enforce_directory_structure(self, staging_dir):
         # type: (Union[str, Path]) -> None
@@ -128,8 +114,8 @@ class ExporterBase:
         regex = f'{staging_dir}/metadata/file/'
         mask = data.filepath.apply(lambda x: re.search(regex, x)).astype(bool)
         content = data[mask].filepath.apply(hbt.read_json)
-        with DaskConnection(self._dask_cluster_type, self._dask_workers):
-            content = dd.from_pandas(content, npartitions=self._dask_workers)
+        with DaskConnection(self._dask_config) as conn:
+            content = dd.from_pandas(content, npartitions=conn.num_partitions)
             content.apply(self._export_content, meta=object).compute()
         logger.info('exporter: export content', step=1, total=total)
 
@@ -144,8 +130,8 @@ class ExporterBase:
             regex = f'{staging_dir}/metadata/{mtype}/'
             mask = data.filepath.apply(lambda x: bool(re.search(regex, x)))
             meta = data[mask].filepath.apply(hbt.read_json)
-            with DaskConnection(self._dask_cluster_type, self._dask_workers):
-                meta = dd.from_pandas(meta, npartitions=self._dask_workers)
+            with DaskConnection(self._dask_config) as conn:
+                meta = dd.from_pandas(meta, npartitions=conn.num_partitions)
                 meta.apply(lut[mtype], meta=object).compute()
 
         logger.info(f'exporter: export {mtype}', step=i + 1, total=total)

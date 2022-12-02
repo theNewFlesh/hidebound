@@ -296,7 +296,7 @@ def search(store, query, group_by_asset, client=requests):
 
 
 def format_config(
-    config, redact_regex='(_key|_id|url)$', redact_hash=False
+    config, redact_regex='(_key|_id|_token|url)$', redact_hash=False
 ):
     # type: (Dict[str, Any], str, bool) -> OrderedDict[str, Any]
     '''
@@ -305,7 +305,7 @@ def format_config(
     Args:
         config (dict): Configuration dictionary.
         redact_regex (str, optional): Regular expression that matches keys,
-            whose values are to be redacted. Default: "(_key|_id|url)$".
+            whose values are to be redacted. Default: "(_key|_id|_token|url)$".
         redact_hash (bool, optional): Whether to redact values with the string
             "REDACTED" or a hash of the value. Default: False.
 
@@ -332,12 +332,11 @@ def format_config(
         'include_regex',
         'exclude_regex',
         'write_mode',
-        'dask_workers',
-        'dask_cluster_type',
         'redact_regex',
         'redact_hash',
         'specification_files',
         'workflow',
+        'dask',
         'exporters',
         'webhooks',
     ]

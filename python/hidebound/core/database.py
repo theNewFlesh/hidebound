@@ -19,7 +19,7 @@ import requests
 import yaml
 
 from hidebound.core.config import Config
-from hidebound.core.connection import DaskConnection
+from hidebound.core.connection import DaskConnection, DaskConnectionConfig
 from hidebound.core.logging import ProgressLogger
 from hidebound.core.specification_base import SpecificationBase
 from hidebound.exporters.disk_exporter import DiskExporter
@@ -80,7 +80,7 @@ class Database:
             write_mode=config['write_mode'],
             exporters=config['exporters'],
             webhooks=config['webhooks'],
-            dask_workers=config['dask_workers'],
+            dask=config['dask'],
             testing=testing,
         )
 
@@ -126,8 +126,7 @@ class Database:
         write_mode='copy',            # type: str
         exporters=[],                 # type: List[Dict[str, Any]]
         webhooks=[],                  # type: List[Dict[str, Any]]
-        dask_workers=8,               # type: int
-        dask_cluster_type='local',    # type: str
+        dask={},                      # type: Dict[str, Any]
         testing=False,                # type: bool
     ):
         # type: (...) -> None
@@ -151,10 +150,7 @@ class Database:
             webhooks (list[dict], optional): List of webhooks to call.
                 Default: [].
                 Default: False.
-            dask_workers (int, optional): Number of partitions to use for
-                Dask. Must be 1 or greater. Default: 8.
-            dask_cluster_type: (str, optional): Dask cluster type:
-                Default: local.
+            dask (dict, optional): Dask configuration. Default: {}.
             testing: (bool, optional): Used for testing. Default: False.
 
         Raises:
@@ -214,17 +210,19 @@ class Database:
         self._specifications = {x.__name__.lower(): x for x in specifications} \
             # type: Dict[str, SpecificationBase]
 
+        # webhooks
+        self._webhooks = webhooks
+
+        # dask
+        config = DaskConnectionConfig(dask)
+        config.validate()
+        self._dask_config = config.to_primitive()
+
         # setup exporters
         for exp in exporters:
-            exp['dask_workers'] = exp.get('dask_workers', dask_workers)
-            exp['dask_cluster_type'] = exp.get(
-                'dask_cluster_type', dask_cluster_type
-            )
+            exp['dask'] = exp.get('dask', self._dask_config)
         self._exporters = exporters
 
-        self._webhooks = webhooks
-        self._dask_workers = dask_workers
-        self._dask_cluster_type = dask_cluster_type
         self._testing = testing
         self.data = None
 
@@ -266,57 +264,65 @@ class Database:
 
         # convert to dask dataframes
         file_data, asset_meta, file_meta, asset_chunk, file_chunk = temp
-        nparts = self._dask_workers
-        file_data = dd.from_pandas(file_data, npartitions=nparts)
-        asset_meta = dd.from_pandas(asset_meta, npartitions=nparts)
-        file_meta = dd.from_pandas(file_meta, npartitions=nparts)
-        asset_chunk = dd.from_pandas(asset_chunk, npartitions=nparts)
-        file_chunk = dd.from_pandas(file_chunk, npartitions=nparts)
-        temp = [file_data, asset_meta, file_meta, asset_chunk, file_chunk]
 
-        # make directories
-        for item in temp:
-            item.target.apply(
-                lambda x: os.makedirs(Path(x).parent, exist_ok=True),
-                meta=np.nan
+        with DaskConnection(self._dask_config) as conn:
+            nparts = conn.num_partitions
+            file_data = dd.from_pandas(file_data, npartitions=nparts)
+            asset_meta = dd.from_pandas(asset_meta, npartitions=nparts)
+            file_meta = dd.from_pandas(file_meta, npartitions=nparts)
+            asset_chunk = dd.from_pandas(asset_chunk, npartitions=nparts)
+            file_chunk = dd.from_pandas(file_chunk, npartitions=nparts)
+            temp = [file_data, asset_meta, file_meta, asset_chunk, file_chunk]
+
+            # make directories
+            for item in temp:
+                item.target.apply(
+                    lambda x: os.makedirs(Path(x).parent, exist_ok=True),
+                    meta=np.nan
+                ).compute()
+            self._logger.info('create: make directories', step=2, total=total)
+
+            # write file data
+            if self._write_mode == 'move':
+                file_data.apply(
+                    lambda x: shutil.move(x.source, x.target),
+                    axis=1, meta=np.nan
+                ).compute()
+                hbt.delete_empty_directories(self._root)
+            else:
+                file_data.apply(
+                    lambda x: shutil.copy2(x.source, x.target),
+                    axis=1, meta=np.nan
+                ).compute()
+            self._logger.info('create: write file data', step=3, total=total)
+
+            # write asset metadata
+            asset_meta.apply(
+                lambda x: hbt.write_json(x.metadata, x.target),
+                axis=1, meta=np.nan
             ).compute()
-        self._logger.info('create: make directories', step=2, total=total)
+            self._logger.info('create: write asset metadata', step=4, total=total)
 
-        # write file data
-        if self._write_mode == 'move':
-            file_data.apply(
-                lambda x: shutil.move(x.source, x.target), axis=1, meta=np.nan
+            # write file metadata
+            file_meta.apply(
+                lambda x: hbt.write_json(x.metadata, x.target),
+                axis=1, meta=np.nan
             ).compute()
-            hbt.delete_empty_directories(self._root)
-        else:
-            file_data.apply(
-                lambda x: shutil.copy2(x.source, x.target), axis=1, meta=np.nan
+            self._logger.info('create: write file metadata', step=5, total=total)
+
+            # write asset chunk
+            asset_chunk.apply(
+                lambda x: hbt.write_json(x.metadata, x.target),
+                axis=1, meta=np.nan
             ).compute()
-        self._logger.info('create: write file data', step=3, total=total)
+            self._logger.info('create: write asset chunk', step=6, total=total)
 
-        # write asset metadata
-        asset_meta.apply(
-            lambda x: hbt.write_json(x.metadata, x.target), axis=1, meta=np.nan
-        ).compute()
-        self._logger.info('create: write asset metadata', step=4, total=total)
-
-        # write file metadata
-        file_meta.apply(
-            lambda x: hbt.write_json(x.metadata, x.target), axis=1, meta=np.nan
-        ).compute()
-        self._logger.info('create: write file metadata', step=5, total=total)
-
-        # write asset chunk
-        asset_chunk.apply(
-            lambda x: hbt.write_json(x.metadata, x.target), axis=1, meta=np.nan
-        ).compute()
-        self._logger.info('create: write asset chunk', step=6, total=total)
-
-        # write file chunk
-        file_chunk.apply(
-            lambda x: hbt.write_json(x.metadata, x.target), axis=1, meta=np.nan
-        ).compute()
-        self._logger.info('create: write file chunk', step=7, total=total)
+            # write file chunk
+            file_chunk.apply(
+                lambda x: hbt.write_json(x.metadata, x.target),
+                axis=1, meta=np.nan
+            ).compute()
+            self._logger.info('create: write file chunk', step=7, total=total)
 
         self._logger.info('create: complete', step=7, total=total)
         return self
@@ -366,7 +372,7 @@ class Database:
             if col not in data.columns:
                 data[col] = np.nan
 
-            mask = traits[col].notnull()
+            mask = traits[col].notnull().tolist()
             data.loc[mask, col] = traits.loc[mask, col]
         self._logger.info('read: filter traits', step=3, total=total)
 
@@ -431,8 +437,8 @@ class Database:
         self._logger.info(f'update: parsed {self._root}', step=1, total=total)
 
         if len(data) > 0:
-            with DaskConnection(self._dask_cluster_type, self._dask_workers):
-                data = dd.from_pandas(data, npartitions=self._dask_workers)
+            with DaskConnection(self._dask_config) as conn:
+                data = dd.from_pandas(data, npartitions=conn.num_partitions)
                 data = db_tools.add_specification(data, self._specifications)
                 data = db_tools.validate_filepath(data)
                 data = db_tools.add_file_traits(data)

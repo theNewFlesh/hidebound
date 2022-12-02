@@ -15,7 +15,7 @@ from hidebound.core.specification_base import SequenceSpecificationBase
 import hidebound.core.database_tools as db_tools
 
 ENABLE_DASK_CLUSTER = True
-DASK_WORKERS = 2
+NUM_PARTITIONS = 2
 # ------------------------------------------------------------------------------
 
 
@@ -80,7 +80,7 @@ def test_validate_filepath(db_client, db_data_nans):
     cols = ['specification_class', 'filepath', 'file_error']
     data = data[cols]
 
-    data = dd.from_pandas(data, npartitions=DASK_WORKERS)
+    data = dd.from_pandas(data, npartitions=NUM_PARTITIONS)
     data = db_tools.validate_filepath(data).compute()
     result = data.loc[mask, 'file_error'].tolist()[0]
     assert re.search(error, result) is not None
@@ -127,7 +127,7 @@ def test_add_file_traits(db_client, specs):
     ]
     data.columns = ['specification_class', 'filepath', 'file_error'] + cols
     temp = data.copy()
-    data = dd.from_pandas(data, npartitions=DASK_WORKERS)
+    data = dd.from_pandas(data, npartitions=NUM_PARTITIONS)
 
     data = db_tools.add_file_traits(data).compute()
     for col in cols:
@@ -147,7 +147,7 @@ def test_add_asset_traits(db_client):
         dict(x=2, y=2, z=2),
         {},
     ]
-    data = dd.from_pandas(data, npartitions=DASK_WORKERS)
+    data = dd.from_pandas(data, npartitions=NUM_PARTITIONS)
 
     result = db_tools.add_asset_traits(data).compute()
     result = result.sort_values('asset_path').asset_traits
@@ -236,7 +236,7 @@ def test_add_asset_name(db_client, specs):
 
     data = DataFrame(data)
     data.columns = ['specification_class', 'filepath', 'file_error']
-    data = dd.from_pandas(data, npartitions=DASK_WORKERS)
+    data = dd.from_pandas(data, npartitions=NUM_PARTITIONS)
 
     result = db_tools.add_asset_name(data).compute()
     result = result['asset_name'].dropna().nunique()
@@ -279,7 +279,7 @@ def test_add_asset_path(db_client, specs):
         .apply(lambda x: Path(x).parent).apply(str).tolist()
     expected[-1] = 'nan'
 
-    data = dd.from_pandas(data, npartitions=DASK_WORKERS)
+    data = dd.from_pandas(data, npartitions=NUM_PARTITIONS)
 
     results = db_tools.add_asset_path(data).compute()
     result = results['asset_path'].apply(str).tolist()
@@ -296,7 +296,7 @@ def test_add_relative_path(db_client):
         '/foo/bar/kiwi.txt',
         '/tmp/pizza.txt',
     ]
-    data = dd.from_pandas(data, npartitions=DASK_WORKERS)
+    data = dd.from_pandas(data, npartitions=NUM_PARTITIONS)
 
     result = db_tools \
         .add_relative_path(data, 'foo', '/foo/bar') \
@@ -328,7 +328,7 @@ def test_add_asset_type(db_client):
         Spec003,
         np.nan,
     ]
-    data = dd.from_pandas(data, npartitions=DASK_WORKERS)
+    data = dd.from_pandas(data, npartitions=NUM_PARTITIONS)
 
     result = db_tools.add_asset_type(data).compute()
     result = result['asset_type'].fillna('null').tolist()
@@ -386,7 +386,7 @@ def test_validate_assets(db_client, db_data, make_files):
     data = data[cols]
     data['file_error'] = np.nan
 
-    data = dd.from_pandas(data, npartitions=DASK_WORKERS)
+    data = dd.from_pandas(data, npartitions=NUM_PARTITIONS)
 
     result = db_tools.validate_assets(data).compute().reset_index(drop=True)
 
@@ -419,7 +419,7 @@ def test_validate_assets_invalid_one_file(db_client, db_data, make_files):
         channels=[3],
     )
     data['asset_traits'] = [traits]
-    data = dd.from_pandas(data, npartitions=DASK_WORKERS)
+    data = dd.from_pandas(data, npartitions=NUM_PARTITIONS)
 
     result = db_tools.validate_assets(data).compute().reset_index()
     for _, row in result.iterrows():
@@ -442,7 +442,7 @@ def test_validate_assets_invalid_many_file(db_client, db_data, make_files):
         channels=[3, 3],
     )
     data['asset_traits'] = [traits, traits]
-    data = dd.from_pandas(data, npartitions=DASK_WORKERS)
+    data = dd.from_pandas(data, npartitions=NUM_PARTITIONS)
 
     result = db_tools.validate_assets(data).compute().reset_index()
     for _, row in result.iterrows():

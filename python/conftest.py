@@ -28,6 +28,9 @@ def env(config):
     for key, val in config.items():
         if key in yaml_keys:
             os.environ[f'HIDEBOUND_{key.upper()}'] = yaml.safe_dump(val)
+        elif key == 'dask':
+            for k, v in val.items():
+                os.environ[f'HIDEBOUND_DASK_{k.upper()}'] = str(v)
         else:
             os.environ[f'HIDEBOUND_{key.upper()}'] = str(val)
 
@@ -96,7 +99,7 @@ def make_dirs(temp_dir):
 
 
 @pytest.fixture()
-def config(temp_dir):
+def config(temp_dir, dask_config):
     spec = '../hidebound/hidebound/core/test_specifications.py'
     if 'REPO_ENV' in os.environ:
         spec = '../python/hidebound/core/test_specifications.py'
@@ -108,12 +111,11 @@ def config(temp_dir):
         include_regex='',
         exclude_regex=r'\.DS_Store',
         write_mode='copy',
-        dask_workers=2,
-        dask_cluster_type='local',
-        redact_regex='(_key|_id|url)$',
+        redact_regex='(_key|_id|_token|url)$',
         redact_hash=True,
         workflow=['update', 'create', 'export', 'delete'],
         specification_files=[spec],
+        dask=dask_config,
         exporters=[
             dict(
                 name='disk',
@@ -180,3 +182,22 @@ def app_setup(make_dirs, make_files, spec_file, env, app):
         env=env,
         app=app,
     )
+
+
+@pytest.fixture()
+def dask_config():
+    config = dict(
+        cluster_type='local',
+        num_partitions=2,
+        local_num_workers=2,
+        local_threads_per_worker=1,
+        local_multiprocessing=True,
+        gateway_address='http://gateway-address.com',
+        gateway_proxy_address='http://gateway-proxy-address.com',
+        gateway_public_address='http://gateway-public-address.com',
+        gateway_auth_type='jupyterhub',
+        gateway_api_token='token',
+        gateway_cluster_options={},
+        gateway_shutdown_on_close=False,
+    )
+    yield config

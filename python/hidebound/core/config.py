@@ -14,9 +14,10 @@ from schematics.types import (
 )
 from schematics import Model
 
+from hidebound.core.connection import DaskConnectionConfig
 from hidebound.core.specification_base import SpecificationBase
-from hidebound.exporters.girder_exporter import GirderConfig
 from hidebound.exporters.disk_exporter import DiskConfig
+from hidebound.exporters.girder_exporter import GirderConfig
 from hidebound.exporters.s3_exporter import S3Config
 import hidebound.core.validators as vd
 # ------------------------------------------------------------------------------
@@ -99,13 +100,11 @@ class Config(Model):
             Default: '\.DS_Store'.
         write_mode (str, optional): How assets will be extracted to
             hidebound/content directory. Default: copy.
-        dask_workers (int, optional): Number of Dask worker to use if enabled.
-            Default: 8.
-        dask_cluster_type (str, optional): Dask cluster type. Default: local.
         workflow (list[str], optional): Ordered steps of workflow.  Default:
             ['delete', 'update', 'create', 'export'].
         redact_regex (str, optional): Regex pattern matched to config keys.
-            Values of matching keys will be redacted. Default: "(_key|_id|url)$".
+            Values of matching keys will be redacted.
+            Default: "(_key|_id|_token|url)$".
         redact_hash (bool, optional): Whether to replace redacted values with
             "REDACTED" or a hash of the value. Default: True.
         specification_files (list[str], optional): List of asset specification
@@ -114,6 +113,7 @@ class Config(Model):
             key is the exporter name and the value is its config. Default: {}.
         webhooks (list[dict], optional): List of webhooks to be called after
             export. Default: [].
+        dask (dict, optional). Dask configuration. Default: {}.
     '''
     ingress_directory = StringType(
         required=True, validators=[vd.is_directory]
@@ -128,21 +128,16 @@ class Config(Model):
         validators=[lambda x: vd.is_in(x, ['copy', 'move'])],
         default="copy",
     )  # type: StringType
-    dask_workers = IntType(
-        default=8, required=True, validators=[lambda x: vd.is_gt(x, 0)]
-    )  # type: IntType
-    dask_cluster_type = StringType(
-        default='local',
-        required=True,
-        validators=[lambda x: vd.is_in(x, ['local'])],
-    )  # type: IntType
+    dask = ModelType(
+        DaskConnectionConfig, default={}, required=True
+    )  # type: ModelType
     workflow = ListType(
         StringType(),
         required=True,
         validators=[vd.is_workflow],
         default=['delete', 'update', 'create', 'export']
     )  # type: ListType
-    redact_regex = StringType(required=True, default='(_key|_id|url)$')  # type: StringType
+    redact_regex = StringType(required=True, default='(_key|_id|_token|url)$')  # type: StringType
     redact_hash = BooleanType(required=True, default=True)  # type: BooleanType
     specification_files = ListType(
         StringType(validators=[is_specification_file, vd.is_file]),

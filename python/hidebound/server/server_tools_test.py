@@ -215,6 +215,12 @@ def test_format_config_webhooks(config):
     assert result == 'REDACTED'
 
 
+def test_format_config_dask(config):
+    result = hst.format_config(config)
+    result = yaml.safe_load(result['dask'])['gateway_api_token']
+    assert result == 'REDACTED'
+
+
 def test_format_config_ellipsis(config):
     result = hst.format_config(config)
     for val in result.values():
