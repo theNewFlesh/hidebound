@@ -21,7 +21,11 @@
 
         {{- /* convert yaml env vars to strings */ -}}
         {{- $vars := list
+            "HIDEBOUND_DASK_GATEWAY_CLUSTER_OPTIONS"
+            "HIDEBOUND_EXPORTERS"
             "HIDEBOUND_SPECIFICATION_FILES"
+            "HIDEBOUND_WEBHOOKS"
+            "HIDEBOUND_WORKFLOW"
         -}}
         {{- range $key := $vars -}}
             {{- $val := (get $env $key) | toYaml -}}
@@ -30,8 +34,8 @@
 
         {{- /* convert secret yaml env vars to strings and encrypt */ -}}
         {{- $secrets := list
-            "HIDEBOUND_WEBHOOKS"
             "HIDEBOUND_EXPORTERS"
+            "HIDEBOUND_WEBHOOKS"
         -}}
         {{- range $key := $secrets -}}
             {{- $val := (get $secret $key) | toYaml | b64enc -}}
