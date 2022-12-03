@@ -713,7 +713,7 @@ Here is a full example config with comments:
       gateway_public_address: https://dask-gateway/services/dask-gateway/    # gateway server address, as accessible from a web browser
       gateway_auth_type: jupyterhub                                          # authentication type
       gateway_api_token: token123                                            # api token
-      gateway_cluster_options: {}                                            # dict of dask gateway cluster options
+      gateway_cluster_options: []                                            # list of dask gateway cluster options
       gateway_shutdown_on_close: true                                        # whether to shudown cluster upon close
     exporters:                                                               # dict of exporter configs
       - name: disk                                                           # export to disk

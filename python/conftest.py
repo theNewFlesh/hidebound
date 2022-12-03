@@ -197,7 +197,7 @@ def dask_config():
         gateway_public_address='http://gateway-public-address.com',
         gateway_auth_type='jupyterhub',
         gateway_api_token='token',
-        gateway_cluster_options={},
+        gateway_cluster_options=[],
         gateway_shutdown_on_close=False,
     )
     yield config
