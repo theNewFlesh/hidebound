@@ -37,7 +37,7 @@ class DaskConnectionConfig(Model):
         gateway_auth_type (str, optional): Dask Gateway authentication type.
             Default: jupyterhub.
         gateway_api_token (str, optional): Authentication API token.
-        gateway_cluster_options (dict, optional): Dask Gateway cluster options.
+        gateway_cluster_options (list, optional): Dask Gateway cluster options.
             Default: [].
         gateway_shutdown_on_close (bool, optional): Whether to shudown cluster
             upon close. Default: True.
@@ -165,7 +165,7 @@ class DaskConnection:
                     spec['spec']['options'] = opt['options']
                 specs.append(spec)
             options = dgw.options.Options._from_spec(specs)
-            output['gateway_cluster_options'] = options
+            output['cluster_options'] = options
 
         return output
 
@@ -198,7 +198,7 @@ class DaskConnection:
         if self.cluster_type == 'local':
             self.cluster = ddist.LocalCluster(**self.local_config)
         elif self.cluster_type == 'gateway':
-            self.cluster = dgw.GatewayCluster(**self.gateway_config)
+            self.cluster = dgw.GatewayCluster(**self.gateway_config)  # pragma: no cover
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):

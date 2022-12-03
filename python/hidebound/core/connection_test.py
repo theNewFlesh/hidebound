@@ -41,6 +41,12 @@ def test_local_config(dask_config):
 
 
 def test_gateway_config(dask_config):
+    dask_config['gateway_cluster_options'] = [
+        dict(
+            field='foobar', label='barfoo', default='a', option_type='select',
+            options=['a', 'b']
+        )
+    ]
     result = DaskConnection(dask_config).gateway_config
     expected = dict(
         address=dask_config['gateway_address'],
@@ -53,6 +59,9 @@ def test_gateway_config(dask_config):
     for key, val in expected.items():
         assert result[key] == val
 
+    assert isinstance(result['cluster_options'], dgw.options.Options)
+    assert result['cluster_options']['foobar'] == 'a'
+
 
 def test_gateway_cluster_options(dask_config):
     dask_config['gateway_cluster_options'] = [dict(
@@ -62,8 +71,8 @@ def test_gateway_cluster_options(dask_config):
         option_type='string',
     )]
     result = DaskConnection(dask_config).gateway_config
-    assert isinstance(result['gateway_cluster_options'], dgw.options.Options)
-    assert result['gateway_cluster_options']['image'] == 'foobar:latest'
+    assert isinstance(result['cluster_options'], dgw.options.Options)
+    assert result['cluster_options']['image'] == 'foobar:latest'
 
 
 def test_cluster_type(dask_config):
