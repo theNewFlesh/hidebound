@@ -1,7 +1,9 @@
 from typing import Any
 
 from schematics import Model
-from schematics.types import BooleanType, DictType, IntType, StringType, URLType
+from schematics.types import (
+    BaseType, BooleanType, IntType, ListType, ModelType, StringType, URLType
+)
 import dask_gateway as dgw
 import dask.distributed as ddist
 
@@ -36,7 +38,7 @@ class DaskConnectionConfig(Model):
             Default: jupyterhub.
         gateway_api_token (str, optional): Authentication API token.
         gateway_cluster_options (dict, optional): Dask Gateway cluster options.
-            Default: {}.
+            Default: [].
         gateway_shutdown_on_close (bool, optional): Whether to shudown cluster
             upon close. Default: True.
     '''
@@ -77,12 +79,21 @@ class DaskConnectionConfig(Model):
         validators=[lambda x: vd.is_eq(x, 'jupyterhub')]
     )  # StringType
     gateway_api_token = StringType()  # StringType
-    gateway_cluster_options = DictType(
-        StringType, required=True, default={}
-    )  # DictType
     gateway_shutdown_on_close = BooleanType(
         required=True, default=True
     )  # type: BooleanType
+
+    class ClusterOption(Model):
+        field = StringType(required=True)  # type: StringType
+        label = StringType(required=True)  # type: StringType
+        default = BaseType(required=True)  # type: BaseType
+        options = ListType(BaseType, required=True, default=[])
+        option_type = StringType(
+            required=True, validators=[vd.is_cluster_option_type]
+        )
+    gateway_cluster_options = ListType(
+        ModelType(ClusterOption), required=False, default=[]
+    )  # type: ListType
 # ------------------------------------------------------------------------------
 
 
@@ -141,10 +152,19 @@ class DaskConnection:
 
         # set cluster options
         opts = self.config['gateway_cluster_options']
-        if opts != {}:
-            options = dgw.options.Options()
-            for key, val in opts.items():
-                options[key] = val
+        if len(opts) > 0:
+            specs = []
+            for opt in opts:
+                spec = dict(
+                    field=opt['field'],
+                    label=opt['label'],
+                    default=opt['default'],
+                    spec={'type': opt['option_type']},
+                )
+                if opt['option_type'] == 'select':
+                    spec['spec']['options'] = opt['options']
+                specs.append(spec)
+            options = dgw.options.Options._from_spec(specs)
             output['gateway_cluster_options'] = options
 
         return output

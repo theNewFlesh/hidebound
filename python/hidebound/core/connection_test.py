@@ -54,6 +54,18 @@ def test_gateway_config(dask_config):
         assert result[key] == val
 
 
+def test_gateway_cluster_options(dask_config):
+    dask_config['gateway_cluster_options'] = [dict(
+        field='image',
+        label='image',
+        default='foobar:latest',
+        option_type='string',
+    )]
+    result = DaskConnection(dask_config).gateway_config
+    assert isinstance(result['gateway_cluster_options'], dgw.options.Options)
+    assert result['gateway_cluster_options']['image'] == 'foobar:latest'
+
+
 def test_cluster_type(dask_config):
     result = DaskConnection(dask_config).cluster_type
     assert result == dask_config['cluster_type']
@@ -68,53 +80,77 @@ def test_num_partitions(dask_config):
 def test_dask_connection_config(dask_config):
     DaskConnectionConfig(dask_config).validate()
 
-    # cluster type
-    config = dask_config.copy()
-    config['cluster_type'] = 'local'
-    DaskConnectionConfig(config).validate()
 
-    config['cluster_type'] = 'gateway'
-    DaskConnectionConfig(config).validate()
+def test_config_cluster_type(dask_config):
+    dask_config['cluster_type'] = 'local'
+    DaskConnectionConfig(dask_config).validate()
 
-    config['cluster_type'] = 'foobar'
+    dask_config['cluster_type'] = 'gateway'
+    DaskConnectionConfig(dask_config).validate()
+
+    dask_config['cluster_type'] = 'foobar'
     with pytest.raises(DataError):
-        DaskConnectionConfig(config).validate()
+        DaskConnectionConfig(dask_config).validate()
 
-    # num_partitions
-    config = dask_config.copy()
-    config['num_partitions'] = 0
+
+def test_config_num_partitions(dask_config):
+    dask_config['num_partitions'] = 0
     with pytest.raises(DataError):
-        DaskConnectionConfig(config).validate()
+        DaskConnectionConfig(dask_config).validate()
 
-    # local_num_workers
-    config = dask_config.copy()
-    config['local_num_workers'] = 0
+
+def test_config_local_num_workers(dask_config):
+    dask_config['local_num_workers'] = 0
     with pytest.raises(DataError):
-        DaskConnectionConfig(config).validate()
+        DaskConnectionConfig(dask_config).validate()
 
-    # local_threads_per_worker
-    config = dask_config.copy()
-    config['local_threads_per_worker'] = 0
+
+def test_config_local_threads_per_worker(dask_config):
+    dask_config['local_threads_per_worker'] = 0
     with pytest.raises(DataError):
-        DaskConnectionConfig(config).validate()
+        DaskConnectionConfig(dask_config).validate()
 
-    # gateway_address
-    config = dask_config.copy()
-    config['gateway_address'] = 'http://proxy-public/services/dask-gateway'
-    DaskConnectionConfig(config).validate()
 
-    # gateway_proxy_address
-    config = dask_config.copy()
-    config['gateway_proxy_address'] = 'gateway://traefik-daskhub-dask-gateway.core:80'
-    DaskConnectionConfig(config).validate()
+def test_config_gateway_address(dask_config):
+    dask_config['gateway_address'] = 'http://proxy-public/services/dask-gateway'
+    DaskConnectionConfig(dask_config).validate()
 
-    # gateway_public_address
-    config = dask_config.copy()
-    config['gateway_public_address'] = 'https://dask-gateway/services/dask-gateway/'
-    DaskConnectionConfig(config).validate()
 
-    # gateway_auth_type
-    config = dask_config.copy()
-    config['gateway_auth_type'] = 'foobar'
+def test_config_gateway_proxy_address(dask_config):
+    dask_config['gateway_proxy_address'] = 'gateway://traefik-daskhub-dask-gateway.core:80'
+    DaskConnectionConfig(dask_config).validate()
+
+
+def test_config_gateway_public_address(dask_config):
+    dask_config['gateway_public_address'] = 'https://dask-gateway/services/dask-gateway/'
+    DaskConnectionConfig(dask_config).validate()
+
+
+def test_config_gateway_auth_type(dask_config):
+    dask_config['gateway_auth_type'] = 'foobar'
     with pytest.raises(DataError):
-        DaskConnectionConfig(config).validate()
+        DaskConnectionConfig(dask_config).validate()
+
+
+def test_config_gateway_cluster_options(dask_config):
+    opts = [
+        dict(field='bool', label='bool', default=True, option_type='bool'),
+        dict(field='float', label='float', default=1.3, option_type='float'),
+        dict(field='int', label='int', default=9, option_type='int'),
+        dict(
+            field='mapping', label='mapping', default={'a': 1},
+            option_type='mapping'
+        ),
+        dict(
+            field='select', label='select', default='a', option_type='select',
+            options=['a', 'b']
+        ),
+        dict(field='string', label='string', default='a', option_type='string'),
+    ]
+    dask_config['gateway_cluster_options'] = opts
+    DaskConnectionConfig(dask_config).validate()
+
+    opts[0]['option_type'] = 'foobar'
+    dask_config['gateway_cluster_options'] = opts
+    with pytest.raises(DataError):
+        DaskConnectionConfig(dask_config).validate()
