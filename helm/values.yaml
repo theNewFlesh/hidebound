@@ -29,7 +29,7 @@ base:
     FLASK_APP: server.app:get_app
     FLASK_DEBUG:
     FLASK_ENV:
-    FLASK_RUN_PORT: "8080"
+    FLASK_RUN_PORT: 8080
     FLASK_RUN_HOST: 0.0.0.0
     REPO_ENV:
     HIDEBOUND_INGRESS_DIRECTORY: /mnt/storage/ingress
@@ -125,7 +125,7 @@ overlays:
         - /home/ubuntu/.local/lib/python3.7/site-packages/hidebound/server/app.py
 
     env_configmap:
-      FLASK_DEBUG: "1"
+      FLASK_DEBUG: 1
       FLASK_ENV: development
       HIDEBOUND_INCLUDE_REGEX: ""
       HIDEBOUND_WRITE_MODE: copy
