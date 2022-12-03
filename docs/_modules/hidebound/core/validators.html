@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.27.0
+                0.30.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -72,9 +72,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>hidebound.core.validators</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">hidebound.core.validators</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -839,6 +839,33 @@
             <span class="n">errors</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
     <span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">errors</span><span class="p">))</span>
     <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="is_cluster_option_type"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_cluster_option_type">[docs]</a><span class="nd">@validate</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{}</span><span class="s1"> is not a legal cluster option type.</span>
+<span class="s1">Legal cluster option types: [bool, float, int, mapping, select, string]&#39;&#39;&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">is_cluster_option_type</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="c1"># type: (str) -&gt; bool</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Validates that a given cluster option type is legal.</span>
+<span class="sd">    Legal types include:</span>
+
+<span class="sd">        * bool</span>
+<span class="sd">        * float</span>
+<span class="sd">        * int</span>
+<span class="sd">        * mapping</span>
+<span class="sd">        * select</span>
+<span class="sd">        * string</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        item (str): Cluster option type.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValidationError: If cluster option type is illegal.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: Validity of cluster option type.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">item</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;bool&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">,</span> <span class="s1">&#39;int&#39;</span><span class="p">,</span> <span class="s1">&#39;mapping&#39;</span><span class="p">,</span> <span class="s1">&#39;select&#39;</span><span class="p">,</span> <span class="s1">&#39;string&#39;</span><span class="p">]</span></div>
 </pre></div>
 
            </div>

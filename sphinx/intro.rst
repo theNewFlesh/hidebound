@@ -585,7 +585,7 @@ gateway\_address - gateway server address gateway\_proxy\_address -
 scheduler proxy server address gateway\_public\_address - gateway server
 address, as accessible from a web browser gateway\_auth\_type -
 authentication type gateway\_api\_token - api token
-gateway\_cluster\_options - dict of dask gateway cluster options
+gateway\_cluster\_options - list of dask gateway cluster options
 gateway\_shutdown\_on\_close - whether to shudown cluster upon close
 
 Exporters
@@ -668,7 +668,7 @@ config file.
 | HIDEBOUND\_DASK\_GATEWAY\_AP | str  | api token                               |
 | I\_TOKEN                     |      |                                         |
 +------------------------------+------+-----------------------------------------+
-| HIDEBOUND\_DASK\_GATEWAY\_CL | yaml | dict of dask gateway cluster options    |
+| HIDEBOUND\_DASK\_GATEWAY\_CL | yaml | list of dask gateway cluster options    |
 | USTER\_OPTIONS               |      |                                         |
 +------------------------------+------+-----------------------------------------+
 | HIDEBOUND\_DASK\_GATEWAY\_SH | str  | whether to shudown cluster upon close   |
@@ -713,7 +713,14 @@ Here is a full example config with comments:
       gateway_public_address: https://dask-gateway/services/dask-gateway/    # gateway server address, as accessible from a web browser
       gateway_auth_type: jupyterhub                                          # authentication type
       gateway_api_token: token123                                            # api token
-      gateway_cluster_options: []                                            # list of dask gateway cluster options
+      gateway_cluster_options:                                               # list of dask gateway options
+        - field: image                                                       # option field
+          label: image                                                       # option label
+          option_type: select                                                # options: bool, float, int, mapping, select, string
+          default: "some-image:latest"                                       # option default value
+          options:                                                           # list of choices if option_type is select
+            - "some-image:latest"                                            # choice 1
+            - "some-image:0.1.2"                                             # choice 2
       gateway_shutdown_on_close: true                                        # whether to shudown cluster upon close
     exporters:                                                               # dict of exporter configs
       - name: disk                                                           # export to disk

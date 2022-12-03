@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.28.0
+                0.30.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -72,9 +72,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>hidebound.core.connection</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">hidebound.core.connection</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -86,35 +86,192 @@
   <h1>Source code for hidebound.core.connection</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
 
-<span class="kn">from</span> <span class="nn">lunchbox.enforce</span> <span class="kn">import</span> <span class="n">Enforce</span>
+<span class="kn">from</span> <span class="nn">schematics</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">schematics.types</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BaseType</span><span class="p">,</span> <span class="n">BooleanType</span><span class="p">,</span> <span class="n">IntType</span><span class="p">,</span> <span class="n">ListType</span><span class="p">,</span> <span class="n">ModelType</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">URLType</span>
+<span class="p">)</span>
+<span class="kn">import</span> <span class="nn">dask_gateway</span> <span class="k">as</span> <span class="nn">dgw</span>
 <span class="kn">import</span> <span class="nn">dask.distributed</span> <span class="k">as</span> <span class="nn">ddist</span>
+
+<span class="kn">import</span> <span class="nn">hidebound.core.validators</span> <span class="k">as</span> <span class="nn">vd</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="DaskConnectionConfig"><a class="viewcode-back" href="../../../core.html#hidebound.core.connection.DaskConnectionConfig">[docs]</a><span class="k">class</span> <span class="nc">DaskConnectionConfig</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    A class for validating DaskConnection configurations.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        cluster_type (str, optional): Dask cluster type. Options include:</span>
+<span class="sd">            local, gateway. Default: local.</span>
+<span class="sd">        num_partitions (int, optional): Number of partions each DataFrame is to</span>
+<span class="sd">            be split into. Default: 16.</span>
+<span class="sd">        local_num_workers (int, optional): Number of workers to run on local</span>
+<span class="sd">            cluster. Default: 16.</span>
+<span class="sd">        local_threads_per_worker (int, optional): Number of threads to run per</span>
+<span class="sd">            worker local cluster. Default: 1.</span>
+<span class="sd">        local_multiprocessing (bool, optional): Whether to use multiprocessing</span>
+<span class="sd">            for local cluster. Default: True.</span>
+<span class="sd">        gateway_address (str, optional): Dask Gateway server address. Default:</span>
+<span class="sd">            &#39;http://proxy-public/services/dask-gateway&#39;.</span>
+<span class="sd">        gateway_proxy_address (str, optional): Dask Gateway scheduler proxy</span>
+<span class="sd">            server address.</span>
+<span class="sd">            Default: &#39;gateway://traefik-daskhub-dask-gateway.core:80&#39;</span>
+<span class="sd">        gateway_public_address (str, optional): The address to the gateway</span>
+<span class="sd">            server, as accessible from a web browser.</span>
+<span class="sd">            Default: &#39;https://dask-gateway/services/dask-gateway/&#39;.</span>
+<span class="sd">        gateway_auth_type (str, optional): Dask Gateway authentication type.</span>
+<span class="sd">            Default: jupyterhub.</span>
+<span class="sd">        gateway_api_token (str, optional): Authentication API token.</span>
+<span class="sd">        gateway_cluster_options (list, optional): Dask Gateway cluster options.</span>
+<span class="sd">            Default: [].</span>
+<span class="sd">        gateway_shutdown_on_close (bool, optional): Whether to shudown cluster</span>
+<span class="sd">            upon close. Default: True.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">cluster_type</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;local&#39;</span><span class="p">,</span>
+        <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_in</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;local&#39;</span><span class="p">,</span> <span class="s1">&#39;gateway&#39;</span><span class="p">])]</span>
+    <span class="p">)</span>  <span class="c1"># type: StringType</span>
+    <span class="n">num_partitions</span> <span class="o">=</span> <span class="n">IntType</span><span class="p">(</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_gte</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
+    <span class="p">)</span>  <span class="c1"># type: IntType</span>
+    <span class="n">local_num_workers</span> <span class="o">=</span> <span class="n">IntType</span><span class="p">(</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_gte</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
+    <span class="p">)</span>  <span class="c1"># type: IntType</span>
+    <span class="n">local_threads_per_worker</span> <span class="o">=</span> <span class="n">IntType</span><span class="p">(</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_gte</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
+    <span class="p">)</span>  <span class="c1"># type: IntType</span>
+    <span class="n">local_multiprocessing</span> <span class="o">=</span> <span class="n">BooleanType</span><span class="p">(</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>  <span class="c1"># type: BooleanType</span>
+    <span class="n">gateway_address</span> <span class="o">=</span> <span class="n">URLType</span><span class="p">(</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">fqdn</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;http://proxy-public/services/dask-gateway&#39;</span><span class="p">,</span>
+    <span class="p">)</span>  <span class="c1"># type: URLType</span>
+    <span class="n">gateway_proxy_address</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;gateway://traefik-daskhub-dask-gateway.core:80&#39;</span><span class="p">,</span>
+    <span class="p">)</span>  <span class="c1"># type: StringType</span>
+    <span class="n">gateway_public_address</span> <span class="o">=</span> <span class="n">URLType</span><span class="p">(</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">fqdn</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;https://dask-gateway/services/dask-gateway/&#39;</span><span class="p">,</span>
+    <span class="p">)</span>  <span class="c1"># type: URLType</span>
+    <span class="n">gateway_auth_type</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;jupyterhub&#39;</span><span class="p">,</span>
+        <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_eq</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;jupyterhub&#39;</span><span class="p">)]</span>
+    <span class="p">)</span>  <span class="c1"># StringType</span>
+    <span class="n">gateway_api_token</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">()</span>  <span class="c1"># StringType</span>
+    <span class="n">gateway_shutdown_on_close</span> <span class="o">=</span> <span class="n">BooleanType</span><span class="p">(</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>  <span class="c1"># type: BooleanType</span>
+
+<div class="viewcode-block" id="DaskConnectionConfig.ClusterOption"><a class="viewcode-back" href="../../../core.html#hidebound.core.connection.DaskConnectionConfig.ClusterOption">[docs]</a>    <span class="k">class</span> <span class="nc">ClusterOption</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+        <span class="n">field</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: StringType</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: StringType</span>
+        <span class="n">default</span> <span class="o">=</span> <span class="n">BaseType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: BaseType</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span><span class="n">BaseType</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[])</span>
+        <span class="n">option_type</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
+            <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_cluster_option_type</span><span class="p">]</span>
+        <span class="p">)</span></div>
+    <span class="n">gateway_cluster_options</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
+        <span class="n">ModelType</span><span class="p">(</span><span class="n">ClusterOption</span><span class="p">),</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[]</span>
+    <span class="p">)</span>  <span class="c1"># type: ListType</span></div>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
 <div class="viewcode-block" id="DaskConnection"><a class="viewcode-back" href="../../../core.html#hidebound.core.connection.DaskConnection">[docs]</a><span class="k">class</span> <span class="nc">DaskConnection</span><span class="p">:</span>
-<div class="viewcode-block" id="DaskConnection.__init__"><a class="viewcode-back" href="../../../core.html#hidebound.core.connection.DaskConnection.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cluster_type</span><span class="p">,</span> <span class="n">num_workers</span><span class="p">):</span>
-        <span class="c1"># type: (str, int) -&gt; None</span>
+<div class="viewcode-block" id="DaskConnection.__init__"><a class="viewcode-back" href="../../../core.html#hidebound.core.connection.DaskConnection.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="c1"># type: (dict) -&gt; None</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Instantiates a DaskConnection.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            cluster_type (str): Dask cluster type. Options include: local.</span>
-<span class="sd">            num_workers (int): Number of Dask workers.</span>
+<span class="sd">            config (dict): DaskConnection config.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            EnforceError: If cluster_type is illegal.</span>
-<span class="sd">            EnforceError: If num_workers is less than 1.</span>
+<span class="sd">            DataError: If config is invalid.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Illegal cluster type: </span><span class="si">{a}</span><span class="s1">. Legal cluster types: </span><span class="si">{b}</span><span class="s1">.&#39;</span>
-        <span class="n">Enforce</span><span class="p">(</span><span class="n">cluster_type</span><span class="p">,</span> <span class="s1">&#39;in&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;local&#39;</span><span class="p">],</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
-
-        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;num_workers must be greater than 0. Given value: </span><span class="si">{a}</span><span class="s1">.&#39;</span>
-        <span class="n">Enforce</span><span class="p">(</span><span class="n">num_workers</span><span class="p">,</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
-        <span class="c1"># ----------------------------------------------------------------------</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">cluster_type</span> <span class="o">=</span> <span class="n">cluster_type</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_workers</span> <span class="o">=</span> <span class="n">num_workers</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">DaskConnectionConfig</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">to_native</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cluster</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">local_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; dict</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: Local cluster config.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span>
+            <span class="n">dashboard_address</span><span class="o">=</span><span class="s1">&#39;0.0.0.0:8087&#39;</span><span class="p">,</span>
+            <span class="n">n_workers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;local_num_workers&#39;</span><span class="p">],</span>
+            <span class="n">threads_per_worker</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;local_threads_per_worker&#39;</span><span class="p">],</span>
+            <span class="n">processes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;local_multiprocessing&#39;</span><span class="p">],</span>
+        <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">gateway_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; dict</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: gateway cluster config.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># create gateway config</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;gateway_address&#39;</span><span class="p">],</span>
+            <span class="n">proxy_address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;gateway_proxy_address&#39;</span><span class="p">],</span>
+            <span class="n">public_address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;gateway_public_address&#39;</span><span class="p">],</span>
+            <span class="n">shutdown_on_close</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;gateway_shutdown_on_close&#39;</span><span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="c1"># set jupyterhub authentication</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;gateway_auth_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;jupyterhub&#39;</span><span class="p">:</span>
+            <span class="n">output</span><span class="p">[</span><span class="s1">&#39;auth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dgw</span><span class="o">.</span><span class="n">JupyterHubAuth</span><span class="p">(</span>
+                <span class="n">api_token</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;gateway_api_token&#39;</span><span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="c1"># set cluster options</span>
+        <span class="n">opts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;gateway_cluster_options&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">specs</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="n">opts</span><span class="p">:</span>
+                <span class="n">spec</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+                    <span class="n">field</span><span class="o">=</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;field&#39;</span><span class="p">],</span>
+                    <span class="n">label</span><span class="o">=</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">],</span>
+                    <span class="n">default</span><span class="o">=</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span>
+                    <span class="n">spec</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">opt</span><span class="p">[</span><span class="s1">&#39;option_type&#39;</span><span class="p">]},</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">opt</span><span class="p">[</span><span class="s1">&#39;option_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;select&#39;</span><span class="p">:</span>
+                    <span class="n">spec</span><span class="p">[</span><span class="s1">&#39;spec&#39;</span><span class="p">][</span><span class="s1">&#39;options&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">opt</span><span class="p">[</span><span class="s1">&#39;options&#39;</span><span class="p">]</span>
+                <span class="n">specs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="n">dgw</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">Options</span><span class="o">.</span><span class="n">_from_spec</span><span class="p">(</span><span class="n">specs</span><span class="p">)</span>
+            <span class="n">output</span><span class="p">[</span><span class="s1">&#39;cluster_options&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">options</span>
+
+        <span class="k">return</span> <span class="n">output</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">cluster_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; str</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Cluster type.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;cluster_type&#39;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">num_partitions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># type: () -&gt; int</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            int: Number of partitions.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;num_partitions&#39;</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; DaskConnection</span>
@@ -125,11 +282,9 @@
 <span class="sd">            DaskConnection: self.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cluster_type</span> <span class="o">==</span> <span class="s1">&#39;local&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">cluster</span> <span class="o">=</span> <span class="n">ddist</span><span class="o">.</span><span class="n">LocalCluster</span><span class="p">(</span>
-                <span class="n">processes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">n_workers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_workers</span><span class="p">,</span>
-                <span class="n">dashboard_address</span><span class="o">=</span><span class="s1">&#39;0.0.0.0:8087&#39;</span><span class="p">,</span>
-            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cluster</span> <span class="o">=</span> <span class="n">ddist</span><span class="o">.</span><span class="n">LocalCluster</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">local_config</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">cluster_type</span> <span class="o">==</span> <span class="s1">&#39;gateway&#39;</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cluster</span> <span class="o">=</span> <span class="n">dgw</span><span class="o">.</span><span class="n">GatewayCluster</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">gateway_config</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>

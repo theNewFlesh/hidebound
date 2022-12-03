@@ -28,7 +28,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.27.0
+                0.30.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -72,9 +72,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>hidebound.server.extension</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">hidebound.server.extension</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -90,7 +90,7 @@
 <span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">import</span> <span class="nn">flask</span>
-<span class="kn">import</span> <span class="nn">jsoncomment</span> <span class="k">as</span> <span class="nn">jsonc</span>
+<span class="kn">import</span> <span class="nn">pyjson5</span> <span class="k">as</span> <span class="nn">jsonc</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
 
 <span class="kn">from</span> <span class="nn">hidebound.core.database</span> <span class="kn">import</span> <span class="n">Database</span>
@@ -161,7 +161,7 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">ext</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;yml&#39;</span><span class="p">,</span> <span class="s1">&#39;yaml&#39;</span><span class="p">]:</span>
                 <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">jsonc</span><span class="o">.</span><span class="n">JsonComment</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="n">jsonc</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HideboundExtension._get_config_from_env"><a class="viewcode-back" href="../../../server.html#hidebound.server.extension.HideboundExtension._get_config_from_env">[docs]</a>    <span class="k">def</span> <span class="nf">_get_config_from_env</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
         <span class="c1"># type: (flask.Flask) -&gt; dict</span>
@@ -174,15 +174,33 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            dict: Database config.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">dask</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">cluster_type</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DASK_CLUSTER_TYPE&#39;</span><span class="p">),</span>
+            <span class="n">num_partitions</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DASK_NUM_PARTITIONS&#39;</span><span class="p">),</span>
+            <span class="n">local_num_workers</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DASK_LOCAL_NUM_WORKERS&#39;</span><span class="p">),</span>
+            <span class="n">local_threads_per_worker</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DASK_LOCAL_THREADS_PER_WORKER&#39;</span><span class="p">),</span>
+            <span class="n">local_multiprocessing</span><span class="o">=</span><span class="n">hbt</span><span class="o">.</span><span class="n">str_to_bool</span><span class="p">(</span>
+                <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DASK_LOCAL_MULTIPROCESSING&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">)</span>
+            <span class="p">),</span>
+            <span class="n">gateway_address</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DASK_GATEWAY_ADDRESS&#39;</span><span class="p">),</span>
+            <span class="n">gateway_proxy_address</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DASK_GATEWAY_PROXY_ADDRESS&#39;</span><span class="p">),</span>
+            <span class="n">gateway_public_address</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DASK_GATEWAY_PUBLIC_ADDRESS&#39;</span><span class="p">),</span>
+            <span class="n">gateway_auth_type</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DASK_GATEWAY_AUTH_TYPE&#39;</span><span class="p">),</span>
+            <span class="n">gateway_api_token</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DASK_GATEWAY_API_TOKEN&#39;</span><span class="p">),</span>
+            <span class="n">gateway_cluster_options</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DASK_GATEWAY_CLUSTER_OPTIONS&#39;</span><span class="p">,</span> <span class="s1">&#39;[]&#39;</span><span class="p">))</span>
+            <span class="p">),</span>
+            <span class="n">gateway_shutdown_on_close</span><span class="o">=</span><span class="n">hbt</span><span class="o">.</span><span class="n">str_to_bool</span><span class="p">(</span>
+                <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DASK_GATEWAY_SHUTDOWN_ON_CLOSE&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">)</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
             <span class="n">ingress_directory</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;INGRESS_DIRECTORY&#39;</span><span class="p">),</span>
             <span class="n">staging_directory</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;STAGING_DIRECTORY&#39;</span><span class="p">),</span>
             <span class="n">include_regex</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;INCLUDE_REGEX&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
             <span class="n">exclude_regex</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;EXCLUDE_REGEX&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\.DS_Store&#39;</span><span class="p">),</span>
             <span class="n">write_mode</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;WRITE_MODE&#39;</span><span class="p">,</span> <span class="s1">&#39;copy&#39;</span><span class="p">),</span>
-            <span class="n">dask_workers</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DASK_WORKERS&#39;</span><span class="p">,</span> <span class="mi">8</span><span class="p">)),</span>
-            <span class="n">dask_cluster_type</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DASK_CLUSTER_TYPE&#39;</span><span class="p">,</span> <span class="s1">&#39;local&#39;</span><span class="p">),</span>
-            <span class="n">redact_regex</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;REDACT_REGEX&#39;</span><span class="p">,</span> <span class="s1">&#39;(_key|_id|url)$&#39;</span><span class="p">),</span>
+            <span class="n">redact_regex</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;REDACT_REGEX&#39;</span><span class="p">,</span> <span class="s1">&#39;(_key|_id|_token|url)$&#39;</span><span class="p">),</span>
             <span class="n">redact_hash</span><span class="o">=</span><span class="n">hbt</span><span class="o">.</span><span class="n">str_to_bool</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;REDACT_HASH&#39;</span><span class="p">,</span> <span class="s1">&#39;False&#39;</span><span class="p">)),</span>
             <span class="n">specification_files</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span>
                 <span class="nb">str</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;SPECIFICATION_FILES&#39;</span><span class="p">,</span> <span class="s1">&#39;[]&#39;</span><span class="p">))</span>
@@ -191,6 +209,7 @@
                 <span class="s1">&#39;WORKFLOW&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;[&quot;delete&quot;, &quot;update&quot;, &quot;create&quot;, &quot;export&quot;]&#39;</span><span class="p">,</span>
             <span class="p">))),</span>
+            <span class="n">dask</span><span class="o">=</span><span class="n">dask</span><span class="p">,</span>
             <span class="n">exporters</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;EXPORTERS&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="p">))),</span>
             <span class="n">webhooks</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;WEBHOOKS&#39;</span><span class="p">,</span> <span class="s1">&#39;[]&#39;</span><span class="p">))),</span>
         <span class="p">)</span></div>

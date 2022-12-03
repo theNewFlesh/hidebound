@@ -54,8 +54,8 @@
             </div>
         </aside>
         <h2>
-            <span class="text">175 statements &nbsp;</span>
-            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">175<span class="text"> run</span></button>
+            <span class="text">177 statements &nbsp;</span>
+            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">177<span class="text"> run</span></button>
             <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">0<span class="text"> missing</span></button>
             <button type="button" class="exc show_exc button_toggle_exc" value="exc" data-shortcut="x" title="Toggle lines excluded">11<span class="text"> excluded</span></button>
         </h2>
@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="d_9f25819ed329aa80_disk_exporter_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io">coverage.py v6.5.0</a>,
-            created at 2022-10-20 00:15 +0000
+            created at 2022-12-03 01:22 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"/>
@@ -835,6 +835,33 @@
     <p class="run"><span class="n"><a id="t753" href="#t753">753</a></span><span class="t">            <span class="nam">errors</span><span class="op">.</span><span class="nam">add</span><span class="op">(</span><span class="nam">str</span><span class="op">(</span><span class="nam">e</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t754" href="#t754">754</a></span><span class="t">    <span class="nam">error</span> <span class="op">=</span> <span class="str">'\n'</span><span class="op">.</span><span class="nam">join</span><span class="op">(</span><span class="nam">list</span><span class="op">(</span><span class="nam">errors</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t755" href="#t755">755</a></span><span class="t">    <span class="key">raise</span> <span class="nam">ValidationError</span><span class="op">(</span><span class="nam">error</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t756" href="#t756">756</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t757" href="#t757">757</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t758" href="#t758">758</a></span><span class="t"><span class="op">@</span><span class="nam">validate</span><span class="op">(</span><span class="str">'''{} is not a legal cluster option type.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t759" href="#t759">759</a></span><span class="t"><span class="str">Legal cluster option types: [bool, float, int, mapping, select, string]'''</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t760" href="#t760">760</a></span><span class="t"><span class="key">def</span> <span class="nam">is_cluster_option_type</span><span class="op">(</span><span class="nam">item</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t761" href="#t761">761</a></span><span class="t">    <span class="com"># type: (str) -> bool</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t762" href="#t762">762</a></span><span class="t">    <span class="str">'''</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t763" href="#t763">763</a></span><span class="t"><span class="str">    Validates that a given cluster option type is legal.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t764" href="#t764">764</a></span><span class="t"><span class="str">    Legal types include:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t765" href="#t765">765</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t766" href="#t766">766</a></span><span class="t"><span class="str">        * bool</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t767" href="#t767">767</a></span><span class="t"><span class="str">        * float</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t768" href="#t768">768</a></span><span class="t"><span class="str">        * int</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t769" href="#t769">769</a></span><span class="t"><span class="str">        * mapping</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t770" href="#t770">770</a></span><span class="t"><span class="str">        * select</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t771" href="#t771">771</a></span><span class="t"><span class="str">        * string</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t772" href="#t772">772</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t773" href="#t773">773</a></span><span class="t"><span class="str">    Args:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t774" href="#t774">774</a></span><span class="t"><span class="str">        item (str): Cluster option type.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t775" href="#t775">775</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t776" href="#t776">776</a></span><span class="t"><span class="str">    Raises:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t777" href="#t777">777</a></span><span class="t"><span class="str">        ValidationError: If cluster option type is illegal.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t778" href="#t778">778</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t779" href="#t779">779</a></span><span class="t"><span class="str">    Returns:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t780" href="#t780">780</a></span><span class="t"><span class="str">        bool: Validity of cluster option type.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t781" href="#t781">781</a></span><span class="t"><span class="str">    '''</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t782" href="#t782">782</a></span><span class="t">    <span class="key">return</span> <span class="nam">item</span> <span class="key">in</span> <span class="op">[</span><span class="str">'bool'</span><span class="op">,</span> <span class="str">'float'</span><span class="op">,</span> <span class="str">'int'</span><span class="op">,</span> <span class="str">'mapping'</span><span class="op">,</span> <span class="str">'select'</span><span class="op">,</span> <span class="str">'string'</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
 </main>
 <footer>
     <div class="content">
@@ -844,7 +871,7 @@
             <a id="nextFileLink" class="nav" href="d_9f25819ed329aa80_disk_exporter_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io">coverage.py v6.5.0</a>,
-            created at 2022-10-20 00:15 +0000
+            created at 2022-12-03 01:22 +0000
         </p>
     </div>
 </footer>
