@@ -1,4 +1,4 @@
-FROM ubuntu:18.04 AS base
+FROM ubuntu:22.04 AS base
 
 USER root
 
@@ -23,22 +23,18 @@ WORKDIR /home/ubuntu
 RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${CLEAR}"; \
     apt update && \
     apt install -y \
-        curl \
-        graphviz \
-        python3-pydot \
         software-properties-common \
-        wget
+        wget && \
+    rm -rf /var/lib/apt/lists/*
 
-# install python3.7 and pip
-RUN echo "\n${CYAN}SETUP PYTHON3.7${CLEAR}"; \
+# install python3.10 and pip
+RUN echo "\n${CYAN}SETUP PYTHON3.10${CLEAR}"; \
     add-apt-repository -y ppa:deadsnakes/ppa && \
     apt update && \
-    apt install --fix-missing -y \
-        python3-distutils \
-        python3.7-dev \
-        python3.7 && \
+    apt install --fix-missing -y python3.10 && \
+    rm -rf /var/lib/apt/lists/* && \
     wget https://bootstrap.pypa.io/get-pip.py && \
-    python3.7 get-pip.py && \
+    python3.10 get-pip.py && \
     rm -rf /home/ubuntu/get-pip.py
 
 # install tini
@@ -57,6 +53,6 @@ USER ubuntu
 ENV REPO='hidebound'
 ENV PYTHONPATH "${PYTHONPATH}:/home/ubuntu/$REPO/python"
 RUN echo "\n${CYAN}INSTALL HIDEBOUND{CLEAR}"; \
-    pip3.7 install hidebound
+    pip3.10 install --user --upgrade hidebound
 
 ENTRYPOINT ["/usr/bin/tini", "--"]

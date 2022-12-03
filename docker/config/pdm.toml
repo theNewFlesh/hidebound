@@ -1,0 +1,13 @@
+build_isolation = true
+cache_dir = "/home/ubuntu/pdm/cache"
+
+[venv]
+location = "/home/ubuntu/pdm/envs"
+in_project = true
+backend = "virtualenv"
+prompt = "dev-{python_version}"
+
+[python]
+path = "/usr/bin/python3.10"
+use_pyenv = true
+use_venv = true

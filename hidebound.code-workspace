@@ -2,20 +2,25 @@
     "folders": [{"path": "./"}],
     "settings": {
         "debug.allowBreakpointsEverywhere": true,
+        "forbeslindesay-taskrunner.prefix": "[",
+        "forbeslindesay-taskrunner.separator": "] ",
+        "mypy.configFile": "docker/config/pyproject.toml",
+        "mypy.targets": ["python"],
+        "python.analysis.autoImportCompletions": true,
         "python.languageServer": "Pylance",
         "python.linting.enabled": true,
-        "python.linting.flake8Args": ["--config=docker/flake8.ini"],
+        "python.linting.flake8Args": ["--config=docker/config/flake8.ini"],
         "python.linting.flake8Enabled": true,
-        "python.linting.flake8Path": "/home/ubuntu/.local/bin/flake8",
-        "python.linting.mypyArgs": ["--config=docker/mypy.ini"],
+        "python.linting.mypyArgs": ["--config=docker/config/mypy.ini"],
         "python.linting.mypyEnabled": true,
-        "python.linting.mypyPath": "/home/ubuntu/.local/bin/mypy",
-        "python.linting.pycodestylePath": "/home/ubuntu/.local/bin/pycodestyle",
         "python.linting.pylintEnabled": false,
-        "python.pythonPath": "/usr/bin/python3.7",
-        "python.testing.pytestArgs": ["--headless"],
+        "python.testing.pytestArgs": [],
         "python.testing.pytestEnabled": true,
         "python.testing.unittestEnabled": false,
+        "pythonTestExplorer.testFramework": "pytest",
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.defaultProfile.osx": "zsh",
+        "testExplorer.codeLens": true,
         "todo-tree.filtering.excludeGlobs": ["**/docs/**/*.*"],
         "terminal.integrated.profiles.linux": {
             "zsh": {"path": "/bin/zsh"}
@@ -24,9 +29,9 @@
             "**/docs": true
         },
         "files.exclude": {
+            "**/__pypackages__": true,
             "**/.classpath": true,
             "**/.coverage": true,
-            ".coverage*": true,
             "**/.DS_Store": true,
             "**/.factorypath": true,
             "**/.git": true,
@@ -37,229 +42,457 @@
             "**/.pytest_cache": true,
             "**/.settings": true,
             "**/.svn": true,
-            "**/CVS": true,
-            "*/*/**/node_modules": true,
             "**/.vscode": true,
+            "**/CVS": true,
             "**/flask_monitoringdashboard.db": true,
-            "**/dask-worker-space": true,
-            "**/test_cluster_dump": true
+            "*/*/**/node_modules": true
         }
     },
     "tasks": {
         "version": "2.0.0",
+        "type": "shell",
+        "dependsOrder": "sequence",
+        "problemMatcher": [],
         "options": {
-            "cwd": "/home/ubuntu/${workspaceFolderBasename}",
+            "cwd": "${workspaceFolder}",
             "env": {
-                "REPO": "${workspaceFolderBasename}",
-                "PYTHONPATH": "${PYTHONPATH}:/home/ubuntu/${workspaceFolderBasename}/python",
-                "REPO_ENV": "True",
+                "X_TOOLS_PATH": "${workspaceFolder}/docker/scripts/x_tools.sh",
             }
+        },
+        "presentation": {
+            "focus": true,
+            "panel": "new",
+            "showReuseMessage": false
         },
         "tasks": [
             {
-                "label": "app",
+                "label": "[build] package",
+                "detail": "Generate pip package of repo in $HOME/build/repo",
+                "icon": {"id": "tools", "color": "terminal.ansiBlue"},
                 "command": [
-                    "export DEBUG_MODE=True &&",
-                    "export CREATE_TMP_DIRS=True &&",
-                    "export HIDEBOUND_CONFIG_FILEPATH=/home/ubuntu/hidebound/resources/test_config.yaml &&",
-                    "python3.7 python/$REPO/server/app.py"
-                ],
-                "type": "shell"
+                    "source $X_TOOLS_PATH &&",
+                    "x_build_package"
+                ]
             },
             {
-                "label": "architecture",
+                "label": "[build] prod",
+                "detail": "Build production version of repo for publishing",
+                "icon": {"id": "tools", "color": "terminal.ansiBlue"},
                 "command": [
-                    "python3.7 -c ",
-                        "\"import rolling_pin.repo_etl as rpo;",
-                        "rpo.write_repo_architecture(",
-                            "'/home/ubuntu/$REPO/python',",
-                            "'docs/architecture.svg',",
-                            "exclude_regex='test|mock',",
-                            "orient='lr'",
-                        ")\""
-                ],
-                "type": "shell"
+                    "source $X_TOOLS_PATH &&",
+                    "x_build_prod"
+                ]
             },
             {
-                "label": "coverage",
-                "command": "source ~/.zshrc && run_tests_coverage",
-                "type": "shell"
-            },
-            {
-                "label": "docs",
+                "label": "[build] publish",
+                "detail": "Publish pip package of repo to PyPi",
+                "icon": {"id": "tools", "color": "terminal.ansiBlue"},
                 "command": [
-                    "mkdir -p docs &&",
-                    "pandoc README.md ",
-                        "-o sphinx/intro.rst",
-                        "--from markdown-yaml_metadata_block &&",
-                    "sphinx-build sphinx docs &&",
-                    "cp sphinx/style.css docs/_static/style.css &&",
-                    "touch docs/.nojekyll &&",
-                    "mkdir -p docs/resources &&",
-                    "cp -R resources/screenshots docs/resources/"
+                    "source $X_TOOLS_PATH &&",
+                    "_x_build_publish",
+                    "'${input:pypi_user}'",
+                    "'${input:pypi_password}'",
+                    "'${input:pypi_comment}'"
                 ],
-                "type": "shell"
-            },
-            {
-                "label": "fast-test",
-                "command": "source ~/.zshrc && run_tests_fast",
-                "type": "shell"
-            },
-            {
-                "label": "full-docs",
-                "dependsOrder": "sequence",
                 "dependsOn": [
-                    "docs",
-                    "coverage",
-                    "architecture",
-                    "metrics"
-                ],
-                "type": "shell"
+                    "[test] prod"
+                ]
             },
             {
-                "label": "lab",
-                "command": "jupyter lab --allow-root --ip=0.0.0.0 --no-browser",
-                "type": "shell"
-            },
-            {
-                "label": "lint",
+                "label": "[build] test",
+                "detail": "Build test version of repo for prod testing",
+                "icon": {"id": "tools", "color": "terminal.ansiBlue"},
                 "command": [
-                    "echo 'LINTING' &&",
-                    "flake8 python --config docker/flake8.ini &&",
-                    "echo 'TYPE CHECKING' &&",
-                    "mypy python --config-file docker/mypy.ini"
-                ],
-                "type": "shell"
+                    "source $X_TOOLS_PATH &&",
+                    "x_build_test"
+                ]
             },
             {
-                "label": "metrics",
+                "label": "[docs] docs",
+                "detail": "Generate sphinx documentation",
+                "icon": {"id": "book", "color": "terminal.ansiYellow"},
                 "command": [
-                    "python3.7 -c ",
-                        "\"import rolling_pin.repo_etl as rpo;",
-                        "rpo.write_repo_plots_and_tables(",
-                            "'python', 'docs/plots.html', 'docs'",
-                        ")\""
-                ],
-                "type": "shell"
+                    "source $X_TOOLS_PATH &&",
+                    "x_docs"
+                ]
             },
             {
-                "label": "tmp-repo",
+                "label": "[docs] architecture",
+                "detail": "Generate architecture.svg diagram from all import statements",
+                "icon": {"id": "book", "color": "terminal.ansiYellow"},
                 "command": [
-                    "rm -rf /tmp/$REPO &&",
-                    "cp -R python /tmp/$REPO &&",
-                    "cp -R templates /tmp/$REPO/$REPO/ &&",
-                    "cp -R resources /tmp/$REPO/$REPO/ &&",
-                    "cp README.md /tmp/$REPO/ &&",
-                    "cp LICENSE /tmp/$REPO/ &&",
-                    "cp docker/dev_requirements.txt /tmp/$REPO/ &&",
-                    "cp docker/prod_requirements.txt /tmp/$REPO/ &&",
-                    "cp -R pip/* /tmp/$REPO/ &&",
-                    "cp -R templates /tmp/$REPO/$REPO &&",
-                    "find /tmp/$REPO",
-                        "| grep -E '__pycache__|flask_monitor|cli.py'",
-                        "| parallel 'rm -rf {}' &&",
-                    "find /tmp/$REPO -type f",
-                        "| grep __init__.py",
-                        "| parallel 'rm -rf {}; touch {}'"
-                ],
-                "type": "shell"
+                    "source $X_TOOLS_PATH &&",
+                    "x_docs_architecture"
+                ]
             },
             {
-                "label": "package-repo",
+                "label": "[docs] full",
+                "detail": "Generate documentation, coverage report, architecture diagram and code",
+                "icon": {"id": "book", "color": "terminal.ansiYellow"},
                 "command": [
-                    "cd /tmp/$REPO &&",
-                    "find /tmp/$REPO",
-                        "| grep -E '.*test.*\\.py$|mock.*\\.py$|__pycache__'",
-                        "| parallel 'rm -rf {}'",
+                    "source $X_TOOLS_PATH &&",
+                    "x_docs_full"
+                ]
+            },
+            {
+                "label": "[docs] metrics",
+                "detail": "Generate code metrics report, plots and tables",
+                "icon": {"id": "book", "color": "terminal.ansiYellow"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_docs_metrics"
+                ]
+            },
+            {
+                "label": "[library] add",
+                "detail": "Add a given package to a given dependency group",
+                "icon": {"id": "package", "color": "terminal.ansiCyan"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_library_add '${input:add_pdm_package}' '${input:pdm_group}'"
+                ]
+            },
+            {
+                "label": "[library] graph-dev",
+                "detail": "Graph dependencies in dev environment",
+                "icon": {"id": "package", "color": "terminal.ansiCyan"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_library_graph_dev"
+                ]
+            },
+            {
+                "label": "[library] graph-prod",
+                "detail": "Graph dependencies in prod environment",
+                "icon": {"id": "package", "color": "terminal.ansiMagenta"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_library_graph_prod"
+                ]
+            },
+            {
+                "label": "[library] install-dev",
+                "detail": "Install all dependencies into dev environment",
+                "icon": {"id": "package", "color": "terminal.ansiCyan"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_library_install_dev"
+                ]
+            },
+            {
+                "label": "[library] install-prod",
+                "detail": "Install all dependencies into prod environment",
+                "icon": {"id": "package", "color": "terminal.ansiMagenta"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_library_install_prod"
+                ]
+            },
+            {
+                "label": "[library] list-dev",
+                "detail": "List packages in dev environment",
+                "icon": {"id": "package", "color": "terminal.ansiCyan"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_library_list_dev"
+                ]
+            },
+            {
+                "label": "[library] list-prod",
+                "detail": "List packages in prod environment",
+                "icon": {"id": "package", "color": "terminal.ansiMagenta"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_library_list_prod"
+                ]
+            },
+            {
+                "label": "[library] lock-dev",
+                "detail": "Resolve dev.lock file",
+                "icon": {"id": "package", "color": "terminal.ansiCyan"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_library_lock_dev"
+                ]
+            },
+            {
+                "label": "[library] lock-prod",
+                "detail": "Resolve prod.lock file",
+                "icon": {"id": "package", "color": "terminal.ansiMagenta"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_library_lock_prod"
+                ]
+            },
+            {
+                "label": "[library] remove",
+                "detail": "Remove a given package from a given dependency group",
+                "icon": {"id": "package", "color": "terminal.ansiCyan"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_library_remove ${input:remove_pdm_package} ${input:pdm_group}"
+                ]
+            },
+            {
+                "label": "[library] search",
+                "detail": "Search for pip packages",
+                "icon": {"id": "package", "color": "terminal.ansiCyan"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_library_search ${input:search_pdm_package}"
+                ]
+            },
+            {
+                "label": "[library] sync-dev",
+                "detail": "Sync dev environment with packages listed in dev.lock",
+                "icon": {"id": "package", "color": "terminal.ansiCyan"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_library_sync_dev"
+                ]
+            },
+            {
+                "label": "[library] sync-prod",
+                "detail": "Sync prod environment with packages listed in prod.lock",
+                "icon": {"id": "package", "color": "terminal.ansiMagenta"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_library_sync_prod"
+                ]
+            },
+            {
+                "label": "[library] update",
+                "detail": "Update dev dependencies",
+                "icon": {"id": "package", "color": "terminal.ansiCyan"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_library_update ${input:update_pdm_package} ${input:pdm_group}"
+                ]
+            },
+            // {
+            //     "label": "[session] app",
+            //     "detail": "Run app",
+            //     "icon": {"id": "beaker", "color": "terminal.ansiWhite"},
+            //     "command": [
+            //         "source $X_TOOLS_PATH &&",
+            //         "x_session_app"
+            //     ],
+            // },
+            {
+                "label": "[session] lab",
+                "detail": "Run jupyter lab server",
+                "icon": {"id": "beaker", "color": "terminal.ansiWhite"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_session_lab"
+                ]
+            },
+            {
+                "label": "[session] python",
+                "detail": "Run python session with dev dependencies",
+                "icon": {"id": "beaker", "color": "terminal.ansiWhite"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_session_python"
+                ]
+            },
+            {
+                "label": "[test] coverage",
+                "detail": "Generate test coverage report",
+                "icon": {"id": "check", "color": "terminal.ansiGreen"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_test_coverage"
+                ]
+            },
+            {
+                "label": "[test] dev",
+                "detail": "Run all tests",
+                "icon": {"id": "check", "color": "terminal.ansiGreen"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_test_dev"
+                ]
+            },
+            {
+                "label": "[test] fast",
+                "detail": "Test all code excepts tests marked with SKIP_SLOWS_TESTS decorator",
+                "icon": {"id": "check", "color": "terminal.ansiGreen"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_test_fast"
+                ]
+            },
+            {
+                "label": "[test] lint",
+                "detail": "Run linting and type checking",
+                "icon": {"id": "check", "color": "terminal.ansiGreen"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_test_lint"
+                ]
+            },
+            {
+                "label": "_[test] prod-3.7",
+                "detail": "Run tests in prod-3.7 environment",
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "TEST_PROCS=1 &&",
+                    "x_test_run prod 3.7"
                 ],
-                "dependsOrder": "sequence",
+                "hide": true,
+                "presentation": {
+                    "group": "test",
+                    "panel": "dedicated"
+                }
+            },
+            {
+                "label": "_[test] prod-3.8",
+                "detail": "Run tests in prod-3.8 environment",
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "TEST_PROCS=1 &&",
+                    "x_test_run prod 3.8"
+                ],
+                "hide": true,
+                "presentation": {
+                    "group": "test",
+                    "panel": "dedicated"
+                }
+            },
+            {
+                "label": "_[test] prod-3.9",
+                "detail": "Run tests in prod-3.9 environment",
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "TEST_PROCS=1 &&",
+                    "x_test_run prod 3.9"
+                ],
+                "hide": true,
+                "presentation": {
+                    "group": "test",
+                    "panel": "dedicated"
+                }
+            },
+            {
+                "label": "_[test] prod-3.10",
+                "detail": "Run tests in prod-3.10 environment",
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "TEST_PROCS=1 &&",
+                    "x_test_run prod 3.10"
+                ],
+                "hide": true,
+                "presentation": {
+                    "group": "test",
+                    "panel": "dedicated"
+                }
+            },
+            {
+                "label": "_[test] prod",
+                "detail": "Run tests across all support python versions",
                 "dependsOn": [
-                    "tmp-repo"
+                    "_[test] prod-3.7",
+                    "_[test] prod-3.8",
+                    "_[test] prod-3.9",
+                    "_[test] prod-3.10"
                 ],
-                "type": "shell"
+                "hide": true,
+                "dependsOrder": "parallel",
+                "presentation": {
+                    "group": "test"
+                }
             },
             {
-                "label": "package",
-                "command": [
-                    "unset REPO_ENV &&",
-                    "cd /tmp/$REPO &&",
-                    "python3.7 setup.py sdist"
-                ],
-                "dependsOrder": "sequence",
+                "label": "[test] prod",
+                "detail": "Run tests across all support python versions",
+                "icon": {"id": "check", "color": "terminal.ansiMagenta"},
                 "dependsOn": [
-                    "package-repo"
+                    "[build] test",
+                    "_[test] prod"
                 ],
-                "type": "shell"
+                "dependsOrder": "sequence"
             },
             {
-                "label": "publish",
+                "label": "[version] version",
+                "detail": "Full resolution of repo: dependencies, linting, tests, docs, etc",
+                "icon": {"id": "plus", "color": "terminal.ansiRed"},
                 "command": [
-                    "unset REPO_ENV &&",
-                    "cd /tmp/$REPO && twine upload dist/* && rm -rf /tmp/$REPO"
-                ],
-                "dependsOrder": "sequence",
-                "dependsOn": [
-                    "tox",
-                    "lint",
-                    "package"
-                ],
-                "type": "shell"
+                    "source $X_TOOLS_PATH &&",
+                    "x_version"
+                ]
             },
             {
-                "label": "python",
-                "command": "python3.7",
-                "type": "shell"
-            },
-            {
-                "label": "requirements",
+                "label": "[version] bump-major",
+                "detail": "Bump repo's major version",
+                "icon": {"id": "plus", "color": "terminal.ansiRed"},
                 "command": [
-                    "python3.7 -m pip list --format freeze > docker/frozen_requirements.txt"
-                ],
-                "type": "shell"
+                    "source $X_TOOLS_PATH &&",
+                    "x_version_bump_major"
+                ]
             },
             {
-                "label": "test",
-                "command": "source ~/.zshrc && run_tests",
-                "type": "shell"
-            },
-            {
-                "label": "tox-repo",
+                "label": "[version] bump-minor",
+                "detail": "Bump repo's minor version",
+                "icon": {"id": "plus", "color": "terminal.ansiRed"},
                 "command": [
-                    "cp docker/flake8.ini /tmp/$REPO &&",
-                    "cp docker/mypy.ini /tmp/$REPO &&",
-                    "cp docker/pytest.ini /tmp/$REPO &&",
-                    "cp docker/tox.ini /tmp/$REPO &&",
-                    "cp python/conftest.py /tmp/$REPO &&",
-                    "cp -R /home/ubuntu/$REPO/resources /tmp",
-                ],
-                "dependsOrder": "sequence",
-                "dependsOn": [
-                    "tmp-repo"
-                ],
-                "type": "shell"
+                    "source $X_TOOLS_PATH &&",
+                    "x_version_bump_minor"
+                ]
             },
             {
-                "label": "tox",
+                "label": "[version] bump-patch",
+                "detail": "Bump repo's patch version",
+                "icon": {"id": "plus", "color": "terminal.ansiRed"},
                 "command": [
-                    "unset REPO_ENV &&",
-                    "cd /tmp/$REPO &&",
-                    "tox -vvv"
-                ],
-                "dependsOrder": "sequence",
-                "dependsOn": [
-                    "tox-repo"
-                ],
-                "type": "shell"
+                    "source $X_TOOLS_PATH &&",
+                    "x_version_bump_patch"
+                ]
+            }
+        ],
+        "inputs": [
+            {
+                "id": "pdm_group",
+                "type": "pickString",
+                "description": "Dependency group:",
+                "options": ["default", "dev", "test", "lab"],
+                "default": "default"
             },
             {
-                "label": "version",
-                "dependsOrder": "sequence",
-                "dependsOn": [
-                    "lint",
-                    "full-docs",
-                    "requirements"
-                ],
-                "type": "shell"
+                "id": "add_pdm_package",
+                "type": "promptString",
+                "description": "[ADD] Package name:"
+            },
+            {
+                "id": "remove_pdm_package",
+                "type": "promptString",
+                "description": "[REMOVE] Package name:"
+            },
+            {
+                "id": "search_pdm_package",
+                "type": "promptString",
+                "description": "[SEARCH] Package name:"
+            },
+            {
+                "id": "update_pdm_package",
+                "type": "promptString",
+                "description": "[UPDATE] Package name:"
+            },
+            {
+                "id": "pypi_user",
+                "description": "PyPi username:",
+                "type": "promptString",
+                "default": "the-new-flesh"
+            },
+            {
+                "id": "pypi_password",
+                "description": "PyPi password:",
+                "type": "promptString"
+            },
+            {
+                "id": "pypi_comment",
+                "description": "Comments:",
+                "type": "promptString"
             }
         ]
     }

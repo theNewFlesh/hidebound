@@ -1,4 +1,4 @@
-version: "3.4"
+version: "3.8"
 volumes:
   cache:
 services:
@@ -16,13 +16,13 @@ services:
     userns_mode: "host"
     user: ubuntu
     env_file:
-      - dev-env
+      - config/dev-env
     volumes:
-      - ../:/home/ubuntu/hidebound
-      - ./jupyter:/home/ubuntu/.jupyter
-      - ./ipython:/home/ubuntu/.ipython
+      - ../:/home/ubuntu/rolling-pin
+      - ~/.ssh:/home/ubuntu/.ssh:ro
+      - ./config/jupyter:/home/ubuntu/.jupyter
+      - ./config/zshrc:/home/ubuntu/.zshrc
       - ../artifacts:/tmp/dash_artifacts
-      - ~/.ssh:/home/ubuntu/.ssh
       # - /mnt/storage:/mnt/storage
     working_dir: "/home/ubuntu"
     command: "tail -f /dev/null"
