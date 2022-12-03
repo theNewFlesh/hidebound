@@ -4,7 +4,7 @@ volumes:
 services:
   hidebound:
     container_name: hidebound
-    image: hidebound
+    image: hidebound:tag
     build:
       context: .
       dockerfile: dev.dockerfile
