@@ -197,7 +197,7 @@ class DaskConnection:
         '''
         if self.cluster_type == 'local':
             self.cluster = ddist.LocalCluster(**self.local_config)
-        elif self.cluster_type == 'gateway':
+        elif self.cluster_type == 'gateway':  # pragma: no cover
             self.cluster = dgw.GatewayCluster(**self.gateway_config)  # pragma: no cover
         return self
 
