@@ -1,13 +1,13 @@
 [project]
 name = "hidebound"
 version = "0.30.0"
-description = "A library of various tools for common python tasks"
+description = "A local database service for converting directories of arbitrary files into validated assets and derived JSON metadata."
 authors = [
     {name = "Alex Braun", email = "alexander.g.braun@gmail.com"},
 ]
 readme = "README.md"
 license = "MIT"
-keywords = ["tool", "tools", "general", "slack", "enforce"]
+keywords = ["ephemeral", "database", "asset", "assetstore", "datastore", "vfx"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
