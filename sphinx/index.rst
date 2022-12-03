@@ -4,7 +4,7 @@ Welcome to hidebound' documentation!
 ====================================
 .. toctree::
    :maxdepth: 1
-   :caption: Documentation
+   :caption: Getting Started
 
    intro
 
@@ -13,6 +13,12 @@ Welcome to hidebound' documentation!
    :caption: Python API
 
    modules
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Developer CLI
+
+   cli
 
 Indices and tables
 ==================
