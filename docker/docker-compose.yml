@@ -18,7 +18,7 @@ services:
     env_file:
       - config/dev-env
     volumes:
-      - ../:/home/ubuntu/rolling-pin
+      - ../:/home/ubuntu/hidebound
       - ~/.ssh:/home/ubuntu/.ssh:ro
       - ./config/jupyter:/home/ubuntu/.jupyter
       - ./config/zshrc:/home/ubuntu/.zshrc

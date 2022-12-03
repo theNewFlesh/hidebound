@@ -161,7 +161,7 @@ WORKDIR /home/ubuntu
 RUN echo "\n${CYAN}REMOVE DIRECTORIES${CLEAR}"; \
     rm -rf config scripts
 
-ENV REPO='rolling-pin'
+ENV REPO='hidebound'
 ENV PYTHONPATH ":/home/ubuntu/$REPO/python:/home/ubuntu/.local/lib"
 ENV PYTHONPYCACHEPREFIX "/home/ubuntu/.python_cache"
 
