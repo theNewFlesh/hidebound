@@ -64,7 +64,7 @@ fi;
 
 # OLD---------------------------------------------------------------------------
 get_num_cores () {
-    python3.7 -c 'import os; print(os.cpu_count())';
+    python3 -c 'import os; print(os.cpu_count())';
 }
 get_test_dirs () {
     find ~/$REPO/python -maxdepth 2 -mindepth 2 -type d \

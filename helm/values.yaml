@@ -69,8 +69,8 @@ base:
     image_pull_policy: IfNotPresent
     nfs_server:
     command:
-      - /usr/bin/python3.7
-      - /home/ubuntu/.local/lib/python3.7/site-packages/hidebound/server/app.py
+      - /usr/bin/python3.10
+      - /home/ubuntu/.local/lib/python3.10/site-packages/hidebound/server/app.py
     args:
     env_configmap: hidebound-env-configmap
     env_secret: hidebound-env-secret
@@ -120,8 +120,8 @@ overlays:
 
     deployment:
       command:
-        - /usr/bin/python3.7
-        - /home/ubuntu/.local/lib/python3.7/site-packages/hidebound/server/app.py
+        - /usr/bin/python3.10
+        - /home/ubuntu/.local/lib/python3.10/site-packages/hidebound/server/app.py
 
     env_configmap:
       FLASK_DEBUG: 1
