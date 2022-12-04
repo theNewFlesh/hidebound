@@ -30,6 +30,7 @@ dependencies = [
     "flasgger",
     "flask_monitoringdashboard",
     "flask-healthz",
+    "flask",
     "flask>=2.1.2",
     "girder-client",
     "jinja2>=3.0",

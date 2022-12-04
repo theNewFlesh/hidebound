@@ -1205,12 +1205,13 @@ dependencies = [
 
 [[package]]
 name = "pdm-bump"
-version = "0.6.9"
+version = "0.6.10"
 requires_python = ">=3.9"
 summary = "A plugin for PDM providing the ability to modify the version according to PEP440"
 dependencies = [
     "annotated-types>=0.2.0",
     "pdm>=2.00",
+    "tomlkit>=0.11.6",
 ]
 
 [[package]]
@@ -1973,7 +1974,7 @@ dependencies = [
 
 [metadata]
 lock_version = "4.1"
-content_hash = "sha256:fe04c35fcea6876df8dcfed4a2df45494b753b95f675f5500664886625ac9e7a"
+content_hash = "sha256:4d11541057b64bae2cf520f3e69f4868d79e6fcc79b3a01cdbfe751767493190"
 
 [metadata.files]
 "aiohttp 3.8.3" = [
@@ -3106,9 +3107,9 @@ content_hash = "sha256:fe04c35fcea6876df8dcfed4a2df45494b753b95f675f550066488662
     {url = "https://files.pythonhosted.org/packages/b9/83/e40ebd12718d4df1ca61eeb01f409a110bc528ef5afb7c13e49e090ef618/pdm-2.3.0-py3-none-any.whl", hash = "sha256:9304e1b3f367672214dd23217cb37925b7c34e4338948df428d227e21e62f95e"},
     {url = "https://files.pythonhosted.org/packages/f4/6e/8dc22978d68490f7799137d60221f5c76d8f8069b2f3089cb27df19158fb/pdm-2.3.0.tar.gz", hash = "sha256:15a105a8a2e2ccbcd281ae42444658c03a25be5d9df6e256871c80958f11ff58"},
 ]
-"pdm-bump 0.6.9" = [
-    {url = "https://files.pythonhosted.org/packages/d0/14/f2f4cb933e89cc2cae0ebc0db55b4857da30fc19061c6dd20201a83fb0f6/pdm_bump-0.6.9-py3-none-any.whl", hash = "sha256:4872eadc8db488bd327a76d2ec691a0575b874d3617efaca864a632ad650e2fd"},
-    {url = "https://files.pythonhosted.org/packages/f0/0d/ec8e25e422501e0dd7d4472bf34523e74e361ddcb9311f4a64009136ef52/pdm-bump-0.6.9.tar.gz", hash = "sha256:000eb560575de120afa25ce97d0152a39e386d6c607d970eb6cfac7a9ba165a5"},
+"pdm-bump 0.6.10" = [
+    {url = "https://files.pythonhosted.org/packages/50/47/640a01cedf88322295fea5c0f7cfe060a605ec579e85ebe73b3cef630ccd/pdm-bump-0.6.10.tar.gz", hash = "sha256:b993ff487651343481c7e8b0968c0d407dc54fdb28c554ed0ecb1b34cb7158c6"},
+    {url = "https://files.pythonhosted.org/packages/73/b1/0246311f7a1565997de5a5b577296b73ef6f3dc338208128d3f1222b8bb3/pdm_bump-0.6.10-py3-none-any.whl", hash = "sha256:34ebe040cd72700947db755b4367c38b3bcb84e9e6e27288cff4be7f9166154c"},
 ]
 "percy 2.0.2" = [
     {url = "https://files.pythonhosted.org/packages/6c/e8/1b856488736db9f1bb8578480f9497f7cf1ede96c6e6e17f29ebef4e78bc/percy-2.0.2.tar.gz", hash = "sha256:6238612dc401fa5c221c0ad7738f7ea43e48fe2695f6423e785ee2bc940f021d"},
