@@ -98,7 +98,8 @@ filterwarnings = [
     # "ignore::UserWarning",
     # "ignore::DeprecationWarning",
     # "ignore::PendingDeprecationWarning",
-    "ignore:The --rsyncdir command line argument"
+    "ignore:The --rsyncdir command line argument",
+    "ignore:is a low contrast image"
 ]
 markers = [
     "flaky:Flaky test",
