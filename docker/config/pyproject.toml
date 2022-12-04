@@ -99,18 +99,19 @@ filterwarnings = [
     # "ignore::FutureWarning",
     # "ignore::DeprecationWarning",
     # "ignore::PendingDeprecationWarning"
-    "ignore:.*before_app_first_request",
-    "ignore:.*deprecated function _options",
-    "ignore:.*deprecated function _valid_input_keys",
-    "ignore:.*deprecated function _validator_functions",
-    "ignore:.*deprecated function fields",
-    "ignore:.*imp module is deprecated",
-    "ignore:.*low contrast image",
-    "ignore:.*make_current is deprecated",
-    "ignore:.*Port.*is already in use",
-    "ignore:.*The --rsyncdir command line argument",
-    "ignore:.*the imp module is deprecated",
-    "ignore:.*There is no current event loop"
+    "ignore:.*before_app_first_request:",
+    "ignore:.*deprecated function _options:",
+    "ignore:.*deprecated function _valid_input_keys:",
+    "ignore:.*deprecated function _validator_functions:",
+    "ignore:.*deprecated function fields:",
+    "ignore:.*imp module is deprecated:",
+    "ignore:.*low contrast image:",
+    "ignore:.*make_current is deprecated:",
+    "ignore:.*Port.*is already in use:",
+    "ignore:.*The --rsyncdir command line argument:",
+    "ignore:.*the imp module is deprecated:",
+    "ignore:.*There is no current event loop:",
+    "ignore:.*Meta is not valid:"
 ]
 markers = [
     "flaky:Flaky test",
