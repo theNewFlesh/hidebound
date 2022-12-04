@@ -536,10 +536,32 @@ x_session_python () {
 }
 
 # TEST-FUNCTIONS----------------------------------------------------------------
-x_test_coverage () {
-    # Generate test coverage report
+_x_test_dirs () {
+    # Lists subpackage directories for testing
+    find $REPO_DIR/python -maxdepth 2 -mindepth 2 -type d \
+    | grep -vE '\/(\.|_)' \
+    | sort;
+    # find $REPO_DIR/python -type f | grep -E '_test\.py$' | sort;
+}
+
+_x_test () {
+    # Run all tests on given directory
+    # args: directory
     x_env_activate_dev;
-    echo "${CYAN2}GENERATING TEST COVERAGE REPORT${CLEAR}\n";
+    echo "${CYAN2}TESTING $1${CLEAR}\n";
+    cd $REPO_DIR;
+    pytest \
+        -c $CONFIG_DIR/pyproject.toml \
+        --numprocesses $TEST_PROCS \
+        --verbosity $TEST_VERBOSITY \
+        $1;
+}
+
+_x_test_coverage () {
+    # Generate test coverage report for given directory
+    # args: directory
+    x_env_activate_dev;
+    echo "${CYAN2}GENERATING TEST COVERAGE REPORT FOR $1${CLEAR}\n";
     cd $REPO_DIR;
     mkdir -p docs;
     pytest \
@@ -549,32 +571,45 @@ x_test_coverage () {
         --cov=python \
         --cov-config=$CONFIG_DIR/pyproject.toml \
         --cov-report=html:docs/htmlcov \
-        $REPO_DIR/python;
+        $1;
 }
 
-x_test_dev () {
-    # Run all tests
+_x_test_fast () {
+    # Run all tests on given directory not marked with slow marker
+    # args: directory
     x_env_activate_dev;
-    echo "${CYAN2}TESTING DEV${CLEAR}\n";
-    cd $REPO_DIR;
-    pytest \
-        -c $CONFIG_DIR/pyproject.toml \
-        --numprocesses $TEST_PROCS \
-        --verbosity $TEST_VERBOSITY \
-        $REPO_DIR/python;
-}
-
-x_test_fast () {
-    # Test all code excepts tests marked with SKIP_SLOWS_TESTS decorator
-    x_env_activate_dev;
-    echo "${CYAN2}FAST TESTING DEV${CLEAR}\n";
+    echo "${CYAN2}FAST TESTING $1${CLEAR}\n";
     cd $REPO_DIR;
     SKIP_SLOW_TESTS=true && \
     pytest \
         -c $CONFIG_DIR/pyproject.toml \
         --numprocesses $TEST_PROCS \
         --verbosity $TEST_VERBOSITY \
-        $REPO_DIR/python;
+        $1;
+}
+
+x_test_coverage () {
+    # Run all tests
+    for TEST_DIR in $(_x_test_dirs)
+    do
+        _x_test_coverage $TEST_DIR
+    done;
+}
+
+x_test_dev () {
+    # Run all tests
+    for TEST_DIR in $(_x_test_dirs)
+    do
+        _x_test $TEST_DIR
+    done;
+}
+
+x_test_fast () {
+    # Test all code excepts tests marked with SKIP_SLOWS_TESTS decorator
+    for TEST_DIR in $(_x_test_dirs)
+    do
+        _x_test_fast $TEST_DIR
+    done;
 }
 
 x_test_lint () {

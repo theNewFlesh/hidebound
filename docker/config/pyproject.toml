@@ -96,10 +96,21 @@ test = [
 cache_dir = "/home/ubuntu/.pytest_cache"
 filterwarnings = [
     # "ignore::UserWarning",
+    # "ignore::FutureWarning",
     # "ignore::DeprecationWarning",
-    # "ignore::PendingDeprecationWarning",
-    "ignore:The --rsyncdir command line argument",
-    "ignore:is a low contrast image"
+    # "ignore::PendingDeprecationWarning"
+    "ignore:.*before_app_first_request",
+    "ignore:.*deprecated function _options",
+    "ignore:.*deprecated function _valid_input_keys",
+    "ignore:.*deprecated function _validator_functions",
+    "ignore:.*deprecated function fields",
+    "ignore:.*imp module is deprecated",
+    "ignore:.*low contrast image",
+    "ignore:.*make_current is deprecated",
+    "ignore:.*Port.*is already in use",
+    "ignore:.*The --rsyncdir command line argument",
+    "ignore:.*the imp module is deprecated",
+    "ignore:.*There is no current event loop"
 ]
 markers = [
     "flaky:Flaky test",

@@ -11,7 +11,7 @@
         "python.linting.enabled": true,
         "python.linting.flake8Args": ["--config=docker/config/flake8.ini"],
         "python.linting.flake8Enabled": true,
-        "python.linting.mypyArgs": ["--config=docker/config/mypy.ini"],
+        "python.linting.mypyArgs": ["--config=docker/config/pyproject.toml"],
         "python.linting.mypyEnabled": true,
         "python.linting.pylintEnabled": false,
         "python.testing.pytestArgs": [],
@@ -266,7 +266,7 @@
                 "icon": {"id": "package", "color": "terminal.ansiCyan"},
                 "command": [
                     "source $X_TOOLS_PATH &&",
-                    "x_library_update ${input:update_pdm_package} ${input:pdm_group}"
+                    "x_library_update '${input:update_pdm_package}' '${input:pdm_group}'"
                 ]
             },
             {
