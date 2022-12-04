@@ -6,6 +6,7 @@ import shutil
 import unittest
 
 from schematics.exceptions import DataError
+import pytest
 
 from hidebound.exporters.exporter_base import ExporterBase, ExporterConfigBase
 import hidebound.core.tools as hbt
@@ -157,6 +158,7 @@ class ExporterBaseTests(unittest.TestCase):
                     ExporterBase()._enforce_directory_structure(root)
                 os.makedirs(dir_)
 
+    @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
     def test_export(self):
         with TemporaryDirectory() as root:
             e_content, e_assets, e_files = self.create_data(root)
@@ -182,6 +184,7 @@ class ExporterBaseTests(unittest.TestCase):
             for expected in e_files:
                 self.assertIn(expected, foo.file_chunk)
 
+    @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
     def test_metadata_types(self):
         with TemporaryDirectory() as root:
             e_content, e_assets, e_files = self.create_data(root)

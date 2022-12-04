@@ -6,6 +6,7 @@ import unittest
 
 from girder_client import HttpError
 from schematics.exceptions import DataError
+import pytest
 
 from hidebound.exporters.girder_exporter import GirderConfig, GirderExporter
 from hidebound.exporters.mock_girder import MockGirderClient
@@ -187,6 +188,7 @@ class GirderExporterTests(unittest.TestCase):
         expected = 'http://1.2.3.4:5678/api/v1'
         self.assertEqual(result._url, expected)
 
+    @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
     def test_export(self):
         with TemporaryDirectory() as root:
             self.client = MockGirderClient(add_suffix=False)
@@ -207,6 +209,7 @@ class GirderExporterTests(unittest.TestCase):
             result = sorted(list(result))
             self.assertEqual(result, e_files)
 
+    @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
     def test_export_no_file_metadata(self):
         with TemporaryDirectory() as root:
             self.client = MockGirderClient(add_suffix=False)

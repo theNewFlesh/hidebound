@@ -164,6 +164,7 @@ class DiskExporterTests(unittest.TestCase):
         return staging
 
     @pytest.mark.flakey
+    @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
     def test_export(self):
         with TemporaryDirectory() as root:
             config = self.get_config(root)

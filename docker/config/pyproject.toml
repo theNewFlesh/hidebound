@@ -107,11 +107,12 @@ filterwarnings = [
     "ignore:.*imp module is deprecated:",
     "ignore:.*low contrast image:",
     "ignore:.*make_current is deprecated:",
+    "ignore:.*Meta is not valid:",
     "ignore:.*Port.*is already in use:",
+    "ignore:.*Stream is closed:",
     "ignore:.*The --rsyncdir command line argument:",
     "ignore:.*the imp module is deprecated:",
-    "ignore:.*There is no current event loop:",
-    "ignore:.*Meta is not valid:"
+    "ignore:.*There is no current event loop:"
 ]
 markers = [
     "flaky:Flaky test",
