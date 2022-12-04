@@ -1,7 +1,7 @@
 source_rules:
   - path: /home/ubuntu/hidebound
     include: "LICENSE|README\\.md"
-    exclude: "/\\.|docker"
+    exclude: "/\\.|docker|helm"
   - path: /home/ubuntu/hidebound/python/hidebound
     include: "\\.py$"
   - path: /home/ubuntu/hidebound/docker/config
@@ -9,13 +9,13 @@ source_rules:
     exclude: "cache|__pypackages__"
   - path: /home/ubuntu/hidebound/resources
     include: ".*"
-    exclude: "__pycache__"
+    exclude: "screenshots|\\.DS_Store"
 rename_rules:
   - regex: "/home/ubuntu/hidebound"
     replace: "/home/ubuntu/build/repo"
   - regex: ".*/resources"
     replace: "/home/ubuntu/build/resources"
-  - regex: "/python|/docker|/config"
+  - regex: "/python|/docker/config|/docker"
     replace: ""
   - regex: "prod.lock"
     replace: "pdm.lock"
