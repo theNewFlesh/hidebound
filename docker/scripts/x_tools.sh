@@ -574,22 +574,8 @@ _x_test_coverage () {
         $1;
 }
 
-_x_test_fast () {
-    # Run all tests on given directory not marked with slow marker
-    # args: directory
-    x_env_activate_dev;
-    echo "${CYAN2}FAST TESTING $1${CLEAR}\n";
-    cd $REPO_DIR;
-    SKIP_SLOW_TESTS=true && \
-    pytest \
-        -c $CONFIG_DIR/pyproject.toml \
-        --numprocesses $TEST_PROCS \
-        --verbosity $TEST_VERBOSITY \
-        $1;
-}
-
 x_test_coverage () {
-    # Run all tests
+    # Run all tests generate coverage report
     for TEST_DIR in $(_x_test_dirs)
     do
         _x_test_coverage $TEST_DIR
