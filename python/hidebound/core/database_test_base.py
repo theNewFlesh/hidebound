@@ -20,16 +20,20 @@ import hidebound.core.validators as vd
 
 
 # FIXTURES----------------------------------------------------------------------
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='session')
 def db_client():
     cluster = ddist.LocalCluster(
-        n_workers=1,
-        threads_per_worker=2,
-        dashboard_address='0.0.0.0:8087',
+        host='0.0.0.0',
+        # scheduler_port=0,
+        n_workers=4,
+        threads_per_worker=1,
+        processes=True,
+        memory_limit='1GiB',
     )
     client = ddist.Client(cluster)
     yield client, cluster
 
+    cluster.close()
     client.shutdown()
 
 
