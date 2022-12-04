@@ -592,10 +592,15 @@ x_test_dev () {
 
 x_test_fast () {
     # Test all code excepts tests marked with SKIP_SLOWS_TESTS decorator
-    for TEST_DIR in $(_x_test_dirs)
-    do
-        _x_test_fast $TEST_DIR
-    done;
+    x_env_activate_dev;
+    echo "${CYAN2}FAST TEST${CLEAR}\n";
+    cd $REPO_DIR;
+    SKIP_SLOW_TESTS=true \
+    pytest \
+        -c $CONFIG_DIR/pyproject.toml \
+        --numprocesses $TEST_PROCS \
+        --verbosity $TEST_VERBOSITY \
+        $REPO_SUBPACKAGE;
 }
 
 x_test_lint () {
