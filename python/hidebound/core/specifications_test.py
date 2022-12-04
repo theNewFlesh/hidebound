@@ -28,18 +28,18 @@ class SpecificationsTests(unittest.TestCase):
 
         expected = '.*JPG.* is not a valid extension.'
         data['extension'][-1] = 'JPG'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             spec.Raw001(data).validate()
 
         expected = 'png != jpg'
         data['extension'][-1] = 'png'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             spec.Raw001(data).validate()
 
         expected = r'2 is not in \[1, 3\]'
         data['extension'][-1] = 'jpg'
         data['channels'][-1] = 2
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             spec.Raw002(data).validate()
 
     def test_raw002(self):
@@ -63,16 +63,16 @@ class SpecificationsTests(unittest.TestCase):
 
         expected = '.*JPG.* is not a valid extension.'
         data['extension'][-1] = 'JPG'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             spec.Raw002(data).validate()
 
         expected = 'png != jpg'
         data['extension'][-1] = 'png'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             spec.Raw002(data).validate()
 
         expected = r'2 is not in \[1, 3\]'
         data['extension'][-1] = 'jpg'
         data['channels'][-1] = 2
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             spec.Raw002(data).validate()

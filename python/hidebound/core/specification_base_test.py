@@ -55,7 +55,7 @@ class SpecificationBaseTests(unittest.TestCase):
             pass
         expected = 'Method must be implemented in subclasses of '
         expected += 'SpecificationBase.'
-        with self.assertRaisesRegexp(NotImplementedError, expected):
+        with self.assertRaisesRegex(NotImplementedError, expected):
             Bar().get_asset_path(self.filepath)
 
         result = self.Foo().get_asset_path(self.filepath)
@@ -83,26 +83,26 @@ class SpecificationBaseTests(unittest.TestCase):
         bad = 'p-proj001_spec001_d-desc_v001.ext'
         bad_filename_indicator = Path(root, parent, bad)
         expected = 'Illegal specification field indicator'
-        with self.assertRaisesRegexp(ValidationError, expected):
+        with self.assertRaisesRegex(ValidationError, expected):
             self.Foo().validate_filepath(bad_filename_indicator)
 
         bad = 'p-proj001_s-spec001_d-PIZZA_v001.ext'
         bad_parent = 'p-proj001_s-spec001_d-PIZZA_v001'
         bad_descriptor_token = Path(root, bad_parent, bad)
         expected = 'Illegal descriptor field token'
-        with self.assertRaisesRegexp(ValidationError, expected):
+        with self.assertRaisesRegex(ValidationError, expected):
             self.Foo().validate_filepath(bad_descriptor_token)
 
         bad_parent = 'p-proj001_s-spec001_d-pizza_v001'
         bad_parent = Path(root, bad_parent, filename)
         expected = 'Invalid asset directory name'
-        with self.assertRaisesRegexp(ValidationError, expected):
+        with self.assertRaisesRegex(ValidationError, expected):
             self.Foo().validate_filepath(bad_parent)
 
         bad_parent_token = 'p-proj001_s-spec001_d-pizza_v01'
         bad_parent_token = Path(root, bad_parent_token, filename)
         expected = 'Illegal version field token'
-        with self.assertRaisesRegexp(ValidationError, expected):
+        with self.assertRaisesRegex(ValidationError, expected):
             self.Foo().validate_filepath(bad_parent_token)
 
     def test_get_filename_traits(self):

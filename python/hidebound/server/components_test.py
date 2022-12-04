@@ -16,11 +16,11 @@ class ComponentsTests(unittest.TestCase):
 
     def test_get_dropdown(self):
         expected = 'foo is not a list.'
-        with self.assertRaisesRegexp(TypeError, expected):
+        with self.assertRaisesRegex(TypeError, expected):
             components.get_dropdown('foo')
 
         expected = r'\[2, 3\] are not strings\.'
-        with self.assertRaisesRegexp(TypeError, expected):
+        with self.assertRaisesRegex(TypeError, expected):
             components.get_dropdown(['foo', 2, 3])
 
         result = components.get_dropdown(['foo', 'bar'])
@@ -34,7 +34,7 @@ class ComponentsTests(unittest.TestCase):
 
     def test_get_button(self):
         expected = '10 is not a string.'
-        with self.assertRaisesRegexp(TypeError, expected):
+        with self.assertRaisesRegex(TypeError, expected):
             components.get_button(10)
 
         result = components.get_button('foo')
@@ -178,17 +178,17 @@ class ComponentsTests(unittest.TestCase):
     def test_get_asset_graph(self):
         expected = r"Rows must contain \['asset_path', 'asset_valid'\] "
         expected += r"keys\. Keys found: \[\]\."
-        with self.assertRaisesRegexp(KeyError, expected):
+        with self.assertRaisesRegex(KeyError, expected):
             components.get_asset_graph([])
 
         expected = r"Rows must contain \['asset_path', 'asset_valid'\] "
         expected += r"keys\. Keys found: \['asset_valid']\."
-        with self.assertRaisesRegexp(KeyError, expected):
+        with self.assertRaisesRegex(KeyError, expected):
             components.get_asset_graph([{'asset_valid': 'foo'}])
 
         expected = r"Rows must contain \['asset_path', 'asset_valid'\] "
         expected += r"keys\. Keys found: \['asset_path']\."
-        with self.assertRaisesRegexp(KeyError, expected):
+        with self.assertRaisesRegex(KeyError, expected):
             components.get_asset_graph([{'asset_path': 'foo'}])
 
         data = [

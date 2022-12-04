@@ -57,7 +57,7 @@ class ExporterConfigBaseTests(unittest.TestCase):
 
         config = dict(metadata_types=['foobar', 'file-chunk', 'x'])
         expected = 'foobar is not a legal metadata type.'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             ExporterConfigBase(config).validate()
 
 
@@ -153,7 +153,7 @@ class ExporterBaseTests(unittest.TestCase):
                     os.makedirs(dir_, exist_ok=True)
                 shutil.rmtree(dir_)
                 expected = f'{dir_.as_posix()} directory does not exist.'
-                with self.assertRaisesRegexp(FileNotFoundError, expected):
+                with self.assertRaisesRegex(FileNotFoundError, expected):
                     ExporterBase()._enforce_directory_structure(root)
                 os.makedirs(dir_)
 
@@ -209,33 +209,33 @@ class ExporterBaseTests(unittest.TestCase):
         class Bar(ExporterBase):
             pass
         expected = '_export_content method must be implemented in subclass.'
-        with self.assertRaisesRegexp(NotImplementedError, expected):
+        with self.assertRaisesRegex(NotImplementedError, expected):
             Bar()._export_content({})
 
     def test_export_asset(self):
         class Bar(ExporterBase):
             pass
         expected = '_export_asset method must be implemented in subclass.'
-        with self.assertRaisesRegexp(NotImplementedError, expected):
+        with self.assertRaisesRegex(NotImplementedError, expected):
             Bar()._export_asset({})
 
     def test_export_file(self):
         class Bar(ExporterBase):
             pass
         expected = '_export_file method must be implemented in subclass.'
-        with self.assertRaisesRegexp(NotImplementedError, expected):
+        with self.assertRaisesRegex(NotImplementedError, expected):
             Bar()._export_file({})
 
     def test_export_asset_chunk(self):
         class Bar(ExporterBase):
             pass
         expected = '_export_asset_chunk method must be implemented in subclass.'
-        with self.assertRaisesRegexp(NotImplementedError, expected):
+        with self.assertRaisesRegex(NotImplementedError, expected):
             Bar()._export_asset_chunk({})
 
     def test_export_file_chunk(self):
         class Bar(ExporterBase):
             pass
         expected = '_export_file_chunk method must be implemented in subclass.'
-        with self.assertRaisesRegexp(NotImplementedError, expected):
+        with self.assertRaisesRegex(NotImplementedError, expected):
             Bar()._export_file_chunk({})

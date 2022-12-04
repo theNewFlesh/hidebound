@@ -42,18 +42,18 @@ class GirderConfigTests(unittest.TestCase):
         config = self.config
         expected = r"foo is not in \[\'collection\', \'folder\'\]"
         config['root_type'] = 'foo'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             GirderConfig(config).validate()
 
     def test_host(self):
         config = self.config
         expected = 'Not a well-formed URL'
         config['host'] = '0.1.2'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             GirderConfig(config).validate()
 
         config['host'] = 'foo.bar.com'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             GirderConfig(config).validate()
 
         config = self.config
@@ -65,12 +65,12 @@ class GirderConfigTests(unittest.TestCase):
         config = self.config
         expected = '1023 !> 1023.'
         config['port'] = 1023
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             GirderConfig(config).validate()
 
         expected = '65536 !< 65536.'
         config['port'] = 65536
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             GirderConfig(config).validate()
 # ------------------------------------------------------------------------------
 

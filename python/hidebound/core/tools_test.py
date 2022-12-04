@@ -97,16 +97,16 @@ class ToolsTests(unittest.TestCase):
 
     def test_traverse_directory_error(self):
         expected = '/foo/bar is not a directory or does not exist.'
-        with self.assertRaisesRegexp(FileNotFoundError, expected):
+        with self.assertRaisesRegex(FileNotFoundError, expected):
             next(hbt.traverse_directory('/foo/bar'))
 
         expected = '/foo.bar is not a directory or does not exist.'
-        with self.assertRaisesRegexp(FileNotFoundError, expected):
+        with self.assertRaisesRegex(FileNotFoundError, expected):
             next(hbt.traverse_directory('/foo.bar'))
 
         expected = 'Illegal entry type: foobar. Legal entry types: '
         expected += r"\['file', 'directory'\]\."
-        with self.assertRaisesRegexp(EnforceError, expected):
+        with self.assertRaisesRegex(EnforceError, expected):
             next(hbt.traverse_directory('/tmp', entry_type='foobar'))
 
     def test_traverse_directory_include(self):
@@ -205,7 +205,7 @@ class ToolsTests(unittest.TestCase):
 
     def test_delete_empty_directories_errors(self):
         expected = '/foo/bar is not a directory or does not exist.'
-        with self.assertRaisesRegexp(FileNotFoundError, expected):
+        with self.assertRaisesRegex(FileNotFoundError, expected):
             next(hbt.delete_empty_directories('/foo/bar'))
 
     def test_directory_to_dataframe(self):
@@ -287,7 +287,7 @@ class ToolsTests(unittest.TestCase):
                 f.write('// encoding error')
 
             expected = 'No JSON data could be decoded from .*/test.json.'
-            with self.assertRaisesRegexp(json.JSONDecodeError, expected):
+            with self.assertRaisesRegex(json.JSONDecodeError, expected):
                 hbt.read_json(filepath)
 
     def test_get_meta_kwargs(self):
