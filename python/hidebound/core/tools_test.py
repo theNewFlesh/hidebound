@@ -460,8 +460,8 @@ def test_get_lut_dd_dataframe(db_client):
     assert isinstance(result, dd.DataFrame)
 
     result = result.compute()
-    assert result.key.tolist() == [1, 2, 3]
-    assert result.value.tolist() == ['[1, 1, 1]', '[2, 2]', "['foo']"]
+    assert sorted(result.key.tolist()) == [1, 2, 3]
+    assert sorted(result.value.tolist()) == ["['foo']", '[1, 1, 1]', '[2, 2]']
 
 
 # LUT_COMBINATOR------------------------------------------------------------
@@ -499,11 +499,11 @@ def test_lut_combinator_dd_dataframe(db_client):
     result = result.compute()
     assert 'vals' in result.columns
     expected = [
-        '[1, 1, 1]',
-        '[1, 1, 1]',
-        '[1, 1, 1]',
-        '[2, 2]',
-        '[2, 2]',
         "['foo']",
+        '[1, 1, 1]',
+        '[1, 1, 1]',
+        '[1, 1, 1]',
+        '[2, 2]',
+        '[2, 2]',
     ]
-    assert result.vals.tolist() == expected
+    assert sorted(result.vals.tolist()) == expected
