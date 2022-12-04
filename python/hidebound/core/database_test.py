@@ -196,6 +196,7 @@ def test_init_testing(make_dirs, dask_config):
 
 # CREATE------------------------------------------------------------------------
 @pytest.mark.flaky(rerun=3)
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_create(make_dirs, make_files, specs, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
@@ -277,6 +278,7 @@ def test_create_all_invalid(make_dirs, make_files, specs, dask_config):  # noqa:
     assert result.exists() is False
 
 
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_create_copy(make_dirs, make_files, specs, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
@@ -298,6 +300,7 @@ def test_create_copy(make_dirs, make_files, specs, dask_config):  # noqa: F811
     assert result == make_files
 
 
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_create_move(make_dirs, make_files, specs, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
@@ -343,6 +346,7 @@ def test_create_move(make_dirs, make_files, specs, dask_config):  # noqa: F811
 
 # READ--------------------------------------------------------------------------
 @pytest.mark.flaky(reruns=RERUNS)
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_read_legal_types(make_dirs, make_files, specs, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
@@ -385,6 +389,7 @@ def test_read_legal_types(make_dirs, make_files, specs, dask_config):  # noqa: F
     assert len(result) == 0
 
 
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_read_traits(make_dirs, make_files, specs, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
@@ -417,6 +422,7 @@ def test_read_traits(make_dirs, make_files, specs, dask_config):  # noqa: F811
     assert 'illegal' not in result
 
 
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_read_coordinates(make_dirs, make_files, specs, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
@@ -454,6 +460,7 @@ def test_read_coordinates(make_dirs, make_files, specs, dask_config):  # noqa: F
 
 
 @pytest.mark.flaky(reruns=RERUNS)
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_read_column_order(make_dirs, make_files, specs, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
@@ -568,6 +575,7 @@ def test_update_include(make_dirs, make_files, specs, dask_config):  # noqa: F81
     assert result == expected
 
 
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_update_include_exclude(make_dirs, make_files, specs, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
@@ -648,6 +656,7 @@ def test_delete(make_dirs, make_files, specs, dask_config):  # noqa: F811
 
 # EXPORT------------------------------------------------------------------------
 @pytest.mark.flaky(reruns=RERUNS)
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_export_girder(make_dirs, make_files, specs, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
@@ -677,6 +686,7 @@ def test_export_girder(make_dirs, make_files, specs, dask_config):  # noqa: F811
 
 
 @mock_s3
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_export_s3(make_dirs, make_files, specs, db_data, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, _ = make_dirs
@@ -745,6 +755,7 @@ def test_export_s3(make_dirs, make_files, specs, db_data, dask_config):  # noqa:
     assert result == 1
 
 
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_export_disk(make_dirs, make_files, specs, db_data, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
     ingress, staging, archive = make_dirs
