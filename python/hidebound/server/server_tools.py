@@ -58,9 +58,7 @@ def render_template(filename, parameters):
     Returns:
         bytes: HTML.
     '''
-    # path to templates inside pip package
-    tempdir = lbt.relative_path(__file__, '../templates').as_posix()
-
+    tempdir = lbt.relative_path(__file__, '../../../templates').as_posix()
     env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(tempdir),
         keep_trailing_newline=True

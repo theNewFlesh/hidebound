@@ -281,5 +281,5 @@ def on_progress(timestamp):
 
 
 if __name__ == '__main__':
-    debug = 'DEBUG_MODE' in os.environ.keys()
+    debug = os.environ.get('FLASK_DEBUG', 1) == 1
     APP.run_server(debug=debug, host=EP.host, port=EP.port)

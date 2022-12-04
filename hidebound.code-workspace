@@ -269,15 +269,15 @@
                     "x_library_update ${input:update_pdm_package} ${input:pdm_group}"
                 ]
             },
-            // {
-            //     "label": "[session] app",
-            //     "detail": "Run app",
-            //     "icon": {"id": "beaker", "color": "terminal.ansiWhite"},
-            //     "command": [
-            //         "source $X_TOOLS_PATH &&",
-            //         "x_session_app"
-            //     ],
-            // },
+            {
+                "label": "[session] app",
+                "detail": "Run app",
+                "icon": {"id": "beaker", "color": "terminal.ansiWhite"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_session_app"
+                ],
+            },
             {
                 "label": "[session] lab",
                 "detail": "Run jupyter lab server",
