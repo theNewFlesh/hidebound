@@ -674,8 +674,8 @@ def test_export_girder(make_dirs, make_files, specs, dask_config):  # noqa: F811
 
     db.update().create().export()
 
-    db_client = db._Database__exporter_lut['girder']._client
-    result = list(db_client.folders.keys())
+    db_cluster = db._Database__exporter_lut['girder']._client
+    result = list(db_cluster.folders.keys())
     asset_paths = [
         'p-proj001_s-spec001_d-pizza_v001',
         'p-proj001_s-spec001_d-pizza_v002',

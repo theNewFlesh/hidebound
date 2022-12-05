@@ -35,7 +35,7 @@ class Spec003(ComplexSpecificationBase):
 
 
 # SPECIFICATION-FUNCTIONS-------------------------------------------------------
-def test_add_specification(db_client, dir_data):
+def test_add_specification(db_cluster, dir_data):
     specs = {Spec001.name: Spec001, Spec002.name: Spec002}
     data = dir_data
 
@@ -70,7 +70,7 @@ def test_add_specification(db_client, dir_data):
 
 
 # FILE-FUNCTIONS----------------------------------------------------------------
-def test_validate_filepath(db_client, db_data_nans):
+def test_validate_filepath(db_cluster, db_data_nans):
     data = db_data_nans
 
     error = 'Invalid asset directory name'
@@ -86,7 +86,7 @@ def test_validate_filepath(db_client, db_data_nans):
     assert re.search(error, result) is not None
 
 
-def test_add_file_traits(db_client, specs):
+def test_add_file_traits(db_cluster, specs):
     Spec001, Spec002, _ = specs
     data = [
         [
@@ -137,7 +137,7 @@ def test_add_file_traits(db_client, specs):
 
 
 # ASSET-FUNCTIONS---------------------------------------------------------------
-def test_add_asset_traits(db_client):
+def test_add_asset_traits(db_cluster):
     data = DataFrame()
     data['asset_path'] = ['a', 'a', 'b', 'b', np.nan]
     data['file_traits'] = [
@@ -166,7 +166,7 @@ def test_add_asset_traits(db_client):
     assert result == expected
 
 
-def test_add_asset_id(db_client, specs):
+def test_add_asset_id(db_cluster, specs):
     Spec001, Spec002, _ = specs
     data = [
         [
@@ -204,7 +204,7 @@ def test_add_asset_id(db_client, specs):
     assert result == 2
 
 
-def test_add_asset_name(db_client, specs):
+def test_add_asset_name(db_cluster, specs):
     Spec001, Spec002, _ = specs
     data = [
         [
@@ -243,7 +243,7 @@ def test_add_asset_name(db_client, specs):
     assert result == 2
 
 
-def test_add_asset_path(db_client, specs):
+def test_add_asset_path(db_cluster, specs):
     Spec001, Spec002, _ = specs
     data = [
         [
@@ -289,7 +289,7 @@ def test_add_asset_path(db_client, specs):
     assert result == 3
 
 
-def test_add_relative_path(db_client):
+def test_add_relative_path(db_cluster):
     data = DataFrame()
     data['foo'] = [
         '/foo/bar/taco.txt',
@@ -320,7 +320,7 @@ def test_add_relative_path(db_client):
     assert result == expected
 
 
-def test_add_asset_type(db_client):
+def test_add_asset_type(db_cluster):
     data = DataFrame()
     data['specification_class'] = [
         Spec001,
@@ -336,7 +336,7 @@ def test_add_asset_type(db_client):
     assert result == expected
 
 
-def test_cleanup(db_client, db_columns):
+def test_cleanup(db_cluster, db_columns):
     data = DataFrame()
     result = db_tools.cleanup(data).columns.tolist()
     assert result == db_columns
@@ -350,7 +350,7 @@ def test_cleanup(db_client, db_columns):
     assert result == db_columns
 
 
-def test_validate_assets(db_client, db_data, make_files):
+def test_validate_assets(db_cluster, db_data, make_files):
     data = db_data.head(1).copy()
     traits = dict(
         project=['proj001'],
@@ -404,7 +404,7 @@ def test_validate_assets(db_client, db_data, make_files):
     assert re.search('99 != 5', result.loc[1, 'asset_error']) is not None
 
 
-def test_validate_assets_invalid_one_file(db_client, db_data, make_files):
+def test_validate_assets_invalid_one_file(db_cluster, db_data, make_files):
     data = db_data.head(1).copy()
     traits = dict(
         project=['proj001'],
@@ -427,7 +427,7 @@ def test_validate_assets_invalid_one_file(db_client, db_data, make_files):
         assert row.asset_valid is False
 
 
-def test_validate_assets_invalid_many_file(db_client, db_data, make_files):
+def test_validate_assets_invalid_many_file(db_cluster, db_data, make_files):
     data = db_data.head(2).copy()
     traits = dict(
         project=['proj001', 'proj001'],

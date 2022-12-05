@@ -330,7 +330,7 @@ class ToolsTests(unittest.TestCase):
 
 
 # PRED_COMBINATOR-----------------------------------------------------------
-def test_pred_combinator_dd_dataframe(db_client):
+def test_pred_combinator_dd_dataframe(db_cluster):
     data = DataFrame()
     data['foo'] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     data['bar'] = [1, 2, 3, 4, 5, 6, 2, 1, 2]
@@ -349,7 +349,7 @@ def test_pred_combinator_dd_dataframe(db_client):
     assert result == expected
 
 
-def test_pred_combinator_dd_dataframe_nan(db_client):
+def test_pred_combinator_dd_dataframe_nan(db_cluster):
     # no meta
     data = DataFrame()
     data['foo'] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -385,7 +385,7 @@ def test_pred_combinator_dd_dataframe_nan(db_client):
     assert result == expected
 
 
-def test_pred_combinator_series(db_client):
+def test_pred_combinator_series(db_cluster):
     data = Series([2, 2, 2, 2, 3, 3, 3, 3])
     data = dd.from_pandas(data, chunksize=3)
     result = hbt.pred_combinator(
@@ -402,7 +402,7 @@ def test_pred_combinator_series(db_client):
     assert result == expected
 
 
-def test_pred_combinator_pd_dataframe(db_client):
+def test_pred_combinator_pd_dataframe(db_cluster):
     data = pd.DataFrame()
     data['x'] = [1, 1, 1, 2, 2, 3]
     data['y'] = [1, 1, 1, 2, 2, 3]
@@ -415,7 +415,7 @@ def test_pred_combinator_pd_dataframe(db_client):
     assert isinstance(result, pd.Series)
 
 
-def test_pred_combinator_pd_series(db_client):
+def test_pred_combinator_pd_series(db_cluster):
     data = pd.Series([1, 1, 1, 2, 2, 3])
     expected = [10, 10, 10, 20, 20, 20]
 
@@ -427,7 +427,7 @@ def test_pred_combinator_pd_series(db_client):
 
 
 # GET_LUT-------------------------------------------------------------------
-def test_get_lut_empty(db_client):
+def test_get_lut_empty(db_cluster):
     data = pd.DataFrame()
     data['grp'] = [np.nan] * 6
     data['val'] = [1, 1, 1, 2, 2, 'foo']
@@ -438,7 +438,7 @@ def test_get_lut_empty(db_client):
     assert result.columns.tolist() == ['key', 'value']
 
 
-def test_get_lut_pd_dataframe(db_client):
+def test_get_lut_pd_dataframe(db_cluster):
     data = pd.DataFrame()
     data['grp'] = [1, 1, 1, 2, 2, 3]
     data['val'] = [1, 1, 1, 2, 2, 'foo']
@@ -450,7 +450,7 @@ def test_get_lut_pd_dataframe(db_client):
     assert result.value.tolist() == [[1, 1, 1], [2, 2], ['foo']]
 
 
-def test_get_lut_dd_dataframe(db_client):
+def test_get_lut_dd_dataframe(db_cluster):
     data = pd.DataFrame()
     data['grp'] = [1, 1, 1, 2, 2, 3]
     data['val'] = [1, 1, 1, 2, 2, 'foo']
@@ -465,7 +465,7 @@ def test_get_lut_dd_dataframe(db_client):
 
 
 # LUT_COMBINATOR------------------------------------------------------------
-def test_lut_combinator_pd_dataframe(db_client):
+def test_lut_combinator_pd_dataframe(db_cluster):
     data = pd.DataFrame()
     data['grp'] = [1, 1, 1, 2, 2, 3]
     data['val'] = [1, 1, 1, 2, 2, 'foo']
@@ -485,7 +485,7 @@ def test_lut_combinator_pd_dataframe(db_client):
     assert result.vals.tolist() == expected
 
 
-def test_lut_combinator_dd_dataframe(db_client):
+def test_lut_combinator_dd_dataframe(db_cluster):
     data = pd.DataFrame()
     data['grp'] = [1, 1, 1, 2, 2, 3]
     data['val'] = [1, 1, 1, 2, 2, 'foo']
