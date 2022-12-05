@@ -13,6 +13,9 @@ from hidebound.exporters.mock_girder import MockGirderClient
 # ------------------------------------------------------------------------------
 
 
+RERUNS = 3
+
+
 class GirderConfigTests(unittest.TestCase):
     def setUp(self):
         self.config = dict(
@@ -188,6 +191,7 @@ class GirderExporterTests(unittest.TestCase):
         expected = 'http://1.2.3.4:5678/api/v1'
         self.assertEqual(result._url, expected)
 
+    @pytest.mark.flaky(reruns=RERUNS)
     @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
     def test_export(self):
         with TemporaryDirectory() as root:
@@ -209,6 +213,7 @@ class GirderExporterTests(unittest.TestCase):
             result = sorted(list(result))
             self.assertEqual(result, e_files)
 
+    @pytest.mark.flaky(reruns=RERUNS)
     @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
     def test_export_no_file_metadata(self):
         with TemporaryDirectory() as root:
