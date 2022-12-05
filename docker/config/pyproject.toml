@@ -62,6 +62,7 @@ hidebound = "hidebound.command:main"
 [tool.pdm.dev-dependencies]
 lab = [
     "cufflinks",
+    "dask-labextension>=6.0.0",
     "jupyterlab-git>=0.39.3",
     "jupyterlab-henanigans>=0.2.2",
     "jupyterlab-sublime",

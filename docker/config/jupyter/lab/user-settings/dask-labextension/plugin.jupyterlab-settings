@@ -1,0 +1,6 @@
+{
+    "defaultURL": "",
+    "autoStartClient": false,
+    "hideClusterManager": false,
+    "browserDashboardCheck": true
+}
