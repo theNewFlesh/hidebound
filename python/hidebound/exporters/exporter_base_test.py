@@ -13,6 +13,9 @@ import hidebound.core.tools as hbt
 # ------------------------------------------------------------------------------
 
 
+RERUNS = 3
+
+
 class Foo(ExporterBase):
     def __init__(
         self, metadata_types=['asset', 'file', 'asset-chunk', 'file-chunk']
@@ -158,6 +161,7 @@ class ExporterBaseTests(unittest.TestCase):
                     ExporterBase()._enforce_directory_structure(root)
                 os.makedirs(dir_)
 
+    @pytest.mark.flaky(reruns=RERUNS)
     @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
     def test_export(self):
         with TemporaryDirectory() as root:
@@ -184,6 +188,7 @@ class ExporterBaseTests(unittest.TestCase):
             for expected in e_files:
                 self.assertIn(expected, foo.file_chunk)
 
+    @pytest.mark.flaky(reruns=RERUNS)
     @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
     def test_metadata_types(self):
         with TemporaryDirectory() as root:
