@@ -609,6 +609,7 @@ x_test_run () {
         -c pyproject.toml \
         --numprocesses $TEST_PROCS \
         --verbosity $TEST_VERBOSITY \
+        --dist loadscope \
         $REPO_SUBPACKAGE;
     exit_code=`_x_resolve_exit_code $exit_code $?`;
 

@@ -296,7 +296,7 @@ class ToolsTests(unittest.TestCase):
         self.assertEqual(result, {})
 
         # pd.Series
-        result = hbt.get_meta_kwargs(pd.Series(), str)
+        result = hbt.get_meta_kwargs(pd.Series(dtype=np.float16), str)
         self.assertEqual(result, {})
 
         # dd.DataFrame
@@ -309,7 +309,7 @@ class ToolsTests(unittest.TestCase):
         self.assertEqual(result, {})
 
         # dd.Series
-        data = dd.from_pandas(pd.Series(), chunksize=1)
+        data = dd.from_pandas(pd.Series(dtype=np.float16), chunksize=1)
         result = hbt.get_meta_kwargs(data, str)
         self.assertEqual(result, dict(meta=str))
 

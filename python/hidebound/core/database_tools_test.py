@@ -428,7 +428,7 @@ def test_validate_assets_invalid_one_file(db_client, db_data, make_files):
 
 
 def test_validate_assets_invalid_many_file(db_client, db_data, make_files):
-    data = db_data.head(2)
+    data = db_data.head(2).copy()
     traits = dict(
         project=['proj001', 'proj001'],
         specification=['spec001', 'spec001'],
