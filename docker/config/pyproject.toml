@@ -103,6 +103,7 @@ filterwarnings = [
     "ignore:.*deprecated function _valid_input_keys:",
     "ignore:.*deprecated function _validator_functions:",
     "ignore:.*deprecated function fields:",
+    "ignore:.*Failed to reconnect to scheduler",
     "ignore:.*imp module is deprecated:",
     "ignore:.*low contrast image:",
     "ignore:.*make_current is deprecated:",
