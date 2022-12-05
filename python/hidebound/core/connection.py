@@ -112,7 +112,7 @@ class DaskConnection:
         config = DaskConnectionConfig(config)
         config.validate()
         self.config = config.to_native()
-        self.cluster = None
+        self.cluster = None  # type: Any
 
     @property
     def local_config(self):
