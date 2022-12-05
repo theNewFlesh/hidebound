@@ -333,20 +333,6 @@
                 ]
             },
             {
-                "label": "_[test] prod-3.7",
-                "detail": "Run tests in prod-3.7 environment",
-                "command": [
-                    "source $X_TOOLS_PATH &&",
-                    "TEST_PROCS=1 &&",
-                    "x_test_run prod 3.7"
-                ],
-                "hide": true,
-                "presentation": {
-                    "group": "test",
-                    "panel": "dedicated"
-                }
-            },
-            {
                 "label": "_[test] prod-3.8",
                 "detail": "Run tests in prod-3.8 environment",
                 "command": [
@@ -392,7 +378,6 @@
                 "label": "_[test] prod",
                 "detail": "Run tests across all support python versions",
                 "dependsOn": [
-                    "_[test] prod-3.7",
                     "_[test] prod-3.8",
                     "_[test] prod-3.9",
                     "_[test] prod-3.10"
