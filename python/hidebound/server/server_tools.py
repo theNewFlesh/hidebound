@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional, Union  # noqa F401
 
 from collections import OrderedDict
 from dataclasses import dataclass

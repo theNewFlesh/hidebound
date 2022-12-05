@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any  # noqa F401
 
 from schematics import Model
 from schematics.types import (

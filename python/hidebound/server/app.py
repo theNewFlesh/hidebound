@@ -1,8 +1,9 @@
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Dict, List, Tuple, Union  # noqa F401
+from dash import dash_table  # noqa F401
 
 import os
 
-from dash import dash_table, dcc
+from dash import dcc
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 import dash

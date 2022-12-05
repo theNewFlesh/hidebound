@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional, Tuple, Union
+from typing import Any, Dict, Optional, Tuple, Union  # noqa F401
 
 from collections import defaultdict
 from pathlib import Path

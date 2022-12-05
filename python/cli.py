@@ -2,7 +2,7 @@
 
 try:
     # python2.7 doesn't have typing module
-    from typing import Any, List, Tuple
+    from typing import Any, List, Tuple  # noqa F401
 except ImportError:
     pass
 

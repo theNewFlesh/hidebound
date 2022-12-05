@@ -1,13 +1,13 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union  # noqa F401
+from collections import OrderedDict  # noqa F401
+import flask  # noqa F401
 
-from collections import OrderedDict
 import re
 
 from dash import dash_table, dcc, html
 from pandas import DataFrame
 import dash
 import dash_cytoscape as cyto
-import flask
 import rolling_pin.blob_etl as blob_etl
 # ------------------------------------------------------------------------------
 

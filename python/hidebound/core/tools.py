@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, Generator, List, Union
+from typing import Any, Callable, Dict, Generator, List, Union  # noqa F401
 
 from collections import defaultdict
 from datetime import datetime

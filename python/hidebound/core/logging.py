@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional, Union  # noqa F401
 
 from datetime import datetime
 from pathlib import Path

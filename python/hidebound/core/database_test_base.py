@@ -1,4 +1,4 @@
-from typing import Any, List, Tuple, Union
+from typing import Any, List, Tuple, Union  # noqa F401
 
 from pathlib import Path
 import os
@@ -24,7 +24,6 @@ import hidebound.core.validators as vd
 def db_client():
     cluster = ddist.LocalCluster(
         host='0.0.0.0',
-        # scheduler_port=0,
         n_workers=4,
         threads_per_worker=1,
         processes=True,
@@ -33,7 +32,6 @@ def db_client():
     client = ddist.Client(cluster)
     yield client, cluster
 
-    cluster.close()
     client.shutdown()
 
 
