@@ -114,7 +114,6 @@ filterwarnings = [
     "ignore:.*The setup method 'record_once':",
     "ignore:.*The setup method 'record':",
     "ignore:.*There is no current event loop:",
-    "ignore:.*A value is trying to be set on a copy of a slice.*:",
     "ignore:.*will attempt to set the values inplace instead.*:"
 ]
 markers = [

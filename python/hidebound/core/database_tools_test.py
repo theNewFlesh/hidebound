@@ -351,7 +351,7 @@ def test_cleanup(db_client, db_columns):
 
 
 def test_validate_assets(db_client, db_data, make_files):
-    data = db_data.head(1)
+    data = db_data.head(1).copy()
     traits = dict(
         project=['proj001'],
         specification=['spec001'],
@@ -405,7 +405,7 @@ def test_validate_assets(db_client, db_data, make_files):
 
 
 def test_validate_assets_invalid_one_file(db_client, db_data, make_files):
-    data = db_data.head(1)
+    data = db_data.head(1).copy()
     traits = dict(
         project=['proj001'],
         specification=['spec001'],
