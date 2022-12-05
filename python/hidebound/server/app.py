@@ -74,6 +74,12 @@ def get_app(testing=False):
     fmdb.config.link = 'monitor'
     fmdb.config.monitor_level = 3
     fmdb.config.git = 'https://theNewFlesh.github.io/hidebound/'
+    fmdb.config.brand_name = 'Hidebound Monitoring Dashboard'
+    fmdb.config.title_name = 'Hidebound Monitoring Dashboard'
+    fmdb.config.description = 'Monitor Hidebound App Performance'
+    fmdb.config.enable_logging = False
+    fmdb.config.show_login_banner = True
+    fmdb.config.show_login_footer = True
     fmdb.bind(app)
 
     app = components.get_dash_app(app, seconds=0.8)
