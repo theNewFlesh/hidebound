@@ -30,7 +30,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.31.2
+                0.31.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -105,9 +105,7 @@
 <span class="kn">import</span> <span class="nn">hidebound.server.server_tools</span> <span class="k">as</span> <span class="nn">hst</span>
 
 
-<span class="n">TESTING</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="k">if</span> <span class="vm">__name__</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;__main__&#39;</span><span class="p">,</span> <span class="s1">&#39;hidebound.server.app&#39;</span><span class="p">]:</span>
-    <span class="n">TESTING</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># pragma: no cover</span>
+<span class="n">TESTING</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">str_to_bool</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;_HIDEBOUND_TESTING&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">))</span>  <span class="c1"># pragma: no cover</span>
 
 <span class="c1"># setup directories in /tmp/mnt</span>
 <span class="k">if</span> <span class="n">hbt</span><span class="o">.</span><span class="n">str_to_bool</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;CREATE_TMP_DIRS&#39;</span><span class="p">,</span> <span class="s1">&#39;False&#39;</span><span class="p">)):</span>
