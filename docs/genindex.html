@@ -14,7 +14,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -28,7 +30,7 @@
             <a href="index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.30.0
+                0.31.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="intro.html#installation">Installation</a></li>
@@ -46,9 +48,6 @@
 <li class="toctree-l1"><a class="reference internal" href="intro.html#dataflow">Dataflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="intro.html#workflow">Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="intro.html#naming-convention">Naming Convention</a></li>
-<li class="toctree-l1"><a class="reference internal" href="intro.html#project-structure">Project Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="intro.html#application">Application</a></li>
-<li class="toctree-l1"><a class="reference internal" href="intro.html#configuration">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="intro.html#specification">Specification</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
@@ -56,6 +55,9 @@
 <li class="toctree-l1"><a class="reference internal" href="core.html">core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="exporters.html">exporters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="server.html">server</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer CLI</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="cli.html">cli</a></li>
 </ul>
 
@@ -108,6 +110,7 @@
  | <a href="#U"><strong>U</strong></a>
  | <a href="#V"><strong>V</strong></a>
  | <a href="#W"><strong>W</strong></a>
+ | <a href="#X"><strong>X</strong></a>
  | <a href="#Z"><strong>Z</strong></a>
  
 </div>
@@ -274,8 +277,6 @@
 </li>
       <li><a href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig.api_key">api_key (hidebound.exporters.girder_exporter.GirderConfig attribute)</a>, <a href="exporters.html#id2">[1]</a>
 </li>
-      <li><a href="cli.html#cli.app_command">app_command() (in module cli)</a>
-</li>
       <li><a href="core.html#hidebound.core.specification_base.SpecificationBase.asset_name_fields">asset_name_fields (hidebound.core.specification_base.SpecificationBase attribute)</a>, <a href="core.html#id27">[1]</a>
 
       <ul>
@@ -343,10 +344,10 @@
 </li>
       <li><a href="core.html#hidebound.core.config.Config">Config (class in hidebound.core.config)</a>
 </li>
-      <li><a href="core.html#hidebound.core.config.Config.WebhookConfig">Config.WebhookConfig (class in hidebound.core.config)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="core.html#hidebound.core.config.Config.WebhookConfig">Config.WebhookConfig (class in hidebound.core.config)</a>
+</li>
       <li><a href="cli.html#cli.container_id_command">container_id_command() (in module cli)</a>
 </li>
       <li><a href="core.html#hidebound.core.specifications.Raw002.coordinate">coordinate (hidebound.core.specifications.Raw002 attribute)</a>
@@ -356,10 +357,6 @@
       <li><a href="core.html#hidebound.core.parser.AssetNameParser.COORDINATE_PADDING">COORDINATE_PADDING (hidebound.core.parser.AssetNameParser attribute)</a>
 </li>
       <li><a href="core.html#hidebound.core.validators.coordinates_begin_at">coordinates_begin_at() (in module hidebound.core.validators)</a>
-</li>
-      <li><a href="cli.html#cli.coverage">coverage() (in module cli)</a>
-</li>
-      <li><a href="cli.html#cli.coverage_command">coverage_command() (in module cli)</a>
 </li>
       <li><a href="server.html#hidebound.server.server_tools.EndPoints.create">create (hidebound.server.server_tools.EndPoints attribute)</a>
 </li>
@@ -453,8 +450,6 @@
 </li>
       <li><a href="cli.html#cli.docker_exec">docker_exec() (in module cli)</a>
 </li>
-      <li><a href="cli.html#cli.docs_command">docs_command() (in module cli)</a>
-</li>
       <li><a href="core.html#hidebound.core.logging.DummyLogger">DummyLogger (class in hidebound.core.logging)</a>
 </li>
   </ul></td>
@@ -521,8 +516,6 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="cli.html#cli.fast_test_command">fast_test_command() (in module cli)</a>
-</li>
       <li><a href="core.html#hidebound.core.logging.DummyLogger.fatal">fatal() (hidebound.core.logging.DummyLogger method)</a>
 
       <ul>
@@ -580,8 +573,6 @@
       <li><a href="core.html#hidebound.core.database.Database.from_json">from_json() (hidebound.core.database.Database static method)</a>
 </li>
       <li><a href="core.html#hidebound.core.database.Database.from_yaml">from_yaml() (hidebound.core.database.Database static method)</a>
-</li>
-      <li><a href="cli.html#cli.full_docs_command">full_docs_command() (in module cli)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -968,22 +959,18 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="cli.html#cli.lab_command">lab_command() (in module cli)</a>
-</li>
       <li><a href="core.html#hidebound.core.connection.DaskConnectionConfig.ClusterOption.label">label (hidebound.core.connection.DaskConnectionConfig.ClusterOption attribute)</a>
 </li>
       <li><a href="core.html#hidebound.core.parser.AssetNameParser.LEGAL_FIELDS">LEGAL_FIELDS (hidebound.core.parser.AssetNameParser attribute)</a>
 </li>
       <li><a href="cli.html#cli.line">line() (in module cli)</a>
 </li>
-      <li><a href="cli.html#cli.lint_command">lint_command() (in module cli)</a>
-</li>
       <li><a href="server.html#hidebound.server.app.liveness">liveness() (in module hidebound.server.app)</a>
+</li>
+      <li><a href="core.html#hidebound.core.connection.DaskConnection.local_config">local_config (hidebound.core.connection.DaskConnection property)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="core.html#hidebound.core.connection.DaskConnection.local_config">local_config (hidebound.core.connection.DaskConnection property)</a>
-</li>
       <li><a href="core.html#hidebound.core.connection.DaskConnectionConfig.local_multiprocessing">local_multiprocessing (hidebound.core.connection.DaskConnectionConfig attribute)</a>, <a href="core.html#id20">[1]</a>
 </li>
       <li><a href="core.html#hidebound.core.connection.DaskConnectionConfig.local_num_workers">local_num_workers (hidebound.core.connection.DaskConnectionConfig attribute)</a>, <a href="core.html#id21">[1]</a>
@@ -1003,8 +990,6 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cli.html#cli.main">main() (in module cli)</a>
-</li>
-      <li><a href="cli.html#cli.make_docs_dir">make_docs_dir() (in module cli)</a>
 </li>
       <li><a href="exporters.html#hidebound.exporters.disk_exporter.DiskConfig.metadata_types">metadata_types (hidebound.exporters.disk_exporter.DiskConfig attribute)</a>
 
@@ -1115,10 +1100,6 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="cli.html#cli.package_command">package_command() (in module cli)</a>
-</li>
-      <li><a href="cli.html#cli.package_repo">package_repo() (in module cli)</a>
-</li>
       <li><a href="core.html#hidebound.core.config.Config.WebhookConfig.params">params (hidebound.core.config.Config.WebhookConfig attribute)</a>
 </li>
       <li><a href="core.html#hidebound.core.parser.AssetNameParser.parse">parse() (hidebound.core.parser.AssetNameParser method)</a>
@@ -1163,11 +1144,7 @@
       </ul></li>
       <li><a href="core.html#hidebound.core.parser.AssetNameParser.PROJECT_INDICATOR">PROJECT_INDICATOR (hidebound.core.parser.AssetNameParser attribute)</a>
 </li>
-      <li><a href="cli.html#cli.publish_command">publish_command() (in module cli)</a>
-</li>
       <li><a href="cli.html#cli.push_command">push_command() (in module cli)</a>
-</li>
-      <li><a href="cli.html#cli.python_command">python_command() (in module cli)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1195,10 +1172,10 @@
 </li>
       <li><a href="core.html#hidebound.core.config.Config.redact_hash">redact_hash (hidebound.core.config.Config attribute)</a>, <a href="core.html#id5">[1]</a>
 </li>
-      <li><a href="core.html#hidebound.core.config.Config.redact_regex">redact_regex (hidebound.core.config.Config attribute)</a>, <a href="core.html#id6">[1]</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="core.html#hidebound.core.config.Config.redact_regex">redact_regex (hidebound.core.config.Config attribute)</a>, <a href="core.html#id6">[1]</a>
+</li>
       <li><a href="exporters.html#hidebound.exporters.s3_exporter.S3Config.region">region (hidebound.exporters.s3_exporter.S3Config attribute)</a>, <a href="exporters.html#id14">[1]</a>
 </li>
       <li><a href="cli.html#cli.remove_command">remove_command() (in module cli)</a>
@@ -1208,8 +1185,6 @@
       <li><a href="server.html#hidebound.server.server_tools.render_template">render_template() (in module hidebound.server.server_tools)</a>
 </li>
       <li><a href="server.html#hidebound.server.server_tools.request">request() (in module hidebound.server.server_tools)</a>
-</li>
-      <li><a href="cli.html#cli.requirements_command">requirements_command() (in module cli)</a>
 </li>
       <li><a href="cli.html#cli.resolve">resolve() (in module cli)</a>
 </li>
@@ -1291,13 +1266,9 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="exporters.html#hidebound.exporters.disk_exporter.DiskConfig.target_directory">target_directory (hidebound.exporters.disk_exporter.DiskConfig attribute)</a>, <a href="exporters.html#id10">[1]</a>
 </li>
-      <li><a href="cli.html#cli.test_command">test_command() (in module cli)</a>
-</li>
       <li><a href="core.html#hidebound.core.tools.time_string">time_string() (in module hidebound.core.tools)</a>
 </li>
       <li><a href="core.html#hidebound.core.config.Config.WebhookConfig.timeout">timeout (hidebound.core.config.Config.WebhookConfig attribute)</a>
-</li>
-      <li><a href="cli.html#cli.tmp_repo">tmp_repo() (in module cli)</a>
 </li>
       <li><a href="core.html#hidebound.core.specification_base.FileSpecificationBase.to_filepaths">to_filepaths() (hidebound.core.specification_base.FileSpecificationBase method)</a>
 
@@ -1312,10 +1283,6 @@
       <li><a href="core.html#hidebound.core.parser.AssetNameParser.to_string">to_string() (hidebound.core.parser.AssetNameParser method)</a>
 </li>
       <li><a href="core.html#hidebound.core.parser.AssetNameParser.TOKEN_SEPARATOR">TOKEN_SEPARATOR (hidebound.core.parser.AssetNameParser attribute)</a>
-</li>
-      <li><a href="cli.html#cli.tox_command">tox_command() (in module cli)</a>
-</li>
-      <li><a href="cli.html#cli.tox_repo">tox_repo() (in module cli)</a>
 </li>
       <li><a href="core.html#hidebound.core.tools.traverse_directory">traverse_directory() (in module hidebound.core.tools)</a>
 </li>
@@ -1375,8 +1342,6 @@
 </li>
       <li><a href="core.html#hidebound.core.parser.AssetNameParser.VERSION_PADDING">VERSION_PADDING (hidebound.core.parser.AssetNameParser attribute)</a>
 </li>
-      <li><a href="cli.html#cli.version_up_command">version_up_command() (in module cli)</a>
-</li>
       <li><a href="cli.html#cli.version_variable">version_variable() (in module cli)</a>
 </li>
   </ul></td>
@@ -1416,6 +1381,18 @@
   </ul></td>
 </tr></table>
 
+<h2 id="X">X</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cli.html#cli.x_tools">x_tools() (in module cli)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cli.html#cli.x_tools_command">x_tools_command() (in module cli)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="Z">Z</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -1439,7 +1416,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
+    <p>&#169; Copyright 2022, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

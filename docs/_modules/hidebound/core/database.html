@@ -14,7 +14,9 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -28,7 +30,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.28.0
+                0.31.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#installation">Installation</a></li>
@@ -46,9 +48,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#dataflow">Dataflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#workflow">Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#naming-convention">Naming Convention</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#project-structure">Project Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#application">Application</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#configuration">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#specification">Specification</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
@@ -56,6 +55,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../core.html">core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../exporters.html">exporters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../server.html">server</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer CLI</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
 </ul>
 
@@ -72,9 +74,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>hidebound.core.database</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">hidebound.core.database</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -84,7 +86,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for hidebound.core.database</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>  <span class="c1"># noqa F401</span>
 
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 <span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">import_module</span>
@@ -98,14 +100,14 @@
 <span class="kn">from</span> <span class="nn">requests.exceptions</span> <span class="kn">import</span> <span class="ne">ConnectionError</span>
 <span class="kn">from</span> <span class="nn">requests.models</span> <span class="kn">import</span> <span class="n">Response</span>
 <span class="kn">import</span> <span class="nn">dask.dataframe</span> <span class="k">as</span> <span class="nn">dd</span>
-<span class="kn">import</span> <span class="nn">jsoncomment</span> <span class="k">as</span> <span class="nn">jsonc</span>
+<span class="kn">import</span> <span class="nn">pyjson5</span> <span class="k">as</span> <span class="nn">jsonc</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandasql</span>
 <span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
 
 <span class="kn">from</span> <span class="nn">hidebound.core.config</span> <span class="kn">import</span> <span class="n">Config</span>
-<span class="kn">from</span> <span class="nn">hidebound.core.connection</span> <span class="kn">import</span> <span class="n">DaskConnection</span>
+<span class="kn">from</span> <span class="nn">hidebound.core.connection</span> <span class="kn">import</span> <span class="n">DaskConnection</span><span class="p">,</span> <span class="n">DaskConnectionConfig</span>
 <span class="kn">from</span> <span class="nn">hidebound.core.logging</span> <span class="kn">import</span> <span class="n">ProgressLogger</span>
 <span class="kn">from</span> <span class="nn">hidebound.core.specification_base</span> <span class="kn">import</span> <span class="n">SpecificationBase</span>
 <span class="kn">from</span> <span class="nn">hidebound.exporters.disk_exporter</span> <span class="kn">import</span> <span class="n">DiskExporter</span>
@@ -166,7 +168,7 @@
             <span class="n">write_mode</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;write_mode&#39;</span><span class="p">],</span>
             <span class="n">exporters</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;exporters&#39;</span><span class="p">],</span>
             <span class="n">webhooks</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;webhooks&#39;</span><span class="p">],</span>
-            <span class="n">dask_workers</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;dask_workers&#39;</span><span class="p">],</span>
+            <span class="n">dask</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;dask&#39;</span><span class="p">],</span>
             <span class="n">testing</span><span class="o">=</span><span class="n">testing</span><span class="p">,</span>
         <span class="p">)</span></div>
 
@@ -183,7 +185,7 @@
 <span class="sd">            Database: Database instance.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">config</span> <span class="o">=</span> <span class="n">jsonc</span><span class="o">.</span><span class="n">JsonComment</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">jsonc</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Database</span><span class="o">.</span><span class="n">from_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Database.from_yaml"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.from_yaml">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -212,8 +214,7 @@
         <span class="n">write_mode</span><span class="o">=</span><span class="s1">&#39;copy&#39;</span><span class="p">,</span>            <span class="c1"># type: str</span>
         <span class="n">exporters</span><span class="o">=</span><span class="p">[],</span>                 <span class="c1"># type: List[Dict[str, Any]]</span>
         <span class="n">webhooks</span><span class="o">=</span><span class="p">[],</span>                  <span class="c1"># type: List[Dict[str, Any]]</span>
-        <span class="n">dask_workers</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>               <span class="c1"># type: int</span>
-        <span class="n">dask_cluster_type</span><span class="o">=</span><span class="s1">&#39;local&#39;</span><span class="p">,</span>    <span class="c1"># type: str</span>
+        <span class="n">dask</span><span class="o">=</span><span class="p">{},</span>                      <span class="c1"># type: Dict[str, Any]</span>
         <span class="n">testing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>                <span class="c1"># type: bool</span>
     <span class="p">):</span>
         <span class="c1"># type: (...) -&gt; None</span>
@@ -237,10 +238,7 @@
 <span class="sd">            webhooks (list[dict], optional): List of webhooks to call.</span>
 <span class="sd">                Default: [].</span>
 <span class="sd">                Default: False.</span>
-<span class="sd">            dask_workers (int, optional): Number of partitions to use for</span>
-<span class="sd">                Dask. Must be 1 or greater. Default: 8.</span>
-<span class="sd">            dask_cluster_type: (str, optional): Dask cluster type:</span>
-<span class="sd">                Default: local.</span>
+<span class="sd">            dask (dict, optional): Dask configuration. Default: {}.</span>
 <span class="sd">            testing: (bool, optional): Used for testing. Default: False.</span>
 
 <span class="sd">        Raises:</span>
@@ -300,17 +298,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_specifications</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">specifications</span><span class="p">}</span> \
             <span class="c1"># type: Dict[str, SpecificationBase]</span>
 
+        <span class="c1"># webhooks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_webhooks</span> <span class="o">=</span> <span class="n">webhooks</span>
+
+        <span class="c1"># dask</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">DaskConnectionConfig</span><span class="p">(</span><span class="n">dask</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dask_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">to_primitive</span><span class="p">()</span>
+
         <span class="c1"># setup exporters</span>
         <span class="k">for</span> <span class="n">exp</span> <span class="ow">in</span> <span class="n">exporters</span><span class="p">:</span>
-            <span class="n">exp</span><span class="p">[</span><span class="s1">&#39;dask_workers&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;dask_workers&#39;</span><span class="p">,</span> <span class="n">dask_workers</span><span class="p">)</span>
-            <span class="n">exp</span><span class="p">[</span><span class="s1">&#39;dask_cluster_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                <span class="s1">&#39;dask_cluster_type&#39;</span><span class="p">,</span> <span class="n">dask_cluster_type</span>
-            <span class="p">)</span>
+            <span class="n">exp</span><span class="p">[</span><span class="s1">&#39;dask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;dask&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dask_config</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_exporters</span> <span class="o">=</span> <span class="n">exporters</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_webhooks</span> <span class="o">=</span> <span class="n">webhooks</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_dask_workers</span> <span class="o">=</span> <span class="n">dask_workers</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_dask_cluster_type</span> <span class="o">=</span> <span class="n">dask_cluster_type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_testing</span> <span class="o">=</span> <span class="n">testing</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -352,57 +352,65 @@
 
         <span class="c1"># convert to dask dataframes</span>
         <span class="n">file_data</span><span class="p">,</span> <span class="n">asset_meta</span><span class="p">,</span> <span class="n">file_meta</span><span class="p">,</span> <span class="n">asset_chunk</span><span class="p">,</span> <span class="n">file_chunk</span> <span class="o">=</span> <span class="n">temp</span>
-        <span class="n">nparts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dask_workers</span>
-        <span class="n">file_data</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">file_data</span><span class="p">,</span> <span class="n">npartitions</span><span class="o">=</span><span class="n">nparts</span><span class="p">)</span>
-        <span class="n">asset_meta</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">asset_meta</span><span class="p">,</span> <span class="n">npartitions</span><span class="o">=</span><span class="n">nparts</span><span class="p">)</span>
-        <span class="n">file_meta</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">file_meta</span><span class="p">,</span> <span class="n">npartitions</span><span class="o">=</span><span class="n">nparts</span><span class="p">)</span>
-        <span class="n">asset_chunk</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">asset_chunk</span><span class="p">,</span> <span class="n">npartitions</span><span class="o">=</span><span class="n">nparts</span><span class="p">)</span>
-        <span class="n">file_chunk</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">file_chunk</span><span class="p">,</span> <span class="n">npartitions</span><span class="o">=</span><span class="n">nparts</span><span class="p">)</span>
-        <span class="n">temp</span> <span class="o">=</span> <span class="p">[</span><span class="n">file_data</span><span class="p">,</span> <span class="n">asset_meta</span><span class="p">,</span> <span class="n">file_meta</span><span class="p">,</span> <span class="n">asset_chunk</span><span class="p">,</span> <span class="n">file_chunk</span><span class="p">]</span>
 
-        <span class="c1"># make directories</span>
-        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">temp</span><span class="p">:</span>
-            <span class="n">item</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-                <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-                <span class="n">meta</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="k">with</span> <span class="n">DaskConnection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dask_config</span><span class="p">)</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
+            <span class="n">nparts</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">num_partitions</span>
+            <span class="n">file_data</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">file_data</span><span class="p">,</span> <span class="n">npartitions</span><span class="o">=</span><span class="n">nparts</span><span class="p">)</span>
+            <span class="n">asset_meta</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">asset_meta</span><span class="p">,</span> <span class="n">npartitions</span><span class="o">=</span><span class="n">nparts</span><span class="p">)</span>
+            <span class="n">file_meta</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">file_meta</span><span class="p">,</span> <span class="n">npartitions</span><span class="o">=</span><span class="n">nparts</span><span class="p">)</span>
+            <span class="n">asset_chunk</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">asset_chunk</span><span class="p">,</span> <span class="n">npartitions</span><span class="o">=</span><span class="n">nparts</span><span class="p">)</span>
+            <span class="n">file_chunk</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">file_chunk</span><span class="p">,</span> <span class="n">npartitions</span><span class="o">=</span><span class="n">nparts</span><span class="p">)</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="p">[</span><span class="n">file_data</span><span class="p">,</span> <span class="n">asset_meta</span><span class="p">,</span> <span class="n">file_meta</span><span class="p">,</span> <span class="n">asset_chunk</span><span class="p">,</span> <span class="n">file_chunk</span><span class="p">]</span>
+
+            <span class="c1"># make directories</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">temp</span><span class="p">:</span>
+                <span class="n">item</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+                    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                    <span class="n">meta</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;create: make directories&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>
+
+            <span class="c1"># write file data</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_write_mode</span> <span class="o">==</span> <span class="s1">&#39;move&#39;</span><span class="p">:</span>
+                <span class="n">file_data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+                    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">target</span><span class="p">),</span>
+                    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+                <span class="n">hbt</span><span class="o">.</span><span class="n">delete_empty_directories</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">file_data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+                    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">target</span><span class="p">),</span>
+                    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;create: write file data&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>
+
+            <span class="c1"># write asset metadata</span>
+            <span class="n">asset_meta</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">hbt</span><span class="o">.</span><span class="n">write_json</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">target</span><span class="p">),</span>
+                <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span>
             <span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;create: make directories&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;create: write asset metadata&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>
 
-        <span class="c1"># write file data</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_write_mode</span> <span class="o">==</span> <span class="s1">&#39;move&#39;</span><span class="p">:</span>
-            <span class="n">file_data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-                <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">target</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="c1"># write file metadata</span>
+            <span class="n">file_meta</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">hbt</span><span class="o">.</span><span class="n">write_json</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">target</span><span class="p">),</span>
+                <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span>
             <span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
-            <span class="n">hbt</span><span class="o">.</span><span class="n">delete_empty_directories</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">file_data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-                <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">target</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;create: write file metadata&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>
+
+            <span class="c1"># write asset chunk</span>
+            <span class="n">asset_chunk</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">hbt</span><span class="o">.</span><span class="n">write_json</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">target</span><span class="p">),</span>
+                <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span>
             <span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;create: write file data&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;create: write asset chunk&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>
 
-        <span class="c1"># write asset metadata</span>
-        <span class="n">asset_meta</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">hbt</span><span class="o">.</span><span class="n">write_json</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">target</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;create: write asset metadata&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>
-
-        <span class="c1"># write file metadata</span>
-        <span class="n">file_meta</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">hbt</span><span class="o">.</span><span class="n">write_json</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">target</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;create: write file metadata&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>
-
-        <span class="c1"># write asset chunk</span>
-        <span class="n">asset_chunk</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">hbt</span><span class="o">.</span><span class="n">write_json</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">target</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;create: write asset chunk&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>
-
-        <span class="c1"># write file chunk</span>
-        <span class="n">file_chunk</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">hbt</span><span class="o">.</span><span class="n">write_json</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">target</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;create: write file chunk&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>
+            <span class="c1"># write file chunk</span>
+            <span class="n">file_chunk</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">hbt</span><span class="o">.</span><span class="n">write_json</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">target</span><span class="p">),</span>
+                <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;create: write file chunk&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;create: complete&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
@@ -452,7 +460,7 @@
             <span class="k">if</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
                 <span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
 
-            <span class="n">mask</span> <span class="o">=</span> <span class="n">traits</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">traits</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
             <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;read: filter traits&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>
 
@@ -517,8 +525,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;update: parsed </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">with</span> <span class="n">DaskConnection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dask_cluster_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dask_workers</span><span class="p">):</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">npartitions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_dask_workers</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">DaskConnection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dask_config</span><span class="p">)</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">npartitions</span><span class="o">=</span><span class="n">conn</span><span class="o">.</span><span class="n">num_partitions</span><span class="p">)</span>
                 <span class="n">data</span> <span class="o">=</span> <span class="n">db_tools</span><span class="o">.</span><span class="n">add_specification</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_specifications</span><span class="p">)</span>
                 <span class="n">data</span> <span class="o">=</span> <span class="n">db_tools</span><span class="o">.</span><span class="n">validate_filepath</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
                 <span class="n">data</span> <span class="o">=</span> <span class="n">db_tools</span><span class="o">.</span><span class="n">add_file_traits</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -674,7 +682,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
+    <p>&#169; Copyright 2022, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

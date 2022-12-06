@@ -14,7 +14,9 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -28,7 +30,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.28.0
+                0.31.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#installation">Installation</a></li>
@@ -46,9 +48,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#dataflow">Dataflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#workflow">Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#naming-convention">Naming Convention</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#project-structure">Project Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#application">Application</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#configuration">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#specification">Specification</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
@@ -56,6 +55,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../core.html">core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../exporters.html">exporters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../server.html">server</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer CLI</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
 </ul>
 
@@ -72,9 +74,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>hidebound.exporters.exporter_base</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">hidebound.exporters.exporter_base</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -84,16 +86,16 @@
            <div itemprop="articleBody">
              
   <h1>Source code for hidebound.exporters.exporter_base</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>  <span class="c1"># noqa F401</span>
 
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">re</span>
 
 <span class="kn">from</span> <span class="nn">schematics</span> <span class="kn">import</span> <span class="n">Model</span>
-<span class="kn">from</span> <span class="nn">schematics.types</span> <span class="kn">import</span> <span class="n">IntType</span><span class="p">,</span> <span class="n">ListType</span><span class="p">,</span> <span class="n">StringType</span>
+<span class="kn">from</span> <span class="nn">schematics.types</span> <span class="kn">import</span> <span class="n">ListType</span><span class="p">,</span> <span class="n">ModelType</span><span class="p">,</span> <span class="n">StringType</span>
 <span class="kn">import</span> <span class="nn">dask.dataframe</span> <span class="k">as</span> <span class="nn">dd</span>
 
-<span class="kn">from</span> <span class="nn">hidebound.core.connection</span> <span class="kn">import</span> <span class="n">DaskConnection</span>
+<span class="kn">from</span> <span class="nn">hidebound.core.connection</span> <span class="kn">import</span> <span class="n">DaskConnection</span><span class="p">,</span> <span class="n">DaskConnectionConfig</span>
 <span class="kn">from</span> <span class="nn">hidebound.core.logging</span> <span class="kn">import</span> <span class="n">DummyLogger</span><span class="p">,</span> <span class="n">ProgressLogger</span>
 <span class="kn">import</span> <span class="nn">hidebound.core.tools</span> <span class="k">as</span> <span class="nn">hbt</span>
 <span class="kn">import</span> <span class="nn">hidebound.core.validators</span> <span class="k">as</span> <span class="nn">vd</span>
@@ -107,25 +109,16 @@
 <span class="sd">    Attributes:</span>
 <span class="sd">        metadata_types (list, optional): List of metadata types for export.</span>
 <span class="sd">            Default: [asset, file, asset-chunk, file-chunk].</span>
-<span class="sd">        dask_workers (int, optional): Number of Dask worker to use if enabled.</span>
-<span class="sd">            Default: 8.</span>
-<span class="sd">        dask_cluster_type (str, optional): Dask cluster type. Default: local.</span>
+<span class="sd">        dask (dict, optional). Dask configuration. Default: {}.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">metadata_types</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
         <span class="n">StringType</span><span class="p">(</span><span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_metadata_type</span><span class="p">]),</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asset&#39;</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;asset-chunk&#39;</span><span class="p">,</span> <span class="s1">&#39;file-chunk&#39;</span><span class="p">]</span>
     <span class="p">)</span>
-    <span class="n">dask_workers</span> <span class="o">=</span> <span class="n">IntType</span><span class="p">(</span>
-        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">serialize_when_none</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_gt</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span>
-    <span class="p">)</span>  <span class="c1"># type: IntType</span>
-    <span class="n">dask_cluster_type</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
-        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">serialize_when_none</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_in</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;local&#39;</span><span class="p">])],</span>
-    <span class="p">)</span>  <span class="c1"># type: IntType</span></div>
+    <span class="n">dask</span> <span class="o">=</span> <span class="n">ModelType</span><span class="p">(</span>
+        <span class="n">DaskConnectionConfig</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">{},</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>  <span class="c1"># type: ModelType</span></div>
 
 
 <div class="viewcode-block" id="ExporterBase"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.exporter_base.ExporterBase">[docs]</a><span class="k">class</span> <span class="nc">ExporterBase</span><span class="p">:</span>
@@ -135,25 +128,20 @@
 <div class="viewcode-block" id="ExporterBase.__init__"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.exporter_base.ExporterBase.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">metadata_types</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asset&#39;</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;asset-chunk&#39;</span><span class="p">,</span> <span class="s1">&#39;file-chunk&#39;</span><span class="p">],</span>
-        <span class="n">dask_workers</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
-        <span class="n">dask_cluster_type</span><span class="o">=</span><span class="s1">&#39;local&#39;</span><span class="p">,</span>
+        <span class="n">dask</span><span class="o">=</span><span class="p">{},</span>
     <span class="p">):</span>
-        <span class="c1"># type: (List[str], int, str) -&gt; None</span>
+        <span class="c1"># type: (List[str], Dict[str, Any]) -&gt; None</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Constructs a ExporterBase instance.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            metadata_types (list[st], optional). Metadata types to be exported.</span>
 <span class="sd">                Default: [asset, file, asset-chunk, file-chunk].</span>
-<span class="sd">            dask_workers (int, optional): Number of Dask worker to use if</span>
-<span class="sd">                enabled. Default: 8.</span>
-<span class="sd">            dask_cluster_type (str, optional): Dask cluster type.</span>
-<span class="sd">                Default: local.</span>
+<span class="sd">            dask (dict, optional). Dask configuration. Default: {}.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_metadata_types</span> <span class="o">=</span> <span class="n">metadata_types</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_time</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">time_string</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_dask_cluster_type</span> <span class="o">=</span> <span class="n">dask_cluster_type</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_dask_workers</span> <span class="o">=</span> <span class="n">dask_workers</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dask_config</span> <span class="o">=</span> <span class="n">dask</span></div>
 
 <div class="viewcode-block" id="ExporterBase._enforce_directory_structure"><a class="viewcode-back" href="../../../exporters.html#hidebound.exporters.exporter_base.ExporterBase._enforce_directory_structure">[docs]</a>    <span class="k">def</span> <span class="nf">_enforce_directory_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">staging_dir</span><span class="p">):</span>
         <span class="c1"># type: (Union[str, Path]) -&gt; None</span>
@@ -214,8 +202,8 @@
         <span class="n">regex</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">staging_dir</span><span class="si">}</span><span class="s1">/metadata/file/&#39;</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
         <span class="n">content</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">hbt</span><span class="o">.</span><span class="n">read_json</span><span class="p">)</span>
-        <span class="k">with</span> <span class="n">DaskConnection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dask_cluster_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dask_workers</span><span class="p">):</span>
-            <span class="n">content</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">npartitions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_dask_workers</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">DaskConnection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dask_config</span><span class="p">)</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
+            <span class="n">content</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">npartitions</span><span class="o">=</span><span class="n">conn</span><span class="o">.</span><span class="n">num_partitions</span><span class="p">)</span>
             <span class="n">content</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_export_content</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;exporter: export content&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span>
 
@@ -230,8 +218,8 @@
             <span class="n">regex</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">staging_dir</span><span class="si">}</span><span class="s1">/metadata/</span><span class="si">{</span><span class="n">mtype</span><span class="si">}</span><span class="s1">/&#39;</span>
             <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span> <span class="n">x</span><span class="p">)))</span>
             <span class="n">meta</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">hbt</span><span class="o">.</span><span class="n">read_json</span><span class="p">)</span>
-            <span class="k">with</span> <span class="n">DaskConnection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dask_cluster_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dask_workers</span><span class="p">):</span>
-                <span class="n">meta</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="n">npartitions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_dask_workers</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">DaskConnection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dask_config</span><span class="p">)</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
+                <span class="n">meta</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="n">npartitions</span><span class="o">=</span><span class="n">conn</span><span class="o">.</span><span class="n">num_partitions</span><span class="p">)</span>
                 <span class="n">meta</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">lut</span><span class="p">[</span><span class="n">mtype</span><span class="p">],</span> <span class="n">meta</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;exporter: export </span><span class="si">{</span><span class="n">mtype</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">)</span></div>
@@ -317,7 +305,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
+    <p>&#169; Copyright 2022, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

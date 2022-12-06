@@ -15,7 +15,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -31,7 +33,7 @@
             <a href="index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.30.0
+                0.31.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -41,7 +43,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="intro.html#installation">Installation</a></li>
@@ -49,9 +51,6 @@
 <li class="toctree-l1"><a class="reference internal" href="intro.html#dataflow">Dataflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="intro.html#workflow">Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="intro.html#naming-convention">Naming Convention</a></li>
-<li class="toctree-l1"><a class="reference internal" href="intro.html#project-structure">Project Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="intro.html#application">Application</a></li>
-<li class="toctree-l1"><a class="reference internal" href="intro.html#configuration">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="intro.html#specification">Specification</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
@@ -59,6 +58,9 @@
 <li class="toctree-l1"><a class="reference internal" href="core.html">core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="exporters.html">exporters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="server.html">server</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer CLI</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="cli.html">cli</a></li>
 </ul>
 
@@ -89,36 +91,542 @@
   <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="core.html">core</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="core.html#module-hidebound.core.config">config</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core.html#module-hidebound.core.connection">connection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core.html#module-hidebound.core.database">database</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core.html#module-hidebound.core.database_tools">database_tools</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core.html#module-hidebound.core.logging">logging</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core.html#module-hidebound.core.parser">parser</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core.html#module-hidebound.core.specification_base">specification_base</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core.html#module-hidebound.core.specifications">specifications</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core.html#module-hidebound.core.tools">tools</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core.html#module-hidebound.core.traits">traits</a></li>
-<li class="toctree-l2"><a class="reference internal" href="core.html#module-hidebound.core.validators">validators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#module-hidebound.core.config">config</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.config.Config"><code class="docutils literal notranslate"><span class="pre">Config</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.config.Config.ingress_directory"><code class="docutils literal notranslate"><span class="pre">Config.ingress_directory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.config.Config.staging_directory"><code class="docutils literal notranslate"><span class="pre">Config.staging_directory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.config.Config.include_regex"><code class="docutils literal notranslate"><span class="pre">Config.include_regex</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.config.Config.exclude_regex"><code class="docutils literal notranslate"><span class="pre">Config.exclude_regex</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.config.Config.write_mode"><code class="docutils literal notranslate"><span class="pre">Config.write_mode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.config.Config.workflow"><code class="docutils literal notranslate"><span class="pre">Config.workflow</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.config.Config.redact_regex"><code class="docutils literal notranslate"><span class="pre">Config.redact_regex</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.config.Config.redact_hash"><code class="docutils literal notranslate"><span class="pre">Config.redact_hash</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.config.Config.specification_files"><code class="docutils literal notranslate"><span class="pre">Config.specification_files</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.config.Config.exporters"><code class="docutils literal notranslate"><span class="pre">Config.exporters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.config.Config.webhooks"><code class="docutils literal notranslate"><span class="pre">Config.webhooks</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.config.Config.dask"><code class="docutils literal notranslate"><span class="pre">Config.dask</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.config.Config.WebhookConfig"><code class="docutils literal notranslate"><span class="pre">Config.WebhookConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.config.Config._schema"><code class="docutils literal notranslate"><span class="pre">Config._schema</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id0"><code class="docutils literal notranslate"><span class="pre">Config.dask</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id1"><code class="docutils literal notranslate"><span class="pre">Config.exclude_regex</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id2"><code class="docutils literal notranslate"><span class="pre">Config.exporters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id3"><code class="docutils literal notranslate"><span class="pre">Config.include_regex</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id4"><code class="docutils literal notranslate"><span class="pre">Config.ingress_directory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id5"><code class="docutils literal notranslate"><span class="pre">Config.redact_hash</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id6"><code class="docutils literal notranslate"><span class="pre">Config.redact_regex</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id7"><code class="docutils literal notranslate"><span class="pre">Config.specification_files</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id8"><code class="docutils literal notranslate"><span class="pre">Config.staging_directory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id9"><code class="docutils literal notranslate"><span class="pre">Config.webhooks</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id10"><code class="docutils literal notranslate"><span class="pre">Config.workflow</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id11"><code class="docutils literal notranslate"><span class="pre">Config.write_mode</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.config.is_specification_file"><code class="docutils literal notranslate"><span class="pre">is_specification_file()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#module-hidebound.core.connection">connection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.connection.DaskConnection"><code class="docutils literal notranslate"><span class="pre">DaskConnection</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.connection.DaskConnection.__init__"><code class="docutils literal notranslate"><span class="pre">DaskConnection.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.connection.DaskConnection.cluster_type"><code class="docutils literal notranslate"><span class="pre">DaskConnection.cluster_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.connection.DaskConnection.gateway_config"><code class="docutils literal notranslate"><span class="pre">DaskConnection.gateway_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.connection.DaskConnection.local_config"><code class="docutils literal notranslate"><span class="pre">DaskConnection.local_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.connection.DaskConnection.num_partitions"><code class="docutils literal notranslate"><span class="pre">DaskConnection.num_partitions</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.connection.DaskConnectionConfig"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.connection.DaskConnectionConfig.cluster_type"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.cluster_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.connection.DaskConnectionConfig.num_partitions"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.num_partitions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.connection.DaskConnectionConfig.local_num_workers"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.local_num_workers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.connection.DaskConnectionConfig.local_threads_per_worker"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.local_threads_per_worker</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.connection.DaskConnectionConfig.local_multiprocessing"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.local_multiprocessing</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.connection.DaskConnectionConfig.gateway_address"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_address</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.connection.DaskConnectionConfig.gateway_proxy_address"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_proxy_address</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.connection.DaskConnectionConfig.gateway_public_address"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_public_address</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.connection.DaskConnectionConfig.gateway_auth_type"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_auth_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.connection.DaskConnectionConfig.gateway_api_token"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_api_token</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.connection.DaskConnectionConfig.gateway_cluster_options"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_cluster_options</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.connection.DaskConnectionConfig.gateway_shutdown_on_close"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_shutdown_on_close</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.connection.DaskConnectionConfig.ClusterOption"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.ClusterOption</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.connection.DaskConnectionConfig._schema"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig._schema</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id12"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.cluster_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id13"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_address</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id14"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_api_token</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id15"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_auth_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id16"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_cluster_options</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id17"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_proxy_address</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id18"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_public_address</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id19"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_shutdown_on_close</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id20"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.local_multiprocessing</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id21"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.local_num_workers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id22"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.local_threads_per_worker</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id23"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.num_partitions</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#module-hidebound.core.database">database</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.database.Database"><code class="docutils literal notranslate"><span class="pre">Database</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.database.Database.__init__"><code class="docutils literal notranslate"><span class="pre">Database.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.database.Database.call_webhooks"><code class="docutils literal notranslate"><span class="pre">Database.call_webhooks()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.database.Database.create"><code class="docutils literal notranslate"><span class="pre">Database.create()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.database.Database.delete"><code class="docutils literal notranslate"><span class="pre">Database.delete()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.database.Database.export"><code class="docutils literal notranslate"><span class="pre">Database.export()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.database.Database.from_config"><code class="docutils literal notranslate"><span class="pre">Database.from_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.database.Database.from_json"><code class="docutils literal notranslate"><span class="pre">Database.from_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.database.Database.from_yaml"><code class="docutils literal notranslate"><span class="pre">Database.from_yaml()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.database.Database.read"><code class="docutils literal notranslate"><span class="pre">Database.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.database.Database.search"><code class="docutils literal notranslate"><span class="pre">Database.search()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.database.Database.update"><code class="docutils literal notranslate"><span class="pre">Database.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#module-hidebound.core.database_tools">database_tools</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.database_tools.DF"><code class="docutils literal notranslate"><span class="pre">DF</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.database_tools.add_asset_id"><code class="docutils literal notranslate"><span class="pre">add_asset_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.database_tools.add_asset_name"><code class="docutils literal notranslate"><span class="pre">add_asset_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.database_tools.add_asset_path"><code class="docutils literal notranslate"><span class="pre">add_asset_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.database_tools.add_asset_traits"><code class="docutils literal notranslate"><span class="pre">add_asset_traits()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.database_tools.add_asset_type"><code class="docutils literal notranslate"><span class="pre">add_asset_type()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.database_tools.add_file_traits"><code class="docutils literal notranslate"><span class="pre">add_file_traits()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.database_tools.add_relative_path"><code class="docutils literal notranslate"><span class="pre">add_relative_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.database_tools.add_specification"><code class="docutils literal notranslate"><span class="pre">add_specification()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.database_tools.cleanup"><code class="docutils literal notranslate"><span class="pre">cleanup()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.database_tools.get_data_for_write"><code class="docutils literal notranslate"><span class="pre">get_data_for_write()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.database_tools.validate_assets"><code class="docutils literal notranslate"><span class="pre">validate_assets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.database_tools.validate_filepath"><code class="docutils literal notranslate"><span class="pre">validate_filepath()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#module-hidebound.core.logging">logging</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.logging.DummyLogger"><code class="docutils literal notranslate"><span class="pre">DummyLogger</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.logging.DummyLogger.critical"><code class="docutils literal notranslate"><span class="pre">DummyLogger.critical()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.logging.DummyLogger.debug"><code class="docutils literal notranslate"><span class="pre">DummyLogger.debug()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.logging.DummyLogger.error"><code class="docutils literal notranslate"><span class="pre">DummyLogger.error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.logging.DummyLogger.fatal"><code class="docutils literal notranslate"><span class="pre">DummyLogger.fatal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.logging.DummyLogger.info"><code class="docutils literal notranslate"><span class="pre">DummyLogger.info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.logging.DummyLogger.warning"><code class="docutils literal notranslate"><span class="pre">DummyLogger.warning()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.logging.ProgressLogger"><code class="docutils literal notranslate"><span class="pre">ProgressLogger</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.logging.ProgressLogger.__init__"><code class="docutils literal notranslate"><span class="pre">ProgressLogger.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.logging.ProgressLogger._get_logger"><code class="docutils literal notranslate"><span class="pre">ProgressLogger._get_logger()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.logging.ProgressLogger.critical"><code class="docutils literal notranslate"><span class="pre">ProgressLogger.critical()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.logging.ProgressLogger.debug"><code class="docutils literal notranslate"><span class="pre">ProgressLogger.debug()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.logging.ProgressLogger.error"><code class="docutils literal notranslate"><span class="pre">ProgressLogger.error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.logging.ProgressLogger.fatal"><code class="docutils literal notranslate"><span class="pre">ProgressLogger.fatal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.logging.ProgressLogger.filepath"><code class="docutils literal notranslate"><span class="pre">ProgressLogger.filepath</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.logging.ProgressLogger.info"><code class="docutils literal notranslate"><span class="pre">ProgressLogger.info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.logging.ProgressLogger.log"><code class="docutils literal notranslate"><span class="pre">ProgressLogger.log()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.logging.ProgressLogger.logs"><code class="docutils literal notranslate"><span class="pre">ProgressLogger.logs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.logging.ProgressLogger.read"><code class="docutils literal notranslate"><span class="pre">ProgressLogger.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.logging.ProgressLogger.warning"><code class="docutils literal notranslate"><span class="pre">ProgressLogger.warning()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.logging.get_progress"><code class="docutils literal notranslate"><span class="pre">get_progress()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#module-hidebound.core.parser">parser</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.parser.AssetNameParser"><code class="docutils literal notranslate"><span class="pre">AssetNameParser</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.parser.AssetNameParser.COORDINATE_INDICATOR"><code class="docutils literal notranslate"><span class="pre">AssetNameParser.COORDINATE_INDICATOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.parser.AssetNameParser.COORDINATE_PADDING"><code class="docutils literal notranslate"><span class="pre">AssetNameParser.COORDINATE_PADDING</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.parser.AssetNameParser.DESCRIPTOR_INDICATOR"><code class="docutils literal notranslate"><span class="pre">AssetNameParser.DESCRIPTOR_INDICATOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.parser.AssetNameParser.EXTENSION_INDICATOR"><code class="docutils literal notranslate"><span class="pre">AssetNameParser.EXTENSION_INDICATOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.parser.AssetNameParser.FIELD_SEPARATOR"><code class="docutils literal notranslate"><span class="pre">AssetNameParser.FIELD_SEPARATOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.parser.AssetNameParser.FRAME_INDICATOR"><code class="docutils literal notranslate"><span class="pre">AssetNameParser.FRAME_INDICATOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.parser.AssetNameParser.FRAME_PADDING"><code class="docutils literal notranslate"><span class="pre">AssetNameParser.FRAME_PADDING</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.parser.AssetNameParser.LEGAL_FIELDS"><code class="docutils literal notranslate"><span class="pre">AssetNameParser.LEGAL_FIELDS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.parser.AssetNameParser.PROJECT_INDICATOR"><code class="docutils literal notranslate"><span class="pre">AssetNameParser.PROJECT_INDICATOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.parser.AssetNameParser.SPECIFICATION_INDICATOR"><code class="docutils literal notranslate"><span class="pre">AssetNameParser.SPECIFICATION_INDICATOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.parser.AssetNameParser.TOKEN_SEPARATOR"><code class="docutils literal notranslate"><span class="pre">AssetNameParser.TOKEN_SEPARATOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.parser.AssetNameParser.VERSION_INDICATOR"><code class="docutils literal notranslate"><span class="pre">AssetNameParser.VERSION_INDICATOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.parser.AssetNameParser.VERSION_PADDING"><code class="docutils literal notranslate"><span class="pre">AssetNameParser.VERSION_PADDING</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.parser.AssetNameParser.__init__"><code class="docutils literal notranslate"><span class="pre">AssetNameParser.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.parser.AssetNameParser._get_extension_parser"><code class="docutils literal notranslate"><span class="pre">AssetNameParser._get_extension_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.parser.AssetNameParser._get_grammar"><code class="docutils literal notranslate"><span class="pre">AssetNameParser._get_grammar()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.parser.AssetNameParser._get_parser"><code class="docutils literal notranslate"><span class="pre">AssetNameParser._get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.parser.AssetNameParser._get_specification_parser"><code class="docutils literal notranslate"><span class="pre">AssetNameParser._get_specification_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.parser.AssetNameParser._raise_field_error"><code class="docutils literal notranslate"><span class="pre">AssetNameParser._raise_field_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.parser.AssetNameParser.parse"><code class="docutils literal notranslate"><span class="pre">AssetNameParser.parse()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.parser.AssetNameParser.parse_specification"><code class="docutils literal notranslate"><span class="pre">AssetNameParser.parse_specification()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.parser.AssetNameParser.to_string"><code class="docutils literal notranslate"><span class="pre">AssetNameParser.to_string()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#module-hidebound.core.specification_base">specification_base</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.specification_base.ComplexSpecificationBase"><code class="docutils literal notranslate"><span class="pre">ComplexSpecificationBase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.ComplexSpecificationBase.asset_type"><code class="docutils literal notranslate"><span class="pre">ComplexSpecificationBase.asset_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.ComplexSpecificationBase._schema"><code class="docutils literal notranslate"><span class="pre">ComplexSpecificationBase._schema</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id24"><code class="docutils literal notranslate"><span class="pre">ComplexSpecificationBase.asset_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.ComplexSpecificationBase.descriptor"><code class="docutils literal notranslate"><span class="pre">ComplexSpecificationBase.descriptor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.ComplexSpecificationBase.extension"><code class="docutils literal notranslate"><span class="pre">ComplexSpecificationBase.extension</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.ComplexSpecificationBase.project"><code class="docutils literal notranslate"><span class="pre">ComplexSpecificationBase.project</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.ComplexSpecificationBase.specification"><code class="docutils literal notranslate"><span class="pre">ComplexSpecificationBase.specification</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.ComplexSpecificationBase.version"><code class="docutils literal notranslate"><span class="pre">ComplexSpecificationBase.version</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.specification_base.FileSpecificationBase"><code class="docutils literal notranslate"><span class="pre">FileSpecificationBase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.FileSpecificationBase.asset_type"><code class="docutils literal notranslate"><span class="pre">FileSpecificationBase.asset_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.FileSpecificationBase._schema"><code class="docutils literal notranslate"><span class="pre">FileSpecificationBase._schema</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id25"><code class="docutils literal notranslate"><span class="pre">FileSpecificationBase.asset_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.FileSpecificationBase.descriptor"><code class="docutils literal notranslate"><span class="pre">FileSpecificationBase.descriptor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.FileSpecificationBase.extension"><code class="docutils literal notranslate"><span class="pre">FileSpecificationBase.extension</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.FileSpecificationBase.get_asset_path"><code class="docutils literal notranslate"><span class="pre">FileSpecificationBase.get_asset_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.FileSpecificationBase.project"><code class="docutils literal notranslate"><span class="pre">FileSpecificationBase.project</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.FileSpecificationBase.specification"><code class="docutils literal notranslate"><span class="pre">FileSpecificationBase.specification</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.FileSpecificationBase.to_filepaths"><code class="docutils literal notranslate"><span class="pre">FileSpecificationBase.to_filepaths()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.FileSpecificationBase.version"><code class="docutils literal notranslate"><span class="pre">FileSpecificationBase.version</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.specification_base.SequenceSpecificationBase"><code class="docutils literal notranslate"><span class="pre">SequenceSpecificationBase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SequenceSpecificationBase.asset_type"><code class="docutils literal notranslate"><span class="pre">SequenceSpecificationBase.asset_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SequenceSpecificationBase._schema"><code class="docutils literal notranslate"><span class="pre">SequenceSpecificationBase._schema</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id26"><code class="docutils literal notranslate"><span class="pre">SequenceSpecificationBase.asset_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SequenceSpecificationBase.descriptor"><code class="docutils literal notranslate"><span class="pre">SequenceSpecificationBase.descriptor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SequenceSpecificationBase.extension"><code class="docutils literal notranslate"><span class="pre">SequenceSpecificationBase.extension</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SequenceSpecificationBase.get_asset_path"><code class="docutils literal notranslate"><span class="pre">SequenceSpecificationBase.get_asset_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SequenceSpecificationBase.project"><code class="docutils literal notranslate"><span class="pre">SequenceSpecificationBase.project</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SequenceSpecificationBase.specification"><code class="docutils literal notranslate"><span class="pre">SequenceSpecificationBase.specification</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SequenceSpecificationBase.to_filepaths"><code class="docutils literal notranslate"><span class="pre">SequenceSpecificationBase.to_filepaths()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SequenceSpecificationBase.version"><code class="docutils literal notranslate"><span class="pre">SequenceSpecificationBase.version</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.specification_base.SpecificationBase"><code class="docutils literal notranslate"><span class="pre">SpecificationBase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SpecificationBase.asset_type"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.asset_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SpecificationBase.filename_fields"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.filename_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SpecificationBase.asset_name_fields"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.asset_name_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SpecificationBase.project"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.project</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SpecificationBase.descriptor"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.descriptor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SpecificationBase.version"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.version</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SpecificationBase.extension"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.extension</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SpecificationBase.__init__"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SpecificationBase._schema"><code class="docutils literal notranslate"><span class="pre">SpecificationBase._schema</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SpecificationBase._to_filepaths"><code class="docutils literal notranslate"><span class="pre">SpecificationBase._to_filepaths()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id27"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.asset_name_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id28"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.asset_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id29"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.descriptor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id30"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.extension</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SpecificationBase.file_traits"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.file_traits</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id31"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.filename_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SpecificationBase.get_asset_id"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.get_asset_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SpecificationBase.get_asset_name"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.get_asset_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SpecificationBase.get_asset_path"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.get_asset_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SpecificationBase.get_file_traits"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.get_file_traits()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SpecificationBase.get_filename_traits"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.get_filename_traits()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SpecificationBase.get_name_patterns"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.get_name_patterns()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SpecificationBase.get_traits"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.get_traits()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id32"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.project</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SpecificationBase.specification"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.specification</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specification_base.SpecificationBase.validate_filepath"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.validate_filepath()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id33"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.version</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#module-hidebound.core.specifications">specifications</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw001"><code class="docutils literal notranslate"><span class="pre">Raw001</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw001.filename_fields"><code class="docutils literal notranslate"><span class="pre">Raw001.filename_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw001.asset_name_fields"><code class="docutils literal notranslate"><span class="pre">Raw001.asset_name_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw001.height"><code class="docutils literal notranslate"><span class="pre">Raw001.height</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw001.width"><code class="docutils literal notranslate"><span class="pre">Raw001.width</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw001.extension"><code class="docutils literal notranslate"><span class="pre">Raw001.extension</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw001._schema"><code class="docutils literal notranslate"><span class="pre">Raw001._schema</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id34"><code class="docutils literal notranslate"><span class="pre">Raw001.asset_name_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw001.channels"><code class="docutils literal notranslate"><span class="pre">Raw001.channels</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw001.descriptor"><code class="docutils literal notranslate"><span class="pre">Raw001.descriptor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id35"><code class="docutils literal notranslate"><span class="pre">Raw001.extension</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw001.file_traits"><code class="docutils literal notranslate"><span class="pre">Raw001.file_traits</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id36"><code class="docutils literal notranslate"><span class="pre">Raw001.filename_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw001.frame"><code class="docutils literal notranslate"><span class="pre">Raw001.frame</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id37"><code class="docutils literal notranslate"><span class="pre">Raw001.height</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw001.project"><code class="docutils literal notranslate"><span class="pre">Raw001.project</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw001.specification"><code class="docutils literal notranslate"><span class="pre">Raw001.specification</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw001.version"><code class="docutils literal notranslate"><span class="pre">Raw001.version</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id38"><code class="docutils literal notranslate"><span class="pre">Raw001.width</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw002"><code class="docutils literal notranslate"><span class="pre">Raw002</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw002.filename_fields"><code class="docutils literal notranslate"><span class="pre">Raw002.filename_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw002.asset_name_fields"><code class="docutils literal notranslate"><span class="pre">Raw002.asset_name_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw002.height"><code class="docutils literal notranslate"><span class="pre">Raw002.height</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw002.width"><code class="docutils literal notranslate"><span class="pre">Raw002.width</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw002.extension"><code class="docutils literal notranslate"><span class="pre">Raw002.extension</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw002._schema"><code class="docutils literal notranslate"><span class="pre">Raw002._schema</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id39"><code class="docutils literal notranslate"><span class="pre">Raw002.asset_name_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw002.channels"><code class="docutils literal notranslate"><span class="pre">Raw002.channels</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw002.coordinate"><code class="docutils literal notranslate"><span class="pre">Raw002.coordinate</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw002.descriptor"><code class="docutils literal notranslate"><span class="pre">Raw002.descriptor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id40"><code class="docutils literal notranslate"><span class="pre">Raw002.extension</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw002.file_traits"><code class="docutils literal notranslate"><span class="pre">Raw002.file_traits</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id41"><code class="docutils literal notranslate"><span class="pre">Raw002.filename_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw002.frame"><code class="docutils literal notranslate"><span class="pre">Raw002.frame</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id42"><code class="docutils literal notranslate"><span class="pre">Raw002.height</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw002.project"><code class="docutils literal notranslate"><span class="pre">Raw002.project</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw002.specification"><code class="docutils literal notranslate"><span class="pre">Raw002.specification</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#hidebound.core.specifications.Raw002.version"><code class="docutils literal notranslate"><span class="pre">Raw002.version</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#id43"><code class="docutils literal notranslate"><span class="pre">Raw002.width</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#module-hidebound.core.tools">tools</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.tools.DFS"><code class="docutils literal notranslate"><span class="pre">DFS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.tools.delete_empty_directories"><code class="docutils literal notranslate"><span class="pre">delete_empty_directories()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.tools.directory_to_dataframe"><code class="docutils literal notranslate"><span class="pre">directory_to_dataframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.tools.error_to_string"><code class="docutils literal notranslate"><span class="pre">error_to_string()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.tools.get_lut"><code class="docutils literal notranslate"><span class="pre">get_lut()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.tools.get_meta_kwargs"><code class="docutils literal notranslate"><span class="pre">get_meta_kwargs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.tools.lut_combinator"><code class="docutils literal notranslate"><span class="pre">lut_combinator()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.tools.pred_combinator"><code class="docutils literal notranslate"><span class="pre">pred_combinator()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.tools.read_json"><code class="docutils literal notranslate"><span class="pre">read_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.tools.str_to_bool"><code class="docutils literal notranslate"><span class="pre">str_to_bool()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.tools.time_string"><code class="docutils literal notranslate"><span class="pre">time_string()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.tools.to_prototype"><code class="docutils literal notranslate"><span class="pre">to_prototype()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.tools.traverse_directory"><code class="docutils literal notranslate"><span class="pre">traverse_directory()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.tools.write_json"><code class="docutils literal notranslate"><span class="pre">write_json()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#module-hidebound.core.traits">traits</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.traits.get_image_height"><code class="docutils literal notranslate"><span class="pre">get_image_height()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.traits.get_image_width"><code class="docutils literal notranslate"><span class="pre">get_image_width()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.traits.get_num_image_channels"><code class="docutils literal notranslate"><span class="pre">get_num_image_channels()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#module-hidebound.core.validators">validators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.coordinates_begin_at"><code class="docutils literal notranslate"><span class="pre">coordinates_begin_at()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.has_dense_coordinates"><code class="docutils literal notranslate"><span class="pre">has_dense_coordinates()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.has_uniform_coordinate_count"><code class="docutils literal notranslate"><span class="pre">has_uniform_coordinate_count()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.is_attribute_of"><code class="docutils literal notranslate"><span class="pre">is_attribute_of()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.is_aws_region"><code class="docutils literal notranslate"><span class="pre">is_aws_region()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.is_bucket_name"><code class="docutils literal notranslate"><span class="pre">is_bucket_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.is_cluster_option_type"><code class="docutils literal notranslate"><span class="pre">is_cluster_option_type()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.is_coordinate"><code class="docutils literal notranslate"><span class="pre">is_coordinate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.is_descriptor"><code class="docutils literal notranslate"><span class="pre">is_descriptor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.is_directory"><code class="docutils literal notranslate"><span class="pre">is_directory()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.is_eq"><code class="docutils literal notranslate"><span class="pre">is_eq()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.is_extension"><code class="docutils literal notranslate"><span class="pre">is_extension()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.is_file"><code class="docutils literal notranslate"><span class="pre">is_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.is_frame"><code class="docutils literal notranslate"><span class="pre">is_frame()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.is_gt"><code class="docutils literal notranslate"><span class="pre">is_gt()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.is_gte"><code class="docutils literal notranslate"><span class="pre">is_gte()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.is_hidebound_directory"><code class="docutils literal notranslate"><span class="pre">is_hidebound_directory()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.is_homogenous"><code class="docutils literal notranslate"><span class="pre">is_homogenous()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.is_http_method"><code class="docutils literal notranslate"><span class="pre">is_http_method()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.is_in"><code class="docutils literal notranslate"><span class="pre">is_in()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.is_legal_directory"><code class="docutils literal notranslate"><span class="pre">is_legal_directory()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.is_lt"><code class="docutils literal notranslate"><span class="pre">is_lt()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.is_lte"><code class="docutils literal notranslate"><span class="pre">is_lte()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.is_metadata_type"><code class="docutils literal notranslate"><span class="pre">is_metadata_type()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.is_not_missing_values"><code class="docutils literal notranslate"><span class="pre">is_not_missing_values()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.is_one_of"><code class="docutils literal notranslate"><span class="pre">is_one_of()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.is_project"><code class="docutils literal notranslate"><span class="pre">is_project()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.is_version"><code class="docutils literal notranslate"><span class="pre">is_version()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.is_workflow"><code class="docutils literal notranslate"><span class="pre">is_workflow()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.validate"><code class="docutils literal notranslate"><span class="pre">validate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#hidebound.core.validators.validate_each"><code class="docutils literal notranslate"><span class="pre">validate_each()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="exporters.html">exporters</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="exporters.html#module-hidebound.exporters.exporter_base">exporter_base</a></li>
-<li class="toctree-l2"><a class="reference internal" href="exporters.html#module-hidebound.exporters.girder_exporter">girder_exporter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="exporters.html#module-hidebound.exporters.disk_exporter">disk_exporter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="exporters.html#module-hidebound.exporters.s3_exporter">s3_exporter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exporters.html#module-hidebound.exporters.exporter_base">exporter_base</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="exporters.html#hidebound.exporters.exporter_base.ExporterBase"><code class="docutils literal notranslate"><span class="pre">ExporterBase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.exporter_base.ExporterBase.__init__"><code class="docutils literal notranslate"><span class="pre">ExporterBase.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.exporter_base.ExporterBase._enforce_directory_structure"><code class="docutils literal notranslate"><span class="pre">ExporterBase._enforce_directory_structure()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.exporter_base.ExporterBase._export_asset"><code class="docutils literal notranslate"><span class="pre">ExporterBase._export_asset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.exporter_base.ExporterBase._export_asset_chunk"><code class="docutils literal notranslate"><span class="pre">ExporterBase._export_asset_chunk()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.exporter_base.ExporterBase._export_content"><code class="docutils literal notranslate"><span class="pre">ExporterBase._export_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.exporter_base.ExporterBase._export_file"><code class="docutils literal notranslate"><span class="pre">ExporterBase._export_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.exporter_base.ExporterBase._export_file_chunk"><code class="docutils literal notranslate"><span class="pre">ExporterBase._export_file_chunk()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.exporter_base.ExporterBase.export"><code class="docutils literal notranslate"><span class="pre">ExporterBase.export()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="exporters.html#hidebound.exporters.exporter_base.ExporterConfigBase"><code class="docutils literal notranslate"><span class="pre">ExporterConfigBase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.exporter_base.ExporterConfigBase.metadata_types"><code class="docutils literal notranslate"><span class="pre">ExporterConfigBase.metadata_types</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.exporter_base.ExporterConfigBase.dask"><code class="docutils literal notranslate"><span class="pre">ExporterConfigBase.dask</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.exporter_base.ExporterConfigBase._schema"><code class="docutils literal notranslate"><span class="pre">ExporterConfigBase._schema</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#id0"><code class="docutils literal notranslate"><span class="pre">ExporterConfigBase.dask</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#id1"><code class="docutils literal notranslate"><span class="pre">ExporterConfigBase.metadata_types</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="exporters.html#module-hidebound.exporters.girder_exporter">girder_exporter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig"><code class="docutils literal notranslate"><span class="pre">GirderConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig.name"><code class="docutils literal notranslate"><span class="pre">GirderConfig.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig.api_key"><code class="docutils literal notranslate"><span class="pre">GirderConfig.api_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig.root_id"><code class="docutils literal notranslate"><span class="pre">GirderConfig.root_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig.root_type"><code class="docutils literal notranslate"><span class="pre">GirderConfig.root_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig.host"><code class="docutils literal notranslate"><span class="pre">GirderConfig.host</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig.port"><code class="docutils literal notranslate"><span class="pre">GirderConfig.port</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig.metadata_types"><code class="docutils literal notranslate"><span class="pre">GirderConfig.metadata_types</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.girder_exporter.GirderConfig._schema"><code class="docutils literal notranslate"><span class="pre">GirderConfig._schema</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#id2"><code class="docutils literal notranslate"><span class="pre">GirderConfig.api_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#id3"><code class="docutils literal notranslate"><span class="pre">GirderConfig.host</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#id4"><code class="docutils literal notranslate"><span class="pre">GirderConfig.metadata_types</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#id5"><code class="docutils literal notranslate"><span class="pre">GirderConfig.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#id6"><code class="docutils literal notranslate"><span class="pre">GirderConfig.port</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#id7"><code class="docutils literal notranslate"><span class="pre">GirderConfig.root_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#id8"><code class="docutils literal notranslate"><span class="pre">GirderConfig.root_type</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="exporters.html#hidebound.exporters.girder_exporter.GirderExporter"><code class="docutils literal notranslate"><span class="pre">GirderExporter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.girder_exporter.GirderExporter.__init__"><code class="docutils literal notranslate"><span class="pre">GirderExporter.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.girder_exporter.GirderExporter._export_asset"><code class="docutils literal notranslate"><span class="pre">GirderExporter._export_asset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.girder_exporter.GirderExporter._export_asset_chunk"><code class="docutils literal notranslate"><span class="pre">GirderExporter._export_asset_chunk()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.girder_exporter.GirderExporter._export_content"><code class="docutils literal notranslate"><span class="pre">GirderExporter._export_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.girder_exporter.GirderExporter._export_dirs"><code class="docutils literal notranslate"><span class="pre">GirderExporter._export_dirs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.girder_exporter.GirderExporter._export_file"><code class="docutils literal notranslate"><span class="pre">GirderExporter._export_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.girder_exporter.GirderExporter._export_file_chunk"><code class="docutils literal notranslate"><span class="pre">GirderExporter._export_file_chunk()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.girder_exporter.GirderExporter.from_config"><code class="docutils literal notranslate"><span class="pre">GirderExporter.from_config()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="exporters.html#module-hidebound.exporters.disk_exporter">disk_exporter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="exporters.html#hidebound.exporters.disk_exporter.DiskConfig"><code class="docutils literal notranslate"><span class="pre">DiskConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.disk_exporter.DiskConfig.name"><code class="docutils literal notranslate"><span class="pre">DiskConfig.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.disk_exporter.DiskConfig.target_directory"><code class="docutils literal notranslate"><span class="pre">DiskConfig.target_directory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.disk_exporter.DiskConfig._schema"><code class="docutils literal notranslate"><span class="pre">DiskConfig._schema</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.disk_exporter.DiskConfig.dask"><code class="docutils literal notranslate"><span class="pre">DiskConfig.dask</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.disk_exporter.DiskConfig.metadata_types"><code class="docutils literal notranslate"><span class="pre">DiskConfig.metadata_types</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#id9"><code class="docutils literal notranslate"><span class="pre">DiskConfig.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#id10"><code class="docutils literal notranslate"><span class="pre">DiskConfig.target_directory</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="exporters.html#hidebound.exporters.disk_exporter.DiskExporter"><code class="docutils literal notranslate"><span class="pre">DiskExporter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.disk_exporter.DiskExporter.__init__"><code class="docutils literal notranslate"><span class="pre">DiskExporter.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.disk_exporter.DiskExporter._export_asset"><code class="docutils literal notranslate"><span class="pre">DiskExporter._export_asset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.disk_exporter.DiskExporter._export_asset_chunk"><code class="docutils literal notranslate"><span class="pre">DiskExporter._export_asset_chunk()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.disk_exporter.DiskExporter._export_content"><code class="docutils literal notranslate"><span class="pre">DiskExporter._export_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.disk_exporter.DiskExporter._export_file"><code class="docutils literal notranslate"><span class="pre">DiskExporter._export_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.disk_exporter.DiskExporter._export_file_chunk"><code class="docutils literal notranslate"><span class="pre">DiskExporter._export_file_chunk()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.disk_exporter.DiskExporter.from_config"><code class="docutils literal notranslate"><span class="pre">DiskExporter.from_config()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="exporters.html#module-hidebound.exporters.s3_exporter">s3_exporter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="exporters.html#hidebound.exporters.s3_exporter.S3Config"><code class="docutils literal notranslate"><span class="pre">S3Config</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.s3_exporter.S3Config.name"><code class="docutils literal notranslate"><span class="pre">S3Config.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.s3_exporter.S3Config.access_key"><code class="docutils literal notranslate"><span class="pre">S3Config.access_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.s3_exporter.S3Config.secret_key"><code class="docutils literal notranslate"><span class="pre">S3Config.secret_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.s3_exporter.S3Config.bucket"><code class="docutils literal notranslate"><span class="pre">S3Config.bucket</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.s3_exporter.S3Config.region"><code class="docutils literal notranslate"><span class="pre">S3Config.region</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.s3_exporter.S3Config._schema"><code class="docutils literal notranslate"><span class="pre">S3Config._schema</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#id11"><code class="docutils literal notranslate"><span class="pre">S3Config.access_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#id12"><code class="docutils literal notranslate"><span class="pre">S3Config.bucket</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.s3_exporter.S3Config.dask"><code class="docutils literal notranslate"><span class="pre">S3Config.dask</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.s3_exporter.S3Config.metadata_types"><code class="docutils literal notranslate"><span class="pre">S3Config.metadata_types</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#id13"><code class="docutils literal notranslate"><span class="pre">S3Config.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#id14"><code class="docutils literal notranslate"><span class="pre">S3Config.region</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#id15"><code class="docutils literal notranslate"><span class="pre">S3Config.secret_key</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="exporters.html#hidebound.exporters.s3_exporter.S3Exporter"><code class="docutils literal notranslate"><span class="pre">S3Exporter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.s3_exporter.S3Exporter.__init__"><code class="docutils literal notranslate"><span class="pre">S3Exporter.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.s3_exporter.S3Exporter._export_asset"><code class="docutils literal notranslate"><span class="pre">S3Exporter._export_asset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.s3_exporter.S3Exporter._export_asset_chunk"><code class="docutils literal notranslate"><span class="pre">S3Exporter._export_asset_chunk()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.s3_exporter.S3Exporter._export_content"><code class="docutils literal notranslate"><span class="pre">S3Exporter._export_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.s3_exporter.S3Exporter._export_file"><code class="docutils literal notranslate"><span class="pre">S3Exporter._export_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.s3_exporter.S3Exporter._export_file_chunk"><code class="docutils literal notranslate"><span class="pre">S3Exporter._export_file_chunk()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="exporters.html#hidebound.exporters.s3_exporter.S3Exporter.from_config"><code class="docutils literal notranslate"><span class="pre">S3Exporter.from_config()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="server.html">server</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="server.html#module-hidebound.server.api">api</a></li>
-<li class="toctree-l2"><a class="reference internal" href="server.html#module-hidebound.server.app">app</a></li>
-<li class="toctree-l2"><a class="reference internal" href="server.html#module-hidebound.server.components">components</a></li>
-<li class="toctree-l2"><a class="reference internal" href="server.html#module-hidebound.server.extension">extension</a></li>
-<li class="toctree-l2"><a class="reference internal" href="server.html#module-hidebound.server.extensions">extensions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="server.html#module-hidebound.server.server_tools">server_tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#module-hidebound.server.api">api</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.api.api"><code class="docutils literal notranslate"><span class="pre">api()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.api.create"><code class="docutils literal notranslate"><span class="pre">create()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.api.delete"><code class="docutils literal notranslate"><span class="pre">delete()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.api.export"><code class="docutils literal notranslate"><span class="pre">export()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.api.handle_data_error"><code class="docutils literal notranslate"><span class="pre">handle_data_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.api.handle_json_decode_error"><code class="docutils literal notranslate"><span class="pre">handle_json_decode_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.api.handle_key_error"><code class="docutils literal notranslate"><span class="pre">handle_key_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.api.handle_type_error"><code class="docutils literal notranslate"><span class="pre">handle_type_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.api.initialize"><code class="docutils literal notranslate"><span class="pre">initialize()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.api.progress"><code class="docutils literal notranslate"><span class="pre">progress()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.api.read"><code class="docutils literal notranslate"><span class="pre">read()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.api.search"><code class="docutils literal notranslate"><span class="pre">search()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.api.update"><code class="docutils literal notranslate"><span class="pre">update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.api.workflow"><code class="docutils literal notranslate"><span class="pre">workflow()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="cli.html">cli</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#module-hidebound.server.app">app</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.app.get_app"><code class="docutils literal notranslate"><span class="pre">get_app()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.app.liveness"><code class="docutils literal notranslate"><span class="pre">liveness()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.app.on_datatable_update"><code class="docutils literal notranslate"><span class="pre">on_datatable_update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.app.on_event"><code class="docutils literal notranslate"><span class="pre">on_event()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.app.on_get_tab"><code class="docutils literal notranslate"><span class="pre">on_get_tab()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.app.on_progress"><code class="docutils literal notranslate"><span class="pre">on_progress()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.app.readiness"><code class="docutils literal notranslate"><span class="pre">readiness()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.app.serve_stylesheet"><code class="docutils literal notranslate"><span class="pre">serve_stylesheet()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#module-hidebound.server.components">components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.components.get_asset_graph"><code class="docutils literal notranslate"><span class="pre">get_asset_graph()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.components.get_button"><code class="docutils literal notranslate"><span class="pre">get_button()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.components.get_config_tab"><code class="docutils literal notranslate"><span class="pre">get_config_tab()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.components.get_configbar"><code class="docutils literal notranslate"><span class="pre">get_configbar()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.components.get_dash_app"><code class="docutils literal notranslate"><span class="pre">get_dash_app()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.components.get_data_tab"><code class="docutils literal notranslate"><span class="pre">get_data_tab()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.components.get_datatable"><code class="docutils literal notranslate"><span class="pre">get_datatable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.components.get_dropdown"><code class="docutils literal notranslate"><span class="pre">get_dropdown()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.components.get_dummy_elements"><code class="docutils literal notranslate"><span class="pre">get_dummy_elements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.components.get_key_value_card"><code class="docutils literal notranslate"><span class="pre">get_key_value_card()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.components.get_progressbar"><code class="docutils literal notranslate"><span class="pre">get_progressbar()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.components.get_searchbar"><code class="docutils literal notranslate"><span class="pre">get_searchbar()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#module-hidebound.server.extension">extension</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.extension.HideboundExtension"><code class="docutils literal notranslate"><span class="pre">HideboundExtension</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="server.html#hidebound.server.extension.HideboundExtension.__init__"><code class="docutils literal notranslate"><span class="pre">HideboundExtension.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="server.html#hidebound.server.extension.HideboundExtension._get_config"><code class="docutils literal notranslate"><span class="pre">HideboundExtension._get_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="server.html#hidebound.server.extension.HideboundExtension._get_config_from_env"><code class="docutils literal notranslate"><span class="pre">HideboundExtension._get_config_from_env()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="server.html#hidebound.server.extension.HideboundExtension._get_config_from_file"><code class="docutils literal notranslate"><span class="pre">HideboundExtension._get_config_from_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="server.html#hidebound.server.extension.HideboundExtension.init_app"><code class="docutils literal notranslate"><span class="pre">HideboundExtension.init_app()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#module-hidebound.server.extensions">extensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#module-hidebound.server.server_tools">server_tools</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.server_tools.EndPoints"><code class="docutils literal notranslate"><span class="pre">EndPoints</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="server.html#hidebound.server.server_tools.EndPoints.api"><code class="docutils literal notranslate"><span class="pre">EndPoints.api</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="server.html#hidebound.server.server_tools.EndPoints.create"><code class="docutils literal notranslate"><span class="pre">EndPoints.create</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="server.html#hidebound.server.server_tools.EndPoints.delete"><code class="docutils literal notranslate"><span class="pre">EndPoints.delete</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="server.html#hidebound.server.server_tools.EndPoints.export"><code class="docutils literal notranslate"><span class="pre">EndPoints.export</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="server.html#hidebound.server.server_tools.EndPoints.host"><code class="docutils literal notranslate"><span class="pre">EndPoints.host</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="server.html#hidebound.server.server_tools.EndPoints.init"><code class="docutils literal notranslate"><span class="pre">EndPoints.init</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="server.html#hidebound.server.server_tools.EndPoints.port"><code class="docutils literal notranslate"><span class="pre">EndPoints.port</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="server.html#hidebound.server.server_tools.EndPoints.progress"><code class="docutils literal notranslate"><span class="pre">EndPoints.progress</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="server.html#hidebound.server.server_tools.EndPoints.read"><code class="docutils literal notranslate"><span class="pre">EndPoints.read</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="server.html#hidebound.server.server_tools.EndPoints.search"><code class="docutils literal notranslate"><span class="pre">EndPoints.search</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="server.html#hidebound.server.server_tools.EndPoints.update"><code class="docutils literal notranslate"><span class="pre">EndPoints.update</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="server.html#hidebound.server.server_tools.EndPoints.workflow"><code class="docutils literal notranslate"><span class="pre">EndPoints.workflow</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.server_tools.error_to_response"><code class="docutils literal notranslate"><span class="pre">error_to_response()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.server_tools.format_config"><code class="docutils literal notranslate"><span class="pre">format_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.server_tools.get_config_error"><code class="docutils literal notranslate"><span class="pre">get_config_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.server_tools.get_connection_error"><code class="docutils literal notranslate"><span class="pre">get_connection_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.server_tools.get_initialization_error"><code class="docutils literal notranslate"><span class="pre">get_initialization_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.server_tools.get_progress"><code class="docutils literal notranslate"><span class="pre">get_progress()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.server_tools.get_read_error"><code class="docutils literal notranslate"><span class="pre">get_read_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.server_tools.get_search_error"><code class="docutils literal notranslate"><span class="pre">get_search_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.server_tools.get_update_error"><code class="docutils literal notranslate"><span class="pre">get_update_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.server_tools.parse_json_file_content"><code class="docutils literal notranslate"><span class="pre">parse_json_file_content()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.server_tools.render_template"><code class="docutils literal notranslate"><span class="pre">render_template()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.server_tools.request"><code class="docutils literal notranslate"><span class="pre">request()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.server_tools.search"><code class="docutils literal notranslate"><span class="pre">search()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#hidebound.server.server_tools.setup_hidebound_directories"><code class="docutils literal notranslate"><span class="pre">setup_hidebound_directories()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div>
 
@@ -133,7 +641,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
+    <p>&#169; Copyright 2022, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

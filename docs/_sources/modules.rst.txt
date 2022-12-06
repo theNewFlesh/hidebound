@@ -4,4 +4,3 @@
    core
    exporters
    server
-   cli

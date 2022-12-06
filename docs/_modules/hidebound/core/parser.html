@@ -14,7 +14,9 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -28,7 +30,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.27.0
+                0.31.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#installation">Installation</a></li>
@@ -46,9 +48,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#dataflow">Dataflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#workflow">Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#naming-convention">Naming Convention</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#project-structure">Project Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#application">Application</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#configuration">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#specification">Specification</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
@@ -56,6 +55,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../core.html">core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../exporters.html">exporters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../server.html">server</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer CLI</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
 </ul>
 
@@ -72,9 +74,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>hidebound.core.parser</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">hidebound.core.parser</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -84,7 +86,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for hidebound.core.parser</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>  <span class="c1"># noqa F401</span>
 
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
 <span class="kn">from</span> <span class="nn">pyparsing</span> <span class="kn">import</span> <span class="n">Group</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">ParseException</span><span class="p">,</span> <span class="n">Regex</span><span class="p">,</span> <span class="n">Suppress</span>
@@ -189,7 +191,7 @@
             <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Illegal </span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s1"> field </span><span class="si">{</span><span class="n">part</span><span class="si">}</span><span class="s1"> in &quot;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s1">&quot;. &#39;</span>
             <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;Expecting: </span><span class="si">{</span><span class="n">expr</span><span class="si">}</span><span class="s1">&#39;</span>
             <span class="k">raise</span> <span class="n">ParseException</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-        <span class="k">return</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="n">raise_error</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="n">raise_error</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>  <span class="c1"># noqa E741</span></div>
 
 <div class="viewcode-block" id="AssetNameParser._get_grammar"><a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser._get_grammar">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_grammar</span><span class="p">():</span>
@@ -215,10 +217,10 @@
         <span class="n">version</span> <span class="o">=</span> <span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\d{&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">VERSION_PADDING</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span><span class="p">)</span> \
             <span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> \
             <span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;version&#39;</span><span class="p">)</span> \
-            <span class="o">.</span><span class="n">setFailAction</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">_raise_field_error</span><span class="p">(</span><span class="s1">&#39;version&#39;</span><span class="p">,</span> <span class="s1">&#39;token&#39;</span><span class="p">))</span>
+            <span class="o">.</span><span class="n">setFailAction</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">_raise_field_error</span><span class="p">(</span><span class="s1">&#39;version&#39;</span><span class="p">,</span> <span class="s1">&#39;token&#39;</span><span class="p">))</span>  <span class="c1"># noqa E741</span>
 
         <span class="n">coord</span> <span class="o">=</span> <span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\d{&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">COORDINATE_PADDING</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span><span class="p">)</span> \
-            <span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>  <span class="c1"># noqa E741</span>
         <span class="n">t_sep</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">TOKEN_SEPARATOR</span><span class="p">)</span>
         <span class="n">opt_coord</span> <span class="o">=</span> <span class="n">Optional</span><span class="p">(</span><span class="n">t_sep</span> <span class="o">+</span> <span class="n">coord</span><span class="p">)</span>
         <span class="n">coordinate</span> <span class="o">=</span> <span class="n">Group</span><span class="p">(</span><span class="n">coord</span> <span class="o">+</span> <span class="n">opt_coord</span> <span class="o">+</span> <span class="n">opt_coord</span><span class="p">)</span> \
@@ -228,7 +230,7 @@
         <span class="n">frame</span> <span class="o">=</span> <span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\d{&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">FRAME_PADDING</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span><span class="p">)</span> \
             <span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> \
             <span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;frame&#39;</span><span class="p">)</span> \
-            <span class="o">.</span><span class="n">setFailAction</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">_raise_field_error</span><span class="p">(</span><span class="s1">&#39;frame&#39;</span><span class="p">,</span> <span class="s1">&#39;token&#39;</span><span class="p">))</span>
+            <span class="o">.</span><span class="n">setFailAction</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">_raise_field_error</span><span class="p">(</span><span class="s1">&#39;frame&#39;</span><span class="p">,</span> <span class="s1">&#39;token&#39;</span><span class="p">))</span>  <span class="c1"># noqa E741</span>
 
         <span class="n">extension</span> <span class="o">=</span> <span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[a-zA-Z0-9]+$&#39;</span><span class="p">)</span> \
             <span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;extension&#39;</span><span class="p">)</span> \
@@ -416,7 +418,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
+    <p>&#169; Copyright 2022, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -14,7 +14,9 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -28,7 +30,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.29.0
+                0.31.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#installation">Installation</a></li>
@@ -46,9 +48,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#dataflow">Dataflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#workflow">Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#naming-convention">Naming Convention</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#project-structure">Project Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#application">Application</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#configuration">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#specification">Specification</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
@@ -56,6 +55,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../core.html">core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../exporters.html">exporters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../server.html">server</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer CLI</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
 </ul>
 
@@ -72,9 +74,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>hidebound.core.tools</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">hidebound.core.tools</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -84,7 +86,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for hidebound.core.tools</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>  <span class="c1"># noqa F401</span>
 
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
@@ -95,9 +97,10 @@
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">lunchbox.enforce</span> <span class="kn">import</span> <span class="n">Enforce</span>
 <span class="kn">from</span> <span class="nn">schematics.exceptions</span> <span class="kn">import</span> <span class="n">DataError</span><span class="p">,</span> <span class="n">ValidationError</span>
 <span class="kn">import</span> <span class="nn">dask.dataframe</span> <span class="k">as</span> <span class="nn">dd</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">pyjson5</span> <span class="k">as</span> <span class="nn">jsonc</span>
 
 <span class="n">FilePath</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]</span>
@@ -111,10 +114,13 @@
 <span class="sd">&#39;&#39;&#39;</span>
 
 
-<div class="viewcode-block" id="list_all_files"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.list_all_files">[docs]</a><span class="k">def</span> <span class="nf">list_all_files</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">include_regex</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">exclude_regex</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
-    <span class="c1"># type: (FilePath, str, str) -&gt; Generator[Path, None, None]</span>
+<span class="c1"># DIRECTORY-FUNCS---------------------------------------------------------------</span>
+<div class="viewcode-block" id="traverse_directory"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.traverse_directory">[docs]</a><span class="k">def</span> <span class="nf">traverse_directory</span><span class="p">(</span>
+    <span class="n">directory</span><span class="p">,</span> <span class="n">include_regex</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">exclude_regex</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">entry_type</span><span class="o">=</span><span class="s1">&#39;file&#39;</span>
+<span class="p">):</span>
+    <span class="c1"># type: (FilePath, str, str, str) -&gt; Generator[Path, None, None]</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Recusively list all files within a given directory.</span>
+<span class="sd">    Recusively list all files or directories within a given directory.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        directory (str or Path): Directory to walk.</span>
@@ -122,24 +128,34 @@
 <span class="sd">            Default: &#39;&#39;.</span>
 <span class="sd">        exclude_regex (str, optional): Exclude filenames that match this regex.</span>
 <span class="sd">            Default: &#39;&#39;.</span>
+<span class="sd">        entry_type (str, optional): Kind of directory entry to return. Options</span>
+<span class="sd">            include: file, directory. Default: file.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        FileNotFoundError: If argument is not a directory or does not exist.</span>
+<span class="sd">        EnforceError: If entry_type is not file or directory.</span>
 
 <span class="sd">    Yields:</span>
 <span class="sd">        Path: File.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">etypes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;directory&#39;</span><span class="p">]</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Illegal entry type: </span><span class="si">{a}</span><span class="s1">. Legal entry types: </span><span class="si">{b}</span><span class="s1">.&#39;</span>
+    <span class="n">Enforce</span><span class="p">(</span><span class="n">entry_type</span><span class="p">,</span> <span class="s1">&#39;in&#39;</span><span class="p">,</span> <span class="n">etypes</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+
     <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">directory</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">directory</span><span class="si">}</span><span class="s1"> is not a directory or does not exist.&#39;</span>
         <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
 
     <span class="n">include_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">include_regex</span><span class="p">)</span>
     <span class="n">exclude_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">exclude_regex</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">file_</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-            <span class="n">filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">file_</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">items</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">entry_type</span> <span class="o">==</span> <span class="s1">&#39;directory&#39;</span><span class="p">:</span>
+            <span class="n">items</span> <span class="o">=</span> <span class="n">dirs</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+            <span class="n">filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
 
             <span class="n">output</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">temp</span> <span class="o">=</span> <span class="n">filepath</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
@@ -149,7 +165,7 @@
                 <span class="n">output</span> <span class="o">=</span> <span class="kc">False</span>
 
             <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
-                <span class="k">yield</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">file_</span><span class="p">)</span></div>
+                <span class="k">yield</span> <span class="n">filepath</span></div>
 
 
 <div class="viewcode-block" id="delete_empty_directories"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.delete_empty_directories">[docs]</a><span class="k">def</span> <span class="nf">delete_empty_directories</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
@@ -199,7 +215,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        pd.DataFrame: pd.DataFrame with one file per row.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">files</span> <span class="o">=</span> <span class="n">list_all_files</span><span class="p">(</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="n">traverse_directory</span><span class="p">(</span>
         <span class="n">directory</span><span class="p">,</span>
         <span class="n">include_regex</span><span class="o">=</span><span class="n">include_regex</span><span class="p">,</span>
         <span class="n">exclude_regex</span><span class="o">=</span><span class="n">exclude_regex</span>
@@ -213,6 +229,23 @@
         <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">Path</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">suffix</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">))</span>
     <span class="n">data</span><span class="o">.</span><span class="n">filepath</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">())</span>
     <span class="k">return</span> <span class="n">data</span></div>
+
+
+<span class="c1"># STRING-FUNCS------------------------------------------------------------------</span>
+<div class="viewcode-block" id="str_to_bool"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.str_to_bool">[docs]</a><span class="k">def</span> <span class="nf">str_to_bool</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+    <span class="c1"># type: (str) -&gt; bool</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Converts a string to a boolean value.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        string (str): String to be converted.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: Boolean</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">string</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;true&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
 
 
 <div class="viewcode-block" id="error_to_string"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.error_to_string">[docs]</a><span class="k">def</span> <span class="nf">error_to_string</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
@@ -241,6 +274,16 @@
     <span class="k">return</span> <span class="n">output</span></div>
 
 
+<div class="viewcode-block" id="time_string"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.time_string">[docs]</a><span class="k">def</span> <span class="nf">time_string</span><span class="p">():</span>
+    <span class="c1"># type: () -&gt; str</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        str: String representing current time.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">T-%H-%M-%S&#39;</span><span class="p">)</span></div>
+
+
+<span class="c1"># MISC-FUNCS--------------------------------------------------------------------</span>
 <div class="viewcode-block" id="to_prototype"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.to_prototype">[docs]</a><span class="k">def</span> <span class="nf">to_prototype</span><span class="p">(</span><span class="n">dicts</span><span class="p">):</span>
     <span class="c1"># type: (List[Dict]) -&gt; Dict</span>
     <span class="sd">&#39;&#39;&#39;</span>
@@ -266,15 +309,7 @@
     <span class="k">return</span> <span class="n">output</span></div>
 
 
-<div class="viewcode-block" id="time_string"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.time_string">[docs]</a><span class="k">def</span> <span class="nf">time_string</span><span class="p">():</span>
-    <span class="c1"># type: () -&gt; str</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Returns:</span>
-<span class="sd">        str: String representing current time.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">T-%H-%M-%S&#39;</span><span class="p">)</span></div>
-
-
+<span class="c1"># IO-FUNCS----------------------------------------------------------------------</span>
 <div class="viewcode-block" id="write_json"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.write_json">[docs]</a><span class="k">def</span> <span class="nf">write_json</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
     <span class="c1"># type: (object, FilePath) -&gt; None</span>
     <span class="sd">&#39;&#39;&#39;</span>
@@ -319,6 +354,7 @@
     <span class="k">return</span> <span class="n">output</span></div>
 
 
+<span class="c1"># DASK-FUNCS--------------------------------------------------------------------</span>
 <div class="viewcode-block" id="get_meta_kwargs"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.get_meta_kwargs">[docs]</a><span class="k">def</span> <span class="nf">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
     <span class="c1"># type: (DFS, Any) -&gt; dict</span>
     <span class="sd">&#39;&#39;&#39;</span>
@@ -436,22 +472,6 @@
     <span class="n">lut</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">key_column</span><span class="p">,</span> <span class="n">value_column</span><span class="p">]</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">merge</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">lut</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="n">key_column</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">data</span></div>
-
-
-<div class="viewcode-block" id="str_to_bool"><a class="viewcode-back" href="../../../core.html#hidebound.core.tools.str_to_bool">[docs]</a><span class="k">def</span> <span class="nf">str_to_bool</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
-    <span class="c1"># type: (str) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Converts a string to a boolean value.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        string (str): String to be converted.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        bool: Boolean</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">if</span> <span class="n">string</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;true&#39;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">True</span>
-    <span class="k">return</span> <span class="kc">False</span></div>
 </pre></div>
 
            </div>
@@ -461,7 +481,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
+    <p>&#169; Copyright 2022, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

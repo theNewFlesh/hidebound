@@ -14,7 +14,9 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -28,7 +30,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.27.0
+                0.31.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#installation">Installation</a></li>
@@ -46,9 +48,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#dataflow">Dataflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#workflow">Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#naming-convention">Naming Convention</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#project-structure">Project Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#application">Application</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#configuration">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#specification">Specification</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
@@ -56,6 +55,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../core.html">core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../exporters.html">exporters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../server.html">server</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer CLI</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
 </ul>
 
@@ -72,9 +74,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>hidebound.server.server_tools</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">hidebound.server.server_tools</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -84,7 +86,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for hidebound.server.server_tools</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>  <span class="c1"># noqa F401</span>
 
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
@@ -144,13 +146,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        bytes: HTML.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="c1"># path to templates inside pip package</span>
-    <span class="n">tempdir</span> <span class="o">=</span> <span class="n">lbt</span><span class="o">.</span><span class="n">relative_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s1">&#39;../templates&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
-
-    <span class="c1"># path to templates inside repo</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;REPO_ENV&#39;</span><span class="p">,</span> <span class="s1">&#39;False&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;true&#39;</span><span class="p">:</span>
-        <span class="n">tempdir</span> <span class="o">=</span> <span class="n">lbt</span><span class="o">.</span><span class="n">relative_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s1">&#39;../../../templates&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
-
+    <span class="n">tempdir</span> <span class="o">=</span> <span class="n">lbt</span><span class="o">.</span><span class="n">relative_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s1">&#39;../../../templates&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">jinja2</span><span class="o">.</span><span class="n">Environment</span><span class="p">(</span>
         <span class="n">loader</span><span class="o">=</span><span class="n">jinja2</span><span class="o">.</span><span class="n">FileSystemLoader</span><span class="p">(</span><span class="n">tempdir</span><span class="p">),</span>
         <span class="n">keep_trailing_newline</span><span class="o">=</span><span class="kc">True</span>
@@ -382,7 +378,7 @@
 
 
 <div class="viewcode-block" id="format_config"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.format_config">[docs]</a><span class="k">def</span> <span class="nf">format_config</span><span class="p">(</span>
-    <span class="n">config</span><span class="p">,</span> <span class="n">redact_regex</span><span class="o">=</span><span class="s1">&#39;(_key|_id|url)$&#39;</span><span class="p">,</span> <span class="n">redact_hash</span><span class="o">=</span><span class="kc">False</span>
+    <span class="n">config</span><span class="p">,</span> <span class="n">redact_regex</span><span class="o">=</span><span class="s1">&#39;(_key|_id|_token|url)$&#39;</span><span class="p">,</span> <span class="n">redact_hash</span><span class="o">=</span><span class="kc">False</span>
 <span class="p">):</span>
     <span class="c1"># type: (Dict[str, Any], str, bool) -&gt; OrderedDict[str, Any]</span>
     <span class="sd">&#39;&#39;&#39;</span>
@@ -391,7 +387,7 @@
 <span class="sd">    Args:</span>
 <span class="sd">        config (dict): Configuration dictionary.</span>
 <span class="sd">        redact_regex (str, optional): Regular expression that matches keys,</span>
-<span class="sd">            whose values are to be redacted. Default: &quot;(_key|_id|url)$&quot;.</span>
+<span class="sd">            whose values are to be redacted. Default: &quot;(_key|_id|_token|url)$&quot;.</span>
 <span class="sd">        redact_hash (bool, optional): Whether to redact values with the string</span>
 <span class="sd">            &quot;REDACTED&quot; or a hash of the value. Default: False.</span>
 
@@ -418,12 +414,11 @@
         <span class="s1">&#39;include_regex&#39;</span><span class="p">,</span>
         <span class="s1">&#39;exclude_regex&#39;</span><span class="p">,</span>
         <span class="s1">&#39;write_mode&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;dask_workers&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;dask_cluster_type&#39;</span><span class="p">,</span>
         <span class="s1">&#39;redact_regex&#39;</span><span class="p">,</span>
         <span class="s1">&#39;redact_hash&#39;</span><span class="p">,</span>
         <span class="s1">&#39;specification_files&#39;</span><span class="p">,</span>
         <span class="s1">&#39;workflow&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;dask&#39;</span><span class="p">,</span>
         <span class="s1">&#39;exporters&#39;</span><span class="p">,</span>
         <span class="s1">&#39;webhooks&#39;</span><span class="p">,</span>
     <span class="p">]</span>
@@ -444,7 +439,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
+    <p>&#169; Copyright 2022, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

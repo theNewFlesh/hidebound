@@ -14,7 +14,9 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -28,7 +30,7 @@
             <a href="../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.27.1
+                0.31.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../intro.html#installation">Installation</a></li>
@@ -46,9 +48,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../intro.html#dataflow">Dataflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../intro.html#workflow">Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../intro.html#naming-convention">Naming Convention</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intro.html#project-structure">Project Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intro.html#application">Application</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intro.html#configuration">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../intro.html#specification">Specification</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
@@ -56,6 +55,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../core.html">core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../exporters.html">exporters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../server.html">server</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer CLI</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../cli.html">cli</a></li>
 </ul>
 
@@ -72,9 +74,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="index.html">Module code</a> &raquo;</li>
-      <li>cli</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">cli</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -88,7 +90,7 @@
 
 <span class="k">try</span><span class="p">:</span>
     <span class="c1"># python2.7 doesn&#39;t have typing module</span>
-    <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+    <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>  <span class="c1"># noqa F401</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="k">pass</span>
 
@@ -134,36 +136,57 @@
         <span class="n">nargs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;&#39;&#39;Command to run in </span><span class="si">{repo}</span><span class="s1"> app.</span>
-<span class="s1">    app          - Run app inside </span><span class="si">{repo}</span><span class="s1"> container</span>
-<span class="s1">    build        - Build image of </span><span class="si">{repo}</span><span class="s1"></span>
-<span class="s1">    build-prod   - Build production image of </span><span class="si">{repo}</span><span class="s1"></span>
-<span class="s1">    container    - Display the Docker container id of </span><span class="si">{repo}</span><span class="s1"></span>
-<span class="s1">    coverage     - Generate coverage report for </span><span class="si">{repo}</span><span class="s1"></span>
-<span class="s1">    destroy      - Shutdown </span><span class="si">{repo}</span><span class="s1"> container and destroy its image</span>
-<span class="s1">    destroy-prod - Shutdown </span><span class="si">{repo}</span><span class="s1"> production container and destroy its image</span>
-<span class="s1">    docs         - Generate documentation for </span><span class="si">{repo}</span><span class="s1"></span>
-<span class="s1">    fast-test    - Run testing on </span><span class="si">{repo}</span><span class="s1"> skipping tests marked as slow</span>
-<span class="s1">    full-docs    - Generates documentation, coverage report and metrics</span>
-<span class="s1">    image        - Display the Docker image id of </span><span class="si">{repo}</span><span class="s1"></span>
-<span class="s1">    lab          - Start a Jupyter lab server</span>
-<span class="s1">    lint         - Run linting and type checking on </span><span class="si">{repo}</span><span class="s1"></span>
-<span class="s1">    package      - Build </span><span class="si">{repo}</span><span class="s1"> pip package</span>
-<span class="s1">    prod         - Start </span><span class="si">{repo}</span><span class="s1"> production container</span>
-<span class="s1">    publish      - Publish </span><span class="si">{repo}</span><span class="s1"> repository to python package index</span>
-<span class="s1">    push         - Push </span><span class="si">{repo}</span><span class="s1"> production image to Dockerhub</span>
-<span class="s1">    python       - Run python interpreter session inside </span><span class="si">{repo}</span><span class="s1"> container</span>
-<span class="s1">    remove       - Remove </span><span class="si">{repo}</span><span class="s1"> Docker image</span>
-<span class="s1">    restart      - Restart </span><span class="si">{repo}</span><span class="s1"> container</span>
-<span class="s1">    requirements - Write frozen requirements to disk</span>
-<span class="s1">    start        - Start </span><span class="si">{repo}</span><span class="s1"> container</span>
-<span class="s1">    state        - State of </span><span class="si">{repo}</span><span class="s1"> container</span>
-<span class="s1">    stop         - Stop </span><span class="si">{repo}</span><span class="s1"> container</span>
-<span class="s1">    test         - Run testing on </span><span class="si">{repo}</span><span class="s1"></span>
-<span class="s1">    tox          - Run tox tests on </span><span class="si">{repo}</span><span class="s1"></span>
-<span class="s1">    version-up   - Updates version and runs full-docs and requirements</span>
-<span class="s1">    zsh          - Run ZSH session inside </span><span class="si">{repo}</span><span class="s1"> container</span>
-<span class="s1">    zsh-complete - Generate oh-my-zsh completions</span>
-<span class="s1">    zsh-root     - Run ZSH session as root inside </span><span class="si">{repo}</span><span class="s1"> container</span>
+<span class="s1">    build-package        - Build production version of repo for publishing</span>
+<span class="s1">    build-prod           - Publish pip package of repo to PyPi</span>
+<span class="s1">    build-publish        - Run production tests first then publish pip package of repo to PyPi</span>
+<span class="s1">    build-test           - Build test version of repo for prod testing</span>
+<span class="s1">    docker-build         - Build image of </span><span class="si">{repo}</span><span class="s1"></span>
+<span class="s1">    docker-build-prod    - Build production image of </span><span class="si">{repo}</span><span class="s1"></span>
+<span class="s1">    docker-container     - Display the Docker container id of </span><span class="si">{repo}</span><span class="s1"></span>
+<span class="s1">    docker-coverage      - Generate coverage report for </span><span class="si">{repo}</span><span class="s1"></span>
+<span class="s1">    docker-destroy       - Shutdown </span><span class="si">{repo}</span><span class="s1"> container and destroy its image</span>
+<span class="s1">    docker-destroy-prod  - Shutdown </span><span class="si">{repo}</span><span class="s1"> production container and destroy its image</span>
+<span class="s1">    docker-image         - Display the Docker image id of </span><span class="si">{repo}</span><span class="s1"></span>
+<span class="s1">    docker-prod          - Start </span><span class="si">{repo}</span><span class="s1"> production container</span>
+<span class="s1">    docker-push          - Push </span><span class="si">{repo}</span><span class="s1"> production image to Dockerhub</span>
+<span class="s1">    docker-remove        - Remove </span><span class="si">{repo}</span><span class="s1"> Docker image</span>
+<span class="s1">    docker-restart       - Restart </span><span class="si">{repo}</span><span class="s1"> container</span>
+<span class="s1">    docker-start         - Start </span><span class="si">{repo}</span><span class="s1"> container</span>
+<span class="s1">    docker-stop          - Stop </span><span class="si">{repo}</span><span class="s1"> container</span>
+<span class="s1">    docs                 - Generate sphinx documentation</span>
+<span class="s1">    docs-architecture    - Generate architecture.svg diagram from all import statements</span>
+<span class="s1">    docs-full            - Generate documentation, coverage report, diagram and code</span>
+<span class="s1">    docs-metrics         - Generate code metrics report, plots and tables</span>
+<span class="s1">    library-add          - Add a given package to a given dependency group</span>
+<span class="s1">    library-graph-dev    - Graph dependencies in dev environment</span>
+<span class="s1">    library-graph-prod   - Graph dependencies in prod environment</span>
+<span class="s1">    library-install-dev  - Install all dependencies into dev environment</span>
+<span class="s1">    library-install-prod - Install all dependencies into prod environment</span>
+<span class="s1">    library-list-dev     - List packages in dev environment</span>
+<span class="s1">    library-list-prod    - List packages in prod environment</span>
+<span class="s1">    library-lock-dev     - Resolve dev.lock file</span>
+<span class="s1">    library-lock-prod    - Resolve prod.lock file</span>
+<span class="s1">    library-remove       - Remove a given package from a given dependency group</span>
+<span class="s1">    library-search       - Search for pip packages</span>
+<span class="s1">    library-sync-dev     - Sync dev environment with packages listed in dev.lock</span>
+<span class="s1">    library-sync-prod    - Sync prod environment with packages listed in prod.lock</span>
+<span class="s1">    library-update       - Update dev dependencies</span>
+<span class="s1">    session-app          - Run app</span>
+<span class="s1">    session-lab          - Run jupyter lab server</span>
+<span class="s1">    session-python       - Run python session with dev dependencies</span>
+<span class="s1">    state                - State of </span><span class="si">{repo}</span><span class="s1"></span>
+<span class="s1">    test-coverage        - Generate test coverage report</span>
+<span class="s1">    test-dev             - Run all tests</span>
+<span class="s1">    test-fast            - Test all code excepts tests marked with SKIP_SLOWS_TESTS decorator</span>
+<span class="s1">    test-lint            - Run linting and type checking</span>
+<span class="s1">    test-prod            - Run tests across all support python versions</span>
+<span class="s1">    version              - Full resolution of repo: dependencies, linting, tests, docs, etc</span>
+<span class="s1">    version-bump-major   - Bump pyproject major version</span>
+<span class="s1">    version-bump-minor   - Bump pyproject minor version</span>
+<span class="s1">    version-bump-patch   - Bump pyproject patch version</span>
+<span class="s1">    zsh                  - Run ZSH session inside </span><span class="si">{repo}</span><span class="s1"> container</span>
+<span class="s1">    zsh-complete         - Generate oh-my-zsh completions</span>
+<span class="s1">    zsh-root             - Run ZSH session as root inside </span><span class="si">{repo}</span><span class="s1"> container</span>
 <span class="s1">&#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">))</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
@@ -209,14 +232,13 @@
         <span class="n">red</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[0;31m&#39;</span><span class="p">,</span>
         <span class="n">white</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[0;37m&#39;</span><span class="p">,</span>
         <span class="n">yellow</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[0;33m&#39;</span><span class="p">,</span>
-        <span class="n">github_user</span><span class="o">=</span><span class="n">GITHUB_USER</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+        <span class="n">github_user</span><span class="o">=</span><span class="n">GITHUB_USER</span><span class="p">,</span>
         <span class="n">port</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">PORT</span><span class="p">),</span>
         <span class="n">pythonpath</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{PYTHONPATH}</span><span class="s1">&#39;</span><span class="p">,</span>
         <span class="n">repo_path</span><span class="o">=</span><span class="n">REPO_PATH</span><span class="p">,</span>
         <span class="n">repo</span><span class="o">=</span><span class="n">REPO</span><span class="p">,</span>
         <span class="n">repo_</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="n">REPO</span><span class="p">),</span>
         <span class="n">user</span><span class="o">=</span><span class="n">USER</span><span class="p">,</span>
-        <span class="n">num_cores</span><span class="o">=</span><span class="s2">&quot;`python3 -c &#39;import os; print(os.cpu_count())&#39;`&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">all_</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -294,33 +316,6 @@
     <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="version_variable"><a class="viewcode-back" href="../cli.html#cli.version_variable">[docs]</a><span class="k">def</span> <span class="nf">version_variable</span><span class="p">():</span>
-    <span class="c1"># type: () -&gt; str</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Returns:</span>
-<span class="sd">        str: Command to set version variable from pip/version.txt.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">return</span> <span class="s1">&#39;export VERSION=`cat pip/version.txt`&#39;</span></div>
-
-
-<div class="viewcode-block" id="make_docs_dir"><a class="viewcode-back" href="../cli.html#cli.make_docs_dir">[docs]</a><span class="k">def</span> <span class="nf">make_docs_dir</span><span class="p">():</span>
-    <span class="c1"># type: () -&gt; str</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Returns:</span>
-<span class="sd">        str: Command to create docs directory in repo.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="n">line</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">        docker exec</span>
-<span class="s1">            --interactive</span>
-<span class="s1">            --tty</span>
-<span class="s1">            --user </span><span class="si">{user}</span><span class="s1"></span>
-<span class="s1">            -e PYTHONPATH=&quot;$</span><span class="si">{pythonpath}</span><span class="s1">:/home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/python&quot;</span>
-<span class="s1">            -e REPO_ENV=True </span><span class="si">{repo}</span><span class="s1"></span>
-<span class="s1">            mkdir -p /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/docs</span>
-<span class="s1">    &#39;&#39;&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">cmd</span></div>
-
-
 <div class="viewcode-block" id="stop"><a class="viewcode-back" href="../cli.html#cli.stop">[docs]</a><span class="k">def</span> <span class="nf">stop</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; str</span>
     <span class="sd">&#39;&#39;&#39;</span>
@@ -334,26 +329,6 @@
 <span class="s1">            -f </span><span class="si">{repo_path}</span><span class="s1">/docker/docker-compose.yml</span>
 <span class="s1">            down;</span>
 <span class="s1">        cd ..</span>
-<span class="s1">    &#39;&#39;&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">cmd</span></div>
-
-
-<div class="viewcode-block" id="coverage"><a class="viewcode-back" href="../cli.html#cli.coverage">[docs]</a><span class="k">def</span> <span class="nf">coverage</span><span class="p">():</span>
-    <span class="c1"># type: () -&gt; str</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Returns:</span>
-<span class="sd">        str: Partial command to get generate coverage report.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="n">line</span><span class="p">(</span>
-        <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;&#39;&#39;-e REPO_ENV=True </span><span class="si">{repo}</span><span class="s1"></span>
-<span class="s1">            pytest</span>
-<span class="s1">                /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/python</span>
-<span class="s1">                -c /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/docker/pytest.ini</span>
-<span class="s1">                --cov /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/python</span>
-<span class="s1">                --cov-config /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/docker/pytest.ini</span>
-<span class="s1">                --cov-report html:/home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/docs/htmlcov</span>
-<span class="s1">                --headless</span>
-<span class="s1">                --numprocesses </span><span class="si">{num_cores}</span><span class="s1"></span>
 <span class="s1">    &#39;&#39;&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">cmd</span></div>
 
@@ -378,92 +353,46 @@
 <span class="s1">            --interactive</span>
 <span class="s1">            --tty</span>
 <span class="s1">            --user </span><span class="si">{user}</span><span class="s1"></span>
-<span class="s1">            -e PYTHONPATH=&quot;$</span><span class="si">{pythonpath}</span><span class="s1">:/home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/python&quot;</span>
 <span class="s1">    &#39;&#39;&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">cmd</span></div>
 
 
-<div class="viewcode-block" id="tmp_repo"><a class="viewcode-back" href="../cli.html#cli.tmp_repo">[docs]</a><span class="k">def</span> <span class="nf">tmp_repo</span><span class="p">():</span>
+<div class="viewcode-block" id="version_variable"><a class="viewcode-back" href="../cli.html#cli.version_variable">[docs]</a><span class="k">def</span> <span class="nf">version_variable</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; str</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Returns:</span>
-<span class="sd">        str: Command to build repo in /tmp.</span>
+<span class="sd">        str: Command to set version variable from pyproject.toml.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="n">line</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">        cd /home/ubuntu/</span><span class="si">{repo}</span><span class="s1"> &amp;&amp;</span>
-<span class="s1">        rm -rf /tmp/</span><span class="si">{repo}</span><span class="s1"> &amp;&amp;</span>
-<span class="s1">        mkdir /tmp/</span><span class="si">{repo}</span><span class="s1"> &amp;&amp;</span>
-<span class="s1">        cp -R python/</span><span class="si">{repo_}</span><span class="s1"> /tmp/</span><span class="si">{repo}</span><span class="s1">/ &amp;&amp;</span>
-<span class="s1">        cp -R templates /tmp/</span><span class="si">{repo}</span><span class="s1">/</span><span class="si">{repo_}</span><span class="s1">/ &amp;&amp;</span>
-<span class="s1">        cp -R resources /tmp/</span><span class="si">{repo}</span><span class="s1">/</span><span class="si">{repo_}</span><span class="s1">/ &amp;&amp;</span>
-<span class="s1">        cp README.md /tmp/</span><span class="si">{repo}</span><span class="s1">/ &amp;&amp;</span>
-<span class="s1">        cp LICENSE /tmp/</span><span class="si">{repo}</span><span class="s1">/ &amp;&amp;</span>
-<span class="s1">        cp docker/dev_requirements.txt /tmp/</span><span class="si">{repo}</span><span class="s1">/ &amp;&amp;</span>
-<span class="s1">        cp docker/prod_requirements.txt /tmp/</span><span class="si">{repo}</span><span class="s1">/ &amp;&amp;</span>
-<span class="s1">        cp -R pip/* /tmp/</span><span class="si">{repo}</span><span class="s1">/ &amp;&amp;</span>
-<span class="s1">        find /tmp/</span><span class="si">{repo}</span><span class="s1">/</span><span class="si">{repo_}</span><span class="s1">/resources -type f | grep -vE &#39;icon|test_&#39;</span>
-<span class="s1">            | parallel &#39;rm -rf {{}}&#39; &amp;&amp;</span>
-<span class="s1">        find /tmp/</span><span class="si">{repo}</span><span class="s1"> | grep -E &#39;__pycache__|flask_monitor|cli.py&#39;</span>
-<span class="s1">            | parallel &#39;rm -rf {{}}&#39; &amp;&amp;</span>
-<span class="s1">        find /tmp/</span><span class="si">{repo}</span><span class="s1"> -type f | grep __init__.py</span>
-<span class="s1">            | parallel &#39;rm -rf {{}}; touch {{}}&#39;</span>
-<span class="s1">    &#39;&#39;&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">cmd</span></div>
+    <span class="k">return</span> <span class="n">line</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        export VERSION=`cat docker/config/pyproject.toml</span>
+<span class="s1">            | grep -E &#39;^version *=&#39;</span>
+<span class="s1">            | awk &#39;{{print $3}}&#39;</span>
+<span class="s1">            | sed &#39;s/</span><span class="se">\&quot;</span><span class="s1">//g&#39;`</span>
+<span class="s1">    &#39;&#39;&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="package_repo"><a class="viewcode-back" href="../cli.html#cli.package_repo">[docs]</a><span class="k">def</span> <span class="nf">package_repo</span><span class="p">():</span>
-    <span class="c1"># type: () -&gt; str</span>
+<div class="viewcode-block" id="x_tools"><a class="viewcode-back" href="../cli.html#cli.x_tools">[docs]</a><span class="k">def</span> <span class="nf">x_tools</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="c1"># type: (str, list[str]) -&gt; str</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Returns:</span>
-<span class="sd">        str: Command to create a temporary repo in /tmp.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">pkg</span> <span class="o">=</span> <span class="n">line</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">        find /tmp/$REPO | grep -E &#39;.*test.*</span><span class="se">\\</span><span class="s1">.py$|mock.*</span><span class="se">\\</span><span class="s1">.py$|__pycache__&#39;</span>
-<span class="s1">            | parallel &#39;rm -rf {{}}&#39;</span>
-<span class="s1">    &#39;&#39;&#39;</span><span class="p">)</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; </span><span class="si">{repo}</span><span class="s1"> zsh -c &quot;&#39;</span> <span class="o">+</span> <span class="n">tmp_repo</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; &amp;&amp; &#39;</span> <span class="o">+</span> <span class="n">pkg</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span>
-    <span class="k">return</span> <span class="n">cmd</span></div>
+<span class="sd">    Creates a x_tools command string.</span>
 
+<span class="sd">    Args:</span>
+<span class="sd">        command (str): x_tools command</span>
+<span class="sd">        args (list, optional): List of arguments to be passed to the command.</span>
+<span class="sd">            Default: []</span>
 
-<div class="viewcode-block" id="tox_repo"><a class="viewcode-back" href="../cli.html#cli.tox_repo">[docs]</a><span class="k">def</span> <span class="nf">tox_repo</span><span class="p">():</span>
-    <span class="c1"># type: () -&gt; str</span>
-    <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Returns:</span>
-<span class="sd">        str: Command to build tox repo.</span>
+<span class="sd">        str: x_tools command.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">tox</span> <span class="o">=</span> <span class="n">line</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">        cp docker/flake8.ini /tmp/</span><span class="si">{repo}</span><span class="s1"> &amp;&amp;</span>
-<span class="s1">        cp docker/mypy.ini /tmp/</span><span class="si">{repo}</span><span class="s1"> &amp;&amp;</span>
-<span class="s1">        cp docker/pytest.ini /tmp/</span><span class="si">{repo}</span><span class="s1"> &amp;&amp;</span>
-<span class="s1">        cp docker/tox.ini /tmp/</span><span class="si">{repo}</span><span class="s1"> &amp;&amp;</span>
-<span class="s1">        cp python/conftest.py /tmp/</span><span class="si">{repo}</span><span class="s1"> &amp;&amp;</span>
-<span class="s1">        cp -R /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/resources /tmp</span>
-<span class="s1">    &#39;&#39;&#39;</span><span class="p">)</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; </span><span class="si">{repo}</span><span class="s1"> zsh -c &quot;&#39;</span> <span class="o">+</span> <span class="n">tmp_repo</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; &amp;&amp; &#39;</span> <span class="o">+</span> <span class="n">tox</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span>
+
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;source /home/ubuntu/.zshrc &amp;&amp; </span><span class="si">{cmd}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="n">command</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span> <span class="o">!=</span> <span class="p">[]:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;&quot;</span><span class="si">{cmd}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">cmd</span></div>
 
 
 <span class="c1"># COMMANDS----------------------------------------------------------------------</span>
-<div class="viewcode-block" id="app_command"><a class="viewcode-back" href="../cli.html#cli.app_command">[docs]</a><span class="k">def</span> <span class="nf">app_command</span><span class="p">():</span>
-    <span class="c1"># type: () -&gt; str</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Returns:</span>
-<span class="sd">        str: Command to start app.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cmds</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">enter_repo</span><span class="p">(),</span>
-        <span class="n">start</span><span class="p">(),</span>
-        <span class="n">line</span><span class="p">(</span>
-            <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">                -e DEBUG_MODE=True</span>
-<span class="s1">                -e REPO_ENV=True </span><span class="si">{repo}</span><span class="s1"></span>
-<span class="s1">                python3.7 /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/python/</span><span class="si">{repo}</span><span class="s1">/server/app.py&#39;&#39;&#39;</span>
-        <span class="p">),</span>
-        <span class="n">exit_repo</span><span class="p">(),</span>
-    <span class="p">]</span>
-    <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span></div>
-
-
 <div class="viewcode-block" id="build_dev_command"><a class="viewcode-back" href="../cli.html#cli.build_dev_command">[docs]</a><span class="k">def</span> <span class="nf">build_dev_command</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; str</span>
     <span class="sd">&#39;&#39;&#39;</span>
@@ -475,10 +404,8 @@
         <span class="n">line</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
 <span class="s1">            cd docker;</span>
 <span class="s1">            docker build</span>
-<span class="s1">                --force-rm</span>
-<span class="s1">                --no-cache</span>
 <span class="s1">                --file dev.dockerfile</span>
-<span class="s1">                --tag </span><span class="si">{repo}</span><span class="s1">:latest .;</span>
+<span class="s1">                --tag </span><span class="si">{repo}</span><span class="s1">:dev .;</span>
 <span class="s1">            cd ..</span>
 <span class="s1">        &#39;&#39;&#39;</span><span class="p">),</span>
         <span class="n">exit_repo</span><span class="p">(),</span>
@@ -521,22 +448,6 @@
     <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="coverage_command"><a class="viewcode-back" href="../cli.html#cli.coverage_command">[docs]</a><span class="k">def</span> <span class="nf">coverage_command</span><span class="p">():</span>
-    <span class="c1"># type: () -&gt; str</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Returns:</span>
-<span class="sd">        str: Command to get generate coverage report.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cmds</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">enter_repo</span><span class="p">(),</span>
-        <span class="n">start</span><span class="p">(),</span>
-        <span class="n">make_docs_dir</span><span class="p">(),</span>
-        <span class="n">coverage</span><span class="p">(),</span>
-        <span class="n">exit_repo</span><span class="p">(),</span>
-    <span class="p">]</span>
-    <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span></div>
-
-
 <div class="viewcode-block" id="destroy_dev_command"><a class="viewcode-back" href="../cli.html#cli.destroy_dev_command">[docs]</a><span class="k">def</span> <span class="nf">destroy_dev_command</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; str</span>
     <span class="sd">&#39;&#39;&#39;</span>
@@ -547,7 +458,7 @@
         <span class="n">enter_repo</span><span class="p">(),</span>
         <span class="n">stop</span><span class="p">(),</span>
         <span class="n">remove_container</span><span class="p">(),</span>
-        <span class="s1">&#39;docker image rm --force </span><span class="si">{repo}</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;docker image rm --force </span><span class="si">{repo}</span><span class="s1">:dev&#39;</span><span class="p">,</span>
         <span class="n">exit_repo</span><span class="p">(),</span>
     <span class="p">]</span>
     <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span></div>
@@ -568,120 +479,6 @@
     <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="docs_command"><a class="viewcode-back" href="../cli.html#cli.docs_command">[docs]</a><span class="k">def</span> <span class="nf">docs_command</span><span class="p">():</span>
-    <span class="c1"># type: () -&gt; str</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Returns:</span>
-<span class="sd">        str: Command to generate documentation.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cmds</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">enter_repo</span><span class="p">(),</span>
-        <span class="n">start</span><span class="p">(),</span>
-        <span class="n">make_docs_dir</span><span class="p">(),</span>
-        <span class="n">line</span><span class="p">(</span>
-            <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;&#39;&#39;-e REPO_ENV=True </span><span class="si">{repo}</span><span class="s1"></span>
-<span class="s1">                 zsh -c &quot;</span>
-<span class="s1">                    pandoc /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/README.md</span>
-<span class="s1">                        -o /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/sphinx/intro.rst</span>
-<span class="s1">                        --from markdown-yaml_metadata_block;</span>
-<span class="s1">                    sphinx-build</span>
-<span class="s1">                        /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/sphinx</span>
-<span class="s1">                        /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/docs;</span>
-<span class="s1">                    cp /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/sphinx/style.css</span>
-<span class="s1">                    /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/docs/_static/style.css;</span>
-<span class="s1">                    touch /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/docs/.nojekyll;</span>
-<span class="s1">                    mkdir -p /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/docs/resources;</span>
-<span class="s1">                &quot;</span>
-<span class="s1">        &#39;&#39;&#39;</span><span class="p">),</span>
-        <span class="n">exit_repo</span><span class="p">(),</span>
-    <span class="p">]</span>
-    <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="fast_test_command"><a class="viewcode-back" href="../cli.html#cli.fast_test_command">[docs]</a><span class="k">def</span> <span class="nf">fast_test_command</span><span class="p">():</span>
-    <span class="c1"># type: () -&gt; str</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Returns:</span>
-<span class="sd">        str: Command to run test not marked slow.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cmds</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">enter_repo</span><span class="p">(),</span>
-        <span class="n">start</span><span class="p">(),</span>
-        <span class="n">line</span><span class="p">(</span>
-            <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;&#39;&#39;-e REPO_ENV=True -e SKIP_SLOW_TESTS=true </span><span class="si">{repo}</span><span class="s1"></span>
-<span class="s1">                pytest</span>
-<span class="s1">                    /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/python</span>
-<span class="s1">                    -c /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/docker/pytest.ini</span>
-<span class="s1">                    --headless</span>
-<span class="s1">                    --numprocesses </span><span class="si">{num_cores}</span><span class="s1"></span>
-<span class="s1">        &#39;&#39;&#39;</span><span class="p">),</span>
-        <span class="n">exit_repo</span><span class="p">(),</span>
-    <span class="p">]</span>
-    <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="full_docs_command"><a class="viewcode-back" href="../cli.html#cli.full_docs_command">[docs]</a><span class="k">def</span> <span class="nf">full_docs_command</span><span class="p">():</span>
-    <span class="c1"># type: () -&gt; str</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Generates:</span>
-
-<span class="sd">      * documentation</span>
-<span class="sd">      * code coverage report</span>
-<span class="sd">      * dependency architecture diagram</span>
-<span class="sd">      * code metrics plots</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        str: Command.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cmds</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">enter_repo</span><span class="p">(),</span>
-        <span class="n">start</span><span class="p">(),</span>
-        <span class="n">make_docs_dir</span><span class="p">(),</span>
-        <span class="n">line</span><span class="p">(</span>
-            <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;&#39;&#39;-e REPO_ENV=True </span><span class="si">{repo}</span><span class="s1"></span>
-<span class="s1">                 zsh -c &quot;</span>
-<span class="s1">                    pandoc</span>
-<span class="s1">                        /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/README.md</span>
-<span class="s1">                        -o /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/sphinx/intro.rst;</span>
-<span class="s1">                    sphinx-build</span>
-<span class="s1">                        /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/sphinx</span>
-<span class="s1">                        /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/docs;</span>
-<span class="s1">                    cp</span>
-<span class="s1">                        /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/sphinx/style.css</span>
-<span class="s1">                        /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/docs/_static/style.css;</span>
-<span class="s1">                    touch /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/docs/.nojekyll;</span>
-<span class="s1">                    mkdir -p /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/docs/resources;</span>
-<span class="s1">                &quot;</span>
-<span class="s1">        &#39;&#39;&#39;</span><span class="p">),</span>
-        <span class="n">coverage</span><span class="p">(),</span>
-        <span class="n">line</span><span class="p">(</span>
-            <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;&#39;&#39;-e REPO_ENV=True </span><span class="si">{repo}</span><span class="s1"></span>
-<span class="s1">                python3.7 -c</span>
-<span class="s1">                    &quot;import rolling_pin.repo_etl as rpo;</span>
-<span class="s1">                    rpo.write_repo_architecture(</span>
-<span class="s1">                        &#39;/home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/python&#39;,</span>
-<span class="s1">                        &#39;/home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/docs/architecture.svg&#39;,</span>
-<span class="s1">                        exclude_regex=&#39;test|mock&#39;,</span>
-<span class="s1">                        orient=&#39;lr&#39;,</span>
-<span class="s1">                    );</span>
-<span class="s1">                &quot;</span>
-<span class="s1">        &#39;&#39;&#39;</span><span class="p">),</span>
-        <span class="n">line</span><span class="p">(</span>
-            <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;&#39;&#39;-e REPO_ENV=True </span><span class="si">{repo}</span><span class="s1"></span>
-<span class="s1">                python3.7 -c</span>
-<span class="s1">                   &quot;import rolling_pin.repo_etl as rpo;</span>
-<span class="s1">                    rpo.write_repo_plots_and_tables(</span>
-<span class="s1">                        &#39;/home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/python&#39;,</span>
-<span class="s1">                        &#39;/home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/docs/plots.html&#39;,</span>
-<span class="s1">                        &#39;/home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/docs&#39;,</span>
-<span class="s1">                    );</span>
-<span class="s1">                &quot;</span>
-<span class="s1">        &#39;&#39;&#39;</span><span class="p">),</span>
-        <span class="n">exit_repo</span><span class="p">(),</span>
-    <span class="p">]</span>
-    <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span></div>
-
-
 <div class="viewcode-block" id="image_id_command"><a class="viewcode-back" href="../cli.html#cli.image_id_command">[docs]</a><span class="k">def</span> <span class="nf">image_id_command</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; str</span>
     <span class="sd">&#39;&#39;&#39;</span>
@@ -692,68 +489,6 @@
         <span class="n">enter_repo</span><span class="p">(),</span>
         <span class="n">start</span><span class="p">(),</span>
         <span class="s2">&quot;docker images </span><span class="si">{repo}</span><span class="s2"> --format &#39;{{{{.ID}}}}&#39;&quot;</span><span class="p">,</span>
-        <span class="n">exit_repo</span><span class="p">(),</span>
-    <span class="p">]</span>
-    <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="lab_command"><a class="viewcode-back" href="../cli.html#cli.lab_command">[docs]</a><span class="k">def</span> <span class="nf">lab_command</span><span class="p">():</span>
-    <span class="c1"># type: () -&gt; str</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Returns:</span>
-<span class="sd">        str: Command to start jupyter lab.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cmds</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">enter_repo</span><span class="p">(),</span>
-        <span class="n">start</span><span class="p">(),</span>
-        <span class="n">line</span><span class="p">(</span>
-            <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;&#39;&#39;-e REPO_ENV=True </span><span class="si">{repo}</span><span class="s1"></span>
-<span class="s1">                jupyter lab --allow-root --ip=0.0.0.0 --no-browser&#39;&#39;&#39;</span>
-        <span class="p">),</span>
-        <span class="n">exit_repo</span><span class="p">(),</span>
-    <span class="p">]</span>
-    <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="lint_command"><a class="viewcode-back" href="../cli.html#cli.lint_command">[docs]</a><span class="k">def</span> <span class="nf">lint_command</span><span class="p">():</span>
-    <span class="c1"># type: () -&gt; str</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Returns:</span>
-<span class="sd">        str: Command to run linting and type analysis.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cmds</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">enter_repo</span><span class="p">(),</span>
-        <span class="n">start</span><span class="p">(),</span>
-        <span class="s1">&#39;echo LINTING&#39;</span><span class="p">,</span>
-        <span class="n">line</span><span class="p">(</span>
-            <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;&#39;&#39;-e REPO_ENV=True </span><span class="si">{repo}</span><span class="s1"></span>
-<span class="s1">                flake8</span>
-<span class="s1">                    /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/python</span>
-<span class="s1">                    --config /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/docker/flake8.ini&#39;&#39;&#39;</span>
-        <span class="p">),</span>
-        <span class="s1">&#39;echo TYPE CHECKING&#39;</span><span class="p">,</span>
-        <span class="n">line</span><span class="p">(</span>
-            <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;&#39;&#39;-e REPO_ENV=True </span><span class="si">{repo}</span><span class="s1"></span>
-<span class="s1">                mypy</span>
-<span class="s1">                    /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/python</span>
-<span class="s1">                    --config-file /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/docker/mypy.ini&#39;&#39;&#39;</span>
-        <span class="p">),</span>
-        <span class="n">exit_repo</span><span class="p">(),</span>
-    <span class="p">]</span>
-    <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="package_command"><a class="viewcode-back" href="../cli.html#cli.package_command">[docs]</a><span class="k">def</span> <span class="nf">package_command</span><span class="p">():</span>
-    <span class="c1"># type: () -&gt; str</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Returns:</span>
-<span class="sd">        str: Command to pip package repo.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cmds</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">enter_repo</span><span class="p">(),</span>
-        <span class="n">start</span><span class="p">(),</span>
-        <span class="n">package_repo</span><span class="p">(),</span>
-        <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; -w /tmp/</span><span class="si">{repo}</span><span class="s1"> </span><span class="si">{repo}</span><span class="s1"> python3.7 setup.py sdist&#39;</span><span class="p">,</span>
         <span class="n">exit_repo</span><span class="p">(),</span>
     <span class="p">]</span>
     <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span></div>
@@ -789,26 +524,6 @@
     <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="publish_command"><a class="viewcode-back" href="../cli.html#cli.publish_command">[docs]</a><span class="k">def</span> <span class="nf">publish_command</span><span class="p">():</span>
-    <span class="c1"># type: () -&gt; str</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Returns:</span>
-<span class="sd">        str: Command to publish repo as pip package.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cmds</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">enter_repo</span><span class="p">(),</span>
-        <span class="n">start</span><span class="p">(),</span>
-        <span class="n">tox_repo</span><span class="p">(),</span>
-        <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">{repo}</span><span class="s1"> zsh -c &quot;cd /tmp/</span><span class="si">{repo}</span><span class="s1"> &amp;&amp; tox&quot;&#39;</span><span class="p">,</span>
-        <span class="n">package_repo</span><span class="p">(),</span>
-        <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; -w /tmp/</span><span class="si">{repo}</span><span class="s1"> </span><span class="si">{repo}</span><span class="s1"> python3.7 setup.py sdist&#39;</span><span class="p">,</span>
-        <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; -w /tmp/</span><span class="si">{repo}</span><span class="s1"> </span><span class="si">{repo}</span><span class="s1"> twine upload dist/*&#39;</span><span class="p">,</span>
-        <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; </span><span class="si">{repo}</span><span class="s1"> rm -rf /tmp/</span><span class="si">{repo}</span><span class="s1">&#39;</span><span class="p">,</span>
-        <span class="n">exit_repo</span><span class="p">(),</span>
-    <span class="p">]</span>
-    <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span></div>
-
-
 <div class="viewcode-block" id="push_command"><a class="viewcode-back" href="../cli.html#cli.push_command">[docs]</a><span class="k">def</span> <span class="nf">push_command</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; str</span>
     <span class="sd">&#39;&#39;&#39;</span>
@@ -820,21 +535,6 @@
         <span class="n">version_variable</span><span class="p">(),</span>
         <span class="n">start</span><span class="p">(),</span>
         <span class="s1">&#39;docker push </span><span class="si">{github_user}</span><span class="s1">/</span><span class="si">{repo}</span><span class="s1">:$VERSION&#39;</span><span class="p">,</span>
-        <span class="n">exit_repo</span><span class="p">(),</span>
-    <span class="p">]</span>
-    <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="python_command"><a class="viewcode-back" href="../cli.html#cli.python_command">[docs]</a><span class="k">def</span> <span class="nf">python_command</span><span class="p">():</span>
-    <span class="c1"># type: () -&gt; str</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Returns:</span>
-<span class="sd">        str: Command to start python interpreter.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cmds</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">enter_repo</span><span class="p">(),</span>
-        <span class="n">start</span><span class="p">(),</span>
-        <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; -e REPO_ENV=True </span><span class="si">{repo}</span><span class="s1"> python3.7&#39;</span><span class="p">,</span>
         <span class="n">exit_repo</span><span class="p">(),</span>
     <span class="p">]</span>
     <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span></div>
@@ -869,25 +569,6 @@
 <span class="s1">                -f </span><span class="si">{repo_path}</span><span class="s1">/docker/docker-compose.yml</span>
 <span class="s1">                restart;</span>
 <span class="s1">            cd ..</span>
-<span class="s1">        &#39;&#39;&#39;</span><span class="p">),</span>
-        <span class="n">exit_repo</span><span class="p">(),</span>
-    <span class="p">]</span>
-    <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="requirements_command"><a class="viewcode-back" href="../cli.html#cli.requirements_command">[docs]</a><span class="k">def</span> <span class="nf">requirements_command</span><span class="p">():</span>
-    <span class="c1"># type: () -&gt; str</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Returns:</span>
-<span class="sd">        str: Command to regenerate frozen_requirements.txt.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cmds</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">enter_repo</span><span class="p">(),</span>
-        <span class="n">start</span><span class="p">(),</span>
-        <span class="n">line</span><span class="p">(</span>
-            <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;&#39;&#39;-e REPO_ENV=True </span><span class="si">{repo}</span><span class="s1"> zsh -c &quot;</span>
-<span class="s1">                python3.7 -m pip list --format freeze &gt;</span>
-<span class="s1">                    /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/docker/frozen_requirements.txt&quot;</span>
 <span class="s1">        &#39;&#39;&#39;</span><span class="p">),</span>
         <span class="n">exit_repo</span><span class="p">(),</span>
     <span class="p">]</span>
@@ -970,66 +651,26 @@
     <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="test_command"><a class="viewcode-back" href="../cli.html#cli.test_command">[docs]</a><span class="k">def</span> <span class="nf">test_command</span><span class="p">():</span>
-    <span class="c1"># type: () -&gt; str</span>
+<div class="viewcode-block" id="x_tools_command"><a class="viewcode-back" href="../cli.html#cli.x_tools_command">[docs]</a><span class="k">def</span> <span class="nf">x_tools_command</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="c1"># type: (str, list[str]) -&gt; str</span>
     <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Runs a x_tools command.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        command (str): x_tools command</span>
+<span class="sd">        args (list, optional): List of arguments to be passed to the command.</span>
+<span class="sd">            Default: []</span>
+
 <span class="sd">    Returns:</span>
-<span class="sd">        str: Command to run tests.</span>
+<span class="sd">        str: x_tools command.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">cmds</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">enter_repo</span><span class="p">(),</span>
         <span class="n">start</span><span class="p">(),</span>
-        <span class="n">line</span><span class="p">(</span>
-            <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;&#39;&#39;-e REPO_ENV=True </span><span class="si">{repo}</span><span class="s1"></span>
-<span class="s1">                pytest</span>
-<span class="s1">                    /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/python</span>
-<span class="s1">                    -c /home/ubuntu/</span><span class="si">{repo}</span><span class="s1">/docker/pytest.ini</span>
-<span class="s1">                    --headless</span>
-<span class="s1">                    --numprocesses </span><span class="si">{num_cores}</span><span class="s1"></span>
-<span class="s1">        &#39;&#39;&#39;</span><span class="p">),</span>
+        <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; </span><span class="si">{repo}</span><span class="s1"> zsh -c &#39;</span> <span class="o">+</span> <span class="n">x_tools</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
         <span class="n">exit_repo</span><span class="p">(),</span>
     <span class="p">]</span>
     <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="tox_command"><a class="viewcode-back" href="../cli.html#cli.tox_command">[docs]</a><span class="k">def</span> <span class="nf">tox_command</span><span class="p">():</span>
-    <span class="c1"># type: () -&gt; str</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Returns:</span>
-<span class="sd">        str: Command to run tox.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">cmds</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">enter_repo</span><span class="p">(),</span>
-        <span class="n">start</span><span class="p">(),</span>
-        <span class="n">tox_repo</span><span class="p">(),</span>
-        <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">{repo}</span><span class="s1"> zsh -c &quot;cd /tmp/</span><span class="si">{repo}</span><span class="s1"> &amp;&amp; tox -vvv&quot;&#39;</span><span class="p">,</span>
-        <span class="n">exit_repo</span><span class="p">(),</span>
-    <span class="p">]</span>
-    <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="version_up_command"><a class="viewcode-back" href="../cli.html#cli.version_up_command">[docs]</a><span class="k">def</span> <span class="nf">version_up_command</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
-    <span class="c1"># type: (list) -&gt; str</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Sets pip/version.txt to given value. Then calls full-docs.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        str: Command.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">if</span> <span class="n">args</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]:</span>
-        <span class="n">cmds</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s1">&#39;echo &quot;Please provide a version after the </span><span class="si">{cyan}</span><span class="s1">-a</span><span class="si">{clear}</span><span class="s1"> flag.&quot;&#39;</span>
-        <span class="p">]</span>
-        <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span>
-
-    <span class="n">cmds</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">enter_repo</span><span class="p">(),</span>
-        <span class="s1">&#39;echo </span><span class="si">{}</span><span class="s1"> &gt; pip/version.txt&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
-        <span class="n">exit_repo</span><span class="p">(),</span>
-    <span class="p">]</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span>
-    <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span> <span class="o">+</span> <span class="s1">&#39; &amp;&amp; &#39;</span> <span class="o">+</span> <span class="n">full_docs_command</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">cmd</span></div>
 
 
 <div class="viewcode-block" id="zsh_command"><a class="viewcode-back" href="../cli.html#cli.zsh_command">[docs]</a><span class="k">def</span> <span class="nf">zsh_command</span><span class="p">():</span>
@@ -1041,7 +682,7 @@
     <span class="n">cmds</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">enter_repo</span><span class="p">(),</span>
         <span class="n">start</span><span class="p">(),</span>
-        <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; -e REPO_ENV=True </span><span class="si">{repo}</span><span class="s1"> zsh&#39;</span><span class="p">,</span>
+        <span class="n">docker_exec</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; </span><span class="si">{repo}</span><span class="s1"> zsh&#39;</span><span class="p">,</span>
         <span class="n">exit_repo</span><span class="p">(),</span>
     <span class="p">]</span>
     <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span></div>
@@ -1120,33 +761,53 @@
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">mode</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="n">get_info</span><span class="p">()</span>
     <span class="n">lut</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;app&#39;</span><span class="p">:</span> <span class="n">app_command</span><span class="p">(),</span>
-        <span class="s1">&#39;build&#39;</span><span class="p">:</span> <span class="n">build_dev_command</span><span class="p">(),</span>
-        <span class="s1">&#39;build-prod&#39;</span><span class="p">:</span> <span class="n">build_prod_command</span><span class="p">(),</span>
-        <span class="s1">&#39;container&#39;</span><span class="p">:</span> <span class="n">container_id_command</span><span class="p">(),</span>
-        <span class="s1">&#39;coverage&#39;</span><span class="p">:</span> <span class="n">coverage_command</span><span class="p">(),</span>
-        <span class="s1">&#39;destroy&#39;</span><span class="p">:</span> <span class="n">destroy_dev_command</span><span class="p">(),</span>
-        <span class="s1">&#39;destroy-prod&#39;</span><span class="p">:</span> <span class="n">destroy_prod_command</span><span class="p">(),</span>
-        <span class="s1">&#39;docs&#39;</span><span class="p">:</span> <span class="n">docs_command</span><span class="p">(),</span>
-        <span class="s1">&#39;fast-test&#39;</span><span class="p">:</span> <span class="n">fast_test_command</span><span class="p">(),</span>
-        <span class="s1">&#39;full-docs&#39;</span><span class="p">:</span> <span class="n">full_docs_command</span><span class="p">(),</span>
-        <span class="s1">&#39;image&#39;</span><span class="p">:</span> <span class="n">image_id_command</span><span class="p">(),</span>
-        <span class="s1">&#39;lab&#39;</span><span class="p">:</span> <span class="n">lab_command</span><span class="p">(),</span>
-        <span class="s1">&#39;lint&#39;</span><span class="p">:</span> <span class="n">lint_command</span><span class="p">(),</span>
-        <span class="s1">&#39;package&#39;</span><span class="p">:</span> <span class="n">package_command</span><span class="p">(),</span>
-        <span class="s1">&#39;prod&#39;</span><span class="p">:</span> <span class="n">prod_command</span><span class="p">(</span><span class="n">args</span><span class="p">),</span>
-        <span class="s1">&#39;publish&#39;</span><span class="p">:</span> <span class="n">publish_command</span><span class="p">(),</span>
-        <span class="s1">&#39;push&#39;</span><span class="p">:</span> <span class="n">push_command</span><span class="p">(),</span>
-        <span class="s1">&#39;python&#39;</span><span class="p">:</span> <span class="n">python_command</span><span class="p">(),</span>
-        <span class="s1">&#39;remove&#39;</span><span class="p">:</span> <span class="n">remove_command</span><span class="p">(),</span>
-        <span class="s1">&#39;requirements&#39;</span><span class="p">:</span> <span class="n">requirements_command</span><span class="p">(),</span>
-        <span class="s1">&#39;restart&#39;</span><span class="p">:</span> <span class="n">restart_command</span><span class="p">(),</span>
-        <span class="s1">&#39;start&#39;</span><span class="p">:</span> <span class="n">start_command</span><span class="p">(),</span>
+        <span class="s1">&#39;build-package&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_build_package&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;build-prod&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_build_prod&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;build-publish&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_build_publish&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;build-test&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_build_test&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;docker-build&#39;</span><span class="p">:</span> <span class="n">build_dev_command</span><span class="p">(),</span>
+        <span class="s1">&#39;docker-build-prod&#39;</span><span class="p">:</span> <span class="n">build_prod_command</span><span class="p">(),</span>
+        <span class="s1">&#39;docker-container&#39;</span><span class="p">:</span> <span class="n">container_id_command</span><span class="p">(),</span>
+        <span class="s1">&#39;docker-destroy&#39;</span><span class="p">:</span> <span class="n">destroy_dev_command</span><span class="p">(),</span>
+        <span class="s1">&#39;docker-destroy-prod&#39;</span><span class="p">:</span> <span class="n">destroy_prod_command</span><span class="p">(),</span>
+        <span class="s1">&#39;docker-image&#39;</span><span class="p">:</span> <span class="n">image_id_command</span><span class="p">(),</span>
+        <span class="s1">&#39;docker-prod&#39;</span><span class="p">:</span> <span class="n">prod_command</span><span class="p">(</span><span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;docker-push&#39;</span><span class="p">:</span> <span class="n">push_command</span><span class="p">(),</span>
+        <span class="s1">&#39;docker-remove&#39;</span><span class="p">:</span> <span class="n">remove_command</span><span class="p">(),</span>
+        <span class="s1">&#39;docker-restart&#39;</span><span class="p">:</span> <span class="n">restart_command</span><span class="p">(),</span>
+        <span class="s1">&#39;docker-start&#39;</span><span class="p">:</span> <span class="n">start_command</span><span class="p">(),</span>
+        <span class="s1">&#39;docker-stop&#39;</span><span class="p">:</span> <span class="n">stop_command</span><span class="p">(),</span>
+        <span class="s1">&#39;docs&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_docs&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;docs-architecture&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_docs_architecture&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;docs-full&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_docs_full&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;docs-metrics&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_docs_metrics&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;library-add&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_library_add&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;library-graph-dev&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_library_graph_dev&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;library-graph-prod&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_library_graph_prod&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;library-install-dev&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_library_install_dev&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;library-install-prod&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_library_install_prod&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;library-list-dev&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_library_list_dev&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;library-list-prod&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_library_list_prod&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;library-lock-dev&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_library_lock_dev&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;library-lock-prod&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_library_lock_prod&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;library-remove&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_library_remove&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;library-search&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_library_search&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;library-sync-dev&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_library_sync_dev&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;library-sync-prod&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_library_sync_prod&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;library-update&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_library_update&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;session-app&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_session_app&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;session-lab&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_session_lab&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;session-python&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_session_python&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
         <span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="n">state_command</span><span class="p">(),</span>
-        <span class="s1">&#39;stop&#39;</span><span class="p">:</span> <span class="n">stop_command</span><span class="p">(),</span>
-        <span class="s1">&#39;test&#39;</span><span class="p">:</span> <span class="n">test_command</span><span class="p">(),</span>
-        <span class="s1">&#39;tox&#39;</span><span class="p">:</span> <span class="n">tox_command</span><span class="p">(),</span>
-        <span class="s1">&#39;version-up&#39;</span><span class="p">:</span> <span class="n">version_up_command</span><span class="p">(</span><span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;test-coverage&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_test_coverage&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;test-dev&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_test_dev&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;test-fast&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_test_fast&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;test-lint&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_test_lint&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;test-prod&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_test_prod&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;version&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_version&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;version-bump-major&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_version_bump_major&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;version-bump-minor&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_version_bump_minor&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
+        <span class="s1">&#39;version-bump-patch&#39;</span><span class="p">:</span> <span class="n">x_tools_command</span><span class="p">(</span><span class="s1">&#39;x_version_bump_patch&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span>
         <span class="s1">&#39;zsh&#39;</span><span class="p">:</span> <span class="n">zsh_command</span><span class="p">(),</span>
         <span class="s1">&#39;zsh-complete&#39;</span><span class="p">:</span> <span class="n">zsh_complete_command</span><span class="p">(),</span>
         <span class="s1">&#39;zsh-root&#39;</span><span class="p">:</span> <span class="n">zsh_root_command</span><span class="p">(),</span>
@@ -1171,7 +832,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
+    <p>&#169; Copyright 2022, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
