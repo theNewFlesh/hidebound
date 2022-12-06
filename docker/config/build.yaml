@@ -21,9 +21,9 @@ rename_rules:
     replace: "pdm.lock"
 group_rules:
   - name: test
-    regex: "(__init__|_test)\\.py$|flake8\\.ini$|resources|\\.lock$"
+    regex: "(__init__|_test)\\.py$|flake8\\.ini$|resources|\\.lock$|test|mock"
   - name: prod
     regex: "__init__\\.py$"
 line_rules:
   - group: prod
-    exclude: test
+    exclude: "test|mock"
