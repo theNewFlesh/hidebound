@@ -14,7 +14,7 @@
         "python.linting.mypyArgs": ["--config=docker/config/pyproject.toml"],
         "python.linting.mypyEnabled": true,
         "python.linting.pylintEnabled": false,
-        "python.testing.pytestArgs": [],
+        "python.testing.pytestArgs": ["-c=docker/config/pyproject.toml"],
         "python.testing.pytestEnabled": true,
         "python.testing.unittestEnabled": false,
         "pythonTestExplorer.testFramework": "pytest",
