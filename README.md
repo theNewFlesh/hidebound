@@ -433,6 +433,7 @@ Hidebound configs consist of four main sections:
 
 ### Dask
 Default configuration of Dask distributed framework.
+
 * cluster_type - dask cluster type
 * num_partitions - number of partions for each dataframe
 * local_num_workers - number of workers on local cluster
