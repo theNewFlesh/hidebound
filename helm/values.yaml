@@ -28,7 +28,6 @@ base:
   env_configmap:
     FLASK_APP: server.app:get_app
     FLASK_DEBUG:
-    FLASK_ENV:
     FLASK_RUN_PORT: 8080
     FLASK_RUN_HOST: 0.0.0.0
     HIDEBOUND_INGRESS_DIRECTORY: /mnt/storage/ingress
@@ -125,7 +124,6 @@ overlays:
 
     env_configmap:
       FLASK_DEBUG: 1
-      FLASK_ENV: development
       HIDEBOUND_INCLUDE_REGEX: ""
       HIDEBOUND_WRITE_MODE: copy
       HIDEBOUND_SPECIFICATION_FILES: []
