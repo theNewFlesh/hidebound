@@ -80,6 +80,7 @@ def get_app(testing=False):
     fmdb.config.enable_logging = False
     fmdb.config.show_login_banner = True
     fmdb.config.show_login_footer = True
+    fmdb.config.database_name = 'sqlite:////tmp/hidebound_monitor.db'
     fmdb.bind(app)
 
     app = components.get_dash_app(app, seconds=0.8)
