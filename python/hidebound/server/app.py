@@ -20,7 +20,7 @@ import hidebound.server.server_tools as hst
 TESTING = hbt.str_to_bool(os.environ.get('_HIDEBOUND_TESTING', 'True'))  # pragma: no cover
 
 # setup directories in /tmp/mnt
-if hbt.str_to_bool(os.environ.get('CREATE_TMP_DIRS', 'False')):
+if hbt.str_to_bool(os.environ.get('_HIDEBOUND_TEST_DIRS', 'False')):
     hst.setup_hidebound_directories('/tmp/mnt')  # pragma: no cover
 # ------------------------------------------------------------------------------
 
