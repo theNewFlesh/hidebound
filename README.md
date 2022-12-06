@@ -489,6 +489,7 @@ file.
 | HIDEBOUND_DASK_GATEWAY_SHUTDOWN_ON_CLOSE | str    | whether to shudown cluster upon close                    |
 | HIDEBOUND_EXPORTERS                      | yaml   | exporters section of config                              |
 | HIDEBOUND_WEBHOOKS                       | yaml   | webhooks section of config                               |
+| HIDEBOUND_TESTING                        | str    | run in test mode                                         |
 
 ---
 

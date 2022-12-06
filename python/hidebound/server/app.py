@@ -17,7 +17,7 @@ import hidebound.server.extensions as ext
 import hidebound.server.server_tools as hst
 
 
-TESTING = hbt.str_to_bool(os.environ.get('_HIDEBOUND_TESTING', 'True'))  # pragma: no cover
+TESTING = hbt.str_to_bool(os.environ.get('HIDEBOUND_TESTING', 'True'))  # pragma: no cover
 
 # setup directories in /tmp/mnt
 if hbt.str_to_bool(os.environ.get('_HIDEBOUND_TEST_DIRS', 'False')):
@@ -56,12 +56,10 @@ def get_app(testing=False):
         Dash: Dash app.
     '''
     app = flask.Flask('hidebound')  # type: Union[flask.Flask, dash.Dash]
-    app.config.update(
-        TESTING=testing,
-        HEALTHZ=dict(
-            live=liveness,
-            ready=readiness,
-        )
+    app.config['TESTING'] = testing
+    app.config['HEALTHZ'] = dict(
+        live=liveness,
+        ready=readiness,
     )
 
     ext.swagger.init_app(app)

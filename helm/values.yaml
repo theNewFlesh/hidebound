@@ -30,6 +30,7 @@ base:
     FLASK_DEBUG:
     FLASK_RUN_PORT: 8080
     FLASK_RUN_HOST: 0.0.0.0
+    HIDEBOUND_TESTING: false
     HIDEBOUND_INGRESS_DIRECTORY: /mnt/storage/ingress
     HIDEBOUND_STAGING_DIRECTORY: /mnt/storage/hidebound
     HIDEBOUND_INCLUDE_REGEX: ""
