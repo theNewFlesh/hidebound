@@ -1,6 +1,6 @@
 [project]
 name = "hidebound"
-version = "0.31.3"
+version = "0.31.4"
 description = "A local database service for converting directories of arbitrary files into validated assets and derived JSON metadata."
 authors = [
     {name = "Alex Braun", email = "alexander.g.braun@gmail.com"},
