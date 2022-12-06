@@ -93,6 +93,15 @@
 <li class="toctree-l2"><a class="reference internal" href="#example-specification">Example specification</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="#production-cli">Production CLI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#commands">Commands</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#development-cli">Development CLI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#commands-1">Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#flags">Flags</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
@@ -100,7 +109,7 @@
 <li class="toctree-l1"><a class="reference internal" href="exporters.html">exporters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="server.html">server</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Developer CLI</span></p>
+<p class="caption" role="heading"><span class="caption-text">Development CLI</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="cli.html">cli</a></li>
 </ul>
@@ -752,7 +761,7 @@ m
 l</p></td>
 <td><p>list of dask gateway cluster options</p></td>
 </tr>
-<tr class="row-odd"><td><p><a href="#id2"><span class="problematic" id="id3">HIDEBOUND_DASK_</span></a>
+<tr class="row-odd"><td><p><a href="#id3"><span class="problematic" id="id4">HIDEBOUND_DASK_</span></a>
 GATEWAY_SHUTDOWN_ON_CLOSE</p></td>
 <td><p>s
 t
@@ -939,6 +948,309 @@ specificqtion for. Our image sequences consist of a directory containing
     <span class="p">)</span>
 </pre></div>
 </div>
+</section>
+</section>
+<section id="production-cli">
+<h1>Production CLI<a class="headerlink" href="#production-cli" title="Permalink to this heading">¶</a></h1>
+<p>Hidebound comes with a command line interface defined in command.py.</p>
+<p>Its usage pattern is: <code class="docutils literal notranslate"><span class="pre">hidebound</span> <span class="pre">COMMAND</span> <span class="pre">[FLAGS]</span> <span class="pre">[-h</span> <span class="pre">--help]</span></code></p>
+<section id="commands">
+<h2>Commands<a class="headerlink" href="#commands" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 70%" />
+<col style="width: 5%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>C
+ommand</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>F
+l
+a
+g
+s</p></th>
+<th class="head"><p>Flag
+Desc
+ription</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>config</p></td>
+<td><p>Prints hidebound config</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>server</p></td>
+<td><p>Runs a hidebound server</p></td>
+<td><p>–
+d
+e
+b
+u
+g</p></td>
+<td><p>Enable
+debug
+mode</p></td>
+</tr>
+<tr class="row-even"><td><p>bas
+h-comp
+letion</p></td>
+<td><p>Prints BASH completion code to be written to
+a _hidebound completion file</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>zs
+h-comp
+letion</p></td>
+<td><p>Prints ZSH completion code to be written to
+a _hidebound completion file</p></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="development-cli">
+<h1>Development CLI<a class="headerlink" href="#development-cli" title="Permalink to this heading">¶</a></h1>
+<p>bin/hidebound is a command line interface (defined in cli.py) that works
+with any version of python 2.7 and above, as it has no dependencies.</p>
+<p>Its usage pattern is:
+<code class="docutils literal notranslate"><span class="pre">bin/hidebound</span> <span class="pre">COMMAND</span> <span class="pre">[-a</span> <span class="pre">--args]=ARGS</span> <span class="pre">[-h</span> <span class="pre">--help]</span> <span class="pre">[--dryrun]</span></code></p>
+<section id="commands-1">
+<span id="id2"></span><h2>Commands<a class="headerlink" href="#commands-1" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 78%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Command</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>build-package</p></td>
+<td><p>Build production version of repo for publishing</p></td>
+</tr>
+<tr class="row-odd"><td><p>build-prod</p></td>
+<td><p>Publish pip package of repo to PyPi</p></td>
+</tr>
+<tr class="row-even"><td><p>build-publish</p></td>
+<td><p>Run production tests first then publish pip package
+of repo to PyPi</p></td>
+</tr>
+<tr class="row-odd"><td><p>build-test</p></td>
+<td><p>Build test version of repo for prod testing</p></td>
+</tr>
+<tr class="row-even"><td><p>docker-build</p></td>
+<td><p>Build image of hidebound</p></td>
+</tr>
+<tr class="row-odd"><td><p>dock
+er-build-prod</p></td>
+<td><p>Build production image of hidebound</p></td>
+</tr>
+<tr class="row-even"><td><p>doc
+ker-container</p></td>
+<td><p>Display the Docker container id of hidebound</p></td>
+</tr>
+<tr class="row-odd"><td><p>do
+cker-coverage</p></td>
+<td><p>Generate coverage report for hidebound</p></td>
+</tr>
+<tr class="row-even"><td><p>d
+ocker-destroy</p></td>
+<td><p>Shutdown hidebound container and destroy its image</p></td>
+</tr>
+<tr class="row-odd"><td><p>docker
+-destroy-prod</p></td>
+<td><p>Shutdown hidebound production container and destroy
+its image</p></td>
+</tr>
+<tr class="row-even"><td><p>docker-image</p></td>
+<td><p>Display the Docker image id of hidebound</p></td>
+</tr>
+<tr class="row-odd"><td><p>docker-prod</p></td>
+<td><p>Start hidebound production container</p></td>
+</tr>
+<tr class="row-even"><td><p>docker-push</p></td>
+<td><p>Push hidebound production image to Dockerhub</p></td>
+</tr>
+<tr class="row-odd"><td><p>docker-remove</p></td>
+<td><p>Remove hidebound Docker image</p></td>
+</tr>
+<tr class="row-even"><td><p>d
+ocker-restart</p></td>
+<td><p>Restart hidebound container</p></td>
+</tr>
+<tr class="row-odd"><td><p>docker-start</p></td>
+<td><p>Start hidebound container</p></td>
+</tr>
+<tr class="row-even"><td><p>docker-stop</p></td>
+<td><p>Stop hidebound container</p></td>
+</tr>
+<tr class="row-odd"><td><p>docs</p></td>
+<td><p>Generate sphinx documentation</p></td>
+</tr>
+<tr class="row-even"><td><p>docs
+-architecture</p></td>
+<td><p>Generate architecture.svg diagram from all import
+statements</p></td>
+</tr>
+<tr class="row-odd"><td><p>docs-full</p></td>
+<td><p>Generate documentation, coverage report, diagram and
+code</p></td>
+</tr>
+<tr class="row-even"><td><p>docs-metrics</p></td>
+<td><p>Generate code metrics report, plots and tables</p></td>
+</tr>
+<tr class="row-odd"><td><p>library-add</p></td>
+<td><p>Add a given package to a given dependency group</p></td>
+</tr>
+<tr class="row-even"><td><p>libr
+ary-graph-dev</p></td>
+<td><p>Graph dependencies in dev environment</p></td>
+</tr>
+<tr class="row-odd"><td><p>libra
+ry-graph-prod</p></td>
+<td><p>Graph dependencies in prod environment</p></td>
+</tr>
+<tr class="row-even"><td><p>librar
+y-install-dev</p></td>
+<td><p>Install all dependencies into dev environment</p></td>
+</tr>
+<tr class="row-odd"><td><p>library
+-install-prod</p></td>
+<td><p>Install all dependencies into prod environment</p></td>
+</tr>
+<tr class="row-even"><td><p>lib
+rary-list-dev</p></td>
+<td><p>List packages in dev environment</p></td>
+</tr>
+<tr class="row-odd"><td><p>libr
+ary-list-prod</p></td>
+<td><p>List packages in prod environment</p></td>
+</tr>
+<tr class="row-even"><td><p>lib
+rary-lock-dev</p></td>
+<td><p>Resolve dev.lock file</p></td>
+</tr>
+<tr class="row-odd"><td><p>libr
+ary-lock-prod</p></td>
+<td><p>Resolve prod.lock file</p></td>
+</tr>
+<tr class="row-even"><td><p>l
+ibrary-remove</p></td>
+<td><p>Remove a given package from a given dependency group</p></td>
+</tr>
+<tr class="row-odd"><td><p>l
+ibrary-search</p></td>
+<td><p>Search for pip packages</p></td>
+</tr>
+<tr class="row-even"><td><p>lib
+rary-sync-dev</p></td>
+<td><p>Sync dev environment with packages listed in
+dev.lock</p></td>
+</tr>
+<tr class="row-odd"><td><p>libr
+ary-sync-prod</p></td>
+<td><p>Sync prod environment with packages listed in
+prod.lock</p></td>
+</tr>
+<tr class="row-even"><td><p>l
+ibrary-update</p></td>
+<td><p>Update dev dependencies</p></td>
+</tr>
+<tr class="row-odd"><td><p>session-app</p></td>
+<td><p>Run app</p></td>
+</tr>
+<tr class="row-even"><td><p>session-lab</p></td>
+<td><p>Run jupyter lab server</p></td>
+</tr>
+<tr class="row-odd"><td><p>s
+ession-python</p></td>
+<td><p>Run python session with dev dependencies</p></td>
+</tr>
+<tr class="row-even"><td><p>state</p></td>
+<td><p>State of hidebound</p></td>
+</tr>
+<tr class="row-odd"><td><p>test-coverage</p></td>
+<td><p>Generate test coverage report</p></td>
+</tr>
+<tr class="row-even"><td><p>test-dev</p></td>
+<td><p>Run all tests</p></td>
+</tr>
+<tr class="row-odd"><td><p>test-fast</p></td>
+<td><p>Test all code excepts tests marked with
+SKIP_SLOWS_TESTS decorator</p></td>
+</tr>
+<tr class="row-even"><td><p>test-lint</p></td>
+<td><p>Run linting and type checking</p></td>
+</tr>
+<tr class="row-odd"><td><p>test-prod</p></td>
+<td><p>Run tests across all support python versions</p></td>
+</tr>
+<tr class="row-even"><td><p>version</p></td>
+<td><p>Full resolution of repo: dependencies, linting,
+tests, docs, etc</p></td>
+</tr>
+<tr class="row-odd"><td><p>versi
+on-bump-major</p></td>
+<td><p>Bump pyproject major version</p></td>
+</tr>
+<tr class="row-even"><td><p>versi
+on-bump-minor</p></td>
+<td><p>Bump pyproject minor version</p></td>
+</tr>
+<tr class="row-odd"><td><p>versi
+on-bump-patch</p></td>
+<td><p>Bump pyproject patch version</p></td>
+</tr>
+<tr class="row-even"><td><p>zsh</p></td>
+<td><p>Run ZSH session inside hidebound container</p></td>
+</tr>
+<tr class="row-odd"><td><p>zsh-complete</p></td>
+<td><p>Generate oh-my-zsh completions</p></td>
+</tr>
+<tr class="row-even"><td><p>zsh-root</p></td>
+<td><p>Run ZSH session as root inside hidebound container</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="flags">
+<h2>Flags<a class="headerlink" href="#flags" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 11%" />
+<col style="width: 81%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Short</p></th>
+<th class="head"><p>Long</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>-a</p></td>
+<td><p>–args</p></td>
+<td><p>Additional arguments, this can generally be ignored</p></td>
+</tr>
+<tr class="row-odd"><td><p>-h</p></td>
+<td><p>–help</p></td>
+<td><p>Prints command help message to stdout</p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p>–dryrun</p></td>
+<td><p>Prints command that would otherwise be run to stdout</p></td>
+</tr>
+</tbody>
+</table>
 </section>
 </section>
 
