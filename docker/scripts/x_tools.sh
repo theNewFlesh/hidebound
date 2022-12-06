@@ -540,14 +540,16 @@ x_test_coverage () {
     # Run all tests generate coverage report
     x_env_activate_dev;
     echo "${CYAN2}GENERATING TEST COVERAGE REPORT${CLEAR}\n";
-    cd $REPO_DIR;
+    rm -rf /tmp/coverage;
+    mkdir /tmp/coverage;
+    cd /tmp/coverage;
     pytest \
         -c $CONFIG_DIR/pyproject.toml \
         --numprocesses $TEST_PROCS \
         --verbosity $TEST_VERBOSITY \
-        --cov=python \
+        --cov=$REPO_DIR/python \
         --cov-config=$CONFIG_DIR/pyproject.toml \
-        --cov-report=html:docs/htmlcov \
+        --cov-report=html:$REPO_DIR/docs/htmlcov \
         $REPO_SUBPACKAGE;
 }
 
