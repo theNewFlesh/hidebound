@@ -649,3 +649,87 @@ class Raw001(SequenceSpecificationBase):
         channels=tr.get_num_image_channels,  # retrieves image channel number from file
     )
 ```
+
+# Production CLI
+
+Hidebound comes with a command line interface defined in command.py.
+
+Its usage pattern is: `hidebound COMMAND [FLAGS] [-h --help]`
+
+### Commands
+| Command         | Description                                                               | Flags   | Flag Description  |
+| --------------- | --------------------------------------------------------------------------| ------- | ----------------- |
+| config          | Prints hidebound config                                                   |         |                   |
+| server          | Runs a hidebound server                                                   | --debug | Enable debug mode |
+| bash-completion | Prints BASH completion code to be written to a _hidebound completion file |         |                   |
+| zsh-completion  | Prints ZSH completion code to be written to a _hidebound completion file  |         |                   |
+
+# Development CLI
+bin/hidebound is a command line interface (defined in cli.py) that works with
+any version of python 2.7 and above, as it has no dependencies.
+
+Its usage pattern is: `bin/hidebound COMMAND [-a --args]=ARGS [-h --help] [--dryrun]`
+
+### Commands
+
+| Command              | Description                                                         |
+| -------------------- | ------------------------------------------------------------------- |
+| build-package        | Build production version of repo for publishing                     |
+| build-prod           | Publish pip package of repo to PyPi                                 |
+| build-publish        | Run production tests first then publish pip package of repo to PyPi |
+| build-test           | Build test version of repo for prod testing                         |
+| docker-build         | Build image of hidebound                                            |
+| docker-build-prod    | Build production image of hidebound                                 |
+| docker-container     | Display the Docker container id of hidebound                        |
+| docker-coverage      | Generate coverage report for hidebound                              |
+| docker-destroy       | Shutdown hidebound container and destroy its image                  |
+| docker-destroy-prod  | Shutdown hidebound production container and destroy its image       |
+| docker-image         | Display the Docker image id of hidebound                            |
+| docker-prod          | Start hidebound production container                                |
+| docker-push          | Push hidebound production image to Dockerhub                        |
+| docker-remove        | Remove hidebound Docker image                                       |
+| docker-restart       | Restart hidebound container                                         |
+| docker-start         | Start hidebound container                                           |
+| docker-stop          | Stop hidebound container                                            |
+| docs                 | Generate sphinx documentation                                       |
+| docs-architecture    | Generate architecture.svg diagram from all import statements        |
+| docs-full            | Generate documentation, coverage report, diagram and code           |
+| docs-metrics         | Generate code metrics report, plots and tables                      |
+| library-add          | Add a given package to a given dependency group                     |
+| library-graph-dev    | Graph dependencies in dev environment                               |
+| library-graph-prod   | Graph dependencies in prod environment                              |
+| library-install-dev  | Install all dependencies into dev environment                       |
+| library-install-prod | Install all dependencies into prod environment                      |
+| library-list-dev     | List packages in dev environment                                    |
+| library-list-prod    | List packages in prod environment                                   |
+| library-lock-dev     | Resolve dev.lock file                                               |
+| library-lock-prod    | Resolve prod.lock file                                              |
+| library-remove       | Remove a given package from a given dependency group                |
+| library-search       | Search for pip packages                                             |
+| library-sync-dev     | Sync dev environment with packages listed in dev.lock               |
+| library-sync-prod    | Sync prod environment with packages listed in prod.lock             |
+| library-update       | Update dev dependencies                                             |
+| session-app          | Run app                                                             |
+| session-lab          | Run jupyter lab server                                              |
+| session-python       | Run python session with dev dependencies                            |
+| state                | State of hidebound                                                  |
+| test-coverage        | Generate test coverage report                                       |
+| test-dev             | Run all tests                                                       |
+| test-fast            | Test all code excepts tests marked with SKIP_SLOWS_TESTS decorator  |
+| test-lint            | Run linting and type checking                                       |
+| test-prod            | Run tests across all support python versions                        |
+| version              | Full resolution of repo: dependencies, linting, tests, docs, etc    |
+| version-bump-major   | Bump pyproject major version                                        |
+| version-bump-minor   | Bump pyproject minor version                                        |
+| version-bump-patch   | Bump pyproject patch version                                        |
+| zsh                  | Run ZSH session inside hidebound container                          |
+| zsh-complete         | Generate oh-my-zsh completions                                      |
+| zsh-root             | Run ZSH session as root inside hidebound container                  |
+
+### Flags
+
+| Short | Long      | Description                                          |
+| ----- | --------- | ---------------------------------------------------- |
+| -a    | --args    | Additional arguments, this can generally be ignored  |
+| -h    | --help    | Prints command help message to stdout                |
+|       | --dryrun  | Prints command that would otherwise be run to stdout |
