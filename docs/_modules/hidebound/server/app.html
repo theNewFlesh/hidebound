@@ -30,7 +30,7 @@
             <a href="../../../index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.31.4
+                0.31.5
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -105,10 +105,10 @@
 <span class="kn">import</span> <span class="nn">hidebound.server.server_tools</span> <span class="k">as</span> <span class="nn">hst</span>
 
 
-<span class="n">TESTING</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">str_to_bool</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;_HIDEBOUND_TESTING&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">))</span>  <span class="c1"># pragma: no cover</span>
+<span class="n">TESTING</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">str_to_bool</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;HIDEBOUND_TESTING&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">))</span>  <span class="c1"># pragma: no cover</span>
 
 <span class="c1"># setup directories in /tmp/mnt</span>
-<span class="k">if</span> <span class="n">hbt</span><span class="o">.</span><span class="n">str_to_bool</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;CREATE_TMP_DIRS&#39;</span><span class="p">,</span> <span class="s1">&#39;False&#39;</span><span class="p">)):</span>
+<span class="k">if</span> <span class="n">hbt</span><span class="o">.</span><span class="n">str_to_bool</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;_HIDEBOUND_TEST_DIRS&#39;</span><span class="p">,</span> <span class="s1">&#39;False&#39;</span><span class="p">)):</span>
     <span class="n">hst</span><span class="o">.</span><span class="n">setup_hidebound_directories</span><span class="p">(</span><span class="s1">&#39;/tmp/mnt&#39;</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
@@ -144,12 +144,10 @@
 <span class="sd">        Dash: Dash app.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">app</span> <span class="o">=</span> <span class="n">flask</span><span class="o">.</span><span class="n">Flask</span><span class="p">(</span><span class="s1">&#39;hidebound&#39;</span><span class="p">)</span>  <span class="c1"># type: Union[flask.Flask, dash.Dash]</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-        <span class="n">TESTING</span><span class="o">=</span><span class="n">testing</span><span class="p">,</span>
-        <span class="n">HEALTHZ</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-            <span class="n">live</span><span class="o">=</span><span class="n">liveness</span><span class="p">,</span>
-            <span class="n">ready</span><span class="o">=</span><span class="n">readiness</span><span class="p">,</span>
-        <span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;TESTING&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">testing</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;HEALTHZ&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">live</span><span class="o">=</span><span class="n">liveness</span><span class="p">,</span>
+        <span class="n">ready</span><span class="o">=</span><span class="n">readiness</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">ext</span><span class="o">.</span><span class="n">swagger</span><span class="o">.</span><span class="n">init_app</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>

@@ -256,6 +256,191 @@ Field indicator determines metadata key
 Field token     a set of 1+ characters that define the field’s data
 =============== ===================================================
 
+Project Structure
+=================
+
+Hidebound does not formally define a project structure. It merely
+stipulates that assets must exist under some particular root directory.
+Each asset specification does define a directory structure for the files
+that make up that asset. Assets are divided into 3 types: file, sequence
+and complex. File defines an asset that consists of a single file.
+Sequence is defined to be a single directory containing one or more
+files. Complex is for assets that consist of an arbitrarily complex
+layout of directories and files.
+
+The following project structure is recommended:
+
+.. code:: shell
+
+   project
+       |-- specification
+           |-- descriptor
+               |-- asset      # either a file or directory of files and directories
+                   |- file
+
+For Example
+^^^^^^^^^^^
+
+.. code:: shell
+
+   /tmp/projects
+   └── p-cat001
+       ├── s-spec002
+       │   ├── d-calico-jumping
+       │   │   └── p-cat001_s-spec002_d-calico-jumping_v001
+       │   │       ├── p-cat001_s-spec002_d-calico-jumping_v001_f0001.png
+       │   │       ├── p-cat001_s-spec002_d-calico-jumping_v001_f0002.png
+       │   │       └── p-cat001_s-spec002_d-calico-jumping_v001_f0003.png
+       │   │
+       │   └── d-tabby-playing
+       │       ├── p-cat001_s-spec002_d-tabby-playing_v001
+       │       │   ├── p-cat001_s-spec002_d-tabby-playing_v001_f0001.png
+       │       │   ├── p-cat001_s-spec002_d-tabby-playing_v001_f0002.png
+       │       │   └── p-cat001_s-spec002_d-tabby-playing_v001_f0003.png
+       │       │
+       │       └── p-cat001_s-spec002_d-tabby-playing_v002
+       │           ├── p-cat001_s-spec002_d-tabby-playing_v002_f0001.png
+       │           ├── p-cat001_s-spec002_d-tabby-playing_v002_f0002.png
+       │           └── p-cat001_s-spec002_d-tabby-playing_v002_f0003.png
+       │
+       └── spec001
+           └── p-cat001_s-spec001_d-running-cat_v001
+               ├── p-cat001_s-spec001_d-Running-Cat_v001_c0000-0005_f0002.png
+               ├── p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0001.png
+               └── p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png
+
+Application
+===========
+
+The Hidebound web application has five sections: data, graph, config,
+api and docs.
+
+Data
+~~~~
+
+The data tab is the workhorse of the Hidebound app.
+
+|image4|
+
+Its functions are as follows:
+
+-  Search - Search the updated database’s data via SQL
+-  Dropdown - Groups search results by file or asset
+-  Init - Initialized the database with the current config
+-  Update - Initializes and updates the database with the current config
+-  Create - Copies or moves valid assets to hidebound/content directory
+   and creates JSON files in hidebound/metadata directory
+-  Delete - Deletes hidebound/content and hidebound/metadata directories
+
+Prior to calling update, the application will look like this:
+
+|image5|
+
+Graph
+~~~~~
+
+The graph tab is used for visualizing the state of all the assets within
+a root directory.
+
+|image6|
+
+It’s color code is as follows:
+
+===== ===========================
+Color Meaning
+===== ===========================
+Cyan  Non-asset file or directory
+Green Valid asset
+Red   Invalid asset
+===== ===========================
+
+Config
+~~~~~~
+
+The config tab is used for uploading and writing Hidebound’s
+configuration file.
+
+|image7|
+
+API
+~~~
+
+The API tab is really a link to Hidebound’s REST API documentation.
+
+|image8|
+
+Docs
+~~~~
+
+The API tab is really a link to Hidebound’s github documentation.
+
+|image9|
+
+Errors
+~~~~~~
+
+Hidebound is oriented towards developers and technically proficient
+users. It displays errors in their entirety within the application.
+
+|image10|
+
+Configuration
+=============
+
+Hidebound is configured via a configuration file or environment
+variables.
+
+Hidebound configs consist of four main sections:
+
+Base
+~~~~
+
+-  ingress_directory - the directory hidebound parses for assets that
+   comprise its database
+-  staging_directory - the staging directory valid assets are created in
+-  specification_files - a list of python specification files
+-  include_regex - filepaths in the root that match this are included in
+   the database
+-  exclude_regex - filepaths in the root that match this are excluded
+   from the database
+-  write_mode - whether to copy or move files from root to staging
+-  redact_regex - regular expression which matches config keys whose
+   valuse are to be redacted
+-  redact_hash - whether to redact config values with “REDACTED” or a
+   hash of the value
+-  workflow - order list of steps to be followed in workflow
+
+Dask
+~~~~
+
+Default configuration of Dask distributed framework. cluster_type - dask
+cluster type num_partitions - number of partions for each dataframe
+local_num_workers - number of workers on local cluster
+local_threads_per_worker - number of threads per worker on local cluster
+local_multiprocessing - use multiprocessing for local cluster
+gateway_address - gateway server address gateway_proxy_address -
+scheduler proxy server address gateway_public_address - gateway server
+address, as accessible from a web browser gateway_auth_type -
+authentication type gateway_api_token - api token
+gateway_cluster_options - list of dask gateway cluster options
+gateway_shutdown_on_close - whether to shudown cluster upon close
+
+Exporters
+~~~~~~~~~
+
+Which exporters to us in the workflow. Options include:
+
+-  s3
+-  disk
+-  girder
+
+Webhooks
+~~~~~~~~
+
+Webhooks to call after the export phase has completed.
+
+--------------
+
 Environment Variables
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -372,8 +557,15 @@ config file.
 |                           | m |                                      |
 |                           | l |                                      |
 +---------------------------+---+--------------------------------------+
+| HIDEBOUND_TESTING         | s | run in test mode                     |
+|                           | t |                                      |
+|                           | r |                                      |
++---------------------------+---+--------------------------------------+
 
 --------------
+
+Config File
+~~~~~~~~~~~
 
 Here is a full example config with comments:
 
@@ -539,3 +731,10 @@ We would write the following specification for such an asset.
 .. |image1| image:: resources/screenshots/update.png
 .. |image2| image:: resources/screenshots/graph.png
 .. |image3| image:: resources/screenshots/girder.png
+.. |image4| image:: resources/screenshots/data.png
+.. |image5| image:: resources/screenshots/pre_update.png
+.. |image6| image:: resources/screenshots/graph.png
+.. |image7| image:: resources/screenshots/config.png
+.. |image8| image:: resources/screenshots/api.png
+.. |image9| image:: resources/screenshots/docs.png
+.. |image10| image:: resources/screenshots/error.png

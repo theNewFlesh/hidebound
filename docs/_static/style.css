@@ -200,3 +200,12 @@ span[id*='MathJax-Span'] {
 .rst-content table.docutils {
     border: 0px solid #343434 !important;
 }
+
+/* Custom table widths */
+#environment-variables {
+    min-width: 950px;
+}
+
+#configuration {
+    min-width: 980px;
+}
