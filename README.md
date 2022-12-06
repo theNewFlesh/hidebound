@@ -308,6 +308,7 @@ The grammatical concept of field order here is one of rough encapsulation:
 - Use of hyphens in descriptors is encouraged.
 - When in doubt, hyphenate and put into the descriptor.
 
+---
 # Project Structure
 Hidebound does not formally define a project structure. It merely stipulates
 that assets must exist under some particular root directory. Each asset
@@ -493,6 +494,7 @@ file.
 
 ---
 
+### Config File
 Here is a full example config with comments:
 ```yaml
 ingress_directory: /mnt/storage/projects                                 # where hb looks for assets
