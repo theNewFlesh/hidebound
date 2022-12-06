@@ -1,8 +1,9 @@
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Dict, List, Tuple, Union  # noqa F401
+from dash import dash_table  # noqa F401
 
 import os
 
-from dash import dash_table, dcc
+from dash import dcc
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 import dash
@@ -73,6 +74,13 @@ def get_app(testing=False):
     fmdb.config.link = 'monitor'
     fmdb.config.monitor_level = 3
     fmdb.config.git = 'https://theNewFlesh.github.io/hidebound/'
+    fmdb.config.brand_name = 'Hidebound Monitoring Dashboard'
+    fmdb.config.title_name = 'Hidebound Monitoring Dashboard'
+    fmdb.config.description = 'Monitor Hidebound App Performance'
+    fmdb.config.enable_logging = False
+    fmdb.config.show_login_banner = True
+    fmdb.config.show_login_footer = True
+    fmdb.config.database_name = 'sqlite:////tmp/hidebound_monitor.db'
     fmdb.bind(app)
 
     app = components.get_dash_app(app, seconds=0.8)
@@ -281,5 +289,5 @@ def on_progress(timestamp):
 
 
 if __name__ == '__main__':
-    debug = 'DEBUG_MODE' in os.environ.keys()
+    debug = os.environ.get('FLASK_DEBUG', 1) == 1
     APP.run_server(debug=debug, host=EP.host, port=EP.port)

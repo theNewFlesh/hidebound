@@ -1,0 +1,63 @@
+# OH-MY-ZSH---------------------------------------------------------------------
+export SHELL=`which zsh`
+ZSH_THEME="henanigans"
+export ZSH="/home/ubuntu/.oh-my-zsh"
+fpath=(~/.oh-my-zsh/custom/completions $fpath)
+DISABLE_UPDATE_PROMPT=true
+plugins=(
+    aws
+    command-not-found
+    common-aliases
+    git
+    npm
+    pip
+    python
+    sudo
+    fast-syntax-highlighting
+    zsh-autosuggestions
+    zsh-history-enquirer
+)
+source $ZSH/oh-my-zsh.sh
+
+# X-TOOLS-----------------------------------------------------------------------
+source /home/ubuntu/hidebound/docker/scripts/x_tools.sh
+
+# ALIASES-----------------------------------------------------------------------
+alias l='ls -hl'
+alias ll='ls -hlA'
+
+# exa aliases
+if [[ `which exa` != "* not found" ]]; then
+    alias l='exa --long --header';
+    alias ll='exa --long --header --all';
+    alias tree='exa --tree --all';
+fi;
+
+# batcat aliases
+if [[ `which batcat` != "* not found" ]]; then
+    alias cat='batcat';
+    alias pcat='batcat --plain --color never';
+    alias xcat='batcat --show-all';
+fi;
+
+# MISC--------------------------------------------------------------------------
+# remove parallel nagware
+if [[ `which parallel` != "* not found" ]]; then
+    echo 'will cite' | parallel --citation >> /dev/null 2>&1;
+fi;
+
+# fix git permissions
+git config --global --add safe.directory /home/ubuntu/hidebound
+
+# activate dev env
+x_env_activate_dev;
+
+# ROLLING-PIN-------------------------------------------------------------------
+# if rolling-pin cli exists install its zsh completions if they do not exist
+if [[ `which rolling-pin` != "* not found" ]]; then
+    if [ ! -f "$ZSH/custom/completions/_rolling-pin" ]; then
+        mkdir -p $ZSH/custom/completions;
+        rolling-pin zsh-completion > $ZSH/custom/completions/_rolling-pin && \
+        echo 'rolling-pin zsh-completions installed';
+    fi;
+fi;

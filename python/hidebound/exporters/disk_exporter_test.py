@@ -32,7 +32,7 @@ class DiskConfigTests(unittest.TestCase):
     def test_validate_errors(self):
         expected = 'is not a legal directory path'
         for path in ['foo/bar', '\foo\bar', '/foo/bar/', '/foo.bar/baz']:
-            with self.assertRaisesRegexp(DataError, expected):
+            with self.assertRaisesRegex(DataError, expected):
                 config = dict(name='disk', target_directory=path)
                 DiskConfig(config).validate()
 # ------------------------------------------------------------------------------
@@ -163,7 +163,8 @@ class DiskExporterTests(unittest.TestCase):
 
         return staging
 
-    @pytest.mark.flakey
+    @pytest.mark.flaky
+    @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
     def test_export(self):
         with TemporaryDirectory() as root:
             config = self.get_config(root)

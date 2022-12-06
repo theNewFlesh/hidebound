@@ -49,7 +49,7 @@ class ValidatorsTests(unittest.TestCase):
                 f.write(text)
 
             expected = f'{filepath.as_posix()} could not be imported.'
-            with self.assertRaisesRegexp(ValidationError, expected):
+            with self.assertRaisesRegex(ValidationError, expected):
                 cfg.is_specification_file(filepath)
 
     def test_has_specifications_attribute(self):
@@ -68,7 +68,7 @@ class ValidatorsTests(unittest.TestCase):
                 f.write(text)
 
             expected = f'{filepath.as_posix()} has no SPECIFICATIONS attribute.'
-            with self.assertRaisesRegexp(ValidationError, expected):
+            with self.assertRaisesRegex(ValidationError, expected):
                 cfg.is_specification_file(filepath)
 
     def test_is_specification_file_not_list(self):
@@ -90,7 +90,7 @@ class ValidatorsTests(unittest.TestCase):
 
             expected = f'{filepath.as_posix()} SPECIFICATIONS attribute is not '
             expected += 'a list.'
-            with self.assertRaisesRegexp(ValidationError, expected):
+            with self.assertRaisesRegex(ValidationError, expected):
                 cfg.is_specification_file(filepath)
 
     def test_is_specification_file_bad_subclasses(self):
@@ -111,7 +111,7 @@ class ValidatorsTests(unittest.TestCase):
                 f.write(text)
 
             expected = 'are not subclasses of SpecificationBase.'
-            with self.assertRaisesRegexp(ValidationError, expected):
+            with self.assertRaisesRegex(ValidationError, expected):
                 cfg.is_specification_file(filepath)
 
 
@@ -207,7 +207,7 @@ class ConfigTests(unittest.TestCase):
 
             self.config['write_mode'] = 'shuffle'
             expected = r"shuffle is not in \['copy', 'move'\]"
-            with self.assertRaisesRegexp(DataError, expected):
+            with self.assertRaisesRegex(DataError, expected):
                 cfg.Config(self.config).validate()
 
     def test_specification_files_good(self):
@@ -232,7 +232,7 @@ class ConfigTests(unittest.TestCase):
             self.config['specification_files'] = [good, bad]
 
             expected = 'Foobar.* are not subclasses of SpecificationBase'
-            with self.assertRaisesRegexp(DataError, expected):
+            with self.assertRaisesRegex(DataError, expected):
                 cfg.Config(self.config).validate()
 
     def test_workflow(self):
@@ -286,7 +286,7 @@ class ConfigTests(unittest.TestCase):
             self.add_exporters_to_config(root)
             self.config['exporters'][0]['root_type'] = 'pizza'
             expected = r"pizza is not in \[\'collection\', \'folder\'\]"
-            with self.assertRaisesRegexp(DataError, expected):
+            with self.assertRaisesRegex(DataError, expected):
                 cfg.Config(self.config).validate()
             self.config['exporters'][0]['root_type'] = 'collection'
 
@@ -295,7 +295,7 @@ class ConfigTests(unittest.TestCase):
             self.add_exporters_to_config(root)
             self.config['exporters'][1]['bucket'] = 'BadBucket'
             expected = 'is not a valid bucket name'
-            with self.assertRaisesRegexp(DataError, expected):
+            with self.assertRaisesRegex(DataError, expected):
                 cfg.Config(self.config).validate()
 
     def test_exporters_bad_disk(self):
@@ -303,7 +303,7 @@ class ConfigTests(unittest.TestCase):
             self.add_exporters_to_config(root)
             self.config['exporters'][2]['target_directory'] = 'bad/dir'
             expected = 'is not a legal directory path.'
-            with self.assertRaisesRegexp(DataError, expected):
+            with self.assertRaisesRegex(DataError, expected):
                 cfg.Config(self.config).validate()
 
     def test_exporters_bad_config(self):
@@ -311,7 +311,7 @@ class ConfigTests(unittest.TestCase):
             self.add_exporters_to_config(root)
             self.config['exporters'] = [dict(bagel='lox')]
             expected = 'Rogue field'
-            with self.assertRaisesRegexp(DataError, expected):
+            with self.assertRaisesRegex(DataError, expected):
                 cfg.Config(self.config).validate()
 
     def test_exporters_no_girder(self):
@@ -426,7 +426,7 @@ class ConfigTests(unittest.TestCase):
             self.add_webhooks_to_config(temp)
             self.config['webhooks'][0]['url'] = 'not-valid-url.com'
             expected = 'Not a well-formed URL.'
-            with self.assertRaisesRegexp(DataError, expected):
+            with self.assertRaisesRegex(DataError, expected):
                 cfg.Config(self.config).validate()
 
             # allow invalid fqdns for kubernetes
@@ -438,5 +438,5 @@ class ConfigTests(unittest.TestCase):
             self.add_webhooks_to_config(temp)
             self.config['webhooks'][0]['method'] = 'trace'
             expected = 'trace is not a legal HTTP method.'
-            with self.assertRaisesRegexp(DataError, expected):
+            with self.assertRaisesRegex(DataError, expected):
                 cfg.Config(self.config).validate()

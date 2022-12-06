@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Union  # noqa F401
 
 from copy import deepcopy
 from importlib import import_module

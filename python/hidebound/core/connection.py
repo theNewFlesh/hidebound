@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any  # noqa F401
 
 from schematics import Model
 from schematics.types import (
@@ -19,9 +19,9 @@ class DaskConnectionConfig(Model):
         cluster_type (str, optional): Dask cluster type. Options include:
             local, gateway. Default: local.
         num_partitions (int, optional): Number of partions each DataFrame is to
-            be split into. Default: 16.
+            be split into. Default: 1.
         local_num_workers (int, optional): Number of workers to run on local
-            cluster. Default: 16.
+            cluster. Default: 1.
         local_threads_per_worker (int, optional): Number of threads to run per
             worker local cluster. Default: 1.
         local_multiprocessing (bool, optional): Whether to use multiprocessing
@@ -48,10 +48,10 @@ class DaskConnectionConfig(Model):
         validators=[lambda x: vd.is_in(x, ['local', 'gateway'])]
     )  # type: StringType
     num_partitions = IntType(
-        required=True, default=16, validators=[lambda x: vd.is_gte(x, 1)]
+        required=True, default=1, validators=[lambda x: vd.is_gte(x, 1)]
     )  # type: IntType
     local_num_workers = IntType(
-        required=True, default=16, validators=[lambda x: vd.is_gte(x, 1)]
+        required=True, default=1, validators=[lambda x: vd.is_gte(x, 1)]
     )  # type: IntType
     local_threads_per_worker = IntType(
         required=True, default=1, validators=[lambda x: vd.is_gte(x, 1)]
@@ -112,7 +112,7 @@ class DaskConnection:
         config = DaskConnectionConfig(config)
         config.validate()
         self.config = config.to_native()
-        self.cluster = None
+        self.cluster = None  # type: Any
 
     @property
     def local_config(self):

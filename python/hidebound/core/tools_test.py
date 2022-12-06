@@ -97,16 +97,16 @@ class ToolsTests(unittest.TestCase):
 
     def test_traverse_directory_error(self):
         expected = '/foo/bar is not a directory or does not exist.'
-        with self.assertRaisesRegexp(FileNotFoundError, expected):
+        with self.assertRaisesRegex(FileNotFoundError, expected):
             next(hbt.traverse_directory('/foo/bar'))
 
         expected = '/foo.bar is not a directory or does not exist.'
-        with self.assertRaisesRegexp(FileNotFoundError, expected):
+        with self.assertRaisesRegex(FileNotFoundError, expected):
             next(hbt.traverse_directory('/foo.bar'))
 
         expected = 'Illegal entry type: foobar. Legal entry types: '
         expected += r"\['file', 'directory'\]\."
-        with self.assertRaisesRegexp(EnforceError, expected):
+        with self.assertRaisesRegex(EnforceError, expected):
             next(hbt.traverse_directory('/tmp', entry_type='foobar'))
 
     def test_traverse_directory_include(self):
@@ -205,7 +205,7 @@ class ToolsTests(unittest.TestCase):
 
     def test_delete_empty_directories_errors(self):
         expected = '/foo/bar is not a directory or does not exist.'
-        with self.assertRaisesRegexp(FileNotFoundError, expected):
+        with self.assertRaisesRegex(FileNotFoundError, expected):
             next(hbt.delete_empty_directories('/foo/bar'))
 
     def test_directory_to_dataframe(self):
@@ -287,7 +287,7 @@ class ToolsTests(unittest.TestCase):
                 f.write('// encoding error')
 
             expected = 'No JSON data could be decoded from .*/test.json.'
-            with self.assertRaisesRegexp(json.JSONDecodeError, expected):
+            with self.assertRaisesRegex(json.JSONDecodeError, expected):
                 hbt.read_json(filepath)
 
     def test_get_meta_kwargs(self):
@@ -296,7 +296,7 @@ class ToolsTests(unittest.TestCase):
         self.assertEqual(result, {})
 
         # pd.Series
-        result = hbt.get_meta_kwargs(pd.Series(), str)
+        result = hbt.get_meta_kwargs(pd.Series(dtype=np.float16), str)
         self.assertEqual(result, {})
 
         # dd.DataFrame
@@ -309,7 +309,7 @@ class ToolsTests(unittest.TestCase):
         self.assertEqual(result, {})
 
         # dd.Series
-        data = dd.from_pandas(pd.Series(), chunksize=1)
+        data = dd.from_pandas(pd.Series(dtype=np.float16), chunksize=1)
         result = hbt.get_meta_kwargs(data, str)
         self.assertEqual(result, dict(meta=str))
 
@@ -330,7 +330,7 @@ class ToolsTests(unittest.TestCase):
 
 
 # PRED_COMBINATOR-----------------------------------------------------------
-def test_pred_combinator_dd_dataframe(db_client):
+def test_pred_combinator_dd_dataframe(db_cluster):
     data = DataFrame()
     data['foo'] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     data['bar'] = [1, 2, 3, 4, 5, 6, 2, 1, 2]
@@ -349,7 +349,7 @@ def test_pred_combinator_dd_dataframe(db_client):
     assert result == expected
 
 
-def test_pred_combinator_dd_dataframe_nan(db_client):
+def test_pred_combinator_dd_dataframe_nan(db_cluster):
     # no meta
     data = DataFrame()
     data['foo'] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -385,7 +385,7 @@ def test_pred_combinator_dd_dataframe_nan(db_client):
     assert result == expected
 
 
-def test_pred_combinator_series(db_client):
+def test_pred_combinator_series(db_cluster):
     data = Series([2, 2, 2, 2, 3, 3, 3, 3])
     data = dd.from_pandas(data, chunksize=3)
     result = hbt.pred_combinator(
@@ -402,7 +402,7 @@ def test_pred_combinator_series(db_client):
     assert result == expected
 
 
-def test_pred_combinator_pd_dataframe(db_client):
+def test_pred_combinator_pd_dataframe(db_cluster):
     data = pd.DataFrame()
     data['x'] = [1, 1, 1, 2, 2, 3]
     data['y'] = [1, 1, 1, 2, 2, 3]
@@ -415,7 +415,7 @@ def test_pred_combinator_pd_dataframe(db_client):
     assert isinstance(result, pd.Series)
 
 
-def test_pred_combinator_pd_series(db_client):
+def test_pred_combinator_pd_series(db_cluster):
     data = pd.Series([1, 1, 1, 2, 2, 3])
     expected = [10, 10, 10, 20, 20, 20]
 
@@ -427,7 +427,7 @@ def test_pred_combinator_pd_series(db_client):
 
 
 # GET_LUT-------------------------------------------------------------------
-def test_get_lut_empty(db_client):
+def test_get_lut_empty(db_cluster):
     data = pd.DataFrame()
     data['grp'] = [np.nan] * 6
     data['val'] = [1, 1, 1, 2, 2, 'foo']
@@ -438,7 +438,7 @@ def test_get_lut_empty(db_client):
     assert result.columns.tolist() == ['key', 'value']
 
 
-def test_get_lut_pd_dataframe(db_client):
+def test_get_lut_pd_dataframe(db_cluster):
     data = pd.DataFrame()
     data['grp'] = [1, 1, 1, 2, 2, 3]
     data['val'] = [1, 1, 1, 2, 2, 'foo']
@@ -450,7 +450,7 @@ def test_get_lut_pd_dataframe(db_client):
     assert result.value.tolist() == [[1, 1, 1], [2, 2], ['foo']]
 
 
-def test_get_lut_dd_dataframe(db_client):
+def test_get_lut_dd_dataframe(db_cluster):
     data = pd.DataFrame()
     data['grp'] = [1, 1, 1, 2, 2, 3]
     data['val'] = [1, 1, 1, 2, 2, 'foo']
@@ -460,12 +460,12 @@ def test_get_lut_dd_dataframe(db_client):
     assert isinstance(result, dd.DataFrame)
 
     result = result.compute()
-    assert result.key.tolist() == [1, 2, 3]
-    assert result.value.tolist() == ['[1, 1, 1]', '[2, 2]', "['foo']"]
+    assert sorted(result.key.tolist()) == [1, 2, 3]
+    assert sorted(result.value.tolist()) == ["['foo']", '[1, 1, 1]', '[2, 2]']
 
 
 # LUT_COMBINATOR------------------------------------------------------------
-def test_lut_combinator_pd_dataframe(db_client):
+def test_lut_combinator_pd_dataframe(db_cluster):
     data = pd.DataFrame()
     data['grp'] = [1, 1, 1, 2, 2, 3]
     data['val'] = [1, 1, 1, 2, 2, 'foo']
@@ -485,7 +485,7 @@ def test_lut_combinator_pd_dataframe(db_client):
     assert result.vals.tolist() == expected
 
 
-def test_lut_combinator_dd_dataframe(db_client):
+def test_lut_combinator_dd_dataframe(db_cluster):
     data = pd.DataFrame()
     data['grp'] = [1, 1, 1, 2, 2, 3]
     data['val'] = [1, 1, 1, 2, 2, 'foo']
@@ -499,11 +499,11 @@ def test_lut_combinator_dd_dataframe(db_client):
     result = result.compute()
     assert 'vals' in result.columns
     expected = [
-        '[1, 1, 1]',
-        '[1, 1, 1]',
-        '[1, 1, 1]',
-        '[2, 2]',
-        '[2, 2]',
         "['foo']",
+        '[1, 1, 1]',
+        '[1, 1, 1]',
+        '[1, 1, 1]',
+        '[2, 2]',
+        '[2, 2]',
     ]
-    assert result.vals.tolist() == expected
+    assert sorted(result.vals.tolist()) == expected

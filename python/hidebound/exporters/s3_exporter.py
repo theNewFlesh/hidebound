@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any, List  # noqa F401
 
 from io import BytesIO
 import json

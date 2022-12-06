@@ -6,10 +6,14 @@ import unittest
 
 from girder_client import HttpError
 from schematics.exceptions import DataError
+import pytest
 
 from hidebound.exporters.girder_exporter import GirderConfig, GirderExporter
 from hidebound.exporters.mock_girder import MockGirderClient
 # ------------------------------------------------------------------------------
+
+
+RERUNS = 3
 
 
 class GirderConfigTests(unittest.TestCase):
@@ -42,18 +46,18 @@ class GirderConfigTests(unittest.TestCase):
         config = self.config
         expected = r"foo is not in \[\'collection\', \'folder\'\]"
         config['root_type'] = 'foo'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             GirderConfig(config).validate()
 
     def test_host(self):
         config = self.config
         expected = 'Not a well-formed URL'
         config['host'] = '0.1.2'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             GirderConfig(config).validate()
 
         config['host'] = 'foo.bar.com'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             GirderConfig(config).validate()
 
         config = self.config
@@ -65,12 +69,12 @@ class GirderConfigTests(unittest.TestCase):
         config = self.config
         expected = '1023 !> 1023.'
         config['port'] = 1023
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             GirderConfig(config).validate()
 
         expected = '65536 !< 65536.'
         config['port'] = 65536
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             GirderConfig(config).validate()
 # ------------------------------------------------------------------------------
 
@@ -187,6 +191,8 @@ class GirderExporterTests(unittest.TestCase):
         expected = 'http://1.2.3.4:5678/api/v1'
         self.assertEqual(result._url, expected)
 
+    @pytest.mark.flaky(reruns=RERUNS)
+    @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
     def test_export(self):
         with TemporaryDirectory() as root:
             self.client = MockGirderClient(add_suffix=False)
@@ -207,6 +213,8 @@ class GirderExporterTests(unittest.TestCase):
             result = sorted(list(result))
             self.assertEqual(result, e_files)
 
+    @pytest.mark.flaky(reruns=RERUNS)
+    @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
     def test_export_no_file_metadata(self):
         with TemporaryDirectory() as root:
             self.client = MockGirderClient(add_suffix=False)

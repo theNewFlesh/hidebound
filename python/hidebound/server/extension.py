@@ -1,9 +1,9 @@
-from typing import Optional, Union
+from typing import Optional, Union  # noqa F401
+import flask  # noqa F401
 
 from pathlib import Path
 import os
 
-import flask
 import pyjson5 as jsonc
 import yaml
 

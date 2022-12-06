@@ -1,13 +1,13 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union  # noqa F401
+from collections import OrderedDict  # noqa F401
+import flask  # noqa F401
 
-from collections import OrderedDict
 import re
 
 from dash import dash_table, dcc, html
 from pandas import DataFrame
 import dash
 import dash_cytoscape as cyto
-import flask
 import rolling_pin.blob_etl as blob_etl
 # ------------------------------------------------------------------------------
 
@@ -404,7 +404,7 @@ def get_key_value_card(data, header=None, id_='key-value-card', sorting=False):
     '''
     data = blob_etl.BlobETL(data)\
         .set(
-            predicate=lambda k, v: re.search(r'<list_\d', k),
+            predicate=lambda k, v: bool(re.search(r'<list_\d', k)),
             key_setter=lambda k, v: re.sub('<list_|>', '', k))\
         .to_flat_dict()
 

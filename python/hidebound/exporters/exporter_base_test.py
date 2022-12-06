@@ -6,10 +6,14 @@ import shutil
 import unittest
 
 from schematics.exceptions import DataError
+import pytest
 
 from hidebound.exporters.exporter_base import ExporterBase, ExporterConfigBase
 import hidebound.core.tools as hbt
 # ------------------------------------------------------------------------------
+
+
+RERUNS = 3
 
 
 class Foo(ExporterBase):
@@ -57,7 +61,7 @@ class ExporterConfigBaseTests(unittest.TestCase):
 
         config = dict(metadata_types=['foobar', 'file-chunk', 'x'])
         expected = 'foobar is not a legal metadata type.'
-        with self.assertRaisesRegexp(DataError, expected):
+        with self.assertRaisesRegex(DataError, expected):
             ExporterConfigBase(config).validate()
 
 
@@ -153,10 +157,12 @@ class ExporterBaseTests(unittest.TestCase):
                     os.makedirs(dir_, exist_ok=True)
                 shutil.rmtree(dir_)
                 expected = f'{dir_.as_posix()} directory does not exist.'
-                with self.assertRaisesRegexp(FileNotFoundError, expected):
+                with self.assertRaisesRegex(FileNotFoundError, expected):
                     ExporterBase()._enforce_directory_structure(root)
                 os.makedirs(dir_)
 
+    @pytest.mark.flaky(reruns=RERUNS)
+    @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
     def test_export(self):
         with TemporaryDirectory() as root:
             e_content, e_assets, e_files = self.create_data(root)
@@ -182,6 +188,8 @@ class ExporterBaseTests(unittest.TestCase):
             for expected in e_files:
                 self.assertIn(expected, foo.file_chunk)
 
+    @pytest.mark.flaky(reruns=RERUNS)
+    @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
     def test_metadata_types(self):
         with TemporaryDirectory() as root:
             e_content, e_assets, e_files = self.create_data(root)
@@ -209,33 +217,33 @@ class ExporterBaseTests(unittest.TestCase):
         class Bar(ExporterBase):
             pass
         expected = '_export_content method must be implemented in subclass.'
-        with self.assertRaisesRegexp(NotImplementedError, expected):
+        with self.assertRaisesRegex(NotImplementedError, expected):
             Bar()._export_content({})
 
     def test_export_asset(self):
         class Bar(ExporterBase):
             pass
         expected = '_export_asset method must be implemented in subclass.'
-        with self.assertRaisesRegexp(NotImplementedError, expected):
+        with self.assertRaisesRegex(NotImplementedError, expected):
             Bar()._export_asset({})
 
     def test_export_file(self):
         class Bar(ExporterBase):
             pass
         expected = '_export_file method must be implemented in subclass.'
-        with self.assertRaisesRegexp(NotImplementedError, expected):
+        with self.assertRaisesRegex(NotImplementedError, expected):
             Bar()._export_file({})
 
     def test_export_asset_chunk(self):
         class Bar(ExporterBase):
             pass
         expected = '_export_asset_chunk method must be implemented in subclass.'
-        with self.assertRaisesRegexp(NotImplementedError, expected):
+        with self.assertRaisesRegex(NotImplementedError, expected):
             Bar()._export_asset_chunk({})
 
     def test_export_file_chunk(self):
         class Bar(ExporterBase):
             pass
         expected = '_export_file_chunk method must be implemented in subclass.'
-        with self.assertRaisesRegexp(NotImplementedError, expected):
+        with self.assertRaisesRegex(NotImplementedError, expected):
             Bar()._export_file_chunk({})

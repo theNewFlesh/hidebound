@@ -45,6 +45,9 @@ parts
 sdist
 var
 
+# pdm
+__pypackages__
+
 # python
 __pycache__
 *.py[cod]
@@ -54,7 +57,7 @@ __pycache__
 sftp-config.json
 
 # testing
-.coverage*
+.coverage
 .pytest_cache
 artifacts
 

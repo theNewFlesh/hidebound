@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable, Dict, List  # noqa F401
 
 from copy import copy
 from pyparsing import Group, Optional, ParseException, Regex, Suppress
@@ -103,7 +103,7 @@ class AssetNameParser:
             msg = f'Illegal {field} field {part} in "{text}". '
             msg += f'Expecting: {expr}'
             raise ParseException(msg)
-        return lambda s, l, i, e: raise_error(field, s, i)
+        return lambda s, l, i, e: raise_error(field, s, i)  # noqa E741
 
     @staticmethod
     def _get_grammar():
@@ -129,10 +129,10 @@ class AssetNameParser:
         version = Regex(r'\d{' + str(AssetNameParser.VERSION_PADDING) + '}') \
             .setParseAction(lambda s, l, t: int(t[0])) \
             .setResultsName('version') \
-            .setFailAction(AssetNameParser._raise_field_error('version', 'token'))
+            .setFailAction(AssetNameParser._raise_field_error('version', 'token'))  # noqa E741
 
         coord = Regex(r'\d{' + str(AssetNameParser.COORDINATE_PADDING) + '}') \
-            .setParseAction(lambda s, l, t: int(t[0]))
+            .setParseAction(lambda s, l, t: int(t[0]))  # noqa E741
         t_sep = Suppress(AssetNameParser.TOKEN_SEPARATOR)
         opt_coord = Optional(t_sep + coord)
         coordinate = Group(coord + opt_coord + opt_coord) \
@@ -142,7 +142,7 @@ class AssetNameParser:
         frame = Regex(r'\d{' + str(AssetNameParser.FRAME_PADDING) + '}') \
             .setParseAction(lambda s, l, t: int(t[0])) \
             .setResultsName('frame') \
-            .setFailAction(AssetNameParser._raise_field_error('frame', 'token'))
+            .setFailAction(AssetNameParser._raise_field_error('frame', 'token'))  # noqa E741
 
         extension = Regex(r'[a-zA-Z0-9]+$') \
             .setResultsName('extension') \

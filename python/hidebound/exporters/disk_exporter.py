@@ -1,4 +1,4 @@
-from typing import Any, Dict, List
+from typing import Any, Dict, List  # noqa F401
 
 from pathlib import Path
 import os

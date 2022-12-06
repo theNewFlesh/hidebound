@@ -1,0 +1,29 @@
+source_rules:
+  - path: /home/ubuntu/hidebound
+    include: "LICENSE|README\\.md"
+    exclude: "/\\.|docker|helm"
+  - path: /home/ubuntu/hidebound/python/hidebound
+    include: "\\.py$"
+  - path: /home/ubuntu/hidebound/docker/config
+    include: "flake8|prod.lock"
+    exclude: "cache|__pypackages__"
+  - path: /home/ubuntu/hidebound/resources
+    include: ".*"
+    exclude: "screenshots|\\.DS_Store"
+rename_rules:
+  - regex: "/home/ubuntu/hidebound"
+    replace: "/home/ubuntu/build/repo"
+  - regex: ".*/resources"
+    replace: "/home/ubuntu/build/resources"
+  - regex: "/python|/docker/config|/docker"
+    replace: ""
+  - regex: "prod.lock"
+    replace: "pdm.lock"
+group_rules:
+  - name: test
+    regex: "(__init__|_test)\\.py$|flake8\\.ini$|resources|\\.lock$"
+  - name: prod
+    regex: "__init__\\.py$"
+line_rules:
+  - group: prod
+    exclude: test

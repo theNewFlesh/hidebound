@@ -1,4 +1,5 @@
-from typing import Any, Callable, List, Union
+from typing import Any, Callable, List, Union  # noqa F401
+from schematics.models import Model  # noqa F401
 
 from collections import Counter
 from itertools import product
@@ -9,7 +10,6 @@ import re
 from pandas import DataFrame
 from pyparsing import ParseException
 from schematics.exceptions import DataError, ValidationError
-from schematics.models import Model
 import wrapt
 
 from hidebound.core.parser import AssetNameParser

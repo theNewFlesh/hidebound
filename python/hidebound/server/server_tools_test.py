@@ -109,7 +109,7 @@ ZV9yZWdleCI6ICJcXC5EU19TdG9yZXx5b3VyLW1vbSIsCiAgICAid3JpdGVfbW9kZSI6ICJjb3B5Igp\
         expected = 'File header is not JSON. Header: '
         expected += 'data:application/text;base64.'
         content = re.sub('json', 'text', content)
-        with self.assertRaisesRegexp(ValueError, expected):
+        with self.assertRaisesRegex(ValueError, expected):
             hst.parse_json_file_content(content)
 
     # DASH-TOOLS----------------------------------------------------------------

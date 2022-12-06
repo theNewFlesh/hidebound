@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional, Union  # noqa F401
 
 from collections import OrderedDict
 from dataclasses import dataclass
@@ -58,13 +58,7 @@ def render_template(filename, parameters):
     Returns:
         bytes: HTML.
     '''
-    # path to templates inside pip package
-    tempdir = lbt.relative_path(__file__, '../templates').as_posix()
-
-    # path to templates inside repo
-    if os.environ.get('REPO_ENV', 'False').lower() == 'true':
-        tempdir = lbt.relative_path(__file__, '../../../templates').as_posix()
-
+    tempdir = lbt.relative_path(__file__, '../../../templates').as_posix()
     env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(tempdir),
         keep_trailing_newline=True

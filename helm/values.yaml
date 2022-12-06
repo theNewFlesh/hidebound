@@ -31,7 +31,6 @@ base:
     FLASK_ENV:
     FLASK_RUN_PORT: 8080
     FLASK_RUN_HOST: 0.0.0.0
-    REPO_ENV:
     HIDEBOUND_INGRESS_DIRECTORY: /mnt/storage/ingress
     HIDEBOUND_STAGING_DIRECTORY: /mnt/storage/hidebound
     HIDEBOUND_INCLUDE_REGEX: ""
@@ -70,8 +69,8 @@ base:
     image_pull_policy: IfNotPresent
     nfs_server:
     command:
-      - /usr/bin/python3.7
-      - /home/ubuntu/.local/lib/python3.7/site-packages/hidebound/server/app.py
+      - /usr/bin/python3.10
+      - /home/ubuntu/.local/lib/python3.10/site-packages/hidebound/server/app.py
     args:
     env_configmap: hidebound-env-configmap
     env_secret: hidebound-env-secret
@@ -121,8 +120,8 @@ overlays:
 
     deployment:
       command:
-        - /usr/bin/python3.7
-        - /home/ubuntu/.local/lib/python3.7/site-packages/hidebound/server/app.py
+        - /usr/bin/python3.10
+        - /home/ubuntu/.local/lib/python3.10/site-packages/hidebound/server/app.py
 
     env_configmap:
       FLASK_DEBUG: 1

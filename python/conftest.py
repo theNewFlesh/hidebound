@@ -100,9 +100,7 @@ def make_dirs(temp_dir):
 
 @pytest.fixture()
 def config(temp_dir, dask_config):
-    spec = '../hidebound/hidebound/core/test_specifications.py'
-    if 'REPO_ENV' in os.environ:
-        spec = '../python/hidebound/core/test_specifications.py'
+    spec = '../python/hidebound/core/test_specifications.py'
     spec = lbt.relative_path(__file__, spec).absolute().as_posix()
 
     config = dict(

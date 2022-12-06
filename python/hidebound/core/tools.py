@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, Generator, List, Union
+from typing import Any, Callable, Dict, Generator, List, Union  # noqa F401
 
 from collections import defaultdict
 from datetime import datetime
@@ -26,6 +26,7 @@ The tools module contains general functions useful to other hidebound modules.
 '''
 
 
+# DIRECTORY-FUNCS---------------------------------------------------------------
 def traverse_directory(
     directory, include_regex='', exclude_regex='', entry_type='file'
 ):
@@ -142,6 +143,23 @@ def directory_to_dataframe(directory, include_regex='', exclude_regex=r'\.DS_Sto
     return data
 
 
+# STRING-FUNCS------------------------------------------------------------------
+def str_to_bool(string):
+    # type: (str) -> bool
+    '''
+    Converts a string to a boolean value.
+
+    Args:
+        string (str): String to be converted.
+
+    Returns:
+        bool: Boolean
+    '''
+    if string.lower() == 'true':
+        return True
+    return False
+
+
 def error_to_string(error):
     # type: (Exception) -> str
     '''
@@ -168,6 +186,16 @@ def error_to_string(error):
     return output
 
 
+def time_string():
+    # type: () -> str
+    '''
+    Returns:
+        str: String representing current time.
+    '''
+    return datetime.now().strftime('%Y-%m-%dT-%H-%M-%S')
+
+
+# MISC-FUNCS--------------------------------------------------------------------
 def to_prototype(dicts):
     # type: (List[Dict]) -> Dict
     '''
@@ -193,15 +221,7 @@ def to_prototype(dicts):
     return output
 
 
-def time_string():
-    # type: () -> str
-    '''
-    Returns:
-        str: String representing current time.
-    '''
-    return datetime.now().strftime('%Y-%m-%dT-%H-%M-%S')
-
-
+# IO-FUNCS----------------------------------------------------------------------
 def write_json(data, filepath):
     # type: (object, FilePath) -> None
     '''
@@ -246,6 +266,7 @@ def read_json(filepath):
     return output
 
 
+# DASK-FUNCS--------------------------------------------------------------------
 def get_meta_kwargs(data, meta):
     # type: (DFS, Any) -> dict
     '''
@@ -363,19 +384,3 @@ def lut_combinator(
     lut.columns = [key_column, value_column]
     data = merge(data, lut, on=key_column, how='left')
     return data
-
-
-def str_to_bool(string):
-    # type: (str) -> bool
-    '''
-    Converts a string to a boolean value.
-
-    Args:
-        string (str): String to be converted.
-
-    Returns:
-        bool: Boolean
-    '''
-    if string.lower() == 'true':
-        return True
-    return False

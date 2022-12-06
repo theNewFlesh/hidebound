@@ -1,4 +1,4 @@
-from typing import Any, List, Tuple, Union
+from typing import Any, List, Tuple, Union  # noqa F401
 
 from pathlib import Path
 import os
@@ -20,17 +20,18 @@ import hidebound.core.validators as vd
 
 
 # FIXTURES----------------------------------------------------------------------
-@pytest.fixture(scope='module')
-def db_client():
+@pytest.fixture(scope='session')
+def db_cluster():
     cluster = ddist.LocalCluster(
-        n_workers=1,
-        threads_per_worker=2,
-        dashboard_address='0.0.0.0:8087',
+        host='0.0.0.0',
+        n_workers=4,
+        threads_per_worker=1,
+        processes=True,
+        memory_limit='1GiB',
     )
-    client = ddist.Client(cluster)
-    yield client, cluster
+    yield cluster
 
-    client.shutdown()
+    cluster.close()
 
 
 @pytest.fixture()

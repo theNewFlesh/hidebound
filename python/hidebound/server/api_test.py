@@ -78,6 +78,7 @@ def test_initialize_bad_config(api_setup, flask_client, config):
 
 # CREATE------------------------------------------------------------------------
 @pytest.mark.flaky(reruns=RERUNS)
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_create(api_setup, flask_client, config, make_files, api_update):
     content = Path(config['staging_directory'], 'content')
     meta = Path(config['staging_directory'], 'metadata')
@@ -164,6 +165,7 @@ def test_read_no_update(api_setup, flask_client):
 
 # UPDATE------------------------------------------------------------------------
 @pytest.mark.flaky(reruns=RERUNS)
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_update(api_setup, flask_client, make_files):
     result = try_post_json(flask_client, '/api/update')['message']
     expected = 'Database updated.'
@@ -172,6 +174,7 @@ def test_update(api_setup, flask_client, make_files):
 
 # DELETE------------------------------------------------------------------------
 @pytest.mark.flaky(reruns=RERUNS)
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_delete(api_setup, flask_client, config, make_files, api_update):
     flask_client.post('/api/create')
     time.sleep(DELAY)
@@ -202,6 +205,7 @@ def test_delete_no_create(api_setup, flask_client, config, make_files):
 
 # EXPORT------------------------------------------------------------------------
 @pytest.mark.flaky(reruns=RERUNS)
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_export(api_setup, flask_client, config, make_files):
     target_dir = config['exporters'][0]['target_directory']
     result = os.listdir(target_dir)
@@ -286,6 +290,7 @@ def test_search_bad_group_by_asset(api_setup, flask_client, make_files):
 
 
 @pytest.mark.flaky(reruns=RERUNS)
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_search_bad_query(api_setup, flask_client, make_files):
     flask_client.post('/api/update', json={})
     query = {'query': 'SELECT * FROM data WHERE foo == "bar"'}
@@ -306,6 +311,7 @@ def test_search_no_update(api_setup, flask_client, make_files):
 
 # WORKFLOW----------------------------------------------------------------------
 @pytest.mark.flaky(reruns=RERUNS)
+@pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_workflow(api_setup, flask_client, config, make_files):
     expected = ['update', 'create', 'export', 'delete']
 
