@@ -33,7 +33,7 @@
             <a href="index.html" class="icon icon-home"> hidebound
           </a>
               <div class="version">
-                0.31.1
+                0.31.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -104,9 +104,9 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-hidebound.server.extension">extension</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#hidebound.server.extension.HideboundExtension"><code class="docutils literal notranslate"><span class="pre">HideboundExtension</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.server.extension.HideboundExtension.__init__"><code class="docutils literal notranslate"><span class="pre">HideboundExtension.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#hidebound.server.extension.HideboundExtension._get_config"><code class="docutils literal notranslate"><span class="pre">HideboundExtension._get_config()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.server.extension.HideboundExtension._get_config_from_env"><code class="docutils literal notranslate"><span class="pre">HideboundExtension._get_config_from_env()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.server.extension.HideboundExtension._get_config_from_file"><code class="docutils literal notranslate"><span class="pre">HideboundExtension._get_config_from_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hidebound.server.extension.HideboundExtension.get_config"><code class="docutils literal notranslate"><span class="pre">HideboundExtension.get_config()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.server.extension.HideboundExtension.init_app"><code class="docutils literal notranslate"><span class="pre">HideboundExtension.init_app()</span></code></a></li>
 </ul>
 </li>
@@ -755,23 +755,6 @@ Default: False.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="hidebound.server.extension.HideboundExtension._get_config">
-<span class="sig-name descname"><span class="pre">_get_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Flask</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/hidebound/server/extension.html#HideboundExtension._get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.server.extension.HideboundExtension._get_config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get config from envirnment variables or config file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>app</strong> (<em>flask.Flask</em>) – Flask app.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Database config.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="hidebound.server.extension.HideboundExtension._get_config_from_env">
 <span class="sig-name descname"><span class="pre">_get_config_from_env</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Flask</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/hidebound/server/extension.html#HideboundExtension._get_config_from_env"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.server.extension.HideboundExtension._get_config_from_env" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get config from environment variables.</p>
@@ -805,6 +788,23 @@ Default: False.</p></li>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hidebound.server.extension.HideboundExtension.get_config">
+<span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Flask</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/hidebound/server/extension.html#HideboundExtension.get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.server.extension.HideboundExtension.get_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get config from envirnment variables or config file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>app</strong> (<em>flask.Flask</em>) – Flask app.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Database config.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
