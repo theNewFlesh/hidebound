@@ -537,7 +537,7 @@ x_session_python () {
 
 # TEST-FUNCTIONS----------------------------------------------------------------
 x_test_coverage () {
-    # Run all tests generate coverage report
+    # Generate coverage report
     x_env_activate_dev;
     echo "${CYAN2}GENERATING TEST COVERAGE REPORT${CLEAR}\n";
     rm -rf /tmp/coverage;
