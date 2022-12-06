@@ -17,9 +17,7 @@ import hidebound.server.extensions as ext
 import hidebound.server.server_tools as hst
 
 
-TESTING = True
-if __name__ in ['__main__', 'hidebound.server.app']:
-    TESTING = False  # pragma: no cover
+TESTING = hbt.str_to_bool(os.environ.get('_HIDEBOUND_TESTING', 'True'))  # pragma: no cover
 
 # setup directories in /tmp/mnt
 if hbt.str_to_bool(os.environ.get('CREATE_TMP_DIRS', 'False')):

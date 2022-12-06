@@ -1,9 +1,8 @@
 from pprint import pprint
+import os
 import subprocess
 
 import click
-
-import hidebound.server.app as hba
 # ------------------------------------------------------------------------------
 
 '''
@@ -27,6 +26,8 @@ def server(debug):
     '''
         Runs a hidebound server.
     '''
+    os.environ['_HIDEBOUND_TESTING'] = 'False'
+    import hidebound.server.app as hba
     hba.APP.run_server(debug=debug, host=hba.EP.host, port=hba.EP.port)
 
 
@@ -36,6 +37,8 @@ def config():
     '''
         Prints hidebound config.
     '''
+    os.environ['_HIDEBOUND_TESTING'] = 'True'
+    import hidebound.server.app as hba
     app = hba.APP.server
     config = app.extensions['hidebound'].get_config(app)
     pprint(config, indent=4)
