@@ -433,18 +433,18 @@ Hidebound configs consist of four main sections:
 
 ### Dask
 Default configuration of Dask distributed framework.
-cluster_type - dask cluster type
-num_partitions - number of partions for each dataframe
-local_num_workers - number of workers on local cluster
-local_threads_per_worker - number of threads per worker on local cluster
-local_multiprocessing - use multiprocessing for local cluster
-gateway_address - gateway server address
-gateway_proxy_address - scheduler proxy server address
-gateway_public_address - gateway server address, as accessible from a web browser
-gateway_auth_type - authentication type
-gateway_api_token - api token
-gateway_cluster_options - list of dask gateway cluster options
-gateway_shutdown_on_close - whether to shudown cluster upon close
+* cluster_type - dask cluster type
+* num_partitions - number of partions for each dataframe
+* local_num_workers - number of workers on local cluster
+* local_threads_per_worker - number of threads per worker on local cluster
+* local_multiprocessing - use multiprocessing for local cluster
+* gateway_address - gateway server address
+* gateway_proxy_address - **scheduler** proxy server address
+* gateway_public_address - gateway server address, as accessible from a web browser
+* gateway_auth_type - authentication type
+* gateway_api_token - api token
+* gateway_cluster_options - list of dask gateway cluster options
+* gateway_shutdown_on_close - whether to shudown cluster upon close
 
 ### Exporters
 Which exporters to us in the workflow.
