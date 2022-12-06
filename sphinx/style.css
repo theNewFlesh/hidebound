@@ -209,3 +209,7 @@ span[id*='MathJax-Span'] {
 #configuration {
     min-width: 980px;
 }
+
+#commands {
+    min-width: 960px;
+}

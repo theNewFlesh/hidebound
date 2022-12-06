@@ -732,6 +732,200 @@ We would write the following specification for such an asset.
            channels=tr.get_num_image_channels,  # retrieves image channel number from file
        )
 
+Production CLI
+==============
+
+Hidebound comes with a command line interface defined in command.py.
+
+Its usage pattern is: ``hidebound COMMAND [FLAGS] [-h --help]``
+
+Commands
+~~~~~~~~
+
++--------+----------------------------------------------+---+---------+
+| C      | Description                                  | F | Flag    |
+| ommand |                                              | l | Desc    |
+|        |                                              | a | ription |
+|        |                                              | g |         |
+|        |                                              | s |         |
++========+==============================================+===+=========+
+| config | Prints hidebound config                      |   |         |
++--------+----------------------------------------------+---+---------+
+| server | Runs a hidebound server                      | – | Enable  |
+|        |                                              | d | debug   |
+|        |                                              | e | mode    |
+|        |                                              | b |         |
+|        |                                              | u |         |
+|        |                                              | g |         |
++--------+----------------------------------------------+---+---------+
+| bas    | Prints BASH completion code to be written to |   |         |
+| h-comp | a \_hidebound completion file                |   |         |
+| letion |                                              |   |         |
++--------+----------------------------------------------+---+---------+
+| zs     | Prints ZSH completion code to be written to  |   |         |
+| h-comp | a \_hidebound completion file                |   |         |
+| letion |                                              |   |         |
++--------+----------------------------------------------+---+---------+
+
+Development CLI
+===============
+
+bin/hidebound is a command line interface (defined in cli.py) that works
+with any version of python 2.7 and above, as it has no dependencies.
+
+Its usage pattern is:
+``bin/hidebound COMMAND [-a --args]=ARGS [-h --help] [--dryrun]``
+
+.. _commands-1:
+
+Commands
+~~~~~~~~
+
++---------------+------------------------------------------------------+
+| Command       | Description                                          |
++===============+======================================================+
+| build-package | Build production version of repo for publishing      |
++---------------+------------------------------------------------------+
+| build-prod    | Publish pip package of repo to PyPi                  |
++---------------+------------------------------------------------------+
+| build-publish | Run production tests first then publish pip package  |
+|               | of repo to PyPi                                      |
++---------------+------------------------------------------------------+
+| build-test    | Build test version of repo for prod testing          |
++---------------+------------------------------------------------------+
+| docker-build  | Build image of hidebound                             |
++---------------+------------------------------------------------------+
+| dock          | Build production image of hidebound                  |
+| er-build-prod |                                                      |
++---------------+------------------------------------------------------+
+| doc           | Display the Docker container id of hidebound         |
+| ker-container |                                                      |
++---------------+------------------------------------------------------+
+| do            | Generate coverage report for hidebound               |
+| cker-coverage |                                                      |
++---------------+------------------------------------------------------+
+| d             | Shutdown hidebound container and destroy its image   |
+| ocker-destroy |                                                      |
++---------------+------------------------------------------------------+
+| docker        | Shutdown hidebound production container and destroy  |
+| -destroy-prod | its image                                            |
++---------------+------------------------------------------------------+
+| docker-image  | Display the Docker image id of hidebound             |
++---------------+------------------------------------------------------+
+| docker-prod   | Start hidebound production container                 |
++---------------+------------------------------------------------------+
+| docker-push   | Push hidebound production image to Dockerhub         |
++---------------+------------------------------------------------------+
+| docker-remove | Remove hidebound Docker image                        |
++---------------+------------------------------------------------------+
+| d             | Restart hidebound container                          |
+| ocker-restart |                                                      |
++---------------+------------------------------------------------------+
+| docker-start  | Start hidebound container                            |
++---------------+------------------------------------------------------+
+| docker-stop   | Stop hidebound container                             |
++---------------+------------------------------------------------------+
+| docs          | Generate sphinx documentation                        |
++---------------+------------------------------------------------------+
+| docs          | Generate architecture.svg diagram from all import    |
+| -architecture | statements                                           |
++---------------+------------------------------------------------------+
+| docs-full     | Generate documentation, coverage report, diagram and |
+|               | code                                                 |
++---------------+------------------------------------------------------+
+| docs-metrics  | Generate code metrics report, plots and tables       |
++---------------+------------------------------------------------------+
+| library-add   | Add a given package to a given dependency group      |
++---------------+------------------------------------------------------+
+| libr          | Graph dependencies in dev environment                |
+| ary-graph-dev |                                                      |
++---------------+------------------------------------------------------+
+| libra         | Graph dependencies in prod environment               |
+| ry-graph-prod |                                                      |
++---------------+------------------------------------------------------+
+| librar        | Install all dependencies into dev environment        |
+| y-install-dev |                                                      |
++---------------+------------------------------------------------------+
+| library       | Install all dependencies into prod environment       |
+| -install-prod |                                                      |
++---------------+------------------------------------------------------+
+| lib           | List packages in dev environment                     |
+| rary-list-dev |                                                      |
++---------------+------------------------------------------------------+
+| libr          | List packages in prod environment                    |
+| ary-list-prod |                                                      |
++---------------+------------------------------------------------------+
+| lib           | Resolve dev.lock file                                |
+| rary-lock-dev |                                                      |
++---------------+------------------------------------------------------+
+| libr          | Resolve prod.lock file                               |
+| ary-lock-prod |                                                      |
++---------------+------------------------------------------------------+
+| l             | Remove a given package from a given dependency group |
+| ibrary-remove |                                                      |
++---------------+------------------------------------------------------+
+| l             | Search for pip packages                              |
+| ibrary-search |                                                      |
++---------------+------------------------------------------------------+
+| lib           | Sync dev environment with packages listed in         |
+| rary-sync-dev | dev.lock                                             |
++---------------+------------------------------------------------------+
+| libr          | Sync prod environment with packages listed in        |
+| ary-sync-prod | prod.lock                                            |
++---------------+------------------------------------------------------+
+| l             | Update dev dependencies                              |
+| ibrary-update |                                                      |
++---------------+------------------------------------------------------+
+| session-app   | Run app                                              |
++---------------+------------------------------------------------------+
+| session-lab   | Run jupyter lab server                               |
++---------------+------------------------------------------------------+
+| s             | Run python session with dev dependencies             |
+| ession-python |                                                      |
++---------------+------------------------------------------------------+
+| state         | State of hidebound                                   |
++---------------+------------------------------------------------------+
+| test-coverage | Generate test coverage report                        |
++---------------+------------------------------------------------------+
+| test-dev      | Run all tests                                        |
++---------------+------------------------------------------------------+
+| test-fast     | Test all code excepts tests marked with              |
+|               | SKIP_SLOWS_TESTS decorator                           |
++---------------+------------------------------------------------------+
+| test-lint     | Run linting and type checking                        |
++---------------+------------------------------------------------------+
+| test-prod     | Run tests across all support python versions         |
++---------------+------------------------------------------------------+
+| version       | Full resolution of repo: dependencies, linting,      |
+|               | tests, docs, etc                                     |
++---------------+------------------------------------------------------+
+| versi         | Bump pyproject major version                         |
+| on-bump-major |                                                      |
++---------------+------------------------------------------------------+
+| versi         | Bump pyproject minor version                         |
+| on-bump-minor |                                                      |
++---------------+------------------------------------------------------+
+| versi         | Bump pyproject patch version                         |
+| on-bump-patch |                                                      |
++---------------+------------------------------------------------------+
+| zsh           | Run ZSH session inside hidebound container           |
++---------------+------------------------------------------------------+
+| zsh-complete  | Generate oh-my-zsh completions                       |
++---------------+------------------------------------------------------+
+| zsh-root      | Run ZSH session as root inside hidebound container   |
++---------------+------------------------------------------------------+
+
+Flags
+~~~~~
+
+===== ======= ====================================================
+Short Long    Description
+===== ======= ====================================================
+-a    –args   Additional arguments, this can generally be ignored
+-h    –help   Prints command help message to stdout
+\     –dryrun Prints command that would otherwise be run to stdout
+===== ======= ====================================================
+
 .. |image0| image:: resources/screenshots/data_flow.png
 .. |image1| image:: resources/screenshots/update.png
 .. |image2| image:: resources/screenshots/graph.png

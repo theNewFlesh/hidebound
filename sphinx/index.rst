@@ -16,7 +16,7 @@ Welcome to hidebound' documentation!
 
 .. toctree::
    :maxdepth: 1
-   :caption: Developer CLI
+   :caption: Development CLI
 
    cli
 
