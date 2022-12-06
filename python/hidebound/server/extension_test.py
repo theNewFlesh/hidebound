@@ -59,7 +59,7 @@ def test_get_config_from_file_error(env, flask_app, config):
 
 def test_get_config_env_vars(env, flask_app, config):
     flask_app.config.from_prefixed_env('HIDEBOUND')
-    result = HideboundExtension()._get_config(flask_app)
+    result = HideboundExtension().get_config(flask_app)
     for key, val in config.items():
         assert result[key] == val
 
@@ -67,7 +67,7 @@ def test_get_config_env_vars(env, flask_app, config):
 def test_get_config_mising_env_var(env, flask_app, config):
     os.environ.pop('HIDEBOUND_WORKFLOW')
     flask_app.config.from_prefixed_env('HIDEBOUND')
-    result = HideboundExtension()._get_config(flask_app)['workflow']
+    result = HideboundExtension().get_config(flask_app)['workflow']
     expected = ['delete', 'update', 'create', 'export']
     assert result == expected
 
@@ -80,14 +80,14 @@ def test_get_config_env_vars_empty_lists(env, flask_app, config):
 
     keys = ['workflow', 'specification_files', 'webhooks']
     for key in keys:
-        result = HideboundExtension()._get_config(flask_app)[key]
+        result = HideboundExtension().get_config(flask_app)[key]
         assert result == []
 
 
 def test_get_config_filepath(env, flask_app, config, config_yaml_file):
     os.environ['HIDEBOUND_INGRESS_DIRECTORY'] = 'foobar'
     flask_app.config.from_prefixed_env('HIDEBOUND')
-    result = HideboundExtension()._get_config(flask_app)
+    result = HideboundExtension().get_config(flask_app)
 
     assert result['ingress_directory'] != 'foobar'
 

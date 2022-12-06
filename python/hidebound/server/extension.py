@@ -27,7 +27,7 @@ class HideboundExtension:
         if app is not None:
             self.init_app(app)
 
-    def _get_config(self, app):
+    def get_config(self, app):
         # type: (flask.Flask) -> dict
         '''
         Get config from envirnment variables or config file.
@@ -139,5 +139,5 @@ class HideboundExtension:
         app.extensions['hidebound'] = self
         app.register_blueprint(API)
         if not app.config['TESTING']:
-            self.config = self._get_config(app)
+            self.config = self.get_config(app)
             self.database = Database.from_config(self.config)
