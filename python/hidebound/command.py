@@ -25,7 +25,7 @@ def main():
 def server(debug):
     # type: (bool) -> None
     '''
-        Starts a hidebound server.
+        Runs a hidebound server.
     '''
     hba.APP.run_server(debug=debug, host=hba.EP.host, port=hba.EP.port)
 

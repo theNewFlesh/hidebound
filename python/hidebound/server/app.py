@@ -18,7 +18,7 @@ import hidebound.server.server_tools as hst
 
 
 TESTING = True
-if __name__ == '__main__':
+if __name__ in ['__main__', 'hidebound.server.app']:
     TESTING = False  # pragma: no cover
 
 # setup directories in /tmp/mnt
