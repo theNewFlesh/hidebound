@@ -273,7 +273,7 @@ x_build_package () {
 x_build_prod () {
     # Build production version of repo for publishing
     echo "${CYAN2}BUILDING PROD REPO${CLEAR}\n";
-    _x_build prod;
+    _x_build "prod,prod-templates";
     _x_gen_pyproject package > $BUILD_DIR/repo/pyproject.toml;
     _x_build_show_dir;
 }

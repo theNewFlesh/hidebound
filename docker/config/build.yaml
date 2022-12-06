@@ -10,11 +10,16 @@ source_rules:
   - path: /home/ubuntu/hidebound/resources
     include: ".*"
     exclude: "screenshots|\\.DS_Store"
+  - path: /home/ubuntu/hidebound/templates
+    include: ".*"
+    exclude: "\\.DS_Store"
 rename_rules:
   - regex: "/home/ubuntu/hidebound"
     replace: "/home/ubuntu/build/repo"
   - regex: ".*/resources"
     replace: "/home/ubuntu/build/resources"
+  - regex: ".*/templates"
+    replace: "/home/ubuntu/build/repo/hidebound/templates"
   - regex: "/python|/docker/config|/docker"
     replace: ""
   - regex: "prod.lock"
@@ -24,6 +29,11 @@ group_rules:
     regex: "(__init__|_test)\\.py$|flake8\\.ini$|resources|\\.lock$|test|mock"
   - name: prod
     regex: "__init__\\.py$"
+  - name: prod-templates
+    regex: "server_tools\\.py$"
 line_rules:
   - group: prod
     exclude: "test|mock"
+  - group: prod-templates
+    regex: "\\.\\./\\.\\./\\.\\./templates"
+    replace: "../templates"
