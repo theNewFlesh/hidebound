@@ -1,8 +1,8 @@
 FLASK_DEBUG=1
 _HIDEBOUND_TEST_DIRS=True
 HIDEBOUND_TESTING=True
-HIDEBOUND_INGRESS_DIRECTORY=/tmp/ingress
-HIDEBOUND_STAGING_DIRECTORY=/tmp/hidebound
+HIDEBOUND_INGRESS_DIRECTORY=/tmp/mnt/ingress
+HIDEBOUND_STAGING_DIRECTORY=/tmp/mnt/hidebound
 HIDEBOUND_INCLUDE_REGEX=''
 HIDEBOUND_EXCLUDE_REGEX='\.DS_Store'
 HIDEBOUND_WRITE_MODE=copy
@@ -26,7 +26,7 @@ HIDEBOUND_DASK_GATEWAY_CLUSTER_OPTIONS='[]'
 HIDEBOUND_DASK_GATEWAY_SHUTDOWN_ON_CLOSE=True
 HIDEBOUND_EXPORTERS='
 - name: disk
-  target_directory: /tmp/archive
+  target_directory: /tmp/mnt/archive
   metadata_types:
     - asset
     - file
