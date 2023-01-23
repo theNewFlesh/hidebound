@@ -2,6 +2,9 @@
 export SHELL=`which zsh`
 ZSH_THEME="henanigans"
 export ZSH="/home/ubuntu/.oh-my-zsh"
+export ZSH_CACHE_DIR="/home/ubuntu/.zsh_cache"
+export ZSH_COMPDUMP=$ZSH_CACHE_DIR/.zcompdump-$HOST
+mkdir -p $ZSH_CACHE_DIR
 fpath=(~/.oh-my-zsh/custom/completions $fpath)
 DISABLE_UPDATE_PROMPT=true
 plugins=(
