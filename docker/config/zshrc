@@ -22,8 +22,13 @@ plugins=(
 )
 source $ZSH/oh-my-zsh.sh
 
+# EXPORTS-----------------------------------------------------------------------
+export HOME="/home/ubuntu"
+export REPO="lunchbox"
+export REPO_DIR="$HOME/$REPO"
+
 # X-TOOLS-----------------------------------------------------------------------
-source /home/ubuntu/hidebound/docker/scripts/x_tools.sh
+source $REPO_DIR/docker/scripts/x_tools.sh
 
 # ALIASES-----------------------------------------------------------------------
 alias l='ls -hl'
@@ -50,7 +55,7 @@ if [[ `which parallel` != "* not found" ]]; then
 fi;
 
 # fix git permissions
-git config --global --add safe.directory /home/ubuntu/hidebound
+git config --global --add safe.directory $REPO_DIR
 
 # activate dev env
 x_env_activate_dev;

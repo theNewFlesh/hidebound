@@ -510,6 +510,13 @@ x_library_update () {
     _x_library_pdm_to_repo_dev;
 }
 
+x_library_update_pdm () {
+    # Update PDM in all environments
+    echo "${CYAN2}UPDATE PDM${CLEAR}\n";
+    cd $PDM_DIR;
+    pdm self update;
+}
+
 # SESSION-FUNCTIONS-------------------------------------------------------------
 x_session_app () {
     # Run app

@@ -7,6 +7,10 @@ a:hover {
     color: #DE958E !important;
 }
 
+p {
+    margin-bottom: 5px;
+}
+
 .btn,
 .btn-neutral,
 .btn:visited,
@@ -104,6 +108,7 @@ pre > span {
 .wy-nav-content {
     background: #242424;
     color: #F4F4F4;
+    max-width: 1400px !important;
 }
 
 .wy-nav-side {
@@ -137,10 +142,6 @@ pre > span {
 .descclassname  {
     background: #343434 !important;
     color: #A0D17B !important;
-}
-
-.sig-param {
-    color: #DE958E !important;
 }
 
 .rst-content dl:not(.docutils) dt {
@@ -201,6 +202,45 @@ span[id*='MathJax-Span'] {
     border: 0px solid #343434 !important;
 }
 
+/* Parameters */
+.sig-param {
+    color: #A4A4A4 !important;
+}
+
+.sig-param > .n {
+    color: #DE958E !important;
+}
+
+.sig-param > .default_value {
+    color: #F4F4F4 !important;
+}
+
+.rst-content dl p {
+    margin-bottom: 4px;
+}
+
+.colon {
+    display: none;
+}
+
+.field-list.simple,
+.field-list.simple .field-odd,
+.field-list.simple .field-even {
+    background: #242424 !important;
+}
+
+.sig.sig-object.py {
+    font-size: 100% !important;
+}
+
+.MathJax {
+    text-align: left !important;
+}
+
+.math.notranslate.nohighlight {
+    padding-left: 40px !important;
+}
+
 /* Custom table widths */
 #environment-variables {
     min-width: 950px;
@@ -212,4 +252,15 @@ span[id*='MathJax-Span'] {
 
 #commands {
     min-width: 960px;
+}
+
+/* Architecture Diagram */
+#architecture object[data="architecture.svg"] {
+    max-width: 900px !important;
+}
+
+/* Intro Sections */
+h1 {
+    margin-top: 12px;
+    margin-bottom: 12px;
 }
