@@ -24,7 +24,7 @@ source $ZSH/oh-my-zsh.sh
 
 # EXPORTS-----------------------------------------------------------------------
 export HOME="/home/ubuntu"
-export REPO="lunchbox"
+export REPO="hidebound"
 export REPO_DIR="$HOME/$REPO"
 
 # X-TOOLS-----------------------------------------------------------------------
