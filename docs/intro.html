@@ -1,40 +1,78 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
   <title>Introduction &mdash; hidebound  documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="_static/style.css" type="text/css" />
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/style.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
-    <script src="_static/js/theme.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="&lt;no title&gt;" href="modules.html" />
     <link rel="prev" title="Welcome to hidebound’ documentation!" href="index.html" /> 
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
+
+   
   <div class="wy-grid-for-nav">
+    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
+          
+
+          
             <a href="index.html" class="icon icon-home"> hidebound
+          
+
+          
           </a>
+
+          
+            
+            
               <div class="version">
                 0.31.5
               </div>
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -42,7 +80,18 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
               <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a></li>
@@ -62,11 +111,16 @@
 <li class="toctree-l2"><a class="reference internal" href="#create"><em>Create</em></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#export"><em>Export</em></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#delete"><em>Delete</em></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#workflow-1"><em>Workflow</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2"><em>Workflow</em></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#naming-convention">Naming Convention</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#syntax"><em>Syntax</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-diagrams"><strong>Example Diagrams</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#special-field-syntax"><em>Special Field Syntax</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#semantics"><em>Semantics</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#grammar"><em>Grammar</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#encouraged-lexical-conventions"><em>Encouraged Lexical Conventions</em></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#project-structure">Project Structure</a></li>
@@ -98,7 +152,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#development-cli">Development CLI</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#commands-1">Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">Commands</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#flags">Flags</a></li>
 </ul>
 </li>
@@ -114,37 +168,103 @@
 <li class="toctree-l1"><a class="reference internal" href="cli.html">cli</a></li>
 </ul>
 
+            
+          
         </div>
+        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">hidebound</a>
+        
       </nav>
 
+
       <div class="wy-nav-content">
+        
         <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a></li>
-      <li class="breadcrumb-item active">Introduction</li>
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Introduction</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
+        
+          
             <a href="_sources/intro.rst.txt" rel="nofollow"> View page source</a>
+          
+        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
-  <section id="introduction">
+            
+  <p>
+    <a href="https://www.linkedin.com/in/alexandergbraun" rel="nofollow noreferrer">
+        <img src="https://www.gomezaparicio.com/wp-content/uploads/2012/03/linkedin-logo-1-150x150.png"
+             alt="linkedin" width="30px" height="30px"
+        >
+    </a>
+    <a href="https://github.com/theNewFlesh" rel="nofollow noreferrer">
+        <img src="https://tadeuzagallo.com/GithubPulse/assets/img/app-icon-github.png"
+             alt="github" width="30px" height="30px"
+        >
+    </a>
+    <a href="https://pypi.org/user/the-new-flesh" rel="nofollow noreferrer">
+        <img src="https://cdn.iconscout.com/icon/free/png-256/python-2-226051.png"
+             alt="pypi" width="30px" height="30px"
+        >
+    </a>
+    <a href="http://vimeo.com/user3965452" rel="nofollow noreferrer">
+        <img src="https://cdn1.iconfinder.com/data/icons/somacro___dpi_social_media_icons_by_vervex-dfjq/500/vimeo.png"
+             alt="vimeo" width="30px" height="30px"
+        >
+    </a>
+    <a href="http://www.alexgbraun.com" rel="nofollow noreferrer">
+        <img src="https://i.ibb.co/fvyMkpM/logo.png"
+             alt="alexgbraun" width="30px" height="30px"
+        >
+    </a>
+</p><section id="introduction">
 <h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h1>
-<p>A local database service for converting directories of arbitrary files
-into validated assets and derived metadata for export to databases like
-AWS S3 and MongoDB.</p>
-<p>See <a class="reference external" href="https://thenewflesh.github.io/hidebound/">documentation</a> for
-details.</p>
+<p>A local database service for converting directories of arbitrary files into
+validated assets and derived metadata for export to databases like AWS S3 and
+MongoDB.</p>
+<p>See <a class="reference external" href="https://thenewflesh.github.io/hidebound/">documentation</a> for details.</p>
 </section>
 <section id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h1>
@@ -175,188 +295,173 @@ details.</p>
 </section>
 <section id="overview">
 <h1>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h1>
-<p>Hidebound is an ephemeral database and asset framework used for
-generating, validating and exporting assets to various data stores.
-Hidebound enables developers to ingest arbitrary sets of files and
-output them as content and generated metadata, which has validated
-according to specifications they define.</p>
-<p>Assets are placed into an ingress directory, typically reserved for
-Hidebound projects, and then processed by Hidebound. Hidebound extracts
-metadata from the files and directories that make each asset according
-to their name, location and file properties. This data comprises the
-entirety of Hidebound’s database at any one time.</p>
+<p>Hidebound is an ephemeral database and asset framework used for generating,
+validating and exporting assets to various data stores. Hidebound enables
+developers to ingest arbitrary sets of files and output them as content and
+generated metadata, which has validated according to specifications they define.</p>
+<p>Assets are placed into an ingress directory, typically reserved for Hidebound
+projects, and then processed by Hidebound. Hidebound extracts metadata from the
+files and directories that make each asset according to their name, location and
+file properties. This data comprises the entirety of Hidebound’s database at any
+one time.</p>
 </section>
 <section id="dataflow">
 <h1>Dataflow<a class="headerlink" href="#dataflow" title="Permalink to this heading">¶</a></h1>
-<p><img alt="image0" src="resources/screenshots/data_flow.png" /></p>
-<p>Data begins as files on disk. Hidebound creates a JSON-compatible dict
-from their name traits and file traits and then constructs an internal
-database table from them, one dict per row. All the rows are then
-aggregated by asset, and converted into JSON blobs. Those blobs are then
-validated according to their respective specifications. Files from valid
-assets are then copied or moved into Hidebound’s content directory,
-according to their same directory structure and naming. Metadata is
-written to JSON files inside Hidebound’s metadata directory. Each file’s
-metadata is written as a JSON file in /hidebound/metadata/file, and each
-asset’s metadata (the aggregate of its file metadata) is written to
+<a class="reference external image-reference" href="resources/screenshots/data_flow.png"><img alt="" src="resources/screenshots/data_flow.png" /></a>
+<p>Data begins as files on disk. Hidebound creates a JSON-compatible dict from
+their name traits and file traits and then constructs an internal database table
+from them, one dict per row. All the rows are then aggregated by asset, and
+converted into JSON blobs. Those blobs are then validated according to their
+respective specifications. Files from valid assets are then copied or moved into
+Hidebound’s content directory, according to their same directory structure and
+naming. Metadata is written to JSON files inside Hidebound’s metadata directory.
+Each file’s metadata is written as a JSON file in /hidebound/metadata/file, and
+each asset’s metadata (the aggregate of its file metadata) is written to
 /hidebound/metadata/asset. From their exporters, can export the valid
-asset data and its accompanying metadata to various locations, like an
-AWS S3 bucket.</p>
+asset data and its accompanying metadata to various locations, like an AWS S3
+bucket.</p>
 </section>
 <section id="workflow">
 <h1>Workflow<a class="headerlink" href="#workflow" title="Permalink to this heading">¶</a></h1>
-<p>The acronynm to remember for workflows is <strong>CRUDES</strong>: create, read,
-update, delete, export and search. Those operations constitue the main
-functionality that Hidebound supports.</p>
+<p>The acronynm to remember for workflows is <strong>CRUDES</strong>: create, read, update,
+delete, export and search. Those operations constitue the main functionality
+that Hidebound supports.</p>
 <section id="create-asset">
 <h2><em>Create Asset</em><a class="headerlink" href="#create-asset" title="Permalink to this heading">¶</a></h2>
-<p>For example, an asset could be an image sequence, such as a directory
-full of PNG files, all of which have a frame number, have 3 (RGB)
-channels, and are 1024 pixels wide by 1024 pixels tall. Let’s call the
-specification for this type of asset “spec001”. We create an image
-sequence of a cat running, and we move it into the Hidebound projects
-directory.</p>
+<p>For example, an asset could be an image sequence, such as a directory full of
+PNG files, all of which have a frame number, have 3 (RGB) channels, and are 1024
+pixels wide by 1024 pixels tall. Let’s call the specification for this type of
+asset “spec001”. We create an image sequence of a cat running, and we move it
+into the Hidebound projects directory.</p>
 </section>
 <section id="update">
 <h2><em>Update</em><a class="headerlink" href="#update" title="Permalink to this heading">¶</a></h2>
-<p><img alt="image1" src="resources/screenshots/update.png" /></p>
-<p>We call the update function via Hidebound’s web app. Hidebound creates a
-new database based upon the recursive listing of all the files within
-said directory. This database is displayed to us as a table, with one
-file per row. If we choose to group by asset in the app, the table will
-display one asset per row. Hidebound extracts metadata from each
-filename (not any directory name) as well as from the file itself. That
-metadata is called file_traits. Using only information derived from
-filename and file traits, Hidebound determines which files are grouped
-together as a single asset and the specification of that asset. Asset
-traits are then derived from this set of files (one or more). Finally,
-Hidebound validates each asset according to its determined
-specification. All of this data is displayed as a table within the web
-app. Importantly, all of the errors in filenames, file traits and asset
-traits are included.</p>
+<a class="reference external image-reference" href="resources/screenshots/update.png"><img alt="" src="resources/screenshots/update.png" /></a>
+<p>We call the update function via Hidebound’s web app. Hidebound creates
+a new database based upon the recursive listing of all the files within said
+directory. This database is displayed to us as a table, with one file per row.
+If we choose to group by asset in the app, the table will display one asset per
+row. Hidebound extracts metadata from each filename (not any directory name) as
+well as from the file itself. That metadata is called file_traits. Using only
+information derived from filename and file traits, Hidebound determines which
+files are grouped together as a single asset and the specification of that
+asset. Asset traits are then derived from this set of files (one or more).
+Finally, Hidebound validates each asset according to its determined
+specification. All of this data is displayed as a table within the web app.
+Importantly, all of the errors in filenames, file traits and asset traits are
+included.</p>
 </section>
 <section id="review-graph">
 <h2><em>Review Graph</em><a class="headerlink" href="#review-graph" title="Permalink to this heading">¶</a></h2>
-<p><img alt="image2" src="resources/screenshots/graph.png" /> If we click on the graph tab, we are greeted by a hierarchical
-graph of all our assets in our project directory. Our asset is red,
-meaning it’s invalid. Valid asset’s are green, and all other files and
-directories, including parent directories, are cyan.</p>
+<a class="reference external image-reference" href="resources/screenshots/graph.png"><img alt="" src="resources/screenshots/graph.png" /></a>
+<p>If we click on the graph tab, we are greeted by a hierarchical graph of all our
+assets in our project directory. Our asset is red, meaning it’s invalid. Valid
+asset’s are green, and all other files and directories, including parent
+directories, are cyan.</p>
 </section>
 <section id="diagnose-and-repair">
 <h2><em>Diagnose and Repair</em><a class="headerlink" href="#diagnose-and-repair" title="Permalink to this heading">¶</a></h2>
-<p>We flip back to the data tab. Using table within it, we search (via SQL)
-for our asset within Hidebound’s freshly created database. We see an
-error in one of the filenames, conveniently displayed in red text. The
-descriptor in one orf our filenames has capital letters in it. This
-violates Hidebound’s naming convention, and so we get an error. We go
-and rename the file appropriately and call update again. Our asset is
-now valid. The filenames are correct and we can see in the height and
-width columns, that it’s 1024 by 1024 and the channels column says it
-has three.</p>
+<p>We flip back to the data tab. Using table within it, we search (via SQL) for our
+asset within Hidebound’s freshly created database. We see an error in one of the
+filenames, conveniently displayed in red text. The descriptor in one orf our
+filenames has capital letters in it. This violates Hidebound’s naming
+convention, and so we get an error. We go and rename the file appropriately and
+call update again.  Our asset is now valid. The filenames are correct and we can
+see in the height and width columns, that it’s 1024 by 1024 and the channels
+column says it has three.</p>
 </section>
 <section id="create">
 <h2><em>Create</em><a class="headerlink" href="#create" title="Permalink to this heading">¶</a></h2>
-<p>Next we click the create button. For each valid asset, Hidebound
-generates file and asset metadata as JSON files within the
-hidebound/metadata directory. Hidebound also copies or moves, depending
-on the config write mode, valid files and directories into the
-hidebound/content directory. Hidebound/content and hidebound/metadata
-are both staging directories used for generating a valid ephemeral
-database. We now have a hidebound directory that looks like this
+<p>Next we click the create button. For each valid asset, Hidebound generates file
+and asset metadata as JSON files within the hidebound/metadata directory.
+Hidebound also copies or moves, depending on the config write mode, valid files
+and directories into the hidebound/content directory. Hidebound/content and
+hidebound/metadata are both staging directories used for generating a valid
+ephemeral database. We now have a hidebound directory that looks like this
 (unmentioned assets are collapsed behind the ellipses):</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>/tmp/hidebound
-├── hidebound_config.yaml
+├──<span class="w"> </span>hidebound_config.yaml
 │
-├── specifications
-│   └── specifications.py
+├──<span class="w"> </span>specifications
+│<span class="w">   </span>└──<span class="w"> </span>specifications.py
 │
-├── data
-│   ...
-│   └── p-cat001
-│       └── spec001
-│           └── p-cat001_s-spec001_d-running-cat_v001
-│               ├── p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0001.png
-│               ├── p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0002.png
-│               └── p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png
+├──<span class="w"> </span>data
+│<span class="w">   </span>...
+│<span class="w">   </span>└──<span class="w"> </span>p-cat001
+│<span class="w">       </span>└──<span class="w"> </span>spec001
+│<span class="w">           </span>└──<span class="w"> </span>p-cat001_s-spec001_d-running-cat_v001
+│<span class="w">               </span>├──<span class="w"> </span>p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0001.png
+│<span class="w">               </span>├──<span class="w"> </span>p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0002.png
+│<span class="w">               </span>└──<span class="w"> </span>p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png
 │
-├── metadata
-    ├── asset
-    │   ...
-    │   └── a9f3727c-cb9b-4eb1-bc84-a6bc3b756cc5.json
-    │
-    └── file
-        ...
-        ├── 279873a2-bfd0-4757-abf2-7dc4f771f992.json
-        ├── e50160ae-8678-40b3-b766-ee8311b1f0c9.json
-        └── ea95bd79-cb8f-4262-8489-efe734c5f65c.json
+├──<span class="w"> </span>metadata
+<span class="w">    </span>├──<span class="w"> </span>asset
+<span class="w">    </span>│<span class="w">   </span>...
+<span class="w">    </span>│<span class="w">   </span>└──<span class="w"> </span>a9f3727c-cb9b-4eb1-bc84-a6bc3b756cc5.json
+<span class="w">    </span>│
+<span class="w">    </span>└──<span class="w"> </span>file
+<span class="w">        </span>...
+<span class="w">        </span>├──<span class="w"> </span>279873a2-bfd0-4757-abf2-7dc4f771f992.json
+<span class="w">        </span>├──<span class="w"> </span>e50160ae-8678-40b3-b766-ee8311b1f0c9.json
+<span class="w">        </span>└──<span class="w"> </span>ea95bd79-cb8f-4262-8489-efe734c5f65c.json
 </pre></div>
 </div>
 </section>
 <section id="export">
 <h2><em>Export</em><a class="headerlink" href="#export" title="Permalink to this heading">¶</a></h2>
-<p>The hidebound directories contain only valid assets. Thus, we are now
-free to export this data to various data stores, such as AWS S3,
-MongoDB, and Girder. Exporters are are defined within the exporters
-subpackage. They expect a populated hidebound directory and use the
-files and metadata therein to export hidebound data. Exporter
-configurations are stored in the hidebound config, under the “exporters”
-key. Currently supported exporters include, disk, s3 and girder. Below
-we can see the results of an export to Girder in the Girder web app.</p>
-<p><img alt="image3" src="resources/screenshots/girder.png" /></p>
+<p>The hidebound directories contain only valid assets. Thus, we are now free to
+export this data to various data stores, such as AWS S3, MongoDB, and Girder.
+Exporters are are defined within the exporters subpackage. They expect a
+populated hidebound directory and use the files and metadata therein to export
+hidebound data. Exporter configurations are stored in the hidebound config,
+under the “exporters” key. Currently supported exporters include, disk, s3 and
+girder. Below we can see the results of an export to Girder in the Girder web
+app.</p>
+<a class="reference external image-reference" href="resources/screenshots/girder.png"><img alt="" src="resources/screenshots/girder.png" /></a>
 </section>
 <section id="delete">
 <h2><em>Delete</em><a class="headerlink" href="#delete" title="Permalink to this heading">¶</a></h2>
-<p>Once this export process is complete, we may click the delete button.
-Hidebound deletes the hidebound/content and hidebound/metdata
-directories and all their contents. If write_mode in the Hidebound
-configuration is set to “copy”, then this step will merely delete data
-created by Hidebound. If it is set to “move”, then Hidebound will
-presumably delete, the only existing copy of out asset data on the host
-machine. The delete stage in combination with the removal of assets from
-the ingress directory is what makes Hidebound’s database ephemeral.</p>
+<p>Once this export process is complete, we may click the delete button. Hidebound
+deletes the hidebound/content and hidebound/metdata directories and all their
+contents. If write_mode in the Hidebound configuration is set to “copy”, then
+this step will merely delete data created by Hidebound. If it is set to “move”,
+then Hidebound will presumably delete, the only existing copy of out asset data
+on the host machine. The delete stage in combination with the removal of assets
+from the ingress directory is what makes Hidebound’s database ephemeral.</p>
 </section>
-<section id="workflow-1">
-<span id="id1"></span><h2><em>Workflow</em><a class="headerlink" href="#workflow-1" title="Permalink to this heading">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">/api/workflow</span></code> is a API endpoint that initializes a database a with a
-given config, and then calls each method from a given list. For
-instance, if you send this data to <code class="docutils literal notranslate"><span class="pre">/api/workflow</span></code>:</p>
+<section id="id2">
+<h2><em>Workflow</em><a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">/api/workflow</span></code> is a API endpoint that initializes a database a with a given
+config, and then calls each method from a given list. For instance, if you send
+this data to <code class="docutils literal notranslate"><span class="pre">/api/workflow</span></code>:</p>
 <p><code class="docutils literal notranslate"><span class="pre">{config={...},</span> <span class="pre">workflow=['update',</span> <span class="pre">'create',</span> <span class="pre">'export',</span> <span class="pre">'delete']}</span></code></p>
 <p>A database instance will be created with the given config, and then that
-instance will call its update, create, export and delete methods, in
-that order.</p>
+instance will call its update, create, export and delete methods, in that order.</p>
 </section>
 </section>
 <section id="naming-convention">
 <h1>Naming Convention<a class="headerlink" href="#naming-convention" title="Permalink to this heading">¶</a></h1>
-<p>Hidebound is a highly opinionated framework that relies upon a strict
-but composable naming convention in order to extract metadata from
-filenames. All files and directories that are part of assets must
-conform to a naming convention defined within that asset’s
-specification.</p>
-<p>In an over-simplified sense; sentences are constructions of words.
-Syntax concerns how each word is formed, grammar concerns how to form
-words into a sentence, and semantics concerns what each word means.
-Similarly, filenames can be thought of as crude sentences. They are made
-of several words (ie fields). These words have distinct semantics (as
-determines by field indicators). Each word is constructed according to a
-syntax (ie indicator + token). All words are joined together by spaces
-(ie underscores) in a particular order as determined by grammar (as
-defined in each specification).</p>
+<p>Hidebound is a highly opinionated framework that relies upon a strict but
+composable naming convention in order to extract metadata from filenames. All
+files and directories that are part of assets must conform to a naming
+convention defined within that asset’s specification.</p>
+<p>In an over-simplified sense; sentences are constructions of words. Syntax
+concerns how each word is formed, grammar concerns how to form words into a
+sentence, and semantics concerns what each word means. Similarly, filenames can
+be thought of as crude sentences. They are made of several words (ie fields).
+These words have distinct semantics (as determines by field indicators). Each
+word is constructed according to a syntax (ie indicator + token). All words are
+joined together by spaces (ie underscores) in a particular order as determined
+by grammar (as defined in each specification).</p>
 <section id="syntax">
 <h2><em>Syntax</em><a class="headerlink" href="#syntax" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
-<li><p>Names consist of a series of fields, each separated by a single
-underscore “_”, also called a field separator.</p></li>
-<li><p>Periods, “.”, are the exception to this, as it indicates file
-extension.</p></li>
+<li><p>Names consist of a series of fields, each separated by a single underscore
+“_”, also called a field separator.</p></li>
+<li><p>Periods, “.”, are the exception to this, as it indicates file extension.</p></li>
 <li><p>Legal characters include and only include:</p></li>
 </ul>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 31%" />
-<col style="width: 20%" />
-<col style="width: 49%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
 <th class="head"><p>Characters</p></th>
@@ -391,10 +496,6 @@ extension.</p></li>
 </table>
 <p>Fields are comprised of two main parts:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 23%" />
-<col style="width: 77%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
 <th class="head"><p>Use</p></th>
@@ -410,85 +511,230 @@ extension.</p></li>
 </tbody>
 </table>
 </section>
+<hr class="docutils" />
+<section id="example-diagrams">
+<h2><strong>Example Diagrams</strong><a class="headerlink" href="#example-diagrams" title="Permalink to this heading">¶</a></h2>
+<p>In our example filename:
+<code class="docutils literal notranslate"><span class="pre">p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png</span></code> the metadata will be:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;project&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cat001&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;specification&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;spec001&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;descriptor&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;running-cat&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;coordinate&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;frame&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;extension&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;png&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The spec001 specification is derived from the second field of this filename:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="w">      </span>field<span class="w">   </span>field
+<span class="w">  </span>indicator<span class="w">   </span>token
+<span class="w">          </span><span class="p">|</span><span class="w"> </span>__<span class="p">|</span>__
+<span class="w">         </span><span class="p">|</span><span class="w"> </span><span class="p">|</span><span class="w">     </span><span class="p">|</span>
+p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png
+<span class="w">         </span><span class="p">|</span>_______<span class="p">|</span>
+<span class="w">             </span><span class="p">|</span>
+<span class="w">           </span>field
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Part</p></th>
+<th class="head"><p>Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Field</p></td>
+<td><p>s-spec001</p></td>
+</tr>
+<tr class="row-odd"><td><p>Field indicator</p></td>
+<td><p>s-</p></td>
+</tr>
+<tr class="row-even"><td><p>Field token</p></td>
+<td><p>spec001</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived metadata</p></td>
+<td><p>{specification: spec001}</p></td>
+</tr>
+</tbody>
+</table>
 </section>
+<section id="special-field-syntax">
+<h2><em>Special Field Syntax</em><a class="headerlink" href="#special-field-syntax" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Projects begin with 3 or 4 letters followed by 1 to 4 numbers</p></li>
+<li><p>Specifications begin with 3 or 4 letters followed by 3 numbers</p></li>
+<li><p>Descriptors begin with a letter or number and may also contain hyphens</p></li>
+<li><p>Descriptors may not begin with the words master, final or last</p></li>
+<li><p>Versions are triple-padded with zeros and must be greater than 0</p></li>
+<li><p>Coordinates may contain up to 3 quadruple-padded numbers, separated by hyphens</p></li>
+<li><p>Coordinates are always evaluated in XYZ order. For example: <code class="docutils literal notranslate"><span class="pre">c0001-0002-0003</span></code>
+produces <code class="docutils literal notranslate"><span class="pre">{x:</span> <span class="pre">1,</span> <span class="pre">y:</span> <span class="pre">2,</span> <span class="pre">z:</span> <span class="pre">3}</span></code>.</p></li>
+<li><p>Each element of a coordinate may be equal to or greater than zero</p></li>
+<li><p>Frames are quadruple-padded and are greater than or equal to 0</p></li>
+<li><p>Extensions may only contain upper and lower case letters a to z and numbers 0
+to 9</p></li>
+</ul>
+</section>
+<section id="semantics">
+<h2><em>Semantics</em><a class="headerlink" href="#semantics" title="Permalink to this heading">¶</a></h2>
+<p>Hidebound is highly opionated, especially with regards to its semantics. It
+contains exactly seven field types, as indicated by their field indicators.
+They are:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Indicator</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>project</p></td>
+<td><p>p-</p></td>
+</tr>
+<tr class="row-odd"><td><p>specification</p></td>
+<td><p>s-</p></td>
+</tr>
+<tr class="row-even"><td><p>descriptor</p></td>
+<td><p>d-</p></td>
+</tr>
+<tr class="row-odd"><td><p>version</p></td>
+<td><p>v</p></td>
+</tr>
+<tr class="row-even"><td><p>coordinate</p></td>
+<td><p>c</p></td>
+</tr>
+<tr class="row-odd"><td><p>frame</p></td>
+<td><p>f</p></td>
+</tr>
+<tr class="row-even"><td><p>extension</p></td>
+<td><p>.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="grammar">
+<h2><em>Grammar</em><a class="headerlink" href="#grammar" title="Permalink to this heading">¶</a></h2>
+<p>The grammar is fairly simple:</p>
+<ul class="simple">
+<li><p>Names are comprised of an ordered set of fields drawn from the seven above</p></li>
+<li><p>All names must contain the specification field</p></li>
+<li><p>All specification must define a field order</p></li>
+<li><p>All fields of a name under that specification must occcur in its defined
+field order</p></li>
+</ul>
+<p>Its is highly encouraged that fields be defined in the following order:</p>
+<p><code class="docutils literal notranslate"><span class="pre">project</span> <span class="pre">specification</span> <span class="pre">descriptor</span> <span class="pre">version</span> <span class="pre">coordinate</span> <span class="pre">frame</span> <span class="pre">extension</span></code></p>
+<p>The grammatical concept of field order here is one of rough encapsulation:</p>
+<ul class="simple">
+<li><p>Projects contain assets</p></li>
+<li><p>Assets are grouped by specification</p></li>
+<li><p>A set of assets of the same content is grouped by a descriptor</p></li>
+<li><p>That set of assets consists of multiple versions of the same content</p></li>
+<li><p>A single asset may broken into chunks, identified by 1, 2 or 3 coordinates</p></li>
+<li><p>Each chunk may consist of a series of files seperated by frame number</p></li>
+<li><p>Each file has an extension</p></li>
+</ul>
+</section>
+<section id="encouraged-lexical-conventions">
+<h2><em>Encouraged Lexical Conventions</em><a class="headerlink" href="#encouraged-lexical-conventions" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Specifications end with a triple padded number so that they may be explicitely
+versioned. You redefine an asset specification to something slightly
+different, by copying its specification class, adding one to its name and
+change the class attributes in some way. That way you always maintain
+backwards compatibility with legacy assets.</p></li>
+<li><p>Descriptors are not a dumping ground for useless terms like wtf, junk, stuff,
+wip and test.</p></li>
+<li><p>Descriptors should not specify information known at the asset specification
+level, such as the project name, the generic content of the asset (ie image,
+mask, png, etc).</p></li>
+<li><p>Descriptors should not include information that can be known from the
+preceding tokens, such as version, frame or extension.</p></li>
+<li><p>A descriptor should be applicable to every version of the asset it designates.</p></li>
+<li><p>Use of hyphens in descriptors is encouraged.</p></li>
+<li><p>When in doubt, hyphenate and put into the descriptor.</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
 <section id="project-structure">
 <h1>Project Structure<a class="headerlink" href="#project-structure" title="Permalink to this heading">¶</a></h1>
-<p>Hidebound does not formally define a project structure. It merely
-stipulates that assets must exist under some particular root directory.
-Each asset specification does define a directory structure for the files
-that make up that asset. Assets are divided into 3 types: file, sequence
-and complex. File defines an asset that consists of a single file.
-Sequence is defined to be a single directory containing one or more
-files. Complex is for assets that consist of an arbitrarily complex
-layout of directories and files.</p>
+<p>Hidebound does not formally define a project structure. It merely stipulates
+that assets must exist under some particular root directory. Each asset
+specification does define a directory structure for the files that make up that
+asset. Assets are divided into 3 types: file, sequence and complex. File defines
+an asset that consists of a single file. Sequence is defined to be a single
+directory containing one or more files. Complex is for assets that consist of an
+arbitrarily complex layout of directories and files.</p>
 <p>The following project structure is recommended:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>project
-    <span class="p">|</span>-- specification
-        <span class="p">|</span>-- descriptor
-            <span class="p">|</span>-- asset      <span class="c1"># either a file or directory of files and directories</span>
-                <span class="p">|</span>- file
+<span class="w">    </span><span class="p">|</span>--<span class="w"> </span>specification
+<span class="w">        </span><span class="p">|</span>--<span class="w"> </span>descriptor
+<span class="w">            </span><span class="p">|</span>--<span class="w"> </span>asset<span class="w">      </span><span class="c1"># either a file or directory of files and directories</span>
+<span class="w">                </span><span class="p">|</span>-<span class="w"> </span>file
 </pre></div>
 </div>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>/tmp/projects
-└── p-cat001
-    ├── s-spec002
-    │   ├── d-calico-jumping
-    │   │   └── p-cat001_s-spec002_d-calico-jumping_v001
-    │   │       ├── p-cat001_s-spec002_d-calico-jumping_v001_f0001.png
-    │   │       ├── p-cat001_s-spec002_d-calico-jumping_v001_f0002.png
-    │   │       └── p-cat001_s-spec002_d-calico-jumping_v001_f0003.png
-    │   │
-    │   └── d-tabby-playing
-    │       ├── p-cat001_s-spec002_d-tabby-playing_v001
-    │       │   ├── p-cat001_s-spec002_d-tabby-playing_v001_f0001.png
-    │       │   ├── p-cat001_s-spec002_d-tabby-playing_v001_f0002.png
-    │       │   └── p-cat001_s-spec002_d-tabby-playing_v001_f0003.png
-    │       │
-    │       └── p-cat001_s-spec002_d-tabby-playing_v002
-    │           ├── p-cat001_s-spec002_d-tabby-playing_v002_f0001.png
-    │           ├── p-cat001_s-spec002_d-tabby-playing_v002_f0002.png
-    │           └── p-cat001_s-spec002_d-tabby-playing_v002_f0003.png
-    │
-    └── spec001
-        └── p-cat001_s-spec001_d-running-cat_v001
-            ├── p-cat001_s-spec001_d-Running-Cat_v001_c0000-0005_f0002.png
-            ├── p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0001.png
-            └── p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png
+└──<span class="w"> </span>p-cat001
+<span class="w">    </span>├──<span class="w"> </span>s-spec002
+<span class="w">    </span>│<span class="w">   </span>├──<span class="w"> </span>d-calico-jumping
+<span class="w">    </span>│<span class="w">   </span>│<span class="w">   </span>└──<span class="w"> </span>p-cat001_s-spec002_d-calico-jumping_v001
+<span class="w">    </span>│<span class="w">   </span>│<span class="w">       </span>├──<span class="w"> </span>p-cat001_s-spec002_d-calico-jumping_v001_f0001.png
+<span class="w">    </span>│<span class="w">   </span>│<span class="w">       </span>├──<span class="w"> </span>p-cat001_s-spec002_d-calico-jumping_v001_f0002.png
+<span class="w">    </span>│<span class="w">   </span>│<span class="w">       </span>└──<span class="w"> </span>p-cat001_s-spec002_d-calico-jumping_v001_f0003.png
+<span class="w">    </span>│<span class="w">   </span>│
+<span class="w">    </span>│<span class="w">   </span>└──<span class="w"> </span>d-tabby-playing
+<span class="w">    </span>│<span class="w">       </span>├──<span class="w"> </span>p-cat001_s-spec002_d-tabby-playing_v001
+<span class="w">    </span>│<span class="w">       </span>│<span class="w">   </span>├──<span class="w"> </span>p-cat001_s-spec002_d-tabby-playing_v001_f0001.png
+<span class="w">    </span>│<span class="w">       </span>│<span class="w">   </span>├──<span class="w"> </span>p-cat001_s-spec002_d-tabby-playing_v001_f0002.png
+<span class="w">    </span>│<span class="w">       </span>│<span class="w">   </span>└──<span class="w"> </span>p-cat001_s-spec002_d-tabby-playing_v001_f0003.png
+<span class="w">    </span>│<span class="w">       </span>│
+<span class="w">    </span>│<span class="w">       </span>└──<span class="w"> </span>p-cat001_s-spec002_d-tabby-playing_v002
+<span class="w">    </span>│<span class="w">           </span>├──<span class="w"> </span>p-cat001_s-spec002_d-tabby-playing_v002_f0001.png
+<span class="w">    </span>│<span class="w">           </span>├──<span class="w"> </span>p-cat001_s-spec002_d-tabby-playing_v002_f0002.png
+<span class="w">    </span>│<span class="w">           </span>└──<span class="w"> </span>p-cat001_s-spec002_d-tabby-playing_v002_f0003.png
+<span class="w">    </span>│
+<span class="w">    </span>└──<span class="w"> </span>spec001
+<span class="w">        </span>└──<span class="w"> </span>p-cat001_s-spec001_d-running-cat_v001
+<span class="w">            </span>├──<span class="w"> </span>p-cat001_s-spec001_d-Running-Cat_v001_c0000-0005_f0002.png
+<span class="w">            </span>├──<span class="w"> </span>p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0001.png
+<span class="w">            </span>└──<span class="w"> </span>p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png
 </pre></div>
 </div>
 </section>
 <section id="application">
 <h1>Application<a class="headerlink" href="#application" title="Permalink to this heading">¶</a></h1>
-<p>The Hidebound web application has five sections: data, graph, config,
-api and docs.</p>
+<p>The Hidebound web application has five sections: data, graph, config, api and
+docs.</p>
 <section id="data">
 <h2>Data<a class="headerlink" href="#data" title="Permalink to this heading">¶</a></h2>
 <p>The data tab is the workhorse of the Hidebound app.</p>
-<p><img alt="image4" src="resources/screenshots/data.png" /></p>
+<a class="reference external image-reference" href="resources/screenshots/data.png"><img alt="" src="resources/screenshots/data.png" /></a>
 <p>Its functions are as follows:</p>
-<ul class="simple">
+<ul>
 <li><p>Search - Search the updated database’s data via SQL</p></li>
 <li><p>Dropdown - Groups search results by file or asset</p></li>
 <li><p>Init - Initialized the database with the current config</p></li>
 <li><p>Update - Initializes and updates the database with the current config</p></li>
-<li><p>Create - Copies or moves valid assets to hidebound/content directory
-and creates JSON files in hidebound/metadata directory</p></li>
+<li><p>Create - Copies or moves valid assets to hidebound/content directory and
+.. code-block:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">creates</span> <span class="n">JSON</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">hidebound</span><span class="o">/</span><span class="n">metadata</span> <span class="n">directory</span>
+</pre></div>
+</div>
+</li>
 <li><p>Delete - Deletes hidebound/content and hidebound/metadata directories</p></li>
 </ul>
 <p>Prior to calling update, the application will look like this:</p>
-<p><img alt="image5" src="resources/screenshots/pre_update.png" /></p>
+<a class="reference external image-reference" href="resources/screenshots/pre_update.png"><img alt="" src="resources/screenshots/pre_update.png" /></a>
 </section>
 <section id="graph">
 <h2>Graph<a class="headerlink" href="#graph" title="Permalink to this heading">¶</a></h2>
-<p>The graph tab is used for visualizing the state of all the assets within
-a root directory.</p>
-<p><img alt="image6" src="resources/screenshots/graph.png" /></p>
+<p>The graph tab is used for visualizing the state of all the assets within a root
+directory.</p>
+<a class="reference external image-reference" href="resources/screenshots/graph.png"><img alt="" src="resources/screenshots/graph.png" /></a>
 <p>It’s color code is as follows:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 16%" />
-<col style="width: 84%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Color</p></th>
 <th class="head"><p>Meaning</p></th>
@@ -509,48 +755,41 @@ a root directory.</p>
 </section>
 <section id="config">
 <h2>Config<a class="headerlink" href="#config" title="Permalink to this heading">¶</a></h2>
-<p>The config tab is used for uploading and writing Hidebound’s
-configuration file.</p>
-<p><img alt="image7" src="resources/screenshots/config.png" /></p>
+<p>The config tab is used for uploading and writing Hidebound’s configuration file.</p>
+<a class="reference external image-reference" href="resources/screenshots/config.png"><img alt="" src="resources/screenshots/config.png" /></a>
 </section>
 <section id="api">
 <h2>API<a class="headerlink" href="#api" title="Permalink to this heading">¶</a></h2>
 <p>The API tab is really a link to Hidebound’s REST API documentation.</p>
-<p><img alt="image8" src="resources/screenshots/api.png" /></p>
+<a class="reference external image-reference" href="resources/screenshots/api.png"><img alt="" src="resources/screenshots/api.png" /></a>
 </section>
 <section id="docs">
 <h2>Docs<a class="headerlink" href="#docs" title="Permalink to this heading">¶</a></h2>
 <p>The API tab is really a link to Hidebound’s github documentation.</p>
-<p><img alt="image9" src="resources/screenshots/docs.png" /></p>
+<a class="reference external image-reference" href="resources/screenshots/docs.png"><img alt="" src="resources/screenshots/docs.png" /></a>
 </section>
 <section id="errors">
 <h2>Errors<a class="headerlink" href="#errors" title="Permalink to this heading">¶</a></h2>
-<p>Hidebound is oriented towards developers and technically proficient
-users. It displays errors in their entirety within the application.</p>
-<p><img alt="image10" src="resources/screenshots/error.png" /></p>
+<p>Hidebound is oriented towards developers and technically proficient users. It
+displays errors in their entirety within the application.</p>
+<a class="reference external image-reference" href="resources/screenshots/error.png"><img alt="" src="resources/screenshots/error.png" /></a>
 </section>
 </section>
 <section id="configuration">
 <h1>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading">¶</a></h1>
-<p>Hidebound is configured via a configuration file or environment
-variables.</p>
+<p>Hidebound is configured via a configuration file or environment variables.</p>
 <p>Hidebound configs consist of four main sections:</p>
 <section id="base">
 <h2>Base<a class="headerlink" href="#base" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
-<li><p>ingress_directory - the directory hidebound parses for assets that
-comprise its database</p></li>
+<li><p>ingress_directory - the directory hidebound parses for assets that comprise its database</p></li>
 <li><p>staging_directory - the staging directory valid assets are created in</p></li>
 <li><p>specification_files - a list of python specification files</p></li>
-<li><p>include_regex - filepaths in the root that match this are included in
-the database</p></li>
-<li><p>exclude_regex - filepaths in the root that match this are excluded
-from the database</p></li>
+<li><p>include_regex - filepaths in the root that match this are included in the database</p></li>
+<li><p>exclude_regex - filepaths in the root that match this are excluded from the database</p></li>
 <li><p>write_mode - whether to copy or move files from root to staging</p></li>
-<li><p>redact_regex - regular expression which matches config keys whose
-valuse are to be redacted</p></li>
-<li><p>redact_hash - whether to redact config values with “REDACTED” or a
-hash of the value</p></li>
+<li><p>redact_regex - regular expression which matches config keys whose valuse are to be redacted</p></li>
+<li><p>redact_hash - whether to redact config values with “REDACTED” or a hash of the value</p></li>
 <li><p>workflow - order list of steps to be followed in workflow</p></li>
 </ul>
 </section>
@@ -561,13 +800,11 @@ hash of the value</p></li>
 <li><p>cluster_type - dask cluster type</p></li>
 <li><p>num_partitions - number of partions for each dataframe</p></li>
 <li><p>local_num_workers - number of workers on local cluster</p></li>
-<li><p>local_threads_per_worker - number of threads per worker on local
-cluster</p></li>
+<li><p>local_threads_per_worker - number of threads per worker on local cluster</p></li>
 <li><p>local_multiprocessing - use multiprocessing for local cluster</p></li>
 <li><p>gateway_address - gateway server address</p></li>
 <li><p>gateway_proxy_address - <strong>scheduler</strong> proxy server address</p></li>
-<li><p>gateway_public_address - gateway server address, as accessible from a
-web browser</p></li>
+<li><p>gateway_public_address - gateway server address, as accessible from a web browser</p></li>
 <li><p>gateway_auth_type - authentication type</p></li>
 <li><p>gateway_api_token - api token</p></li>
 <li><p>gateway_cluster_options - list of dask gateway cluster options</p></li>
@@ -576,7 +813,8 @@ web browser</p></li>
 </section>
 <section id="exporters">
 <h2>Exporters<a class="headerlink" href="#exporters" title="Permalink to this heading">¶</a></h2>
-<p>Which exporters to us in the workflow. Options include:</p>
+<p>Which exporters to us in the workflow.
+Options include:</p>
 <ul class="simple">
 <li><p>s3</p></li>
 <li><p>disk</p></li>
@@ -591,202 +829,114 @@ web browser</p></li>
 <section id="environment-variables">
 <h2>Environment Variables<a class="headerlink" href="#environment-variables" title="Permalink to this heading">¶</a></h2>
 <p>If <code class="docutils literal notranslate"><span class="pre">HIDEBOUND_CONFIG_FILEPATH</span></code> is set, Hidebound will ignore all other
-environment variables and read the given filepath in as a yaml or json
-config file.</p>
+environment variables and read the given filepath in as a yaml or json config
+file.</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 40%" />
-<col style="width: 4%" />
-<col style="width: 56%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Variable</p></th>
-<th class="head"><p>F
-o
-r
-m
-a
-t</p></th>
+<th class="head"><p>Format</p></th>
 <th class="head"><p>Portion</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>HIDEBOUND_CONFIG_FILEPATH</p></td>
-<td><p>s
-t
-r</p></td>
+<td><p>str</p></td>
 <td><p>Entire Hidebound config file</p></td>
 </tr>
-<tr class="row-odd"><td><p>HI
-DEBOUND_INGRESS_DIRECTORY</p></td>
-<td><p>s
-t
-r</p></td>
-<td><p>ingress_directory parameter of
-config</p></td>
+<tr class="row-odd"><td><p>HIDEBOUND_INGRESS_DIRECTORY</p></td>
+<td><p>str</p></td>
+<td><p>ingress_directory parameter of config</p></td>
 </tr>
-<tr class="row-even"><td><p>HI
-DEBOUND_STAGING_DIRECTORY</p></td>
-<td><p>s
-t
-r</p></td>
-<td><p>staging_directory parameter of
-config</p></td>
+<tr class="row-even"><td><p>HIDEBOUND_STAGING_DIRECTORY</p></td>
+<td><p>str</p></td>
+<td><p>staging_directory parameter of config</p></td>
 </tr>
 <tr class="row-odd"><td><p>HIDEBOUND_INCLUDE_REGEX</p></td>
-<td><p>s
-t
-r</p></td>
+<td><p>str</p></td>
 <td><p>include_regex parameter of config</p></td>
 </tr>
 <tr class="row-even"><td><p>HIDEBOUND_EXCLUDE_REGEX</p></td>
-<td><p>s
-t
-r</p></td>
+<td><p>str</p></td>
 <td><p>exclude_regex parameter of config</p></td>
 </tr>
 <tr class="row-odd"><td><p>HIDEBOUND_WRITE_MODE</p></td>
-<td><p>s
-t
-r</p></td>
+<td><p>str</p></td>
 <td><p>write_mode parameter of config</p></td>
 </tr>
 <tr class="row-even"><td><p>HIDEBOUND_REDACT_REGEX</p></td>
-<td><p>s
-t
-r</p></td>
+<td><p>str</p></td>
 <td><p>redact_regex parameter of config</p></td>
 </tr>
 <tr class="row-odd"><td><p>HIDEBOUND_REDACT_HASH</p></td>
-<td><p>s
-t
-r</p></td>
+<td><p>str</p></td>
 <td><p>redact_hash parameter of config</p></td>
 </tr>
 <tr class="row-even"><td><p>HIDEBOUND_WORKFLOW</p></td>
-<td><p>y
-a
-m
-l</p></td>
+<td><p>yaml</p></td>
 <td><p>workflow paramater of config</p></td>
 </tr>
-<tr class="row-odd"><td><p>HIDE
-BOUND_SPECIFICATION_FILES</p></td>
-<td><p>y
-a
-m
-l</p></td>
-<td><p>specification_files section of
-config</p></td>
+<tr class="row-odd"><td><p>HIDEBOUND_SPECIFICATION_FILES</p></td>
+<td><p>yaml</p></td>
+<td><p>specification_files section of config</p></td>
 </tr>
-<tr class="row-even"><td><p>HI
-DEBOUND_DASK_CLUSTER_TYPE</p></td>
-<td><p>s
-t
-r</p></td>
+<tr class="row-even"><td><p>HIDEBOUND_DASK_CLUSTER_TYPE</p></td>
+<td><p>str</p></td>
 <td><p>dask cluster type</p></td>
 </tr>
-<tr class="row-odd"><td><p>HIDE
-BOUND_DASK_NUM_PARTITIONS</p></td>
-<td><p>i
-n
-t</p></td>
-<td><p>number of partions for each
-dataframe</p></td>
+<tr class="row-odd"><td><p>HIDEBOUND_DASK_NUM_PARTITIONS</p></td>
+<td><p>int</p></td>
+<td><p>number of partions for each dataframe</p></td>
 </tr>
-<tr class="row-even"><td><p>HIDEBOU
-ND_DASK_LOCAL_NUM_WORKERS</p></td>
-<td><p>i
-n
-t</p></td>
+<tr class="row-even"><td><p>HIDEBOUND_DASK_LOCAL_NUM_WORKERS</p></td>
+<td><p>int</p></td>
 <td><p>number of workers on local cluster</p></td>
 </tr>
-<tr class="row-odd"><td><p>HIDEBOUND_DASK
-_LOCAL_THREADS_PER_WORKER</p></td>
-<td><p>i
-n
-t</p></td>
-<td><p>number of threads per worker on
-local cluster</p></td>
+<tr class="row-odd"><td><p>HIDEBOUND_DASK_LOCAL_THREADS_PER_WORKER</p></td>
+<td><p>int</p></td>
+<td><p>number of threads per worker on local cluster</p></td>
 </tr>
-<tr class="row-even"><td><p>HIDEBOUND_D
-ASK_LOCAL_MULTIPROCESSING</p></td>
-<td><p>s
-t
-r</p></td>
-<td><p>use multiprocessing for local
-cluster</p></td>
+<tr class="row-even"><td><p>HIDEBOUND_DASK_LOCAL_MULTIPROCESSING</p></td>
+<td><p>str</p></td>
+<td><p>use multiprocessing for local cluster</p></td>
 </tr>
-<tr class="row-odd"><td><p>HIDEB
-OUND_DASK_GATEWAY_ADDRESS</p></td>
-<td><p>s
-t
-r</p></td>
+<tr class="row-odd"><td><p>HIDEBOUND_DASK_GATEWAY_ADDRESS</p></td>
+<td><p>str</p></td>
 <td><p>gateway server address</p></td>
 </tr>
-<tr class="row-even"><td><p>HIDEBOUND_D
-ASK_GATEWAY_PROXY_ADDRESS</p></td>
-<td><p>s
-t
-r</p></td>
+<tr class="row-even"><td><p>HIDEBOUND_DASK_GATEWAY_PROXY_ADDRESS</p></td>
+<td><p>str</p></td>
 <td><p>scheduler proxy server address</p></td>
 </tr>
-<tr class="row-odd"><td><p>HIDEBOUND_DA
-SK_GATEWAY_PUBLIC_ADDRESS</p></td>
-<td><p>s
-t
-r</p></td>
-<td><p>gateway server address, as
-accessible from a web browser</p></td>
+<tr class="row-odd"><td><p>HIDEBOUND_DASK_GATEWAY_PUBLIC_ADDRESS</p></td>
+<td><p>str</p></td>
+<td><p>gateway server address, as accessible from a web browser</p></td>
 </tr>
-<tr class="row-even"><td><p>HIDEBOU
-ND_DASK_GATEWAY_AUTH_TYPE</p></td>
-<td><p>s
-t
-r</p></td>
+<tr class="row-even"><td><p>HIDEBOUND_DASK_GATEWAY_AUTH_TYPE</p></td>
+<td><p>str</p></td>
 <td><p>authentication type</p></td>
 </tr>
-<tr class="row-odd"><td><p>HIDEBOU
-ND_DASK_GATEWAY_API_TOKEN</p></td>
-<td><p>s
-t
-r</p></td>
+<tr class="row-odd"><td><p>HIDEBOUND_DASK_GATEWAY_API_TOKEN</p></td>
+<td><p>str</p></td>
 <td><p>api token</p></td>
 </tr>
-<tr class="row-even"><td><p>HIDEBOUND_DAS
-K_GATEWAY_CLUSTER_OPTIONS</p></td>
-<td><p>y
-a
-m
-l</p></td>
+<tr class="row-even"><td><p>HIDEBOUND_DASK_GATEWAY_CLUSTER_OPTIONS</p></td>
+<td><p>yaml</p></td>
 <td><p>list of dask gateway cluster options</p></td>
 </tr>
-<tr class="row-odd"><td><p><a href="#id3"><span class="problematic" id="id4">HIDEBOUND_DASK_</span></a>
-GATEWAY_SHUTDOWN_ON_CLOSE</p></td>
-<td><p>s
-t
-r</p></td>
-<td><p>whether to shudown cluster upon
-close</p></td>
+<tr class="row-odd"><td><p>HIDEBOUND_DASK_GATEWAY_SHUTDOWN_ON_CLOSE</p></td>
+<td><p>str</p></td>
+<td><p>whether to shudown cluster upon close</p></td>
 </tr>
 <tr class="row-even"><td><p>HIDEBOUND_EXPORTERS</p></td>
-<td><p>y
-a
-m
-l</p></td>
+<td><p>yaml</p></td>
 <td><p>exporters section of config</p></td>
 </tr>
 <tr class="row-odd"><td><p>HIDEBOUND_WEBHOOKS</p></td>
-<td><p>y
-a
-m
-l</p></td>
+<td><p>yaml</p></td>
 <td><p>webhooks section of config</p></td>
 </tr>
 <tr class="row-even"><td><p>HIDEBOUND_TESTING</p></td>
-<td><p>s
-t
-r</p></td>
+<td><p>str</p></td>
 <td><p>run in test mode</p></td>
 </tr>
 </tbody>
@@ -796,112 +946,111 @@ r</p></td>
 <section id="config-file">
 <h2>Config File<a class="headerlink" href="#config-file" title="Permalink to this heading">¶</a></h2>
 <p>Here is a full example config with comments:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">ingress_directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/storage/projects</span><span class="w">                                 </span><span class="c1"># where hb looks for assets</span><span class="w"></span>
-<span class="nt">staging_directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/storage/hidebound</span><span class="w">                                </span><span class="c1"># hb staging directory</span><span class="w"></span>
-<span class="nt">include_regex</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w">                                                        </span><span class="c1"># include files that match</span><span class="w"></span>
-<span class="nt">exclude_regex</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;\\.DS_Store&quot;</span><span class="w">                                             </span><span class="c1"># exclude files that match</span><span class="w"></span>
-<span class="nt">write_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">copy</span><span class="w">                                                         </span><span class="c1"># copy files from root to staging</span><span class="w"></span>
-<span class="w">                                                                         </span><span class="c1"># options: copy, move</span><span class="w"></span>
-<span class="nt">redact_regex</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;(_key|_id|_token|url)$&quot;</span><span class="w">                                   </span><span class="c1"># regex matched config keys to redact</span><span class="w"></span>
-<span class="nt">redact_hash</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                                                        </span><span class="c1"># hash redacted values</span><span class="w"></span>
-<span class="nt">workflow</span><span class="p">:</span><span class="w">                                                                </span><span class="c1"># workflow steps</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">delete</span><span class="w">                                                               </span><span class="c1"># clear staging directory</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">update</span><span class="w">                                                               </span><span class="c1"># create database from ingress files</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">create</span><span class="w">                                                               </span><span class="c1"># stage valid assets</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">export</span><span class="w">                                                               </span><span class="c1"># export assets in staging</span><span class="w"></span>
-<span class="nt">specification_files</span><span class="p">:</span><span class="w">                                                     </span><span class="c1"># list of spec files</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/storage/specs/image_specs.py</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/storage/specs/video_specs.py</span><span class="w"></span>
-<span class="nt">dask</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">cluster_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">local</span><span class="w">                                                    </span><span class="c1"># Dask cluster type</span><span class="w"></span>
-<span class="w">                                                                         </span><span class="c1"># options: local, gateway</span><span class="w"></span>
-<span class="w">  </span><span class="nt">num_partitions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span><span class="w">                                                     </span><span class="c1"># number of partions for each dataframe</span><span class="w"></span>
-<span class="w">  </span><span class="nt">local_num_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span><span class="w">                                                  </span><span class="c1"># number of workers on local cluster</span><span class="w"></span>
-<span class="w">  </span><span class="nt">local_threads_per_worker</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">                                            </span><span class="c1"># number of threads per worker on local cluster</span><span class="w"></span>
-<span class="w">  </span><span class="nt">local_multiprocessing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                                            </span><span class="c1"># use multiprocessing for local cluster</span><span class="w"></span>
-<span class="w">  </span><span class="nt">gateway_address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://proxy-public/services/dask-gateway</span><span class="w">             </span><span class="c1"># gateway server address</span><span class="w"></span>
-<span class="w">  </span><span class="nt">gateway_proxy_address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gateway://traefik-daskhub-dask-gateway.core:80</span><span class="w">  </span><span class="c1"># scheduler proxy server address</span><span class="w"></span>
-<span class="w">  </span><span class="nt">gateway_public_address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://dask-gateway/services/dask-gateway/</span><span class="w">    </span><span class="c1"># gateway server address, as accessible from a web browser</span><span class="w"></span>
-<span class="w">  </span><span class="nt">gateway_auth_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jupyterhub</span><span class="w">                                          </span><span class="c1"># authentication type</span><span class="w"></span>
-<span class="w">  </span><span class="nt">gateway_api_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">token123</span><span class="w">                                            </span><span class="c1"># api token</span><span class="w"></span>
-<span class="w">  </span><span class="nt">gateway_cluster_options</span><span class="p">:</span><span class="w">                                               </span><span class="c1"># list of dask gateway options</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">field</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">image</span><span class="w">                                                       </span><span class="c1"># option field</span><span class="w"></span>
-<span class="w">      </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">image</span><span class="w">                                                       </span><span class="c1"># option label</span><span class="w"></span>
-<span class="w">      </span><span class="nt">option_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select</span><span class="w">                                                </span><span class="c1"># options: bool, float, int, mapping, select, string</span><span class="w"></span>
-<span class="w">      </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;some-image:latest&quot;</span><span class="w">                                       </span><span class="c1"># option default value</span><span class="w"></span>
-<span class="w">      </span><span class="nt">options</span><span class="p">:</span><span class="w">                                                           </span><span class="c1"># list of choices if option_type is select</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;some-image:latest&quot;</span><span class="w">                                            </span><span class="c1"># choice 1</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;some-image:0.1.2&quot;</span><span class="w">                                             </span><span class="c1"># choice 2</span><span class="w"></span>
-<span class="w">  </span><span class="nt">gateway_shutdown_on_close</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                                        </span><span class="c1"># whether to shudown cluster upon close</span><span class="w"></span>
-<span class="nt">exporters</span><span class="p">:</span><span class="w">                                                               </span><span class="c1"># dict of exporter configs</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">disk</span><span class="w">                                                           </span><span class="c1"># export to disk</span><span class="w"></span>
-<span class="w">    </span><span class="nt">target_directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/storage/archive</span><span class="w">                               </span><span class="c1"># target location</span><span class="w"></span>
-<span class="w">    </span><span class="nt">metadata_types</span><span class="p">:</span><span class="w">                                                      </span><span class="c1"># options: asset, file, asset-chunk, file-chunk</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">asset</span><span class="w">                                                            </span><span class="c1"># only asset and file metadata</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file</span><span class="w"></span>
-<span class="w">    </span><span class="nt">dask</span><span class="p">:</span><span class="w">                                                                </span><span class="c1"># dask settings override</span><span class="w"></span>
-<span class="w">      </span><span class="nt">num_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span><span class="w"></span>
-<span class="w">      </span><span class="nt">local_threads_per_worker</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3</span><span class="w">                                                             </span><span class="c1"># export to s3</span><span class="w"></span>
-<span class="w">    </span><span class="nt">access_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ABCDEFGHIJKLMNOPQRST</span><span class="w">                                     </span><span class="c1"># aws access key</span><span class="w"></span>
-<span class="w">    </span><span class="nt">secret_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">abcdefghijklmnopqrstuvwxyz1234567890abcd</span><span class="w">                 </span><span class="c1"># aws secret key</span><span class="w"></span>
-<span class="w">    </span><span class="nt">bucket</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prod-data</span><span class="w">                                                    </span><span class="c1"># s3 bucket</span><span class="w"></span>
-<span class="w">    </span><span class="nt">region</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us-west-2</span><span class="w">                                                    </span><span class="c1"># bucket region</span><span class="w"></span>
-<span class="w">    </span><span class="nt">metadata_types</span><span class="p">:</span><span class="w">                                                      </span><span class="c1"># options: asset, file, asset-chunk, file-chunk</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">asset</span><span class="w">                                                            </span><span class="c1"># drop file metadata</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">asset-chunk</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file-chunk</span><span class="w"></span>
-<span class="w">    </span><span class="nt">dask</span><span class="p">:</span><span class="w">                                                                </span><span class="c1"># dask settings override</span><span class="w"></span>
-<span class="w">      </span><span class="nt">cluster_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gateway</span><span class="w"></span>
-<span class="w">      </span><span class="nt">num_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">64</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">girder</span><span class="w">                                                         </span><span class="c1"># export to girder</span><span class="w"></span>
-<span class="w">    </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eyS0nj9qPC5E7yK5l7nhGVPqDOBKPdA3EC60Rs9h</span><span class="w">                    </span><span class="c1"># girder api key</span><span class="w"></span>
-<span class="w">    </span><span class="nt">root_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5ed735c8d8dd6242642406e5</span><span class="w">                                    </span><span class="c1"># root resource id</span><span class="w"></span>
-<span class="w">    </span><span class="nt">root_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">collection</span><span class="w">                                                </span><span class="c1"># root resource type</span><span class="w"></span>
-<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://prod.girder.com</span><span class="w">                                         </span><span class="c1"># girder server url</span><span class="w"></span>
-<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8180</span><span class="w">                                                           </span><span class="c1"># girder server port</span><span class="w"></span>
-<span class="w">    </span><span class="nt">metadata_types</span><span class="p">:</span><span class="w">                                                      </span><span class="c1"># options: asset, file</span><span class="w"></span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">asset</span><span class="w">                                                            </span><span class="c1"># only asset metadata</span><span class="w"></span>
-<span class="w">    </span><span class="nt">dask</span><span class="p">:</span><span class="w">                                                                </span><span class="c1"># dask settings override</span><span class="w"></span>
-<span class="w">      </span><span class="nt">num_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"></span>
-<span class="w">    </span><span class="nt">dask</span><span class="p">:</span><span class="w">                                                                </span><span class="c1"># dask settings override</span><span class="w"></span>
-<span class="w">      </span><span class="nt">num_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"></span>
-<span class="nt">webhooks</span><span class="p">:</span><span class="w">                                                                </span><span class="c1"># call these after export</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://hooks.slack.com/services/ABCDEFGHI/JKLMNO</span><span class="w">               </span><span class="c1"># slack URL</span><span class="w"></span>
-<span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">post</span><span class="w">                                                         </span><span class="c1"># post this to slack</span><span class="w"></span>
-<span class="w">    </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w">                                                          </span><span class="c1"># timeout after 60 seconds</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># params: {}                                                         # params to post (NA here)</span><span class="w"></span>
-<span class="w">    </span><span class="c1"># json: {}                                                           # json to post (NA here)</span><span class="w"></span>
-<span class="w">    </span><span class="nt">data</span><span class="p">:</span><span class="w">                                                                </span><span class="c1"># data to post</span><span class="w"></span>
-<span class="w">      </span><span class="nt">channel</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#hidebound&quot;</span><span class="w">                                              </span><span class="c1"># slack data</span><span class="w"></span>
-<span class="w">      </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">export complete</span><span class="w">                                              </span><span class="c1"># slack data</span><span class="w"></span>
-<span class="w">      </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hidebound</span><span class="w">                                                </span><span class="c1"># slack data</span><span class="w"></span>
-<span class="w">    </span><span class="nt">headers</span><span class="p">:</span><span class="w">                                                             </span><span class="c1"># request headers</span><span class="w"></span>
-<span class="w">      </span><span class="nt">Content-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">application/json</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">ingress_directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/storage/projects</span><span class="w">                                 </span><span class="c1"># where hb looks for assets</span>
+<span class="nt">staging_directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/storage/hidebound</span><span class="w">                                </span><span class="c1"># hb staging directory</span>
+<span class="nt">include_regex</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w">                                                        </span><span class="c1"># include files that match</span>
+<span class="nt">exclude_regex</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;\\.DS_Store&quot;</span><span class="w">                                             </span><span class="c1"># exclude files that match</span>
+<span class="nt">write_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">copy</span><span class="w">                                                         </span><span class="c1"># copy files from root to staging</span>
+<span class="w">                                                                         </span><span class="c1"># options: copy, move</span>
+<span class="nt">redact_regex</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;(_key|_id|_token|url)$&quot;</span><span class="w">                                   </span><span class="c1"># regex matched config keys to redact</span>
+<span class="nt">redact_hash</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                                                        </span><span class="c1"># hash redacted values</span>
+<span class="nt">workflow</span><span class="p">:</span><span class="w">                                                                </span><span class="c1"># workflow steps</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">delete</span><span class="w">                                                               </span><span class="c1"># clear staging directory</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">update</span><span class="w">                                                               </span><span class="c1"># create database from ingress files</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">create</span><span class="w">                                                               </span><span class="c1"># stage valid assets</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">export</span><span class="w">                                                               </span><span class="c1"># export assets in staging</span>
+<span class="nt">specification_files</span><span class="p">:</span><span class="w">                                                     </span><span class="c1"># list of spec files</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/storage/specs/image_specs.py</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/storage/specs/video_specs.py</span>
+<span class="nt">dask</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">cluster_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">local</span><span class="w">                                                    </span><span class="c1"># Dask cluster type</span>
+<span class="w">                                                                         </span><span class="c1"># options: local, gateway</span>
+<span class="w">  </span><span class="nt">num_partitions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span><span class="w">                                                     </span><span class="c1"># number of partions for each dataframe</span>
+<span class="w">  </span><span class="nt">local_num_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span><span class="w">                                                  </span><span class="c1"># number of workers on local cluster</span>
+<span class="w">  </span><span class="nt">local_threads_per_worker</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">                                            </span><span class="c1"># number of threads per worker on local cluster</span>
+<span class="w">  </span><span class="nt">local_multiprocessing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                                            </span><span class="c1"># use multiprocessing for local cluster</span>
+<span class="w">  </span><span class="nt">gateway_address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://proxy-public/services/dask-gateway</span><span class="w">             </span><span class="c1"># gateway server address</span>
+<span class="w">  </span><span class="nt">gateway_proxy_address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gateway://traefik-daskhub-dask-gateway.core:80</span><span class="w">  </span><span class="c1"># scheduler proxy server address</span>
+<span class="w">  </span><span class="nt">gateway_public_address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://dask-gateway/services/dask-gateway/</span><span class="w">    </span><span class="c1"># gateway server address, as accessible from a web browser</span>
+<span class="w">  </span><span class="nt">gateway_auth_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jupyterhub</span><span class="w">                                          </span><span class="c1"># authentication type</span>
+<span class="w">  </span><span class="nt">gateway_api_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">token123</span><span class="w">                                            </span><span class="c1"># api token</span>
+<span class="w">  </span><span class="nt">gateway_cluster_options</span><span class="p">:</span><span class="w">                                               </span><span class="c1"># list of dask gateway options</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">field</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">image</span><span class="w">                                                       </span><span class="c1"># option field</span>
+<span class="w">      </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">image</span><span class="w">                                                       </span><span class="c1"># option label</span>
+<span class="w">      </span><span class="nt">option_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">select</span><span class="w">                                                </span><span class="c1"># options: bool, float, int, mapping, select, string</span>
+<span class="w">      </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;some-image:latest&quot;</span><span class="w">                                       </span><span class="c1"># option default value</span>
+<span class="w">      </span><span class="nt">options</span><span class="p">:</span><span class="w">                                                           </span><span class="c1"># list of choices if option_type is select</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;some-image:latest&quot;</span><span class="w">                                            </span><span class="c1"># choice 1</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;some-image:0.1.2&quot;</span><span class="w">                                             </span><span class="c1"># choice 2</span>
+<span class="w">  </span><span class="nt">gateway_shutdown_on_close</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                                        </span><span class="c1"># whether to shudown cluster upon close</span>
+<span class="nt">exporters</span><span class="p">:</span><span class="w">                                                               </span><span class="c1"># dict of exporter configs</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">disk</span><span class="w">                                                           </span><span class="c1"># export to disk</span>
+<span class="w">    </span><span class="nt">target_directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/storage/archive</span><span class="w">                               </span><span class="c1"># target location</span>
+<span class="w">    </span><span class="nt">metadata_types</span><span class="p">:</span><span class="w">                                                      </span><span class="c1"># options: asset, file, asset-chunk, file-chunk</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">asset</span><span class="w">                                                            </span><span class="c1"># only asset and file metadata</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file</span>
+<span class="w">    </span><span class="nt">dask</span><span class="p">:</span><span class="w">                                                                </span><span class="c1"># dask settings override</span>
+<span class="w">      </span><span class="nt">num_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
+<span class="w">      </span><span class="nt">local_threads_per_worker</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3</span><span class="w">                                                             </span><span class="c1"># export to s3</span>
+<span class="w">    </span><span class="nt">access_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ABCDEFGHIJKLMNOPQRST</span><span class="w">                                     </span><span class="c1"># aws access key</span>
+<span class="w">    </span><span class="nt">secret_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">abcdefghijklmnopqrstuvwxyz1234567890abcd</span><span class="w">                 </span><span class="c1"># aws secret key</span>
+<span class="w">    </span><span class="nt">bucket</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prod-data</span><span class="w">                                                    </span><span class="c1"># s3 bucket</span>
+<span class="w">    </span><span class="nt">region</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us-west-2</span><span class="w">                                                    </span><span class="c1"># bucket region</span>
+<span class="w">    </span><span class="nt">metadata_types</span><span class="p">:</span><span class="w">                                                      </span><span class="c1"># options: asset, file, asset-chunk, file-chunk</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">asset</span><span class="w">                                                            </span><span class="c1"># drop file metadata</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">asset-chunk</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">file-chunk</span>
+<span class="w">    </span><span class="nt">dask</span><span class="p">:</span><span class="w">                                                                </span><span class="c1"># dask settings override</span>
+<span class="w">      </span><span class="nt">cluster_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gateway</span>
+<span class="w">      </span><span class="nt">num_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">64</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">girder</span><span class="w">                                                         </span><span class="c1"># export to girder</span>
+<span class="w">    </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eyS0nj9qPC5E7yK5l7nhGVPqDOBKPdA3EC60Rs9h</span><span class="w">                    </span><span class="c1"># girder api key</span>
+<span class="w">    </span><span class="nt">root_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5ed735c8d8dd6242642406e5</span><span class="w">                                    </span><span class="c1"># root resource id</span>
+<span class="w">    </span><span class="nt">root_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">collection</span><span class="w">                                                </span><span class="c1"># root resource type</span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://prod.girder.com</span><span class="w">                                         </span><span class="c1"># girder server url</span>
+<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8180</span><span class="w">                                                           </span><span class="c1"># girder server port</span>
+<span class="w">    </span><span class="nt">metadata_types</span><span class="p">:</span><span class="w">                                                      </span><span class="c1"># options: asset, file</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">asset</span><span class="w">                                                            </span><span class="c1"># only asset metadata</span>
+<span class="w">    </span><span class="nt">dask</span><span class="p">:</span><span class="w">                                                                </span><span class="c1"># dask settings override</span>
+<span class="w">      </span><span class="nt">num_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">    </span><span class="nt">dask</span><span class="p">:</span><span class="w">                                                                </span><span class="c1"># dask settings override</span>
+<span class="w">      </span><span class="nt">num_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="nt">webhooks</span><span class="p">:</span><span class="w">                                                                </span><span class="c1"># call these after export</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://hooks.slack.com/services/ABCDEFGHI/JKLMNO</span><span class="w">               </span><span class="c1"># slack URL</span>
+<span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">post</span><span class="w">                                                         </span><span class="c1"># post this to slack</span>
+<span class="w">    </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w">                                                          </span><span class="c1"># timeout after 60 seconds</span>
+<span class="w">    </span><span class="c1"># params: {}                                                         # params to post (NA here)</span>
+<span class="w">    </span><span class="c1"># json: {}                                                           # json to post (NA here)</span>
+<span class="w">    </span><span class="nt">data</span><span class="p">:</span><span class="w">                                                                </span><span class="c1"># data to post</span>
+<span class="w">      </span><span class="nt">channel</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#hidebound&quot;</span><span class="w">                                              </span><span class="c1"># slack data</span>
+<span class="w">      </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">export complete</span><span class="w">                                              </span><span class="c1"># slack data</span>
+<span class="w">      </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hidebound</span><span class="w">                                                </span><span class="c1"># slack data</span>
+<span class="w">    </span><span class="nt">headers</span><span class="p">:</span><span class="w">                                                             </span><span class="c1"># request headers</span>
+<span class="w">      </span><span class="nt">Content-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">application/json</span>
 </pre></div>
 </div>
 </section>
 </section>
 <section id="specification">
 <h1>Specification<a class="headerlink" href="#specification" title="Permalink to this heading">¶</a></h1>
-<p>Asset specifications are defined in python using the base classes found
-in specification_base.py. The base classes are defined using the
-schematics framework. Hidebound generates a single JSON blob of metadata
-for each file of an asset, and then combines blob into a single blob
-with a list values per key. Thus every class member defined with
-schematics is encapsulated with ListType.</p>
+<p>Asset specifications are defined in python using the base classes found in
+specification_base.py. The base classes are defined using the schematics
+framework. Hidebound generates a single JSON blob of metadata for each file of
+an asset, and then combines blob into a single blob with a list values per key.
+Thus every class member defined with schematics is encapsulated with ListType.</p>
 <section id="example-asset">
 <h2>Example asset<a class="headerlink" href="#example-asset" title="Permalink to this heading">¶</a></h2>
-<p>Suppose we have an image sequence asset that we wish to define a
-specificqtion for. Our image sequences consist of a directory containing
-1 or 3 channel png with frame numbers in the filename.</p>
+<p>Suppose we have an image sequence asset that we wish to define a specificqtion
+for. Our image sequences consist of a directory containing 1 or 3 channel png
+with frame numbers in the filename.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>projects
-    └── cat001
-        └── raw001
-            └── p-cat001_s-raw001_d-calico-jumping_v001
-                ├── p-cat001_s-raw001_d-calico-jumping_v001_f0001.png
-                ├── p-cat001_s-raw001_d-calico-jumping_v001_f0002.png
-                └── p-cat001_s-raw001_d-calico-jumping_v001_f0003.png
+<span class="w">    </span>└──<span class="w"> </span>cat001
+<span class="w">        </span>└──<span class="w"> </span>raw001
+<span class="w">            </span>└──<span class="w"> </span>p-cat001_s-raw001_d-calico-jumping_v001
+<span class="w">                </span>├──<span class="w"> </span>p-cat001_s-raw001_d-calico-jumping_v001_f0001.png
+<span class="w">                </span>├──<span class="w"> </span>p-cat001_s-raw001_d-calico-jumping_v001_f0002.png
+<span class="w">                </span>└──<span class="w"> </span>p-cat001_s-raw001_d-calico-jumping_v001_f0003.png
 </pre></div>
 </div>
 </section>
@@ -956,78 +1105,16 @@ specificqtion for. Our image sequences consist of a directory containing
 <p>Its usage pattern is: <code class="docutils literal notranslate"><span class="pre">hidebound</span> <span class="pre">COMMAND</span> <span class="pre">[FLAGS]</span> <span class="pre">[-h</span> <span class="pre">--help]</span></code></p>
 <section id="commands">
 <h2>Commands<a class="headerlink" href="#commands" title="Permalink to this heading">¶</a></h2>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 12%" />
-<col style="width: 70%" />
-<col style="width: 5%" />
-<col style="width: 14%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>C
-ommand</p></th>
-<th class="head"><p>Description</p></th>
-<th class="head"><p>F
-l
-a
-g
-s</p></th>
-<th class="head"><p>Flag
-Desc
-ription</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>config</p></td>
-<td><p>Prints hidebound config</p></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p>server</p></td>
-<td><p>Runs a hidebound server</p></td>
-<td><p>–
-d
-e
-b
-u
-g</p></td>
-<td><p>Enable
-debug
-mode</p></td>
-</tr>
-<tr class="row-even"><td><p>bas
-h-comp
-letion</p></td>
-<td><p>Prints BASH completion code to be written to
-a _hidebound completion file</p></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p>zs
-h-comp
-letion</p></td>
-<td><p>Prints ZSH completion code to be written to
-a _hidebound completion file</p></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
 </section>
 </section>
 <section id="development-cli">
 <h1>Development CLI<a class="headerlink" href="#development-cli" title="Permalink to this heading">¶</a></h1>
-<p>bin/hidebound is a command line interface (defined in cli.py) that works
-with any version of python 2.7 and above, as it has no dependencies.</p>
-<p>Its usage pattern is:
-<code class="docutils literal notranslate"><span class="pre">bin/hidebound</span> <span class="pre">COMMAND</span> <span class="pre">[-a</span> <span class="pre">--args]=ARGS</span> <span class="pre">[-h</span> <span class="pre">--help]</span> <span class="pre">[--dryrun]</span></code></p>
-<section id="commands-1">
-<span id="id2"></span><h2>Commands<a class="headerlink" href="#commands-1" title="Permalink to this heading">¶</a></h2>
+<p>bin/hidebound is a command line interface (defined in cli.py) that works with
+any version of python 2.7 and above, as it has no dependencies.</p>
+<p>Its usage pattern is: <code class="docutils literal notranslate"><span class="pre">bin/hidebound</span> <span class="pre">COMMAND</span> <span class="pre">[-a</span> <span class="pre">--args]=ARGS</span> <span class="pre">[-h</span> <span class="pre">--help]</span> <span class="pre">[--dryrun]</span></code></p>
+<section id="id3">
+<h2>Commands<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h2>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 22%" />
-<col style="width: 78%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Command</p></th>
 <th class="head"><p>Description</p></th>
@@ -1041,8 +1128,7 @@ with any version of python 2.7 and above, as it has no dependencies.</p>
 <td><p>Publish pip package of repo to PyPi</p></td>
 </tr>
 <tr class="row-even"><td><p>build-publish</p></td>
-<td><p>Run production tests first then publish pip package
-of repo to PyPi</p></td>
+<td><p>Run production tests first then publish pip package of repo to PyPi</p></td>
 </tr>
 <tr class="row-odd"><td><p>build-test</p></td>
 <td><p>Build test version of repo for prod testing</p></td>
@@ -1050,26 +1136,20 @@ of repo to PyPi</p></td>
 <tr class="row-even"><td><p>docker-build</p></td>
 <td><p>Build image of hidebound</p></td>
 </tr>
-<tr class="row-odd"><td><p>dock
-er-build-prod</p></td>
+<tr class="row-odd"><td><p>docker-build-prod</p></td>
 <td><p>Build production image of hidebound</p></td>
 </tr>
-<tr class="row-even"><td><p>doc
-ker-container</p></td>
+<tr class="row-even"><td><p>docker-container</p></td>
 <td><p>Display the Docker container id of hidebound</p></td>
 </tr>
-<tr class="row-odd"><td><p>do
-cker-coverage</p></td>
+<tr class="row-odd"><td><p>docker-coverage</p></td>
 <td><p>Generate coverage report for hidebound</p></td>
 </tr>
-<tr class="row-even"><td><p>d
-ocker-destroy</p></td>
+<tr class="row-even"><td><p>docker-destroy</p></td>
 <td><p>Shutdown hidebound container and destroy its image</p></td>
 </tr>
-<tr class="row-odd"><td><p>docker
--destroy-prod</p></td>
-<td><p>Shutdown hidebound production container and destroy
-its image</p></td>
+<tr class="row-odd"><td><p>docker-destroy-prod</p></td>
+<td><p>Shutdown hidebound production container and destroy its image</p></td>
 </tr>
 <tr class="row-even"><td><p>docker-image</p></td>
 <td><p>Display the Docker image id of hidebound</p></td>
@@ -1083,8 +1163,7 @@ its image</p></td>
 <tr class="row-odd"><td><p>docker-remove</p></td>
 <td><p>Remove hidebound Docker image</p></td>
 </tr>
-<tr class="row-even"><td><p>d
-ocker-restart</p></td>
+<tr class="row-even"><td><p>docker-restart</p></td>
 <td><p>Restart hidebound container</p></td>
 </tr>
 <tr class="row-odd"><td><p>docker-start</p></td>
@@ -1096,14 +1175,11 @@ ocker-restart</p></td>
 <tr class="row-odd"><td><p>docs</p></td>
 <td><p>Generate sphinx documentation</p></td>
 </tr>
-<tr class="row-even"><td><p>docs
--architecture</p></td>
-<td><p>Generate architecture.svg diagram from all import
-statements</p></td>
+<tr class="row-even"><td><p>docs-architecture</p></td>
+<td><p>Generate architecture.svg diagram from all import statements</p></td>
 </tr>
 <tr class="row-odd"><td><p>docs-full</p></td>
-<td><p>Generate documentation, coverage report, diagram and
-code</p></td>
+<td><p>Generate documentation, coverage report, diagram and code</p></td>
 </tr>
 <tr class="row-even"><td><p>docs-metrics</p></td>
 <td><p>Generate code metrics report, plots and tables</p></td>
@@ -1111,58 +1187,43 @@ code</p></td>
 <tr class="row-odd"><td><p>library-add</p></td>
 <td><p>Add a given package to a given dependency group</p></td>
 </tr>
-<tr class="row-even"><td><p>libr
-ary-graph-dev</p></td>
+<tr class="row-even"><td><p>library-graph-dev</p></td>
 <td><p>Graph dependencies in dev environment</p></td>
 </tr>
-<tr class="row-odd"><td><p>libra
-ry-graph-prod</p></td>
+<tr class="row-odd"><td><p>library-graph-prod</p></td>
 <td><p>Graph dependencies in prod environment</p></td>
 </tr>
-<tr class="row-even"><td><p>librar
-y-install-dev</p></td>
+<tr class="row-even"><td><p>library-install-dev</p></td>
 <td><p>Install all dependencies into dev environment</p></td>
 </tr>
-<tr class="row-odd"><td><p>library
--install-prod</p></td>
+<tr class="row-odd"><td><p>library-install-prod</p></td>
 <td><p>Install all dependencies into prod environment</p></td>
 </tr>
-<tr class="row-even"><td><p>lib
-rary-list-dev</p></td>
+<tr class="row-even"><td><p>library-list-dev</p></td>
 <td><p>List packages in dev environment</p></td>
 </tr>
-<tr class="row-odd"><td><p>libr
-ary-list-prod</p></td>
+<tr class="row-odd"><td><p>library-list-prod</p></td>
 <td><p>List packages in prod environment</p></td>
 </tr>
-<tr class="row-even"><td><p>lib
-rary-lock-dev</p></td>
+<tr class="row-even"><td><p>library-lock-dev</p></td>
 <td><p>Resolve dev.lock file</p></td>
 </tr>
-<tr class="row-odd"><td><p>libr
-ary-lock-prod</p></td>
+<tr class="row-odd"><td><p>library-lock-prod</p></td>
 <td><p>Resolve prod.lock file</p></td>
 </tr>
-<tr class="row-even"><td><p>l
-ibrary-remove</p></td>
+<tr class="row-even"><td><p>library-remove</p></td>
 <td><p>Remove a given package from a given dependency group</p></td>
 </tr>
-<tr class="row-odd"><td><p>l
-ibrary-search</p></td>
+<tr class="row-odd"><td><p>library-search</p></td>
 <td><p>Search for pip packages</p></td>
 </tr>
-<tr class="row-even"><td><p>lib
-rary-sync-dev</p></td>
-<td><p>Sync dev environment with packages listed in
-dev.lock</p></td>
+<tr class="row-even"><td><p>library-sync-dev</p></td>
+<td><p>Sync dev environment with packages listed in dev.lock</p></td>
 </tr>
-<tr class="row-odd"><td><p>libr
-ary-sync-prod</p></td>
-<td><p>Sync prod environment with packages listed in
-prod.lock</p></td>
+<tr class="row-odd"><td><p>library-sync-prod</p></td>
+<td><p>Sync prod environment with packages listed in prod.lock</p></td>
 </tr>
-<tr class="row-even"><td><p>l
-ibrary-update</p></td>
+<tr class="row-even"><td><p>library-update</p></td>
 <td><p>Update dev dependencies</p></td>
 </tr>
 <tr class="row-odd"><td><p>session-app</p></td>
@@ -1171,8 +1232,7 @@ ibrary-update</p></td>
 <tr class="row-even"><td><p>session-lab</p></td>
 <td><p>Run jupyter lab server</p></td>
 </tr>
-<tr class="row-odd"><td><p>s
-ession-python</p></td>
+<tr class="row-odd"><td><p>session-python</p></td>
 <td><p>Run python session with dev dependencies</p></td>
 </tr>
 <tr class="row-even"><td><p>state</p></td>
@@ -1185,8 +1245,7 @@ ession-python</p></td>
 <td><p>Run all tests</p></td>
 </tr>
 <tr class="row-odd"><td><p>test-fast</p></td>
-<td><p>Test all code excepts tests marked with
-SKIP_SLOWS_TESTS decorator</p></td>
+<td><p>Test all code excepts tests marked with SKIP_SLOWS_TESTS decorator</p></td>
 </tr>
 <tr class="row-even"><td><p>test-lint</p></td>
 <td><p>Run linting and type checking</p></td>
@@ -1195,19 +1254,15 @@ SKIP_SLOWS_TESTS decorator</p></td>
 <td><p>Run tests across all support python versions</p></td>
 </tr>
 <tr class="row-even"><td><p>version</p></td>
-<td><p>Full resolution of repo: dependencies, linting,
-tests, docs, etc</p></td>
+<td><p>Full resolution of repo: dependencies, linting, tests, docs, etc</p></td>
 </tr>
-<tr class="row-odd"><td><p>versi
-on-bump-major</p></td>
+<tr class="row-odd"><td><p>version-bump-major</p></td>
 <td><p>Bump pyproject major version</p></td>
 </tr>
-<tr class="row-even"><td><p>versi
-on-bump-minor</p></td>
+<tr class="row-even"><td><p>version-bump-minor</p></td>
 <td><p>Bump pyproject minor version</p></td>
 </tr>
-<tr class="row-odd"><td><p>versi
-on-bump-patch</p></td>
+<tr class="row-odd"><td><p>version-bump-patch</p></td>
 <td><p>Bump pyproject patch version</p></td>
 </tr>
 <tr class="row-even"><td><p>zsh</p></td>
@@ -1225,11 +1280,6 @@ on-bump-patch</p></td>
 <section id="flags">
 <h2>Flags<a class="headerlink" href="#flags" title="Permalink to this heading">¶</a></h2>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 8%" />
-<col style="width: 11%" />
-<col style="width: 81%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Short</p></th>
 <th class="head"><p>Long</p></th>
@@ -1245,7 +1295,7 @@ on-bump-patch</p></td>
 <td><p>–help</p></td>
 <td><p>Prints command help message to stdout</p></td>
 </tr>
-<tr class="row-even"><td><p></p></td>
+<tr class="row-even"><td></td>
 <td><p>–dryrun</p></td>
 <td><p>Prints command that would otherwise be run to stdout</p></td>
 </tr>
@@ -1256,33 +1306,50 @@ on-bump-patch</p></td>
 
 
            </div>
+           
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to hidebound’ documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="modules.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to hidebound’ documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
-  </div>
+    <p>
+        &#169; Copyright 2022, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
         </div>
       </div>
+
     </section>
+
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>
