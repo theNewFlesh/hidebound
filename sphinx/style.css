@@ -1,3 +1,7 @@
+body {
+    background: #242424 !important;
+}
+
 a,
 a:visited {
     color: #B6ECF3 !important;
@@ -241,17 +245,9 @@ span[id*='MathJax-Span'] {
     padding-left: 40px !important;
 }
 
-/* Custom table widths */
-#environment-variables {
-    min-width: 950px;
-}
-
-#configuration {
-    min-width: 980px;
-}
-
-#commands {
-    min-width: 960px;
+.rst-content code.literal,
+.rst-content tt.literal {
+    white-space: pre-wrap;
 }
 
 /* Architecture Diagram */
