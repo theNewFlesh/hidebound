@@ -320,8 +320,6 @@ x_docs () {
     cd $REPO_DIR;
     echo "${CYAN2}GENERATING DOCS${CLEAR}\n";
     mkdir -p docs;
-    m2r2 README.md;
-    mv README.rst sphinx/intro.rst;
     sphinx-build sphinx docs;
     cp -f sphinx/style.css docs/_static/style.css;
     touch docs/.nojekyll;

@@ -688,10 +688,10 @@ Its usage pattern is: `hidebound COMMAND [FLAGS] [-h --help]`
 ### Commands
 | Command         | Description                                                               | Flags   | Flag Description  |
 | --------------- | --------------------------------------------------------------------------| ------- | ----------------- |
-| config          | Prints hidebound config                                                   |         |                   |
+| config          | Prints hidebound config                                                   | -       | -                 |
 | server          | Runs a hidebound server                                                   | --debug | Enable debug mode |
-| bash-completion | Prints BASH completion code to be written to a _hidebound completion file |         |                   |
-| zsh-completion  | Prints ZSH completion code to be written to a _hidebound completion file  |         |                   |
+| bash-completion | Prints BASH completion code to be written to a _hidebound completion file | -       | -                 |
+| zsh-completion  | Prints ZSH completion code to be written to a _hidebound completion file  | -       | -                 |
 
 # Development CLI
 bin/hidebound is a command line interface (defined in cli.py) that works with
@@ -761,4 +761,4 @@ Its usage pattern is: `bin/hidebound COMMAND [-a --args]=ARGS [-h --help] [--dry
 | ----- | --------- | ---------------------------------------------------- |
 | -a    | --args    | Additional arguments, this can generally be ignored  |
 | -h    | --help    | Prints command help message to stdout                |
-|       | --dryrun  | Prints command that would otherwise be run to stdout |
+| -     | --dryrun  | Prints command that would otherwise be run to stdout |

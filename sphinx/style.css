@@ -15,6 +15,10 @@ p {
     margin-bottom: 5px;
 }
 
+h2 {
+    font-size: 120%;
+}
+
 .btn,
 .btn-neutral,
 .btn:visited,
@@ -199,6 +203,7 @@ span[id*='MathJax-Span'] {
 .rst-content table.docutils thead th {
     background: #343434 !important;
     color: #B6ECF3 !important;
+    border: 0px solid #242424 !important;
     border-bottom: 1px solid #B6ECF3 !important;
 }
 
