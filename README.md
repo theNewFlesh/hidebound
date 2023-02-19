@@ -738,6 +738,7 @@ Its usage pattern is: `bin/hidebound COMMAND [-a --args]=ARGS [-h --help] [--dry
 | library-sync-dev     | Sync dev environment with packages listed in dev.lock               |
 | library-sync-prod    | Sync prod environment with packages listed in prod.lock             |
 | library-update       | Update dev dependencies                                             |
+| library-update-pdm   | Update PDM                                                          |
 | session-app          | Run app                                                             |
 | session-lab          | Run jupyter lab server                                              |
 | session-python       | Run python session with dev dependencies                            |
