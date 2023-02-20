@@ -44,8 +44,9 @@ dependencies = [
     "pyyaml",
     "requests",
     "rolling-pin",
-    "scikit-image",
     "schematics",
+    "scikit-image",
+    "sqlalchemy<=1.4.46",
     "werkzeug",
     "wrapt",
 ]

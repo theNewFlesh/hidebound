@@ -578,10 +578,8 @@ class Database:
         Returns:
             DataFrame: Formatted data.
         '''
-        result = pandasql.sqldf(
-            query,
-            {'data': self.read(group_by_asset=group_by_asset)}
-        )
+        env = {'data': self.read(group_by_asset=group_by_asset)}
+        result = pandasql.PandaSQL()(query, env)
         self._logger.info(f'search: {query}', step=1, total=1)
         self._logger.info('search: complete', step=1, total=1)
         return result
