@@ -26,6 +26,7 @@
     </a>
 </p>
 
+[![PyPI version](https://badge.fury.io/py/hidebound.svg)](https://badge.fury.io/py/hidebound)
 
 # Introduction
 A local database service for converting directories of arbitrary files into
