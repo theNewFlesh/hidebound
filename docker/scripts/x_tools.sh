@@ -468,9 +468,9 @@ x_library_remove () {
     echo "${CYAN2}REMOVING PACKAGE FROM DEV DEPENDENCIES${CLEAR}\n";
     cd $PDM_DIR;
     if [ "$2" = '' ] || [ "$2" = 'default' ]; then
-        pdm remove $1 -v;
+        pdm remove --no-self $1 -v;
     else
-        pdm remove -dG $2 $1 -v;
+        pdm remove --no-self -dG $2 $1 -v;
     fi;
     _x_library_pdm_to_repo_dev;
 }
