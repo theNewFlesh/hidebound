@@ -15,7 +15,7 @@
         >
     </a>
     <a href="http://vimeo.com/user3965452" rel="nofollow noreferrer">
-        <img src="https://cdn1.iconfinder.com/data/icons/somacro___dpi_social_media_icons_by_vervex-dfjq/500/vimeo.png"
+        <img src="https://cdn.iconscout.com/icon/free/png-512/movie-52-151107.png?f=avif&w=512"
              alt="vimeo" width="30px" height="30px"
         >
     </a>
@@ -26,7 +26,12 @@
     </a>
 </p>
 
-[![PyPI version](https://badge.fury.io/py/hidebound.svg)](https://badge.fury.io/py/hidebound)
+<!-- <img id="logo" src="resources/icon.png" style="max-width: 717px"> -->
+
+[![](https://img.shields.io/badge/License-MIT-F77E70.svg?style=for-the-badge)](https://github.com/theNewFlesh/hidebound/blob/master/LICENSE)
+[![](https://img.shields.io/pypi/pyversions/hidebound?style=for-the-badge&label=Python&color=A0D17B&logo=python&logoColor=A0D17B)](https://github.com/theNewFlesh/hidebound/blob/master/docker/config/pyproject.toml)
+[![](https://img.shields.io/pypi/v/hidebound?style=for-the-badge&label=PyPI&color=5F95DE&logo=pypi&logoColor=5F95DE)](https://pypi.org/project/hidebound/)
+[![](https://img.shields.io/pypi/dm/hidebound?style=for-the-badge&label=Downloads&color=5F95DE)](https://pepy.tech/project/hidebound)
 
 # Introduction
 A local database service for converting directories of arbitrary files into

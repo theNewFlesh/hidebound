@@ -265,3 +265,10 @@ h1 {
     margin-top: 12px;
     margin-bottom: 12px;
 }
+
+/* Logo */
+@media screen and (max-width: 717px) {
+    #logo {
+        max-width: 100% !important;
+    }
+}
