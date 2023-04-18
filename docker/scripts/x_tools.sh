@@ -118,7 +118,7 @@ _x_gen_pyproject () {
 }
 
 _x_gen_pdm_files () {
-    # Generate pyproject.tom, .pdm.toml and pdm.lock files
+    # Generate pyproject.tom, pdm.toml and pdm.lock files
     # args: mode, python version
 
     # pyproject.toml
@@ -128,14 +128,13 @@ _x_gen_pdm_files () {
     rm -f $PDM_DIR/pdm.lock;
     cp -f $CONFIG_DIR/$1.lock $PDM_DIR/pdm.lock;
 
-    # get python path
-    local pypath=`_x_env_get_python $1 $2`;
+    # .pdm-python
+    _x_env_get_python $1 $2 > $PDM_DIR/.pdm-python;
 
-    # .pdm.toml
+    # pdm.toml
     rolling-pin toml $CONFIG_DIR/pdm.toml \
         --edit "venv.prompt=\"$1-{python_version}\"" \
-        --edit "python.path=\"$pypath\"" \
-        --target $PDM_DIR/.pdm.toml;
+        --target $PDM_DIR/pdm.toml;
 }
 
 # ENV-FUNCTIONS-----------------------------------------------------------------
