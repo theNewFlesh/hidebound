@@ -54,7 +54,7 @@ See [documentation](https://thenewflesh.github.io/hidebound/) for details.
 4. `git clone git@github.com:theNewFlesh/hidebound.git`
 5. `cd hidebound`
 6. `chmod +x bin/hidebound`
-7. `bin/hidebound start`
+7. `bin/hidebound docker-start`
 
 The service should take a few minutes to start up.
 
