@@ -1,6 +1,6 @@
 .. hidebound documentation master file
 
-Welcome to hidebound' documentation!
+Welcome to hidebound's documentation!
 ====================================
 .. toctree::
    :maxdepth: 1

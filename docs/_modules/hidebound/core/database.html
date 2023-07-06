@@ -1,37 +1,75 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
   <title>hidebound.core.database &mdash; hidebound  documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
-    <script src="../../../_static/js/theme.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
+
+   
   <div class="wy-grid-for-nav">
+    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
+          
+
+          
             <a href="../../../index.html" class="icon icon-home"> hidebound
+          
+
+          
           </a>
+
+          
+            
+            
               <div class="version">
-                0.31.0
+                0.31.5
               </div>
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -39,16 +77,31 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
               <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#installation">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#overview">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#dataflow">Dataflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#workflow">Workflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#naming-convention">Naming Convention</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#specification">Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">1.0 Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#installation">2.0 Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#dataflow">3.0 Dataflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#workflow">4.0 Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#naming-convention">5.0 Naming Convention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#project-structure">6.0 Project Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#application">7.0 Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#configuration">8.0 Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#specification">9.0 Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#production-cli">10.0 Production CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#development-cli">11.0 Development CLI</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
@@ -56,35 +109,74 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../exporters.html">exporters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../server.html">server</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Developer CLI</span></p>
+<p class="caption" role="heading"><span class="caption-text">Development CLI</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
 </ul>
 
+            
+          
         </div>
+        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">hidebound</a>
+        
       </nav>
 
+
       <div class="wy-nav-content">
+        
         <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">hidebound.core.database</li>
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>hidebound.core.database</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
+        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
+            
   <h1>Source code for hidebound.core.database</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>  <span class="c1"># noqa F401</span>
 
@@ -119,13 +211,13 @@
 
 
 <div class="viewcode-block" id="Database"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database">[docs]</a><span class="k">class</span> <span class="nc">Database</span><span class="p">:</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Generates a DataFrame using the files within a given directory as rows.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 <div class="viewcode-block" id="Database.from_config"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.from_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_config</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
         <span class="c1"># type: (Dict[str, Any]) -&gt; &quot;Database&quot;</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Constructs a Database instance given a valid config.</span>
 
 <span class="sd">        Args:</span>
@@ -175,7 +267,7 @@
 <div class="viewcode-block" id="Database.from_json"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.from_json">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_json</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
         <span class="c1"># type: (Union[str, Path]) -&gt; &quot;Database&quot;</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Constructs a Database instance from a given json file.</span>
 
 <span class="sd">        Args:</span>
@@ -191,7 +283,7 @@
 <div class="viewcode-block" id="Database.from_yaml"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.from_yaml">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_yaml</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
         <span class="c1"># type: (Union[str, Path]) -&gt; &quot;Database&quot;</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Constructs a Database instance from a given yaml file.</span>
 
 <span class="sd">        Args:</span>
@@ -218,7 +310,7 @@
         <span class="n">testing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>                <span class="c1"># type: bool</span>
     <span class="p">):</span>
         <span class="c1"># type: (...) -&gt; None</span>
-        <span class="sa">r</span><span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Creates an instance of Database but does not populate it with data.</span>
 
 <span class="sd">        Args:</span>
@@ -321,7 +413,7 @@
 
 <div class="viewcode-block" id="Database.create"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; &quot;Database&quot;</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Extract valid assets as data and metadata within the hidebound</span>
 <span class="sd">        directory.</span>
 
@@ -417,7 +509,7 @@
 
 <div class="viewcode-block" id="Database.read"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group_by_asset</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="c1"># type: (bool) -&gt; &quot;DataFrame&quot;</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Return a DataFrame which can be easily be queried and has only cells</span>
 <span class="sd">        with scalar values.</span>
 
@@ -506,7 +598,7 @@
 
 <div class="viewcode-block" id="Database.update"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; &quot;Database&quot;</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Recurse root directory, populate self.data with its files, locate and</span>
 <span class="sd">        validate assets.</span>
 
@@ -549,7 +641,7 @@
 
 <div class="viewcode-block" id="Database.delete"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; &quot;Database&quot;</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Deletes hidebound/content and hidebound/metadata directories and all their</span>
 <span class="sd">        contents.</span>
 
@@ -572,7 +664,7 @@
 
 <div class="viewcode-block" id="Database.call_webhooks"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.call_webhooks">[docs]</a>    <span class="k">def</span> <span class="nf">call_webhooks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type () -&gt; requests.Response</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Calls webhooks defined in config.</span>
 
 <span class="sd">        Yields:</span>
@@ -620,7 +712,7 @@
 
 <div class="viewcode-block" id="Database.export"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.export">[docs]</a>    <span class="k">def</span> <span class="nf">export</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; &quot;Database&quot;</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Exports all the files found in in hidebound root directory.</span>
 <span class="sd">        Calls webhooks afterwards.</span>
 
@@ -655,7 +747,7 @@
 
 <div class="viewcode-block" id="Database.search"><a class="viewcode-back" href="../../../core.html#hidebound.core.database.Database.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">group_by_asset</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="c1"># type: (str, bool) -&gt; &quot;DataFrame&quot;</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Search data according to given SQL query.</span>
 
 <span class="sd">        Args:</span>
@@ -666,40 +758,54 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            DataFrame: Formatted data.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">pandasql</span><span class="o">.</span><span class="n">sqldf</span><span class="p">(</span>
-            <span class="n">query</span><span class="p">,</span>
-            <span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">group_by_asset</span><span class="o">=</span><span class="n">group_by_asset</span><span class="p">)}</span>
-        <span class="p">)</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">group_by_asset</span><span class="o">=</span><span class="n">group_by_asset</span><span class="p">)}</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">pandasql</span><span class="o">.</span><span class="n">PandaSQL</span><span class="p">()(</span><span class="n">query</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;search: </span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;search: complete&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span></div></div>
 </pre></div>
 
            </div>
+           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
-  </div>
+    <p>
+        &#169; Copyright 2022, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
         </div>
       </div>
+
     </section>
+
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>
