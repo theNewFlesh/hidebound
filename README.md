@@ -33,7 +33,7 @@
 [![](https://img.shields.io/pypi/v/hidebound?style=for-the-badge&label=PyPI&color=5F95DE&logo=pypi&logoColor=5F95DE)](https://pypi.org/project/hidebound/)
 [![](https://img.shields.io/pypi/dm/hidebound?style=for-the-badge&label=Downloads&color=5F95DE)](https://pepy.tech/project/hidebound)
 
-# Overview
+# 1.0 Overview
 Directory of files in, validated assets out.
 
 Hidebound is an ephemeral database and asset framework used for generating,
@@ -49,15 +49,15 @@ one time.
 
 See [documentation](https://thenewflesh.github.io/hidebound/) for details.
 
-# Installation
-### Python
+# 2.0 Installation
+### 2.1 Python
 `pip install hidebound`
 
-### Docker
+### 2.2 Docker
 1. Install [docker-desktop](https://docs.docker.com/desktop/)
 2. `docker pull thenewflesh/hidebound:latest`
 
-### Docker For Developers
+### 2.3 Docker For Developers
 1. Install [docker-desktop](https://docs.docker.com/desktop/)
 2. Ensure docker-desktop has at least 4 GB of memory allocated to it.
 4. `git clone git@github.com:theNewFlesh/hidebound.git`
@@ -69,7 +69,7 @@ The service should take a few minutes to start up.
 
 Run `bin/hidebound --help` for more help on the command line tool.
 
-# Dataflow
+# 3.0 Dataflow
 ![](resources/screenshots/data_flow.png)
 
 Data begins as files on disk. Hidebound creates a JSON-compatible dict from
@@ -85,19 +85,19 @@ each asset's metadata (the aggregate of its file metadata) is written to
 asset data and its accompanying metadata to various locations, like an AWS S3
 bucket.
 
-# Workflow
+# 4.0 Workflow
 The acronynm to remember for workflows is **CRUDES**: create, read, update,
 delete, export and search. Those operations constitue the main functionality
 that Hidebound supports.
 
-### *Create Asset*
+### 4.1 *Create Asset*
 For example, an asset could be an image sequence, such as a directory full of
 PNG files, all of which have a frame number, have 3 (RGB) channels, and are 1024
 pixels wide by 1024 pixels tall. Let's call the specification for this type of
 asset "spec001". We create an image sequence of a cat running, and we move it
 into the Hidebound projects directory.
 
-### *Update*
+### 4.2 *Update*
 ![](resources/screenshots/update.png)
 
 We call the update function via Hidebound's web app. Hidebound creates
@@ -114,14 +114,14 @@ specification. All of this data is displayed as a table within the web app.
 Importantly, all of the errors in filenames, file traits and asset traits are
 included.
 
-### *Review Graph*
+### 4.3 *Review Graph*
 ![](resources/screenshots/graph.png)
 If we click on the graph tab, we are greeted by a hierarchical graph of all our
 assets in our project directory. Our asset is red, meaning it's invalid. Valid
 asset's are green, and all other files and directories, including parent
 directories, are cyan.
 
-### *Diagnose and Repair*
+### 4.4 *Diagnose and Repair*
 We flip back to the data tab. Using table within it, we search (via SQL) for our
 asset within Hidebound's freshly created database. We see an error in one of the
 filenames, conveniently displayed in red text. The descriptor in one orf our
@@ -131,7 +131,7 @@ call update again.  Our asset is now valid. The filenames are correct and we can
 see in the height and width columns, that it's 1024 by 1024 and the channels
 column says it has three.
 
-### *Create*
+### 4.5 *Create*
 Next we click the create button. For each valid asset, Hidebound generates file
 and asset metadata as JSON files within the hidebound/metadata directory.
 Hidebound also copies or moves, depending on the config write mode, valid files
@@ -167,7 +167,7 @@ ephemeral database. We now have a hidebound directory that looks like this
         └── ea95bd79-cb8f-4262-8489-efe734c5f65c.json
 ```
 
-### *Export*
+### 4.6 *Export*
 The hidebound directories contain only valid assets. Thus, we are now free to
 export this data to various data stores, such as AWS S3, MongoDB, and Girder.
 Exporters are are defined within the exporters subpackage. They expect a
@@ -179,7 +179,7 @@ app.
 
 ![](resources/screenshots/girder.png)
 
-### *Delete*
+### 4.7 *Delete*
 Once this export process is complete, we may click the delete button. Hidebound
 deletes the hidebound/content and hidebound/metdata directories and all their
 contents. If write_mode in the Hidebound configuration is set to "copy", then
@@ -188,7 +188,7 @@ then Hidebound will presumably delete, the only existing copy of out asset data
 on the host machine. The delete stage in combination with the removal of assets
 from the ingress directory is what makes Hidebound's database ephemeral.
 
-### *Workflow*
+### 4.8 *Workflow*
 `/api/workflow` is a API endpoint that initializes a database a with a given
 config, and then calls each method from a given list. For instance, if you send
 this data to `/api/workflow`:
@@ -198,7 +198,7 @@ this data to `/api/workflow`:
 A database instance will be created with the given config, and then that
 instance will call its update, create, export and delete methods, in that order.
 
-# Naming Convention
+# 5.0 Naming Convention
 Hidebound is a highly opinionated framework that relies upon a strict but
 composable naming convention in order to extract metadata from filenames. All
 files and directories that are part of assets must conform to a naming
@@ -213,7 +213,7 @@ word is constructed according to a syntax (ie indicator + token). All words are
 joined together by spaces (ie underscores) in a particular order as determined
 by grammar (as defined in each specification).
 
-### *Syntax*
+### 5.1 *Syntax*
 - Names consist of a series of fields, each separated by a single underscore
   “_”, also called a field separator.
 - Periods, ".", are the exception to this, as it indicates file extension.
@@ -235,7 +235,7 @@ Fields are comprised of two main parts:
 | Field token      | a set of 1+ characters that define the field's data |
 
 ---
-### **Example Diagrams**
+### 5.2 **Example Diagrams**
 In our example filename:
 `p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png` the metadata will be:
 
@@ -270,7 +270,7 @@ p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png
 | Field token      | spec001                  |
 | Derived metadata | {specification: spec001} |
 
-### *Special Field Syntax*
+### 5.3 *Special Field Syntax*
 
 - Projects begin with 3 or 4 letters followed by 1 to 4 numbers
 - Specifications begin with 3 or 4 letters followed by 3 numbers
@@ -285,7 +285,7 @@ p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png
 - Extensions may only contain upper and lower case letters a to z and numbers 0
   to 9
 
-### *Semantics*
+### 5.4 *Semantics*
 Hidebound is highly opionated, especially with regards to its semantics. It
 contains exactly seven field types, as indicated by their field indicators.
 They are:
@@ -300,7 +300,7 @@ They are:
 | frame         | f         |
 | extension     | .         |
 
-### *Grammar*
+### 5.5 *Grammar*
 The grammar is fairly simple:
 
   - Names are comprised of an ordered set of fields drawn from the seven above
@@ -323,7 +323,7 @@ The grammatical concept of field order here is one of rough encapsulation:
 - Each chunk may consist of a series of files seperated by frame number
 - Each file has an extension
 
-### *Encouraged Lexical Conventions*
+### 5.6 *Encouraged Lexical Conventions*
 - Specifications end with a triple padded number so that they may be explicitely
   versioned. You redefine an asset specification to something slightly
   different, by copying its specification class, adding one to its name and
@@ -341,7 +341,7 @@ The grammatical concept of field order here is one of rough encapsulation:
 - When in doubt, hyphenate and put into the descriptor.
 
 ---
-# Project Structure
+# 6.0 Project Structure
 Hidebound does not formally define a project structure. It merely stipulates
 that assets must exist under some particular root directory. Each asset
 specification does define a directory structure for the files that make up that
@@ -360,7 +360,7 @@ project
                 |- file
 ```
 
-#### For Example
+#### 6.1 For Example
 ```shell
 /tmp/projects
 └── p-cat001
@@ -389,11 +389,11 @@ project
             └── p-cat001_s-spec001_d-running-cat_v001_c0000-0005_f0003.png
 ```
 
-# Application
+# 7.0 Application
 The Hidebound web application has five sections: data, graph, config, api and
 docs.
 
-### Data
+### 7.1 Data
 The data tab is the workhorse of the Hidebound app.
 
 ![](resources/screenshots/data.png)
@@ -412,7 +412,7 @@ Prior to calling update, the application will look like this:
 
 ![](resources/screenshots/pre_update.png)
 
-### Graph
+### 7.2 Graph
 The graph tab is used for visualizing the state of all the assets within a root
 directory.
 
@@ -426,33 +426,33 @@ It's color code is as follows:
 | Green | Valid asset                 |
 | Red   | Invalid asset               |
 
-### Config
+### 7.3 Config
 The config tab is used for uploading and writing Hidebound's configuration file.
 
 ![](resources/screenshots/config.png)
 
-### API
+### 7.4 API
 The API tab is really a link to Hidebound's REST API documentation.
 
 ![](resources/screenshots/api.png)
 
-### Docs
+### 7.5 Docs
 The API tab is really a link to Hidebound's github documentation.
 
 ![](resources/screenshots/docs.png)
 
-### Errors
+### 7.6 Errors
 Hidebound is oriented towards developers and technically proficient users. It
 displays errors in their entirety within the application.
 
 ![](resources/screenshots/error.png)
 
-# Configuration
+# 8.0 Configuration
 Hidebound is configured via a configuration file or environment variables.
 
 Hidebound configs consist of four main sections:
 
-### Base
+### 8.1 Base
 * ingress_directory - the directory hidebound parses for assets that comprise its database
 * staging_directory - the staging directory valid assets are created in
 * specification_files - a list of python specification files
@@ -463,7 +463,7 @@ Hidebound configs consist of four main sections:
 * redact_hash - whether to redact config values with "REDACTED" or a hash of the value
 * workflow - order list of steps to be followed in workflow
 
-### Dask
+### 8.2 Dask
 Default configuration of Dask distributed framework.
 
 * cluster_type - dask cluster type
@@ -479,7 +479,7 @@ Default configuration of Dask distributed framework.
 * gateway_cluster_options - list of dask gateway cluster options
 * gateway_shutdown_on_close - whether to shudown cluster upon close
 
-### Exporters
+### 8.3 Exporters
 Which exporters to us in the workflow.
 Options include:
 
@@ -487,12 +487,12 @@ Options include:
 * disk
 * girder
 
-### Webhooks
+### 8.4 Webhooks
 Webhooks to call after the export phase has completed.
 
 ---
 
-### Environment Variables
+### 8.5 Environment Variables
 If `HIDEBOUND_CONFIG_FILEPATH` is set, Hidebound will ignore all other
 environment variables and read the given filepath in as a yaml or json config
 file.
@@ -527,7 +527,7 @@ file.
 
 ---
 
-### Config File
+### 8.6 Config File
 Here is a full example config with comments:
 ```yaml
 ingress_directory: /mnt/storage/projects                                 # where hb looks for assets
@@ -614,14 +614,14 @@ webhooks:                                                                # call 
       Content-type: application/json
 ```
 
-# Specification
+# 9.0 Specification
 Asset specifications are defined in python using the base classes found in
 specification_base.py. The base classes are defined using the schematics
 framework. Hidebound generates a single JSON blob of metadata for each file of
 an asset, and then combines blob into a single blob with a list values per key.
 Thus every class member defined with schematics is encapsulated with ListType.
 
-### Example asset
+### 9.1 Example asset
 
 Suppose we have an image sequence asset that we wish to define a specificqtion
 for. Our image sequences consist of a directory containing 1 or 3 channel png
@@ -637,7 +637,7 @@ projects
                 └── p-cat001_s-raw001_d-calico-jumping_v001_f0003.png
 ```
 
-### Example specification
+### 9.2 Example specification
 
 We would write the following specification for such an asset.
 
@@ -682,13 +682,13 @@ class Raw001(SequenceSpecificationBase):
     )
 ```
 
-# Production CLI
+# 10.0 Production CLI
 
 Hidebound comes with a command line interface defined in command.py.
 
 Its usage pattern is: `hidebound COMMAND [FLAGS] [-h --help]`
 
-### Commands
+### 10.1 Commands
 | Command         | Description                                                               | Flags   | Flag Description  |
 | --------------- | --------------------------------------------------------------------------| ------- | ----------------- |
 | config          | Prints hidebound config                                                   | -       | -                 |
@@ -696,13 +696,13 @@ Its usage pattern is: `hidebound COMMAND [FLAGS] [-h --help]`
 | bash-completion | Prints BASH completion code to be written to a _hidebound completion file | -       | -                 |
 | zsh-completion  | Prints ZSH completion code to be written to a _hidebound completion file  | -       | -                 |
 
-# Development CLI
+# 11.0 Development CLI
 bin/hidebound is a command line interface (defined in cli.py) that works with
 any version of python 2.7 and above, as it has no dependencies.
 
 Its usage pattern is: `bin/hidebound COMMAND [-a --args]=ARGS [-h --help] [--dryrun]`
 
-### Commands
+### 11.1 Commands
 
 | Command              | Description                                                         |
 | -------------------- | ------------------------------------------------------------------- |
@@ -759,7 +759,7 @@ Its usage pattern is: `bin/hidebound COMMAND [-a --args]=ARGS [-h --help] [--dry
 | zsh-complete         | Generate oh-my-zsh completions                                      |
 | zsh-root             | Run ZSH session as root inside hidebound container                  |
 
-### Flags
+### 11.2 Flags
 
 | Short | Long      | Description                                          |
 | ----- | --------- | ---------------------------------------------------- |
