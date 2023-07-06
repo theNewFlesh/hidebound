@@ -33,10 +33,19 @@
 [![](https://img.shields.io/pypi/v/hidebound?style=for-the-badge&label=PyPI&color=5F95DE&logo=pypi&logoColor=5F95DE)](https://pypi.org/project/hidebound/)
 [![](https://img.shields.io/pypi/dm/hidebound?style=for-the-badge&label=Downloads&color=5F95DE)](https://pepy.tech/project/hidebound)
 
-# Introduction
-A local database service for converting directories of arbitrary files into
-validated assets and derived metadata for export to databases like AWS S3 and
-MongoDB.
+# Overview
+Directory of files in, validated assets out.
+
+Hidebound is an ephemeral database and asset framework used for generating,
+validating and exporting assets to various data stores. Hidebound enables
+developers to ingest arbitrary sets of files and output them as content and
+generated metadata, which has validated according to specifications they define.
+
+Assets are placed into an ingress directory, typically reserved for Hidebound
+projects, and then processed by Hidebound. Hidebound extracts metadata from the
+files and directories that make each asset according to their name, location and
+file properties. This data comprises the entirety of Hidebound's database at any
+one time.
 
 See [documentation](https://thenewflesh.github.io/hidebound/) for details.
 
@@ -59,18 +68,6 @@ See [documentation](https://thenewflesh.github.io/hidebound/) for details.
 The service should take a few minutes to start up.
 
 Run `bin/hidebound --help` for more help on the command line tool.
-
-# Overview
-Hidebound is an ephemeral database and asset framework used for generating,
-validating and exporting assets to various data stores. Hidebound enables
-developers to ingest arbitrary sets of files and output them as content and
-generated metadata, which has validated according to specifications they define.
-
-Assets are placed into an ingress directory, typically reserved for Hidebound
-projects, and then processed by Hidebound. Hidebound extracts metadata from the
-files and directories that make each asset according to their name, location and
-file properties. This data comprises the entirety of Hidebound's database at any
-one time.
 
 # Dataflow
 ![](resources/screenshots/data_flow.png)
