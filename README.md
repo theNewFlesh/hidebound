@@ -39,7 +39,8 @@ Directory of files in, validated assets out.
 Hidebound is an ephemeral database and asset framework used for generating,
 validating and exporting assets to various data stores. Hidebound enables
 developers to ingest arbitrary sets of files and output them as content and
-generated metadata, which has validated according to specifications they define.
+generated metadata, which has been validated according to specifications they
+define.
 
 Assets are placed into an ingress directory, typically reserved for Hidebound
 projects, and then processed by Hidebound. Hidebound extracts metadata from the
