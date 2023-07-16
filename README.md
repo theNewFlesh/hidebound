@@ -714,7 +714,6 @@ Its usage pattern is: `bin/hidebound COMMAND [-a --args]=ARGS [-h --help] [--dry
 | docker-build         | Build image of hidebound                                            |
 | docker-build-prod    | Build production image of hidebound                                 |
 | docker-container     | Display the Docker container id of hidebound                        |
-| docker-coverage      | Generate coverage report for hidebound                              |
 | docker-destroy       | Shutdown hidebound container and destroy its image                  |
 | docker-destroy-prod  | Shutdown hidebound production container and destroy its image       |
 | docker-image         | Display the Docker image id of hidebound                            |
