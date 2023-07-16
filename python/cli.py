@@ -55,7 +55,6 @@ def get_info():
     docker-build         - Build image of {repo}
     docker-build-prod    - Build production image of {repo}
     docker-container     - Display the Docker container id of {repo}
-    docker-coverage      - Generate coverage report for {repo}
     docker-destroy       - Shutdown {repo} container and destroy its image
     docker-destroy-prod  - Shutdown {repo} production container and destroy its image
     docker-image         - Display the Docker image id of {repo}
