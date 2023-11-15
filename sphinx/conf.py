@@ -31,6 +31,7 @@ version = toml.load('../docker/config/pyproject.toml')['project']['version']
 # ones.
 extensions = [
     'm2r2',
+    'sphinxcontrib.jquery',
     'sphinx.ext.autodoc',
     'sphinx.ext.coverage',
     'sphinx.ext.doctest',

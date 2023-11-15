@@ -74,6 +74,7 @@ dev = [
     "sphinx-autodoc-typehints>=1.22",
     "sphinx-rtd-theme",
     "sphinx>=5.3.0",
+    "sphinxcontrib-jquery>=4.1",
     "toml>=0.10.2",
 ]
 test = [
