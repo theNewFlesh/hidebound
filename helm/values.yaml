@@ -13,7 +13,7 @@ enable:
   liveness_probe: true
 
 namespace:
-  name: asset-ingest
+  name: hidebound
 
 argocd_application:
   name: hidebound
