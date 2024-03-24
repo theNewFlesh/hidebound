@@ -1,4 +1,4 @@
-{{- with (include "overlay" . | fromYaml) -}}
+{{- with .Values -}}
 {{ if .enable.traefik_ingress }}
 kind: IngressRoute
 apiVersion: traefik.containo.us/v1alpha1

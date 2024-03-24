@@ -1,4 +1,4 @@
-{{- with (include "overlay" . | fromYaml) -}}
+{{- with .Values -}}
 kind: Deployment
 apiVersion: apps/v1
 metadata:

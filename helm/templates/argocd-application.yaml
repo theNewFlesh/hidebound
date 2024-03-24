@@ -1,4 +1,4 @@
-{{- with (include "overlay" . | fromYaml) -}}
+{{- with .Values -}}
 {{ if .enable.argocd_application }}
 kind: Application
 apiVersion: argoproj.io/v1alpha1

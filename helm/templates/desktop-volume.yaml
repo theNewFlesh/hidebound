@@ -1,4 +1,4 @@
-{{- with (include "overlay" . | fromYaml) -}}
+{{- with .Values -}}
 {{ if .enable.desktop_volume }}
 kind: PersistentVolume
 apiVersion: v1
