@@ -1,5 +1,3 @@
-{{- /* CONVERT OVERLAY YAML VALUES TO STRINGS */ -}}
-
 {{- with .Values -}}
     {{- $env := .env_configmap }}
     {{- $secret := .env_secret }}

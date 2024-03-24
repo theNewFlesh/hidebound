@@ -12,8 +12,7 @@ spec:
     targetRevision: master
     path: helm
     helm:
-      values: |
-        overlay: rancher_desktop
+      values:
   destination:
     server: https://kubernetes.default.svc
     namespace: {{ .argocd_application.target_namespace }}
