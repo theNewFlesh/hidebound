@@ -47,7 +47,7 @@ env_configmap:
   HIDEBOUND_DASK_GATEWAY_ADDRESS: "http://proxy-public/services/dask-gateway"
   HIDEBOUND_DASK_GATEWAY_PROXY_ADDRESS: "gateway://traefik-daskhub-dask-gateway.core:80"
   HIDEBOUND_DASK_GATEWAY_PUBLIC_ADDRESS: "https://dask-gateway/services/dask-gateway/"
-  HIDEBOUND_DASK_GATEWAY_AUTH_TYPE: jupyterhub
+  HIDEBOUND_DASK_GATEWAY_AUTH_TYPE: simple
   HIDEBOUND_DASK_GATEWAY_CLUSTER_OPTIONS: []
   HIDEBOUND_DASK_GATEWAY_SHUTDOWN_ON_CLOSE: true
 
