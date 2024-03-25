@@ -27,7 +27,7 @@ env_configmap:
   FLASK_RUN_HOST: 0.0.0.0
   HIDEBOUND_TESTING: false
   HIDEBOUND_INGRESS_DIRECTORY: /mnt/storage/ingress
-  HIDEBOUND_STAGING_DIRECTORY: /mnt/storage/hidebound
+  HIDEBOUND_STAGING_DIRECTORY: /mnt/storage/staging
   HIDEBOUND_INCLUDE_REGEX: ""
   HIDEBOUND_EXCLUDE_REGEX: "\\\\.DS_Store"
   HIDEBOUND_WRITE_MODE: move
