@@ -531,8 +531,8 @@ file.
 ## Config File
 Here is a full example config with comments:
 ```yaml
-ingress_directory: /mnt/storage/projects                                 # where hb looks for assets
-staging_directory: /mnt/storage/hidebound                                # hb staging directory
+ingress_directory: /mnt/ingress                                          # where hb looks for assets
+staging_directory: /mnt/staging                                          # hb staging directory
 include_regex: ""                                                        # include files that match
 exclude_regex: "\\.DS_Store"                                             # exclude files that match
 write_mode: copy                                                         # copy files from root to staging
@@ -545,8 +545,8 @@ workflow:                                                                # workf
   - create                                                               # stage valid assets
   - export                                                               # export assets in staging
 specification_files:                                                     # list of spec files
-  - /mnt/storage/specs/image_specs.py
-  - /mnt/storage/specs/video_specs.py
+  - /mnt/specs/image_specs.py
+  - /mnt/specs/video_specs.py
 dask:
   cluster_type: local                                                    # Dask cluster type
                                                                          # options: local, gateway
@@ -570,7 +570,7 @@ dask:
   gateway_shutdown_on_close: true                                        # whether to shudown cluster upon close
 exporters:                                                               # dict of exporter configs
   - name: disk                                                           # export to disk
-    target_directory: /mnt/storage/archive                               # target location
+    target_directory: /mnt/archive                                       # target location
     metadata_types:                                                      # options: asset, file, asset-chunk, file-chunk
       - asset                                                            # only asset and file metadata
       - file

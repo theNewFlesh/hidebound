@@ -26,8 +26,8 @@ env_configmap:
   FLASK_RUN_PORT: 8080
   FLASK_RUN_HOST: 0.0.0.0
   HIDEBOUND_TESTING: false
-  HIDEBOUND_INGRESS_DIRECTORY: /mnt/storage/ingress
-  HIDEBOUND_STAGING_DIRECTORY: /mnt/storage/staging
+  HIDEBOUND_INGRESS_DIRECTORY: /mnt/ingress
+  HIDEBOUND_STAGING_DIRECTORY: /mnt/staging
   HIDEBOUND_INCLUDE_REGEX: ""
   HIDEBOUND_EXCLUDE_REGEX: "\\\\.DS_Store"
   HIDEBOUND_WRITE_MODE: move
@@ -60,7 +60,7 @@ deployment:
   repository: thenewflesh/hidebound
   image_tag: latest
   repo_path: /home/ubuntu/hidebound
-  storage_path: /mnt/storage
+  ingress_path: /mnt/ingress
   image_pull_policy: IfNotPresent
   nfs_server:
   command:

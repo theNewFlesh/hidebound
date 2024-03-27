@@ -54,23 +54,23 @@ spec:
             timeoutSeconds: 1
           {{- end }}
           volumeMounts:
-            - name: storage
-              mountPath: {{ .deployment.storage_path }}
+            - name: ingress
+              mountPath: {{ .deployment.ingress_path }}
             {{- if .enable.repo_volume }}
             - name: repo
               mountPath: {{ .deployment.repo_path }}
             {{- end }}
       volumes:
       {{- if .enable.nfs_volume }}
-        - name: storage
+        - name: ingress
           nfs:
-             path: {{ .deployment.storage_path }}
+             path: {{ .deployment.ingress_path }}
              server: {{ .deployment.nfs_server }}
              readOnly: false
       {{- else if .enable.desktop_volume }}
-        - name: storage
+        - name: ingress
           persistentVolumeClaim:
-            claimName: hidebound-storage-pvc
+            claimName: hidebound-ingress-pvc
       {{- end }}
       {{- if .enable.repo_volume }}
         - name: repo
