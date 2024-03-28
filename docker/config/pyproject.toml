@@ -1,13 +1,16 @@
 [project]
 name = "hidebound"
 version = "0.31.5"
-description = "A local database service for converting directories of arbitrary files into validated assets and derived JSON metadata."
+description = "A MLOps framework for generating ML assets and metadata."
 authors = [
     {name = "Alex Braun", email = "alexander.g.braun@gmail.com"},
 ]
 readme = "README.md"
 license = "MIT"
-keywords = ["ephemeral", "database", "asset", "assetstore", "datastore", "vfx"]
+keywords = [
+    "ephemeral", "database", "asset", "assetstore", "datastore", "vfx", "mlops",
+    "ml", "machine-learning", "data"
+]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",

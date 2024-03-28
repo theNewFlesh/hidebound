@@ -34,7 +34,7 @@
 [![](https://img.shields.io/pypi/dm/hidebound?style=for-the-badge&label=Downloads&color=5F95DE)](https://pepy.tech/project/hidebound)
 
 # Overview
-Directory of files in, validated assets out.
+A MLOps framework for generating ML assets and metadata.
 
 Hidebound is an ephemeral database and asset framework used for generating,
 validating and exporting assets to various data stores. Hidebound enables
