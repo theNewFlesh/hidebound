@@ -133,9 +133,9 @@ class SpecificationBaseTests(unittest.TestCase):
                 f.write('')
 
             result = self.Foo().get_file_traits(filepath)
-            self.assertRegex(result['width_error'], 'ValueError')
-            self.assertRegex(result['height_error'], 'ValueError')
-            self.assertRegex(result['channels_error'], 'ValueError')
+            self.assertRegex(result['width_error'], 'OSError')
+            self.assertRegex(result['height_error'], 'OSError')
+            self.assertRegex(result['channels_error'], 'OSError')
 
     def test_get_traits(self):
         with TemporaryDirectory() as root:
