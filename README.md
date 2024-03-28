@@ -570,7 +570,7 @@ dask:
   gateway_shutdown_on_close: true                                        # whether to shudown cluster upon close
 exporters:                                                               # dict of exporter configs
   - name: disk                                                           # export to disk
-    target_directory: /mnt/archive                                       # target location
+    target_directory: /mnt/egress                                        # target location
     metadata_types:                                                      # options: asset, file, asset-chunk, file-chunk
       - asset                                                            # only asset and file metadata
       - file

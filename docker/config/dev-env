@@ -26,7 +26,7 @@ HIDEBOUND_DASK_GATEWAY_CLUSTER_OPTIONS='[]'
 HIDEBOUND_DASK_GATEWAY_SHUTDOWN_ON_CLOSE=True
 HIDEBOUND_EXPORTERS='
 - name: disk
-  target_directory: /tmp/mnt/archive
+  target_directory: /tmp/mnt/egress
   metadata_types:
     - asset
     - file

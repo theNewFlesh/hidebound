@@ -4,9 +4,10 @@ enable:
   env_configmap: true
   env_secret: false
   image_pull_secret: false
+  ingress_volume: true
+  staging_volume: true
+  egress_volume: true
   repo_volume: false
-  desktop_volume: false
-  nfs_volume: false
   nginx_ingress: false
   traefik_ingress: false
   readiness_probe: true
@@ -59,10 +60,23 @@ env_secret:
 deployment:
   repository: thenewflesh/hidebound
   image_tag: latest
-  repo_path: /home/ubuntu/hidebound
-  ingress_path: /mnt/ingress
+  ingress:
+    path: /mnt/ingress
+    nfs: false
+    nfs_server:
+  staging:
+    path: /mnt/staging
+    nfs: false
+    nfs_server:
+  egress:
+    path: /mnt/egress
+    nfs: false
+    nfs_server:
+  repo:
+    path: /home/ubuntu/hidebound
+    nfs: false
+    nfs_server:
   image_pull_policy: IfNotPresent
-  nfs_server:
   command:
     - hidebound
     - server
@@ -73,12 +87,6 @@ deployment:
 service:
   port: 80
   target_port: 8080
-
-repo_volume:
-  path:
-
-desktop_volume:
-  path:
 
 nginx_ingress:
   host:

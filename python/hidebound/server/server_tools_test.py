@@ -165,7 +165,7 @@ def test_format_config_exporters(config):
     expected = [
         dict(
             name='disk',
-            target_directory='/tmp/mnt/archive',
+            target_directory='/tmp/mnt/egress',
             metadata_types=['asset', 'file']
         ),
         dict(
