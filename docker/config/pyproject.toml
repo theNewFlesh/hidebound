@@ -48,7 +48,7 @@ dependencies = [
     "requests",
     "rolling-pin",
     "schematics",
-    "scikit-image==0.19.3",
+    "scikit-image",
     "sqlalchemy<=1.4.46",
     "werkzeug==2.2.3",
     "wrapt",
