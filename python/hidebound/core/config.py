@@ -119,7 +119,7 @@ class Config(Model):
         required=True, validators=[vd.is_directory]
     )  # type: StringType
     staging_directory = StringType(
-        required=True, validators=[vd.is_directory, vd.is_hidebound_directory]
+        required=True, validators=[vd.is_directory]
     )  # type: StringType
     include_regex = StringType(default='', required=True)  # type: StringType
     exclude_regex = StringType(default=r'\.DS_Store', required=True)  # type: StringType

@@ -665,22 +665,6 @@ def is_metadata_type(item):
     return item in ['asset', 'file', 'asset-chunk', 'file-chunk']
 
 
-def is_hidebound_directory(directory):
-    # type: (Union[str, Path]) -> None
-    '''
-    Ensures directory name is "hidebound".
-
-    Args:
-        directory (str or Path): Hidebound directory.
-
-    Raises:
-        ValidationError: If directory is not named "hidebound".
-    '''
-    if Path(directory).name != 'hidebound':
-        msg = f'{directory} directory is not named hidebound.'
-        raise ValidationError(msg)
-
-
 def is_http_method(method):
     # type: (str) -> None
     '''

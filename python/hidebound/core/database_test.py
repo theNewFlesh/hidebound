@@ -131,18 +131,11 @@ def test_init_bad_ingress(make_dirs, specs, dask_config):  # noqa: F811
 
 
 def test_init_bad_staging(temp_dir, dask_config):  # noqa: F811
-    staging = Path(temp_dir, 'hidebound')
+    staging = Path(temp_dir, 'staging')
 
-    expected = '/hidebound is not a directory or does not exist'
+    expected = '/staging is not a directory or does not exist'
     with pytest.raises(FileNotFoundError) as e:
         Database(temp_dir, staging, dask=dask_config, testing=False)
-        assert re.search(expected, str(e))
-
-    temp = Path(temp_dir, 'Hidebound')
-    os.makedirs(temp)
-    expected = r'Hidebound directory is not named hidebound\.$'
-    with pytest.raises(NameError) as e:
-        Database(temp_dir, temp, dask=dask_config, testing=False)
         assert re.search(expected, str(e))
 
 
