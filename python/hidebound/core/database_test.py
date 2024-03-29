@@ -367,7 +367,7 @@ def test_read_legal_types(make_dirs, make_files, specs, dask_config):  # noqa: F
     data = db.read()
 
     # test types by file
-    result = data.applymap(type)\
+    result = data.map(type)\
         .apply(lambda x: x.unique().tolist())\
         .tolist()
     result = list(chain(*result))
@@ -379,7 +379,7 @@ def test_read_legal_types(make_dirs, make_files, specs, dask_config):  # noqa: F
 
     # test types by asset
     data = db.read(group_by_asset=True)
-    result = data.applymap(type)\
+    result = data.map(type)\
         .apply(lambda x: x.unique().tolist()) \
         .loc[0].tolist()
     result = set(result)

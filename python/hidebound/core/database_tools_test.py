@@ -374,7 +374,7 @@ def test_validate_assets(db_cluster, db_data, make_files):
     bad['asset_traits'] = [bad_traits]
     bad['asset_id'] = 1
     cols = ['asset_name', 'asset_path', 'filename']
-    bad[cols] = bad[cols].applymap(lambda x: re.sub('pizza', 'kiwi', x))
+    bad[cols] = bad[cols].map(lambda x: re.sub('pizza', 'kiwi', x))
     data = pd.concat([data, bad], ignore_index=True)
 
     cols = [

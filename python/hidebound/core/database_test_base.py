@@ -68,7 +68,7 @@ def db_data(temp_dir):
 
 @pytest.fixture()
 def db_data_nans(db_data):
-    return db_data.applymap(lambda x: np.nan if x is None else x)
+    return db_data.map(lambda x: np.nan if x is None else x)
 
 
 def _db_data(temp_dir):
@@ -337,7 +337,7 @@ class DatabaseTestBase(unittest.TestCase):
         # type: (str, bool) -> DataFrame
         data = _db_data(root)
         if nans:
-            data = data.applymap(lambda x: np.nan if x is None else x)
+            data = data.map(lambda x: np.nan if x is None else x)
         return data
 
     def create_files(self, root):

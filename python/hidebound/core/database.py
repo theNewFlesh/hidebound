@@ -380,7 +380,7 @@ class Database:
         cols = self.data.columns.tolist()
         if len(self.data) > 0:
             cols = data \
-                .applymap(type) \
+                .map(type) \
                 .apply(lambda x: x.unique().tolist())
             legal_cols = set([int, float, str, bool, None])
             cols = cols.apply(lambda x: set(x).difference(legal_cols) == set())
