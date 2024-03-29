@@ -70,6 +70,17 @@ def test_add_specification(db_cluster, dir_data):
 
     assert pd.isnull(result.loc[0, 'file_error']) is True
 
+    # test for class to string coercion
+    result = db_tools \
+        .add_specification(data, specs) \
+        .specification_class \
+        .apply(
+            lambda x: np.nan if pd.isnull(x) else x.filename_fields,
+            meta=(None, np.object_)
+        ) \
+        .compute().tolist()[0]
+    assert result == ['specification']
+
 
 # FILE-FUNCTIONS----------------------------------------------------------------
 def test_validate_filepath(db_cluster, db_data_nans):
