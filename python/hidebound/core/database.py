@@ -356,7 +356,7 @@ class Database:
                 item.update(coords)
             return item
 
-        data = self.data.copy()
+        data = self.data.copy().astype(np.object_)
         self._logger.info('read: copy data', step=1, total=total)
 
         col = 'file_traits'
@@ -366,14 +366,15 @@ class Database:
             self._logger.info('read: group by asset', step=2, total=total)
 
         data[col] = data[col].apply(coordinate_to_dict)
-        traits = DataFrame(data[col].tolist())
+        traits = DataFrame(data[col].tolist()).astype(np.object_)
 
         for col in traits.columns:
             if col not in data.columns:
                 data[col] = np.nan
+            data[col] = data[col].astype(np.object_)
 
             mask = traits[col].notnull().tolist()
-            data.loc[mask, col] = traits.loc[mask, col]
+            data.loc[mask, col] = traits.loc[mask, col].astype(np.object_)
         self._logger.info('read: filter traits', step=3, total=total)
 
         # find columns by legal type

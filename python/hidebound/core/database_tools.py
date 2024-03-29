@@ -344,6 +344,7 @@ def add_asset_id(data):
     '''
     mask = data.file_error.isnull()
     data['asset_id'] = np.nan
+    data.asset_id = data.asset_id.astype(np.object_)
     if len(data[mask]) > 0:
         data.loc[mask, 'asset_id'] = data.loc[mask].apply(
             lambda x: x.specification_class().get_asset_id(x.filepath),
