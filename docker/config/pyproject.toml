@@ -97,10 +97,10 @@ test = [
 [tool.pytest.ini_options]
 cache_dir = "/home/ubuntu/.pytest_cache"
 filterwarnings = [
-    # "ignore::UserWarning",
-    # "ignore::FutureWarning",
-    # "ignore::DeprecationWarning",
-    # "ignore::PendingDeprecationWarning"
+    "ignore::UserWarning",
+    "ignore::FutureWarning",
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
     "ignore:.*before_app_first_request:",
     "ignore:.*deprecated function _options:",
     "ignore:.*deprecated function _valid_input_keys:",
