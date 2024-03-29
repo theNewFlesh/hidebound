@@ -59,6 +59,8 @@ def test_add_specification(db_cluster, dir_data):
     e = expected.specification_class.fillna('null').tolist()
     assert r == e
 
+    assert r[0] is Spec001
+
     mask = result.filename.apply(lambda x: 'misc.txt' in x)
     expected = result[mask].file_error.values[0]
     assert re.search(
