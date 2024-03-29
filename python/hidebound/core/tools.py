@@ -267,21 +267,32 @@ def read_json(filepath):
 
 
 # DASK-FUNCS--------------------------------------------------------------------
-def get_meta_kwargs(data, meta):
+def get_meta_kwargs(data, dtype='inherit'):
     # type: (DFS, Any) -> dict
     '''
     Convenience utility for coercing the meta keyword between pandas and dask.
+    Will inherit dtypes from data if dtype is set to 'inherit'.
 
     Args:
-        data (DataFrame or Series): Pandas or dask object.
-        meta (object): Meta key word argument.
+        data (DataFrame or Series): Pandas or Dask object.
+        dtype (object, optional): Dtype of output. Default: inherit.
 
     Returns:
         dict: Appropriate keyword args.
     '''
-    kwargs = {}
-    if meta != '__no_default__' and data.__class__ in [dd.DataFrame, dd.Series]:
-        kwargs = dict(meta=meta)
+    kwargs = {}  # type: dict
+    if data.__class__ in [pd.DataFrame, pd.Series]:
+        return kwargs
+
+    if isinstance(data, dd.DataFrame):
+        if dtype == 'inherit':
+            dtype = data.dtypes
+        meta = pd.DataFrame(columns=data.columns).astype(dtype)
+    elif isinstance(data, dd.Series):
+        if dtype == 'inherit':
+            dtype = data.dtype
+        meta = pd.Series(dtype=dtype)
+    kwargs = dict(meta=meta)
     return kwargs
 
 

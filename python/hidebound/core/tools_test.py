@@ -290,32 +290,59 @@ class ToolsTests(unittest.TestCase):
             with self.assertRaisesRegex(json.JSONDecodeError, expected):
                 hbt.read_json(filepath)
 
-    def test_get_meta_kwargs(self):
-        # pd.DataFrame
+    def test_get_meta_kwargs_pd_df(self):
         result = hbt.get_meta_kwargs(pd.DataFrame(), str)
         self.assertEqual(result, {})
 
-        # pd.Series
+    def test_get_meta_kwargs_pd_s(self):
         result = hbt.get_meta_kwargs(pd.Series(dtype=np.float16), str)
         self.assertEqual(result, {})
 
-        # dd.DataFrame
-        data = dd.from_pandas(pd.DataFrame(), chunksize=1)
-        result = hbt.get_meta_kwargs(data, str)
-        self.assertEqual(result, dict(meta=str))
+    def test_get_meta_kwargs_dd_df(self):
+        df = pd.DataFrame()
+        df['foo'] = list('1234')
+        df['bar'] = [1, 2, 3, 4]
+        data = dd.from_pandas(df, chunksize=1)
+        result = hbt.get_meta_kwargs(data, np.int32)
 
-        # dd.DataFrame no meta
-        result = hbt.get_meta_kwargs(data, '__no_default__')
-        self.assertEqual(result, {})
+        self.assertIsInstance(result, dict)
+        self.assertEqual(list(result.keys()), ['meta'])
 
-        # dd.Series
+        result = result['meta']
+        self.assertIsInstance(result, pd.DataFrame)
+        self.assertEqual(result.columns.tolist(), ['foo', 'bar'])
+        self.assertEqual(result.dtypes.foo, np.int32)
+        self.assertEqual(result.dtypes.bar, np.int32)
+
+    def test_get_meta_kwargs_dd_df_inherit(self):
+        df = pd.DataFrame()
+        df['foo'] = [1.0, 2.0, 3.0, 4.0]
+        df['bar'] = [1, 2, 3, 4]
+        data = dd.from_pandas(df, chunksize=1)
+        result = hbt.get_meta_kwargs(data, np.int32)
+
+        result = hbt.get_meta_kwargs(data)['meta'].dtypes
+        self.assertEqual(result.foo, float)
+        self.assertEqual(result.bar, int)
+        self.assertEqual(result.tolist(), df.dtypes.tolist())
+
+    def test_get_meta_kwargs_dd_s(self):
         data = dd.from_pandas(pd.Series(dtype=np.float16), chunksize=1)
-        result = hbt.get_meta_kwargs(data, str)
-        self.assertEqual(result, dict(meta=str))
+        result = hbt.get_meta_kwargs(data, int)
 
-        # dd.Series no meta
-        result = hbt.get_meta_kwargs(data, '__no_default__')
-        self.assertEqual(result, {})
+        self.assertIsInstance(result, dict)
+        self.assertEqual(list(result.keys()), ['meta'])
+
+        result = result['meta']
+        self.assertIsInstance(result, pd.Series)
+        self.assertEqual(result.dtype, int)
+
+    def test_get_meta_kwargs_dd_s_inherit(self):
+        data = dd.from_pandas(pd.Series(dtype=np.float16), chunksize=1)
+        result = hbt.get_meta_kwargs(data)['meta']
+
+        self.assertIsInstance(result, pd.Series)
+        self.assertEqual(result.dtype, np.float16)
 
     def test_str_to_bool(self):
         assert hbt.str_to_bool('true') is True
@@ -385,7 +412,7 @@ def test_pred_combinator_dd_dataframe_nan(db_cluster):
     assert result == expected
 
 
-def test_pred_combinator_series(db_cluster):
+def test_pred_combinator_dd_series(db_cluster):
     data = Series([2, 2, 2, 2, 3, 3, 3, 3])
     data = dd.from_pandas(data, chunksize=3)
     result = hbt.pred_combinator(
