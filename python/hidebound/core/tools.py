@@ -351,7 +351,7 @@ def get_lut(data, column, aggregator, meta='__no_default__'):
     keys = grp[column].first().to_frame(name='key')
     if len(keys) == 0:
         return empty
-    vals = grp.apply(aggregator, **kwargs).to_frame(name='value')
+    vals = grp.apply(aggregator, include_groups=True, **kwargs).to_frame(name='value')
     lut = merge(keys, vals, left_index=True, right_index=True) \
         .reset_index(drop=True)
     return lut
