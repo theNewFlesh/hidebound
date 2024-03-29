@@ -166,24 +166,24 @@ dependencies = [
 
 [[package]]
 name = "boto3"
-version = "1.26.74"
-requires_python = ">= 3.7"
+version = "1.34.73"
+requires_python = ">=3.8"
 summary = "The AWS SDK for Python"
 dependencies = [
-    "botocore<1.30.0,>=1.29.74",
+    "botocore<1.35.0,>=1.34.73",
     "jmespath<2.0.0,>=0.7.1",
-    "s3transfer<0.7.0,>=0.6.0",
+    "s3transfer<0.11.0,>=0.10.0",
 ]
 
 [[package]]
 name = "botocore"
-version = "1.29.74"
-requires_python = ">= 3.7"
+version = "1.34.73"
+requires_python = ">=3.8"
 summary = "Low-level, data-driven core of boto 3."
 dependencies = [
     "jmespath<2.0.0,>=0.7.1",
     "python-dateutil<3.0.0,>=2.1",
-    "urllib3<1.27,>=1.25.4",
+    "urllib3!=2.2.0,<3,>=1.25.4; python_version >= \"3.10\"",
 ]
 
 [[package]]
@@ -1092,19 +1092,31 @@ summary = "The fastest markdown parser in pure Python"
 
 [[package]]
 name = "moto"
-version = "4.1.2"
-requires_python = ">=3.7"
+version = "5.0.4"
+requires_python = ">=3.8"
 summary = ""
 dependencies = [
     "Jinja2>=2.10.1",
     "boto3>=1.9.201",
-    "botocore>=1.12.201",
+    "botocore>=1.14.0",
     "cryptography>=3.3.1",
     "python-dateutil<3.0.0,>=2.1",
     "requests>=2.5",
-    "responses>=0.13.0",
+    "responses>=0.15.0",
     "werkzeug!=2.2.0,!=2.2.1,>=0.5",
     "xmltodict",
+]
+
+[[package]]
+name = "moto"
+version = "5.0.4"
+extras = ["s3"]
+requires_python = ">=3.8"
+summary = ""
+dependencies = [
+    "PyYAML>=5.1",
+    "moto==5.0.4",
+    "py-partiql-parser==0.5.2",
 ]
 
 [[package]]
@@ -1418,6 +1430,11 @@ requires_python = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 summary = "library with cross-python path, ini-parsing, io, code, log facilities"
 
 [[package]]
+name = "py-partiql-parser"
+version = "0.5.2"
+summary = "Pure Python PartiQL Parser"
+
+[[package]]
 name = "pycodestyle"
 version = "2.11.1"
 requires_python = ">=3.8"
@@ -1674,11 +1691,11 @@ summary = "Python bindings to Rust's persistent data structures (rpds)"
 
 [[package]]
 name = "s3transfer"
-version = "0.6.2"
-requires_python = ">= 3.7"
+version = "0.10.1"
+requires_python = ">= 3.8"
 summary = "An Amazon S3 Transfer Manager"
 dependencies = [
-    "botocore<2.0a.0,>=1.12.36",
+    "botocore<2.0a.0,>=1.33.2",
 ]
 
 [[package]]
@@ -1975,17 +1992,12 @@ summary = "Typing stubs for PyYAML"
 
 [[package]]
 name = "types-requests"
-version = "2.31.0.6"
-requires_python = ">=3.7"
+version = "2.31.0.20240311"
+requires_python = ">=3.8"
 summary = "Typing stubs for requests"
 dependencies = [
-    "types-urllib3",
+    "urllib3>=2",
 ]
-
-[[package]]
-name = "types-urllib3"
-version = "1.26.25.14"
-summary = "Typing stubs for urllib3"
 
 [[package]]
 name = "typing-extensions"
@@ -2015,8 +2027,8 @@ summary = "RFC 6570 URI Template Processor"
 
 [[package]]
 name = "urllib3"
-version = "1.26.18"
-requires_python = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*"
+version = "2.2.1"
+requires_python = ">=3.8"
 summary = "HTTP library with thread-safe connection pooling, file post, and more."
 
 [[package]]
@@ -2121,7 +2133,7 @@ summary = "Mutable mapping tools"
 lock_version = "4.2"
 cross_platform = true
 groups = ["default", "dev", "lab", "test"]
-content_hash = "sha256:aefabfeff25e54818455db8e9ea4eacf4e6d640b503822453427e95bfc15ece7"
+content_hash = "sha256:945f606369f131bb8d37ec2048d5997d5b498f8f5ec82fe13eac91f690d55d0c"
 
 [metadata.files]
 "aiofiles 22.1.0" = [
@@ -2289,13 +2301,13 @@ content_hash = "sha256:aefabfeff25e54818455db8e9ea4eacf4e6d640b503822453427e95bf
     {url = "https://files.pythonhosted.org/packages/34/85/f9dba9dcd482707dc3ece53997689c0aea5fc70fe08ae99d1886bd5bd291/bokeh-3.4.0.tar.gz", hash = "sha256:9ea6bc407b5e7d04ba7a2f07d8f00e8b6ffe02c2368e707f41bb362a9928569a"},
     {url = "https://files.pythonhosted.org/packages/f9/24/d8949753839db67197a33014b854cbed2126f8c871e03723e7abddcca12a/bokeh-3.4.0-py3-none-any.whl", hash = "sha256:d8d9ba026b734317740f90a8a58502d63c76b96c58752fc421ad4aa04df1fbcd"},
 ]
-"boto3 1.26.74" = [
-    {url = "https://files.pythonhosted.org/packages/5f/1d/57c3d8ed33b33dc79706093e792ca74943c26de852394d6bcbf6e758ab19/boto3-1.26.74-py3-none-any.whl", hash = "sha256:57f1696cbf5927180521ddabc37f10eb6650ccedc2b784dfb04502193bb65df9"},
-    {url = "https://files.pythonhosted.org/packages/e3/3f/d6c306834e79189cc7af84f097a27ba2568763a52edcc386c8375a6daba0/boto3-1.26.74.tar.gz", hash = "sha256:a3cf126d18194e5d350ec46f99f1fff15beacdf091d1979e8471681688e14ba1"},
+"boto3 1.34.73" = [
+    {url = "https://files.pythonhosted.org/packages/03/27/f00f10c9dd957e38a45201d06abd45e830ad14511972b8f934e49bd5a20c/boto3-1.34.73.tar.gz", hash = "sha256:f45503333286c03fb692a3ce497b6fdb4e88c51c98a3b8ff05071d7f56571448"},
+    {url = "https://files.pythonhosted.org/packages/0a/5b/f1fa5a41a3ec739a4662f6fdc934fc810b16414cacf9a820a3d76900806d/boto3-1.34.73-py3-none-any.whl", hash = "sha256:4d68e7c7c1339e251c661fd6e2a34e31d281177106326712417fed839907fa84"},
 ]
-"botocore 1.29.74" = [
-    {url = "https://files.pythonhosted.org/packages/32/98/3bb3b395b6bb6f3ae78c14e31b1ca73f56d429fe6f0904320ab780dd412f/botocore-1.29.74.tar.gz", hash = "sha256:bf1515908c8ffdffa249e112fd9bbb54d919ce8fb5ee88baf9c198dda6172fd5"},
-    {url = "https://files.pythonhosted.org/packages/73/84/e437951570d3c714e9dd10a0cdeac565825f107e7b241cf739498cdf587e/botocore-1.29.74-py3-none-any.whl", hash = "sha256:cb1e1a584c0bea3b1bcf39710eb7b2e58add56945598d95356bf9f6d4cc8b6ae"},
+"botocore 1.34.73" = [
+    {url = "https://files.pythonhosted.org/packages/96/7a/dd229e7fc5f281963637a202cad1d7235d94d05786520ebc1ad0700f0d56/botocore-1.34.73.tar.gz", hash = "sha256:8df020b6682b9f1e9ee7b0554d5d0c14b7b23e3de070c85bcdf07fb20bfe4e2b"},
+    {url = "https://files.pythonhosted.org/packages/b6/57/ce8002672837948b688b3b43f9ecf075325d57ed0d628ec84e10c0cfcf54/botocore-1.34.73-py3-none-any.whl", hash = "sha256:88d660b711cc5b5b049e15d547cb09526f86e48c15b78dacad78522109502b91"},
 ]
 "cachetools 5.3.3" = [
     {url = "https://files.pythonhosted.org/packages/b3/4d/27a3e6dd09011649ad5210bdf963765bc8fa81a0827a4fc01bafd2705c5b/cachetools-5.3.3.tar.gz", hash = "sha256:ba29e2dfa0b8b556606f097407ed1aa62080ee108ab0dc5ec9d6a723a007d105"},
@@ -3223,9 +3235,9 @@ content_hash = "sha256:aefabfeff25e54818455db8e9ea4eacf4e6d640b503822453427e95bf
     {url = "https://files.pythonhosted.org/packages/09/ec/4b43dae793655b7d8a25f76119624350b4d65eb663459eb9603d7f1f0345/mistune-0.8.4-py2.py3-none-any.whl", hash = "sha256:88a1051873018da288eee8538d476dffe1262495144b33ecb586c4ab266bb8d4"},
     {url = "https://files.pythonhosted.org/packages/2d/a4/509f6e7783ddd35482feda27bc7f72e65b5e7dc910eca4ab2164daf9c577/mistune-0.8.4.tar.gz", hash = "sha256:59a3429db53c50b5c6bcc8a07f8848cb00d7dc8bdb431a4ab41920d201d4756e"},
 ]
-"moto 4.1.2" = [
-    {url = "https://files.pythonhosted.org/packages/2e/f4/b449e2401da9a8c1e0569162822740709bebf78f0d095c65f1dfc3d864bf/moto-4.1.2-py2.py3-none-any.whl", hash = "sha256:1b361ece638c74a657325378a259276f368aafce2f8be84f8143e69fa93ce8ec"},
-    {url = "https://files.pythonhosted.org/packages/f8/b3/65a80cc1e6cc3c1dce7d1da390e1f4c2712038c2ba06d1e16cf6944e5d2f/moto-4.1.2.tar.gz", hash = "sha256:63431733d2a02c7bd652ad71ec1da442a0e0d580cbac5eeb50d440a2ce066eac"},
+"moto 5.0.4" = [
+    {url = "https://files.pythonhosted.org/packages/0a/9c/fa5eb735196a9d2ec50e1d370834a51b83d0092a828ee700f04d85b8f5f3/moto-5.0.4-py2.py3-none-any.whl", hash = "sha256:4054360b882b6e7bab25d52d057e196b978b8d15f1921333f534c4d8f6510bbb"},
+    {url = "https://files.pythonhosted.org/packages/6b/16/12043d6d169722a746253b9bd0c33625d9082c2cc03ece3c9b342281fce1/moto-5.0.4.tar.gz", hash = "sha256:8d19125d40c919cb40df62f4576904c2647c4e9a0e1ebc42491dd7787d09e107"},
 ]
 "msgpack 1.0.8" = [
     {url = "https://files.pythonhosted.org/packages/03/79/ae000bde2aee4b9f0d50c1ca1ab301ade873b59dd6968c28f918d1cf8be4/msgpack-1.0.8-cp312-cp312-musllinux_1_1_i686.whl", hash = "sha256:ef254a06bcea461e65ff0373d8a0dd1ed3aa004af48839f002a0c994a6f72d04"},
@@ -3665,6 +3677,10 @@ content_hash = "sha256:aefabfeff25e54818455db8e9ea4eacf4e6d640b503822453427e95bf
 "py 1.11.0" = [
     {url = "https://files.pythonhosted.org/packages/98/ff/fec109ceb715d2a6b4c4a85a61af3b40c723a961e8828319fbcb15b868dc/py-1.11.0.tar.gz", hash = "sha256:51c75c4126074b472f746a24399ad32f6053d1b34b68d2fa41e558e6f4a98719"},
     {url = "https://files.pythonhosted.org/packages/f6/f0/10642828a8dfb741e5f3fbaac830550a518a775c7fff6f04a007259b0548/py-1.11.0-py2.py3-none-any.whl", hash = "sha256:607c53218732647dff4acdfcd50cb62615cedf612e72d1724fb1a0cc6405b378"},
+]
+"py-partiql-parser 0.5.2" = [
+    {url = "https://files.pythonhosted.org/packages/04/30/c4492589cb9dafab1045c32b4950df5ec83f1e3cbb2e90c035cb36b4041d/py-partiql-parser-0.5.2.tar.gz", hash = "sha256:bdec65fe17d6093c05e9bc1742a99a041ef810b50a71cc0d9e74a88218d938cf"},
+    {url = "https://files.pythonhosted.org/packages/e3/78/7a3f4a2e2c151c85de73f591f7a16d944fe84ee6f5422c2dc3cd3a5baccc/py_partiql_parser-0.5.2-py3-none-any.whl", hash = "sha256:9c79b59bbe0cb50daa8090020f2e7f3e5a0e33f7846b48924f19a8f7704f4877"},
 ]
 "pycodestyle 2.11.1" = [
     {url = "https://files.pythonhosted.org/packages/34/8f/fa09ae2acc737b9507b5734a9aec9a2b35fa73409982f57db1b42f8c3c65/pycodestyle-2.11.1.tar.gz", hash = "sha256:41ba0e7afc9752dfb53ced5489e89f8186be00e599e712660695b7a75ff2663f"},
@@ -4144,9 +4160,9 @@ content_hash = "sha256:aefabfeff25e54818455db8e9ea4eacf4e6d640b503822453427e95bf
     {url = "https://files.pythonhosted.org/packages/fc/82/4cc5a780f298a92ec5bfb1d7af33d16f07fe689b31a4dfc49f5ede267e88/rpds_py-0.18.0-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:77f195baa60a54ef9d2de16fbbfd3ff8b04edc0c0140a761b56c267ac11aa467"},
     {url = "https://files.pythonhosted.org/packages/fd/ea/92231b62681961812e9fbd8ef9be7137856784406bf6a384976bb7b46472/rpds_py-0.18.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:ddc2f4dfd396c7bfa18e6ce371cba60e4cf9d2e5cdb71376aa2da264605b60b9"},
 ]
-"s3transfer 0.6.2" = [
-    {url = "https://files.pythonhosted.org/packages/5a/47/d676353674e651910085e3537866f093d2b9e9699e95e89d960e78df9ecf/s3transfer-0.6.2.tar.gz", hash = "sha256:cab66d3380cca3e70939ef2255d01cd8aece6a4907a9528740f668c4b0611861"},
-    {url = "https://files.pythonhosted.org/packages/d9/17/a3b666f5ef9543cfd3c661d39d1e193abb9649d0cfbbfee3cf3b51d5af02/s3transfer-0.6.2-py3-none-any.whl", hash = "sha256:b014be3a8a2aab98cfe1abc7229cc5a9a0cf05eb9c1f2b86b230fd8df3f78084"},
+"s3transfer 0.10.1" = [
+    {url = "https://files.pythonhosted.org/packages/83/37/395cdb6ee92925fa211e55d8f07b9f93cf93f60d7d4ce5e66fd73f1ea986/s3transfer-0.10.1-py3-none-any.whl", hash = "sha256:ceb252b11bcf87080fb7850a224fb6e05c8a776bab8f2b64b7f25b969464839d"},
+    {url = "https://files.pythonhosted.org/packages/83/bc/fb0c1f76517e3380eb142af8a9d6b969c150cfca1324cea7d965d8c66571/s3transfer-0.10.1.tar.gz", hash = "sha256:5683916b4c724f799e600f41dd9e10a9ff19871bf87623cc8f491cb4f5fa0a19"},
 ]
 "schematics 2.1.1" = [
     {url = "https://files.pythonhosted.org/packages/a5/e1/c9dca73caf001f82e8479e382a66820cbd29f461f465a12d4b3d7e0b929a/schematics-2.1.1-py2.py3-none-any.whl", hash = "sha256:be2d451bfb86789975e5ec0864aec569b63cea9010f0d24cbbd992a4e564c647"},
@@ -4394,13 +4410,9 @@ content_hash = "sha256:aefabfeff25e54818455db8e9ea4eacf4e6d640b503822453427e95bf
     {url = "https://files.pythonhosted.org/packages/0a/3c/6f4c97d9eb2b58f57fc595c105ae0a53a851747cddfb7df30f3d7192c837/types-PyYAML-6.0.12.20240311.tar.gz", hash = "sha256:a9e0f0f88dc835739b0c1ca51ee90d04ca2a897a71af79de9aec5f38cb0a5342"},
     {url = "https://files.pythonhosted.org/packages/b3/9a/2b75087549910ebd2be9894bfd89450668b2455094a8f2ba2b67072f15a5/types_PyYAML-6.0.12.20240311-py3-none-any.whl", hash = "sha256:b845b06a1c7e54b8e5b4c683043de0d9caf205e7434b3edc678ff2411979b8f6"},
 ]
-"types-requests 2.31.0.6" = [
-    {url = "https://files.pythonhosted.org/packages/5c/a1/6f8dc74d9069e790d604ddae70cb46dcbac668f1bb08136e7b0f2f5cd3bf/types_requests-2.31.0.6-py3-none-any.whl", hash = "sha256:a2db9cb228a81da8348b49ad6db3f5519452dd20a9c1e1a868c83c5fe88fd1a9"},
-    {url = "https://files.pythonhosted.org/packages/f9/b8/c1e8d39996b4929b918aba10dba5de07a8b3f4c8487bb61bb79882544e69/types-requests-2.31.0.6.tar.gz", hash = "sha256:cd74ce3b53c461f1228a9b783929ac73a666658f223e28ed29753771477b3bd0"},
-]
-"types-urllib3 1.26.25.14" = [
-    {url = "https://files.pythonhosted.org/packages/11/7b/3fc711b2efea5e85a7a0bbfe269ea944aa767bbba5ec52f9ee45d362ccf3/types_urllib3-1.26.25.14-py3-none-any.whl", hash = "sha256:9683bbb7fb72e32bfe9d2be6e04875fbe1b3eeec3cbb4ea231435aa7fd6b4f0e"},
-    {url = "https://files.pythonhosted.org/packages/73/de/b9d7a68ad39092368fb21dd6194b362b98a1daeea5dcfef5e1adb5031c7e/types-urllib3-1.26.25.14.tar.gz", hash = "sha256:229b7f577c951b8c1b92c1bc2b2fdb0b49847bd2af6d1cc2a2e3dd340f3bda8f"},
+"types-requests 2.31.0.20240311" = [
+    {url = "https://files.pythonhosted.org/packages/05/22/21c7918c9bb842faa92fd26108e9f669c3dee9b6b239e8f45dd5f673e6cf/types_requests-2.31.0.20240311-py3-none-any.whl", hash = "sha256:47872893d65a38e282ee9f277a4ee50d1b28bd592040df7d1fdaffdf3779937d"},
+    {url = "https://files.pythonhosted.org/packages/d1/bb/05c62e972a5a89318ee014aed52af921800e3bdd9a0eabfb3851d9bf0beb/types-requests-2.31.0.20240311.tar.gz", hash = "sha256:b1c1b66abfb7fa79aae09097a811c4aa97130eb8831c60e47aee4ca344731ca5"},
 ]
 "typing-extensions 4.10.0" = [
     {url = "https://files.pythonhosted.org/packages/16/3a/0d26ce356c7465a19c9ea8814b960f8a36c3b0d07c323176620b7b483e44/typing_extensions-4.10.0.tar.gz", hash = "sha256:b0abd7c89e8fb96f98db18d86106ff1d90ab692004eb746cf6eda2682f91b3cb"},
@@ -4418,9 +4430,9 @@ content_hash = "sha256:aefabfeff25e54818455db8e9ea4eacf4e6d640b503822453427e95bf
     {url = "https://files.pythonhosted.org/packages/31/c7/0336f2bd0bcbada6ccef7aaa25e443c118a704f828a0620c6fa0207c1b64/uri-template-1.3.0.tar.gz", hash = "sha256:0e00f8eb65e18c7de20d595a14336e9f337ead580c70934141624b6d1ffdacc7"},
     {url = "https://files.pythonhosted.org/packages/e7/00/3fca040d7cf8a32776d3d81a00c8ee7457e00f80c649f1e4a863c8321ae9/uri_template-1.3.0-py3-none-any.whl", hash = "sha256:a44a133ea12d44a0c0f06d7d42a52d71282e77e2f937d8abd5655b8d56fc1363"},
 ]
-"urllib3 1.26.18" = [
-    {url = "https://files.pythonhosted.org/packages/0c/39/64487bf07df2ed854cc06078c27c0d0abc59bd27b32232876e403c333a08/urllib3-1.26.18.tar.gz", hash = "sha256:f8ecc1bba5667413457c529ab955bf8c67b45db799d159066261719e328580a0"},
-    {url = "https://files.pythonhosted.org/packages/b0/53/aa91e163dcfd1e5b82d8a890ecf13314e3e149c05270cc644581f77f17fd/urllib3-1.26.18-py2.py3-none-any.whl", hash = "sha256:34b97092d7e0a3a8cf7cd10e386f401b3737364026c45e622aa02903dffe0f07"},
+"urllib3 2.2.1" = [
+    {url = "https://files.pythonhosted.org/packages/7a/50/7fd50a27caa0652cd4caf224aa87741ea41d3265ad13f010886167cfcc79/urllib3-2.2.1.tar.gz", hash = "sha256:d0570876c61ab9e520d776c38acbbb5b05a776d3f9ff98a5c8fd5162a444cf19"},
+    {url = "https://files.pythonhosted.org/packages/a2/73/a68704750a7679d0b6d3ad7aa8d4da8e14e151ae82e6fee774e6e0d05ec8/urllib3-2.2.1-py3-none-any.whl", hash = "sha256:450b20ec296a467077128bff42b73080516e71b56ff59a60a02bef2232c4fa9d"},
 ]
 "virtualenv 20.25.1" = [
     {url = "https://files.pythonhosted.org/packages/16/65/0d0bdfdac31e2db8c6d6c18fe1e00236f0dea279f9846f94a9aafa49cfc9/virtualenv-20.25.1-py3-none-any.whl", hash = "sha256:961c026ac520bac5f69acb8ea063e8a4f071bcc9457b9c1f28f6b085c511583a"},
