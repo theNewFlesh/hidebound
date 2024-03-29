@@ -488,7 +488,10 @@ def test_get_lut_dd_dataframe(db_cluster):
 
     result = result.compute()
     assert sorted(result.key.tolist()) == [1, 2, 3]
-    assert sorted(result.value.tolist()) == ["['foo']", '[1, 1, 1]', '[2, 2]']
+    result = sorted(result.value.tolist())
+    assert result[0] == "['1', '1', '1']"
+    assert result[1] == "['2', '2']"
+    assert result[2] == "['foo']"
 
 
 # LUT_COMBINATOR------------------------------------------------------------
@@ -525,12 +528,34 @@ def test_lut_combinator_dd_dataframe(db_cluster):
 
     result = result.compute()
     assert 'vals' in result.columns
-    expected = [
-        "['foo']",
-        '[1, 1, 1]',
-        '[1, 1, 1]',
-        '[1, 1, 1]',
-        '[2, 2]',
-        '[2, 2]',
-    ]
-    assert sorted(result.vals.tolist()) == expected
+
+    result = sorted(result.vals.tolist())
+    assert result[0] == "['1', '1', '1']"
+    assert result[1] == "['1', '1', '1']"
+    assert result[2] == "['1', '1', '1']"
+    assert result[3] == "['2', '2']"
+    assert result[4] == "['2', '2']"
+    assert result[5] == "['foo']"
+
+
+def test_lut_combinator_dd_dataframe_int(db_cluster):
+    data = pd.DataFrame()
+    data['grp'] = [1, 1, 1, 2, 2, 3]
+    data['val'] = [1, 1, 1, 2, 2, 3]
+    data = dd.from_pandas(data, chunksize=1)
+
+    result = hbt.lut_combinator(
+        data, 'grp', 'vals', lambda x: str(x.val.tolist()), meta=str
+    )
+    assert isinstance(result, dd.DataFrame)
+
+    result = result.compute()
+    assert 'vals' in result.columns
+
+    result = sorted(result.vals.tolist())
+    assert result[0] == '[1, 1, 1]'
+    assert result[1] == '[1, 1, 1]'
+    assert result[2] == '[1, 1, 1]'
+    assert result[3] == '[2, 2]'
+    assert result[4] == '[2, 2]'
+    assert result[5] == '[3]'

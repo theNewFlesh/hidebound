@@ -12,12 +12,14 @@ import shutil
 from lunchbox.enforce import Enforce
 from schematics.exceptions import DataError, ValidationError
 import dask.dataframe as dd
+import numpy as np
 import pandas as pd
 import pyjson5 as jsonc
 
 FilePath = Union[str, Path]
 DF = Union[pd.DataFrame, dd.DataFrame]
 DFS = Union[pd.DataFrame, pd.Series, dd.DataFrame, dd.Series]
+S = Union[pd.Series, dd.Series]
 # ------------------------------------------------------------------------------
 
 
@@ -301,9 +303,9 @@ def pred_combinator(
     predicate,              # type: Callable[[Any], bool]
     true_func,              # type: Callable[[Any], Any]
     false_func,             # type: Callable[[Any], Any]
-    meta='__no_default__',  # type: Any
+    meta='inherit',         # type: Any
 ):
-    # type: (...) -> DFS
+    # type: (...) -> S
     '''
     Apply true_func to rows where predicate if true and false_func to rows where
     it is false.
@@ -315,25 +317,28 @@ def pred_combinator(
             is true.
         false_func (function): Function that expects a row. Called when predicate
             is false.
-        meta (object, optional): Metadata inference. Default: '__no_default__'.
+        meta (object, optional): Metadata inference. Default: inherit.
 
     Returns:
-        DataFrame or Series: Apply results.
+        Series: Combinator results.
     '''
     kwargs = get_meta_kwargs(data, meta)
+    if kwargs != {}:
+        if isinstance(kwargs['meta'], pd.DataFrame):
+            if meta == 'inherit':
+                meta = np.object_
+            kwargs['meta'] = pd.Series(dtype=meta)
+
     if data.__class__ in [pd.DataFrame, dd.DataFrame]:
-        return data.apply(
-            lambda x: true_func(x) if predicate(x) else false_func(x),
-            axis=1,
-            **kwargs,
-        )
+        kwargs['axis'] = 1
+
     return data.apply(
         lambda x: true_func(x) if predicate(x) else false_func(x),
         **kwargs,
     )
 
 
-def get_lut(data, column, aggregator, meta='__no_default__'):
+def get_lut(data, column, aggregator, meta='inherit'):
     # type: (DF, str, Callable[[DF], Any], Any) -> DF
     '''
     Constructs a lookup table with the given column as its keys and the
@@ -346,12 +351,16 @@ def get_lut(data, column, aggregator, meta='__no_default__'):
         column (str): Column to be used as the key.
         aggregator (function): Function that expects a group DataFrame and
             returns a scalar.
-        meta (object, optional): Metadata inference. Default: '__no_default__'.
+        meta (object, optional): Metadata inference. Default: inherit.
 
     Returns:
         DataFrame: DataFrame with key and value columns.
     '''
-    kwargs = get_meta_kwargs(data, ('value', meta))
+    kwargs = get_meta_kwargs(data, meta)
+    if kwargs != {}:
+        dtype = kwargs['meta'].dtypes[column]
+        kwargs = dict(meta=pd.Series(dtype=dtype))
+
     merge = pd.merge
     empty = pd.DataFrame(columns=['key', 'value'])
     if isinstance(data, dd.DataFrame):
@@ -362,14 +371,16 @@ def get_lut(data, column, aggregator, meta='__no_default__'):
     keys = grp[column].first().to_frame(name='key')
     if len(keys) == 0:
         return empty
-    vals = grp.apply(aggregator, include_groups=True, **kwargs).to_frame(name='value')
+    vals = grp \
+        .apply(aggregator, include_groups=True, **kwargs) \
+        .to_frame(name='value')
     lut = merge(keys, vals, left_index=True, right_index=True) \
         .reset_index(drop=True)
     return lut
 
 
 def lut_combinator(
-    data, key_column, value_column, aggregator, meta='__no_default__'
+    data, key_column, value_column, aggregator, meta='inherit'
 ):
     # type: (DF, str, str, Callable[[DF], Any], Any) -> DF
     '''
@@ -381,17 +392,16 @@ def lut_combinator(
         key_column (str): Column to be used as the lut keys.
         value_column (str): Column to be used as the values.
         aggregator (function): Function that expects a pd.DataFrame.
-        meta (object, optional): Metadata irom_nference. Default: '__no_default__'.
+        meta (object, optional): Metadata inference. Default: inherit.
 
     Returns:
         DataFrame: DataFrame with value column.
     '''
-    kwargs = get_meta_kwargs(data, meta)
     merge = pd.merge
     if isinstance(data, dd.DataFrame):
         merge = dd.merge
 
-    lut = get_lut(data, key_column, aggregator, **kwargs)
+    lut = get_lut(data, key_column, aggregator, meta=meta)
     lut.columns = [key_column, value_column]
     data = merge(data, lut, on=key_column, how='left')
     return data
