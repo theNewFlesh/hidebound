@@ -1,15 +1,23 @@
 [project]
 name = "hidebound"
-version = "0.31.5"
+version = "0.32.0"
 description = "A MLOps framework for generating ML assets and metadata."
 authors = [
-    {name = "Alex Braun", email = "alexander.g.braun@gmail.com"},
+    { name = "Alex Braun", email = "alexander.g.braun@gmail.com" },
 ]
 readme = "README.md"
 license = "MIT"
 keywords = [
-    "ephemeral", "database", "asset", "assetstore", "datastore", "vfx", "mlops",
-    "ml", "machine-learning", "data"
+    "ephemeral",
+    "database",
+    "asset",
+    "assetstore",
+    "datastore",
+    "vfx",
+    "mlops",
+    "ml",
+    "machine-learning",
+    "data",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -146,5 +154,7 @@ pretty = true
 warn_unused_ignores = true
 
 [build-system]
-requires = ["pdm-pep517>=1.0.0"]
+requires = [
+    "pdm-pep517>=1.0.0",
+]
 build-backend = "pdm.pep517.api"
