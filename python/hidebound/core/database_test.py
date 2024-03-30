@@ -6,7 +6,7 @@ import os
 import re
 import time
 
-from moto import mock_s3
+from moto import mock_aws
 from schematics.exceptions import DataError
 import boto3 as boto
 import pytest
@@ -367,7 +367,7 @@ def test_read_legal_types(make_dirs, make_files, specs, dask_config):  # noqa: F
     data = db.read()
 
     # test types by file
-    result = data.applymap(type)\
+    result = data.map(type)\
         .apply(lambda x: x.unique().tolist())\
         .tolist()
     result = list(chain(*result))
@@ -379,7 +379,7 @@ def test_read_legal_types(make_dirs, make_files, specs, dask_config):  # noqa: F
 
     # test types by asset
     data = db.read(group_by_asset=True)
-    result = data.applymap(type)\
+    result = data.map(type)\
         .apply(lambda x: x.unique().tolist()) \
         .loc[0].tolist()
     result = set(result)
@@ -685,7 +685,7 @@ def test_export_girder(make_dirs, make_files, specs, dask_config):  # noqa: F811
         assert expected in result
 
 
-@mock_s3
+@mock_aws
 @pytest.mark.skipif('SKIP_SLOW_TESTS' in os.environ, reason='slow test')
 def test_export_s3(make_dirs, make_files, specs, db_data, dask_config):  # noqa: F811
     Spec001, Spec002, _ = specs
