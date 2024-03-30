@@ -222,6 +222,10 @@ RUN echo "\n${CYAN}SETUP S6 SERVICES${CLEAR}"; \
     . /home/ubuntu/scripts/s_tools.sh && \
     s_setup_services
 
+# chown /var/log
+RUN echo "\n${CYAN}CHOWN /VAR/LOG${CLEAR}"; \
+    chown ubuntu:ubuntu /var/log
+
 USER ubuntu
 WORKDIR /home/ubuntu
 
