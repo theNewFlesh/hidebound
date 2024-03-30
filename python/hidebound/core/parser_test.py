@@ -105,6 +105,15 @@ class ParserTests(unittest.TestCase):
         )
         self.assertEqual(result, expected)
 
+    def test_parse_error(self):
+        fields = [
+            'project', 'specification', 'descriptor', 'coordinate', 'version'
+        ]
+        name = 'p-proj001_s-spec001_d-PIZZA_v003_c0000-0001_f0003.png'
+        expected = 'Illegal descriptor field token'
+        with self.assertRaisesRegex(ParseException, expected):
+            AssetNameParser(fields).parse(name)
+
     def test_parse_bad_order(self):
         fields = [
             'project', 'specification', 'descriptor', 'version', 'frame',
