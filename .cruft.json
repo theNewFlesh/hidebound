@@ -1,0 +1,52 @@
+{
+  "template": "https://github.com/theNewFlesh/cookiecutter-datalus",
+  "commit": "d1390b6de31a727332b40e0a566d21ce2a9de4dd",
+  "checkout": null,
+  "skip": [
+    "__init__\\.py$",
+    "\\.gitignore$",
+    "\\.gitkeep$",
+    "docker/config/.*\\.lock$",
+    "docker/config/build\\.yaml",
+    "docs/.*",
+    "mkdocs/md/(?!index\\.md|style\\.css)",
+    "public/.*",
+    "python/yoneda/.*(?!command\\.py$)",
+    "resources/.*",
+    "sphinx/.*rst$"
+  ],
+  "context": {
+    "cookiecutter": {
+      "repo": "hidebound",
+      "repo_type": "dash",
+      "include_black": "no",
+      "include_mkdocs": "no",
+      "include_helm": "yes",
+      "include_openexr": "no",
+      "include_tensorflow": "no",
+      "include_nvidia": "no",
+      "include_prod_cli": "yes",
+      "include_prod_envs": "yes",
+      "include_rsync": "no",
+      "include_vscode_server": "no",
+      "port_prefix": "20",
+      "git_user": "theNewFlesh",
+      "git_host": "github",
+      "git_organization": "theNewFlesh",
+      "docker_registry": "dockerhub",
+      "description": "A MLOps framework for generating ML assets and metadata.",
+      "organization_url": "github.com",
+      "author": "Alex Braun",
+      "email": "alexander.g.braun@gmail.com",
+      "website": "http://www.alexgbraun.com",
+      "volume": "",
+      "keywords": "ephemeral, database, asset, assetstore, datastore, vfx, mlops, ml, machine-learning, data",
+      "year": "2024",
+      "python_min_version": "8",
+      "python_max_version": "10",
+      "initial_repo_version": "0.32.0",
+      "_template": "https://github.com/theNewFlesh/cookiecutter-datalus"
+    }
+  },
+  "directory": null
+}
