@@ -48,7 +48,7 @@ dependencies = [
     "json_logging",
     "lunchbox",
     "numpy",
-    "pandas",
+    "pandas>=2.1.0",
     "pandasql",
     "pyjson5",
     "pyparsing>=3.0.1",

@@ -43,7 +43,7 @@
       "volume": "",
       "keywords": "ephemeral, database, asset, assetstore, datastore, vfx, mlops, ml, machine-learning, data",
       "year": "2024",
-      "python_min_version": "8",
+      "python_min_version": "9",
       "python_max_version": "10",
       "initial_repo_version": "0.32.0",
       "_template": "https://github.com/theNewFlesh/cookiecutter-datalus"

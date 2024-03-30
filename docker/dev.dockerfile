@@ -70,9 +70,6 @@ RUN echo "\n${CYAN}INSTALL PYTHON${CLEAR}"; \
         python3.9-dev \
         python3.9-venv \
         python3.9-distutils \
-        python3.8-dev \
-        python3.8-venv \
-        python3.8-distutils \
     && rm -rf /var/lib/apt/lists/*
 
 # install pip
@@ -206,8 +203,7 @@ RUN echo "\n${CYAN}INSTALL PROD ENVIRONMENTS${CLEAR}"; \
     export CONFIG_DIR=/home/ubuntu/config && \
     export SCRIPT_DIR=/home/ubuntu/scripts && \
     x_env_init prod 3.10 && \
-    x_env_init prod 3.9 && \
-    x_env_init prod 3.8
+    x_env_init prod 3.9
 
 # install prod cli
 RUN echo "\n${CYAN}INSTALL PROD CLI${CLEAR}"; \
