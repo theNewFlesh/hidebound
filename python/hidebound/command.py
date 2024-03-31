@@ -41,8 +41,8 @@ def config():
 
 
 @main.command()
-def serve(debug):
-    # type: (bool) -> None
+def serve():
+    # type: () -> None
     '''
     Runs a hidebound server.
     '''
