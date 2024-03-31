@@ -43,6 +43,7 @@ dependencies = [
     "flask-healthz",
     "flask",
     "girder-client",
+    "gunicorn>=21.2.0",
     "jinja2>=3.0",
     "json_logging",
     "lunchbox",
