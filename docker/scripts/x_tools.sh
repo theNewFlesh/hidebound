@@ -553,7 +553,7 @@ x_session_python () {
 x_session_server () {
     # Run application server
     x_env_activate_dev;
-    echo "${CYAN2}APP${CLEAR}\n";
+    echo "${CYAN2}SERVER${CLEAR}\n";
     mkdir -p /tmp/hidebound /tmp/ingress;
     python3 $REPO_SUBPACKAGE/server/app.py;
 }
