@@ -7,7 +7,7 @@
   <title>cli &mdash; hidebound  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
-      <link rel="stylesheet" type="text/css" href="_static/style.css?v=01a16962" />
+      <link rel="stylesheet" type="text/css" href="_static/style.css" />
 
   
   <!--[if lt IE 9]>
@@ -37,7 +37,7 @@
             hidebound
           </a>
               <div class="version">
-                0.32.0
+                0.32.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -59,6 +59,7 @@
 <li class="toctree-l1"><a class="reference internal" href="intro.html#configuration">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="intro.html#specification">Specification</a></li>
 <li class="toctree-l1"><a class="reference internal" href="intro.html#production-cli">Production CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intro.html#quickstart-guide">Quickstart Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="intro.html#development-cli">Development CLI</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
@@ -85,7 +86,9 @@
 <li class="toctree-l2"><a class="reference internal" href="#cli.line"><code class="docutils literal notranslate"><span class="pre">line()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cli.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cli.prod_command"><code class="docutils literal notranslate"><span class="pre">prod_command()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cli.pull_command"><code class="docutils literal notranslate"><span class="pre">pull_command()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cli.push_command"><code class="docutils literal notranslate"><span class="pre">push_command()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cli.quickstart_command"><code class="docutils literal notranslate"><span class="pre">quickstart_command()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cli.remove_command"><code class="docutils literal notranslate"><span class="pre">remove_command()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cli.remove_container"><code class="docutils literal notranslate"><span class="pre">remove_container()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cli.resolve"><code class="docutils literal notranslate"><span class="pre">resolve()</span></code></a></li>
@@ -95,12 +98,13 @@
 <li class="toctree-l2"><a class="reference internal" href="#cli.state_command"><code class="docutils literal notranslate"><span class="pre">state_command()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cli.stop"><code class="docutils literal notranslate"><span class="pre">stop()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cli.stop_command"><code class="docutils literal notranslate"><span class="pre">stop_command()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cli.version_commit_command"><code class="docutils literal notranslate"><span class="pre">version_commit_command()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cli.version_variable"><code class="docutils literal notranslate"><span class="pre">version_variable()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#cli.x_tools"><code class="docutils literal notranslate"><span class="pre">x_tools()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cli.x_tools_command"><code class="docutils literal notranslate"><span class="pre">x_tools_command()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cli.zsh_command"><code class="docutils literal notranslate"><span class="pre">zsh_command()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cli.zsh_complete_command"><code class="docutils literal notranslate"><span class="pre">zsh_complete_command()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cli.zsh_root_command"><code class="docutils literal notranslate"><span class="pre">zsh_root_command()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cli.zshrc_tools"><code class="docutils literal notranslate"><span class="pre">zshrc_tools()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -140,13 +144,17 @@ repository’s structure. Written to be python version agnostic.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cli.build_dev_command">
-<span class="sig-prename descclassname"><span class="pre">cli.</span></span><span class="sig-name descname"><span class="pre">build_dev_command</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#build_dev_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cli.build_dev_command" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cli.</span></span><span class="sig-name descname"><span class="pre">build_dev_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#build_dev_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cli.build_dev_command" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Command to build dev image.</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>use_cache</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to use Docker image cache.
+Default: False.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Command to build dev image.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -205,13 +213,16 @@ repository’s structure. Written to be python version agnostic.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cli.docker_exec">
-<span class="sig-prename descclassname"><span class="pre">cli.</span></span><span class="sig-name descname"><span class="pre">docker_exec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#docker_exec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cli.docker_exec" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cli.</span></span><span class="sig-name descname"><span class="pre">docker_exec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tty</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#docker_exec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cli.docker_exec" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Partial command to call ‘docker exec’.</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tty</strong> (<em>bool</em><em>, </em><em>optional</em>) – Include –tty flag. Default: False.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Partial command to call ‘docker exec’.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -328,11 +339,47 @@ commands.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="cli.push_command">
-<span class="sig-prename descclassname"><span class="pre">cli.</span></span><span class="sig-name descname"><span class="pre">push_command</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#push_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cli.push_command" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="cli.pull_command">
+<span class="sig-prename descclassname"><span class="pre">cli.</span></span><span class="sig-name descname"><span class="pre">pull_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dev-latest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#pull_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cli.pull_command" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tag</strong> (<em>str</em><em>, </em><em>optional</em>) – Tag prefix. Default: ‘dev-latest’.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Command to pull Docker image from registry.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cli.push_command">
+<span class="sig-prename descclassname"><span class="pre">cli.</span></span><span class="sig-name descname"><span class="pre">push_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dev'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'$VERSION'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#push_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cli.push_command" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode</strong> (<em>str</em><em>, </em><em>optional</em>) – Mode. Default: ‘dev’.</p></li>
+<li><p><strong>suffix</strong> (<em>str</em><em>, </em><em>optional</em>) – Tag suffix. Default: ‘$VERSION’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Command to push Docker image to registry.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cli.quickstart_command">
+<span class="sig-prename descclassname"><span class="pre">cli.</span></span><span class="sig-name descname"><span class="pre">quickstart_command</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#quickstart_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cli.quickstart_command" title="Link to this definition">¶</a></dt>
+<dd><p>Returns a command which prints the quickstart guide.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Command to push prod docker image to dockerhub.</p>
+<dd class="field-odd"><p>quickstart command.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>str</p>
@@ -463,6 +510,23 @@ resolving ‘{…}’ substrings.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="cli.version_commit_command">
+<span class="sig-prename descclassname"><span class="pre">cli.</span></span><span class="sig-name descname"><span class="pre">version_commit_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#version_commit_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cli.version_commit_command" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> (<em>list</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – List containing a target branch.
+Default: [‘master’].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Git tag and commit command.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="cli.version_variable">
 <span class="sig-prename descclassname"><span class="pre">cli.</span></span><span class="sig-name descname"><span class="pre">version_variable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#version_variable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cli.version_variable" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -476,29 +540,8 @@ resolving ‘{…}’ substrings.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="cli.x_tools">
-<span class="sig-prename descclassname"><span class="pre">cli.</span></span><span class="sig-name descname"><span class="pre">x_tools</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#x_tools"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cli.x_tools" title="Link to this definition">¶</a></dt>
-<dd><p>Creates a x_tools command string.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>command</strong> (<em>str</em>) – x_tools command</p></li>
-<li><p><strong>args</strong> (<em>list</em><em>, </em><em>optional</em>) – List of arguments to be passed to the command.
-Default: []</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>x_tools command.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="cli.x_tools_command">
-<span class="sig-prename descclassname"><span class="pre">cli.</span></span><span class="sig-name descname"><span class="pre">x_tools_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#x_tools_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cli.x_tools_command" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cli.</span></span><span class="sig-name descname"><span class="pre">x_tools_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tty</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#x_tools_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cli.x_tools_command" title="Link to this definition">¶</a></dt>
 <dd><p>Runs a x_tools command.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -506,6 +549,7 @@ Default: []</p></li>
 <li><p><strong>command</strong> (<em>str</em>) – x_tools command</p></li>
 <li><p><strong>args</strong> (<em>list</em><em>, </em><em>optional</em>) – List of arguments to be passed to the command.
 Default: []</p></li>
+<li><p><strong>tty</strong> (<em>bool</em><em>, </em><em>optional</em>) – Include docker –tty flag. Default: False.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -556,6 +600,27 @@ Default: []</p></li>
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="cli.zshrc_tools">
+<span class="sig-prename descclassname"><span class="pre">cli.</span></span><span class="sig-name descname"><span class="pre">zshrc_tools</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cli.html#zshrc_tools"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cli.zshrc_tools" title="Link to this definition">¶</a></dt>
+<dd><p>Creates a tools command string that sources zshrc first.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>command</strong> (<em>str</em>) – command</p></li>
+<li><p><strong>args</strong> (<em>list</em><em>, </em><em>optional</em>) – List of arguments to be passed to the command.
+Default: []</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>command.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 
@@ -568,7 +633,7 @@ Default: []</p></li>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
+    <p>&#169; Copyright 2024, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

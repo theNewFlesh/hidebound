@@ -272,3 +272,24 @@ h1 {
         max-width: 100% !important;
     }
 }
+
+/* Notes */
+.admonition {
+    color: #A4A4A4 !important;
+    background: #343434 !important;
+}
+
+.warning > .admonition-title {
+    color: #181818 !important;
+    background: #DE958E !important;
+}
+
+.note > .admonition-title {
+    color: #181818 !important;
+    background: #EBB483 !important;
+}
+
+.admonition-todo > .admonition-title {
+    color: #181818 !important;
+    background: #A0D17B !important;
+}

@@ -668,7 +668,7 @@ _x_get_version () {
 
 x_version () {
     # Full resolution of repo: dependencies, linting, tests, docs, etc
-    x_library_install_dev;
+    # x_library_install_dev;
     x_test_lint;
     x_docs_full;
 }

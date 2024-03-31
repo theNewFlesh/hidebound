@@ -1,22 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>hidebound.server.server_tools &mdash; hidebound  documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/style.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -27,14 +28,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> hidebound
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            hidebound
           </a>
               <div class="version">
-                0.31.4
+                0.32.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -42,13 +47,18 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#installation">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#overview">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#dataflow">Dataflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#workflow">Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#naming-convention">Naming Convention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#project-structure">Project Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#application">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#configuration">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#specification">Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#production-cli">Production CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#quickstart-guide">Quickstart Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#development-cli">Development CLI</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
@@ -56,7 +66,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../exporters.html">exporters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../server.html">server</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Developer CLI</span></p>
+<p class="caption" role="heading"><span class="caption-text">Development CLI</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
 </ul>
@@ -74,7 +84,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">hidebound.server.server_tools</li>
       <li class="wy-breadcrumbs-aside">
@@ -114,9 +124,11 @@
 <span class="n">PORT</span> <span class="o">=</span> <span class="mi">8080</span>
 
 
-<div class="viewcode-block" id="EndPoints"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.EndPoints">[docs]</a><span class="nd">@dataclass</span>
+<div class="viewcode-block" id="EndPoints">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.EndPoints">[docs]</a>
+<span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">EndPoints</span><span class="p">:</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    A convenience class for API endpoints.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">host</span> <span class="o">=</span> <span class="n">HOST</span>
@@ -131,12 +143,15 @@
     <span class="n">search</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;http://</span><span class="si">{</span><span class="n">HOST</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">PORT</span><span class="si">}</span><span class="s1">/api/search&#39;</span>
     <span class="n">workflow</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;http://</span><span class="si">{</span><span class="n">HOST</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">PORT</span><span class="si">}</span><span class="s1">/api/workflow&#39;</span>
     <span class="n">progress</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;http://</span><span class="si">{</span><span class="n">HOST</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">PORT</span><span class="si">}</span><span class="s1">/api/progress&#39;</span></div>
+
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
-<div class="viewcode-block" id="render_template"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.render_template">[docs]</a><span class="k">def</span> <span class="nf">render_template</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
+<div class="viewcode-block" id="render_template">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.render_template">[docs]</a>
+<span class="k">def</span> <span class="nf">render_template</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
     <span class="c1"># type: (str, Dict[str, Any]) -&gt; bytes</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Renders a jinja2 template given by filename with given parameters.</span>
 
 <span class="sd">    Args:</span>
@@ -155,9 +170,12 @@
     <span class="k">return</span> <span class="n">output</span></div>
 
 
-<div class="viewcode-block" id="parse_json_file_content"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.parse_json_file_content">[docs]</a><span class="k">def</span> <span class="nf">parse_json_file_content</span><span class="p">(</span><span class="n">raw_content</span><span class="p">):</span>
+
+<div class="viewcode-block" id="parse_json_file_content">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.parse_json_file_content">[docs]</a>
+<span class="k">def</span> <span class="nf">parse_json_file_content</span><span class="p">(</span><span class="n">raw_content</span><span class="p">):</span>
     <span class="c1"># type: (bytes) -&gt; Dict</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Parses JSON file content as supplied by HTML request.</span>
 
 <span class="sd">    Args:</span>
@@ -180,9 +198,12 @@
     <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">output</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="error_to_response"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.error_to_response">[docs]</a><span class="k">def</span> <span class="nf">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
+
+<div class="viewcode-block" id="error_to_response">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.error_to_response">[docs]</a>
+<span class="k">def</span> <span class="nf">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
     <span class="c1"># type: (Exception) -&gt; flask.Response</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Convenience function for formatting a given exception as a Flask Response.</span>
 
 <span class="sd">    Args:</span>
@@ -215,10 +236,13 @@
     <span class="p">)</span></div>
 
 
+
 <span class="c1"># SETUP-------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="setup_hidebound_directories"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.setup_hidebound_directories">[docs]</a><span class="k">def</span> <span class="nf">setup_hidebound_directories</span><span class="p">(</span><span class="n">root</span><span class="p">):</span>
+<div class="viewcode-block" id="setup_hidebound_directories">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.setup_hidebound_directories">[docs]</a>
+<span class="k">def</span> <span class="nf">setup_hidebound_directories</span><span class="p">(</span><span class="n">root</span><span class="p">):</span>
     <span class="c1"># type: (Union[str, Path]) -&gt; None</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Creates [root]/ingress, [root]/hidebound and [root]/archive directories.</span>
 
 <span class="sd">    Args:</span>
@@ -228,10 +252,13 @@
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">folder</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
+
 <span class="c1"># ERRORS------------------------------------------------------------------------</span>
-<div class="viewcode-block" id="get_config_error"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.get_config_error">[docs]</a><span class="k">def</span> <span class="nf">get_config_error</span><span class="p">():</span>
+<div class="viewcode-block" id="get_config_error">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.get_config_error">[docs]</a>
+<span class="k">def</span> <span class="nf">get_config_error</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; flask.Response</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Convenience function for returning a config error response.</span>
 
 <span class="sd">    Returns:</span>
@@ -242,9 +269,12 @@
     <span class="k">return</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_initialization_error"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.get_initialization_error">[docs]</a><span class="k">def</span> <span class="nf">get_initialization_error</span><span class="p">():</span>
+
+<div class="viewcode-block" id="get_initialization_error">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.get_initialization_error">[docs]</a>
+<span class="k">def</span> <span class="nf">get_initialization_error</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; flask.Response</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Convenience function for returning a initialization error response.</span>
 
 <span class="sd">    Returns:</span>
@@ -255,9 +285,12 @@
     <span class="k">return</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_update_error"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.get_update_error">[docs]</a><span class="k">def</span> <span class="nf">get_update_error</span><span class="p">():</span>
+
+<div class="viewcode-block" id="get_update_error">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.get_update_error">[docs]</a>
+<span class="k">def</span> <span class="nf">get_update_error</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; flask.Response</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Convenience function for returning a update error response.</span>
 
 <span class="sd">    Returns:</span>
@@ -268,8 +301,11 @@
     <span class="k">return</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_read_error"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.get_read_error">[docs]</a><span class="k">def</span> <span class="nf">get_read_error</span><span class="p">():</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="get_read_error">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.get_read_error">[docs]</a>
+<span class="k">def</span> <span class="nf">get_read_error</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Convenience function for returning a read error response.</span>
 
 <span class="sd">    Returns:</span>
@@ -281,9 +317,12 @@
     <span class="k">return</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_search_error"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.get_search_error">[docs]</a><span class="k">def</span> <span class="nf">get_search_error</span><span class="p">():</span>
+
+<div class="viewcode-block" id="get_search_error">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.get_search_error">[docs]</a>
+<span class="k">def</span> <span class="nf">get_search_error</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; flask.Response</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Convenience function for returning a search error response.</span>
 
 <span class="sd">    Returns:</span>
@@ -295,9 +334,12 @@
     <span class="k">return</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_connection_error"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.get_connection_error">[docs]</a><span class="k">def</span> <span class="nf">get_connection_error</span><span class="p">():</span>
+
+<div class="viewcode-block" id="get_connection_error">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.get_connection_error">[docs]</a>
+<span class="k">def</span> <span class="nf">get_connection_error</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; flask.Response</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Convenience function for returning a database connection error response.</span>
 
 <span class="sd">    Returns:</span>
@@ -308,10 +350,13 @@
     <span class="k">return</span> <span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
 
 
+
 <span class="c1"># DASH-TOOLS--------------------------------------------------------------------</span>
-<div class="viewcode-block" id="get_progress"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.get_progress">[docs]</a><span class="k">def</span> <span class="nf">get_progress</span><span class="p">(</span><span class="n">logpath</span><span class="o">=</span><span class="n">hblog</span><span class="o">.</span><span class="n">PROGRESS_LOG_PATH</span><span class="p">):</span>
+<div class="viewcode-block" id="get_progress">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.get_progress">[docs]</a>
+<span class="k">def</span> <span class="nf">get_progress</span><span class="p">(</span><span class="n">logpath</span><span class="o">=</span><span class="n">hblog</span><span class="o">.</span><span class="n">PROGRESS_LOG_PATH</span><span class="p">):</span>
     <span class="c1"># type: (Union[str, Path]) -&gt; dict</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Gets current progress state.</span>
 
 <span class="sd">    Args:</span>
@@ -326,9 +371,12 @@
     <span class="k">return</span> <span class="n">state</span></div>
 
 
-<div class="viewcode-block" id="request"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.request">[docs]</a><span class="k">def</span> <span class="nf">request</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">client</span><span class="o">=</span><span class="n">requests</span><span class="p">):</span>
+
+<div class="viewcode-block" id="request">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.request">[docs]</a>
+<span class="k">def</span> <span class="nf">request</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">client</span><span class="o">=</span><span class="n">requests</span><span class="p">):</span>
     <span class="c1"># type: (dict, str, Optional[dict], Any) -&gt; dict</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Execute search against database and update store with response.</span>
 <span class="sd">    Sets store[&#39;content&#39;] to response if there is an error.</span>
 
@@ -356,9 +404,12 @@
     <span class="k">return</span> <span class="n">response</span></div>
 
 
-<div class="viewcode-block" id="search"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.search">[docs]</a><span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">group_by_asset</span><span class="p">,</span> <span class="n">client</span><span class="o">=</span><span class="n">requests</span><span class="p">):</span>
+
+<div class="viewcode-block" id="search">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.search">[docs]</a>
+<span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">group_by_asset</span><span class="p">,</span> <span class="n">client</span><span class="o">=</span><span class="n">requests</span><span class="p">):</span>
     <span class="c1"># type: (dict, str, bool, Any) -&gt; dict</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Execute search against database and update given store with response.</span>
 
 <span class="sd">    Args:</span>
@@ -377,11 +428,14 @@
     <span class="k">return</span> <span class="n">store</span></div>
 
 
-<div class="viewcode-block" id="format_config"><a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.format_config">[docs]</a><span class="k">def</span> <span class="nf">format_config</span><span class="p">(</span>
+
+<div class="viewcode-block" id="format_config">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.server_tools.format_config">[docs]</a>
+<span class="k">def</span> <span class="nf">format_config</span><span class="p">(</span>
     <span class="n">config</span><span class="p">,</span> <span class="n">redact_regex</span><span class="o">=</span><span class="s1">&#39;(_key|_id|_token|url)$&#39;</span><span class="p">,</span> <span class="n">redact_hash</span><span class="o">=</span><span class="kc">False</span>
 <span class="p">):</span>
     <span class="c1"># type: (Dict[str, Any], str, bool) -&gt; OrderedDict[str, Any]</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Redacts credentials of config and formats it for display in component.</span>
 
 <span class="sd">    Args:</span>
@@ -430,6 +484,7 @@
         <span class="n">val</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\.\.\.$&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_dump</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="n">output</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
     <span class="k">return</span> <span class="n">output</span></div>
+
 </pre></div>
 
            </div>
@@ -439,7 +494,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
+    <p>&#169; Copyright 2024, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
