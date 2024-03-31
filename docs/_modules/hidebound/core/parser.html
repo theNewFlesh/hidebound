@@ -1,22 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>hidebound.core.parser &mdash; hidebound  documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/style.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -27,14 +28,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> hidebound
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            hidebound
           </a>
               <div class="version">
-                0.31.0
+                0.32.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -42,13 +47,18 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#installation">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#overview">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#dataflow">Dataflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#workflow">Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#naming-convention">Naming Convention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#project-structure">Project Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#application">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#configuration">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#specification">Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#production-cli">Production CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#quickstart-guide">Quickstart Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#development-cli">Development CLI</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
@@ -56,7 +66,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../exporters.html">exporters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../server.html">server</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Developer CLI</span></p>
+<p class="caption" role="heading"><span class="caption-text">Development CLI</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
 </ul>
@@ -74,7 +84,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">hidebound.core.parser</li>
       <li class="wy-breadcrumbs-aside">
@@ -93,8 +103,10 @@
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
-<div class="viewcode-block" id="AssetNameParser"><a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser">[docs]</a><span class="k">class</span> <span class="nc">AssetNameParser</span><span class="p">:</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="AssetNameParser">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser">[docs]</a>
+<span class="k">class</span> <span class="nc">AssetNameParser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    A class for converting asset names to metadata and metadata to asset names,</span>
 <span class="sd">    according to a dynimcally defined grammar.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
@@ -121,9 +133,11 @@
     <span class="n">COORDINATE_PADDING</span> <span class="o">=</span> <span class="mi">4</span>  <span class="c1"># type: int</span>
     <span class="n">FRAME_PADDING</span> <span class="o">=</span> <span class="mi">4</span>  <span class="c1"># type: int</span>
 
-<div class="viewcode-block" id="AssetNameParser.__init__"><a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
+<div class="viewcode-block" id="AssetNameParser.__init__">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
         <span class="c1"># type: (List[str]) -&gt; None</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Create a AssetNameParser instance with given fields.</span>
 
 <span class="sd">        Args:</span>
@@ -166,11 +180,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_parser</span><span class="p">(</span><span class="n">grammar</span><span class="p">,</span> <span class="n">fields</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="o">=</span> <span class="n">fields</span></div>
 
+
     <span class="c1"># GRAMMAR-------------------------------------------------------------------</span>
-<div class="viewcode-block" id="AssetNameParser._raise_field_error"><a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser._raise_field_error">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="AssetNameParser._raise_field_error">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser._raise_field_error">[docs]</a>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_raise_field_error</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">part</span><span class="p">):</span>
         <span class="c1"># type: (str, str) -&gt; Callable[[str, Any, Any, Any], None]</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        A convenience function used for raising custom ParseExceptions.</span>
 
 <span class="sd">        Args:</span>
@@ -193,10 +210,13 @@
             <span class="k">raise</span> <span class="n">ParseException</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
         <span class="k">return</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="n">raise_error</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>  <span class="c1"># noqa E741</span></div>
 
-<div class="viewcode-block" id="AssetNameParser._get_grammar"><a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser._get_grammar">[docs]</a>    <span class="nd">@staticmethod</span>
+
+<div class="viewcode-block" id="AssetNameParser._get_grammar">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser._get_grammar">[docs]</a>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_grammar</span><span class="p">():</span>
         <span class="c1"># type: () -&gt; Dict[str, Any]</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Create parser grammar dictionary.</span>
 
 <span class="sd">        Returns:</span>
@@ -273,11 +293,14 @@
         <span class="p">}</span>
         <span class="k">return</span> <span class="n">grammar</span></div>
 
+
     <span class="c1"># PARSERS-------------------------------------------------------------------</span>
-<div class="viewcode-block" id="AssetNameParser._get_extension_parser"><a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser._get_extension_parser">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="AssetNameParser._get_extension_parser">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser._get_extension_parser">[docs]</a>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_extension_parser</span><span class="p">(</span><span class="n">grammar</span><span class="p">):</span>
         <span class="c1"># type: (Dict[str, Any]) -&gt; Group</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Creates a parser for file extensions.</span>
 
 <span class="sd">        Args:</span>
@@ -290,10 +313,13 @@
         <span class="n">output</span> <span class="o">=</span> <span class="n">Group</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">output</span></div>
 
-<div class="viewcode-block" id="AssetNameParser._get_parser"><a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser._get_parser">[docs]</a>    <span class="nd">@staticmethod</span>
+
+<div class="viewcode-block" id="AssetNameParser._get_parser">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser._get_parser">[docs]</a>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_parser</span><span class="p">(</span><span class="n">grammar</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
         <span class="c1"># type: (Dict[str, Any], List[str]) -&gt; Group</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Creates a parser for asset names.</span>
 
 <span class="sd">        Args:</span>
@@ -313,10 +339,13 @@
         <span class="n">output</span> <span class="o">=</span> <span class="n">Group</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">output</span></div>
 
-<div class="viewcode-block" id="AssetNameParser._get_specification_parser"><a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser._get_specification_parser">[docs]</a>    <span class="nd">@staticmethod</span>
+
+<div class="viewcode-block" id="AssetNameParser._get_specification_parser">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser._get_specification_parser">[docs]</a>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_specification_parser</span><span class="p">():</span>
         <span class="c1"># type: () -&gt; Group</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns a parser for finding a specification within an arbitrary string.</span>
 
 <span class="sd">        Returns:</span>
@@ -328,11 +357,14 @@
         <span class="n">parser</span> <span class="o">=</span> <span class="n">Group</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">parser</span></div>
 
+
     <span class="c1"># PUBLIC--------------------------------------------------------------------</span>
-<div class="viewcode-block" id="AssetNameParser.parse_specification"><a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser.parse_specification">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="AssetNameParser.parse_specification">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser.parse_specification">[docs]</a>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">parse_specification</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
         <span class="c1"># type: (str) -&gt; Dict</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Parse a string for a specification.</span>
 
 <span class="sd">        Args:</span>
@@ -352,9 +384,12 @@
             <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Specification not found in &quot;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s1">&quot;.&#39;</span>
             <span class="k">raise</span> <span class="n">ParseException</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AssetNameParser.parse"><a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AssetNameParser.parse">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser.parse">[docs]</a>
+    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
         <span class="c1"># type: (str) -&gt; dict</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Parse a given string.</span>
 
 <span class="sd">        Args:</span>
@@ -370,9 +405,12 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extension_parser</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">text</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">asDict</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">text</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">asDict</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="AssetNameParser.to_string"><a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser.to_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dict_</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AssetNameParser.to_string">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.parser.AssetNameParser.to_string">[docs]</a>
+    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dict_</span><span class="p">):</span>
         <span class="c1"># type: (Dict) -&gt; str</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Converts a given dictionary to a string.</span>
 
 <span class="sd">        Args:</span>
@@ -408,7 +446,9 @@
 
         <span class="k">if</span> <span class="n">has_extension</span><span class="p">:</span>
             <span class="n">output</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">EXTENSION_INDICATOR</span> <span class="o">+</span> <span class="n">dict_</span><span class="p">[</span><span class="s1">&#39;extension&#39;</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">output</span></div></div>
+        <span class="k">return</span> <span class="n">output</span></div>
+</div>
+
 </pre></div>
 
            </div>
@@ -418,7 +458,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
+    <p>&#169; Copyright 2024, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

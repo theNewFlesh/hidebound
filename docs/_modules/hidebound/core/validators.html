@@ -1,22 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>hidebound.core.validators &mdash; hidebound  documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/style.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -27,14 +28,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> hidebound
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            hidebound
           </a>
               <div class="version">
-                0.31.0
+                0.32.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -42,13 +47,18 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#installation">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#overview">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#dataflow">Dataflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#workflow">Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#naming-convention">Naming Convention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#project-structure">Project Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#application">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#configuration">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#specification">Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#production-cli">Production CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#quickstart-guide">Quickstart Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#development-cli">Development CLI</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
@@ -56,7 +66,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../exporters.html">exporters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../server.html">server</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Developer CLI</span></p>
+<p class="caption" role="heading"><span class="caption-text">Development CLI</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
 </ul>
@@ -74,7 +84,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">hidebound.core.validators</li>
       <li class="wy-breadcrumbs-aside">
@@ -115,9 +125,11 @@
 <span class="sd">&#39;&#39;&#39;</span>
 
 
-<div class="viewcode-block" id="validate"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.validate">[docs]</a><span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+<div class="viewcode-block" id="validate">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.validate">[docs]</a>
+<span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
     <span class="c1"># type: (str) -&gt; Callable</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    A decorator for predicate functions that raises a ValidationError</span>
 <span class="sd">    if it returns False.</span>
 
@@ -140,9 +152,12 @@
     <span class="k">return</span> <span class="n">wrapper</span></div>
 
 
-<div class="viewcode-block" id="validate_each"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.validate_each">[docs]</a><span class="k">def</span> <span class="nf">validate_each</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">list_first_arg</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="validate_each">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.validate_each">[docs]</a>
+<span class="k">def</span> <span class="nf">validate_each</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">list_first_arg</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="c1"># type: (str, bool) -&gt; Callable</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    A decorator for predicate functions that raises a ValidationError</span>
 <span class="sd">    if it returns False when applied to each argument individually.</span>
 
@@ -174,11 +189,14 @@
     <span class="k">return</span> <span class="n">wrapper</span></div>
 
 
+
 <span class="c1"># VALIDATORS--------------------------------------------------------------------</span>
-<div class="viewcode-block" id="is_project"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_project">[docs]</a><span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="si">{}</span><span class="s1">&quot; is not a valid project name.&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="is_project">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_project">[docs]</a>
+<span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="si">{}</span><span class="s1">&quot; is not a valid project name.&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_project</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
     <span class="c1"># type: (str) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates a project name.</span>
 
 <span class="sd">    Args:</span>
@@ -202,10 +220,13 @@
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
-<div class="viewcode-block" id="is_descriptor"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_descriptor">[docs]</a><span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="si">{}</span><span class="s1">&quot; is not a valid descriptor.&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="is_descriptor">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_descriptor">[docs]</a>
+<span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="si">{}</span><span class="s1">&quot; is not a valid descriptor.&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_descriptor</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
     <span class="c1"># type: (str) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates a descriptor.</span>
 
 <span class="sd">    Args:</span>
@@ -237,10 +258,13 @@
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
-<div class="viewcode-block" id="is_version"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_version">[docs]</a><span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a valid version. 0 &lt; version &lt; 1000.&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="is_version">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_version">[docs]</a>
+<span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a valid version. 0 &lt; version &lt; 1000.&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_version</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
     <span class="c1"># type: (int) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates a version.</span>
 
 <span class="sd">    Args:</span>
@@ -255,10 +279,13 @@
     <span class="k">return</span> <span class="n">item</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">item</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">**</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">VERSION_PADDING</span></div>
 
 
-<div class="viewcode-block" id="is_frame"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_frame">[docs]</a><span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a valid frame. -1 &lt; frame &lt; 10000.&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="is_frame">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_frame">[docs]</a>
+<span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a valid frame. -1 &lt; frame &lt; 10000.&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_frame</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
     <span class="c1"># type: (int) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates a frame.</span>
 
 <span class="sd">    Args:</span>
@@ -273,13 +300,16 @@
     <span class="k">return</span> <span class="n">item</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">item</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">**</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">FRAME_PADDING</span></div>
 
 
-<div class="viewcode-block" id="is_coordinate"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_coordinate">[docs]</a><span class="nd">@validate_each</span><span class="p">(</span>
+
+<div class="viewcode-block" id="is_coordinate">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_coordinate">[docs]</a>
+<span class="nd">@validate_each</span><span class="p">(</span>
     <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a valid coordinate. -1 &lt; coordinate &lt; 1000.&#39;</span><span class="p">,</span>
     <span class="n">list_first_arg</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_coordinate</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
     <span class="c1"># type: (List[int]) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates a coordinate.</span>
 
 <span class="sd">    Args:</span>
@@ -306,10 +336,13 @@
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
-<div class="viewcode-block" id="is_extension"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_extension">[docs]</a><span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="si">{}</span><span class="s1">&quot; is not a valid extension.&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="is_extension">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_extension">[docs]</a>
+<span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;&quot;</span><span class="si">{}</span><span class="s1">&quot; is not a valid extension.&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_extension</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
     <span class="c1"># type: (str) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates a file extension.</span>
 
 <span class="sd">    Args:</span>
@@ -326,10 +359,13 @@
     <span class="k">return</span> <span class="kc">False</span>  <span class="c1"># pragma: no cover</span></div>
 
 
-<div class="viewcode-block" id="is_eq"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_eq">[docs]</a><span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> != </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="is_eq">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_eq">[docs]</a>
+<span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> != </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_eq</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="c1"># type: (Any, Any) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates that a and b are equal.</span>
 
 <span class="sd">    Args:</span>
@@ -345,10 +381,13 @@
     <span class="k">return</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span></div>
 
 
-<div class="viewcode-block" id="is_lt"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_lt">[docs]</a><span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> !&lt; </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="is_lt">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_lt">[docs]</a>
+<span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> !&lt; </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_lt</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="c1"># type: (Any, Any) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates that a is less than b.</span>
 
 <span class="sd">    Args:</span>
@@ -364,10 +403,13 @@
     <span class="k">return</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span></div>
 
 
-<div class="viewcode-block" id="is_gt"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_gt">[docs]</a><span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> !&gt; </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="is_gt">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_gt">[docs]</a>
+<span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> !&gt; </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_gt</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="c1"># type: (Any, Any) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates that a is greater than b.</span>
 
 <span class="sd">    Args:</span>
@@ -383,10 +425,13 @@
     <span class="k">return</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span></div>
 
 
-<div class="viewcode-block" id="is_lte"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_lte">[docs]</a><span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> !&lt;= </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="is_lte">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_lte">[docs]</a>
+<span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> !&lt;= </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_lte</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="c1"># type: (Any, Any) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates that a is less than or equal to b.</span>
 
 <span class="sd">    Args:</span>
@@ -402,10 +447,13 @@
     <span class="k">return</span> <span class="n">a</span> <span class="o">&lt;=</span> <span class="n">b</span></div>
 
 
-<div class="viewcode-block" id="is_gte"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_gte">[docs]</a><span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> !&gt;= </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="is_gte">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_gte">[docs]</a>
+<span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> !&gt;= </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_gte</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="c1"># type: (Any, Any) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates that a is greater than or equal to b.</span>
 
 <span class="sd">    Args:</span>
@@ -421,10 +469,13 @@
     <span class="k">return</span> <span class="n">a</span> <span class="o">&gt;=</span> <span class="n">b</span></div>
 
 
-<div class="viewcode-block" id="is_homogenous"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_homogenous">[docs]</a><span class="nd">@validate</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not homogenous.&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="is_homogenous">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_homogenous">[docs]</a>
+<span class="nd">@validate</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not homogenous.&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_homogenous</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
     <span class="c1"># type: (List[Any]) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates thats all items are equal.</span>
 
 <span class="sd">    Args:</span>
@@ -446,10 +497,13 @@
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
-<div class="viewcode-block" id="is_in"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_in">[docs]</a><span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not in </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="is_in">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_in">[docs]</a>
+<span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not in </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_in</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="c1"># type: (Any, Any) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates that each a is in b.</span>
 
 <span class="sd">    Args:</span>
@@ -465,10 +519,13 @@
     <span class="k">return</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">b</span></div>
 
 
-<div class="viewcode-block" id="is_attribute_of"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_attribute_of">[docs]</a><span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not an attribute of </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="is_attribute_of">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_attribute_of">[docs]</a>
+<span class="nd">@validate_each</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not an attribute of </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_attribute_of</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
     <span class="c1"># type: (str, Any) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates that each name is an attribute of given object.</span>
 
 <span class="sd">    Args:</span>
@@ -484,10 +541,13 @@
     <span class="k">return</span> <span class="nb">hasattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="is_directory"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_directory">[docs]</a><span class="nd">@validate</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a directory or does not exist.&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="is_directory">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_directory">[docs]</a>
+<span class="nd">@validate</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a directory or does not exist.&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_directory</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
     <span class="c1"># type: (Union[str, Path]) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates thats item is a directory.</span>
 
 <span class="sd">    Args:</span>
@@ -504,10 +564,13 @@
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
-<div class="viewcode-block" id="is_file"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_file">[docs]</a><span class="nd">@validate</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a file or does not exist.&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="is_file">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_file">[docs]</a>
+<span class="nd">@validate</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a file or does not exist.&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_file</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
     <span class="c1"># type: (Union[str, Path]) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates thats item is a file.</span>
 
 <span class="sd">    Args:</span>
@@ -524,9 +587,12 @@
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
-<div class="viewcode-block" id="is_not_missing_values"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_not_missing_values">[docs]</a><span class="k">def</span> <span class="nf">is_not_missing_values</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+
+<div class="viewcode-block" id="is_not_missing_values">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_not_missing_values">[docs]</a>
+<span class="k">def</span> <span class="nf">is_not_missing_values</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
     <span class="c1"># type: (List[int]) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates that sequence of integers is not missing any values.</span>
 
 <span class="sd">    Args:</span>
@@ -547,9 +613,12 @@
     <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="has_uniform_coordinate_count"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.has_uniform_coordinate_count">[docs]</a><span class="k">def</span> <span class="nf">has_uniform_coordinate_count</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+
+<div class="viewcode-block" id="has_uniform_coordinate_count">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.has_uniform_coordinate_count">[docs]</a>
+<span class="k">def</span> <span class="nf">has_uniform_coordinate_count</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
     <span class="c1"># type: (List[List[int]]) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates that non-unique list of coordinates has a uniform count per</span>
 <span class="sd">    coordinate.</span>
 
@@ -573,9 +642,12 @@
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
-<div class="viewcode-block" id="has_dense_coordinates"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.has_dense_coordinates">[docs]</a><span class="k">def</span> <span class="nf">has_dense_coordinates</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+
+<div class="viewcode-block" id="has_dense_coordinates">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.has_dense_coordinates">[docs]</a>
+<span class="k">def</span> <span class="nf">has_dense_coordinates</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
     <span class="c1"># type: (List[List[int]]) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates that list of coordinates is dense (every point is filled).</span>
 
 <span class="sd">    Args:</span>
@@ -605,9 +677,12 @@
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
-<div class="viewcode-block" id="coordinates_begin_at"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.coordinates_begin_at">[docs]</a><span class="k">def</span> <span class="nf">coordinates_begin_at</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">origin</span><span class="p">):</span>
+
+<div class="viewcode-block" id="coordinates_begin_at">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.coordinates_begin_at">[docs]</a>
+<span class="k">def</span> <span class="nf">coordinates_begin_at</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">origin</span><span class="p">):</span>
     <span class="c1"># type: (List[List[int]], List[int]) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates that the minimum coordinate of a given list equals a given origin.</span>
 
 <span class="sd">    Args:</span>
@@ -626,13 +701,16 @@
     <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="is_bucket_name"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_bucket_name">[docs]</a><span class="nd">@validate</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{}</span><span class="s1"> is not a valid bucket name. Bucket names must:</span>
+
+<div class="viewcode-block" id="is_bucket_name">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_bucket_name">[docs]</a>
+<span class="nd">@validate</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{}</span><span class="s1"> is not a valid bucket name. Bucket names must:</span>
 <span class="s1">    - be between 3 and 63 characters</span>
 <span class="s1">    - only consist of lowercase letters, numbers, periods and hyphens</span>
 <span class="s1">    - begin and end with a letter or number&#39;&#39;&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_bucket_name</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
     <span class="c1"># type: (str) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates a bucket name.</span>
 
 <span class="sd">    Args:</span>
@@ -653,10 +731,13 @@
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
-<div class="viewcode-block" id="is_aws_region"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_aws_region">[docs]</a><span class="nd">@validate</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a valid AWS region.&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="is_aws_region">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_aws_region">[docs]</a>
+<span class="nd">@validate</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a valid AWS region.&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_aws_region</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
     <span class="c1"># type: (str) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates an AWS region name.</span>
 
 <span class="sd">    Args:</span>
@@ -695,14 +776,17 @@
     <span class="k">return</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">regions</span></div>
 
 
-<div class="viewcode-block" id="is_legal_directory"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_legal_directory">[docs]</a><span class="nd">@validate</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{}</span><span class="s1"> is not a legal directory path.</span>
+
+<div class="viewcode-block" id="is_legal_directory">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_legal_directory">[docs]</a>
+<span class="nd">@validate</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{}</span><span class="s1"> is not a legal directory path.</span>
 <span class="s1">Legal directory paths must:</span>
 <span class="s1">    - Begin with /</span>
 <span class="s1">    - Not end with /</span>
 <span class="s1">    * Contain only the characters: /, a-z, A-Z, 0-9, _, -&#39;&#39;&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_legal_directory</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
     <span class="c1"># type: (str) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates that directory path is legal.</span>
 <span class="sd">    Legal directory paths must:</span>
 
@@ -728,11 +812,14 @@
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
-<div class="viewcode-block" id="is_metadata_type"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_metadata_type">[docs]</a><span class="nd">@validate</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{}</span><span class="s1"> is not a legal metadata type.</span>
+
+<div class="viewcode-block" id="is_metadata_type">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_metadata_type">[docs]</a>
+<span class="nd">@validate</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{}</span><span class="s1"> is not a legal metadata type.</span>
 <span class="s1">Legal metadata types: [asset, file, asset-chunk, file-chunk]&#39;&#39;&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_metadata_type</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
     <span class="c1"># type: (str) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates that a given metadata type is legal.</span>
 <span class="sd">    Legal types include:</span>
 
@@ -753,9 +840,12 @@
     <span class="k">return</span> <span class="n">item</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;asset&#39;</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;asset-chunk&#39;</span><span class="p">,</span> <span class="s1">&#39;file-chunk&#39;</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="is_hidebound_directory"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_hidebound_directory">[docs]</a><span class="k">def</span> <span class="nf">is_hidebound_directory</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+
+<div class="viewcode-block" id="is_hidebound_directory">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_hidebound_directory">[docs]</a>
+<span class="k">def</span> <span class="nf">is_hidebound_directory</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
     <span class="c1"># type: (Union[str, Path]) -&gt; None</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Ensures directory name is &quot;hidebound&quot;.</span>
 
 <span class="sd">    Args:</span>
@@ -769,9 +859,12 @@
         <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="is_http_method"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_http_method">[docs]</a><span class="k">def</span> <span class="nf">is_http_method</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
+
+<div class="viewcode-block" id="is_http_method">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_http_method">[docs]</a>
+<span class="k">def</span> <span class="nf">is_http_method</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
     <span class="c1"># type: (str) -&gt; None</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Ensures given method is a legal HTTP method.</span>
 <span class="sd">    Legal methods include:</span>
 
@@ -793,9 +886,12 @@
         <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="is_workflow"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_workflow">[docs]</a><span class="k">def</span> <span class="nf">is_workflow</span><span class="p">(</span><span class="n">steps</span><span class="p">):</span>
+
+<div class="viewcode-block" id="is_workflow">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_workflow">[docs]</a>
+<span class="k">def</span> <span class="nf">is_workflow</span><span class="p">(</span><span class="n">steps</span><span class="p">):</span>
     <span class="c1"># type: (List[str]) -&gt; None</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Ensures given workflow steps are legal.</span>
 <span class="sd">    Legal workflows steps include:</span>
 
@@ -817,9 +913,12 @@
         <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="is_one_of"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_one_of">[docs]</a><span class="k">def</span> <span class="nf">is_one_of</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">models</span><span class="p">):</span>
+
+<div class="viewcode-block" id="is_one_of">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_one_of">[docs]</a>
+<span class="k">def</span> <span class="nf">is_one_of</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">models</span><span class="p">):</span>
     <span class="c1"># type: (dict, List[Model]) -&gt; None</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates whether given item matches at least one given model.</span>
 
 <span class="sd">    Args:</span>
@@ -843,11 +942,14 @@
     <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="is_cluster_option_type"><a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_cluster_option_type">[docs]</a><span class="nd">@validate</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{}</span><span class="s1"> is not a legal cluster option type.</span>
+
+<div class="viewcode-block" id="is_cluster_option_type">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.validators.is_cluster_option_type">[docs]</a>
+<span class="nd">@validate</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="si">{}</span><span class="s1"> is not a legal cluster option type.</span>
 <span class="s1">Legal cluster option types: [bool, float, int, mapping, select, string]&#39;&#39;&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">is_cluster_option_type</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
     <span class="c1"># type: (str) -&gt; bool</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validates that a given cluster option type is legal.</span>
 <span class="sd">    Legal types include:</span>
 
@@ -868,6 +970,7 @@
 <span class="sd">        bool: Validity of cluster option type.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="n">item</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;bool&#39;</span><span class="p">,</span> <span class="s1">&#39;float&#39;</span><span class="p">,</span> <span class="s1">&#39;int&#39;</span><span class="p">,</span> <span class="s1">&#39;mapping&#39;</span><span class="p">,</span> <span class="s1">&#39;select&#39;</span><span class="p">,</span> <span class="s1">&#39;string&#39;</span><span class="p">]</span></div>
+
 </pre></div>
 
            </div>
@@ -877,7 +980,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
+    <p>&#169; Copyright 2024, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

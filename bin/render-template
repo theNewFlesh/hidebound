@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-mkdir -p /tmp/artifacts
-helm template --output-dir /tmp/artifacts ./helm
-find /tmp/artifacts -type f | sort | xargs cat
-rm -rf /tmp/artifacts

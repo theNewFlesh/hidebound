@@ -160,6 +160,7 @@ class Database:
             FileNotFoundError: If root is not a directory or does not exist.
             FileNotFoundError: If staging_dir is not directory or does not
                 exist.
+            NameError: If staging_dir is not named "hidebound".
 
         Returns:
             Database: Database instance.
@@ -169,6 +170,10 @@ class Database:
         if not staging.is_dir():
             msg = f'{staging} is not a directory or does not exist.'
             raise FileNotFoundError(msg)
+
+        if Path(staging).name != 'hidebound':
+            msg = f'{staging} directory is not named hidebound.'
+            raise NameError(msg)
 
         # setup logger
         self._logger = ProgressLogger(__name__)
@@ -366,6 +371,7 @@ class Database:
         for col in traits.columns:
             if col not in data.columns:
                 data[col] = np.nan
+            data[col] = data[col]
 
             mask = traits[col].notnull().tolist()
             data.loc[mask, col] = traits.loc[mask, col]
@@ -375,7 +381,7 @@ class Database:
         cols = self.data.columns.tolist()
         if len(self.data) > 0:
             cols = data \
-                .applymap(type) \
+                .map(type) \
                 .apply(lambda x: x.unique().tolist())
             legal_cols = set([int, float, str, bool, None])
             cols = cols.apply(lambda x: set(x).difference(legal_cols) == set())

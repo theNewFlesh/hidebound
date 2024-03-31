@@ -1,22 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>hidebound.server.api &mdash; hidebound  documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/style.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -27,14 +28,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> hidebound
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            hidebound
           </a>
               <div class="version">
-                0.31.0
+                0.32.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -42,13 +47,18 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#installation">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#overview">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#dataflow">Dataflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#workflow">Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#naming-convention">Naming Convention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#project-structure">Project Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#application">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#configuration">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#specification">Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#production-cli">Production CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#quickstart-guide">Quickstart Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#development-cli">Development CLI</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
@@ -56,7 +66,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../exporters.html">exporters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../server.html">server</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Developer CLI</span></p>
+<p class="caption" role="heading"><span class="caption-text">Development CLI</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
 </ul>
@@ -74,7 +84,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">hidebound.server.api</li>
       <li class="wy-breadcrumbs-aside">
@@ -113,10 +123,12 @@
 <span class="n">API</span> <span class="o">=</span> <span class="n">flask</span><span class="o">.</span><span class="n">Blueprint</span><span class="p">(</span><span class="s1">&#39;hidebound_api&#39;</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">,</span> <span class="n">url_prefix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="api"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.api">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="api">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.api.api">[docs]</a>
+<span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">api</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; Any</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Route to Hidebound API documentation.</span>
 
 <span class="sd">    Returns:</span>
@@ -126,7 +138,10 @@
     <span class="k">return</span> <span class="n">flask</span><span class="o">.</span><span class="n">redirect</span><span class="p">(</span><span class="n">flask</span><span class="o">.</span><span class="n">url_for</span><span class="p">(</span><span class="s1">&#39;flasgger.apidocs&#39;</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="initialize"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.initialize">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+
+<div class="viewcode-block" id="initialize">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.api.initialize">[docs]</a>
+<span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/initialize&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="nd">@swg</span><span class="o">.</span><span class="n">swag_from</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
     <span class="n">parameters</span><span class="o">=</span><span class="p">[</span>
         <span class="nb">dict</span><span class="p">(</span>
@@ -155,7 +170,7 @@
 <span class="p">))</span>
 <span class="k">def</span> <span class="nf">initialize</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; flask.Response</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Initialize database with given config.</span>
 
 <span class="sd">    Returns:</span>
@@ -177,7 +192,10 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="create"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.create">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/create&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+
+<div class="viewcode-block" id="create">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.api.create">[docs]</a>
+<span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/create&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="nd">@swg</span><span class="o">.</span><span class="n">swag_from</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
     <span class="n">parameters</span><span class="o">=</span><span class="p">[],</span>
     <span class="n">responses</span><span class="o">=</span><span class="p">{</span>
@@ -192,7 +210,7 @@
 <span class="p">))</span>
 <span class="k">def</span> <span class="nf">create</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; flask.Response</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Create hidebound data.</span>
 
 <span class="sd">    Returns:</span>
@@ -209,7 +227,10 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="read"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.read">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/read&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+
+<div class="viewcode-block" id="read">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.api.read">[docs]</a>
+<span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/read&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="nd">@swg</span><span class="o">.</span><span class="n">swag_from</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
     <span class="n">parameters</span><span class="o">=</span><span class="p">[</span>
         <span class="nb">dict</span><span class="p">(</span>
@@ -232,7 +253,7 @@
 <span class="p">))</span>
 <span class="k">def</span> <span class="nf">read</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; flask.Response</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Read database.</span>
 
 <span class="sd">    Returns:</span>
@@ -264,7 +285,10 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="update"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.update">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/update&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+
+<div class="viewcode-block" id="update">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.api.update">[docs]</a>
+<span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/update&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="nd">@swg</span><span class="o">.</span><span class="n">swag_from</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
     <span class="n">parameters</span><span class="o">=</span><span class="p">[],</span>
     <span class="n">responses</span><span class="o">=</span><span class="p">{</span>
@@ -279,7 +303,7 @@
 <span class="p">))</span>
 <span class="k">def</span> <span class="nf">update</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; flask.Response</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Update database.</span>
 
 <span class="sd">    Returns:</span>
@@ -292,7 +316,10 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="delete"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.delete">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/delete&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+
+<div class="viewcode-block" id="delete">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.api.delete">[docs]</a>
+<span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/delete&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="nd">@swg</span><span class="o">.</span><span class="n">swag_from</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
     <span class="n">parameters</span><span class="o">=</span><span class="p">[],</span>
     <span class="n">responses</span><span class="o">=</span><span class="p">{</span>
@@ -307,7 +334,7 @@
 <span class="p">))</span>
 <span class="k">def</span> <span class="nf">delete</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; flask.Response</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Delete hidebound data.</span>
 
 <span class="sd">    Returns:</span>
@@ -320,7 +347,10 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="export"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.export">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/export&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+
+<div class="viewcode-block" id="export">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.api.export">[docs]</a>
+<span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/export&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="nd">@swg</span><span class="o">.</span><span class="n">swag_from</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
     <span class="n">parameters</span><span class="o">=</span><span class="p">[],</span>
     <span class="n">responses</span><span class="o">=</span><span class="p">{</span>
@@ -335,7 +365,7 @@
 <span class="p">))</span>
 <span class="k">def</span> <span class="nf">export</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; flask.Response</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Export hidebound data.</span>
 
 <span class="sd">    Returns:</span>
@@ -352,7 +382,10 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="search"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.search">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/search&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+
+<div class="viewcode-block" id="search">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.api.search">[docs]</a>
+<span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/search&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="nd">@swg</span><span class="o">.</span><span class="n">swag_from</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
     <span class="n">parameters</span><span class="o">=</span><span class="p">[</span>
         <span class="nb">dict</span><span class="p">(</span>
@@ -381,7 +414,7 @@
 <span class="p">))</span>
 <span class="k">def</span> <span class="nf">search</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; flask.Response</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Search database with a given SQL query.</span>
 
 <span class="sd">    Returns:</span>
@@ -417,7 +450,10 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="workflow"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.workflow">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/workflow&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+
+<div class="viewcode-block" id="workflow">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.api.workflow">[docs]</a>
+<span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/workflow&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="nd">@swg</span><span class="o">.</span><span class="n">swag_from</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
     <span class="n">parameters</span><span class="o">=</span><span class="p">[</span>
         <span class="nb">dict</span><span class="p">(</span>
@@ -439,7 +475,7 @@
 <span class="p">))</span>
 <span class="k">def</span> <span class="nf">workflow</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; flask.Response</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Run given hidebound workflow.</span>
 
 <span class="sd">    Returns:</span>
@@ -469,7 +505,10 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="progress"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.progress">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/progress&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+
+<div class="viewcode-block" id="progress">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.api.progress">[docs]</a>
+<span class="nd">@API</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/progress&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="nd">@swg</span><span class="o">.</span><span class="n">swag_from</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
     <span class="n">parameters</span><span class="o">=</span><span class="p">[],</span>
     <span class="n">responses</span><span class="o">=</span><span class="p">{</span>
@@ -484,7 +523,7 @@
 <span class="p">))</span>
 <span class="k">def</span> <span class="nf">progress</span><span class="p">():</span>
     <span class="c1"># type: () -&gt; flask.Response</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Get hidebound app progress.</span>
 
 <span class="sd">    Returns:</span>
@@ -496,10 +535,13 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="handle_data_error"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.handle_data_error">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">errorhandler</span><span class="p">(</span><span class="n">DataError</span><span class="p">)</span>
+
+<div class="viewcode-block" id="handle_data_error">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.api.handle_data_error">[docs]</a>
+<span class="nd">@API</span><span class="o">.</span><span class="n">errorhandler</span><span class="p">(</span><span class="n">DataError</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">handle_data_error</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
     <span class="c1"># type: (DataError) -&gt; flask.Response</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Handles errors raise by config validation.</span>
 
 <span class="sd">    Args:</span>
@@ -511,10 +553,13 @@
     <span class="k">return</span> <span class="n">hst</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="handle_key_error"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.handle_key_error">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">errorhandler</span><span class="p">(</span><span class="ne">KeyError</span><span class="p">)</span>
+
+<div class="viewcode-block" id="handle_key_error">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.api.handle_key_error">[docs]</a>
+<span class="nd">@API</span><span class="o">.</span><span class="n">errorhandler</span><span class="p">(</span><span class="ne">KeyError</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">handle_key_error</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
     <span class="c1"># type: (KeyError) -&gt; flask.Response</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Handles key errors.</span>
 
 <span class="sd">    Args:</span>
@@ -526,10 +571,13 @@
     <span class="k">return</span> <span class="n">hst</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="handle_type_error"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.handle_type_error">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">errorhandler</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">)</span>
+
+<div class="viewcode-block" id="handle_type_error">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.api.handle_type_error">[docs]</a>
+<span class="nd">@API</span><span class="o">.</span><span class="n">errorhandler</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">handle_type_error</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
     <span class="c1"># type: (TypeError) -&gt; flask.Response</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Handles key errors.</span>
 
 <span class="sd">    Args:</span>
@@ -541,10 +589,13 @@
     <span class="k">return</span> <span class="n">hst</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="handle_json_decode_error"><a class="viewcode-back" href="../../../server.html#hidebound.server.api.handle_json_decode_error">[docs]</a><span class="nd">@API</span><span class="o">.</span><span class="n">errorhandler</span><span class="p">(</span><span class="n">JSONDecodeError</span><span class="p">)</span>
+
+<div class="viewcode-block" id="handle_json_decode_error">
+<a class="viewcode-back" href="../../../server.html#hidebound.server.api.handle_json_decode_error">[docs]</a>
+<span class="nd">@API</span><span class="o">.</span><span class="n">errorhandler</span><span class="p">(</span><span class="n">JSONDecodeError</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">handle_json_decode_error</span><span class="p">(</span><span class="n">error</span><span class="p">):</span>
     <span class="c1"># type: (JSONDecodeError) -&gt; flask.Response</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Handles key errors.</span>
 
 <span class="sd">    Args:</span>
@@ -554,6 +605,7 @@
 <span class="sd">        Response: JSONDecodeError response.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="n">hst</span><span class="o">.</span><span class="n">error_to_response</span><span class="p">(</span><span class="n">error</span><span class="p">)</span></div>
+
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
@@ -570,7 +622,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
+    <p>&#169; Copyright 2024, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

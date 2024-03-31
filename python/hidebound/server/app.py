@@ -9,7 +9,6 @@ from dash.exceptions import PreventUpdate
 import dash
 import flask
 from flask import current_app
-import flask_monitoringdashboard as fmdb
 
 import hidebound.core.tools as hbt
 import hidebound.server.components as components
@@ -66,24 +65,12 @@ def get_app(testing=False):
     ext.hidebound.init_app(app)
     ext.healthz.init_app(app)
 
-    # flask monitoring
-    fmdb.config.link = 'monitor'
-    fmdb.config.monitor_level = 3
-    fmdb.config.git = 'https://theNewFlesh.github.io/hidebound/'
-    fmdb.config.brand_name = 'Hidebound Monitoring Dashboard'
-    fmdb.config.title_name = 'Hidebound Monitoring Dashboard'
-    fmdb.config.description = 'Monitor Hidebound App Performance'
-    fmdb.config.enable_logging = False
-    fmdb.config.show_login_banner = True
-    fmdb.config.show_login_footer = True
-    fmdb.config.database_name = 'sqlite:////tmp/hidebound_monitor.db'
-    fmdb.bind(app)
-
     app = components.get_dash_app(app, seconds=0.8)
     return app
 
 
 APP = get_app(testing=TESTING)
+SERVER = APP.server
 
 
 @APP.server.route('/static/<stylesheet>')

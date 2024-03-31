@@ -141,8 +141,9 @@ class DiskExporterTests(unittest.TestCase):
                 asset_path=x.asset_path.tolist()[0],
                 asset_path_relative=x.asset_path_relative.tolist()[0],
                 filepaths=x.filepath.tolist(),
-                filepath_relatives=x.filepath_relative.tolist(),
-            ))
+                filepath_relatives=x.filepath_relative.tolist()),
+                include_groups=True
+            )
         assets.apply(lambda x: hbt.write_json(x, x['asset_meta_path']))
 
         # write asset chunk

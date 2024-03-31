@@ -49,7 +49,9 @@ def test_initialize(api_setup, flask_client, config):
 
 @pytest.mark.flaky(reruns=RERUNS)
 def test_initialize_no_config(api_setup, flask_client, config):
-    result = flask_client.post('/api/initialize').json['message']
+    result = flask_client \
+        .post('/api/initialize', mimetype='application/json') \
+        .json['message']
     expected = 'Please supply a config dictionary.'
     assert re.search(expected, result) is not None
 

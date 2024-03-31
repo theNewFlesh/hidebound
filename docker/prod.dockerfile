@@ -23,6 +23,7 @@ WORKDIR /home/ubuntu
 RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${CLEAR}"; \
     apt update && \
     apt install -y \
+        curl \
         software-properties-common \
         wget && \
     rm -rf /var/lib/apt/lists/*
@@ -55,4 +56,7 @@ ENV PYTHONPATH "${PYTHONPATH}:/home/ubuntu/$REPO/python"
 RUN echo "\n${CYAN}INSTALL HIDEBOUND{CLEAR}"; \
     pip3.10 install --user --upgrade hidebound
 
+ENV PATH="/home/ubuntu/.local/bin:$PATH"
+EXPOSE 8080
 ENTRYPOINT ["/usr/bin/tini", "--"]
+CMD [ "hidebound server" ]

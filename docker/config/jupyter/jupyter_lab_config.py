@@ -4,6 +4,6 @@ c.ServerApp.root_dir = '/home/ubuntu/hidebound/notebooks'
 c.ServerApp.disable_check_xsrf = True
 c.ServerApp.password_required = False
 c.ServerApp.port = 9000
-c.ServerApp.terminado_settings = {'shell_command': ['/bin/bash']}
+c.ServerApp.terminado_settings = {'shell_command': ['/bin/zsh']}
 c.ServerApp.token = ''
 c.IPCompleter.use_jedi = False
