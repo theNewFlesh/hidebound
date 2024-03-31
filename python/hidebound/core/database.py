@@ -160,6 +160,7 @@ class Database:
             FileNotFoundError: If root is not a directory or does not exist.
             FileNotFoundError: If staging_dir is not directory or does not
                 exist.
+            NameError: If staging_dir is not named "hidebound".
 
         Returns:
             Database: Database instance.
@@ -169,6 +170,10 @@ class Database:
         if not staging.is_dir():
             msg = f'{staging} is not a directory or does not exist.'
             raise FileNotFoundError(msg)
+
+        if Path(staging).name != 'hidebound':
+            msg = f'{staging} directory is not named hidebound.'
+            raise NameError(msg)
 
         # setup logger
         self._logger = ProgressLogger(__name__)

@@ -1,4 +1,4 @@
-{{- with .Values -}}
+{{- with (include "overlay" . | fromYaml) -}}
 {{ if .enable.env_configmap }}
 kind: ConfigMap
 apiVersion: v1

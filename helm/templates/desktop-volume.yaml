@@ -1,9 +1,9 @@
 {{- with (include "overlay" . | fromYaml) -}}
-{{ if .enable.repo_volume }}
+{{ if .enable.desktop_volume }}
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: hidebound-repo-pv
+  name: hidebound-storage-pv
   namespace: {{ .namespace.name }}
   annotations:
     pv.kubernetes.io/provisioned-by: rancher.io/local-path
@@ -11,7 +11,7 @@ metadata:
     - kubernetes.io/pv-protection
 spec:
   local:
-    path: {{ .repo_volume.path }}
+    path: {{ .desktop_volume.path }}
   storageClassName: local-path
   persistentVolumeReclaimPolicy: Retain
   volumeMode: Filesystem
@@ -22,7 +22,7 @@ spec:
   claimRef:
     kind: PersistentVolumeClaim
     apiVersion: v1
-    name: hidebound-repo-pvc
+    name: hidebound-storage-pvc
     namespace: {{ .namespace.name }}
   nodeAffinity:
     required:
@@ -37,11 +37,11 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: hidebound-repo-pvc
+  name: hidebound-storage-pvc
   namespace: {{ .namespace.name }}
 spec:
   storageClassName: local-path
-  volumeName: hidebound-repo-pv
+  volumeName: hidebound-storage-pv
   accessModes:
     - ReadOnlyMany
   resources:

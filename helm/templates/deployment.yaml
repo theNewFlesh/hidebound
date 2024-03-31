@@ -1,4 +1,4 @@
-{{- with .Values -}}
+{{- with (include "overlay" . | fromYaml) -}}
 kind: Deployment
 apiVersion: apps/v1
 metadata:
@@ -54,74 +54,28 @@ spec:
             timeoutSeconds: 1
           {{- end }}
           volumeMounts:
-          {{- if .enable.ingress_volume }}
-            - name: ingress
-              mountPath: {{ .deployment.ingress.path }}
-          {{- end }}
-          {{- if .enable.staging_volume }}
-            - name: staging
-              mountPath: {{ .deployment.staging.path }}
-          {{- end }}
-          {{- if .enable.egress_volume }}
-            - name: egress
-              mountPath: {{ .deployment.egress.path }}
-          {{- end }}
+            - name: storage
+              mountPath: {{ .deployment.storage_path }}
             {{- if .enable.repo_volume }}
             - name: repo
-              mountPath: {{ .deployment.repo.path }}
+              mountPath: {{ .deployment.repo_path }}
             {{- end }}
       volumes:
-      {{- if .enable.ingress_volume }}
-        {{- if .deployment.ingress.nfs }}
-        - name: ingress
+      {{- if .enable.nfs_volume }}
+        - name: storage
           nfs:
-             path: {{ .deployment.ingress.path }}
-             server: {{ .deployment.ingress.nfs_server }}
+             path: {{ .deployment.storage_path }}
+             server: {{ .deployment.nfs_server }}
              readOnly: false
-        {{- else }}
-        - name: ingress
+      {{- else if .enable.desktop_volume }}
+        - name: storage
           persistentVolumeClaim:
-            claimName: hidebound-ingress-pvc
-        {{- end }}
-      {{- end }}
-      {{- if .enable.staging_volume }}
-        {{- if .deployment.staging.nfs }}
-        - name: staging
-          nfs:
-             path: {{ .deployment.staging.path }}
-             server: {{ .deployment.staging.nfs_server }}
-             readOnly: false
-        {{- else }}
-        - name: staging
-          persistentVolumeClaim:
-            claimName: hidebound-staging-pvc
-        {{- end }}
-      {{- end }}
-      {{- if .enable.egress_volume }}
-        {{- if .deployment.egress.nfs }}
-        - name: egress
-          nfs:
-             path: {{ .deployment.egress.path }}
-             server: {{ .deployment.egress.nfs_server }}
-             readOnly: false
-        {{- else }}
-        - name: egress
-          persistentVolumeClaim:
-            claimName: hidebound-egress-pvc
-        {{- end }}
+            claimName: hidebound-storage-pvc
       {{- end }}
       {{- if .enable.repo_volume }}
-        {{- if .deployment.repo.nfs }}
-        - name: repo
-          nfs:
-             path: {{ .deployment.repo.path }}
-             server: {{ .deployment.repo.nfs_server }}
-             readOnly: false
-        {{- else }}
         - name: repo
           persistentVolumeClaim:
             claimName: hidebound-repo-pvc
-        {{- end }}
       {{- end }}
       imagePullSecrets:
         - name: image-pull-secret

@@ -1,4 +1,4 @@
-{{- with .Values -}}
+{{- with (include "overlay" . | fromYaml) -}}
 kind: Service
 apiVersion: v1
 metadata:
