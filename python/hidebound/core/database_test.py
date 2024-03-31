@@ -774,12 +774,12 @@ def test_export_disk(make_dirs, make_files, specs, db_data, dask_config):  # noq
         .apply(lambda x: re.search('/(asset|file|content)', x)) \
         .astype(bool)
     expected = expected[mask] \
-        .apply(lambda x: re.sub('.*/hidebound/', '', x)) \
+        .apply(lambda x: re.sub('.*/staging/', '', x)) \
         .tolist()
     expected = sorted(expected)
 
     result = hbt.directory_to_dataframe(archive).filepath \
-        .apply(lambda x: re.sub('.*/archive/', '', x)) \
+        .apply(lambda x: re.sub('.*/egress/', '', x)) \
         .tolist()
     result = sorted(result)
 
