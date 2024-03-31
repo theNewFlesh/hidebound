@@ -23,6 +23,7 @@ WORKDIR /home/ubuntu
 RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${CLEAR}"; \
     apt update && \
     apt install -y \
+        curl \
         software-properties-common \
         wget && \
     rm -rf /var/lib/apt/lists/*
