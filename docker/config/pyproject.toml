@@ -99,6 +99,7 @@ test = [
     "tox",
     "types-PyYAML",
     "types-requests",
+    "types-python-dateutil>=2.9.0.20240316",
 ]
 
 [tool.pytest.ini_options]
