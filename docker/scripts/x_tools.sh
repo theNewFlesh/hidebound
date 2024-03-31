@@ -555,7 +555,7 @@ x_session_server () {
     x_env_activate_dev;
     echo "${CYAN2}APP${CLEAR}\n";
     mkdir -p /tmp/hidebound /tmp/ingress;
-    python3 $REPO_SUBPACKAGE/command.py server --debug;
+    python3 $REPO_SUBPACKAGE/server/app.py;
 }
 
 # TEST-FUNCTIONS----------------------------------------------------------------

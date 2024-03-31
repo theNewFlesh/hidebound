@@ -708,12 +708,12 @@ Hidebound comes with a command line interface defined in command.py.
 Its usage pattern is: `hidebound COMMAND [FLAGS] [-h --help]`
 
 ## Commands
-| Command         | Description                                                               | Flags   | Flag Description  |
-| --------------- | --------------------------------------------------------------------------| ------- | ----------------- |
-| config          | Prints hidebound config                                                   | -       | -                 |
-| server          | Runs a hidebound server                                                   | --debug | Enable debug mode |
-| bash-completion | Prints BASH completion code to be written to a _hidebound completion file | -       | -                 |
-| zsh-completion  | Prints ZSH completion code to be written to a _hidebound completion file  | -       | -                 |
+| Command         | Description                                                               |
+| --------------- | ------------------------------------------------------------------------- |
+| bash-completion | Prints BASH completion code to be written to a _hidebound completion file |
+| config          | Prints hidebound config                                                   |
+| serve           | Runs a hidebound server                                                   |
+| zsh-completion  | Prints ZSH completion code to be written to a _hidebound completion file  |
 
 ---
 

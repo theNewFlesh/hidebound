@@ -70,6 +70,7 @@ def get_app(testing=False):
 
 
 APP = get_app(testing=TESTING)
+SERVER = APP.server
 
 
 @APP.server.route('/static/<stylesheet>')
