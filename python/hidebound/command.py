@@ -47,9 +47,9 @@ def config():
 @main.command()
 def bash_completion():
     '''
-        BASH completion code to be written to a _hidebound completion file.
+    BASH completion code to be written to a _hidebound completion file.
     '''
-    cmd = '_HIDEBOUND_COMPLETE=bash_source lunchbox'
+    cmd = '_HIDEBOUND_COMPLETE=bash_source hidebound'
     result = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     result.wait()
     click.echo(result.stdout.read())
@@ -58,9 +58,9 @@ def bash_completion():
 @main.command()
 def zsh_completion():
     '''
-        ZSH completion code to be written to a _hidebound completion file.
+    ZSH completion code to be written to a _hidebound completion file.
     '''
-    cmd = '_HIDEBOUND_COMPLETE=zsh_source lunchbox'
+    cmd = '_HIDEBOUND_COMPLETE=zsh_source hidebound'
     result = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     result.wait()
     click.echo(result.stdout.read())

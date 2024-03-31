@@ -1,22 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>hidebound.core.specification_base &mdash; hidebound  documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/style.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -27,14 +28,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> hidebound
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            hidebound
           </a>
               <div class="version">
-                0.31.0
+                0.32.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -42,13 +47,18 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#installation">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#overview">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#dataflow">Dataflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#workflow">Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#naming-convention">Naming Convention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#project-structure">Project Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#application">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#configuration">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#specification">Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#production-cli">Production CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#quickstart-guide">Quickstart Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#development-cli">Development CLI</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
@@ -56,7 +66,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../exporters.html">exporters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../server.html">server</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Developer CLI</span></p>
+<p class="caption" role="heading"><span class="caption-text">Development CLI</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
 </ul>
@@ -74,7 +84,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">hidebound.core.specification_base</li>
       <li class="wy-breadcrumbs-aside">
@@ -118,8 +128,10 @@
 <span class="p">)</span>
 
 
-<div class="viewcode-block" id="SpecificationBase"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase">[docs]</a><span class="k">class</span> <span class="nc">SpecificationBase</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="SpecificationBase">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase">[docs]</a>
+<span class="k">class</span> <span class="nc">SpecificationBase</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    The base class for all Hidebound specifications.</span>
 
 <span class="sd">    Attributes:</span>
@@ -151,9 +163,11 @@
     <span class="p">)</span>  <span class="c1"># type: ListType</span>
     <span class="n">file_traits</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: Dict[str, Any]</span>
 
-<div class="viewcode-block" id="SpecificationBase.__init__"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{}):</span>
+<div class="viewcode-block" id="SpecificationBase.__init__">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{}):</span>
         <span class="c1"># type: (Optional[Dict[str, Any]]) -&gt; None</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns a new specification instance.</span>
 
 <span class="sd">        Args:</span>
@@ -161,9 +175,12 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">raw_data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SpecificationBase.get_asset_name"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.get_asset_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_asset_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SpecificationBase.get_asset_name">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.get_asset_name">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_asset_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
         <span class="c1"># type: (Union[str, Path]) -&gt; str</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns the expected asset name give a filepath.</span>
 
 <span class="sd">        Args:</span>
@@ -177,9 +194,12 @@
         <span class="n">output</span> <span class="o">=</span> <span class="n">AssetNameParser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">asset_name_fields</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>  <span class="c1"># type: str</span>
         <span class="k">return</span> <span class="n">output</span></div>
 
-<div class="viewcode-block" id="SpecificationBase.get_asset_path"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.get_asset_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_asset_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SpecificationBase.get_asset_path">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.get_asset_path">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_asset_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
         <span class="c1"># type: (Union[str, Path]) -&gt; Path</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns the expected asset path given a filepath.</span>
 
 <span class="sd">        Args:</span>
@@ -194,9 +214,12 @@
         <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Method must be implemented in subclasses of SpecificationBase.&#39;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SpecificationBase.get_asset_id"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.get_asset_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_asset_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SpecificationBase.get_asset_id">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.get_asset_id">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_asset_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
         <span class="c1"># type: (Union[str, Path]) -&gt; str</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns a hash UUID of the asset directory or file, depending of asset</span>
 <span class="sd">        type.</span>
 
@@ -210,9 +233,12 @@
             <span class="n">uuid</span><span class="o">.</span><span class="n">NAMESPACE_URL</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_asset_path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
         <span class="p">))</span></div>
 
-<div class="viewcode-block" id="SpecificationBase.validate_filepath"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.validate_filepath">[docs]</a>    <span class="k">def</span> <span class="nf">validate_filepath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SpecificationBase.validate_filepath">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.validate_filepath">[docs]</a>
+    <span class="k">def</span> <span class="nf">validate_filepath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
         <span class="c1"># type: (Union[str, Path]) -&gt; None</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Attempts to parse the given filepath.</span>
 
 <span class="sd">        Args:</span>
@@ -245,9 +271,12 @@
             <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filepath</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span><span class="si">}</span><span class="s1">.&#39;</span>
             <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SpecificationBase.get_filename_traits"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.get_filename_traits">[docs]</a>    <span class="k">def</span> <span class="nf">get_filename_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SpecificationBase.get_filename_traits">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.get_filename_traits">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_filename_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
         <span class="c1"># type: (Union[str, Path]) -&gt; Dict[str, Any]</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns a dictionary of filename traits from given filepath.</span>
 <span class="sd">        Returns error in filename_error key if one is encountered.</span>
 
@@ -263,9 +292,12 @@
         <span class="k">except</span> <span class="n">ParseException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">filename_error</span><span class="o">=</span><span class="n">hbt</span><span class="o">.</span><span class="n">error_to_string</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="SpecificationBase.get_file_traits"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.get_file_traits">[docs]</a>    <span class="k">def</span> <span class="nf">get_file_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SpecificationBase.get_file_traits">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.get_file_traits">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_file_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
         <span class="c1"># type: (Union[str, Path]) -&gt; Dict</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns a dictionary of file traits from given filepath.</span>
 <span class="sd">        Returns error in respective key if one is encountered.</span>
 
@@ -283,9 +315,12 @@
                 <span class="n">output</span><span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">error_to_string</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">output</span></div>
 
-<div class="viewcode-block" id="SpecificationBase.get_traits"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.get_traits">[docs]</a>    <span class="k">def</span> <span class="nf">get_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SpecificationBase.get_traits">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.get_traits">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
         <span class="c1"># type: (Union[str, Path]) -&gt; Dict[str, Any]</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns a dictionary of file and filename traits from given filepath.</span>
 <span class="sd">        Errors are captured in their respective keys.</span>
 
@@ -299,9 +334,12 @@
         <span class="n">traits</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_file_traits</span><span class="p">(</span><span class="n">filepath</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">traits</span></div>
 
-<div class="viewcode-block" id="SpecificationBase.get_name_patterns"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.get_name_patterns">[docs]</a>    <span class="k">def</span> <span class="nf">get_name_patterns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SpecificationBase.get_name_patterns">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase.get_name_patterns">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_name_patterns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># type: () -&gt; Tuple[str, str]</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Generates asset name and filename patterns from class fields.</span>
 
 <span class="sd">        Returns:</span>
@@ -342,9 +380,12 @@
             <span class="n">filename</span> <span class="o">=</span> <span class="n">AssetNameParser</span><span class="o">.</span><span class="n">FIELD_SEPARATOR</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">patterns</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">asset</span><span class="p">,</span> <span class="n">filename</span></div>
 
-<div class="viewcode-block" id="SpecificationBase._to_filepaths"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase._to_filepaths">[docs]</a>    <span class="k">def</span> <span class="nf">_to_filepaths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">pattern</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SpecificationBase._to_filepaths">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SpecificationBase._to_filepaths">[docs]</a>
+    <span class="k">def</span> <span class="nf">_to_filepaths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">pattern</span><span class="p">):</span>
         <span class="c1"># type: (Union[str, Path], str) -&gt; List[str]</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Generates a complete list of filepaths given a root directory and</span>
 <span class="sd">        filepath pattern.</span>
 
@@ -362,11 +403,15 @@
             <span class="n">filepath</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">fields</span><span class="p">)</span>
             <span class="n">filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">filepath</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
             <span class="n">filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">filepaths</span></div></div>
+        <span class="k">return</span> <span class="n">filepaths</span></div>
+</div>
 
 
-<div class="viewcode-block" id="FileSpecificationBase"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.FileSpecificationBase">[docs]</a><span class="k">class</span> <span class="nc">FileSpecificationBase</span><span class="p">(</span><span class="n">SpecificationBase</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="FileSpecificationBase">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.FileSpecificationBase">[docs]</a>
+<span class="k">class</span> <span class="nc">FileSpecificationBase</span><span class="p">(</span><span class="n">SpecificationBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    The base class for asset that consist of a single file.</span>
 
 <span class="sd">    Attributes:</span>
@@ -374,9 +419,11 @@
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">asset_type</span> <span class="o">=</span> <span class="s1">&#39;file&#39;</span>  <span class="c1"># type: str</span>
 
-<div class="viewcode-block" id="FileSpecificationBase.get_asset_path"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.FileSpecificationBase.get_asset_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_asset_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+<div class="viewcode-block" id="FileSpecificationBase.get_asset_path">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.FileSpecificationBase.get_asset_path">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_asset_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
         <span class="c1"># type: (Union[str, Path]) -&gt; Path</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns the filepath.</span>
 
 <span class="sd">        Args:</span>
@@ -387,9 +434,12 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FileSpecificationBase.to_filepaths"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.FileSpecificationBase.to_filepaths">[docs]</a>    <span class="k">def</span> <span class="nf">to_filepaths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
+
+<div class="viewcode-block" id="FileSpecificationBase.to_filepaths">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.FileSpecificationBase.to_filepaths">[docs]</a>
+    <span class="k">def</span> <span class="nf">to_filepaths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
         <span class="c1"># type: (Union[str, Path]) -&gt; List[str]</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Generates a complete list of filepaths given a root directory and</span>
 <span class="sd">        filepath pattern.</span>
 
@@ -401,11 +451,15 @@
 <span class="sd">            list[str]: List of filepaths.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_name_patterns</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_filepaths</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_filepaths</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></div>
+</div>
 
 
-<div class="viewcode-block" id="SequenceSpecificationBase"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SequenceSpecificationBase">[docs]</a><span class="k">class</span> <span class="nc">SequenceSpecificationBase</span><span class="p">(</span><span class="n">SpecificationBase</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="SequenceSpecificationBase">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SequenceSpecificationBase">[docs]</a>
+<span class="k">class</span> <span class="nc">SequenceSpecificationBase</span><span class="p">(</span><span class="n">SpecificationBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    The base class for assets that consist of a sequence of files under a single</span>
 <span class="sd">    directory.</span>
 
@@ -414,9 +468,11 @@
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">asset_type</span> <span class="o">=</span> <span class="s1">&#39;sequence&#39;</span>  <span class="c1"># type: str</span>
 
-<div class="viewcode-block" id="SequenceSpecificationBase.get_asset_path"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SequenceSpecificationBase.get_asset_path">[docs]</a>    <span class="k">def</span> <span class="nf">get_asset_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+<div class="viewcode-block" id="SequenceSpecificationBase.get_asset_path">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SequenceSpecificationBase.get_asset_path">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_asset_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
         <span class="c1"># type: (Union[str, Path]) -&gt; Path</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Returns the directory containing the asset files.</span>
 
 <span class="sd">        Args:</span>
@@ -427,9 +483,12 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="SequenceSpecificationBase.to_filepaths"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SequenceSpecificationBase.to_filepaths">[docs]</a>    <span class="k">def</span> <span class="nf">to_filepaths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SequenceSpecificationBase.to_filepaths">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.SequenceSpecificationBase.to_filepaths">[docs]</a>
+    <span class="k">def</span> <span class="nf">to_filepaths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
         <span class="c1"># type: (Union[str, Path]) -&gt; List[str]</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Generates a complete list of filepaths given a root directory and</span>
 <span class="sd">        filepath pattern.</span>
 
@@ -442,17 +501,22 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">asset</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_name_patterns</span><span class="p">()</span>
         <span class="n">pattern</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">asset</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_filepaths</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_filepaths</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span></div>
+</div>
 
 
-<div class="viewcode-block" id="ComplexSpecificationBase"><a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.ComplexSpecificationBase">[docs]</a><span class="k">class</span> <span class="nc">ComplexSpecificationBase</span><span class="p">(</span><span class="n">SpecificationBase</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="ComplexSpecificationBase">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.specification_base.ComplexSpecificationBase">[docs]</a>
+<span class="k">class</span> <span class="nc">ComplexSpecificationBase</span><span class="p">(</span><span class="n">SpecificationBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    The base class for assets that consist of multiple directories of files.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        asset_type (str): Complex.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">asset_type</span> <span class="o">=</span> <span class="s1">&#39;complex&#39;</span>  <span class="c1"># type: str</span></div>
+
 </pre></div>
 
            </div>
@@ -462,7 +526,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
+    <p>&#169; Copyright 2024, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

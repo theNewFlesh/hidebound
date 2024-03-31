@@ -4,7 +4,7 @@ import json
 import os
 import unittest
 
-from moto import mock_s3
+from moto import mock_aws
 from schematics.exceptions import DataError
 import boto3 as boto
 
@@ -43,7 +43,7 @@ class S3ConfigTests(unittest.TestCase):
 
 
 class S3ExporterTests(unittest.TestCase):
-    @mock_s3
+    @mock_aws
     def setUp(self):
         self.config = dict(
             name='s3',
@@ -59,12 +59,12 @@ class S3ExporterTests(unittest.TestCase):
         ).resource('s3')
         self.bucket = self.s3.Bucket(self.config['bucket'])
 
-    @mock_s3
+    @mock_aws
     def test_from_config(self):
         result = S3Exporter.from_config(self.config)
         self.assertIsInstance(result, S3Exporter)
 
-    @mock_s3
+    @mock_aws
     def test_init(self):
         S3Exporter(**self.config)
         buckets = self.s3.buckets.all()
@@ -72,7 +72,7 @@ class S3ExporterTests(unittest.TestCase):
         self.assertIn(self.config['bucket'], buckets)
         self.assertEqual(len(buckets), 1)
 
-    @mock_s3
+    @mock_aws
     def test_init_with_bucket(self):
         result = list(self.s3.buckets.all())
         self.assertEqual(result, [])
@@ -89,7 +89,7 @@ class S3ExporterTests(unittest.TestCase):
         self.assertIn(self.config['bucket'], buckets)
         self.assertEqual(len(buckets), 1)
 
-    @mock_s3
+    @mock_aws
     def test_export_asset(self):
         exporter = S3Exporter(**self.config)
         id_ = 'abc123'
@@ -106,7 +106,7 @@ class S3ExporterTests(unittest.TestCase):
             with open(file_, 'r') as f:
                 self.assertEqual(json.load(f), expected)
 
-    @mock_s3
+    @mock_aws
     def test_export_content(self):
         with TemporaryDirectory() as root:
             n = 'p-proj001_spec001_d-desc_v001'
@@ -135,7 +135,7 @@ class S3ExporterTests(unittest.TestCase):
             with open(file_, 'r') as f:
                 self.assertEqual(json.load(f), content)
 
-    @mock_s3
+    @mock_aws
     def test_export_file(self):
         with TemporaryDirectory() as root:
             n = 'p-proj001_spec001_d-desc_v001'
@@ -167,7 +167,7 @@ class S3ExporterTests(unittest.TestCase):
             with open(file_, 'r') as f:
                 self.assertEqual(json.load(f), expected)
 
-    @mock_s3
+    @mock_aws
     def test_export_asset_chunk(self):
         exporter = S3Exporter(**self.config)
         expected = [
@@ -185,7 +185,7 @@ class S3ExporterTests(unittest.TestCase):
             with open(temp, 'r') as f:
                 self.assertEqual(json.load(f), expected)
 
-    @mock_s3
+    @mock_aws
     def test_export_file_chunk(self):
         exporter = S3Exporter(**self.config)
         expected = [

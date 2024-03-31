@@ -1,20 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>hidebound.core.config &mdash; hidebound  documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/style.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -25,24 +28,27 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> hidebound
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            hidebound
           </a>
               <div class="version">
-                0.27.0
+                0.32.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#installation">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#overview">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#dataflow">Dataflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#workflow">Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#naming-convention">Naming Convention</a></li>
@@ -50,12 +56,18 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#application">Application</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#configuration">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html#specification">Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#production-cli">Production CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#quickstart-guide">Quickstart Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html#development-cli">Development CLI</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../core.html">core</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../exporters.html">exporters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../server.html">server</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development CLI</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../cli.html">cli</a></li>
 </ul>
 
@@ -72,9 +84,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>hidebound.core.config</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">hidebound.core.config</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -100,18 +112,21 @@
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">schematics</span> <span class="kn">import</span> <span class="n">Model</span>
 
+<span class="kn">from</span> <span class="nn">hidebound.core.connection</span> <span class="kn">import</span> <span class="n">DaskConnectionConfig</span>
 <span class="kn">from</span> <span class="nn">hidebound.core.specification_base</span> <span class="kn">import</span> <span class="n">SpecificationBase</span>
-<span class="kn">from</span> <span class="nn">hidebound.exporters.girder_exporter</span> <span class="kn">import</span> <span class="n">GirderConfig</span>
 <span class="kn">from</span> <span class="nn">hidebound.exporters.disk_exporter</span> <span class="kn">import</span> <span class="n">DiskConfig</span>
+<span class="kn">from</span> <span class="nn">hidebound.exporters.girder_exporter</span> <span class="kn">import</span> <span class="n">GirderConfig</span>
 <span class="kn">from</span> <span class="nn">hidebound.exporters.s3_exporter</span> <span class="kn">import</span> <span class="n">S3Config</span>
 <span class="kn">import</span> <span class="nn">hidebound.core.validators</span> <span class="k">as</span> <span class="nn">vd</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
 <span class="c1"># must be in here to avoid circular import</span>
-<div class="viewcode-block" id="is_specification_file"><a class="viewcode-back" href="../../../core.html#hidebound.core.config.is_specification_file">[docs]</a><span class="k">def</span> <span class="nf">is_specification_file</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+<div class="viewcode-block" id="is_specification_file">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.config.is_specification_file">[docs]</a>
+<span class="k">def</span> <span class="nf">is_specification_file</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
     <span class="c1"># type: (Union[str, Path]) -&gt; None</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Validator for specification files given to Database.</span>
 
 <span class="sd">    Args:</span>
@@ -168,11 +183,14 @@
         <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="n">sys</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">temp</span></div>
+
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 
-<div class="viewcode-block" id="Config"><a class="viewcode-back" href="../../../core.html#hidebound.core.config.Config">[docs]</a><span class="k">class</span> <span class="nc">Config</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="Config">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.config.Config">[docs]</a>
+<span class="k">class</span> <span class="nc">Config</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    A class for validating configurations supplied to Database.</span>
 
 <span class="sd">    Attributes:</span>
@@ -185,13 +203,11 @@
 <span class="sd">            Default: &#39;\.DS_Store&#39;.</span>
 <span class="sd">        write_mode (str, optional): How assets will be extracted to</span>
 <span class="sd">            hidebound/content directory. Default: copy.</span>
-<span class="sd">        dask_workers (int, optional): Number of Dask worker to use if enabled.</span>
-<span class="sd">            Default: 8.</span>
-<span class="sd">        dask_cluster_type (str, optional): Dask cluster type. Default: local.</span>
 <span class="sd">        workflow (list[str], optional): Ordered steps of workflow.  Default:</span>
 <span class="sd">            [&#39;delete&#39;, &#39;update&#39;, &#39;create&#39;, &#39;export&#39;].</span>
 <span class="sd">        redact_regex (str, optional): Regex pattern matched to config keys.</span>
-<span class="sd">            Values of matching keys will be redacted. Default: &quot;(_key|_id|url)$&quot;.</span>
+<span class="sd">            Values of matching keys will be redacted.</span>
+<span class="sd">            Default: &quot;(_key|_id|_token|url)$&quot;.</span>
 <span class="sd">        redact_hash (bool, optional): Whether to replace redacted values with</span>
 <span class="sd">            &quot;REDACTED&quot; or a hash of the value. Default: True.</span>
 <span class="sd">        specification_files (list[str], optional): List of asset specification</span>
@@ -200,6 +216,7 @@
 <span class="sd">            key is the exporter name and the value is its config. Default: {}.</span>
 <span class="sd">        webhooks (list[dict], optional): List of webhooks to be called after</span>
 <span class="sd">            export. Default: [].</span>
+<span class="sd">        dask (dict, optional). Dask configuration. Default: {}.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">ingress_directory</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_directory</span><span class="p">]</span>
@@ -214,21 +231,16 @@
         <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_in</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;copy&#39;</span><span class="p">,</span> <span class="s1">&#39;move&#39;</span><span class="p">])],</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;copy&quot;</span><span class="p">,</span>
     <span class="p">)</span>  <span class="c1"># type: StringType</span>
-    <span class="n">dask_workers</span> <span class="o">=</span> <span class="n">IntType</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_gt</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span>
-    <span class="p">)</span>  <span class="c1"># type: IntType</span>
-    <span class="n">dask_cluster_type</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;local&#39;</span><span class="p">,</span>
-        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_in</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;local&#39;</span><span class="p">])],</span>
-    <span class="p">)</span>  <span class="c1"># type: IntType</span>
+    <span class="n">dask</span> <span class="o">=</span> <span class="n">ModelType</span><span class="p">(</span>
+        <span class="n">DaskConnectionConfig</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">{},</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>  <span class="c1"># type: ModelType</span>
     <span class="n">workflow</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
         <span class="n">StringType</span><span class="p">(),</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_workflow</span><span class="p">],</span>
         <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;delete&#39;</span><span class="p">,</span> <span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="s1">&#39;export&#39;</span><span class="p">]</span>
     <span class="p">)</span>  <span class="c1"># type: ListType</span>
-    <span class="n">redact_regex</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;(_key|_id|url)$&#39;</span><span class="p">)</span>  <span class="c1"># type: StringType</span>
+    <span class="n">redact_regex</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;(_key|_id|_token|url)$&#39;</span><span class="p">)</span>  <span class="c1"># type: StringType</span>
     <span class="n">redact_hash</span> <span class="o">=</span> <span class="n">BooleanType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: BooleanType</span>
     <span class="n">specification_files</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span>
         <span class="n">StringType</span><span class="p">(</span><span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">is_specification_file</span><span class="p">,</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_file</span><span class="p">]),</span>
@@ -245,7 +257,9 @@
         <span class="n">default</span><span class="o">=</span><span class="p">[],</span>
     <span class="p">)</span>  <span class="c1"># type: ListType</span>
 
-<div class="viewcode-block" id="Config.WebhookConfig"><a class="viewcode-back" href="../../../core.html#hidebound.core.config.Config.WebhookConfig">[docs]</a>    <span class="k">class</span> <span class="nc">WebhookConfig</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<div class="viewcode-block" id="Config.WebhookConfig">
+<a class="viewcode-back" href="../../../core.html#hidebound.core.config.Config.WebhookConfig">[docs]</a>
+    <span class="k">class</span> <span class="nc">WebhookConfig</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">URLType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fqdn</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: URLType</span>
         <span class="n">method</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">vd</span><span class="o">.</span><span class="n">is_http_method</span><span class="p">])</span>  <span class="c1"># type: StringType</span>
         <span class="n">headers</span> <span class="o">=</span> <span class="n">DictType</span><span class="p">(</span><span class="n">StringType</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: DictType</span>
@@ -253,7 +267,9 @@
         <span class="n">json</span> <span class="o">=</span> <span class="n">DictType</span><span class="p">(</span><span class="n">BaseType</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">serialize_when_none</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: DictType</span>
         <span class="n">params</span> <span class="o">=</span> <span class="n">DictType</span><span class="p">(</span><span class="n">BaseType</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">serialize_when_none</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: DictType</span>
         <span class="n">timeout</span> <span class="o">=</span> <span class="n">IntType</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">serialize_when_none</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: IntType</span></div>
+
     <span class="n">webhooks</span> <span class="o">=</span> <span class="n">ListType</span><span class="p">(</span><span class="n">ModelType</span><span class="p">(</span><span class="n">WebhookConfig</span><span class="p">),</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[])</span>  <span class="c1"># type: ListType</span></div>
+
 </pre></div>
 
            </div>
@@ -263,7 +279,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
+    <p>&#169; Copyright 2024, Alex Braun &lt;alexander.g.braun@gmail.com&gt;.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
