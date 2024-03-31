@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.abspath('../python'))
 # -- Project information -----------------------------------------------------
 
 project = 'hidebound'
-copyright = '2022, Alex Braun <alexander.g.braun@gmail.com>'
+copyright = '2024, Alex Braun <alexander.g.braun@gmail.com>'
 author = 'Alex Braun <alexander.g.braun@gmail.com>'
 version = toml.load('../docker/config/pyproject.toml')['project']['version']
 # release = ''
@@ -42,6 +42,9 @@ extensions = [
     'sphinx.ext.viewcode',
     "sphinx_autodoc_typehints",
 ]
+
+# Include todo items in docs
+todo_include_todos = True
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
