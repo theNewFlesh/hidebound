@@ -1,0 +1,42 @@
+ingress_directory: /mnt/ingress
+staging_directory: /mnt/hidebound
+include_regex: ""
+exclude_regex: "\\.DS_Store"
+write_mode: copy
+redact_regex: "(_key|_id|_token|url)$"
+redact_hash: True
+workflow:
+  - update
+  - create
+  - export
+  - delete
+specification_files: []
+dask:
+  cluster_type: local
+  num_partitions: 16
+  local_num_workers: 16
+  local_threads_per_worker: 1
+  local_multiprocessing: True
+  gateway_address: "http://proxy-public/services/dask-gateway"
+  gateway_proxy_address: "gateway://traefik-daskhub-dask-gateway.core:80"
+  gateway_public_address: "https://dask-gateway/services/dask-gateway/"
+  gateway_auth_type: jupyterhub
+  gateway_api_token: token
+  gateway_cluster_options: []
+  gateway_shutdown_on_close: True
+exporters:
+  - name: disk
+    target_directory: /mnt/archive
+    metadata_types:
+      - asset
+      - file
+      - asset-chunk
+      - file-chunk
+webhooks:
+  - url: "http://foobar.com/api/user?"
+    method: get
+    params:
+      id: 123
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"

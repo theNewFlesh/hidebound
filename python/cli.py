@@ -447,25 +447,39 @@ def prod_command(args):
     Returns:
         str: Command to start prod container.
     '''
-    if args == ['']:
+    if len(args) != 4:
         cmds = [
             line('''
-                echo "Please provide a directory to map into the container
-                after the {cyan}-a{clear} flag."
+                echo "Please provide the following after the {cyan}-a{clear} flag:";
+                echo "  - config filepath";
+                echo "  - ingress directory";
+                echo "  - staging directory";
+                echo "  - egress directory";
             ''')
         ]
         return resolve(cmds)
 
-    run = 'docker run --volume {}:/mnt/storage'.format(args[0])
+    cmd = line('''
+        docker run
+        --publish 2082:8080
+        --env HIDEBOUND_CONFIG_FILEPATH=/mnt/hidebound/config.yaml
+        --volume {config}:/mnt/hidebound/config.yaml
+        --volume {ingress}:/mnt/ingress
+        --volume {staging}:/mnt/hidebound
+        --volume {egress}:/mnt/archive
+    '''.format(
+        config=args[0], ingress=args[1], staging=args[2], egress=args[3]
+    ))
+    cmd = line(cmd + '''
+        --rm
+        --publish {port}:{port}
+        --name {repo}-prod
+        {repo}:prod
+    ''')
     cmds = [
         enter_repo(),
         version_variable(),
-        line(run + '''
-            --rm
-            --publish {port}:{port}
-            --name {repo}-prod
-            {repo}:prod
-        '''),
+        cmd,
         exit_repo(),
     ]
     return resolve(cmds)
