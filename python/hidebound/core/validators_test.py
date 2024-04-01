@@ -463,6 +463,17 @@ class ValidatorsTests(unittest.TestCase):
         with self.assertRaisesRegex(ValidationError, expected):
             vd.is_metadata_type('foobar')
 
+    def test_is_hidebound_directory(self):
+        vd.is_hidebound_directory('/foo/bar/hidebound')
+
+        expected = '/foo/bar directory is not named hidebound.'
+        with self.assertRaisesRegex(ValidationError, expected):
+            vd.is_hidebound_directory('/foo/bar')
+
+        expected = '/foo/bar/Hidebound directory is not named hidebound.'
+        with self.assertRaisesRegex(ValidationError, expected):
+            vd.is_hidebound_directory('/foo/bar/Hidebound')
+
     def test_is_http_method(self):
         methods = ['get', 'put', 'post', 'delete', 'patch']
         for method in methods:

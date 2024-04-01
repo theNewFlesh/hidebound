@@ -28,7 +28,7 @@ env_configmap:
   FLASK_RUN_HOST: 0.0.0.0
   HIDEBOUND_TESTING: false
   HIDEBOUND_INGRESS_DIRECTORY: /mnt/ingress
-  HIDEBOUND_STAGING_DIRECTORY: /mnt/staging
+  HIDEBOUND_STAGING_DIRECTORY: /mnt/hidebound
   HIDEBOUND_INCLUDE_REGEX: ""
   HIDEBOUND_EXCLUDE_REGEX: "\\\\.DS_Store"
   HIDEBOUND_WRITE_MODE: move
@@ -65,11 +65,11 @@ deployment:
     nfs: false
     nfs_server:
   staging:
-    path: /mnt/staging
+    path: /mnt/hidebound
     nfs: false
     nfs_server:
   egress:
-    path: /mnt/egress
+    path: /mnt/archive
     nfs: false
     nfs_server:
   repo:

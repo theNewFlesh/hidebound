@@ -13,7 +13,7 @@ class ServerToolsTests(DatabaseTestBase):
     def test_setup_hidebound_directories(self):
         with TemporaryDirectory() as root:
             hst.setup_hidebound_directories(root)
-            for folder in ['ingress', 'staging', 'egress']:
+            for folder in ['ingress', 'hidebound', 'archive']:
                 self.assertTrue(Path(root, folder).is_dir())
 
     # ERRORS--------------------------------------------------------------------
@@ -165,7 +165,7 @@ def test_format_config_exporters(config):
     expected = [
         dict(
             name='disk',
-            target_directory='/tmp/mnt/egress',
+            target_directory='/tmp/mnt/archive',
             metadata_types=['asset', 'file']
         ),
         dict(

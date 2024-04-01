@@ -131,11 +131,18 @@ def test_init_bad_ingress(make_dirs, specs, dask_config):  # noqa: F811
 
 
 def test_init_bad_staging(temp_dir, dask_config):  # noqa: F811
-    staging = Path(temp_dir, 'staging')
+    staging = Path(temp_dir, 'hidebound')
 
-    expected = '/staging is not a directory or does not exist'
+    expected = '/hidebound is not a directory or does not exist'
     with pytest.raises(FileNotFoundError) as e:
         Database(temp_dir, staging, dask=dask_config, testing=False)
+        assert re.search(expected, str(e))
+
+    temp = Path(temp_dir, 'Hidebound')
+    os.makedirs(temp)
+    expected = r'Hidebound directory is not named hidebound\.$'
+    with pytest.raises(NameError) as e:
+        Database(temp_dir, temp, dask=dask_config, testing=False)
         assert re.search(expected, str(e))
 
 
@@ -774,12 +781,12 @@ def test_export_disk(make_dirs, make_files, specs, db_data, dask_config):  # noq
         .apply(lambda x: re.search('/(asset|file|content)', x)) \
         .astype(bool)
     expected = expected[mask] \
-        .apply(lambda x: re.sub('.*/staging/', '', x)) \
+        .apply(lambda x: re.sub('.*/hidebound/', '', x)) \
         .tolist()
     expected = sorted(expected)
 
     result = hbt.directory_to_dataframe(archive).filepath \
-        .apply(lambda x: re.sub('.*/egress/', '', x)) \
+        .apply(lambda x: re.sub('.*/archive/', '', x)) \
         .tolist()
     result = sorted(result)
 

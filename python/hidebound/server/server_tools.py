@@ -131,12 +131,12 @@ def error_to_response(error):
 def setup_hidebound_directories(root):
     # type: (Union[str, Path]) -> None
     '''
-    Creates [root]/ingress, [root]/staging and [root]/egress directories.
+    Creates [root]/ingress, [root]/hidebound and [root]/archive directories.
 
     Args:
         root (str or Path): Root directory.
     '''
-    for folder in ['ingress', 'staging', 'egress']:
+    for folder in ['ingress', 'hidebound', 'archive']:
         os.makedirs(Path(root, folder), exist_ok=True)
 
 
