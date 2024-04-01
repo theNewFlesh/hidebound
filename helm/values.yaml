@@ -25,7 +25,7 @@ env_configmap:
   FLASK_APP: server.app:get_app
   FLASK_DEBUG:
   FLASK_RUN_PORT: 8080
-  FLASK_RUN_HOST: 0.0.0.0
+  FLASK_RUN_HOST: "0.0.0.0"
   HIDEBOUND_TESTING: "False"
   HIDEBOUND_INGRESS_DIRECTORY: /mnt/ingress
   HIDEBOUND_STAGING_DIRECTORY: /mnt/hidebound
