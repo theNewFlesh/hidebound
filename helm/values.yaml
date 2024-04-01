@@ -23,7 +23,7 @@ argocd_application:
 
 env_configmap:
   FLASK_APP: server.app:get_app
-  FLASK_DEBUG:
+  FLASK_DEBUG: 0
   FLASK_RUN_PORT: 8080
   FLASK_RUN_HOST: "0.0.0.0"
   HIDEBOUND_TESTING: "False"
