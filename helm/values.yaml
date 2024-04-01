@@ -79,7 +79,7 @@ deployment:
   image_pull_policy: IfNotPresent
   command:
     - hidebound
-    - server
+    - serve
   args:
   env_configmap: hidebound-env-configmap
   env_secret: hidebound-env-secret
