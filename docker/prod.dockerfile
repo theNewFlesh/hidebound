@@ -24,8 +24,7 @@ RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${CLEAR}"; \
     apt update && \
     apt install -y \
         curl \
-        software-properties-common \
-        wget && \
+        software-properties-common && \
     rm -rf /var/lib/apt/lists/*
 
 # install python3.10 and pip
@@ -34,7 +33,7 @@ RUN echo "\n${CYAN}SETUP PYTHON3.10${CLEAR}"; \
     apt update && \
     apt install --fix-missing -y python3.10 && \
     rm -rf /var/lib/apt/lists/* && \
-    wget https://bootstrap.pypa.io/get-pip.py && \
+    curl -fsSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
     python3.10 get-pip.py && \
     rm -rf /home/ubuntu/get-pip.py
 
