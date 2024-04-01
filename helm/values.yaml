@@ -54,8 +54,8 @@ env_configmap:
 
 env_secret:
   HIDEBOUND_DASK_GATEWAY_API_TOKEN: token
-  HIDEBOUND_WEBHOOKS: []
-  HIDEBOUND_EXPORTERS: []
+  HIDEBOUND_WEBHOOKS:
+  HIDEBOUND_EXPORTERS:
 
 deployment:
   repository: thenewflesh/hidebound

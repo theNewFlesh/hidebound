@@ -33,7 +33,7 @@
         "HIDEBOUND_EXPORTERS"
     -}}
     {{- range $key := $secrets -}}
-        {{- $val := (get $secret $key) | toYaml | b64enc -}}
+        {{- $val := (get $secret $key) | default "[]" | toYaml | b64enc -}}
         {{- $secret := set $secret $key $val -}}
     {{- end -}}
 
