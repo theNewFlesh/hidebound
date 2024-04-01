@@ -51,12 +51,10 @@ RUN echo "\n${CYAN}CHOWN /VAR/LOG${CLEAR}"; \
 
 # install hidebound
 USER ubuntu
-ENV REPO='hidebound'
-ENV PYTHONPATH "${PYTHONPATH}:/home/ubuntu/$REPO/python"
 RUN echo "\n${CYAN}INSTALL HIDEBOUND{CLEAR}"; \
     pip3.10 install --user --upgrade hidebound
 
 ENV PATH="/home/ubuntu/.local/bin:$PATH"
 EXPOSE 8080
 ENTRYPOINT ["/usr/bin/tini", "--"]
-CMD [ "hidebound server" ]
+CMD [ "hidebound", "serve" ]
