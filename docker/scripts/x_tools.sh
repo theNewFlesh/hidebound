@@ -554,7 +554,9 @@ x_session_server () {
     # Run application server
     x_env_activate_dev;
     echo "${CYAN2}SERVER${CLEAR}\n";
-    mkdir -p /tmp/hidebound /tmp/ingress;
+    mkdir -p /tmp/mnt/ingress /tmp/mnt/hidebound /tmp/mnt/archive;
+    export HIDEBOUND_TESTING=False;
+    export HIDEBOUND_CONFIG_FILEPATH=$REPO_DIR/resources/test_config.yaml;
     python3 $REPO_SUBPACKAGE/server/app.py;
 }
 
