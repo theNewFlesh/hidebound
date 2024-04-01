@@ -56,7 +56,7 @@ See [documentation](https://thenewflesh.github.io/hidebound/) for details.
 
 ## Docker
 1. Install [docker-desktop](https://docs.docker.com/desktop/)
-2. `docker pull thenewflesh/hidebound:latest`
+2. `docker pull thenewflesh/hidebound:prod-latest`
 
 ## Docker For Developers
 1. Install [docker-desktop](https://docs.docker.com/desktop/)

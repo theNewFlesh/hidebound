@@ -59,7 +59,7 @@ env_secret:
 
 deployment:
   repository: thenewflesh/hidebound
-  image_tag: latest
+  image_tag: prod-latest
   ingress:
     path: /mnt/ingress
     nfs: false
