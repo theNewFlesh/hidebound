@@ -256,7 +256,8 @@ def request(store, url, params=None, client=requests):
     params_ = None
     if params is not None:
         params_ = json.dumps(params)
-    response = client.post(url, json=params_)
+    headers = {'Content-Type': 'application/json'}
+    response = client.post(url, json=params_, headers=headers)
     code = response.status_code
     if isinstance(client, FlaskClient):
         response = response.json
