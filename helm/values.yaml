@@ -1,15 +1,15 @@
 enable:
-  namespace: true
-  argocd_application: true
+  namespace: false
+  argocd_application: false
   env_configmap: true
-  env_secret: true
-  image_pull_secret: true
+  env_secret: false
+  image_pull_secret: false
   ingress_volume: true
   staging_volume: true
   egress_volume: true
-  repo_volume: true
-  nginx_ingress: true
-  traefik_ingress: true
+  repo_volume: false
+  nginx_ingress: false
+  traefik_ingress: false
   readiness_probe: true
   liveness_probe: true
 
