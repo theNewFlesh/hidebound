@@ -3,20 +3,19 @@
     {{- $env := $output.env_configmap -}}
     {{- $secret := $output.env_secret -}}
 
-    {{- /* SET ENV VALUES TO STRING */ -}}
+    {{- /* COERCE ENV VALUES TO STRINGS */ -}}
     {{- range $key, $val := $env -}}
         {{- if eq (kindOf $val) "slice" -}}
             {{- $val := (get $env $key) | toYaml -}}
             {{- $env := set $env $key $val -}}
-        {{- else -}}
-            {{- $temp := $val | toString -}}
-            {{- if eq ($temp | lower) "true" -}}
+        {{- else if eq (kindOf $val) "bool" -}}
+            {{- if eq $val true -}}
                 {{- $env := set $env $key "True" -}}
-            {{- else if eq ($temp | lower) "false" -}}
-                {{- $env := set $env $key "False" -}}
             {{- else -}}
-                {{- $env := set $env $key $temp -}}
+                {{- $env := set $env $key "False" -}}
             {{- end -}}
+        {{- else -}}
+            {{- $env := set $env $key ($val | toString) -}}
         {{- end -}}
     {{- end -}}
 
