@@ -6,6 +6,8 @@ metadata:
   name: hidebound-env-configmap
   namespace: {{ .namespace.name }}
 data:
-{{- .env_configmap | toYaml | nindent 2 }}
-{{ end }}
+{{- range $key, $val := .env_configmap -}}
+  {{ $key | nindent 2 }}: "{{ $val }}"
+{{- end }}
+{{- end -}}
 {{- end -}}
