@@ -1,4 +1,4 @@
-{{- with .Values -}}
+{{- with (include "_values" . | fromYaml) -}}
 {{ if .enable.repo_volume }}
 kind: PersistentVolume
 apiVersion: v1

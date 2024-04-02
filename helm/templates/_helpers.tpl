@@ -1,17 +1,16 @@
-{{- with .Values -}}
-    {{- $env := .env_configmap }}
-    {{- $secret := .env_secret }}
+{{- define "_values" -}}
+    {{- $output := deepCopy .Values -}}
+    {{- $env := $output.env_configmap -}}
+    {{- $secret := $output.env_secret -}}
 
     {{- /* CONVERT YAML ENV VARS TO STRINGS */ -}}
     {{- $vars := list
         "HIDEBOUND_WORKFLOW"
         "HIDEBOUND_SPECIFICATION_FILES"
         "HIDEBOUND_DASK_GATEWAY_CLUSTER_OPTIONS"
-        "HIDEBOUND_EXPORTERS"
-        "HIDEBOUND_WEBHOOKS"
     -}}
     {{- range $key := $vars -}}
-        {{- $val := (get $env $key) | toYaml -}}
+        {{- $val := (get $env $key) | default list | toYaml -}}
         {{- $env := set $env $key $val -}}
     {{- end -}}
 
@@ -37,5 +36,5 @@
         {{- $secret := set $secret $key $val -}}
     {{- end -}}
 
-    {{ . }}
+    {{ $output | toYaml }}
 {{- end -}}

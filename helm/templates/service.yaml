@@ -1,4 +1,4 @@
-{{- with .Values -}}
+{{- with (include "_values" . | fromYaml) -}}
 kind: Service
 apiVersion: v1
 metadata:

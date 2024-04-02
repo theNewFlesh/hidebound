@@ -1,4 +1,4 @@
-{{- with .Values -}}
+{{- with (include "_values" . | fromYaml) -}}
 {{ if .enable.traefik_ingress }}
 kind: IngressRoute
 apiVersion: traefik.containo.us/v1alpha1
