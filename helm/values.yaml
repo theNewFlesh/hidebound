@@ -2,7 +2,7 @@ enable:
   namespace: false
   argocd_application: false
   env_configmap: true
-  env_secret: false
+  env_secret: true
   image_pull_secret: false
   ingress_volume: true
   staging_volume: true
