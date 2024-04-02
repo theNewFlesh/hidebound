@@ -18,14 +18,9 @@
         {{- end -}}
     {{- end -}}
 
-    {{- /* CONVERT SECRET YAML ENV VARS TO STRINGS AND ENCRYPT */ -}}
-    {{- $secrets := list
-        "HIDEBOUND_WEBHOOKS"
-        "HIDEBOUND_EXPORTERS"
-    -}}
-    {{- range $key := $secrets -}}
-        {{- $val := (get $secret $key) | toYaml | b64enc -}}
-        {{- $secret := set $secret $key $val -}}
+    {{- /* CONVERT SECRET VALUES TO STRINGS AND ENCRYPT */ -}}
+    {{- range $key, $val := $secret -}}
+        {{- $secret := set $secret $key ($val |toYaml | b64enc) -}}
     {{- end -}}
 
     {{ $output | toYaml }}
