@@ -6,8 +6,7 @@
     {{- /* COERCE ENV VALUES TO STRINGS */ -}}
     {{- range $key, $val := $env -}}
         {{- if eq (kindOf $val) "slice" -}}
-            {{- $val := (get $env $key) | toYaml -}}
-            {{- $env := set $env $key $val -}}
+            {{- $env := set $env $key ($val | toYaml) -}}
         {{- else if eq (kindOf $val) "bool" -}}
             {{- if eq $val true -}}
                 {{- $env := set $env $key "True" -}}
