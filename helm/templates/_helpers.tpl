@@ -3,26 +3,20 @@
     {{- $env := $output.env_configmap -}}
     {{- $secret := $output.env_secret -}}
 
-    {{- /* CONVERT YAML ENV VARS TO STRINGS */ -}}
-    {{- $vars := list
-        "HIDEBOUND_WORKFLOW"
-        "HIDEBOUND_SPECIFICATION_FILES"
-        "HIDEBOUND_DASK_GATEWAY_CLUSTER_OPTIONS"
-    -}}
-    {{- range $key := $vars -}}
-        {{- $val := (get $env $key) | default list | toYaml -}}
-        {{- $env := set $env $key $val -}}
-    {{- end -}}
-
     {{- /* SET ENV VALUES TO STRING */ -}}
     {{- range $key, $val := $env -}}
-        {{- $temp := $val | toString -}}
-        {{- if eq ($temp | lower) "true" -}}
-            {{- $env := set $env $key "True" -}}
-        {{- else if eq ($temp | lower) "false" -}}
-            {{- $env := set $env $key "False" -}}
+        {{- if eq (kindOf $val) "slice" -}}
+            {{- $val := (get $env $key) | toYaml -}}
+            {{- $env := set $env $key $val -}}
         {{- else -}}
-            {{- $env := set $env $key $temp -}}
+            {{- $temp := $val | toString -}}
+            {{- if eq ($temp | lower) "true" -}}
+                {{- $env := set $env $key "True" -}}
+            {{- else if eq ($temp | lower) "false" -}}
+                {{- $env := set $env $key "False" -}}
+            {{- else -}}
+                {{- $env := set $env $key $temp -}}
+            {{- end -}}
         {{- end -}}
     {{- end -}}
 
