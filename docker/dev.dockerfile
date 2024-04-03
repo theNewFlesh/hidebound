@@ -140,6 +140,16 @@ RUN echo "\n${CYAN}INSTALL S6${CLEAR}"; \
        /tmp/s6-overlay-${S6_ARCH}.tar.xz \
        /tmp/s6-overlay-${S6_ARCH}.tar.xz.sha256
 
+# install helm
+RUN echo "\n${CYAN}INSTALL HELM${CLEAR}"; \
+    mkdir -p /tmp/helm && \
+    cd /tmp/helm && \
+    curl https://get.helm.sh/helm-v3.8.1-linux-amd64.tar.gz -Lo helm.tar.gz && \
+    tar zxvf helm.tar.gz && \
+    mv linux-amd64/helm /usr/local/bin/ && \
+    chmod +x /usr/local/bin/helm && \
+    rm -rf /tmp/helm
+
 USER ubuntu
 ENV PATH="/home/ubuntu/.local/bin:$PATH"
 COPY ./config/henanigans.zsh-theme .oh-my-zsh/custom/themes/henanigans.zsh-theme
