@@ -494,7 +494,8 @@ Default configuration of Dask distributed framework.
 * gateway_proxy_address - **scheduler** proxy server address
 * gateway_public_address - gateway server address, as accessible from a web browser
 * gateway_auth_type - authentication type
-* gateway_api_token - api token
+* gateway_api_token - api token or password
+* gateway_api_user - api user
 * gateway_cluster_options - list of dask gateway cluster options
 * gateway_shutdown_on_close - whether to shudown cluster upon close
 
@@ -537,7 +538,8 @@ file.
 | HIDEBOUND_DASK_GATEWAY_PROXY_ADDRESS     | str    | scheduler proxy server address                           |
 | HIDEBOUND_DASK_GATEWAY_PUBLIC_ADDRESS    | str    | gateway server address, as accessible from a web browser |
 | HIDEBOUND_DASK_GATEWAY_AUTH_TYPE         | str    | authentication type                                      |
-| HIDEBOUND_DASK_GATEWAY_API_TOKEN         | str    | api token                                                |
+| HIDEBOUND_DASK_GATEWAY_API_TOKEN         | str    | api token or password                                    |
+| HIDEBOUND_DASK_GATEWAY_API_USER          | str    | api user                                                 |
 | HIDEBOUND_DASK_GATEWAY_CLUSTER_OPTIONS   | yaml   | list of dask gateway cluster options                     |
 | HIDEBOUND_DASK_GATEWAY_SHUTDOWN_ON_CLOSE | str    | whether to shudown cluster upon close                    |
 | HIDEBOUND_EXPORTERS                      | yaml   | exporters section of config                              |
@@ -576,7 +578,8 @@ dask:
   gateway_proxy_address: gateway://traefik-daskhub-dask-gateway.core:80  # scheduler proxy server address
   gateway_public_address: https://dask-gateway/services/dask-gateway/    # gateway server address, as accessible from a web browser
   gateway_auth_type: jupyterhub                                          # authentication type
-  gateway_api_token: token123                                            # api token
+  gateway_api_token: token123                                            # api token or password
+  gateway_api_user: admin                                                # api user
   gateway_cluster_options:                                               # list of dask gateway options
     - field: image                                                       # option field
       label: image                                                       # option label
