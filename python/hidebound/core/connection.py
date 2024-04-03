@@ -35,8 +35,9 @@ class DaskConnectionConfig(Model):
             server, as accessible from a web browser.
             Default: 'https://dask-gateway/services/dask-gateway/'.
         gateway_auth_type (str, optional): Dask Gateway authentication type.
-            Default: jupyterhub.
+            Default: basic.
         gateway_api_token (str, optional): Authentication API token.
+        gateway_api_user (str, optional): Basic authentication user name.
         gateway_cluster_options (list, optional): Dask Gateway cluster options.
             Default: [].
         gateway_shutdown_on_close (bool, optional): Whether to shudown cluster
@@ -75,10 +76,11 @@ class DaskConnectionConfig(Model):
     )  # type: URLType
     gateway_auth_type = StringType(
         required=True,
-        default='jupyterhub',
-        validators=[lambda x: vd.is_eq(x, 'jupyterhub')]
+        default='basic',
+        validators=[lambda x: vd.is_in(x, ['basic', 'jupyterhub'])]
     )  # StringType
     gateway_api_token = StringType()  # StringType
+    gateway_api_user = StringType()  # StringType
     gateway_shutdown_on_close = BooleanType(
         required=True, default=True
     )  # type: BooleanType
@@ -144,8 +146,15 @@ class DaskConnection:
             shutdown_on_close=self.config['gateway_shutdown_on_close'],
         )
 
+        # set basic authentication
+        if self.config['gateway_auth_type'] == 'basic':
+            output['auth'] = dgw.auth.BasicAuth(
+                username=self.config['gateway_api_user'],
+                password=self.config['gateway_api_token'],
+            )
+
         # set jupyterhub authentication
-        if self.config['gateway_auth_type'] == 'jupyterhub':
+        elif self.config['gateway_auth_type'] == 'jupyterhub':
             output['auth'] = dgw.JupyterHubAuth(
                 api_token=self.config['gateway_api_token']
             )

@@ -193,8 +193,9 @@ def dask_config():
         gateway_address='http://gateway-address.com',
         gateway_proxy_address='http://gateway-proxy-address.com',
         gateway_public_address='http://gateway-public-address.com',
-        gateway_auth_type='jupyterhub',
+        gateway_auth_type='basic',
         gateway_api_token='token',
+        gateway_api_user='user',
         gateway_cluster_options=[],
         gateway_shutdown_on_close=False,
     )
