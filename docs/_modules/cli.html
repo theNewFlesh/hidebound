@@ -35,7 +35,7 @@
             hidebound
           </a>
               <div class="version">
-                0.32.4
+                0.33.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -598,25 +598,39 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        str: Command to start prod container.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">if</span> <span class="n">args</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
         <span class="n">cmds</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">line</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">                echo &quot;Please provide a directory to map into the container</span>
-<span class="s1">                after the </span><span class="si">{cyan}</span><span class="s1">-a</span><span class="si">{clear}</span><span class="s1"> flag.&quot;</span>
+<span class="s1">                echo &quot;Please provide the following after the </span><span class="si">{cyan}</span><span class="s1">-a</span><span class="si">{clear}</span><span class="s1"> flag:&quot;;</span>
+<span class="s1">                echo &quot;  - config filepath&quot;;</span>
+<span class="s1">                echo &quot;  - ingress directory&quot;;</span>
+<span class="s1">                echo &quot;  - staging directory&quot;;</span>
+<span class="s1">                echo &quot;  - egress directory&quot;;</span>
 <span class="s1">            &#39;&#39;&#39;</span><span class="p">)</span>
         <span class="p">]</span>
         <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span>
 
-    <span class="n">run</span> <span class="o">=</span> <span class="s1">&#39;docker run --volume </span><span class="si">{}</span><span class="s1">:/mnt/storage&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="n">line</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        docker run</span>
+<span class="s1">        --publish 2082:8080</span>
+<span class="s1">        --env HIDEBOUND_CONFIG_FILEPATH=/mnt/hidebound/config.yaml</span>
+<span class="s1">        --volume </span><span class="si">{config}</span><span class="s1">:/mnt/hidebound/config.yaml</span>
+<span class="s1">        --volume </span><span class="si">{ingress}</span><span class="s1">:/mnt/ingress</span>
+<span class="s1">        --volume </span><span class="si">{staging}</span><span class="s1">:/mnt/hidebound</span>
+<span class="s1">        --volume </span><span class="si">{egress}</span><span class="s1">:/mnt/archive</span>
+<span class="s1">    &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">config</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ingress</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">staging</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">egress</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="p">))</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="n">line</span><span class="p">(</span><span class="n">cmd</span> <span class="o">+</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        --rm</span>
+<span class="s1">        --publish </span><span class="si">{port}</span><span class="s1">:</span><span class="si">{port}</span>
+<span class="s1">        --name </span><span class="si">{repo}</span><span class="s1">-prod</span>
+<span class="s1">        </span><span class="si">{repo}</span><span class="s1">:prod</span>
+<span class="s1">    &#39;&#39;&#39;</span><span class="p">)</span>
     <span class="n">cmds</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">enter_repo</span><span class="p">(),</span>
         <span class="n">version_variable</span><span class="p">(),</span>
-        <span class="n">line</span><span class="p">(</span><span class="n">run</span> <span class="o">+</span> <span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">            --rm</span>
-<span class="s1">            --publish </span><span class="si">{port}</span><span class="s1">:</span><span class="si">{port}</span>
-<span class="s1">            --name </span><span class="si">{repo}</span><span class="s1">-prod</span>
-<span class="s1">            </span><span class="si">{repo}</span><span class="s1">:prod</span>
-<span class="s1">        &#39;&#39;&#39;</span><span class="p">),</span>
+        <span class="n">cmd</span><span class="p">,</span>
         <span class="n">exit_repo</span><span class="p">(),</span>
     <span class="p">]</span>
     <span class="k">return</span> <span class="n">resolve</span><span class="p">(</span><span class="n">cmds</span><span class="p">)</span></div>

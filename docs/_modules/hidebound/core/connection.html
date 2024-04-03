@@ -35,7 +35,7 @@
             hidebound
           </a>
               <div class="version">
-                0.32.4
+                0.33.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -135,8 +135,9 @@
 <span class="sd">            server, as accessible from a web browser.</span>
 <span class="sd">            Default: &#39;https://dask-gateway/services/dask-gateway/&#39;.</span>
 <span class="sd">        gateway_auth_type (str, optional): Dask Gateway authentication type.</span>
-<span class="sd">            Default: jupyterhub.</span>
+<span class="sd">            Default: basic.</span>
 <span class="sd">        gateway_api_token (str, optional): Authentication API token.</span>
+<span class="sd">        gateway_api_user (str, optional): Basic authentication user name.</span>
 <span class="sd">        gateway_cluster_options (list, optional): Dask Gateway cluster options.</span>
 <span class="sd">            Default: [].</span>
 <span class="sd">        gateway_shutdown_on_close (bool, optional): Whether to shudown cluster</span>
@@ -175,10 +176,11 @@
     <span class="p">)</span>  <span class="c1"># type: URLType</span>
     <span class="n">gateway_auth_type</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;jupyterhub&#39;</span><span class="p">,</span>
-        <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_eq</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;jupyterhub&#39;</span><span class="p">)]</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;basic&#39;</span><span class="p">,</span>
+        <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_in</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;basic&#39;</span><span class="p">,</span> <span class="s1">&#39;jupyterhub&#39;</span><span class="p">])]</span>
     <span class="p">)</span>  <span class="c1"># StringType</span>
     <span class="n">gateway_api_token</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">()</span>  <span class="c1"># StringType</span>
+    <span class="n">gateway_api_user</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">()</span>  <span class="c1"># StringType</span>
     <span class="n">gateway_shutdown_on_close</span> <span class="o">=</span> <span class="n">BooleanType</span><span class="p">(</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">)</span>  <span class="c1"># type: BooleanType</span>
@@ -253,8 +255,15 @@
             <span class="n">shutdown_on_close</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;gateway_shutdown_on_close&#39;</span><span class="p">],</span>
         <span class="p">)</span>
 
+        <span class="c1"># set basic authentication</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;gateway_auth_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;basic&#39;</span><span class="p">:</span>
+            <span class="n">output</span><span class="p">[</span><span class="s1">&#39;auth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dgw</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">BasicAuth</span><span class="p">(</span>
+                <span class="n">username</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;gateway_api_user&#39;</span><span class="p">],</span>
+                <span class="n">password</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;gateway_api_token&#39;</span><span class="p">],</span>
+            <span class="p">)</span>
+
         <span class="c1"># set jupyterhub authentication</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;gateway_auth_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;jupyterhub&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;gateway_auth_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;jupyterhub&#39;</span><span class="p">:</span>
             <span class="n">output</span><span class="p">[</span><span class="s1">&#39;auth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dgw</span><span class="o">.</span><span class="n">JupyterHubAuth</span><span class="p">(</span>
                 <span class="n">api_token</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;gateway_api_token&#39;</span><span class="p">]</span>
             <span class="p">)</span>

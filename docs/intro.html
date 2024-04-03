@@ -38,7 +38,7 @@
             hidebound
           </a>
               <div class="version">
-                0.32.4
+                0.33.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -213,7 +213,7 @@ one time.</p>
 <h2>Docker<a class="headerlink" href="#docker" title="Link to this heading">¶</a></h2>
 <ol class="arabic simple">
 <li><p>Install <a class="reference external" href="https://docs.docker.com/desktop/">docker-desktop</a></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">pull</span> <span class="pre">thenewflesh/hidebound:latest</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">pull</span> <span class="pre">thenewflesh/hidebound:prod-latest</span></code></p></li>
 </ol>
 </section>
 <section id="docker-for-developers">
@@ -759,7 +759,8 @@ displays errors in their entirety within the application.</p>
 <li><p>gateway_proxy_address - <strong>scheduler</strong> proxy server address</p></li>
 <li><p>gateway_public_address - gateway server address, as accessible from a web browser</p></li>
 <li><p>gateway_auth_type - authentication type</p></li>
-<li><p>gateway_api_token - api token</p></li>
+<li><p>gateway_api_token - api token or password</p></li>
+<li><p>gateway_api_user - api user</p></li>
 <li><p>gateway_cluster_options - list of dask gateway cluster options</p></li>
 <li><p>gateway_shutdown_on_close - whether to shudown cluster upon close</p></li>
 </ul>
@@ -870,25 +871,29 @@ file.</p>
 </tr>
 <tr class="row-odd"><td><p>HIDEBOUND_DASK_GATEWAY_API_TOKEN</p></td>
 <td><p>str</p></td>
-<td><p>api token</p></td>
+<td><p>api token or password</p></td>
 </tr>
-<tr class="row-even"><td><p>HIDEBOUND_DASK_GATEWAY_CLUSTER_OPTIONS</p></td>
+<tr class="row-even"><td><p>HIDEBOUND_DASK_GATEWAY_API_USER</p></td>
+<td><p>str</p></td>
+<td><p>api user</p></td>
+</tr>
+<tr class="row-odd"><td><p>HIDEBOUND_DASK_GATEWAY_CLUSTER_OPTIONS</p></td>
 <td><p>yaml</p></td>
 <td><p>list of dask gateway cluster options</p></td>
 </tr>
-<tr class="row-odd"><td><p>HIDEBOUND_DASK_GATEWAY_SHUTDOWN_ON_CLOSE</p></td>
+<tr class="row-even"><td><p>HIDEBOUND_DASK_GATEWAY_SHUTDOWN_ON_CLOSE</p></td>
 <td><p>str</p></td>
 <td><p>whether to shudown cluster upon close</p></td>
 </tr>
-<tr class="row-even"><td><p>HIDEBOUND_EXPORTERS</p></td>
+<tr class="row-odd"><td><p>HIDEBOUND_EXPORTERS</p></td>
 <td><p>yaml</p></td>
 <td><p>exporters section of config</p></td>
 </tr>
-<tr class="row-odd"><td><p>HIDEBOUND_WEBHOOKS</p></td>
+<tr class="row-even"><td><p>HIDEBOUND_WEBHOOKS</p></td>
 <td><p>yaml</p></td>
 <td><p>webhooks section of config</p></td>
 </tr>
-<tr class="row-even"><td><p>HIDEBOUND_TESTING</p></td>
+<tr class="row-odd"><td><p>HIDEBOUND_TESTING</p></td>
 <td><p>str</p></td>
 <td><p>run in test mode</p></td>
 </tr>
@@ -926,7 +931,8 @@ file.</p>
 <span class="w">  </span><span class="nt">gateway_proxy_address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gateway://traefik-daskhub-dask-gateway.core:80</span><span class="w">  </span><span class="c1"># scheduler proxy server address</span>
 <span class="w">  </span><span class="nt">gateway_public_address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://dask-gateway/services/dask-gateway/</span><span class="w">    </span><span class="c1"># gateway server address, as accessible from a web browser</span>
 <span class="w">  </span><span class="nt">gateway_auth_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jupyterhub</span><span class="w">                                          </span><span class="c1"># authentication type</span>
-<span class="w">  </span><span class="nt">gateway_api_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">token123</span><span class="w">                                            </span><span class="c1"># api token</span>
+<span class="w">  </span><span class="nt">gateway_api_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">token123</span><span class="w">                                            </span><span class="c1"># api token or password</span>
+<span class="w">  </span><span class="nt">gateway_api_user</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin</span><span class="w">                                                </span><span class="c1"># api user</span>
 <span class="w">  </span><span class="nt">gateway_cluster_options</span><span class="p">:</span><span class="w">                                               </span><span class="c1"># list of dask gateway options</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">field</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">image</span><span class="w">                                                       </span><span class="c1"># option field</span>
 <span class="w">      </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">image</span><span class="w">                                                       </span><span class="c1"># option label</span>

@@ -40,7 +40,7 @@ def test_local_config(dask_config):
     assert result == expected
 
 
-def test_gateway_config(dask_config):
+def test_gateway_config_basic(dask_config):
     dask_config['gateway_cluster_options'] = [
         dict(
             field='foobar', label='barfoo', default='a', option_type='select',
