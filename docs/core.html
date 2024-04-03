@@ -38,7 +38,7 @@
             hidebound
           </a>
               <div class="version">
-                0.32.4
+                0.33.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -119,6 +119,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.connection.DaskConnectionConfig.gateway_public_address"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_public_address</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.connection.DaskConnectionConfig.gateway_auth_type"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_auth_type</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.connection.DaskConnectionConfig.gateway_api_token"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_api_token</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hidebound.core.connection.DaskConnectionConfig.gateway_api_user"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_api_user</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.connection.DaskConnectionConfig.gateway_cluster_options"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_cluster_options</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.connection.DaskConnectionConfig.gateway_shutdown_on_close"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_shutdown_on_close</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.connection.DaskConnectionConfig.ClusterOption"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.ClusterOption</span></code></a></li>
@@ -126,15 +127,16 @@
 <li class="toctree-l4"><a class="reference internal" href="#id12"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.cluster_type</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id13"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_address</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id14"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_api_token</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id15"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_auth_type</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id16"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_cluster_options</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id17"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_proxy_address</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id18"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_public_address</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id19"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_shutdown_on_close</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id20"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.local_multiprocessing</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id21"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.local_num_workers</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id22"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.local_threads_per_worker</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id23"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.num_partitions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id15"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_api_user</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id16"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_auth_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id17"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_cluster_options</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id18"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_proxy_address</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id19"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_public_address</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id20"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.gateway_shutdown_on_close</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id21"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.local_multiprocessing</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id22"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.local_num_workers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id23"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.local_threads_per_worker</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id24"><code class="docutils literal notranslate"><span class="pre">DaskConnectionConfig.num_partitions</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -232,7 +234,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#hidebound.core.specification_base.ComplexSpecificationBase"><code class="docutils literal notranslate"><span class="pre">ComplexSpecificationBase</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specification_base.ComplexSpecificationBase.asset_type"><code class="docutils literal notranslate"><span class="pre">ComplexSpecificationBase.asset_type</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specification_base.ComplexSpecificationBase._schema"><code class="docutils literal notranslate"><span class="pre">ComplexSpecificationBase._schema</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id24"><code class="docutils literal notranslate"><span class="pre">ComplexSpecificationBase.asset_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id25"><code class="docutils literal notranslate"><span class="pre">ComplexSpecificationBase.asset_type</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specification_base.ComplexSpecificationBase.descriptor"><code class="docutils literal notranslate"><span class="pre">ComplexSpecificationBase.descriptor</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specification_base.ComplexSpecificationBase.extension"><code class="docutils literal notranslate"><span class="pre">ComplexSpecificationBase.extension</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specification_base.ComplexSpecificationBase.project"><code class="docutils literal notranslate"><span class="pre">ComplexSpecificationBase.project</span></code></a></li>
@@ -243,7 +245,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#hidebound.core.specification_base.FileSpecificationBase"><code class="docutils literal notranslate"><span class="pre">FileSpecificationBase</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specification_base.FileSpecificationBase.asset_type"><code class="docutils literal notranslate"><span class="pre">FileSpecificationBase.asset_type</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specification_base.FileSpecificationBase._schema"><code class="docutils literal notranslate"><span class="pre">FileSpecificationBase._schema</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id25"><code class="docutils literal notranslate"><span class="pre">FileSpecificationBase.asset_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id26"><code class="docutils literal notranslate"><span class="pre">FileSpecificationBase.asset_type</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specification_base.FileSpecificationBase.descriptor"><code class="docutils literal notranslate"><span class="pre">FileSpecificationBase.descriptor</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specification_base.FileSpecificationBase.extension"><code class="docutils literal notranslate"><span class="pre">FileSpecificationBase.extension</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specification_base.FileSpecificationBase.get_asset_path"><code class="docutils literal notranslate"><span class="pre">FileSpecificationBase.get_asset_path()</span></code></a></li>
@@ -256,7 +258,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#hidebound.core.specification_base.SequenceSpecificationBase"><code class="docutils literal notranslate"><span class="pre">SequenceSpecificationBase</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specification_base.SequenceSpecificationBase.asset_type"><code class="docutils literal notranslate"><span class="pre">SequenceSpecificationBase.asset_type</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specification_base.SequenceSpecificationBase._schema"><code class="docutils literal notranslate"><span class="pre">SequenceSpecificationBase._schema</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id26"><code class="docutils literal notranslate"><span class="pre">SequenceSpecificationBase.asset_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id27"><code class="docutils literal notranslate"><span class="pre">SequenceSpecificationBase.asset_type</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specification_base.SequenceSpecificationBase.descriptor"><code class="docutils literal notranslate"><span class="pre">SequenceSpecificationBase.descriptor</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specification_base.SequenceSpecificationBase.extension"><code class="docutils literal notranslate"><span class="pre">SequenceSpecificationBase.extension</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specification_base.SequenceSpecificationBase.get_asset_path"><code class="docutils literal notranslate"><span class="pre">SequenceSpecificationBase.get_asset_path()</span></code></a></li>
@@ -277,12 +279,12 @@
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specification_base.SpecificationBase.__init__"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.__init__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specification_base.SpecificationBase._schema"><code class="docutils literal notranslate"><span class="pre">SpecificationBase._schema</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specification_base.SpecificationBase._to_filepaths"><code class="docutils literal notranslate"><span class="pre">SpecificationBase._to_filepaths()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id27"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.asset_name_fields</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id28"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.asset_type</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id29"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.descriptor</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id30"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.extension</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id28"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.asset_name_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id29"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.asset_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id30"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.descriptor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id31"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.extension</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specification_base.SpecificationBase.file_traits"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.file_traits</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id31"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.filename_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id32"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.filename_fields</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specification_base.SpecificationBase.get_asset_id"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.get_asset_id()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specification_base.SpecificationBase.get_asset_name"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.get_asset_name()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specification_base.SpecificationBase.get_asset_path"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.get_asset_path()</span></code></a></li>
@@ -290,10 +292,10 @@
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specification_base.SpecificationBase.get_filename_traits"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.get_filename_traits()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specification_base.SpecificationBase.get_name_patterns"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.get_name_patterns()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specification_base.SpecificationBase.get_traits"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.get_traits()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id32"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.project</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id33"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.project</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specification_base.SpecificationBase.specification"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.specification</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specification_base.SpecificationBase.validate_filepath"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.validate_filepath()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id33"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.version</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id34"><code class="docutils literal notranslate"><span class="pre">SpecificationBase.version</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -306,18 +308,18 @@
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specifications.Raw001.width"><code class="docutils literal notranslate"><span class="pre">Raw001.width</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specifications.Raw001.extension"><code class="docutils literal notranslate"><span class="pre">Raw001.extension</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specifications.Raw001._schema"><code class="docutils literal notranslate"><span class="pre">Raw001._schema</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id34"><code class="docutils literal notranslate"><span class="pre">Raw001.asset_name_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id35"><code class="docutils literal notranslate"><span class="pre">Raw001.asset_name_fields</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specifications.Raw001.channels"><code class="docutils literal notranslate"><span class="pre">Raw001.channels</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specifications.Raw001.descriptor"><code class="docutils literal notranslate"><span class="pre">Raw001.descriptor</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id35"><code class="docutils literal notranslate"><span class="pre">Raw001.extension</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id36"><code class="docutils literal notranslate"><span class="pre">Raw001.extension</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specifications.Raw001.file_traits"><code class="docutils literal notranslate"><span class="pre">Raw001.file_traits</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id36"><code class="docutils literal notranslate"><span class="pre">Raw001.filename_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id37"><code class="docutils literal notranslate"><span class="pre">Raw001.filename_fields</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specifications.Raw001.frame"><code class="docutils literal notranslate"><span class="pre">Raw001.frame</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id37"><code class="docutils literal notranslate"><span class="pre">Raw001.height</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id38"><code class="docutils literal notranslate"><span class="pre">Raw001.height</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specifications.Raw001.project"><code class="docutils literal notranslate"><span class="pre">Raw001.project</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specifications.Raw001.specification"><code class="docutils literal notranslate"><span class="pre">Raw001.specification</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specifications.Raw001.version"><code class="docutils literal notranslate"><span class="pre">Raw001.version</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id38"><code class="docutils literal notranslate"><span class="pre">Raw001.width</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id39"><code class="docutils literal notranslate"><span class="pre">Raw001.width</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#hidebound.core.specifications.Raw002"><code class="docutils literal notranslate"><span class="pre">Raw002</span></code></a><ul>
@@ -327,19 +329,19 @@
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specifications.Raw002.width"><code class="docutils literal notranslate"><span class="pre">Raw002.width</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specifications.Raw002.extension"><code class="docutils literal notranslate"><span class="pre">Raw002.extension</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specifications.Raw002._schema"><code class="docutils literal notranslate"><span class="pre">Raw002._schema</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id39"><code class="docutils literal notranslate"><span class="pre">Raw002.asset_name_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id40"><code class="docutils literal notranslate"><span class="pre">Raw002.asset_name_fields</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specifications.Raw002.channels"><code class="docutils literal notranslate"><span class="pre">Raw002.channels</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specifications.Raw002.coordinate"><code class="docutils literal notranslate"><span class="pre">Raw002.coordinate</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specifications.Raw002.descriptor"><code class="docutils literal notranslate"><span class="pre">Raw002.descriptor</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id40"><code class="docutils literal notranslate"><span class="pre">Raw002.extension</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id41"><code class="docutils literal notranslate"><span class="pre">Raw002.extension</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specifications.Raw002.file_traits"><code class="docutils literal notranslate"><span class="pre">Raw002.file_traits</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id41"><code class="docutils literal notranslate"><span class="pre">Raw002.filename_fields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id42"><code class="docutils literal notranslate"><span class="pre">Raw002.filename_fields</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specifications.Raw002.frame"><code class="docutils literal notranslate"><span class="pre">Raw002.frame</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id42"><code class="docutils literal notranslate"><span class="pre">Raw002.height</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id43"><code class="docutils literal notranslate"><span class="pre">Raw002.height</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specifications.Raw002.project"><code class="docutils literal notranslate"><span class="pre">Raw002.project</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specifications.Raw002.specification"><code class="docutils literal notranslate"><span class="pre">Raw002.specification</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#hidebound.core.specifications.Raw002.version"><code class="docutils literal notranslate"><span class="pre">Raw002.version</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id43"><code class="docutils literal notranslate"><span class="pre">Raw002.width</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id44"><code class="docutils literal notranslate"><span class="pre">Raw002.width</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -884,7 +886,7 @@ Default: ‘<a class="reference external" href="https://dask-gateway/services/da
 <dt class="sig sig-object py" id="hidebound.core.connection.DaskConnectionConfig.gateway_auth_type">
 <span class="sig-name descname"><span class="pre">gateway_auth_type</span></span><a class="headerlink" href="#hidebound.core.connection.DaskConnectionConfig.gateway_auth_type" title="Link to this definition">¶</a></dt>
 <dd><p>Dask Gateway authentication type.
-Default: jupyterhub.</p>
+Default: basic.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str, optional</p>
@@ -896,6 +898,17 @@ Default: jupyterhub.</p>
 <dt class="sig sig-object py" id="hidebound.core.connection.DaskConnectionConfig.gateway_api_token">
 <span class="sig-name descname"><span class="pre">gateway_api_token</span></span><a class="headerlink" href="#hidebound.core.connection.DaskConnectionConfig.gateway_api_token" title="Link to this definition">¶</a></dt>
 <dd><p>Authentication API token.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidebound.core.connection.DaskConnectionConfig.gateway_api_user">
+<span class="sig-name descname"><span class="pre">gateway_api_user</span></span><a class="headerlink" href="#hidebound.core.connection.DaskConnectionConfig.gateway_api_user" title="Link to this definition">¶</a></dt>
+<dd><p>Basic authentication user name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str, optional</p>
@@ -985,47 +998,52 @@ upon close. Default: True.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id15">
-<span class="sig-name descname"><span class="pre">gateway_auth_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">DaskConnectionConfig</span> <span class="pre">as</span> <span class="pre">'gateway_auth_type'&gt;</span></em><a class="headerlink" href="#id15" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">gateway_api_user</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">DaskConnectionConfig</span> <span class="pre">as</span> <span class="pre">'gateway_api_user'&gt;</span></em><a class="headerlink" href="#id15" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id16">
-<span class="sig-name descname"><span class="pre">gateway_cluster_options</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">ListType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ListType(ModelType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">DaskConnectionConfig</span> <span class="pre">as</span> <span class="pre">'gateway_cluster_options'&gt;</span></em><a class="headerlink" href="#id16" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">gateway_auth_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">DaskConnectionConfig</span> <span class="pre">as</span> <span class="pre">'gateway_auth_type'&gt;</span></em><a class="headerlink" href="#id16" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id17">
-<span class="sig-name descname"><span class="pre">gateway_proxy_address</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">StringType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">DaskConnectionConfig</span> <span class="pre">as</span> <span class="pre">'gateway_proxy_address'&gt;</span></em><a class="headerlink" href="#id17" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">gateway_cluster_options</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">ListType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ListType(ModelType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">DaskConnectionConfig</span> <span class="pre">as</span> <span class="pre">'gateway_cluster_options'&gt;</span></em><a class="headerlink" href="#id17" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id18">
-<span class="sig-name descname"><span class="pre">gateway_public_address</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">URLType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;URLType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">DaskConnectionConfig</span> <span class="pre">as</span> <span class="pre">'gateway_public_address'&gt;</span></em><a class="headerlink" href="#id18" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">gateway_proxy_address</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">StringType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;StringType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">DaskConnectionConfig</span> <span class="pre">as</span> <span class="pre">'gateway_proxy_address'&gt;</span></em><a class="headerlink" href="#id18" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id19">
-<span class="sig-name descname"><span class="pre">gateway_shutdown_on_close</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">BooleanType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;BooleanType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">DaskConnectionConfig</span> <span class="pre">as</span> <span class="pre">'gateway_shutdown_on_close'&gt;</span></em><a class="headerlink" href="#id19" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">gateway_public_address</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">URLType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;URLType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">DaskConnectionConfig</span> <span class="pre">as</span> <span class="pre">'gateway_public_address'&gt;</span></em><a class="headerlink" href="#id19" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id20">
-<span class="sig-name descname"><span class="pre">local_multiprocessing</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">BooleanType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;BooleanType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">DaskConnectionConfig</span> <span class="pre">as</span> <span class="pre">'local_multiprocessing'&gt;</span></em><a class="headerlink" href="#id20" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">gateway_shutdown_on_close</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">BooleanType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;BooleanType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">DaskConnectionConfig</span> <span class="pre">as</span> <span class="pre">'gateway_shutdown_on_close'&gt;</span></em><a class="headerlink" href="#id20" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id21">
-<span class="sig-name descname"><span class="pre">local_num_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">IntType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;IntType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">DaskConnectionConfig</span> <span class="pre">as</span> <span class="pre">'local_num_workers'&gt;</span></em><a class="headerlink" href="#id21" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">local_multiprocessing</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">BooleanType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;BooleanType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">DaskConnectionConfig</span> <span class="pre">as</span> <span class="pre">'local_multiprocessing'&gt;</span></em><a class="headerlink" href="#id21" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id22">
-<span class="sig-name descname"><span class="pre">local_threads_per_worker</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">IntType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;IntType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">DaskConnectionConfig</span> <span class="pre">as</span> <span class="pre">'local_threads_per_worker'&gt;</span></em><a class="headerlink" href="#id22" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">local_num_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">IntType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;IntType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">DaskConnectionConfig</span> <span class="pre">as</span> <span class="pre">'local_num_workers'&gt;</span></em><a class="headerlink" href="#id22" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id23">
-<span class="sig-name descname"><span class="pre">num_partitions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">IntType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;IntType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">DaskConnectionConfig</span> <span class="pre">as</span> <span class="pre">'num_partitions'&gt;</span></em><a class="headerlink" href="#id23" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">local_threads_per_worker</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">IntType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;IntType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">DaskConnectionConfig</span> <span class="pre">as</span> <span class="pre">'local_threads_per_worker'&gt;</span></em><a class="headerlink" href="#id23" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id24">
+<span class="sig-name descname"><span class="pre">num_partitions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">IntType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;IntType()</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">DaskConnectionConfig</span> <span class="pre">as</span> <span class="pre">'num_partitions'&gt;</span></em><a class="headerlink" href="#id24" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2102,8 +2120,8 @@ according to a dynimcally defined grammar.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id24">
-<span class="sig-name descname"><span class="pre">asset_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'complex'</span></em><a class="headerlink" href="#id24" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id25">
+<span class="sig-name descname"><span class="pre">asset_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'complex'</span></em><a class="headerlink" href="#id25" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -2155,8 +2173,8 @@ according to a dynimcally defined grammar.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id25">
-<span class="sig-name descname"><span class="pre">asset_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'file'</span></em><a class="headerlink" href="#id25" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id26">
+<span class="sig-name descname"><span class="pre">asset_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'file'</span></em><a class="headerlink" href="#id26" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -2247,8 +2265,8 @@ directory.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id26">
-<span class="sig-name descname"><span class="pre">asset_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'sequence'</span></em><a class="headerlink" href="#id26" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id27">
+<span class="sig-name descname"><span class="pre">asset_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'sequence'</span></em><a class="headerlink" href="#id27" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -2436,23 +2454,23 @@ filepath pattern.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id27">
-<span class="sig-name descname"><span class="pre">asset_name_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['project',</span> <span class="pre">'specification',</span> <span class="pre">'descriptor',</span> <span class="pre">'version']</span></em><a class="headerlink" href="#id27" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="id28">
-<span class="sig-name descname"><span class="pre">asset_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'specification'</span></em><a class="headerlink" href="#id28" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">asset_name_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['project',</span> <span class="pre">'specification',</span> <span class="pre">'descriptor',</span> <span class="pre">'version']</span></em><a class="headerlink" href="#id28" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id29">
-<span class="sig-name descname"><span class="pre">descriptor</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">ListType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ListType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">SpecificationBase</span> <span class="pre">as</span> <span class="pre">'descriptor'&gt;</span></em><a class="headerlink" href="#id29" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">asset_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'specification'</span></em><a class="headerlink" href="#id29" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id30">
-<span class="sig-name descname"><span class="pre">extension</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">ListType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ListType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">SpecificationBase</span> <span class="pre">as</span> <span class="pre">'extension'&gt;</span></em><a class="headerlink" href="#id30" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">descriptor</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">ListType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ListType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">SpecificationBase</span> <span class="pre">as</span> <span class="pre">'descriptor'&gt;</span></em><a class="headerlink" href="#id30" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id31">
+<span class="sig-name descname"><span class="pre">extension</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">ListType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ListType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">SpecificationBase</span> <span class="pre">as</span> <span class="pre">'extension'&gt;</span></em><a class="headerlink" href="#id31" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -2461,8 +2479,8 @@ filepath pattern.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id31">
-<span class="sig-name descname"><span class="pre">filename_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['project',</span> <span class="pre">'specification',</span> <span class="pre">'descriptor',</span> <span class="pre">'version',</span> <span class="pre">'extension']</span></em><a class="headerlink" href="#id31" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id32">
+<span class="sig-name descname"><span class="pre">filename_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['project',</span> <span class="pre">'specification',</span> <span class="pre">'descriptor',</span> <span class="pre">'version',</span> <span class="pre">'extension']</span></em><a class="headerlink" href="#id32" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -2589,8 +2607,8 @@ Errors are captured in their respective keys.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id32">
-<span class="sig-name descname"><span class="pre">project</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">ListType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ListType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">SpecificationBase</span> <span class="pre">as</span> <span class="pre">'project'&gt;</span></em><a class="headerlink" href="#id32" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id33">
+<span class="sig-name descname"><span class="pre">project</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">ListType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ListType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">SpecificationBase</span> <span class="pre">as</span> <span class="pre">'project'&gt;</span></em><a class="headerlink" href="#id33" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -2619,8 +2637,8 @@ Errors are captured in their respective keys.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id33">
-<span class="sig-name descname"><span class="pre">version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">ListType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ListType(IntType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">SpecificationBase</span> <span class="pre">as</span> <span class="pre">'version'&gt;</span></em><a class="headerlink" href="#id33" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id34">
+<span class="sig-name descname"><span class="pre">version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">ListType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ListType(IntType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">SpecificationBase</span> <span class="pre">as</span> <span class="pre">'version'&gt;</span></em><a class="headerlink" href="#id34" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2696,8 +2714,8 @@ version,</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id34">
-<span class="sig-name descname"><span class="pre">asset_name_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['project',</span> <span class="pre">'specification',</span> <span class="pre">'descriptor',</span> <span class="pre">'version']</span></em><a class="headerlink" href="#id34" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id35">
+<span class="sig-name descname"><span class="pre">asset_name_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['project',</span> <span class="pre">'specification',</span> <span class="pre">'descriptor',</span> <span class="pre">'version']</span></em><a class="headerlink" href="#id35" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -2711,8 +2729,8 @@ version,</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id35">
-<span class="sig-name descname"><span class="pre">extension</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">ListType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ListType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Raw001</span> <span class="pre">as</span> <span class="pre">'extension'&gt;</span></em><a class="headerlink" href="#id35" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id36">
+<span class="sig-name descname"><span class="pre">extension</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">ListType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ListType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Raw001</span> <span class="pre">as</span> <span class="pre">'extension'&gt;</span></em><a class="headerlink" href="#id36" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -2721,8 +2739,8 @@ version,</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id36">
-<span class="sig-name descname"><span class="pre">filename_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['project',</span> <span class="pre">'specification',</span> <span class="pre">'descriptor',</span> <span class="pre">'version',</span> <span class="pre">'frame',</span> <span class="pre">'extension']</span></em><a class="headerlink" href="#id36" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id37">
+<span class="sig-name descname"><span class="pre">filename_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['project',</span> <span class="pre">'specification',</span> <span class="pre">'descriptor',</span> <span class="pre">'version',</span> <span class="pre">'frame',</span> <span class="pre">'extension']</span></em><a class="headerlink" href="#id37" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -2731,8 +2749,8 @@ version,</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id37">
-<span class="sig-name descname"><span class="pre">height</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">ListType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ListType(IntType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Raw001</span> <span class="pre">as</span> <span class="pre">'height'&gt;</span></em><a class="headerlink" href="#id37" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id38">
+<span class="sig-name descname"><span class="pre">height</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">ListType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ListType(IntType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Raw001</span> <span class="pre">as</span> <span class="pre">'height'&gt;</span></em><a class="headerlink" href="#id38" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -2751,8 +2769,8 @@ version,</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id38">
-<span class="sig-name descname"><span class="pre">width</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">ListType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ListType(IntType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Raw001</span> <span class="pre">as</span> <span class="pre">'width'&gt;</span></em><a class="headerlink" href="#id38" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id39">
+<span class="sig-name descname"><span class="pre">width</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">ListType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ListType(IntType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Raw001</span> <span class="pre">as</span> <span class="pre">'width'&gt;</span></em><a class="headerlink" href="#id39" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2825,8 +2843,8 @@ version,</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id39">
-<span class="sig-name descname"><span class="pre">asset_name_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['project',</span> <span class="pre">'specification',</span> <span class="pre">'descriptor',</span> <span class="pre">'version']</span></em><a class="headerlink" href="#id39" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id40">
+<span class="sig-name descname"><span class="pre">asset_name_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['project',</span> <span class="pre">'specification',</span> <span class="pre">'descriptor',</span> <span class="pre">'version']</span></em><a class="headerlink" href="#id40" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -2845,8 +2863,8 @@ version,</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id40">
-<span class="sig-name descname"><span class="pre">extension</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">ListType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ListType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Raw002</span> <span class="pre">as</span> <span class="pre">'extension'&gt;</span></em><a class="headerlink" href="#id40" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id41">
+<span class="sig-name descname"><span class="pre">extension</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">ListType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ListType(StringType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Raw002</span> <span class="pre">as</span> <span class="pre">'extension'&gt;</span></em><a class="headerlink" href="#id41" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -2855,8 +2873,8 @@ version,</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id41">
-<span class="sig-name descname"><span class="pre">filename_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['project',</span> <span class="pre">'specification',</span> <span class="pre">'descriptor',</span> <span class="pre">'version',</span> <span class="pre">'coordinate',</span> <span class="pre">'frame',</span> <span class="pre">'extension']</span></em><a class="headerlink" href="#id41" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id42">
+<span class="sig-name descname"><span class="pre">filename_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['project',</span> <span class="pre">'specification',</span> <span class="pre">'descriptor',</span> <span class="pre">'version',</span> <span class="pre">'coordinate',</span> <span class="pre">'frame',</span> <span class="pre">'extension']</span></em><a class="headerlink" href="#id42" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -2865,8 +2883,8 @@ version,</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id42">
-<span class="sig-name descname"><span class="pre">height</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">ListType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ListType(IntType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Raw002</span> <span class="pre">as</span> <span class="pre">'height'&gt;</span></em><a class="headerlink" href="#id42" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id43">
+<span class="sig-name descname"><span class="pre">height</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">ListType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ListType(IntType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Raw002</span> <span class="pre">as</span> <span class="pre">'height'&gt;</span></em><a class="headerlink" href="#id43" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -2885,8 +2903,8 @@ version,</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id43">
-<span class="sig-name descname"><span class="pre">width</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">ListType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ListType(IntType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Raw002</span> <span class="pre">as</span> <span class="pre">'width'&gt;</span></em><a class="headerlink" href="#id43" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id44">
+<span class="sig-name descname"><span class="pre">width</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">ListType</span></code></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ListType(IntType)</span> <span class="pre">instance</span> <span class="pre">on</span> <span class="pre">Raw002</span> <span class="pre">as</span> <span class="pre">'width'&gt;</span></em><a class="headerlink" href="#id44" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
