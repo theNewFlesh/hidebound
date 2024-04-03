@@ -101,6 +101,7 @@ class HideboundExtension:
             gateway_public_address=app.config.get('DASK_GATEWAY_PUBLIC_ADDRESS'),
             gateway_auth_type=app.config.get('DASK_GATEWAY_AUTH_TYPE'),
             gateway_api_token=app.config.get('DASK_GATEWAY_API_TOKEN'),
+            gateway_api_user=app.config.get('DASK_GATEWAY_API_USER'),
             gateway_cluster_options=yaml.safe_load(
                 str(app.config.get('DASK_GATEWAY_CLUSTER_OPTIONS', '[]'))
             ),

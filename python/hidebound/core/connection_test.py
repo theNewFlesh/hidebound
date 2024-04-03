@@ -40,7 +40,7 @@ def test_local_config(dask_config):
     assert result == expected
 
 
-def test_gateway_config(dask_config):
+def test_gateway_config_basic(dask_config):
     dask_config['gateway_cluster_options'] = [
         dict(
             field='foobar', label='barfoo', default='a', option_type='select',
@@ -54,13 +54,27 @@ def test_gateway_config(dask_config):
         public_address=dask_config['gateway_public_address'],
         shutdown_on_close=dask_config['gateway_shutdown_on_close'],
     )
-    assert isinstance(result['auth'], dgw.JupyterHubAuth)
-    assert result['auth'].api_token == dask_config['gateway_api_token']
+    assert isinstance(result['auth'], dgw.auth.BasicAuth)
+    assert result['auth'].username == dask_config['gateway_api_user']
+    assert result['auth'].password == dask_config['gateway_api_token']
     for key, val in expected.items():
         assert result[key] == val
 
     assert isinstance(result['cluster_options'], dgw.options.Options)
     assert result['cluster_options']['foobar'] == 'a'
+
+
+def test_gateway_config_jupyterhub(dask_config):
+    dask_config['gateway_cluster_options'] = [
+        dict(
+            field='foobar', label='barfoo', default='a', option_type='select',
+            options=['a', 'b']
+        )
+    ]
+    dask_config['gateway_auth_type'] = 'jupyterhub'
+    result = DaskConnection(dask_config).gateway_config
+    assert isinstance(result['auth'], dgw.JupyterHubAuth)
+    assert result['auth'].api_token == dask_config['gateway_api_token']
 
 
 def test_gateway_cluster_options(dask_config):

@@ -20,8 +20,9 @@ dask:
   gateway_address: "http://proxy-public/services/dask-gateway"
   gateway_proxy_address: "gateway://traefik-daskhub-dask-gateway.core:80"
   gateway_public_address: "https://dask-gateway/services/dask-gateway/"
-  gateway_auth_type: jupyterhub
+  gateway_auth_type: basic
   gateway_api_token: token
+  gateway_api_user: admin
   gateway_cluster_options: []
   gateway_shutdown_on_close: True
 exporters:
