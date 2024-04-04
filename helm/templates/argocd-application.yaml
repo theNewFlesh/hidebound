@@ -1,4 +1,4 @@
-{{- with (include "overlay" . | fromYaml) -}}
+{{- with (include "_values" . | fromYaml) -}}
 {{ if .enable.argocd_application }}
 kind: Application
 apiVersion: argoproj.io/v1alpha1
@@ -12,8 +12,7 @@ spec:
     targetRevision: master
     path: helm
     helm:
-      values: |
-        overlay: rancher_desktop
+      values:
   destination:
     server: https://kubernetes.default.svc
     namespace: {{ .argocd_application.target_namespace }}

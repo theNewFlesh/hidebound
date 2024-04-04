@@ -1,4 +1,4 @@
-{{- with (include "overlay" . | fromYaml) -}}
+{{- with (include "_values" . | fromYaml)  -}}
 {{ if .enable.env_configmap }}
 kind: ConfigMap
 apiVersion: v1
@@ -7,5 +7,5 @@ metadata:
   namespace: {{ .namespace.name }}
 data:
 {{- .env_configmap | toYaml | nindent 2 }}
-{{ end }}
+{{- end -}}
 {{- end -}}

@@ -1,4 +1,4 @@
-{{- with (include "overlay" . | fromYaml) -}}
+{{- with (include "_values" . | fromYaml) -}}
 {{ if .enable.repo_volume }}
 kind: PersistentVolume
 apiVersion: v1
@@ -11,7 +11,7 @@ metadata:
     - kubernetes.io/pv-protection
 spec:
   local:
-    path: {{ .repo_volume.path }}
+    path: {{ .deployment.repo.path }}
   storageClassName: local-path
   persistentVolumeReclaimPolicy: Retain
   volumeMode: Filesystem

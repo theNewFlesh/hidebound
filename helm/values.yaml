@@ -1,138 +1,99 @@
-# CONTEXT-----------------------------------------------------------------------
-overlay: rancher_desktop
+enable:
+  namespace: false
+  argocd_application: false
+  env_configmap: true
+  env_secret: true
+  image_pull_secret: false
+  ingress_volume: true
+  staging_volume: true
+  egress_volume: true
+  repo_volume: false
+  nginx_ingress: false
+  traefik_ingress: false
+  readiness_probe: true
+  liveness_probe: true
 
-# BASE--------------------------------------------------------------------------
-base:
-  enable:
-    namespace: false
-    argocd_application: false
-    env_configmap: true
-    env_secret: false
-    image_pull_secret: false
-    repo_volume: false
-    desktop_volume: false
-    nfs_volume: false
-    nginx_ingress: false
-    traefik_ingress: false
-    readiness_probe: true
-    liveness_probe: true
+namespace:
+  name: hidebound
 
-  namespace:
-    name: asset-ingest
+argocd_application:
+  name: hidebound
+  source_namespace: argocd
+  target_namespace: hidebound
 
-  argocd_application:
-    name: hidebound
-    source_namespace: argocd
-    target_namespace: hidebound
+env_configmap:
+  FLASK_APP: server.app:get_app
+  FLASK_DEBUG: 0
+  FLASK_RUN_PORT: 8080
+  FLASK_RUN_HOST: 0.0.0.0
+  HIDEBOUND_TESTING: False
+  HIDEBOUND_INGRESS_DIRECTORY: /mnt/ingress
+  HIDEBOUND_STAGING_DIRECTORY: /mnt/hidebound
+  HIDEBOUND_INCLUDE_REGEX: ""
+  HIDEBOUND_EXCLUDE_REGEX: "\\\\.DS_Store"
+  HIDEBOUND_WRITE_MODE: move
+  HIDEBOUND_REDACT_REGEX: "(_key|_id|_token|url)$"
+  HIDEBOUND_REDACT_HASH: true
+  HIDEBOUND_WORKFLOW:
+    - delete
+    - update
+    - create
+    - export
+  HIDEBOUND_SPECIFICATION_FILES: []
+  HIDEBOUND_DASK_CLUSTER_TYPE: local
+  HIDEBOUND_DASK_NUM_PARTITIONS: 16
+  HIDEBOUND_DASK_LOCAL_NUM_WORKERS: 16
+  HIDEBOUND_DASK_LOCAL_THREADS_PER_WORKER: 1
+  HIDEBOUND_DASK_LOCAL_MULTIPROCESSING: true
+  HIDEBOUND_DASK_GATEWAY_ADDRESS: "http://proxy-public/services/dask-gateway"
+  HIDEBOUND_DASK_GATEWAY_PROXY_ADDRESS: "gateway://traefik-daskhub-dask-gateway.core:80"
+  HIDEBOUND_DASK_GATEWAY_PUBLIC_ADDRESS: "https://dask-gateway/services/dask-gateway/"
+  HIDEBOUND_DASK_GATEWAY_AUTH_TYPE: basic
+  HIDEBOUND_DASK_GATEWAY_CLUSTER_OPTIONS: []
+  HIDEBOUND_DASK_GATEWAY_SHUTDOWN_ON_CLOSE: true
 
-  env_configmap:
-    FLASK_APP: server.app:get_app
-    FLASK_DEBUG:
-    FLASK_RUN_PORT: 8080
-    FLASK_RUN_HOST: 0.0.0.0
-    HIDEBOUND_TESTING: false
-    HIDEBOUND_INGRESS_DIRECTORY: /mnt/storage/ingress
-    HIDEBOUND_STAGING_DIRECTORY: /mnt/storage/hidebound
-    HIDEBOUND_INCLUDE_REGEX: ""
-    HIDEBOUND_EXCLUDE_REGEX: "\\\\.DS_Store"
-    HIDEBOUND_WRITE_MODE: move
-    HIDEBOUND_REDACT_REGEX: "(_key|_id|_token|url)$"
-    HIDEBOUND_REDACT_HASH: true
-    HIDEBOUND_WORKFLOW:
-      - delete
-      - update
-      - create
-      - export
-    HIDEBOUND_SPECIFICATION_FILES: []
-    HIDEBOUND_DASK_CLUSTER_TYPE: local
-    HIDEBOUND_DASK_NUM_PARTITIONS: 16
-    HIDEBOUND_DASK_LOCAL_NUM_WORKERS: 16
-    HIDEBOUND_DASK_LOCAL_THREADS_PER_WORKER: 1
-    HIDEBOUND_DASK_LOCAL_MULTIPROCESSING: true
-    HIDEBOUND_DASK_GATEWAY_ADDRESS: "http://proxy-public/services/dask-gateway"
-    HIDEBOUND_DASK_GATEWAY_PROXY_ADDRESS: "gateway://traefik-daskhub-dask-gateway.core:80"
-    HIDEBOUND_DASK_GATEWAY_PUBLIC_ADDRESS: "https://dask-gateway/services/dask-gateway/"
-    HIDEBOUND_DASK_GATEWAY_AUTH_TYPE: jupyterhub
-    HIDEBOUND_DASK_GATEWAY_CLUSTER_OPTIONS: []
-    HIDEBOUND_DASK_GATEWAY_SHUTDOWN_ON_CLOSE: true
+env_secret:
+  HIDEBOUND_DASK_GATEWAY_API_USER: admin
+  HIDEBOUND_DASK_GATEWAY_API_TOKEN: token
+  HIDEBOUND_WEBHOOKS: []
+  HIDEBOUND_EXPORTERS: []
 
-  env_secret:
-    HIDEBOUND_DASK_GATEWAY_API_TOKEN: token
-    HIDEBOUND_WEBHOOKS: []
-    HIDEBOUND_EXPORTERS: []
-
-  deployment:
-    repository: thenewflesh/hidebound
-    image_tag: latest
-    repo_path: /home/ubuntu/hidebound
-    storage_path: /mnt/storage
-    image_pull_policy: IfNotPresent
+deployment:
+  repository: thenewflesh/hidebound
+  image_tag: prod-latest
+  ingress:
+    path: /mnt/ingress
+    nfs: false
     nfs_server:
-    command:
-      - hidebound
-      - server
-    args:
-    env_configmap: hidebound-env-configmap
-    env_secret: hidebound-env-secret
+  staging:
+    path: /mnt/hidebound
+    nfs: false
+    nfs_server:
+  egress:
+    path: /mnt/archive
+    nfs: false
+    nfs_server:
+  repo:
+    path: /home/ubuntu/hidebound
+    nfs: false
+    nfs_server:
+  image_pull_policy: IfNotPresent
+  command:
+    - hidebound
+    - serve
+  args:
+  env_configmap: hidebound-env-configmap
+  env_secret: hidebound-env-secret
 
-  service:
-    port: 80
-    target_port: 8080
+service:
+  port: 80
+  target_port: 8080
 
-  repo_volume:
-    path:
+nginx_ingress:
+  host:
 
-  desktop_volume:
-    path:
+traefik_ingress:
+  match:
 
-  nginx_ingress:
-    host:
-
-  traefik_ingress:
-    match:
-
-  image_pull_secret:
-    docker_config:
-
-# OVERLAYS----------------------------------------------------------------------
-overlays:
-  # RANCHER-DESKTOP-------------------------------------------------------------
-  rancher_desktop:
-    enable:
-      namespace: true
-      env_secret: true
-      image_pull_secret: false
-      repo_volume: false
-      desktop_volume: true
-      traefik_ingress: true
-
-    namespace:
-      name: hidebound
-
-    repo_volume:
-      path: /local/path/to/hidebound/repository
-
-    desktop_volume:
-      path: /local/storage/path
-
-    traefik_ingress:
-      match: HostRegexp(`hidebound.local`)
-
-    deployment:
-      command:
-        - hidebound
-        - server
-
-    env_configmap:
-      FLASK_DEBUG: 1
-      HIDEBOUND_INCLUDE_REGEX: ""
-      HIDEBOUND_WRITE_MODE: copy
-      HIDEBOUND_SPECIFICATION_FILES: []
-
-    env_secret:
-      HIDEBOUND_EXPORTERS:
-        - name: disk
-          target_directory: /mnt/storage/archive
-          metadata_types:
-            - asset-chunk
-            - file-chunk
+image_pull_secret:
+  docker_config:

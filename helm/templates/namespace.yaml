@@ -1,4 +1,4 @@
-{{- with (include "overlay" . | fromYaml) -}}
+{{- with (include "_values" . | fromYaml) -}}
 {{ if .enable.namespace }}
 kind: Namespace
 apiVersion: v1
