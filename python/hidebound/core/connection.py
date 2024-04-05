@@ -40,6 +40,10 @@ class DaskConnectionConfig(Model):
         gateway_api_user (str, optional): Basic authentication user name.
         gateway_cluster_options (list, optional): Dask Gateway cluster options.
             Default: [].
+        gateway_min_workers (int, optional): Minimum number of Dask Gateway
+            workers. Default: 1.
+        gateway_max_workers (int, optional): Maximum number of Dask Gateway
+            workers. Default: 8.
         gateway_shutdown_on_close (bool, optional): Whether to shudown cluster
             upon close. Default: True.
     '''
@@ -81,6 +85,12 @@ class DaskConnectionConfig(Model):
     )  # StringType
     gateway_api_token = StringType()  # StringType
     gateway_api_user = StringType()  # StringType
+    gateway_min_workers = IntType(
+        required=True, default=1, validators=[lambda x: vd.is_gte(x, 1)]
+    )  # type: IntType
+    gateway_max_workers = IntType(
+        required=True, default=8, validators=[lambda x: vd.is_gte(x, 1)]
+    )  # type: IntType
     gateway_shutdown_on_close = BooleanType(
         required=True, default=True
     )  # type: BooleanType
@@ -208,6 +218,10 @@ class DaskConnection:
             self.cluster = ddist.LocalCluster(**self.local_config)
         elif self.cluster_type == 'gateway':  # pragma: no cover
             self.cluster = dgw.GatewayCluster(**self.gateway_config)  # pragma: no cover
+            self.cluster.adapt(
+                minimum=self.config['gateway_min_workers'],
+                maximum=self.config['gateway_max_workers'],
+            )
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):

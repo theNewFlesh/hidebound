@@ -105,6 +105,8 @@ class HideboundExtension:
             gateway_cluster_options=yaml.safe_load(
                 str(app.config.get('DASK_GATEWAY_CLUSTER_OPTIONS', '[]'))
             ),
+            gateway_min_workers=app.config.get('DASK_GATEWAY_MIN_WORKERS'),
+            gateway_max_workers=app.config.get('DASK_GATEWAY_MAX_WORKERS'),
             gateway_shutdown_on_close=hbt.str_to_bool(
                 app.config.get('DASK_GATEWAY_SHUTDOWN_ON_CLOSE', 'True')
             ),

@@ -197,6 +197,8 @@ def dask_config():
         gateway_api_token='token',
         gateway_api_user='user',
         gateway_cluster_options=[],
+        gateway_min_workers=1,
+        gateway_max_workers=8,
         gateway_shutdown_on_close=False,
     )
     yield config

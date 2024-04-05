@@ -588,6 +588,8 @@ dask:
       options:                                                           # list of choices if option_type is select
         - "some-image:latest"                                            # choice 1
         - "some-image:0.1.2"                                             # choice 2
+  gateway_min_workers: 1                                                 # min dask gateway workers
+  gateway_max_workers: 8                                                 # max dask gateway workers
   gateway_shutdown_on_close: true                                        # whether to shudown cluster upon close
 exporters:                                                               # dict of exporter configs
   - name: disk                                                           # export to disk
