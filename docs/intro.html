@@ -38,7 +38,7 @@
             hidebound
           </a>
               <div class="version">
-                0.33.0
+                0.33.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -941,6 +941,8 @@ file.</p>
 <span class="w">      </span><span class="nt">options</span><span class="p">:</span><span class="w">                                                           </span><span class="c1"># list of choices if option_type is select</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;some-image:latest&quot;</span><span class="w">                                            </span><span class="c1"># choice 1</span>
 <span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;some-image:0.1.2&quot;</span><span class="w">                                             </span><span class="c1"># choice 2</span>
+<span class="w">  </span><span class="nt">gateway_min_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">                                                 </span><span class="c1"># min dask gateway workers</span>
+<span class="w">  </span><span class="nt">gateway_max_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span><span class="w">                                                 </span><span class="c1"># max dask gateway workers</span>
 <span class="w">  </span><span class="nt">gateway_shutdown_on_close</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                                        </span><span class="c1"># whether to shudown cluster upon close</span>
 <span class="nt">exporters</span><span class="p">:</span><span class="w">                                                               </span><span class="c1"># dict of exporter configs</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">disk</span><span class="w">                                                           </span><span class="c1"># export to disk</span>

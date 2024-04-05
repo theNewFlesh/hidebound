@@ -1,6 +1,6 @@
 [project]
 name = "hidebound"
-version = "0.33.0"
+version = "0.33.1"
 description = "A MLOps framework for generating ML assets and metadata."
 authors = [
     { name = "Alex Braun", email = "alexander.g.braun@gmail.com" },

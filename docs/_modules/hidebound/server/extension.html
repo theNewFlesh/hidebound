@@ -35,7 +35,7 @@
             hidebound
           </a>
               <div class="version">
-                0.33.0
+                0.33.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -216,6 +216,8 @@
             <span class="n">gateway_cluster_options</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span>
                 <span class="nb">str</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DASK_GATEWAY_CLUSTER_OPTIONS&#39;</span><span class="p">,</span> <span class="s1">&#39;[]&#39;</span><span class="p">))</span>
             <span class="p">),</span>
+            <span class="n">gateway_min_workers</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DASK_GATEWAY_MIN_WORKERS&#39;</span><span class="p">),</span>
+            <span class="n">gateway_max_workers</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DASK_GATEWAY_MAX_WORKERS&#39;</span><span class="p">),</span>
             <span class="n">gateway_shutdown_on_close</span><span class="o">=</span><span class="n">hbt</span><span class="o">.</span><span class="n">str_to_bool</span><span class="p">(</span>
                 <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DASK_GATEWAY_SHUTDOWN_ON_CLOSE&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">)</span>
             <span class="p">),</span>
