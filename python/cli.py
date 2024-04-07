@@ -377,6 +377,7 @@ def build_prod_command():
                 --label "git-user={git_user}"
                 --label "git-branch=$(git branch --show-current)"
                 --label "git-commit=$(git rev-parse HEAD)"
+                --build-arg VERSION="$VERSION"
                 --tag {repo}:prod .;
             cd ..
         '''),
