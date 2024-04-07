@@ -69,15 +69,8 @@ class DaskConnectionConfig(Model):
         fqdn=False,
         default='http://proxy-public/services/dask-gateway',
     )  # type: URLType
-    gateway_proxy_address = StringType(
-        required=True,
-        default='gateway://traefik-daskhub-dask-gateway.core:80',
-    )  # type: StringType
-    gateway_public_address = URLType(
-        required=True,
-        fqdn=False,
-        default='https://dask-gateway/services/dask-gateway/',
-    )  # type: URLType
+    gateway_proxy_address = StringType(serialize_when_none=True)  # type: StringType
+    gateway_public_address = URLType(serialize_when_none=True, fqdn=False)  # type: URLType
     gateway_auth_type = StringType(
         required=True,
         default='basic',

@@ -143,10 +143,20 @@ def test_config_gateway_proxy_address(dask_config):
     dask_config['gateway_proxy_address'] = 'gateway://traefik-daskhub-dask-gateway.core:80'
     DaskConnectionConfig(dask_config).validate()
 
+    dask_config['gateway_proxy_address'] = None
+    DaskConnectionConfig(dask_config).validate()
+    result = DaskConnectionConfig(dask_config).to_native()['gateway_proxy_address']
+    assert result is None
+
 
 def test_config_gateway_public_address(dask_config):
     dask_config['gateway_public_address'] = 'https://dask-gateway/services/dask-gateway/'
     DaskConnectionConfig(dask_config).validate()
+
+    dask_config['gateway_public_address'] = None
+    DaskConnectionConfig(dask_config).validate()
+    result = DaskConnectionConfig(dask_config).to_native()['gateway_public_address']
+    assert result is None
 
 
 def test_config_gateway_auth_type(dask_config):
