@@ -35,7 +35,7 @@
             hidebound
           </a>
               <div class="version">
-                0.33.1
+                0.33.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -169,15 +169,8 @@
         <span class="n">fqdn</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="s1">&#39;http://proxy-public/services/dask-gateway&#39;</span><span class="p">,</span>
     <span class="p">)</span>  <span class="c1"># type: URLType</span>
-    <span class="n">gateway_proxy_address</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
-        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;gateway://traefik-daskhub-dask-gateway.core:80&#39;</span><span class="p">,</span>
-    <span class="p">)</span>  <span class="c1"># type: StringType</span>
-    <span class="n">gateway_public_address</span> <span class="o">=</span> <span class="n">URLType</span><span class="p">(</span>
-        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">fqdn</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;https://dask-gateway/services/dask-gateway/&#39;</span><span class="p">,</span>
-    <span class="p">)</span>  <span class="c1"># type: URLType</span>
+    <span class="n">gateway_proxy_address</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span><span class="n">serialize_when_none</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: StringType</span>
+    <span class="n">gateway_public_address</span> <span class="o">=</span> <span class="n">URLType</span><span class="p">(</span><span class="n">serialize_when_none</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fqdn</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: URLType</span>
     <span class="n">gateway_auth_type</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="s1">&#39;basic&#39;</span><span class="p">,</span>

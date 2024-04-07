@@ -2037,7 +2037,7 @@ files = [
 
 [[package]]
 name = "moto"
-version = "5.0.4"
+version = "5.0.5"
 requires_python = ">=3.8"
 summary = ""
 dependencies = [
@@ -2052,24 +2052,24 @@ dependencies = [
     "xmltodict",
 ]
 files = [
-    {file = "moto-5.0.4-py2.py3-none-any.whl", hash = "sha256:4054360b882b6e7bab25d52d057e196b978b8d15f1921333f534c4d8f6510bbb"},
-    {file = "moto-5.0.4.tar.gz", hash = "sha256:8d19125d40c919cb40df62f4576904c2647c4e9a0e1ebc42491dd7787d09e107"},
+    {file = "moto-5.0.5-py2.py3-none-any.whl", hash = "sha256:4ecdd4084491a2f25f7a7925416dcf07eee0031ce724957439a32ef764b22874"},
+    {file = "moto-5.0.5.tar.gz", hash = "sha256:2eaca2df7758f6868df420bf0725cd0b93d98709606f1fb8b2343b5bdc822d91"},
 ]
 
 [[package]]
 name = "moto"
-version = "5.0.4"
+version = "5.0.5"
 extras = ["s3"]
 requires_python = ">=3.8"
 summary = ""
 dependencies = [
     "PyYAML>=5.1",
-    "moto==5.0.4",
-    "py-partiql-parser==0.5.2",
+    "moto==5.0.5",
+    "py-partiql-parser==0.5.4",
 ]
 files = [
-    {file = "moto-5.0.4-py2.py3-none-any.whl", hash = "sha256:4054360b882b6e7bab25d52d057e196b978b8d15f1921333f534c4d8f6510bbb"},
-    {file = "moto-5.0.4.tar.gz", hash = "sha256:8d19125d40c919cb40df62f4576904c2647c4e9a0e1ebc42491dd7787d09e107"},
+    {file = "moto-5.0.5-py2.py3-none-any.whl", hash = "sha256:4ecdd4084491a2f25f7a7925416dcf07eee0031ce724957439a32ef764b22874"},
+    {file = "moto-5.0.5.tar.gz", hash = "sha256:2eaca2df7758f6868df420bf0725cd0b93d98709606f1fb8b2343b5bdc822d91"},
 ]
 
 [[package]]
@@ -2332,12 +2332,12 @@ files = [
 
 [[package]]
 name = "networkx"
-version = "3.2.1"
-requires_python = ">=3.9"
+version = "3.3"
+requires_python = ">=3.10"
 summary = "Python package for creating and manipulating graphs and networks"
 files = [
-    {file = "networkx-3.2.1-py3-none-any.whl", hash = "sha256:f18c69adc97877c42332c170849c96cefa91881c99a7cb3e95b7c659ebdc1ec2"},
-    {file = "networkx-3.2.1.tar.gz", hash = "sha256:9f1bb5cf3409bf324e0a722c20bdb4c20ee39bf1c30ce8ae499c8502b0b5e0c6"},
+    {file = "networkx-3.3-py3-none-any.whl", hash = "sha256:28575580c6ebdaf4505b22c6256a2b9de86b316dc63ba9e93abde3d78dfdbcf2"},
+    {file = "networkx-3.3.tar.gz", hash = "sha256:0c127d8b2f4865f59ae9cb8aafcd60b5c70f3241ebd66f7defad7c4ab90126c9"},
 ]
 
 [[package]]
@@ -2704,11 +2704,11 @@ files = [
 
 [[package]]
 name = "py-partiql-parser"
-version = "0.5.2"
+version = "0.5.4"
 summary = "Pure Python PartiQL Parser"
 files = [
-    {file = "py-partiql-parser-0.5.2.tar.gz", hash = "sha256:bdec65fe17d6093c05e9bc1742a99a041ef810b50a71cc0d9e74a88218d938cf"},
-    {file = "py_partiql_parser-0.5.2-py3-none-any.whl", hash = "sha256:9c79b59bbe0cb50daa8090020f2e7f3e5a0e33f7846b48924f19a8f7704f4877"},
+    {file = "py_partiql_parser-0.5.4-py2.py3-none-any.whl", hash = "sha256:3dc4295a47da9587681a96b35c6e151886fdbd0a4acbe0d97c4c68e5f689d315"},
+    {file = "py_partiql_parser-0.5.4.tar.gz", hash = "sha256:72e043919538fa63edae72fb59afc7e3fd93adbde656718a7d2b4666f23dd114"},
 ]
 
 [[package]]
@@ -3388,12 +3388,12 @@ files = [
 
 [[package]]
 name = "send2trash"
-version = "1.8.2"
-requires_python = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
+version = "1.8.3"
+requires_python = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,>=2.7"
 summary = "Send file to trash natively under Mac OS X, Windows and Linux"
 files = [
-    {file = "Send2Trash-1.8.2-py3-none-any.whl", hash = "sha256:a384719d99c07ce1eefd6905d2decb6f8b7ed054025bb0e618919f945de4f679"},
-    {file = "Send2Trash-1.8.2.tar.gz", hash = "sha256:c132d59fa44b9ca2b1699af5c86f57ce9f4c5eb56629d5d55fbb7a35f84e2312"},
+    {file = "Send2Trash-1.8.3-py3-none-any.whl", hash = "sha256:0c31227e0bd08961c7665474a3d1ef7193929fedda4233843689baa056be46c9"},
+    {file = "Send2Trash-1.8.3.tar.gz", hash = "sha256:b18e7a3966d99871aefeb00cfbcfdced55ce4871194810fc71f4aa484b953abf"},
 ]
 
 [[package]]
@@ -3819,15 +3819,15 @@ files = [
 
 [[package]]
 name = "types-requests"
-version = "2.31.0.20240403"
+version = "2.31.0.20240406"
 requires_python = ">=3.8"
 summary = "Typing stubs for requests"
 dependencies = [
     "urllib3>=2",
 ]
 files = [
-    {file = "types-requests-2.31.0.20240403.tar.gz", hash = "sha256:e1e0cd0b655334f39d9f872b68a1310f0e343647688bf2cee932ec4c2b04de59"},
-    {file = "types_requests-2.31.0.20240403-py3-none-any.whl", hash = "sha256:06abf6a68f5c4f2a62f6bb006672dfb26ed50ccbfddb281e1ee6f09a65707d5d"},
+    {file = "types-requests-2.31.0.20240406.tar.gz", hash = "sha256:4428df33c5503945c74b3f42e82b181e86ec7b724620419a2966e2de604ce1a1"},
+    {file = "types_requests-2.31.0.20240406-py3-none-any.whl", hash = "sha256:6216cdac377c6b9a040ac1c0404f7284bd13199c0e1bb235f4324627e8898cf5"},
 ]
 
 [[package]]
