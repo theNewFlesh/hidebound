@@ -4,6 +4,7 @@ from schematics import Model
 from schematics.types import (
     BaseType, BooleanType, IntType, ListType, ModelType, StringType, URLType
 )
+import dask
 import dask_gateway as dgw
 import dask.distributed as ddist
 
@@ -46,6 +47,8 @@ class DaskConnectionConfig(Model):
             workers. Default: 8.
         gateway_shutdown_on_close (bool, optional): Whether to shudown cluster
             upon close. Default: True.
+        gateway_timeout (int, optional): Dask Gateway connection timeout in
+            seconds. Default: 30.
     '''
     cluster_type = StringType(
         required=True,
@@ -87,6 +90,9 @@ class DaskConnectionConfig(Model):
     gateway_shutdown_on_close = BooleanType(
         required=True, default=True
     )  # type: BooleanType
+    gateway_timeout = IntType(
+        required=True, default=30, validators=[lambda x: vd.is_gte(x, 1)]
+    )  # type: IntType
 
     class ClusterOption(Model):
         field = StringType(required=True)  # type: StringType
@@ -210,6 +216,9 @@ class DaskConnection:
         if self.cluster_type == 'local':
             self.cluster = ddist.LocalCluster(**self.local_config)
         elif self.cluster_type == 'gateway':  # pragma: no cover
+            dask.config.set({
+                'distributed.comm.timeouts.connect': self.config['gateway_timeout']
+            })
             self.cluster = dgw.GatewayCluster(**self.gateway_config)  # pragma: no cover
             self.cluster.adapt(
                 minimum=self.config['gateway_min_workers'],

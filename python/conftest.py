@@ -200,5 +200,6 @@ def dask_config():
         gateway_min_workers=1,
         gateway_max_workers=8,
         gateway_shutdown_on_close=False,
+        gateway_timeout=30,
     )
     yield config

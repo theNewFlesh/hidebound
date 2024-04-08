@@ -26,6 +26,7 @@ dask:
   gateway_api_user: admin
   gateway_cluster_options: []
   gateway_shutdown_on_close: True
+  gateway_timeout: 30
 exporters:
   - name: disk
     target_directory: /tmp/mnt/archive

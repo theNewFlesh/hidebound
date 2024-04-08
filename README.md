@@ -498,6 +498,7 @@ Default configuration of Dask distributed framework.
 * gateway_api_user - api user
 * gateway_cluster_options - list of dask gateway cluster options
 * gateway_shutdown_on_close - whether to shudown cluster upon close
+* gateway_timeout - gateway client timeout
 
 ## Exporters
 Which exporters to us in the workflow.
@@ -542,6 +543,7 @@ file.
 | HIDEBOUND_DASK_GATEWAY_API_USER          | str    | api user                                                 |
 | HIDEBOUND_DASK_GATEWAY_CLUSTER_OPTIONS   | yaml   | list of dask gateway cluster options                     |
 | HIDEBOUND_DASK_GATEWAY_SHUTDOWN_ON_CLOSE | str    | whether to shudown cluster upon close                    |
+| HIDEBOUND_TIMEOUT                        | int    | gateway client timeout                                   |
 | HIDEBOUND_EXPORTERS                      | yaml   | exporters section of config                              |
 | HIDEBOUND_WEBHOOKS                       | yaml   | webhooks section of config                               |
 | HIDEBOUND_TESTING                        | str    | run in test mode                                         |
@@ -591,6 +593,7 @@ dask:
   gateway_min_workers: 1                                                 # min dask gateway workers
   gateway_max_workers: 8                                                 # max dask gateway workers
   gateway_shutdown_on_close: true                                        # whether to shudown cluster upon close
+  gateway_timeout: 30                                                    # gateway client timeout
 exporters:                                                               # dict of exporter configs
   - name: disk                                                           # export to disk
     target_directory: /mnt/storage/archive                               # target location

@@ -110,6 +110,7 @@ class HideboundExtension:
             gateway_shutdown_on_close=hbt.str_to_bool(
                 app.config.get('DASK_GATEWAY_SHUTDOWN_ON_CLOSE', 'True')
             ),
+            gateway_timeout=app.config.get('DASK_GATEWAY_TIMEOUT'),
         )
         return dict(
             ingress_directory=app.config.get('INGRESS_DIRECTORY'),
