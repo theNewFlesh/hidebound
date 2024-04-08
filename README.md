@@ -710,18 +710,28 @@ class Raw001(SequenceSpecificationBase):
 ```
 
 # Production CLI
-
 Hidebound comes with a command line interface defined in command.py.
 
 Its usage pattern is: `hidebound COMMAND [FLAGS] [-h --help]`
 
 ## Commands
-| Command         | Description                                                               | Flags                              |
-| --------------- | ------------------------------------------------------------------------- | ---------------------------------- |
-| bash-completion | Prints BASH completion code to be written to a _hidebound completion file |                                    |
-| config          | Prints hidebound config                                                   |                                    |
-| serve           | Runs a hidebound server                                                   | --port --timeout --debug --testing |
-| zsh-completion  | Prints ZSH completion code to be written to a _hidebound completion file  |                                    |
+
+| Command         | Description                                                               |
+| --------------- | ------------------------------------------------------------------------- |
+| bash-completion | Prints BASH completion code to be written to a _hidebound completion file |
+| config          | Prints hidebound config                                                   |
+| serve           | Runs a hidebound server                                                   |
+| zsh-completion  | Prints ZSH completion code to be written to a _hidebound completion file  |
+
+## Flags
+
+| Command | Flag      | Description              | Default |
+| ------- | --------- | ------------------------ | ------- |
+| serve   | --port    | Server port              | 8080    |
+| serve   | --timeout | Gunicorn timeout         | 0       |
+| serve   | --testing | Testing mode             | False   |
+| serve   | --debug   | Debug mode (no gunicorn) | False   |
+| all     | --help    | Show help message        | -       |
 
 ---
 

@@ -1,7 +1,7 @@
 .. hidebound documentation master file
 
 Welcome to hidebound's documentation!
-====================================
+=====================================
 .. toctree::
    :maxdepth: 1
    :caption: Getting Started
