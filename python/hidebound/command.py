@@ -66,7 +66,7 @@ def serve(port, timeout, testing, debug):
     fp = Path(Path(__file__).parent, 'server').as_posix()
     cmd = f'cd {fp} && '
     if debug:
-        cmd += f'python3 app.py'
+        cmd += 'python3 app.py'
     else:
         cmd += f'gunicorn --bind {hba.EP.host}:{port} --timeout {timeout} app:SERVER'
     proc = subprocess.Popen(cmd, shell=True)
