@@ -37,13 +37,6 @@ RUN echo "\n${CYAN}SETUP PYTHON3.10${CLEAR}"; \
     python3.10 get-pip.py && \
     rm -rf /home/ubuntu/get-pip.py
 
-# install tini
-RUN echo "\n${CYAN}INSTALL TINI${CLEAR}"; \
-    curl -LJ https://github.com/krallin/tini/releases/download/v0.19.0/tini \
-        -o /usr/bin/tini && \
-    chown ubuntu:ubuntu /usr/bin/tini && \
-    chmod +x /usr/bin/tini
-
 # chown /var/log
 RUN echo "\n${CYAN}CHOWN /VAR/LOG${CLEAR}"; \
     chown ubuntu:ubuntu /var/log
@@ -56,5 +49,3 @@ RUN echo "\n${CYAN}INSTALL HIDEBOUND{CLEAR}"; \
 
 ENV PATH="/home/ubuntu/.local/bin:$PATH"
 EXPOSE 8080
-ENTRYPOINT ["/usr/bin/tini", "--"]
-CMD [ "hidebound", "serve" ]
