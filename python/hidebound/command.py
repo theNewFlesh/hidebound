@@ -1,9 +1,9 @@
-from pprint import pprint
 import os
 import subprocess
 from pathlib import Path
 
 import click
+import yaml
 # ------------------------------------------------------------------------------
 
 '''
@@ -37,20 +37,38 @@ def config():
     import hidebound.server.app as hba
     app = hba.APP.server
     config = app.extensions['hidebound'].get_config(app)
-    pprint(config, indent=4)
+    config = yaml.safe_dump(config, indent=4)
+    print(config)
 
 
 @main.command()
-def serve():
-    # type: () -> None
+@click.option(
+    '--port', type=int, default=8080, help='Server port. Default: 8080.'
+)
+@click.option(
+    '--timeout', type=int, default=0, help='Gunicorn timeout. Default: 0.'
+)
+@click.option(
+    '--testing', type=bool, default=False, is_flag=True,
+    help='Testing mode. Default: False.'
+)
+@click.option(
+    '--debug', type=bool, default=False, is_flag=True,
+    help='Debug mode (no gunicorn). Default: False.'
+)
+def serve(port, timeout, testing, debug):
+    # type: (int, int, bool, bool) -> None
     '''
     Runs a hidebound server.
     '''
-    os.environ['HIDEBOUND_TESTING'] = 'False'
     import hidebound.server.app as hba
+    os.environ['HIDEBOUND_TESTING'] = str(testing)
     fp = Path(Path(__file__).parent, 'server').as_posix()
     cmd = f'cd {fp} && '
-    cmd += f'gunicorn --bind {hba.EP.host}:{hba.EP.port} --timeout 0 app:SERVER'
+    if debug:
+        cmd += f'python3 app.py'
+    else:
+        cmd += f'gunicorn --bind {hba.EP.host}:{port} --timeout {timeout} app:SERVER'
     proc = subprocess.Popen(cmd, shell=True)
     proc.wait()
 

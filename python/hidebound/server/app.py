@@ -272,4 +272,5 @@ def on_progress(timestamp):
 
 
 if __name__ == '__main__':
-    APP.run_server(debug=True, host=EP.host, port=EP.port)
+    debug = os.environ.get('HIDEBOUND_TESTING', False)
+    APP.run_server(debug=debug, host=EP.host, port=EP.port)
