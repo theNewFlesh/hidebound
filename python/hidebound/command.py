@@ -50,7 +50,7 @@ def serve():
     import hidebound.server.app as hba
     fp = Path(Path(__file__).parent, 'server').as_posix()
     cmd = f'cd {fp} && '
-    cmd += f'gunicorn --bind {hba.EP.host}:{hba.EP.port} app:SERVER'
+    cmd += f'gunicorn --bind {hba.EP.host}:{hba.EP.port} --timeout 0 app:SERVER'
     proc = subprocess.Popen(cmd, shell=True)
     proc.wait()
 
