@@ -38,7 +38,7 @@
             hidebound
           </a>
               <div class="version">
-                0.33.4
+                0.33.5
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -110,6 +110,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#production-cli">Production CLI</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#commands">Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#flags">Flags</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#quickstart-guide">Quickstart Guide</a><ul>
@@ -119,7 +120,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#development-cli">Development CLI</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#id3">Commands</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#flags">Flags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">Flags</a></li>
 </ul>
 </li>
 </ul>
@@ -1094,6 +1095,48 @@ with frame numbers in the filename.</p>
 </tbody>
 </table>
 </section>
+<section id="flags">
+<h2>Flags<a class="headerlink" href="#flags" title="Link to this heading">¶</a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Command</p></th>
+<th class="head"><p>Flag</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Default</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>serve</p></td>
+<td><p>–port</p></td>
+<td><p>Server port</p></td>
+<td><p>8080</p></td>
+</tr>
+<tr class="row-odd"><td><p>serve</p></td>
+<td><p>–timeout</p></td>
+<td><p>Gunicorn timeout</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>serve</p></td>
+<td><p>–testing</p></td>
+<td><p>Testing mode</p></td>
+<td><p>False</p></td>
+</tr>
+<tr class="row-odd"><td><p>serve</p></td>
+<td><p>–debug</p></td>
+<td><p>Debug mode (no gunicorn)</p></td>
+<td><p>False</p></td>
+</tr>
+<tr class="row-even"><td><p>all</p></td>
+<td><p>–help</p></td>
+<td><p>Show help message</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
 </section>
 <hr class="docutils" />
 <section id="quickstart-guide">
@@ -1409,8 +1452,8 @@ Commands generally do not expect any arguments or flags.</p>
 </tbody>
 </table>
 </section>
-<section id="flags">
-<h2>Flags<a class="headerlink" href="#flags" title="Link to this heading">¶</a></h2>
+<section id="id4">
+<h2>Flags<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Short</p></th>
