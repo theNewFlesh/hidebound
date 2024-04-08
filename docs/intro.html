@@ -38,7 +38,7 @@
             hidebound
           </a>
               <div class="version">
-                0.33.2
+                0.33.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -763,6 +763,7 @@ displays errors in their entirety within the application.</p>
 <li><p>gateway_api_user - api user</p></li>
 <li><p>gateway_cluster_options - list of dask gateway cluster options</p></li>
 <li><p>gateway_shutdown_on_close - whether to shudown cluster upon close</p></li>
+<li><p>gateway_timeout - gateway client timeout</p></li>
 </ul>
 </section>
 <section id="exporters">
@@ -885,15 +886,19 @@ file.</p>
 <td><p>str</p></td>
 <td><p>whether to shudown cluster upon close</p></td>
 </tr>
-<tr class="row-odd"><td><p>HIDEBOUND_EXPORTERS</p></td>
+<tr class="row-odd"><td><p>HIDEBOUND_TIMEOUT</p></td>
+<td><p>int</p></td>
+<td><p>gateway client timeout</p></td>
+</tr>
+<tr class="row-even"><td><p>HIDEBOUND_EXPORTERS</p></td>
 <td><p>yaml</p></td>
 <td><p>exporters section of config</p></td>
 </tr>
-<tr class="row-even"><td><p>HIDEBOUND_WEBHOOKS</p></td>
+<tr class="row-odd"><td><p>HIDEBOUND_WEBHOOKS</p></td>
 <td><p>yaml</p></td>
 <td><p>webhooks section of config</p></td>
 </tr>
-<tr class="row-odd"><td><p>HIDEBOUND_TESTING</p></td>
+<tr class="row-even"><td><p>HIDEBOUND_TESTING</p></td>
 <td><p>str</p></td>
 <td><p>run in test mode</p></td>
 </tr>
@@ -944,6 +949,7 @@ file.</p>
 <span class="w">  </span><span class="nt">gateway_min_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">                                                 </span><span class="c1"># min dask gateway workers</span>
 <span class="w">  </span><span class="nt">gateway_max_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span><span class="w">                                                 </span><span class="c1"># max dask gateway workers</span>
 <span class="w">  </span><span class="nt">gateway_shutdown_on_close</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">                                        </span><span class="c1"># whether to shudown cluster upon close</span>
+<span class="w">  </span><span class="nt">gateway_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span><span class="w">                                                    </span><span class="c1"># gateway client timeout</span>
 <span class="nt">exporters</span><span class="p">:</span><span class="w">                                                               </span><span class="c1"># dict of exporter configs</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">disk</span><span class="w">                                                           </span><span class="c1"># export to disk</span>
 <span class="w">    </span><span class="nt">target_directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/storage/archive</span><span class="w">                               </span><span class="c1"># target location</span>

@@ -35,7 +35,7 @@
             hidebound
           </a>
               <div class="version">
-                0.33.2
+                0.33.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -102,6 +102,7 @@
 <span class="kn">from</span> <span class="nn">schematics.types</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">BaseType</span><span class="p">,</span> <span class="n">BooleanType</span><span class="p">,</span> <span class="n">IntType</span><span class="p">,</span> <span class="n">ListType</span><span class="p">,</span> <span class="n">ModelType</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">URLType</span>
 <span class="p">)</span>
+<span class="kn">import</span> <span class="nn">dask</span>
 <span class="kn">import</span> <span class="nn">dask_gateway</span> <span class="k">as</span> <span class="nn">dgw</span>
 <span class="kn">import</span> <span class="nn">dask.distributed</span> <span class="k">as</span> <span class="nn">ddist</span>
 
@@ -146,6 +147,8 @@
 <span class="sd">            workers. Default: 8.</span>
 <span class="sd">        gateway_shutdown_on_close (bool, optional): Whether to shudown cluster</span>
 <span class="sd">            upon close. Default: True.</span>
+<span class="sd">        gateway_timeout (int, optional): Dask Gateway connection timeout in</span>
+<span class="sd">            seconds. Default: 30.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">cluster_type</span> <span class="o">=</span> <span class="n">StringType</span><span class="p">(</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -187,6 +190,9 @@
     <span class="n">gateway_shutdown_on_close</span> <span class="o">=</span> <span class="n">BooleanType</span><span class="p">(</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">)</span>  <span class="c1"># type: BooleanType</span>
+    <span class="n">gateway_timeout</span> <span class="o">=</span> <span class="n">IntType</span><span class="p">(</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vd</span><span class="o">.</span><span class="n">is_gte</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
+    <span class="p">)</span>  <span class="c1"># type: IntType</span>
 
 <div class="viewcode-block" id="DaskConnectionConfig.ClusterOption">
 <a class="viewcode-back" href="../../../core.html#hidebound.core.connection.DaskConnectionConfig.ClusterOption">[docs]</a>
@@ -319,6 +325,9 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cluster_type</span> <span class="o">==</span> <span class="s1">&#39;local&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cluster</span> <span class="o">=</span> <span class="n">ddist</span><span class="o">.</span><span class="n">LocalCluster</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">local_config</span><span class="p">)</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">cluster_type</span> <span class="o">==</span> <span class="s1">&#39;gateway&#39;</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+            <span class="n">dask</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">({</span>
+                <span class="s1">&#39;distributed.comm.timeouts.connect&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;gateway_timeout&#39;</span><span class="p">]</span>
+            <span class="p">})</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cluster</span> <span class="o">=</span> <span class="n">dgw</span><span class="o">.</span><span class="n">GatewayCluster</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">gateway_config</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">adapt</span><span class="p">(</span>
                 <span class="n">minimum</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;gateway_min_workers&#39;</span><span class="p">],</span>

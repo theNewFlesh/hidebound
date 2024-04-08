@@ -35,7 +35,7 @@
             hidebound
           </a>
               <div class="version">
-                0.33.2
+                0.33.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -221,6 +221,7 @@
             <span class="n">gateway_shutdown_on_close</span><span class="o">=</span><span class="n">hbt</span><span class="o">.</span><span class="n">str_to_bool</span><span class="p">(</span>
                 <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DASK_GATEWAY_SHUTDOWN_ON_CLOSE&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">)</span>
             <span class="p">),</span>
+            <span class="n">gateway_timeout</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DASK_GATEWAY_TIMEOUT&#39;</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
             <span class="n">ingress_directory</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;INGRESS_DIRECTORY&#39;</span><span class="p">),</span>
