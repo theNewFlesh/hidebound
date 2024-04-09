@@ -417,7 +417,7 @@ def get_data_for_write(
 
     # create asset metadata
     asset_meta = data\
-        .groupby('asset_id', as_index=False)\
+        .groupby('asset_id', as_index=False) \
         .agg(lambda x: x.tolist())
 
     meta = []
