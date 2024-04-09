@@ -52,7 +52,8 @@ def add_specification(data, specifications):
         return np.nan, str(output)
 
     # parse filenames
-    parse = data.filename.apply(get_spec)
+    kwargs = hbt.get_meta_kwargs(data, 'object')
+    parse = data.filename.apply(get_spec, **kwargs)
 
     # set specifications
     kwargs = hbt.get_meta_kwargs(data, str)
@@ -62,9 +63,9 @@ def add_specification(data, specifications):
     data['file_error'] = parse.apply(lambda x: x[1], **kwargs)
 
     # add specification classes
+    kwargs = hbt.get_meta_kwargs(data, SpecificationBase)
     data['specification_class'] = data.specification.apply(
-        lambda x: specifications.get(x, np.nan),
-        **hbt.get_meta_kwargs(data, SpecificationBase)
+        lambda x: specifications.get(x, np.nan), **kwargs,
     )
 
     # add spec not found errors to rows with no file errors
