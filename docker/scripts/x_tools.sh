@@ -20,6 +20,7 @@ export TEST_PROCS="auto"
 export JUPYTER_PLATFORM_DIRS=0
 export JUPYTER_CONFIG_PATH=/home/ubuntu/.jupyter
 export VSCODE_SERVER="$HOME/.vscode-server/bin/*/bin/code-server"
+export PYPI_URL="pypi"
 alias cp=cp  # "cp -i" default alias asks you if you want to clobber files
 
 # COLORS------------------------------------------------------------------------
@@ -297,16 +298,9 @@ _x_build_publish () {
 
 x_build_publish () {
     # Run production tests first then publish pip package of repo to PyPi
-    # args: user, password, comment
-    x_test_prod;
-    # break out if tests produced errors
-    if [ "$?" -ne "0" ]; then
-        echo "\n$SPACER";
-        echo "${RED2}ERROR: Encountered error in testing, exiting before publish.${CLEAR}" >&2;
-        return $?;
-    else
-        _x_build_publish $1 $2 $3 $4;
-    fi;
+    # args: password
+    local version=`_x_get_version`;
+    _x_build_publish __token__ $1 $version $PYPI_URL;
 }
 
 x_build_test () {
