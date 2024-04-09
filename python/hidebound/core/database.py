@@ -371,7 +371,7 @@ class Database:
         for col in traits.columns:
             if col not in data.columns:
                 data[col] = np.nan
-            data[col] = data[col]
+            data[col] = data[col].astype(np.object_)
 
             mask = traits[col].notnull().tolist()
             data.loc[mask, col] = traits.loc[mask, col]
