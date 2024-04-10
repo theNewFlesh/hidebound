@@ -32,12 +32,14 @@ Hidebound service used for displaying and interacting with Hidebound database.
 EP = hst.EndPoints()
 
 
+# TODO: implement this
 def liveness():
     # type: () -> None
     '''Liveness probe for kubernetes.'''
     pass
 
 
+# TODO: implement this
 def readiness():
     # type: () -> None
     '''

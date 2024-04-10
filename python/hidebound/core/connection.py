@@ -108,6 +108,7 @@ class DaskConnectionConfig(Model):
 # ------------------------------------------------------------------------------
 
 
+# TODO: refactor so that cluster is generated upon init
 class DaskConnection:
     def __init__(self, config):
         # type: (dict) -> None

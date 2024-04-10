@@ -437,6 +437,7 @@ class Database:
         )
         self._logger.info(f'update: parsed {self._root}', step=1, total=total)
 
+        # TODO: find a means of performing async execution with progress updates
         if len(data) > 0:
             with DaskConnection(self._dask_config) as conn:
                 data = dd.from_pandas(data, npartitions=conn.num_partitions)
