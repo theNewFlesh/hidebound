@@ -38,7 +38,7 @@
             hidebound
           </a>
               <div class="version">
-                0.33.5
+                0.34.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -3107,7 +3107,7 @@ data as value column.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="hidebound.core.tools.pred_combinator">
-<span class="sig-prename descclassname"><span class="pre">hidebound.core.tools.</span></span><span class="sig-name descname"><span class="pre">pred_combinator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predicate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">false_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'__no_default__'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/tools.html#pred_combinator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.core.tools.pred_combinator" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">hidebound.core.tools.</span></span><span class="sig-name descname"><span class="pre">pred_combinator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predicate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">false_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'object'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidebound/core/tools.html#pred_combinator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidebound.core.tools.pred_combinator" title="Link to this definition">¶</a></dt>
 <dd><p>Apply true_func to rows where predicate if true and false_func to rows where
 it is false.</p>
 <dl class="field-list simple">
@@ -3119,7 +3119,7 @@ it is false.</p>
 is true.</p></li>
 <li><p><strong>false_func</strong> (<em>function</em>) – Function that expects a row. Called when predicate
 is false.</p></li>
-<li><p><strong>meta</strong> (<em>object</em><em>, </em><em>optional</em>) – Metadata inference. Default: ‘__no_default__’.</p></li>
+<li><p><strong>meta</strong> (<em>object</em><em>, </em><em>optional</em>) – Metadata inference. Default: ‘object’.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

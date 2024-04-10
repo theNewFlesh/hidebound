@@ -35,7 +35,7 @@
             hidebound
           </a>
               <div class="version">
-                0.33.5
+                0.34.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -97,6 +97,7 @@
              
   <h1>Source code for hidebound.core.database_tools</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>  <span class="c1"># noqa F401</span>
+<span class="kn">from</span> <span class="nn">hidebound.core.specification_base</span> <span class="kn">import</span> <span class="n">SpecificationBase</span>  <span class="c1"># noqa F401</span>
 
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
@@ -110,7 +111,6 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">from</span> <span class="nn">hidebound.core.parser</span> <span class="kn">import</span> <span class="n">AssetNameParser</span>
-<span class="kn">from</span> <span class="nn">hidebound.core.specification_base</span> <span class="kn">import</span> <span class="n">SpecificationBase</span>
 <span class="kn">import</span> <span class="nn">hidebound.core.tools</span> <span class="k">as</span> <span class="nn">hbt</span>
 
 <span class="n">DF</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">dd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span>
@@ -152,19 +152,23 @@
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
 
     <span class="c1"># parse filenames</span>
-    <span class="n">parse</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">filename</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">get_spec</span><span class="p">)</span>
+    <span class="n">parse</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">filename</span> \
+        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">get_spec</span><span class="p">,</span> <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;filename&#39;</span><span class="p">,</span> <span class="s1">&#39;object&#39;</span><span class="p">)))</span>
 
     <span class="c1"># set specifications</span>
-    <span class="n">kwargs</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
-    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;specification&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;specification&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;specification&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span>
+    <span class="p">)</span>
 
     <span class="c1"># set file errors</span>
-    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;file_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;file_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse</span> \
+        <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;file_error&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">)))</span>
 
     <span class="c1"># add specification classes</span>
     <span class="n">data</span><span class="p">[</span><span class="s1">&#39;specification_class&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">specification</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">specifications</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">),</span>
-        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">SpecificationBase</span><span class="p">)</span>
+        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;specification_class&#39;</span><span class="p">,</span> <span class="s1">&#39;object&#39;</span><span class="p">))</span>
     <span class="p">)</span>
 
     <span class="c1"># add spec not found errors to rows with no file errors</span>
@@ -203,6 +207,7 @@
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">file_error</span><span class="p">),</span>
         <span class="n">validate</span><span class="p">,</span>
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">file_error</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;file_error&#39;</span><span class="p">,</span> <span class="s1">&#39;object&#39;</span><span class="p">))</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">data</span></div>
 
@@ -227,7 +232,7 @@
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">),</span>
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">()</span><span class="o">.</span><span class="n">get_traits</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">filepath</span><span class="p">),</span>
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;file_traits&#39;</span><span class="p">,</span> <span class="s1">&#39;object&#39;</span><span class="p">))</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">data</span></div>
 
@@ -257,7 +262,7 @@
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span>
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">root_dir_</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()),</span>
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">data</span></div>
 
@@ -281,7 +286,7 @@
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">file_error</span><span class="p">),</span>
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">()</span><span class="o">.</span><span class="n">get_asset_name</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">filepath</span><span class="p">),</span>
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;asset_name&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">data</span></div>
 
@@ -305,7 +310,7 @@
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">),</span>
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">()</span><span class="o">.</span><span class="n">get_asset_path</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">filepath</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">(),</span>
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;asset_path&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">data</span></div>
 
@@ -329,7 +334,7 @@
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">asset_type</span><span class="p">,</span>
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;asset_type&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">data</span></div>
 
@@ -354,14 +359,14 @@
         <span class="s1">&#39;asset_path&#39;</span><span class="p">,</span>
         <span class="s1">&#39;asset_traits&#39;</span><span class="p">,</span>
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">file_traits</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">object</span><span class="p">)</span>
+        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span>
     <span class="p">)</span>
     <span class="n">data</span><span class="o">.</span><span class="n">asset_traits</span> <span class="o">=</span> <span class="n">hbt</span><span class="o">.</span><span class="n">pred_combinator</span><span class="p">(</span>
         <span class="n">data</span><span class="o">.</span><span class="n">asset_traits</span><span class="p">,</span>
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span>
         <span class="n">hbt</span><span class="o">.</span><span class="n">to_prototype</span><span class="p">,</span>
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;asset_traits&#39;</span><span class="p">,</span> <span class="s1">&#39;object&#39;</span><span class="p">))</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">data</span></div>
 
@@ -394,7 +399,7 @@
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">asset_traits</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">),</span>
         <span class="n">error_func</span><span class="p">,</span>
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">)</span>
+        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;asset_error&#39;</span><span class="p">,</span> <span class="s1">&#39;object&#39;</span><span class="p">))</span>
     <span class="p">)</span>
 
     <span class="c1"># assign asset_valid column</span>
@@ -403,7 +408,7 @@
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">asset_error</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">file_error</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">),</span>  <span class="c1"># noqa E501</span>
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
         <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span>
+        <span class="o">**</span><span class="n">hbt</span><span class="o">.</span><span class="n">get_meta_kwargs</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;asset_valid&#39;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">))</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">data</span></div>
 
@@ -474,11 +479,12 @@
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">file_error</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
     <span class="n">data</span><span class="p">[</span><span class="s1">&#39;asset_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">asset_id</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">asset_id</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">object_</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;asset_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">specification_class</span><span class="p">()</span><span class="o">.</span><span class="n">get_asset_id</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">filepath</span><span class="p">),</span>
-            <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
-        <span class="p">)</span>
+            <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">data</span></div>
 
 
@@ -550,7 +556,7 @@
 
     <span class="c1"># create asset metadata</span>
     <span class="n">asset_meta</span> <span class="o">=</span> <span class="n">data</span>\
-        <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;asset_id&#39;</span><span class="p">,</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>\
+        <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;asset_id&#39;</span><span class="p">,</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> \
         <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
 
     <span class="n">meta</span> <span class="o">=</span> <span class="p">[]</span>
