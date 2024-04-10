@@ -120,7 +120,6 @@ filterwarnings = [
     "ignore:.*is not.*with a literal. Did you mean.*!=:",
     "ignore:.*low contrast image:",
     "ignore:.*make_current is deprecated:",
-    "ignore:.*Meta is not valid:",
     "ignore:.*Port.*is already in use:",
     "ignore:.*The --rsyncdir command line argument:",
     "ignore:.*the imp module is deprecated:",
@@ -128,6 +127,10 @@ filterwarnings = [
     "ignore:.*The setup method 'record':",
     "ignore:.*There is no current event loop:",
     "ignore:.*will attempt to set the values inplace instead.*:",
+    "ignore:.*pkg_resources is deprecated.*:",
+    "ignore:.*pkg_resources.declare_namespace.*:",
+    "ignore:.*create_block_manager_from_blocks.*:",
+    "ignore:.*Passing a BlockManager to DataFrame.*:",
 ]
 markers = [
     "flaky:Flaky test",

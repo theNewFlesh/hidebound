@@ -52,20 +52,23 @@ def add_specification(data, specifications):
         return np.nan, str(output)
 
     # parse filenames
-    kwargs = hbt.get_meta_kwargs(data, 'object')
-    parse = data.filename.apply(get_spec, **kwargs)
+    parse = data.filename \
+        .apply(get_spec, **hbt.get_meta_kwargs(data, ('filename', 'object')))
 
     # set specifications
-    kwargs = hbt.get_meta_kwargs(data, str)
-    data['specification'] = parse.apply(lambda x: x[0], **kwargs)
+    data['specification'] = parse.apply(
+        lambda x: x[0],
+        **hbt.get_meta_kwargs(data, ('specification', str))
+    )
 
     # set file errors
-    data['file_error'] = parse.apply(lambda x: x[1], **kwargs)
+    data['file_error'] = parse \
+        .apply(lambda x: x[1], **hbt.get_meta_kwargs(data, ('file_error', str)))
 
     # add specification classes
-    kwargs = hbt.get_meta_kwargs(data, SpecificationBase)
     data['specification_class'] = data.specification.apply(
-        lambda x: specifications.get(x, np.nan), **kwargs,
+        lambda x: specifications.get(x, np.nan),
+        **hbt.get_meta_kwargs(data, ('specification_class', 'object'))
     )
 
     # add spec not found errors to rows with no file errors
@@ -101,6 +104,7 @@ def validate_filepath(data):
         lambda x: pd.isnull(x.file_error),
         validate,
         lambda x: x.file_error,
+        **hbt.get_meta_kwargs(data, ('file_error', 'object'))
     )
     return data
 
@@ -122,7 +126,7 @@ def add_file_traits(data):
         lambda x: pd.notnull(x.specification_class),
         lambda x: x.specification_class().get_traits(x.filepath),
         lambda x: {},
-        **hbt.get_meta_kwargs(data, dict)
+        **hbt.get_meta_kwargs(data, ('file_traits', 'object'))
     )
     return data
 
@@ -149,7 +153,7 @@ def add_relative_path(data, column, root_dir):
         lambda x: isinstance(x, str),
         lambda x: re.sub(root_dir_, '', Path(x).as_posix()),
         lambda x: x,
-        **hbt.get_meta_kwargs(data, str)
+        **hbt.get_meta_kwargs(data, (col, str))
     )
     return data
 
@@ -170,7 +174,7 @@ def add_asset_name(data):
         lambda x: pd.isnull(x.file_error),
         lambda x: x.specification_class().get_asset_name(x.filepath),
         lambda x: np.nan,
-        **hbt.get_meta_kwargs(data, str)
+        **hbt.get_meta_kwargs(data, ('asset_name', str))
     )
     return data
 
@@ -191,7 +195,7 @@ def add_asset_path(data):
         lambda x: pd.notnull(x.specification_class),
         lambda x: x.specification_class().get_asset_path(x.filepath).as_posix(),
         lambda x: np.nan,
-        **hbt.get_meta_kwargs(data, str)
+        **hbt.get_meta_kwargs(data, ('asset_path', str))
     )
     return data
 
@@ -212,7 +216,7 @@ def add_asset_type(data):
         lambda x: pd.notnull(x),
         lambda x: x.asset_type,
         lambda x: np.nan,
-        **hbt.get_meta_kwargs(data, str)
+        **hbt.get_meta_kwargs(data, ('asset_type', str))
     )
     return data
 
@@ -234,14 +238,14 @@ def add_asset_traits(data):
         'asset_path',
         'asset_traits',
         lambda x: x.file_traits.tolist(),
-        **hbt.get_meta_kwargs(data, object)
+        **hbt.get_meta_kwargs(data, 'object')
     )
     data.asset_traits = hbt.pred_combinator(
         data.asset_traits,
         lambda x: isinstance(x, list),
         hbt.to_prototype,
         lambda x: np.nan,
-        **hbt.get_meta_kwargs(data, dict)
+        **hbt.get_meta_kwargs(data, ('asset_traits', 'object'))
     )
     return data
 
@@ -271,7 +275,7 @@ def validate_assets(data):
         lambda x: isinstance(x.asset_traits, dict) and pd.notnull(x.specification_class),
         error_func,
         lambda x: np.nan,
-        **hbt.get_meta_kwargs(data, Exception)
+        **hbt.get_meta_kwargs(data, ('asset_error', 'object'))
     )
 
     # assign asset_valid column
@@ -280,7 +284,7 @@ def validate_assets(data):
         lambda x: pd.isnull(x.asset_error) and pd.isnull(x.file_error) and pd.notnull(x.specification_class),  # noqa E501
         lambda x: True,
         lambda x: False,
-        **hbt.get_meta_kwargs(data, bool)
+        **hbt.get_meta_kwargs(data, ('asset_valid', bool))
     )
     return data
 

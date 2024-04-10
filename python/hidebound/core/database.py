@@ -278,7 +278,7 @@ class Database:
             for item in temp:
                 item.target.apply(
                     lambda x: os.makedirs(Path(x).parent, exist_ok=True),
-                    meta=np.nan
+                    meta=('target', 'object')
                 ).compute()
             self._logger.info('create: make directories', step=2, total=total)
 
@@ -286,41 +286,41 @@ class Database:
             if self._write_mode == 'move':
                 file_data.apply(
                     lambda x: shutil.move(x.source, x.target),
-                    axis=1, meta=np.nan
+                    axis=1, meta=(None, 'object')
                 ).compute()
                 hbt.delete_empty_directories(self._root)
             else:
                 file_data.apply(
                     lambda x: shutil.copy2(x.source, x.target),
-                    axis=1, meta=np.nan
+                    axis=1, meta=(None, 'object')
                 ).compute()
             self._logger.info('create: write file data', step=3, total=total)
 
             # write asset metadata
             asset_meta.apply(
                 lambda x: hbt.write_json(x.metadata, x.target),
-                axis=1, meta=np.nan
+                axis=1, meta=(None, 'object')
             ).compute()
             self._logger.info('create: write asset metadata', step=4, total=total)
 
             # write file metadata
             file_meta.apply(
                 lambda x: hbt.write_json(x.metadata, x.target),
-                axis=1, meta=np.nan
+                axis=1, meta=(None, 'object')
             ).compute()
             self._logger.info('create: write file metadata', step=5, total=total)
 
             # write asset chunk
             asset_chunk.apply(
                 lambda x: hbt.write_json(x.metadata, x.target),
-                axis=1, meta=np.nan
+                axis=1, meta=(None, 'object')
             ).compute()
             self._logger.info('create: write asset chunk', step=6, total=total)
 
             # write file chunk
             file_chunk.apply(
                 lambda x: hbt.write_json(x.metadata, x.target),
-                axis=1, meta=np.nan
+                axis=1, meta=(None, 'object')
             ).compute()
             self._logger.info('create: write file chunk', step=7, total=total)
 

@@ -116,7 +116,7 @@ class ExporterBase:
         content = data[mask].filepath.apply(hbt.read_json)
         with DaskConnection(self._dask_config) as conn:
             content = dd.from_pandas(content, npartitions=conn.num_partitions)
-            content.apply(self._export_content, meta=object).compute()
+            content.apply(self._export_content, meta=(None, 'object')).compute()
         logger.info('exporter: export content', step=1, total=total)
 
         # export metadata
@@ -132,7 +132,7 @@ class ExporterBase:
             meta = data[mask].filepath.apply(hbt.read_json)
             with DaskConnection(self._dask_config) as conn:
                 meta = dd.from_pandas(meta, npartitions=conn.num_partitions)
-                meta.apply(lut[mtype], meta=object).compute()
+                meta.apply(lut[mtype], meta=(None, 'object')).compute()
 
         logger.info(f'exporter: export {mtype}', step=i + 1, total=total)
 

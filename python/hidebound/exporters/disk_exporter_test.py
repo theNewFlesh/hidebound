@@ -5,6 +5,7 @@ import json
 import os
 import re
 import unittest
+import warnings
 
 from pandas import DataFrame
 from schematics.exceptions import DataError
@@ -131,19 +132,20 @@ class DiskExporterTests(unittest.TestCase):
         os.makedirs(file_chunk.parent, exist_ok=True)
 
         # write asset metadata
-        assets = data \
-            .groupby('asset_id') \
-            .apply(lambda x: dict(
-                asset_id=x.asset_id.tolist()[0],
-                file_ids=x.file_id.tolist(),
-                asset_meta_path=x.asset_meta_path.tolist()[0],
-                asset_name=x.asset_name.tolist()[0],
-                asset_path=x.asset_path.tolist()[0],
-                asset_path_relative=x.asset_path_relative.tolist()[0],
-                filepaths=x.filepath.tolist(),
-                filepath_relatives=x.filepath_relative.tolist()),
-                include_groups=True
-            )
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore')
+            assets = data \
+                .groupby('asset_id') \
+                .apply(lambda x: dict(
+                    asset_id=x.asset_id.tolist()[0],
+                    file_ids=x.file_id.tolist(),
+                    asset_meta_path=x.asset_meta_path.tolist()[0],
+                    asset_name=x.asset_name.tolist()[0],
+                    asset_path=x.asset_path.tolist()[0],
+                    asset_path_relative=x.asset_path_relative.tolist()[0],
+                    filepaths=x.filepath.tolist(),
+                    filepath_relatives=x.filepath_relative.tolist()),
+                )
         assets.apply(lambda x: hbt.write_json(x, x['asset_meta_path']))
 
         # write asset chunk

@@ -340,7 +340,7 @@ def test_pred_combinator_dd_dataframe(db_cluster):
         lambda x: (x.foo + x.bar) % 2 == 0,
         lambda x: 'even',
         lambda x: 'odd',
-        meta=str,
+        meta=(None, str),
     )
     assert isinstance(result, dd.Series)
 
@@ -364,6 +364,7 @@ def test_pred_combinator_dd_dataframe_nan(db_cluster):
         lambda x: (x.foo + x.bar) % 2 == 0,
         lambda x: 'even',
         lambda x: np.nan,
+        meta=(None, 'object'),
     )
     result = result.compute().tolist()
     result = Series(result).fillna('null').tolist()
@@ -376,7 +377,7 @@ def test_pred_combinator_dd_dataframe_nan(db_cluster):
         lambda x: (x.foo + x.bar) % 2 == 0,
         lambda x: 'even',
         lambda x: np.nan,
-        meta=str,
+        meta=(None, str),
     )
     assert isinstance(result, dd.Series)
 
@@ -393,7 +394,7 @@ def test_pred_combinator_series(db_cluster):
         lambda x: x % 2 == 0,
         lambda x: 'even',
         lambda x: 'odd',
-        meta=str,
+        meta=(None, str),
     )
     assert isinstance(result, dd.Series)
 
