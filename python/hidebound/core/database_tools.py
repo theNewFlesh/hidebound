@@ -1,4 +1,5 @@
 from typing import Any, Dict, Optional, Tuple, Union  # noqa F401
+from hidebound.core.specification_base import SpecificationBase  # noqa F401
 
 from collections import defaultdict
 from pathlib import Path
@@ -12,7 +13,6 @@ import numpy as np
 import pandas as pd
 
 from hidebound.core.parser import AssetNameParser
-from hidebound.core.specification_base import SpecificationBase
 import hidebound.core.tools as hbt
 
 DF = Union[pd.DataFrame, dd.DataFrame]
