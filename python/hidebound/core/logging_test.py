@@ -38,6 +38,7 @@ class LoggingTests(unittest.TestCase):
             logger.info('foobar', extra=dict(props=dict(step=1, total=10)))
             logger.info('foobar', extra=dict(props=dict(step=1, total=None)))
             logger.info('foobar', extra=dict(props=dict(step=None, total=10)))
+            logger.info('foobar', extra=dict(props=dict(step=0, total=0)))
 
             results = ProgressLogger.read(filepath)
 
@@ -84,6 +85,17 @@ class LoggingTests(unittest.TestCase):
             )
             for key, val in lut.items():
                 self.assertEqual(results[3][key], val)
+
+            # total 0
+            lut = dict(
+                message='Progress: 100.00% (0 of 0) - foobar',
+                original_message='foobar',
+                step=0,
+                total=0,
+                progress=1.0
+            )
+            for key, val in lut.items():
+                self.assertEqual(results[4][key], val)
 
     def test_read(self):
         expected = [dict(foo='bar', i=i) for i in range(3)]

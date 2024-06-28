@@ -553,6 +553,7 @@ class Database:
             lut = self.__exporter_lut
 
         total = len(self._exporters)
+        i = 0
         for i, config in enumerate(self._exporters):
             key = config['name']
             exporter = lut[key].from_config(config)

@@ -62,7 +62,9 @@ class ProgressLogger:
                 message = record.getMessage()
                 orig = message
                 if step is not None and total is not None:
-                    progress = float(step) / total
+                    progress = 1.0
+                    if total != 0:
+                        progress = float(step) / total
                     pct = progress * 100
                     message = f'Progress: {pct:.2f}% ({step} of {total})'
                     message += f' - {orig}'
