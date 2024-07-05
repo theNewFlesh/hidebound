@@ -16,7 +16,7 @@
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -35,7 +35,7 @@
             hidebound
           </a>
               <div class="version">
-                0.34.0
+                0.34.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -167,7 +167,9 @@
                 <span class="n">message</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">getMessage</span><span class="p">()</span>
                 <span class="n">orig</span> <span class="o">=</span> <span class="n">message</span>
                 <span class="k">if</span> <span class="n">step</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">total</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">progress</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">step</span><span class="p">)</span> <span class="o">/</span> <span class="n">total</span>
+                    <span class="n">progress</span> <span class="o">=</span> <span class="mf">1.0</span>
+                    <span class="k">if</span> <span class="n">total</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">progress</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">step</span><span class="p">)</span> <span class="o">/</span> <span class="n">total</span>
                     <span class="n">pct</span> <span class="o">=</span> <span class="n">progress</span> <span class="o">*</span> <span class="mi">100</span>
                     <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Progress: </span><span class="si">{</span><span class="n">pct</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">% (</span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s1"> of </span><span class="si">{</span><span class="n">total</span><span class="si">}</span><span class="s1">)&#39;</span>
                     <span class="n">message</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39; - </span><span class="si">{</span><span class="n">orig</span><span class="si">}</span><span class="s1">&#39;</span>

@@ -16,7 +16,7 @@
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -35,7 +35,7 @@
             hidebound
           </a>
               <div class="version">
-                0.34.0
+                0.34.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -222,7 +222,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            dict: Grammar.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">project</span> <span class="o">=</span> <span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[a-z]{3,4}\d\d?\d?\d?&#39;</span><span class="p">)</span> \
+        <span class="n">project</span> <span class="o">=</span> <span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[a-z]{3,10}\d\d?\d?\d?&#39;</span><span class="p">)</span> \
             <span class="o">.</span><span class="n">setResultsName</span><span class="p">(</span><span class="s1">&#39;project&#39;</span><span class="p">)</span> \
             <span class="o">.</span><span class="n">setFailAction</span><span class="p">(</span><span class="n">AssetNameParser</span><span class="o">.</span><span class="n">_raise_field_error</span><span class="p">(</span><span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="s1">&#39;token&#39;</span><span class="p">))</span>
 

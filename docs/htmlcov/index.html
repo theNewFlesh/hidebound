@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Coverage report</title>
-    <link rel="icon" sizes="32x32" href="favicon_32.png">
-    <link rel="stylesheet" href="style.css" type="text/css">
-    <script type="text/javascript" src="coverage_html.js" defer></script>
+    <link rel="icon" sizes="32x32" href="favicon_32_cb_58284776.png">
+    <link rel="stylesheet" href="style_cb_8e611ae1.css" type="text/css">
+    <script src="coverage_html_cb_6fb7b396.js" defer></script>
 </head>
 <body class="indexfile">
 <header>
@@ -16,13 +16,13 @@
         <aside id="help_panel_wrapper">
             <input id="help_panel_state" type="checkbox">
             <label for="help_panel_state">
-                <img id="keyboard_icon" src="keybd_closed.png" alt="Show/hide keyboard shortcuts" />
+                <img id="keyboard_icon" src="keybd_closed_cb_ce680311.png" alt="Show/hide keyboard shortcuts">
             </label>
             <div id="help_panel">
                 <p class="legend">Shortcuts on this page</p>
                 <div class="keyhelp">
                     <p>
-                        <kbd>n</kbd>
+                        <kbd>f</kbd>
                         <kbd>s</kbd>
                         <kbd>m</kbd>
                         <kbd>x</kbd>
@@ -41,11 +41,20 @@
             </div>
         </aside>
         <form id="filter_container">
-            <input id="filter" type="text" value="" placeholder="filter..." />
+            <input id="filter" type="text" value="" placeholder="filter...">
+            <div>
+                <input id="hide100" type="checkbox" >
+                <label for="hide100">hide covered</label>
+            </div>
         </form>
+        <h2>
+                <a class="button current">Files</a>
+                <a class="button" href="function_index.html">Functions</a>
+                <a class="button" href="class_index.html">Classes</a>
+        </h2>
         <p class="text">
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.4.4">coverage.py v7.4.4</a>,
-            created at 2024-04-10 00:42 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.5.4">coverage.py v7.5.4</a>,
+            created at 2024-07-05 17:36 +0000
         </p>
     </div>
 </header>
@@ -53,163 +62,163 @@
     <table class="index" data-sortable>
         <thead>
             <tr class="tablehead" title="Click to sort">
-                <th class="name left" aria-sort="none" data-shortcut="n">Module</th>
-                <th aria-sort="none" data-default-sort-order="descending" data-shortcut="s">statements</th>
-                <th aria-sort="none" data-default-sort-order="descending" data-shortcut="m">missing</th>
-                <th aria-sort="none" data-default-sort-order="descending" data-shortcut="x">excluded</th>
-                <th class="right" aria-sort="none" data-shortcut="c">coverage</th>
+                <th id="file" class="name left" aria-sort="none" data-shortcut="f">File<span class="arrows"></span></th>
+                <th id="statements" aria-sort="none" data-default-sort-order="descending" data-shortcut="s">statements<span class="arrows"></span></th>
+                <th id="missing" aria-sort="none" data-default-sort-order="descending" data-shortcut="m">missing<span class="arrows"></span></th>
+                <th id="excluded" aria-sort="none" data-default-sort-order="descending" data-shortcut="x">excluded<span class="arrows"></span></th>
+                <th id="coverage" class="right" aria-sort="none" data-shortcut="c">coverage<span class="arrows"></span></th>
             </tr>
         </thead>
         <tbody>
-            <tr class="file">
-                <td class="name left"><a href="d_baf15ef4f1434d3e_config_py.html">/home/ubuntu/hidebound/python/hidebound/core/config.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_baf15ef4f1434d3e_config_py.html">/home/ubuntu/hidebound/python/hidebound/core/config.py</a></td>
                 <td>65</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="65 65">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_baf15ef4f1434d3e_connection_py.html">/home/ubuntu/hidebound/python/hidebound/core/connection.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_baf15ef4f1434d3e_connection_py.html">/home/ubuntu/hidebound/python/hidebound/core/connection.py</a></td>
                 <td>69</td>
                 <td>0</td>
                 <td>4</td>
                 <td class="right" data-ratio="69 69">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_baf15ef4f1434d3e_database_py.html">/home/ubuntu/hidebound/python/hidebound/core/database.py</a></td>
-                <td>260</td>
+            <tr class="region">
+                <td class="name left"><a href="z_baf15ef4f1434d3e_database_py.html">/home/ubuntu/hidebound/python/hidebound/core/database.py</a></td>
+                <td>261</td>
                 <td>0</td>
                 <td>4</td>
-                <td class="right" data-ratio="260 260">100%</td>
+                <td class="right" data-ratio="261 261">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_baf15ef4f1434d3e_database_tools_py.html">/home/ubuntu/hidebound/python/hidebound/core/database_tools.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_baf15ef4f1434d3e_database_tools_py.html">/home/ubuntu/hidebound/python/hidebound/core/database_tools.py</a></td>
                 <td>139</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="139 139">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_baf15ef4f1434d3e_logging_py.html">/home/ubuntu/hidebound/python/hidebound/core/logging.py</a></td>
-                <td>79</td>
+            <tr class="region">
+                <td class="name left"><a href="z_baf15ef4f1434d3e_logging_py.html">/home/ubuntu/hidebound/python/hidebound/core/logging.py</a></td>
+                <td>81</td>
                 <td>0</td>
                 <td>6</td>
-                <td class="right" data-ratio="79 79">100%</td>
+                <td class="right" data-ratio="81 81">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_baf15ef4f1434d3e_parser_py.html">/home/ubuntu/hidebound/python/hidebound/core/parser.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_baf15ef4f1434d3e_parser_py.html">/home/ubuntu/hidebound/python/hidebound/core/parser.py</a></td>
                 <td>126</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="126 126">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_baf15ef4f1434d3e_specification_base_py.html">/home/ubuntu/hidebound/python/hidebound/core/specification_base.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_baf15ef4f1434d3e_specification_base_py.html">/home/ubuntu/hidebound/python/hidebound/core/specification_base.py</a></td>
                 <td>128</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="128 128">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_baf15ef4f1434d3e_specifications_py.html">/home/ubuntu/hidebound/python/hidebound/core/specifications.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_baf15ef4f1434d3e_specifications_py.html">/home/ubuntu/hidebound/python/hidebound/core/specifications.py</a></td>
                 <td>26</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="26 26">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_baf15ef4f1434d3e_test_specifications_py.html">/home/ubuntu/hidebound/python/hidebound/core/test_specifications.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_baf15ef4f1434d3e_test_specifications_py.html">/home/ubuntu/hidebound/python/hidebound/core/test_specifications.py</a></td>
                 <td>30</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="30 30">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_baf15ef4f1434d3e_tools_py.html">/home/ubuntu/hidebound/python/hidebound/core/tools.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_baf15ef4f1434d3e_tools_py.html">/home/ubuntu/hidebound/python/hidebound/core/tools.py</a></td>
                 <td>139</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="139 139">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_baf15ef4f1434d3e_traits_py.html">/home/ubuntu/hidebound/python/hidebound/core/traits.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_baf15ef4f1434d3e_traits_py.html">/home/ubuntu/hidebound/python/hidebound/core/traits.py</a></td>
                 <td>15</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="15 15">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_baf15ef4f1434d3e_validators_py.html">/home/ubuntu/hidebound/python/hidebound/core/validators.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_baf15ef4f1434d3e_validators_py.html">/home/ubuntu/hidebound/python/hidebound/core/validators.py</a></td>
                 <td>201</td>
                 <td>0</td>
                 <td>11</td>
                 <td class="right" data-ratio="201 201">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_2087e6d32d83cab0_disk_exporter_py.html">/home/ubuntu/hidebound/python/hidebound/exporters/disk_exporter.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_2087e6d32d83cab0_disk_exporter_py.html">/home/ubuntu/hidebound/python/hidebound/exporters/disk_exporter.py</a></td>
                 <td>42</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="42 42">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_2087e6d32d83cab0_exporter_base_py.html">/home/ubuntu/hidebound/python/hidebound/exporters/exporter_base.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_2087e6d32d83cab0_exporter_base_py.html">/home/ubuntu/hidebound/python/hidebound/exporters/exporter_base.py</a></td>
                 <td>69</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="69 69">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_2087e6d32d83cab0_girder_exporter_py.html">/home/ubuntu/hidebound/python/hidebound/exporters/girder_exporter.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_2087e6d32d83cab0_girder_exporter_py.html">/home/ubuntu/hidebound/python/hidebound/exporters/girder_exporter.py</a></td>
                 <td>57</td>
                 <td>0</td>
                 <td>5</td>
                 <td class="right" data-ratio="57 57">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_2087e6d32d83cab0_s3_exporter_py.html">/home/ubuntu/hidebound/python/hidebound/exporters/s3_exporter.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_2087e6d32d83cab0_s3_exporter_py.html">/home/ubuntu/hidebound/python/hidebound/exporters/s3_exporter.py</a></td>
                 <td>38</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="38 38">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_7887e99df621fd12_api_py.html">/home/ubuntu/hidebound/python/hidebound/server/api.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_7887e99df621fd12_api_py.html">/home/ubuntu/hidebound/python/hidebound/server/api.py</a></td>
                 <td>136</td>
                 <td>2</td>
                 <td>2</td>
                 <td class="right" data-ratio="134 136">99%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_7887e99df621fd12_app_py.html">/home/ubuntu/hidebound/python/hidebound/server/app.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_7887e99df621fd12_app_py.html">/home/ubuntu/hidebound/python/hidebound/server/app.py</a></td>
                 <td>108</td>
                 <td>63</td>
                 <td>2</td>
                 <td class="right" data-ratio="45 108">42%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_7887e99df621fd12_components_py.html">/home/ubuntu/hidebound/python/hidebound/server/components.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_7887e99df621fd12_components_py.html">/home/ubuntu/hidebound/python/hidebound/server/components.py</a></td>
                 <td>138</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="138 138">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_7887e99df621fd12_extension_py.html">/home/ubuntu/hidebound/python/hidebound/server/extension.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_7887e99df621fd12_extension_py.html">/home/ubuntu/hidebound/python/hidebound/server/extension.py</a></td>
                 <td>43</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="43 43">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_7887e99df621fd12_extensions_py.html">/home/ubuntu/hidebound/python/hidebound/server/extensions.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_7887e99df621fd12_extensions_py.html">/home/ubuntu/hidebound/python/hidebound/server/extensions.py</a></td>
                 <td>6</td>
                 <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="6 6">100%</td>
             </tr>
-            <tr class="file">
-                <td class="name left"><a href="d_7887e99df621fd12_server_tools_py.html">/home/ubuntu/hidebound/python/hidebound/server/server_tools.py</a></td>
+            <tr class="region">
+                <td class="name left"><a href="z_7887e99df621fd12_server_tools_py.html">/home/ubuntu/hidebound/python/hidebound/server/server_tools.py</a></td>
                 <td>131</td>
                 <td>0</td>
                 <td>1</td>
@@ -219,10 +228,10 @@
         <tfoot>
             <tr class="total">
                 <td class="name left">Total</td>
-                <td>2045</td>
+                <td>2048</td>
                 <td>65</td>
                 <td>35</td>
-                <td class="right" data-ratio="1980 2045">97%</td>
+                <td class="right" data-ratio="1983 2048">97%</td>
             </tr>
         </tfoot>
     </table>
@@ -233,16 +242,16 @@
 <footer>
     <div class="content">
         <p>
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.4.4">coverage.py v7.4.4</a>,
-            created at 2024-04-10 00:42 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.5.4">coverage.py v7.5.4</a>,
+            created at 2024-07-05 17:36 +0000
         </p>
     </div>
     <aside class="hidden">
-        <a id="prevFileLink" class="nav" href="d_7887e99df621fd12_server_tools_py.html"/>
-        <a id="nextFileLink" class="nav" href="d_baf15ef4f1434d3e_config_py.html"/>
-        <button type="button" class="button_prev_file" data-shortcut="["/>
-        <button type="button" class="button_next_file" data-shortcut="]"/>
-        <button type="button" class="button_show_hide_help" data-shortcut="?"/>
+        <a id="prevFileLink" class="nav" href="z_7887e99df621fd12_server_tools_py.html"></a>
+        <a id="nextFileLink" class="nav" href="z_baf15ef4f1434d3e_config_py.html"></a>
+        <button type="button" class="button_prev_file" data-shortcut="["></button>
+        <button type="button" class="button_next_file" data-shortcut="]"></button>
+        <button type="button" class="button_show_hide_help" data-shortcut="?"></button>
     </aside>
 </footer>
 </body>
