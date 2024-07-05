@@ -44,8 +44,8 @@ RUN echo "\n${CYAN}CHOWN /VAR/LOG${CLEAR}"; \
 # install hidebound
 USER ubuntu
 ARG VERSION
-RUN echo "\n${CYAN}INSTALL HIDEBOUND{CLEAR}"; \
+RUN echo "\n${CYAN}INSTALL HIDEBOUND${CLEAR}"; \
     pip3.10 install --user hidebound==$VERSION
 
-ENV PATH="/home/ubuntu/.local/bin:$PATH"
+ENV PATH="$PATH:/home/ubuntu/.local/bin"
 EXPOSE 8080

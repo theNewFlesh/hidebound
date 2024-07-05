@@ -50,34 +50,30 @@ one time.
 
 See [documentation](https://thenewflesh.github.io/hidebound/) for details.
 
-# Installation
-## Python
-`pip install hidebound`
+# Installation for Developers
 
-## Docker
-1. Install [docker-desktop](https://docs.docker.com/desktop/)
-2. `docker pull thenewflesh/hidebound:prod-latest`
-
-## Docker For Developers
+### Docker
 1. Install [docker-desktop](https://docs.docker.com/desktop/)
 2. Ensure docker-desktop has at least 4 GB of memory allocated to it.
-4. `git clone git@github.com:theNewFlesh/hidebound.git`
-5. `cd hidebound`
-6. `chmod +x bin/hidebound`
-7. `bin/hidebound docker-start`
+3. `git clone git@github.com:theNewFlesh/hidebound.git`
+4. `cd hidebound`
+5. `chmod +x bin/hidebound`
+6. `bin/hidebound docker-start`
+   - If building on a M1 Mac run `export DOCKER_DEFAULT_PLATFORM=linux/amd64` first.
 
 The service should take a few minutes to start up.
 
 Run `bin/hidebound --help` for more help on the command line tool.
 
 ### ZSH Setup
-
 1. `bin/hidebound` must be run from this repository's top level directory.
 2. Therefore, if using zsh, it is recommended that you paste the following line
     in your ~/.zshrc file:
     - `alias hidebound="cd [parent dir]/hidebound; bin/hidebound"`
     - Replace `[parent dir]` with the parent directory of this repository
-3. Running the `zsh-complete` command will enable tab completions of the cli
+3. Consider adding the following line to your ~/.zshrc if you are using a M1 Mac:
+    - `export DOCKER_DEFAULT_PLATFORM=linux/amd64`
+4. Running the `zsh-complete` command will enable tab completions of the cli
    commands, in the next shell session.
 
    For example:
@@ -85,6 +81,15 @@ Run `bin/hidebound --help` for more help on the command line tool.
      tab to cycle through
    - `hidebound docker-[tab]` will show you only the cli options that begin with
      "docker-"
+
+# Installation for Production
+
+### Python
+`pip install hidebound`
+
+### Docker
+1. Install [docker-desktop](https://docs.docker.com/desktop/)
+2. `docker pull thenewflesh/hidebound:[version]`
 
 ---
 
@@ -870,3 +875,50 @@ The following is a complete list of all available development commands:
 | -a    | --args    | Additional arguments, this can generally be ignored  |
 | -h    | --help    | Prints command help message to stdout                |
 |       | --dryrun  | Prints command that would otherwise be run to stdout |
+
+
+---
+
+# Production CLI
+
+hidebound comes with a command line interface defined in command.py.
+
+Its usage pattern is: `hidebound COMMAND [ARGS] [FLAGS] [-h --help]`
+
+## Commands
+
+---
+
+### bash-completion
+Prints BASH completion code to be written to a _hidebound completion file
+
+Usage: `hidebound bash-completion`
+
+---
+
+### config
+Prints hidebound config
+
+Usage: `hidebound config`
+
+---
+
+### serve
+Runs a hidebound server
+
+Usage: `hidebound serve`
+
+| Flag      | Argument | Description              | Default |
+| --------- | -------- | ------------------------ | ------- |
+| --port    | int      | Server port              | 8080    |
+| --timeout | int      | Gunicorn timeout         | 0       |
+| --testing |          | Testing mode             |         |
+| --debug   |          | Debug mode (no gunicorn) |         |
+
+---
+
+### zsh-completion
+Prints ZSH completion code to be written to a _hidebound completion file
+
+Usage: `hidebound zsh-completion`
+

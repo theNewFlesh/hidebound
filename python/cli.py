@@ -360,27 +360,30 @@ def build_dev_command(use_cache=False):
 def build_prod_command():
     # type: () -> str
     '''
+    Build production image.
+
     Returns:
         str: Command to build prod image.
     '''
+    cmd = line('''
+        cd docker;
+        docker build
+            --force-rm
+            --no-cache
+            --file prod.dockerfile
+            --build-arg VERSION="$VERSION"
+            --label "repository={repo}"
+            --label "docker-registry={registry}"
+            --label "git-user={git_user}"
+            --label "git-branch=$(git branch --show-current)"
+            --label "git-commit=$(git rev-parse HEAD)"
+            --tag {repo}:prod .;
+        cd ..
+    ''')
     cmds = [
         enter_repo(),
         version_variable(),
-        line('''
-            cd docker;
-            docker build
-                --force-rm
-                --no-cache
-                --file prod.dockerfile
-                --label "repository={repo}"
-                --label "docker-registry={registry}"
-                --label "git-user={git_user}"
-                --label "git-branch=$(git branch --show-current)"
-                --label "git-commit=$(git rev-parse HEAD)"
-                --build-arg VERSION="$VERSION"
-                --tag {repo}:prod .;
-            cd ..
-        '''),
+        cmd,
         exit_repo(),
     ]
     return resolve(cmds)
