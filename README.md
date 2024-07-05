@@ -736,7 +736,7 @@ Its usage pattern is: `hidebound COMMAND [FLAGS] [-h --help]`
 | serve   | --timeout | Gunicorn timeout         | 0       |
 | serve   | --testing | Testing mode             | False   |
 | serve   | --debug   | Debug mode (no gunicorn) | False   |
-| all     | --help    | Show help message        | -       |
+| all     | --help    | Show help message        | <p></p> |
 
 ---
 
@@ -875,50 +875,3 @@ The following is a complete list of all available development commands:
 | -a    | --args    | Additional arguments, this can generally be ignored  |
 | -h    | --help    | Prints command help message to stdout                |
 |       | --dryrun  | Prints command that would otherwise be run to stdout |
-
-
----
-
-# Production CLI
-
-hidebound comes with a command line interface defined in command.py.
-
-Its usage pattern is: `hidebound COMMAND [ARGS] [FLAGS] [-h --help]`
-
-## Commands
-
----
-
-### bash-completion
-Prints BASH completion code to be written to a _hidebound completion file
-
-Usage: `hidebound bash-completion`
-
----
-
-### config
-Prints hidebound config
-
-Usage: `hidebound config`
-
----
-
-### serve
-Runs a hidebound server
-
-Usage: `hidebound serve`
-
-| Flag      | Argument | Description              | Default |
-| --------- | -------- | ------------------------ | ------- |
-| --port    | int      | Server port              | 8080    |
-| --timeout | int      | Gunicorn timeout         | 0       |
-| --testing |          | Testing mode             |         |
-| --debug   |          | Debug mode (no gunicorn) |         |
-
----
-
-### zsh-completion
-Prints ZSH completion code to be written to a _hidebound completion file
-
-Usage: `hidebound zsh-completion`
-
