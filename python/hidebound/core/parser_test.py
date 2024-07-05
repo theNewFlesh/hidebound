@@ -183,23 +183,44 @@ class ParserTests(unittest.TestCase):
             AssetNameParser(self.fields).parse(name)
 
     def test_parse_project_token(self):
+        # good project heads
+        for i in range(3, 11):
+            name = f"p-{'x' * i}1234_s-spec002_d-desc_v003_c0004-0005-0006_f0007.jpeg"
+            AssetNameParser(self.fields).parse(name)
+
+        # good project tails
+        for i in [1, 12, 123, 1234]:
+            name = f'p-proj{i}_s-spec002_d-desc_v003_c0004-0005-0006_f0007.jpeg'
+            AssetNameParser(self.fields).parse(name)
+
+        # hyphen
         name = 'p-proj-001_s-spec002_d-desc_v003_c0004-0005-0006_f0007.jpeg'
         msg = f'Illegal project field token in "{name}". Expecting: .*'
         with self.assertRaisesRegex(ParseException, msg):
             AssetNameParser(self.fields).parse(name)
 
+        # underscore
         name = 'p-proj_s-spec002_d-desc_v003_c0004-0005-0006_f0007.jpeg'
         msg = f'Illegal project field token in "{name}". Expecting: .*'
         with self.assertRaisesRegex(ParseException, msg):
             AssetNameParser(self.fields).parse(name)
 
-        name = 'p-proj12345_s-spec002_d-desc_v003_c0004-0005-0006_f0007.jpeg'
-        msg = "Expected '_'.*"
+        # tail short
+        name = 'p-pr1234_s-spec002_d-desc_v003_c0004-0005-0006_f0007.jpeg'
+        msg = f'Illegal project field token in "{name}". Expecting: .*'
         with self.assertRaisesRegex(ParseException, msg):
             AssetNameParser(self.fields).parse(name)
 
-        for i in [1, 12, 123, 1234]:
-            name = f'p-proj{i}_s-spec002_d-desc_v003_c0004-0005-0006_f0007.jpeg'
+        # tail long
+        name = 'p-projectkiwi1234_s-spec002_d-desc_v003_c0004-0005-0006_f0007.jpeg'
+        msg = f'Illegal project field token in "{name}". Expecting: .*'
+        with self.assertRaisesRegex(ParseException, msg):
+            AssetNameParser(self.fields).parse(name)
+
+        # tail
+        name = 'p-proj12345_s-spec002_d-desc_v003_c0004-0005-0006_f0007.jpeg'
+        msg = "Expected '_'.*"
+        with self.assertRaisesRegex(ParseException, msg):
             AssetNameParser(self.fields).parse(name)
 
     # SPECIFICATION-------------------------------------------------------------
