@@ -94,7 +94,7 @@
                     "source $X_TOOLS_PATH &&",
                     "_x_build_publish",
                     "'${input:pypi_user}'",
-                    "'${input:pypi_password}'",
+                    "'${input:pypi_token}'",
                     "'${input:pypi_comment}'",
                     "'${input:pypi_url}'"
                 ],
@@ -495,8 +495,8 @@
                 "default": "__token__"
             },
             {
-                "id": "pypi_password",
-                "description": "PyPi password:",
+                "id": "pypi_token",
+                "description": "PyPi token:",
                 "type": "promptString"
             },
             {

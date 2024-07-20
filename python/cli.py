@@ -54,7 +54,8 @@ def get_info():
     build-publish           - Run production tests first then publish pip package of repo to PyPi
     build-test              - Build test version of repo for prod testing
     docker-build            - Build Docker image
-    docker-build-from-cache - Build Docker image from cached image
+    docker-build-from-cache - Build Docker image from registry cache
+    docker-build-no-cache   - Build Docker image without cache
     docker-build-prod       - Build production image
     docker-container        - Display the Docker container id
     docker-destroy          - Shutdown container and destroy its image
@@ -324,12 +325,12 @@ def zshrc_tools(command, args=[]):
 
 
 # COMMANDS----------------------------------------------------------------------
-def build_dev_command(use_cache=False):
-    # type: (bool) -> str
+def build_dev_command(mode='normal'):
+    # type: (str) -> str
     '''
     Args:
-        use_cache (bool, optional): Whether to use Docker image cache.
-            Default: False.
+        mode (str, optional): Build mode. Options: normal, cache, no-cache.
+            Default: normal.
 
     Returns:
         str: Command to build dev image.
@@ -345,8 +346,10 @@ def build_dev_command(use_cache=False):
             --label "git-branch=$(git branch --show-current)"
             --label "git-commit=$(git rev-parse HEAD)"
     ''')
-    if use_cache:
+    if mode == 'cache':
         cmd += ' --cache-from {registry}:dev-latest'
+    elif mode == 'no-cache':
+        cmd += ' --no-cache'
     cmd += ' --tag {repo}:dev .; cd ..'
 
     cmds = [
@@ -799,7 +802,8 @@ def main():
         'build-publish': x_tools_command('x_build_publish', args),
         'build-test': x_tools_command('x_build_test', args),
         'docker-build': build_dev_command(),
-        'docker-build-from-cache': build_dev_command(use_cache=True),
+        'docker-build-from-cache': build_dev_command(mode='cache'),
+        'docker-build-no-cache': build_dev_command(mode='no-cache'),
         'docker-build-prod': build_prod_command(),
         'docker-container': container_id_command(),
         'docker-destroy': destroy_dev_command(),

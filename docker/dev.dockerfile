@@ -81,17 +81,17 @@ RUN echo "\n${CYAN}INSTALL PIP${CLEAR}"; \
 
 # install nodejs (needed by jupyter lab)
 RUN echo "\n${CYAN}INSTALL NODEJS${CLEAR}"; \
-    sudo mkdir -p /etc/apt/keyrings && \
+    mkdir -p /etc/apt/keyrings && \
     curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
-        | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
+        | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
     export NODE_VERSION=18 && \
     echo "deb \
         [signed-by=/etc/apt/keyrings/nodesource.gpg] \
         https://deb.nodesource.com/node_$NODE_VERSION.x \
         nodistro main" \
-        | sudo tee /etc/apt/sources.list.d/nodesource.list && \
-    sudo apt update && \
-    sudo apt install -y nodejs && \
+        | tee /etc/apt/sources.list.d/nodesource.list && \
+    apt update && \
+    apt install -y nodejs && \
     rm -rf /var/lib/apt/lists/*
 
 # install and setup zsh
@@ -180,7 +180,7 @@ RUN echo "\n${CYAN}INSTALL DEV DEPENDENCIES${CLEAR}"; \
     pip3.10 install --upgrade --user \
         pdm \
         'pdm-bump<0.7.0' \
-        'rolling-pin>=0.9.2' && \
+        'rolling-pin>=0.10.1' && \
     mkdir -p /home/ubuntu/.oh-my-zsh/custom/completions && \
     pdm self update --pip-args='--user' && \
     pdm completion zsh > /home/ubuntu/.oh-my-zsh/custom/completions/_pdm
@@ -219,6 +219,14 @@ RUN echo "\n${CYAN}INSTALL PROD ENVIRONMENTS${CLEAR}"; \
 RUN echo "\n${CYAN}INSTALL PROD CLI${CLEAR}"; \
     cp /home/ubuntu/scripts/prod-cli /home/ubuntu/.local/bin/hidebound && \
     chmod 755 /home/ubuntu/.local/bin/hidebound
+
+# build jupyter lab
+# RUN echo "\n${CYAN}BUILD JUPYTER LAB${CLEAR}"; \
+#     . /home/ubuntu/scripts/x_tools.sh && \
+#     export CONFIG_DIR=/home/ubuntu/config && \
+#     export SCRIPT_DIR=/home/ubuntu/scripts && \
+#     x_env_activate_dev && \
+#     jupyter lab build
 
 USER root
 

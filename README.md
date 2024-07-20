@@ -755,7 +755,7 @@ These commands can be accessed through:
 Running the `zsh-complete` command will enable tab completions of the CLI.
 See the zsh setup section for more information.
 
-## Command Groups
+### Command Groups
 
 Development commands are grouped by one of 10 prefixes:
 
@@ -772,7 +772,7 @@ Development commands are grouped by one of 10 prefixes:
 | quickstart | Display this quickstart guide                                                      |
 | zsh        | Commands for running a zsh session in the container and generating zsh completions |
 
-## Common Commands
+### Common Commands
 
 Here are some frequently used commands to get you started:
 
@@ -803,7 +803,7 @@ Commands generally do not expect any arguments or flags.
 
 Its usage pattern is: `bin/hidebound COMMAND [-a --args]=ARGS [-h --help] [--dryrun]`
 
-## Commands
+### Commands
 The following is a complete list of all available development commands:
 
 | Command                 | Description                                                         |
@@ -813,7 +813,8 @@ The following is a complete list of all available development commands:
 | build-publish           | Run production tests first then publish pip package of repo to PyPi |
 | build-test              | Build test version of repo for prod testing                         |
 | docker-build            | Build Docker image                                                  |
-| docker-build-from-cache | Build Docker image from cached image                                |
+| docker-build-from-cache | Build Docker image from registry cache                              |
+| docker-build-no-cache   | Build Docker image without cache                                    |
 | docker-build-prod       | Build production image                                              |
 | docker-container        | Display the Docker container id                                     |
 | docker-destroy          | Shutdown container and destroy its image                            |
@@ -868,7 +869,7 @@ The following is a complete list of all available development commands:
 | zsh-complete            | Generate oh-my-zsh completions                                      |
 | zsh-root                | Run ZSH session as root inside Docker container                     |
 
-## Flags
+### Flags
 
 | Short | Long      | Description                                          |
 | ----- | --------- | ---------------------------------------------------- |
