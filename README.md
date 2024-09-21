@@ -61,6 +61,7 @@ Assets are easily managed and readily consumable by digital asset management
 systems, such as
 [Autodesk Flow (formerly known as Shotgun)](https://www.autodesk.com/products/flow-production-tracking/overview),
 [Adobe Bridge](https://www.adobe.com/products/bridge.html),
+[Adobe XMP](https://www.adobe.com/products/xmp.html),
 [FTrack](https://www.ftrack.com/en),
 [Girder](https://girder.readthedocs.io/en/latest),
 as well as by common storage platforms such as
