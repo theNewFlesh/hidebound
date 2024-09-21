@@ -50,11 +50,11 @@ files and directories that make each asset according to their name, location and
 file properties. This data comprises the entirety of Hidebound's database at any
 one time.
 
-Industries, such as visual effects, have common principals and practices that
+Industries, such as visual effects, have common principles and practices that
 enable them to effectively and efficiently manage petabytes of highly diverse
-data as it is generated and run through complex data tranformation pipelines in
-a reliabel fashion. Hidebound's goal is to extend this capability to other
-hetergenous, data intensive industries, such as artifical intelligence
+data as it is generated and run through complex data transformation pipelines in
+a reliable fashion. Hidebound's goal is to extend this capability to other
+heterogenous, data intensive industries, such as artificial intelligence
 (especially computer vision pipelines) and biotech.
 
 Assets are easily managed and readily consumable by digital asset management
@@ -69,9 +69,9 @@ as well as by common storage platforms such as
 Attached Storage devices. The guarantees assets provide in terms of uniformity
 of content via asset specification, and uniformity of indexing via asset
 metadata, empowers developers to create narrow, powerful pipelines that do not
-have to battle the complexitied of heterogenous content.
+have to battle the complexities of heterogenous content.
 
-Kubeflow, Dask and Hadoop are good examples of pipeline frameworks which can
+Kubeflow, Dask and Hadoop are good examples of pipeline frameworks that can
 easily benefit through use of Hidebound assets. All of which Hidebound's author
 uses personally and professionally for ML pipelines.
 
@@ -138,7 +138,7 @@ bucket.
 
 # Workflow
 The acronynm to remember for workflows is **CRUDES**: create, read, update,
-delete, export and search. Those operations constitue the main functionality
+delete, export and search. Those operations constitute the main functionality
 that Hidebound supports.
 
 ## *Create Asset*
@@ -518,7 +518,7 @@ Hidebound configs consist of four main sections:
 Default configuration of Dask distributed framework.
 
 * cluster_type - dask cluster type
-* num_partitions - number of partions for each dataframe
+* num_partitions - number of partitions for each datafme
 * local_num_workers - number of workers on local cluster
 * local_threads_per_worker - number of threads per worker on local cluster
 * local_multiprocessing - use multiprocessing for local cluster
@@ -563,7 +563,7 @@ file.
 | HIDEBOUND_WORKFLOW                       | yaml   | workflow paramater of config                             |
 | HIDEBOUND_SPECIFICATION_FILES            | yaml   | specification_files section of config                    |
 | HIDEBOUND_DASK_CLUSTER_TYPE              | str    | dask cluster type                                        |
-| HIDEBOUND_DASK_NUM_PARTITIONS            | int    | number of partions for each dataframe                    |
+| HIDEBOUND_DASK_NUM_PARTITIONS            | int    | number of partitions for each dataframe                  |
 | HIDEBOUND_DASK_LOCAL_NUM_WORKERS         | int    | number of workers on local cluster                       |
 | HIDEBOUND_DASK_LOCAL_THREADS_PER_WORKER  | int    | number of threads per worker on local cluster            |
 | HIDEBOUND_DASK_LOCAL_MULTIPROCESSING     | str    | use multiprocessing for local cluster                    |
@@ -604,7 +604,7 @@ specification_files:                                                     # list 
 dask:
   cluster_type: local                                                    # Dask cluster type
                                                                          # options: local, gateway
-  num_partitions: 16                                                     # number of partions for each dataframe
+  num_partitions: 16                                                     # number of partitions for each datafme
   local_num_workers: 16                                                  # number of workers on local cluster
   local_threads_per_worker: 1                                            # number of threads per worker on local cluster
   local_multiprocessing: true                                            # use multiprocessing for local cluster
