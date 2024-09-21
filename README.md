@@ -34,7 +34,9 @@
 [![](https://img.shields.io/pypi/dm/hidebound?style=for-the-badge&label=Downloads&color=5F95DE)](https://pepy.tech/project/hidebound)
 
 # Overview
-A MLOps framework for generating ML assets and metadata.
+A framework for generating digital assets to be managed by external digital
+asset management systems (DAMS). Raw file data comes in, validated file content
+and generated metadata come out, also known as assets.
 
 Hidebound is an ephemeral database and asset framework used for generating,
 validating and exporting assets to various data stores. Hidebound enables
@@ -47,6 +49,30 @@ projects, and then processed by Hidebound. Hidebound extracts metadata from the
 files and directories that make each asset according to their name, location and
 file properties. This data comprises the entirety of Hidebound's database at any
 one time.
+
+Industries, such as visual effects, have common principals and practices that
+enable them to effectively and efficiently manage petabytes of highly diverse
+data as it is generated and run through complex data tranformation pipelines in
+a reliabel fashion. Hidebound's goal is to extend this capability to other
+hetergenous, data intensive industries, such as artifical intelligence
+(especially computer vision pipelines) and biotech.
+
+Assets are easily managed and readily consumable by digital asset management
+systems, such as
+[Autodesk Flow (formerly known as Shotgun)](https://www.autodesk.com/products/flow-production-tracking/overview),
+[Adobe Bridge](https://www.adobe.com/products/bridge.html),
+[FTrack](https://www.ftrack.com/en),
+[Girder](https://girder.readthedocs.io/en/latest),
+as well as by common storage platforms such as
+[Amazon S3](https://aws.amazon.com/s3/), [MinIO](https://min.io) and Network
+Attached Storage devices. The guarantees assets provide in terms of uniformity
+of content via asset specification, and uniformity of indexing via asset
+metadata, empowers developers to create narrow, powerful pipelines that do not
+have to battle the complexitied of heterogenous content.
+
+Kubeflow, Dask and Hadoop are good examples of pipeline frameworks which can
+easily benefit through use of Hidebound assets. All of which Hidebound's author
+uses personally and professionally for ML pipelines.
 
 See [documentation](https://thenewflesh.github.io/hidebound/) for details.
 
