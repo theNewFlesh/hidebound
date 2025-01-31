@@ -34,9 +34,9 @@
 [![](https://img.shields.io/pypi/dm/hidebound?style=for-the-badge&label=Downloads&color=5F95DE)](https://pepy.tech/project/hidebound)
 
 # Overview
-A framework for generating digital assets to be managed by external digital
-asset management systems (DAMS). Raw file data comes in, validated file content
-and generated metadata come out, also known as assets.
+Hidebound is massive, distributed digital asset management system for ML pipelines
+on Kubernetes. Raw file data comes in, validated file content and generated metadata
+come out, known as assets.
 
 Hidebound is an ephemeral database and asset framework used for generating,
 validating and exporting assets to various data stores. Hidebound enables
