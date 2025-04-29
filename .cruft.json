@@ -3,6 +3,17 @@
   "commit": "048b9c8f4a94a6d59fc5ca73340774db2fc16d8a",
   "checkout": null,
   "skip": [
+    "__init__\\.py$",
+    "\\.gitkeep$",
+    "docker/config/.*\\.lock$",
+    "docker/config/build\\.yaml",
+    "docs/.*",
+    "LICENSE",
+    "mkdocs/md/(?!index\\.md|style\\.css)",
+    "public/.*",
+    "python/hidebound/.*(?!command\\.py$)",
+    "resources/.*",
+    "sphinx/.*rst$"
   ],
   "context": {
     "cookiecutter": {
