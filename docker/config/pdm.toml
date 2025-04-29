@@ -1,3 +1,4 @@
+use_uv = true
 build_isolation = true
 cache_dir = "/home/ubuntu/pdm/cache"
 

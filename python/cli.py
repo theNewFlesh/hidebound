@@ -25,6 +25,21 @@ repository's structure. Written to be python version agnostic.
 '''
 
 
+class BetterHelpFormatter(argparse.RawTextHelpFormatter):
+    '''
+    HelpFormatter with better indentation.
+    '''
+    def __init__(
+        self, prog, indent_increment=4, max_help_position=24, width=None
+    ):
+        super().__init__(prog, indent_increment, max_help_position, width)
+
+    def _format_action(self, action):
+        output = super()._format_action(action)
+        output = re.sub(' {28}', '    ', output)
+        return output
+
+
 def get_info():
     # type: () -> Tuple[str, list]
     '''
@@ -37,79 +52,83 @@ def get_info():
         repo=REPO
     )
     parser = argparse.ArgumentParser(
-        formatter_class=argparse.RawTextHelpFormatter,
+        formatter_class=BetterHelpFormatter,
         description=desc,
-        usage='\n\tpython cli.py COMMAND [-a --args]=ARGS [-h --help]'
+        usage='  python cli.py COMMAND [-a --args]=ARGS [-h --help] [--dryrun]'
     )
 
     parser.add_argument(
         'command',
-        metavar='command',
+        metavar='COMMAND                      DESCRIPTION',
         type=str,
         nargs=1,
         action='store',
-        help='''Command to run in {repo} app.
-    build-package           - Build production version of repo for publishing
-    build-prod              - Publish pip package of repo to PyPi
-    build-publish           - Run production tests first then publish pip package of repo to PyPi
-    build-test              - Build test version of repo for prod testing
-    docker-build            - Build Docker image
-    docker-build-from-cache - Build Docker image from registry cache
-    docker-build-no-cache   - Build Docker image without cache
-    docker-build-prod       - Build production image
-    docker-container        - Display the Docker container id
-    docker-destroy          - Shutdown container and destroy its image
-    docker-destroy-prod     - Shutdown production container and destroy its image
-    docker-image            - Display the Docker image id
-    docker-prod             - Start production container
-    docker-pull-dev         - Pull development image from Docker registry
-    docker-pull-prod        - Pull production image from Docker registry
-    docker-push-dev         - Push development image to Docker registry
-    docker-push-dev-latest  - Push development image to Docker registry with dev-latest tag
-    docker-push-prod        - Push production image to Docker registry
-    docker-push-prod-latest - Push production image to Docker registry with prod-latest tag
-    docker-remove           - Remove Docker image
-    docker-restart          - Restart container
-    docker-start            - Start container
-    docker-stop             - Stop container
-    docs                    - Generate sphinx documentation
-    docs-architecture       - Generate architecture.svg diagram from all import statements
-    docs-full               - Generate documentation, coverage report, diagram and code
-    docs-metrics            - Generate code metrics report, plots and tables
-    library-add             - Add a given package to a given dependency group
-    library-graph-dev       - Graph dependencies in dev environment
-    library-graph-prod      - Graph dependencies in prod environment
-    library-install-dev     - Install all dependencies into dev environment
-    library-install-prod    - Install all dependencies into prod environment
-    library-list-dev        - List packages in dev environment
-    library-list-prod       - List packages in prod environment
-    library-lock-dev        - Resolve dev.lock file
-    library-lock-prod       - Resolve prod.lock file
-    library-remove          - Remove a given package from a given dependency group
-    library-search          - Search for pip packages
-    library-sync-dev        - Sync dev environment with packages listed in dev.lock
-    library-sync-prod       - Sync prod environment with packages listed in prod.lock
-    library-update          - Update dev dependencies
-    library-update-pdm      - Update PDM
-    quickstart              - Display quickstart guide
-    session-lab             - Run jupyter lab server
-    session-python          - Run python session with dev dependencies
-    session-server          - Run application server inside Docker container
-    state                   - State of repository and Docker container
-    test-coverage           - Generate test coverage report
-    test-dev                - Run all tests
-    test-fast               - Test all code excepts tests marked with SKIP_SLOWS_TESTS decorator
-    test-lint               - Run linting and type checking
-    test-prod               - Run tests across all support python versions
-    version                 - Full resolution of repo: dependencies, linting, tests, docs, etc
-    version-bump-major      - Bump pyproject major version
-    version-bump-minor      - Bump pyproject minor version
-    version-bump-patch      - Bump pyproject patch version
-    version-commit          - Tag with version and commit changes to master
-    zsh                     - Run ZSH session inside Docker container
-    zsh-complete            - Generate oh-my-zsh completions
-    zsh-root                - Run ZSH session as root inside Docker container
-'''.format(repo=REPO))  # noqa: E501
+        help='''
+    build-edit-prod-dockerfile - Edit prod.dockefile to use local package
+    build-local-package        - Generate pip package of repo and copy it to docker/dist
+    build-package              - Build production version of repo for publishing
+    build-prod                 - Publish pip package of repo to PyPi
+    build-publish              - Run production tests first then publish pip package of repo to PyPi
+    build-test                 - Build test version of repo for prod testing
+    docker-build               - Build development image
+    docker-build-from-cache    - Build development image from registry cache
+    docker-build-no-cache      - Build development image without cache
+    docker-build-prod          - Build production image
+    docker-build-prod-no-cache - Build production image without cache
+    docker-container           - Display the Docker container id
+    docker-destroy             - Shutdown container and destroy its image
+    docker-destroy-prod        - Shutdown production container and destroy its image
+    docker-image               - Display the Docker image id
+    docker-prod                - Start production container
+    docker-pull-dev            - Pull development image from Docker registry
+    docker-pull-prod           - Pull production image from Docker registry
+    docker-push-dev            - Push development image to Docker registry
+    docker-push-dev-latest     - Push development image to Docker registry with dev-latest tag
+    docker-push-prod           - Push production image to Docker registry
+    docker-push-prod-latest    - Push production image to Docker registry with prod-latest tag
+    docker-remove              - Remove Docker image
+    docker-restart             - Restart container
+    docker-start               - Start container
+    docker-stop                - Stop container
+    docs                       - Generate sphinx documentation
+    docs-architecture          - Generate architecture.svg diagram from all import statements
+    docs-full                  - Generate documentation, coverage report, diagram and code
+    docs-metrics               - Generate code metrics report, plots and tables
+    library-add                - Add a given package to a given dependency group
+    library-graph-dev          - Graph dependencies in dev environment
+    library-graph-prod         - Graph dependencies in prod environment
+    library-install-dev        - Install all dependencies into dev environment
+    library-install-prod       - Install all dependencies into prod environment
+    library-list-dev           - List packages in dev environment
+    library-list-prod          - List packages in prod environment
+    library-lock-dev           - Resolve dev.lock file
+    library-lock-prod          - Resolve prod.lock file
+    library-remove             - Remove a given package from a given dependency group
+    library-search             - Search for pip packages
+    library-sync-dev           - Sync dev environment with packages listed in dev.lock
+    library-sync-prod          - Sync prod environment with packages listed in prod.lock
+    library-update             - Update dev dependencies
+    library-update-pdm         - Update PDM
+    quickstart                 - Display quickstart guide
+    session-lab                - Run jupyter lab server
+    session-python             - Run python session with dev dependencies
+    session-server             - Run application server inside Docker container
+    state                      - State of repository and Docker container
+    test-coverage              - Generate test coverage report
+    test-dev                   - Run all tests
+    test-fast                  - Test all code excepts tests marked with SKIP_SLOWS_TESTS decorator
+    test-format                - Format all python files
+    test-lint                  - Run linting and type checking
+    test-prod                  - Run tests across all support python versions
+    version                    - Full resolution of repo: dependencies, linting, tests, docs, etc
+    version-bump-major         - Bump pyproject major version
+    version-bump-minor         - Bump pyproject minor version
+    version-bump-patch         - Bump pyproject patch version
+    version-commit             - Tag with version and commit changes to master
+    zsh                        - Run ZSH session inside Docker container
+    zsh-complete               - Generate oh-my-zsh completions
+    zsh-root                   - Run ZSH session as root inside Docker container
+'''[1:-1].format(repo=REPO))  # noqa: E501
 
     parser.add_argument(
         '-a',
@@ -325,12 +344,13 @@ def zshrc_tools(command, args=[]):
 
 
 # COMMANDS----------------------------------------------------------------------
-def build_dev_command(mode='normal'):
-    # type: (str) -> str
+def build_dev_command(use_cache=True):
+    # type: (bool) -> str
     '''
+    Build image for development.
+
     Args:
-        mode (str, optional): Build mode. Options: normal, cache, no-cache.
-            Default: normal.
+        use_cache (bool, optional): Use layer cache. Default: False.
 
     Returns:
         str: Command to build dev image.
@@ -346,11 +366,11 @@ def build_dev_command(mode='normal'):
             --label "git-branch=$(git branch --show-current)"
             --label "git-commit=$(git rev-parse HEAD)"
     ''')
-    if mode == 'cache':
+    if use_cache:
         cmd += ' --cache-from {registry}:dev-latest'
-    elif mode == 'no-cache':
+    else:
         cmd += ' --no-cache'
-    cmd += ' --tag {repo}:dev .; cd ..'
+    cmd += ' --tag {repo}:dev . && cd ..'
 
     cmds = [
         enter_repo(),
@@ -360,10 +380,13 @@ def build_dev_command(mode='normal'):
     return resolve(cmds)
 
 
-def build_prod_command():
-    # type: () -> str
+def build_prod_command(use_cache=False):
+    # type: (bool) -> str
     '''
-    Build production image.
+    Build image for production.
+
+    Args:
+        use_cache (bool, optional): Use layer cache. Default: False.
 
     Returns:
         str: Command to build prod image.
@@ -372,7 +395,6 @@ def build_prod_command():
         cd docker;
         docker build
             --force-rm
-            --no-cache
             --file prod.dockerfile
             --build-arg VERSION="$VERSION"
             --label "repository={repo}"
@@ -380,9 +402,10 @@ def build_prod_command():
             --label "git-user={git_user}"
             --label "git-branch=$(git branch --show-current)"
             --label "git-commit=$(git rev-parse HEAD)"
-            --tag {repo}:prod .;
-        cd ..
     ''')
+    if not use_cache:
+        cmd += ' --no-cache'
+    cmd += ' --tag {repo}:prod . && cd ..'
     cmds = [
         enter_repo(),
         version_variable(),
@@ -797,14 +820,17 @@ def main():
     '''
     mode, args = get_info()
     lut = {
+        'build-edit-prod-dockerfile': x_tools_command('x_build_edit_prod_dockerfile', args),
+        'build-local-package': x_tools_command('x_build_local_package', args),
         'build-package': x_tools_command('x_build_package', args),
         'build-prod': x_tools_command('x_build_prod', args),
         'build-publish': x_tools_command('x_build_publish', args),
         'build-test': x_tools_command('x_build_test', args),
         'docker-build': build_dev_command(),
-        'docker-build-from-cache': build_dev_command(mode='cache'),
-        'docker-build-no-cache': build_dev_command(mode='no-cache'),
-        'docker-build-prod': build_prod_command(),
+        'docker-build-from-cache': build_dev_command(use_cache=True),
+        'docker-build-no-cache': build_dev_command(use_cache=False),
+        'docker-build-prod': build_prod_command(use_cache=True),
+        'docker-build-prod-no-cache': build_prod_command(use_cache=False),
         'docker-container': container_id_command(),
         'docker-destroy': destroy_dev_command(),
         'docker-destroy-prod': destroy_prod_command(),
@@ -847,6 +873,7 @@ def main():
         'test-coverage': x_tools_command('x_test_coverage', args),
         'test-dev': x_tools_command('x_test_dev', args),
         'test-fast': x_tools_command('x_test_fast', args),
+        'test-format': x_tools_command('x_test_format', args),
         'test-lint': x_tools_command('x_test_lint', args),
         'test-prod': x_tools_command('x_test_prod', args),
         'version': x_tools_command('x_version', args),

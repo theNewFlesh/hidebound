@@ -1,12 +1,9 @@
 {
     "folders": [{"path": "./"}],
     "settings": {
-        "ansible.python.interpreterPath": "/home/ubuntu/.dev-env/bin/python3",
         "debug.allowBreakpointsEverywhere": true,
         "editor.rulers": [80, 100],
-        "flake8.args": ["--config=docker/config/flake8.ini"],
-        "forbeslindesay-taskrunner.prefix": "[",
-        "forbeslindesay-taskrunner.separator": "] ",
+        "editor.defaultFormatter": "charliermarsh.ruff",
         "mypy.configFile": "docker/config/pyproject.toml",
         "mypy.enabled": true,
         "mypy.targets": ["python"],
@@ -16,6 +13,15 @@
         "python.testing.pytestEnabled": true,
         "python.testing.unittestEnabled": false,
         "pythonTestExplorer.testFramework": "pytest",
+        "[python]": {
+            "editor.defaultFormatter": "charliermarsh.ruff"
+        },
+        "ruff.configuration": "docker/config/pyproject.toml",
+        "ruff.configurationPreference": "editorFirst",
+        "ruff.format.preview": true,
+        "ruff.lineLength": 100,
+        "ruff.lint.preview": true,
+        "ruff.enable": true,
         "terminal.integrated.defaultProfile.linux": "zsh",
         "terminal.integrated.defaultProfile.osx": "zsh",
         "testExplorer.codeLens": true,
@@ -44,11 +50,13 @@
             "**/.pytest_cache": true,
             "**/.settings": true,
             "**/.svn": true,
+            "**/.virtual_documents": true,
             "**/.vscode": true,
             "**/CVS": true,
             "**/flask_monitoringdashboard.db": true,
             "**/jupyter/serverconfig": true,
-            "*/*/**/node_modules": true
+            "*/*/**/node_modules": true,
+            "**/.Trash*": true,
         }
     },
     "tasks": {
@@ -68,6 +76,24 @@
             "showReuseMessage": false
         },
         "tasks": [
+            {
+                "label": "[build] edit prod.dockerfile",
+                "detail": "Edit prod.dockefile for local build development",
+                "icon": {"id": "tools", "color": "terminal.ansiBlue"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_build_edit_prod_dockerfile"
+                ]
+            },
+            {
+                "label": "[build] local-package",
+                "detail": "Generate local pip package in docker/dist",
+                "icon": {"id": "tools", "color": "terminal.ansiBlue"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_build_local_package"
+                ]
+            },
             {
                 "label": "[build] package",
                 "detail": "Generate pip package of repo in $HOME/build/repo",
@@ -346,6 +372,15 @@
                 ]
             },
             {
+                "label": "[test] format",
+                "detail": "Format all python files",
+                "icon": {"id": "check", "color": "terminal.ansiGreen"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_test_format"
+                ]
+            },
+            {
                 "label": "[test] lint",
                 "detail": "Run linting and type checking",
                 "icon": {"id": "check", "color": "terminal.ansiGreen"},
@@ -458,7 +493,7 @@
                     "source $X_TOOLS_PATH &&",
                     "x_vscode_reinstall_extensions"
                 ]
-            },
+            }
         ],
         "inputs": [
             {

@@ -25,5 +25,6 @@
 
 # ignore
 docs/* linguist-documentation=true
+notebooks/* linguist-documentation=true
 public/* linguist-documentation=true
 resources/* linguist-detectable=false

@@ -6,7 +6,7 @@ Welcome to hidebound's documentation!
    :maxdepth: 1
    :caption: Getting Started
 
-   intro
+   readme
 
 .. toctree::
    :maxdepth: 1

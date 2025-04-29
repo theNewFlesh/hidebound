@@ -37,6 +37,7 @@ RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${CLEAR}"; \
         bat \
         btop \
         ca-certificates \
+        cargo \
         curl \
         exa \
         git \
@@ -66,9 +67,9 @@ RUN echo "\n${CYAN}INSTALL PYTHON${CLEAR}"; \
         python3-pydot \
         python3.10-dev \
         python3.10-venv \
-        python3.10-distutils \
         python3.9-dev \
         python3.9-venv \
+        python3.10-distutils \
         python3.9-distutils \
     && rm -rf /var/lib/apt/lists/*
 
@@ -84,7 +85,7 @@ RUN echo "\n${CYAN}INSTALL NODEJS${CLEAR}"; \
     mkdir -p /etc/apt/keyrings && \
     curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
         | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
-    export NODE_VERSION=18 && \
+    export NODE_VERSION=20 && \
     echo "deb \
         [signed-by=/etc/apt/keyrings/nodesource.gpg] \
         https://deb.nodesource.com/node_$NODE_VERSION.x \
@@ -112,13 +113,6 @@ RUN echo "\n${CYAN}SETUP ZSH${CLEAR}"; \
     chown -R ubuntu:ubuntu .oh-my-zsh && \
     rm -rf install-oh-my-zsh.sh && \
     echo 'UTC' > /etc/timezone
-
-# install tini
-RUN echo "\n${CYAN}INSTALL TINI${CLEAR}"; \
-    curl -LJ https://github.com/krallin/tini/releases/download/v0.19.0/tini \
-        -o /usr/bin/tini && \
-    chown ubuntu:ubuntu /usr/bin/tini && \
-    chmod +x /usr/bin/tini
 
 # install s6-overlay
 RUN echo "\n${CYAN}INSTALL S6${CLEAR}"; \
@@ -178,9 +172,10 @@ RUN echo "\n${CYAN}INSTALL DEV DEPENDENCIES${CLEAR}"; \
         https://raw.githubusercontent.com/pdm-project/pdm/main/install-pdm.py \
         | python3.10 - && \
     pip3.10 install --upgrade --user \
-        pdm \
+        'pdm>=2.19.1' \
         'pdm-bump<0.7.0' \
-        'rolling-pin>=0.10.1' && \
+        'rolling-pin>=0.11.1' \
+        'uv' && \
     mkdir -p /home/ubuntu/.oh-my-zsh/custom/completions && \
     pdm self update --pip-args='--user' && \
     pdm completion zsh > /home/ubuntu/.oh-my-zsh/custom/completions/_pdm
@@ -221,12 +216,12 @@ RUN echo "\n${CYAN}INSTALL PROD CLI${CLEAR}"; \
     chmod 755 /home/ubuntu/.local/bin/hidebound
 
 # build jupyter lab
-# RUN echo "\n${CYAN}BUILD JUPYTER LAB${CLEAR}"; \
-#     . /home/ubuntu/scripts/x_tools.sh && \
-#     export CONFIG_DIR=/home/ubuntu/config && \
-#     export SCRIPT_DIR=/home/ubuntu/scripts && \
-#     x_env_activate_dev && \
-#     jupyter lab build
+RUN echo "\n${CYAN}BUILD JUPYTER LAB${CLEAR}"; \
+    . /home/ubuntu/scripts/x_tools.sh && \
+    export CONFIG_DIR=/home/ubuntu/config && \
+    export SCRIPT_DIR=/home/ubuntu/scripts && \
+    x_env_activate_dev && \
+    jupyter lab build
 
 USER root
 
@@ -253,4 +248,5 @@ ENV PYTHONPYCACHEPREFIX "/home/ubuntu/.python_cache"
 ENV HOME /home/ubuntu
 ENV JUPYTER_RUNTIME_DIR /tmp/jupyter_runtime
 
+EXPOSE 8888/tcp
 ENTRYPOINT ["/init"]

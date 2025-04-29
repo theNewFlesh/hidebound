@@ -3,12 +3,15 @@ import subprocess
 from pathlib import Path
 
 import click
+import lunchbox.theme as lbc
 import yaml
 # ------------------------------------------------------------------------------
 
 '''
 Command line interface to hidebound application
 '''
+
+click.Context.formatter_class = lbc.ThemeFormatter
 
 
 @click.group()
@@ -19,7 +22,8 @@ def main():
 @main.command()
 def bash_completion():
     '''
-    BASH completion code to be written to a _hidebound completion file.
+    {white}BASH completion code to be written to a _hidebound completion
+    file.{clear}
     '''
     cmd = '_HIDEBOUND_COMPLETE=bash_source hidebound'
     result = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
@@ -31,7 +35,7 @@ def bash_completion():
 def config():
     # type: () -> None
     '''
-    Prints hidebound config.
+    {white}Prints hidebound config.{clear}
     '''
     os.environ['HIDEBOUND_TESTING'] = 'True'
     import hidebound.server.app as hba
@@ -59,7 +63,7 @@ def config():
 def serve(port, timeout, testing, debug):
     # type: (int, int, bool, bool) -> None
     '''
-    Runs a hidebound server.
+    {white}Runs a hidebound server.{clear}
     '''
     import hidebound.server.app as hba
     os.environ['HIDEBOUND_TESTING'] = str(testing)
@@ -76,7 +80,8 @@ def serve(port, timeout, testing, debug):
 @main.command()
 def zsh_completion():
     '''
-    ZSH completion code to be written to a _hidebound completion file.
+    {white}ZSH completion code to be written to a _hidebound completion
+    file.{clear}
     '''
     cmd = '_HIDEBOUND_COMPLETE=zsh_source hidebound'
     result = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)

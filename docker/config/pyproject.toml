@@ -46,7 +46,7 @@ dependencies = [
     "gunicorn>=21.2.0",
     "jinja2>=3.0",
     "json_logging",
-    "lunchbox",
+    "lunchbox>=0.6.1",
     "numpy",
     "pandas>=2.1.0",
     "pandasql",
@@ -64,14 +64,13 @@ dependencies = [
 
 [project.urls]
 repository = "https://github.com/theNewFlesh/hidebound"
-documentation = "https://thenewflesh.github.io/hidebound"
+documentation = "https://theNewFlesh.github.io/hidebound"
 
 [project.scripts]
 hidebound = "hidebound.command:main"
 
 [tool.pdm.dev-dependencies]
 lab = [
-    "cufflinks",
     "dask-labextension>=6.0.0",
     "jupyterlab-git>=0.39.3",
     "jupyterlab-henanigans>=0.2.2",
@@ -79,15 +78,14 @@ lab = [
     "jupyterlab",
 ]
 dev = [
-    "m2r2",
+    "myst-parser>=4.0.0",
     "sphinx-autodoc-typehints>=1.22",
-    "sphinx-rtd-theme",
+    "sphinx-rtd-theme>=2.0.0,<3.0.0",
     "sphinx>=5.3.0",
     "sphinxcontrib-jquery>=4.1",
     "toml>=0.10.2",
 ]
 test = [
-    "flake8",
     "moto[s3]>=5.0.4",
     "mypy",
     "percy",
@@ -97,6 +95,7 @@ test = [
     "pytest-rerunfailures",
     "pytest-xdist",
     "pytest",
+    "ruff",
     "tox",
     "types-PyYAML",
     "types-requests",
@@ -144,6 +143,29 @@ omit = [
     "*/mock_*.py",
     "*/conftest.py",
 ]
+
+[tool.ruff]
+cache-dir = "/home/ubuntu/.cache/ruff"
+line-length = 100
+indent-width = 4
+exclude = ["*_test.py"]
+
+[tool.ruff.format]
+quote-style = "preserve"
+indent-style = "space"
+docstring-code-format = true
+skip-magic-trailing-comma = true
+
+[tool.ruff.lint.flake8-quotes]
+docstring-quotes = "single"
+inline-quotes = "single"
+
+[tool.ruff.lint]
+select = ["E", "F"]
+ignore = ["E731"]
+
+[tool.uv]
+cache-dir = "/home/ubuntu/pdm/cache"
 
 [tool.mypy]
 cache_dir = "/home/ubuntu/.mypy_cache"

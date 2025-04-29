@@ -21,7 +21,7 @@ args=`$pythonx -c "import sys, re; x = filter(lambda x: not re.search('--?a(rgs)
 # run cli.py
 if [ $help == "True" ]; then
     $pythonx ./python/cli.py --help
-    echo '  --dryrun              Simulate command run.'
+    echo '    --dryrun            Simulate command run.'
 else
     if [ $dryrun == "False" ]; then
         eval `$pythonx ./python/cli.py $1 --args "$args"`

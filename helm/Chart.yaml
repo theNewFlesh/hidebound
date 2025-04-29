@@ -4,6 +4,22 @@ type: application
 version: 0.22.4
 appVersion: 0.1.0
 home: https://github.com/theNewFlesh/hidebound
+description: |
+  A MLOps framework for generating ML assets and metadata.
+keywords:
+  - ephemeral
+  - database
+  - asset
+  - assetstore
+  - datastore
+  - vfx
+  - mlops
+  - ml
+  - machine-learning
+  - data
+type: application
+appVersion: "0.32.0"
 maintainers:
   - name: Alex Braun
     email: alexander.g.braun@gmail.com
+    url: http://www.alexgbraun.com
