@@ -46,7 +46,7 @@ dependencies = [
     "gunicorn>=21.2.0",
     "jinja2>=3.0",
     "json_logging",
-    "lunchbox>=0.6.1",
+    "lunchbox",
     "numpy",
     "pandas>=2.1.0",
     "pandasql",
