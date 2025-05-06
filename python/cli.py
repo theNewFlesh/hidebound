@@ -25,6 +25,19 @@ repository's structure. Written to be python version agnostic.
 '''
 
 
+COLORS = dict(
+    blue='\033[0;34m',
+    cyan='\033[0;96m',
+    green='\033[0;92m',
+    grey='\033[0;90m',
+    purple='\033[0;35m',
+    red='\033[0;31m',
+    white='\033[1;97m',
+    yellow='\033[0;33m',
+    clear='\033[0m',
+)
+
+
 class BetterHelpFormatter(argparse.RawTextHelpFormatter):
     '''
     HelpFormatter with better indentation.
@@ -34,9 +47,64 @@ class BetterHelpFormatter(argparse.RawTextHelpFormatter):
     ):
         super().__init__(prog, indent_increment, max_help_position, width)
 
+    def add_text(self, text):
+        # type: (Any) -> None
+        '''
+        Adds color to description.
+
+        Args:
+            text (object): Text.
+        '''
+        if 'CLI' in str(text):
+            text = '{white}{text}{clear}'.format(text=text, **COLORS)
+        super().add_text(text)
+
     def _format_action(self, action):
-        output = super()._format_action(action)
-        output = re.sub(' {28}', '    ', output)
+        # type: (Any) -> str
+        '''
+        Adds colorized table formatting to information provided via
+        parser.add_argument.
+
+        Args:
+            action (object): Parser action.
+
+        Returns:
+            str: Formatted string.
+        '''
+        if action.dest == 'command':
+            metavar = '{purple}COMMAND' + ' ' * 20 + '| DESCRIPTION{clear}'
+            action.metavar = metavar.format(**COLORS)
+
+        text = super()._format_action(action)
+        text = re.sub(' {28}', '    ', text)
+        lines = text.split('\n')
+
+        sep = '-' * 27 + '|' + '-' * 68
+        sep = '    {purple}{sep}{clear}'.format(sep=sep, **COLORS)
+
+        output = []
+        flag = False
+        prev = ''
+        for line in lines:
+            if ' - ' in line:
+                cmd, desc = line.split(' - ', 1)
+                prefix = re.sub('-.*| +', '', cmd)
+                if prefix != prev:
+                    output.append(sep)
+                    flag = not flag
+                    prev = prefix
+
+                if flag:
+                    color = COLORS['yellow']
+                else:
+                    color = COLORS['cyan']
+
+                line = '{color}{cmd}{clear} {purple}|{clear} {desc}'
+                line = line.format(color=color, cmd=cmd, desc=desc, **COLORS)
+
+            output.append(line)
+        output = '\n'.join(output)
+        output += COLORS['green']
         return output
 
 
@@ -48,9 +116,7 @@ def get_info():
     Returns:
         tuple[str]: Mode and arguments.
     '''
-    desc = 'A CLI for developing and deploying the {repo} app.'.format(
-        repo=REPO
-    )
+    desc = 'A CLI for developing and deploying the {repo} app.'.format(repo=REPO)
     parser = argparse.ArgumentParser(
         formatter_class=BetterHelpFormatter,
         description=desc,
@@ -59,7 +125,7 @@ def get_info():
 
     parser.add_argument(
         'command',
-        metavar='COMMAND                      DESCRIPTION',
+        metavar='COMMAND',
         type=str,
         nargs=1,
         action='store',
@@ -164,15 +230,6 @@ def resolve(commands):
     cmd = ' && '.join(commands)
 
     all_ = dict(
-        black='\033[0;30m',
-        blue='\033[0;34m',
-        clear='\033[0m',
-        cyan='\033[0;36m',
-        green='\033[0;32m',
-        purple='\033[0;35m',
-        red='\033[0;31m',
-        white='\033[0;37m',
-        yellow='\033[0;33m',
         git_user=GIT_USER,
         registry=DOCKER_REGISTRY,
         port=str(PORT),
@@ -182,6 +239,7 @@ def resolve(commands):
         repo_=re.sub('-', '_', REPO),
         user=USER,
     )
+    all_.update(COLORS)
     args = {}
     for k, v in all_.items():
         if '{' + k + '}' in cmd:
@@ -763,11 +821,13 @@ def zsh_complete_command():
         'echo "local -a _subcommands" >> $_COMP',
         'echo "_subcommands=(" >> $_COMP',
         line('''
-            bin/{repo} --help
-                | grep '    - '
-                | sed -E 's/ +- /:/g'
-                | sed -E 's/^ +//g'
-                | sed -E "s/(.*)/    '\\1'/g"
+            /bin/cat -v <<< `bin/{repo} --help | tr '\\n' '@'`
+                | tr '@' '\\n'
+                | sed -E 's/\\^\\[\\[.(;..)?m//g'
+                | grep ' | '
+                | grep -v 'COMMAND'
+                | sed -E 's/ +\\| /:/g'
+                | sed -E "s/^ +(.+)/  '\\1'/g"
                 | parallel "echo {{}} >> $_COMP"
         '''),
         'echo ")" >> $_COMP',
@@ -804,8 +864,8 @@ def get_illegal_mode_command():
     '''
     cmds = [
         line('''
-            echo "That is not a legal command.
-            Please call {cyan}{repo} --help{clear} to see a list of legal
+            echo "{red}That is not a legal command.{clear}
+            Please call {green}{repo} --help{clear} to see a list of legal
             commands."
         ''')
     ]
