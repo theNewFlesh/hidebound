@@ -132,8 +132,8 @@ def get_info():
         help='''
     build-edit-prod-dockerfile - Edit prod.dockefile to use local package
     build-local-package        - Generate pip package of repo and copy it to docker/dist
-    build-package              - Build production version of repo for publishing
-    build-prod                 - Publish pip package of repo to PyPi
+    build-package              - Generate pip package of repo
+    build-prod                 - Build production version of repo for publishing
     build-publish              - Run production tests first then publish pip package of repo to PyPi
     build-test                 - Build test version of repo for prod testing
     docker-build               - Build development image
@@ -152,13 +152,13 @@ def get_info():
     docker-push-dev-latest     - Push development image to Docker registry with dev-latest tag
     docker-push-prod           - Push production image to Docker registry
     docker-push-prod-latest    - Push production image to Docker registry with prod-latest tag
-    docker-remove              - Remove Docker image
+    docker-remove              - Remove Docker container
     docker-restart             - Restart container
     docker-start               - Start container
     docker-stop                - Stop container
     docs                       - Generate sphinx documentation
     docs-architecture          - Generate architecture.svg diagram from all import statements
-    docs-full                  - Generate documentation, coverage report, diagram and code
+    docs-full                  - Generate documentation, coverage report, diagram and code metrics
     docs-metrics               - Generate code metrics report, plots and tables
     library-add                - Add a given package to a given dependency group
     library-graph-dev          - Graph dependencies in dev environment

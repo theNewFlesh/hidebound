@@ -806,23 +806,23 @@ Development commands are grouped by one of 10 prefixes:
 
 Here are some frequently used commands to get you started:
 
-| Command           | Description                                               |
-| ----------------- | --------------------------------------------------------- |
-| docker-restart    | Restart container                                         |
-| docker-start      | Start container                                           |
-| docker-stop       | Stop container                                            |
-| docs-full         | Generate documentation, coverage report, diagram and code |
-| library-add       | Add a given package to a given dependency group           |
-| library-graph-dev | Graph dependencies in dev environment                     |
-| library-remove    | Remove a given package from a given dependency group      |
-| library-search    | Search for pip packages                                   |
-| library-update    | Update dev dependencies                                   |
-| session-lab       | Run jupyter lab server                                    |
-| state             | State of                                                  |
-| test-dev          | Run all tests                                             |
-| test-lint         | Run linting and type checking                             |
-| zsh               | Run ZSH session inside container                          |
-| zsh-complete      | Generate ZSH completion script                            |
+| Command           | Description                                                       |
+| ----------------- | ----------------------------------------------------------------- |
+| docker-restart    | Restart container                                                 |
+| docker-start      | Start container                                                   |
+| docker-stop       | Stop container                                                    |
+| docs-full         | Generate documentation, coverage report, diagram and code metrics |
+| library-add       | Add a given package to a given dependency group                   |
+| library-graph-dev | Graph dependencies in dev environment                             |
+| library-remove    | Remove a given package from a given dependency group              |
+| library-search    | Search for pip packages                                           |
+| library-update    | Update dev dependencies                                           |
+| session-lab       | Run jupyter lab server                                            |
+| state             | State of                                                          |
+| test-dev          | Run all tests                                                     |
+| test-lint         | Run linting and type checking                                     |
+| zsh               | Run ZSH session inside container                                  |
+| zsh-complete      | Generate ZSH completion script                                    |
 
 ---
 
@@ -840,8 +840,8 @@ The following is a complete list of all available development commands:
 | -------------------------- | ------------------------------------------------------------------- |
 | build-edit-prod-dockerfile | Edit prod.dockefile to use local package                            |
 | build-local-package        | Generate local pip package in docker/dist                           |
-| build-package              | Build production version of repo for publishing                     |
-| build-prod                 | Publish pip package of repo to PyPi                                 |
+| build-package              | Generate pip package of repo                                        |
+| build-prod                 | Build production version of repo for publishing                     |
 | build-publish              | Run production tests first then publish pip package of repo to PyPi |
 | build-test                 | Build test version of repo for prod testing                         |
 | docker-build               | Build development image                                             |
@@ -860,13 +860,13 @@ The following is a complete list of all available development commands:
 | docker-push-dev-latest     | Push development image to Docker registry with dev-latest tag       |
 | docker-push-prod           | Push production image to Docker registry                            |
 | docker-push-prod-latest    | Push production image to Docker registry with prod-latest tag       |
-| docker-remove              | Remove Docker image                                                 |
+| docker-remove              | Remove Docker container                                             |
 | docker-restart             | Restart container                                                   |
 | docker-start               | Start container                                                     |
 | docker-stop                | Stop container                                                      |
 | docs                       | Generate sphinx documentation                                       |
 | docs-architecture          | Generate architecture.svg diagram from all import statements        |
-| docs-full                  | Generate documentation, coverage report, diagram and code           |
+| docs-full                  | Generate documentation, coverage report, diagram and code metrics   |
 | docs-metrics               | Generate code metrics report, plots and tables                      |
 | library-add                | Add a given package to a given dependency group                     |
 | library-graph-dev          | Graph dependencies in dev environment                               |
