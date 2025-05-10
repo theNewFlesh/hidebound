@@ -82,7 +82,7 @@ class BetterHelpFormatter(argparse.RawTextHelpFormatter):
         sep = '-' * 27 + '|' + '-' * 68
         sep = '    {purple}{sep}{clear}'.format(sep=sep, **COLORS)
 
-        output = []
+        tmp = []
         flag = False
         prev = ''
         for line in lines:
@@ -90,7 +90,7 @@ class BetterHelpFormatter(argparse.RawTextHelpFormatter):
                 cmd, desc = line.split(' - ', 1)
                 prefix = re.sub('-.*| +', '', cmd)
                 if prefix != prev:
-                    output.append(sep)
+                    tmp.append(sep)
                     flag = not flag
                     prev = prefix
 
@@ -102,8 +102,8 @@ class BetterHelpFormatter(argparse.RawTextHelpFormatter):
                 line = '{color}{cmd}{clear} {purple}|{clear} {desc}'
                 line = line.format(color=color, cmd=cmd, desc=desc, **COLORS)
 
-            output.append(line)
-        output = '\n'.join(output)
+            tmp.append(line)
+        output = '\n'.join(tmp)
         output += COLORS['green']
         return output
 

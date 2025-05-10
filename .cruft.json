@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/theNewFlesh/cookiecutter-datalus",
-  "commit": "c7781a02cdfa76a823b97f7537685a735f857b09",
+  "commit": "50c00ad5bf94d64ffe7a6e8552eb375a4349cf7b",
   "checkout": null,
   "skip": [
     "__init__\\.py$",
@@ -45,7 +45,7 @@
       "python_max_version": "10",
       "initial_repo_version": "0.32.0",
       "_template": "https://github.com/theNewFlesh/cookiecutter-datalus",
-      "_commit": "c7781a02cdfa76a823b97f7537685a735f857b09"
+      "_commit": "50c00ad5bf94d64ffe7a6e8552eb375a4349cf7b"
     }
   },
   "directory": null
