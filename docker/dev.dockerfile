@@ -100,7 +100,7 @@ RUN echo "\n${CYAN}SETUP ZSH${CLEAR}"; \
     apt update && \
     apt install -y zsh && \
     rm -rf /var/lib/apt/lists/* && \
-    curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh \
+    curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh \
         -o install-oh-my-zsh.sh && \
     echo y | sh install-oh-my-zsh.sh && \
     mkdir -p /root/.oh-my-zsh/custom/plugins && \
