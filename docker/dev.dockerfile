@@ -5,11 +5,11 @@ USER root
 # coloring syntax for headers
 ENV CYAN='\033[0;36m'
 ENV CLEAR='\033[0m'
-ENV DEBIAN_FRONTEND='noninteractive'
+ENV DEBIAN_FRONTEND="noninteractive"
 
 # setup ubuntu user
-ARG UID_='1000'
-ARG GID_='1000'
+ARG UID_="1000"
+ARG GID_="1000"
 RUN echo "\n${CYAN}SETUP UBUNTU USER${CLEAR}"; \
     addgroup --gid $GID_ ubuntu && \
     adduser \
@@ -148,9 +148,9 @@ USER ubuntu
 ENV PATH="/home/ubuntu/.local/bin:$PATH"
 COPY ./config/henanigans.zsh-theme .oh-my-zsh/custom/themes/henanigans.zsh-theme
 
-ENV LANG "C.UTF-8"
-ENV LANGUAGE "C.UTF-8"
-ENV LC_ALL "C.UTF-8"
+ENV LANG="C.UTF-8"
+ENV LANGUAGE="C.UTF-8"
+ENV LC_ALL="C.UTF-8"
 # ------------------------------------------------------------------------------
 
 FROM base AS dev
@@ -181,7 +181,6 @@ RUN echo "\n${CYAN}INSTALL DEV DEPENDENCIES${CLEAR}"; \
     pdm completion zsh > /home/ubuntu/.oh-my-zsh/custom/completions/_pdm
 
 # setup pdm
-COPY --chown=ubuntu:ubuntu config/build.yaml /home/ubuntu/config/
 COPY --chown=ubuntu:ubuntu config/dev.lock /home/ubuntu/config/
 COPY --chown=ubuntu:ubuntu config/pdm.toml /home/ubuntu/config/
 COPY --chown=ubuntu:ubuntu config/prod.lock /home/ubuntu/config/
@@ -243,10 +242,10 @@ RUN echo "\n${CYAN}REMOVE DIRECTORIES${CLEAR}"; \
     rm -rf /home/ubuntu/config /home/ubuntu/scripts
 
 ENV REPO='hidebound'
-ENV PYTHONPATH ":/home/ubuntu/$REPO/python:/home/ubuntu/.local/lib"
-ENV PYTHONPYCACHEPREFIX "/home/ubuntu/.python_cache"
-ENV HOME /home/ubuntu
-ENV JUPYTER_RUNTIME_DIR /tmp/jupyter_runtime
+ENV PYTHONPATH="/home/ubuntu/$REPO/python:/home/ubuntu/.local/lib"
+ENV PYTHONPYCACHEPREFIX="/home/ubuntu/.python_cache"
+ENV HOME="/home/ubuntu"
+ENV JUPYTER_RUNTIME_DIR="/tmp/jupyter_runtime"
 
 EXPOSE 8888/tcp
 ENTRYPOINT ["/init"]

@@ -16,8 +16,10 @@ export MAX_PYTHON_VERSION="3.10"
 export MKDOCS_DIR="$REPO_DIR/mkdocs"
 export PDM_DIR="$HOME/pdm"
 export PYPI_URL="pypi"
+export PYPI_TEST_URL="testpypi"
 export PYTHONPATH="$REPO_DIR/python:$HOME/.local/lib"
 export SCRIPT_DIR="$REPO_DIR/docker/scripts"
+export SPHINX_DIR="$REPO_DIR/sphinx"
 export TEST_MAX_PROCS=16
 export TEST_PROCS="auto"
 export TEST_VERBOSITY=0
@@ -305,7 +307,7 @@ x_build_edit_prod_dockerfile () {
         's/ARG VERSION/COPY \--chown=ubuntu:ubuntu dist\/pkg.tar.gz \/home\/ubuntu\/pkg.tar.gz/' \
         $REPO_DIR/docker/prod.dockerfile;
     sed --in-place -E \
-        's/--user.*==\$VERSION/--user \/home\/ubuntu\/pkg.tar.gz/' \
+        's/pdm add -v .*==\$VERSION/pdm add -v \/home\/ubuntu\/pkg.tar.gz/' \
         $REPO_DIR/docker/prod.dockerfile;
 }
 
@@ -339,6 +341,13 @@ x_build_publish () {
     _x_build_publish __token__ $1 $version $PYPI_URL;
 }
 
+x_build_publish_test () {
+    # Run tests and then publish pip package of repo to test PyPi
+    # args: token
+    local version=`_x_get_version`;
+    _x_build_publish __token__ $1 $version $PYPI_TEST_URL;
+}
+
 x_build_test () {
     # Build test version of repo for prod testing
     echo "${CYAN2}BUILDING TEST REPO${CLEAR}\n";
@@ -355,11 +364,11 @@ x_docs () {
     echo "${CYAN2}GENERATING DOCS${CLEAR}\n";
     rm -rf $DOCS_DIR;
     mkdir -p $DOCS_DIR;
-    cp $REPO_DIR/README.md $REPO_DIR/sphinx/readme.md;
-    sed --in-place -E 's/sphinx\/images/_images/g' $REPO_DIR/sphinx/readme.md;
+    cp $REPO_DIR/README.md $SPHINX_DIR/readme.md;
+    sed --in-place -E 's/sphinx\/images/_images/g' $SPHINX_DIR/readme.md;
     sphinx-build sphinx $DOCS_DIR;
     exit_code=`_x_resolve_exit_code $exit_code $?`;
-    rm -f $REPO_DIR/sphinx/readme.md;
+    rm -f $SPHINX_DIR/readme.md;
     cp -f sphinx/style.css $DOCS_DIR/_static/style.css;
     touch $DOCS_DIR/.nojekyll;
     # mkdir -p $DOCS_DIR/resources;
@@ -395,6 +404,56 @@ x_docs_metrics () {
         $REPO_DIR/python $DOCS_DIR/plots.html;
     rolling-pin table \
         $REPO_DIR/python $DOCS_DIR;
+}
+
+_x_docs_sphinx () {
+    # Generate sphinx rst file
+    # args: subpackage name, absolute module paths
+    echo "$1";
+    echo "$1" | sed 's/./=/g';
+
+    local items=`echo "$2" | tr ' ' '\n'`;
+    echo $items | while read -r item; do
+        local module=`echo $item | sed -E 's/.*\.//'`;
+        local sep=`echo $module | sed 's/./-/g'`;
+        echo "
+$module
+$sep
+.. automodule:: $item
+    :members:
+    :private-members:
+    :undoc-members:
+    :show-inheritance:";
+    done;
+}
+
+x_docs_sphinx () {
+    # Generate sphinx rst files for all python modules
+    echo "${CYAN2}GENERATING SPHINX RST FILES${CLEAR}\n";
+
+    # modules.rst
+    local tmp=`find $REPO_SUBPACKAGE -mindepth 1 -maxdepth 1 -type d`;
+    local modules=`echo "$tmp" | sed -E 's/.*\//   /' | sort`;
+    echo ".. toctree::
+   :maxdepth: 4
+
+$modules" > $SPHINX_DIR/modules.rst;
+
+    # all other rst files
+    local dirs=`find $REPO_SUBPACKAGE -mindepth 1 -maxdepth 1 -type d`;
+    echo $dirs | while read -r dir; do
+        local name=`echo $dir | tr ' ' '\n' | head -n 1 | sed -E 's/^.*\///'`;
+        local items=` \
+            find $dir -type f \
+            | grep -vE '(test|test_base|__init__|/command)\.py' \
+            | sed -E 's/.*python\///' \
+            | sed -E 's/\//./g' \
+            | sed -E 's/\.py//' \
+            | sort \
+            | tr '\n' ' '
+        `;
+        _x_docs_sphinx "$name" "$items" > $SPHINX_DIR/$name.rst;
+    done;
 }
 
 # LIBRARY-FUNCTIONS-------------------------------------------------------------
@@ -645,7 +704,7 @@ x_test_dev () {
 }
 
 x_test_fast () {
-    # Test all code excepts tests marked with SKIP_SLOWS_TESTS decorator
+    # Test all code excepts tests marked with SKIP_SLOW_TESTS decorator
     x_env_activate_dev;
     echo "${CYAN2}FAST TESTING DEV${CLEAR}\n";
     cd $REPO_DIR;
@@ -727,6 +786,12 @@ _x_get_version () {
         | sed 's/\"//g';
 }
 
+_x_version_file_update () {
+    # update non-pyproject files with new pyproject version
+    # args: old_version, new_version
+    echo "${CYAN2}UPDATING VERSION IN MISC FILES${CLEAR}\n";
+}
+
 x_version () {
     # Full resolution of repo: dependencies, linting, tests, docs, etc
     x_library_install_dev;
@@ -739,10 +804,14 @@ _x_version_bump () {
     # args: type
     x_env_activate_dev;
     local title=`echo $1 | tr '[a-z]' '[A-Z]'`;
+    local old_version=`_x_get_version`;
+
     echo "${CYAN2}BUMPING $title VERSION${CLEAR}\n";
     cd $PDM_DIR
     pdm bump $1;
     _x_library_pdm_to_repo_dev;
+    local new_version=`_x_get_version`;
+    _x_version_file_update $old_version $new_version;
 }
 
 x_version_bump_major () {
@@ -761,13 +830,25 @@ x_version_bump_patch () {
     _x_version_bump patch;
 }
 
+x_version_bump () {
+    # Bump repo's patch version up to x.x.20, then bump minor version
+    local minor=`python3 -c \
+        "v = '$(_x_get_version)'.split('.')[-1]; print(int(v) >= 20)"
+    `;
+    if [ "$minor" = "True" ]; then
+        x_version_bump_minor;
+    else
+        x_version_bump_patch;
+    fi;
+}
+
 x_version_commit () {
     # Tag with version and commit changes to master with given message
     # args: message
     local version=`_x_get_version`;
-    git commit --message $version;
+    git commit --message "$version <no ci>";
     git tag --annotate $version --message "$1";
-    git push --follow-tags origin HEAD:master --push-option ci.skip;
+    git push --follow-tags origin HEAD:master;
 }
 
 # VSCODE-FUNCTIONS--------------------------------------------------------------

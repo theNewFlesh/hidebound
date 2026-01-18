@@ -135,6 +135,7 @@ def get_info():
     build-package              - Generate pip package of repo
     build-prod                 - Build production version of repo for publishing
     build-publish              - Run production tests first then publish pip package of repo to PyPi
+    build-publish-test         - Run tests and then publish pip package of repo to test PyPi
     build-test                 - Build test version of repo for prod testing
     docker-build               - Build development image
     docker-build-from-cache    - Build development image from registry cache
@@ -160,6 +161,7 @@ def get_info():
     docs-architecture          - Generate architecture.svg diagram from all import statements
     docs-full                  - Generate documentation, coverage report, diagram and code metrics
     docs-metrics               - Generate code metrics report, plots and tables
+    docs-sphinx                - Generate sphinx rst files
     library-add                - Add a given package to a given dependency group
     library-graph-dev          - Graph dependencies in dev environment
     library-graph-prod         - Graph dependencies in prod environment
@@ -182,11 +184,12 @@ def get_info():
     state                      - State of repository and Docker container
     test-coverage              - Generate test coverage report
     test-dev                   - Run all tests
-    test-fast                  - Test all code excepts tests marked with SKIP_SLOWS_TESTS decorator
+    test-fast                  - Test all code excepts tests marked with SKIP_SLOW_TESTS decorator
     test-format                - Format all python files
     test-lint                  - Run linting and type checking
     test-prod                  - Run tests across all support python versions
     version                    - Full resolution of repo: dependencies, linting, tests, docs, etc
+    version-bump               - Bump repo patch version up to x.x.20, then bump minor version
     version-bump-major         - Bump pyproject major version
     version-bump-minor         - Bump pyproject minor version
     version-bump-patch         - Bump pyproject patch version
@@ -782,9 +785,9 @@ def version_commit_command(args=[]):
         enter_repo(),
         version_variable(),
         'git add --all',
-        'git commit --message $VERSION',
+        'git commit --message "$VERSION <no ci>"',
         'git tag --annotate $VERSION --message "version: $VERSION"',
-        'git push --follow-tags origin HEAD:' + branch + ' --push-option ci.skip',
+        'git push --follow-tags origin HEAD:' + branch,
         exit_repo(),
     ]
     return resolve(cmds)
@@ -885,6 +888,7 @@ def main():
         'build-package': x_tools_command('x_build_package', args),
         'build-prod': x_tools_command('x_build_prod', args),
         'build-publish': x_tools_command('x_build_publish', args),
+        'build-publish-test': x_tools_command('x_build_publish_test', args),
         'build-test': x_tools_command('x_build_test', args),
         'docker-build': build_dev_command(),
         'docker-build-from-cache': build_dev_command(use_cache=True),
@@ -910,6 +914,7 @@ def main():
         'docs-architecture': x_tools_command('x_docs_architecture', args),
         'docs-full': x_tools_command('x_docs_full', args),
         'docs-metrics': x_tools_command('x_docs_metrics', args),
+        'docs-sphinx': x_tools_command('x_docs_sphinx', args),
         'library-add': x_tools_command('x_library_add', args),
         'library-graph-dev': x_tools_command('x_library_graph_dev', args),
         'library-graph-prod': x_tools_command('x_library_graph_prod', args),
@@ -937,6 +942,7 @@ def main():
         'test-lint': x_tools_command('x_test_lint', args),
         'test-prod': x_tools_command('x_test_prod', args),
         'version': x_tools_command('x_version', args),
+        'version-bump': x_tools_command('x_version_bump', args),
         'version-bump-major': x_tools_command('x_version_bump_major', args),
         'version-bump-minor': x_tools_command('x_version_bump_minor', args),
         'version-bump-patch': x_tools_command('x_version_bump_patch', args),

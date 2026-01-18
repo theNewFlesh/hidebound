@@ -41,16 +41,6 @@
             "selector": "body"
         },
         {
-            "command": "sublime:add-cursor-to-prev-line",
-            "keys": ["Alt ArrowUp"],
-            "selector": "body"
-        },
-        {
-            "command": "sublime:add-cursor-to-next-line",
-            "keys": ["Alt ArrowDown"],
-            "selector": "body"
-        },
-        {
             "command": "documentsearch:start",
             "keys": ["Accel F"],
             "selector": ".jp-mod-searchable",

@@ -102,7 +102,7 @@ input {
 }
 
 pre {
-    background: #343434 !important;
+    background: #242424 !important;
 }
 
 pre > .gp {
@@ -292,4 +292,33 @@ h1 {
 .admonition-todo > .admonition-title {
     color: #181818 !important;
     background: #A0D17B !important;
+}
+
+/* Source Code */
+.nf, .fm {
+    color: #E9EABE !important;
+}
+
+.nb, .nc, .si {
+    color: #B6ECF3 !important;
+}
+
+.n, .nn, .o {
+    color: #F4F4F4 !important;
+}
+
+.sd, .s1, .s2, .sa, .se {
+    color: #EBB483 !important;
+}
+
+.c1 {
+    color: #A0D17B !important;
+}
+
+.bp, .k, .kc, .ow, .mi {
+    color: #93B6E6 !important;
+}
+
+.mf, .kn, .p {
+    color: #AC92DE !important;
 }

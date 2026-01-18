@@ -36,6 +36,9 @@
             "**/docs": true,
             "**/public": true,
         },
+        "files.associations": {
+            "*.yml": "github-actions-workflow"
+        },
         "files.exclude": {
             "**/__pypackages__": true,
             "**/.classpath": true,
@@ -57,6 +60,10 @@
             "**/jupyter/serverconfig": true,
             "*/*/**/node_modules": true,
             "**/.Trash*": true,
+        },
+        "workbench.colorCustomizations": {
+            "statusBar.background": "#AC92DE",
+            "statusBar.foreground": "#000000"
         }
     },
     "tasks": {
@@ -129,6 +136,22 @@
                 ]
             },
             {
+                "label": "[build] publish-test",
+                "detail": "Publish pip package of repo to test PyPi",
+                "icon": {"id": "tools", "color": "terminal.ansiBlue"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "_x_build_publish",
+                    "'${input:pypi_user}'",
+                    "'${input:pypi_token}'",
+                    "'${input:pypi_comment}'",
+                    "'${input:pypi_test_url}'"
+                ],
+                "dependsOn": [
+                    "[test] prod"
+                ]
+            },
+            {
                 "label": "[build] test",
                 "detail": "Build test version of repo for prod testing",
                 "icon": {"id": "tools", "color": "terminal.ansiBlue"},
@@ -171,6 +194,15 @@
                 "command": [
                     "source $X_TOOLS_PATH &&",
                     "x_docs_metrics"
+                ]
+            },
+            {
+                "label": "[docs] sphinx",
+                "detail": "Generate sphinx rst files",
+                "icon": {"id": "book", "color": "terminal.ansiYellow"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_docs_sphinx"
                 ]
             },
             {
@@ -364,7 +396,7 @@
             },
             {
                 "label": "[test] fast",
-                "detail": "Test all code excepts tests marked with SKIP_SLOWS_TESTS decorator",
+                "detail": "Test all code excepts tests marked with SKIP_SLOW_TESTS decorator",
                 "icon": {"id": "check", "color": "terminal.ansiGreen"},
                 "command": [
                     "source $X_TOOLS_PATH &&",
@@ -477,6 +509,15 @@
                 ]
             },
             {
+                "label": "[version] bump",
+                "detail": "Bump repo's patch version up to x.x.20, then bump minor version",
+                "icon": {"id": "plus", "color": "terminal.ansiRed"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "x_version_bump"
+                ]
+            },
+            {
                 "label": "[version] commit",
                 "detail": "Tag with version and commit changes to master",
                 "icon": {"id": "plus", "color": "terminal.ansiRed"},
@@ -546,8 +587,14 @@
                 "default": "pypi"
             },
             {
+                "id": "pypi_test_url",
+                "description": "Test PyPI registry URL:",
+                "type": "promptString",
+                "default": "testpypi"
+            },
+            {
                 "id": "commit_message",
-                "description": "Git commit message",
+                "description": "Git commit message:",
                 "type": "promptString",
                 "default": ""
             }

@@ -843,6 +843,7 @@ The following is a complete list of all available development commands:
 | build-package              | Generate pip package of repo                                        |
 | build-prod                 | Build production version of repo for publishing                     |
 | build-publish              | Run production tests first then publish pip package of repo to PyPi |
+| build-publish-test         | Run tests and then publish pip package of repo to test PyPi         |
 | build-test                 | Build test version of repo for prod testing                         |
 | docker-build               | Build development image                                             |
 | docker-build-from-cache    | Build development image from registry cache                         |
@@ -868,6 +869,7 @@ The following is a complete list of all available development commands:
 | docs-architecture          | Generate architecture.svg diagram from all import statements        |
 | docs-full                  | Generate documentation, coverage report, diagram and code metrics   |
 | docs-metrics               | Generate code metrics report, plots and tables                      |
+| docs-sphinx                | Generate sphinx rst files                                           |
 | library-add                | Add a given package to a given dependency group                     |
 | library-graph-dev          | Graph dependencies in dev environment                               |
 | library-graph-prod         | Graph dependencies in prod environment                              |
@@ -890,11 +892,12 @@ The following is a complete list of all available development commands:
 | state                      | State of repository and Docker container                            |
 | test-coverage              | Generate test coverage report                                       |
 | test-dev                   | Run all tests                                                       |
-| test-fast                  | Test all code excepts tests marked with SKIP_SLOWS_TESTS decorator  |
+| test-fast                  | Test all code excepts tests marked with SKIP_SLOW_TESTS decorator   |
 | test-format                | Format all python files                                             |
 | test-lint                  | Run linting and type checking                                       |
 | test-prod                  | Run tests across all support python versions                        |
 | version                    | Full resolution of repo: dependencies, linting, tests, docs, etc    |
+| version-bump               | Bump repo's patch version up to x.x.20, then bump minor version     |
 | version-bump-major         | Bump pyproject major version                                        |
 | version-bump-minor         | Bump pyproject minor version                                        |
 | version-bump-patch         | Bump pyproject patch version                                        |

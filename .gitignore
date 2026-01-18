@@ -11,6 +11,9 @@ dask-worker-space/*
 test_cluster_dump
 test_cluster_dump/*
 
+# docker
+docker/config/secret-env
+
 # flask
 flask_monitoringdashboard*
 
@@ -39,7 +42,6 @@ docker/dist/*
 .Python
 *.egg
 *.egg-info
-build
 develop-eggs
 dist
 eggs
