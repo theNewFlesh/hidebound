@@ -152,6 +152,22 @@
                 ]
             },
             {
+                "label": "[build] publish-test",
+                "detail": "Publish pip package of repo to test PyPi",
+                "icon": {"id": "tools", "color": "terminal.ansiBlue"},
+                "command": [
+                    "source $X_TOOLS_PATH &&",
+                    "_x_build_publish",
+                    "'${input:pypi_user}'",
+                    "'${input:pypi_token}'",
+                    "'${input:pypi_comment}'",
+                    "'${input:pypi_test_url}'"
+                ],
+                "dependsOn": [
+                    "[test] prod"
+                ]
+            },
+            {
                 "label": "[build] test",
                 "detail": "Build test version of repo for prod testing",
                 "icon": {"id": "tools", "color": "terminal.ansiBlue"},
