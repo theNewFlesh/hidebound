@@ -55,7 +55,7 @@ RUN echo "\n${CYAN}INSTALL GENERIC DEPENDENCIES${CLEAR}"; \
 # install yq
 RUN echo "\n${CYAN}INSTALL YQ${CLEAR}"; \
     curl -fsSL \
-        https://github.com/mikefarah/yq/releases/download/v4.9.1/yq_linux_amd64 \
+        https://github.com/mikefarah/yq/releases/download/v4.50.1/yq_linux_arm64 \
         -o /usr/local/bin/yq && \
     chmod +x /usr/local/bin/yq
 
@@ -116,7 +116,7 @@ RUN echo "\n${CYAN}SETUP ZSH${CLEAR}"; \
 
 # install s6-overlay
 RUN echo "\n${CYAN}INSTALL S6${CLEAR}"; \
-    export S6_ARCH="x86_64" && \
+    export S6_ARCH="aarch64" && \
     export S6_VERSION="v3.1.5.0" && \
     export S6_URL="https://github.com/just-containers/s6-overlay/releases/download" && \
     curl -fsSL "${S6_URL}/${S6_VERSION}/s6-overlay-noarch.tar.xz" \

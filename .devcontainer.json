@@ -39,7 +39,6 @@
                 "matangover.mypy",
                 "mhutchie.git-graph",
                 "ms-azuretools.vscode-docker",
-                "ms-python.anaconda-extension-pack",
                 "ms-python.python",
                 "ms-python.vscode-pylance",
                 "ms-vscode-remote.remote-containers",
@@ -51,7 +50,6 @@
                 "the-new-flesh.henanigans",
                 "tht13.rst-vscode",
                 "tombonnike.vscode-status-bar-format-toggle",
-                "uctakeoff.vscode-counter",
                 "visualstudioexptteam.vscodeintellicode",
                 "yzhang.markdown-all-in-one"
             ]

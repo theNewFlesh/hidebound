@@ -15,6 +15,7 @@ REPO_PATH = os.path.join(os.sep, *os.path.realpath(__file__).split(os.sep)[:-2])
 REPO = os.path.split(REPO_PATH)[-1]
 GIT_USER = 'theNewFlesh'
 DOCKER_REGISTRY = 'thenewflesh/' + REPO
+PLATFORM = 'linux/arm64'
 USER = 'ubuntu:ubuntu'
 PORT = 8080
 # ------------------------------------------------------------------------------
@@ -236,6 +237,7 @@ def resolve(commands):
         git_user=GIT_USER,
         registry=DOCKER_REGISTRY,
         port=str(PORT),
+        platform=PLATFORM,
         pythonpath='{PYTHONPATH}',
         repo_path=REPO_PATH,
         repo=REPO,
@@ -419,6 +421,7 @@ def build_dev_command(use_cache=True):
     cmd = line('''
         cd docker;
         docker build
+            --platform {platform}
             --file dev.dockerfile
             --build-arg BUILDKIT_INLINE_CACHE=1
             --label "repository={repo}"
@@ -456,6 +459,7 @@ def build_prod_command(use_cache=False):
         cd docker;
         docker build
             --force-rm
+            --platform {platform}
             --file prod.dockerfile
             --build-arg VERSION="$VERSION"
             --label "repository={repo}"
