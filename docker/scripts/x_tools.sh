@@ -645,6 +645,11 @@ x_session_lab () {
     # Run jupyter lab server
     x_env_activate_dev;
     echo "${CYAN2}JUPYTER LAB${CLEAR}\n";
+    ps aux \
+        | grep jupyter \
+        | grep -vE 'grep|s6' \
+        | awk '{print $2}' \
+        | parallel 'kill -9 {}';
     jupyter lab \
         --allow-root \
         --ip=0.0.0.0 \
